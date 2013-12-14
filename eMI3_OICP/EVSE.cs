@@ -1,6 +1,6 @@
 ﻿/*
- * Copyright (c) 2013 Achim Friedland <achim.friedland@belectric.com>
- * This file is part of eMI3 <http://www.github.com/eMI3/OICP-Bindings>
+ * Copyright (c) 2013-2014 Achim Friedland <achim.friedland@belectric.com>
+ * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.

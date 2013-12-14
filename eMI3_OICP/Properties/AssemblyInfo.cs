@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("BELECTRIC IT Solutions GmbH")]
 [assembly: AssemblyProduct("eMI3 IO OICP")]
-[assembly: AssemblyCopyright("Copyright © 2013 BELECTRIC IT Solutions GmbH")]
+[assembly: AssemblyCopyright("Copyright © 2013-2014 BELECTRIC IT Solutions GmbH")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
