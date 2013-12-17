@@ -21,10 +21,11 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using de.eMI3.IO.OICP;
 
 #endregion
 
-namespace de.eMI3.IO.OICP
+namespace org.emi3group.IO.OICP
 {
 
     #region ActionType
@@ -45,7 +46,7 @@ namespace de.eMI3.IO.OICP
     /// <summary>
     /// EVSE management operations.
     /// </summary>
-    public static class EVSE
+    public static class EVSEMethods
     {
 
         #region Namespace
@@ -59,6 +60,11 @@ namespace de.eMI3.IO.OICP
         /// The namespace for the EVSE Data within the Open Intercharge Protocol (OICP) Version 1.0.
         /// </summary>
         public static readonly XNamespace NS_OICPv1EVSEData     = "http://www.hubject.com/b2b/services/evsedata/v1";
+
+        /// <summary>
+        /// The namespace for the EVSE Status within the Open Intercharge Protocol (OICP) Version 1.0.
+        /// </summary>
+        public static readonly XNamespace NS_OICPv1EVSEStatus   = "http://www.hubject.com/b2b/services/evsestatus/v1";
 
         /// <summary>
         /// The namespace for the common types within the Open Intercharge Protocol (OICP) Version 1.0.
@@ -79,7 +85,8 @@ namespace de.eMI3.IO.OICP
 
             return new XElement(NS_SOAPEnv + "Envelope",
                        new XAttribute(XNamespace.Xmlns + "eMI3",            NS_SOAPEnv.          NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSPool",         NS_OICPv1EVSEData.   NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSEData",        NS_OICPv1EVSEData.   NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSEStatus",      NS_OICPv1EVSEStatus. NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "ChargingStation", NS_OICPv1CommonTypes.NamespaceName),
 
                        new XElement(NS_SOAPEnv + "Header"),
@@ -98,39 +105,41 @@ namespace de.eMI3.IO.OICP
                                               String             OperatorName = null)
         {
 
-            return EVSEOperator.EVSPools.PushEVSEStatus((OperatorID   == null) ? EVSEOperator.Id.ToString()      : OperatorID,
-                                                         (OperatorName == null) ? EVSEOperator.Name.First().Value : OperatorName,
-                                                         Action);
+            return EVSEOperator.EVSPools.
+                                SelectMany(pool    => pool.ChargingStations).
+                                SelectMany(station => station.EVSEs).
+
+                                PushEVSEStatus((OperatorID   == null) ? EVSEOperator.Id.ToString()      : OperatorID,
+                                               (OperatorName == null) ? EVSEOperator.Name.First().Value : OperatorName,
+                                                Action);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(this EVSPools, OperatorID, OperatorName, Action)
+        #region PushEVSEStatus(this EVSEs, OperatorID, OperatorName, Action)
 
-        public static XElement PushEVSEStatus(this IEnumerable<EVSPool>  EVSPools,
-                                              String                     OperatorID,
-                                              String                     OperatorName,
-                                              ActionType                 Action)
+        public static XElement PushEVSEStatus(this IEnumerable<EVSE>  EVSEs,
+                                              String                  OperatorID,
+                                              String                  OperatorName,
+                                              ActionType              Action)
         {
 
-            return Encapsulate(new XElement(NS_OICPv1EVSEData + "HubjectPushEvseStatus",
-                                 new XElement(NS_OICPv1EVSEData + "ActionType", Action.ToString()),
-                                 new XElement(NS_OICPv1EVSEData + "OperatorEvseStatus",
+            return Encapsulate(new XElement(NS_OICPv1EVSEStatus + "HubjectPushEvseStatus",
+                                 new XElement(NS_OICPv1EVSEStatus + "ActionType", Action.ToString()),
+                                 new XElement(NS_OICPv1EVSEStatus + "OperatorEvseStatus",
 
-                                     new XElement(NS_OICPv1EVSEData + "OperatorID", OperatorID),
+                                     new XElement(NS_OICPv1EVSEStatus + "OperatorID", OperatorID),
                                      (OperatorName != null) ?
-                                     new XElement(NS_OICPv1EVSEData + "OperatorName", OperatorName) : null,
+                                     new XElement(NS_OICPv1EVSEStatus + "OperatorName", OperatorName) : null,
 
-                                     // EVSE => EvseDataRecord
-                                     EVSPools.Select(EVSPool =>
-                                     EVSPool.ChargingStations.Select(ChargingStation =>
-                                     ChargingStation.EVSEs.Select(EVSE =>
-                                         new XElement(NS_OICPv1EVSEData + "EvseStatusRecord",
-                                             new XElement(NS_OICPv1EVSEData + "EvseId",     EVSE.Id.ToString()),
-                                             new XElement(NS_OICPv1EVSEData + "EvseStatus", "")//  ChargingStation.Id. ToString()),
+                                     EVSEs.Select(EVSE =>
+                                         new XElement(NS_OICPv1EVSEStatus + "EvseStatusRecord",
+                                             new XElement(NS_OICPv1EVSEStatus + "EvseId",     EVSE.Id.    ToString()),
+                                             new XElement(NS_OICPv1EVSEStatus + "EvseStatus", EVSE.Status.ToString())
                                          )
-                                     )))
+                                     )
+
                                  )
                              ));
 
@@ -191,7 +200,7 @@ namespace de.eMI3.IO.OICP
                                                  new XElement(NS_OICPv1EVSEData + "EnChargingStationName",  EVSPool.Name.First().Value),
 
                                                  new XElement(NS_OICPv1EVSEData + "Address",
-                                                     new XElement(NS_OICPv1CommonTypes + "Country",     EVSPool.Address.Country),
+                                                     new XElement(NS_OICPv1CommonTypes + "Country",     EVSPool.Address.Country.Alpha3Code),
                                                      new XElement(NS_OICPv1CommonTypes + "City",        EVSPool.Address.City),
                                                      new XElement(NS_OICPv1CommonTypes + "Street",      EVSPool.Address.Street),
                                                      new XElement(NS_OICPv1CommonTypes + "PostalCode",  EVSPool.Address.PostalCode),
@@ -211,21 +220,43 @@ namespace de.eMI3.IO.OICP
                                                  ),
 
                                                  new XElement(NS_OICPv1EVSEData + "Plugs",
-                                                     new XElement(NS_OICPv1EVSEData + "Plug", "Unspecified"),
                                                      EVSE.SocketOutlets.Select(Outlet =>
-                                                        new XElement(NS_OICPv1EVSEData + "Plug", "Unspecified"))//Outlet.Plug.ToString()))
+                                                        new XElement(NS_OICPv1EVSEData + "Plug", HubjectMapper.MapToPlugType(Outlet)))
                                                  ),
 
-                            //               <!--Optional:-->
-                                                 //               <v1:ChargingFacilities>
-                                                 //                  <!--1 or more repetitions:-->
-                                                 //                  <v1:ChargingFacility>?</v1:ChargingFacility>
-                                                 //               </v1:ChargingFacilities>
+                                                 new XElement(NS_OICPv1EVSEData + "ChargingFacilities",
+                                                     EVSE.SocketOutlets.Select(Outlet =>
+                                                        new XElement(NS_OICPv1EVSEData + "ChargingFacility", "Unspecified"))//Outlet.Plug.ToString()))
+
+                                                        // 100 - 120V, 1-Phase ≤10A
+                                                        // 100 - 120V, 1-Phase ≤16A
+                                                        // 100 - 120V, 1-Phase ≤32A
+                                                        // 200 - 240V, 1-Phase ≤10A
+                                                        // 200 - 240V, 1-Phase ≤16A
+                                                        // 200 - 240V, 1-Phase ≤32A
+                                                        // 200 - 240V, 1-Phase >32A
+                                                        // 380 - 480V, 3-Phase ≤16A
+                                                        // 380 - 480V, 3-Phase ≤32A
+                                                        // 380 - 480V, 3-Phase ≤63A
+                                                        // Battery exchange
+                                                        // Unspecified
+                                                        // DC Charging ≤20kW
+                                                        // DC Charging ≤50kW
+                                                        // DC Charging >50kW
+
+                                                 ),
 
                             //               <!--Optional:-->
                                                  //               <v1:ChargingModes>
                                                  //                  <!--1 or more repetitions:-->
                                                  //                  <v1:ChargingMode>?</v1:ChargingMode>
+
+                                                 // Mode_1      IEC 61851-1
+                                                 // Mode_2      IEC 61851-1
+                                                 // Mode_3      IEC 61851-1
+                                                 // Mode_4      IEC 61851-1
+                                                 // CHAdeMO     CHAdeMo Specification
+
                                                  //               </v1:ChargingModes>
 
                                                  new XElement(NS_OICPv1EVSEData + "AuthenticationModes",
