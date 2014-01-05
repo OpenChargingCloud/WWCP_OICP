@@ -22,6 +22,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using de.eMI3.IO.OICP;
+using eu.Vanaheimr.Aegir;
 
 #endregion
 
@@ -43,49 +44,197 @@ namespace org.emi3group.IO.OICP
 
     #endregion
 
+
+    public class HubjectEVSESearchReply
+    {
+
+        public UInt32           Distance                { get; private set; }
+        public String           EVSEId                  { get; private set; }
+        public String           ChargingStationId       { get; private set; }
+        public String           ChargingStationName     { get; private set; }
+        public String           EnChargingStationName   { get; private set; }
+
+        public GeoCoordinate    GeoCoordinate           { get; private set; }
+        public String[]         Plugs                   { get; private set; }
+        public String[]         ChargingFacilities      { get; private set; }
+        public String[]         ChargingModes           { get; private set; }
+        public String[]         AuthenticationModes     { get; private set; }
+        public Byte             MaxCapacity             { get; private set; }
+        public String[]         PaymentOptions          { get; private set; }
+
+        public HubjectEVSESearchReply(UInt32        Distance,
+                                      String        EVSEId,
+                                      String        ChargingStationId,
+                                      String        ChargingStationName,
+                                      String        EnChargingStationName,
+                                      Address       Address,
+                                      GeoCoordinate GeoCoordinate,
+                                      String[]      Plugs,
+                                      String[]      ChargingFacilities,
+                                      String[]      ChargingModes,
+                                      String[]      AuthenticationModes,
+                                      Byte          MaxCapacity,
+                                      String[]      PaymentOptions
+            )
+        {
+
+            this.Distance              = Distance;
+            this.EVSEId                = EVSEId;
+            this.ChargingStationId     = ChargingStationId;
+            this.ChargingStationName   = ChargingStationName;
+            this.EnChargingStationName = EnChargingStationName;
+
+            this.GeoCoordinate         = GeoCoordinate;
+            this.Plugs                 = Plugs;
+            this.ChargingFacilities    = ChargingFacilities;
+            this.ChargingModes         = ChargingModes;
+            this.AuthenticationModes   = AuthenticationModes;
+            this.MaxCapacity           = MaxCapacity;
+            this.PaymentOptions        = PaymentOptions;
+
+        }
+
+        //public static HubjectEVSESearchReply Parse(XDocument XML)
+        //{
+        //    try
+        //    {
+        //        return new HubjectEVSESearchReply(XML);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return null;
+        //    }
+        //}
+
+        public override String ToString()
+        {
+            return EVSEId + ", distance: " + Distance + "m";
+        }
+
+    }
+
+    public class HubjectEVSESearchReplies
+    {
+
+        private readonly HubjectEVSESearchReply[] EVSEs;
+
+        public           UInt64                   NumberOfEVSEs { get; private set; }
+
+        public HubjectEVSESearchReplies(XDocument XML)
+        {
+
+            EVSEs = (from EvseMatch
+                     in     XML.Root.Descendants(XNamespace.Get("http://www.hubject.com/b2b/services/evsesearch/v1") + "EvseMatch")
+
+                     let    nse             = XNamespace.Get("http://www.hubject.com/b2b/services/evsedata/v1")
+                     let    ns              = XNamespace.Get("http://www.hubject.com/b2b/services/commontypes/v1")
+                     let    tns             = XNamespace.Get("http://www.hubject.com/b2b/services/evsesearch/v1")
+
+                     let    EVSE            = EvseMatch.Element(tns + "EVSE")
+                     let    Address         = EVSE.Element(nse + "Address")
+                     let    GeoCoordinates  = EVSE.Element(nse + "GeoCoordinates").Element(ns + "DecimalDegree")
+
+                     select new HubjectEVSESearchReply(
+
+                         Distance:                UInt32.Parse(EvseMatch.Element(tns + "Distance").Value),
+                         EVSEId:                  EVSE.     Element(nse + "EvseId"               ).Value,
+                         ChargingStationId:       EVSE.     Element(nse + "ChargingStationId"    ).Value,
+                         ChargingStationName:     EVSE.     Element(nse + "ChargingStationName"  ).Value,
+                         EnChargingStationName:   EVSE.     Element(nse + "EnChargingStationName").Value,
+
+                         Address:                 new Address() {
+                                                          Country       = Country.ParseCountryName(Address.Element(ns + "Country"   ).Value),
+                                                          City          = Address.Element(ns + "City"      ).Value,
+                                                          Street        = Address.Element(ns + "Street"    ).Value,
+                                                          PostalCode    = Address.Element(ns + "PostalCode").Value,
+                                                          FloorLevel    = Address.Element(ns + "Floor"     ).Value,
+                                                          //Region        = Address.Element(ns + "Region"    ).Value,
+                                                          //TimeZone      = Address.Element(ns + "TimeZone"  ).Value
+                                                      },
+
+                         GeoCoordinate:           new GeoCoordinate(new Latitude (Double.Parse(GeoCoordinates.Element(ns + "Latitude" ).Value)),
+                                                                    new Longitude(Double.Parse(GeoCoordinates.Element(ns + "Longitude").Value))),
+
+                         Plugs:                   EVSE.Element (nse + "Plugs"              ).Elements(nse + "Plug"              ).Select(v => v.Value).ToArray(),
+                         ChargingFacilities:      EVSE.Elements(nse + "ChargingFacilities" ).Elements(nse + "ChargingFacility"  ).Select(v => v.Value).ToArray(),
+                         ChargingModes:           EVSE.Elements(nse + "ChargingModes"      ).Elements(nse + "ChargingMode"      ).Select(v => v.Value).ToArray(),
+                         AuthenticationModes:     EVSE.Elements(nse + "AuthenticationModes").Elements(nse + "AuthenticationMode").Select(v => v.Value).ToArray(),
+                         MaxCapacity:             Byte.Parse(EVSE.Element(nse + "MaxCapacity").Value),
+                         PaymentOptions:          EVSE.Elements(nse + "PaymentOptions"     ).Elements(nse + "PaymentOption"     ).Select(v => v.Value).ToArray()
+
+                     )).ToArray();
+
+            this.NumberOfEVSEs = (UInt64) EVSEs.Length;
+
+        }
+
+        public static HubjectEVSESearchReplies Parse(XDocument XML)
+        {
+            try
+            {
+                return new HubjectEVSESearchReplies(XML);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public override String ToString()
+        {
+            return "Number of EVSEs: " + NumberOfEVSEs;
+        }
+
+    }
+
     /// <summary>
     /// EVSE management operations.
     /// </summary>
     public static class EVSEMethods
     {
 
-        #region Namespace
+        #region (OICP) XML Namespaces
 
         /// <summary>
         /// The namespace for XML SOAP.
         /// </summary>
-        public static readonly XNamespace NS_SOAPEnv              = "http://schemas.xmlsoap.org/soap/envelope/";
+        public static readonly XNamespace NS_SOAPEnv                = "http://schemas.xmlsoap.org/soap/envelope/";
 
         /// <summary>
         /// The namespace for the common types within the Open Intercharge Protocol (OICP) Version 1.0.
         /// </summary>
-        public static readonly XNamespace NS_OICPv1CommonTypes    = "http://www.hubject.com/b2b/services/commontypes/v1";
+        public static readonly XNamespace NS_OICPv1CommonTypes      = "http://www.hubject.com/b2b/services/commontypes/v1";
 
         /// <summary>
         /// The namespace for the EVSE Data within the Open Intercharge Protocol (OICP) Version 1.0.
         /// </summary>
-        public static readonly XNamespace NS_OICPv1EVSEData       = "http://www.hubject.com/b2b/services/evsedata/v1";
+        public static readonly XNamespace NS_OICPv1EVSEData         = "http://www.hubject.com/b2b/services/evsedata/v1";
 
         /// <summary>
         /// The namespace for the EVSE Status within the Open Intercharge Protocol (OICP) Version 1.0.
         /// </summary>
-        public static readonly XNamespace NS_OICPv1EVSEStatus     = "http://www.hubject.com/b2b/services/evsestatus/v1";
+        public static readonly XNamespace NS_OICPv1EVSEStatus       = "http://www.hubject.com/b2b/services/evsestatus/v1";
 
         /// <summary>
         /// The namespace for the Authorization within the Open Intercharge Protocol (OICP) Version 1.0.
         /// </summary>
-        public static readonly XNamespace NS_OICPv1Authorization  = "http://www.hubject.com/b2b/services/authorization/v1";
+        public static readonly XNamespace NS_OICPv1Authorization    = "http://www.hubject.com/b2b/services/authorization/v1";
+
+        /// <summary>
+        /// The namespace for EVSE Serach within the Open Intercharge Protocol (OICP) Version 1.0.
+        /// </summary>
+        public static readonly XNamespace NS_OICPv1EVSESearch       = "http://www.hubject.com/b2b/services/evsesearch/v1";
 
         #endregion
 
-        #region Encapsulate(EmbeddedXML)
+
+        #region SOAPEncapsulation(XML)
 
         /// <summary>
-        /// Encapsulate the given XML Soap data within a SOAP frame.
+        /// Encapsulate the given XML within a XML SOAP frame.
         /// </summary>
-        /// <param name="EmbeddedXML"></param>
-        /// <returns></returns>
-        public static XElement Encapsulate(XElement EmbeddedXML)
+        /// <param name="XML">The internal XML.</param>
+        public static XElement SOAPEncapsulation(XElement XML)
         {
 
             return new XElement(NS_SOAPEnv + "Envelope",
@@ -94,27 +243,28 @@ namespace org.emi3group.IO.OICP
                        new XAttribute(XNamespace.Xmlns + "EVSEData",        NS_OICPv1EVSEData.     NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "EVSEStatus",      NS_OICPv1EVSEStatus.   NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "Authorization",   NS_OICPv1Authorization.NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSESearch",      NS_OICPv1EVSESearch.   NamespaceName),
 
                        new XElement(NS_SOAPEnv + "Header"),
-                       new XElement(NS_SOAPEnv + "Body", EmbeddedXML));
+                       new XElement(NS_SOAPEnv + "Body", XML));
 
         }
 
         #endregion
 
 
-        #region PushEVSEData(this EVSEOperator, Action = fullLoad, OperatorID = null, OperatorName = null)
+        #region PushEVSEDataXML(this EVSEOperator, Action = fullLoad, OperatorID = null, OperatorName = null)
 
-        public static XElement PushEVSEData(this EVSEOperator  EVSEOperator,
-                                            ActionType         Action       = ActionType.fullLoad,
-                                            String             OperatorID   = null,
-                                            String             OperatorName = null)
+        public static XElement PushEVSEDataXML(this EVSEOperator  EVSEOperator,
+                                               ActionType         Action       = ActionType.fullLoad,
+                                               String             OperatorID   = null,
+                                               String             OperatorName = null)
         {
 
             return EVSEOperator.EVSPools.
                                 SelectMany(Pool    => Pool.ChargingStations).
                                 SelectMany(Station => Station.EVSEs).
-                                PushEVSEData((OperatorID   == null) ? EVSEOperator.Id.ToString()      : OperatorID,
+                                PushEVSEDataXML((OperatorID   == null) ? EVSEOperator.Id.ToString()      : OperatorID,
                                              (OperatorName == null) ? EVSEOperator.Name[Languages.de] : OperatorName,
                                              Action);
 
@@ -122,17 +272,17 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region PushEVSEData(this EVSPools, OperatorID, OperatorName, Action = fullLoad)
+        #region PushEVSEDataXML(this EVSPools, OperatorID, OperatorName, Action = fullLoad)
 
-        public static XElement PushEVSEData(this IEnumerable<EVSPool>  EVSPools,
-                                            String                     OperatorID,
-                                            String                     OperatorName,
-                                            ActionType                 Action = ActionType.fullLoad)
+        public static XElement PushEVSEDataXML(this IEnumerable<EVSPool>  EVSPools,
+                                               String                     OperatorID,
+                                               String                     OperatorName,
+                                               ActionType                 Action = ActionType.fullLoad)
         {
 
             return EVSPools.SelectMany(Pool    => Pool.ChargingStations).
                             SelectMany(Station => Station.EVSEs).
-                            PushEVSEData(OperatorID,
+                            PushEVSEDataXML(OperatorID,
                                          OperatorName,
                                          Action);
 
@@ -140,16 +290,16 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region PushEVSEData(this ChargingStations, OperatorID, OperatorName, Action = fullLoad)
+        #region PushEVSEDataXML(this ChargingStations, OperatorID, OperatorName, Action = fullLoad)
 
-        public static XElement PushEVSEData(this IEnumerable<ChargingStation>  ChargingStations,
-                                            String                             OperatorID,
-                                            String                             OperatorName,
-                                            ActionType                         Action = ActionType.fullLoad)
+        public static XElement PushEVSEDataXML(this IEnumerable<ChargingStation>  ChargingStations,
+                                               String                             OperatorID,
+                                               String                             OperatorName,
+                                               ActionType                         Action = ActionType.fullLoad)
         {
 
             return ChargingStations.SelectMany(Station => Station.EVSEs).
-                                    PushEVSEData(OperatorID,
+                                    PushEVSEDataXML(OperatorID,
                                                  OperatorName,
                                                  Action);
 
@@ -157,19 +307,19 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region PushEVSEData(this EVSEs, OperatorID, OperatorName, Action = ActionType.fullLoad)
+        #region PushEVSEDataXML(this EVSEs, OperatorID, OperatorName, Action = ActionType.fullLoad)
 
-        public static XElement PushEVSEData(this IEnumerable<EVSE>  EVSEs,
-                                            String                  OperatorID,
-                                            String                  OperatorName,
-                                            ActionType              Action = ActionType.fullLoad)
+        public static XElement PushEVSEDataXML(this IEnumerable<EVSE>  EVSEs,
+                                               String                  OperatorID,
+                                               String                  OperatorName,
+                                               ActionType              Action = ActionType.fullLoad)
         {
 
             //if (Action == ActionType.fullLoad ||
             //    Action == ActionType.insert   ||
             //    Action == ActionType.update)
 
-            return Encapsulate(new XElement(NS_OICPv1EVSEData + "HubjectPushEvseData",
+            return SOAPEncapsulation(new XElement(NS_OICPv1EVSEData + "HubjectPushEvseData",
                                  new XElement(NS_OICPv1EVSEData + "ActionType", Action.ToString()),
                                  new XElement(NS_OICPv1EVSEData + "OperatorEvseData",
 
@@ -316,15 +466,15 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region PushEVSEData(this EVSE, OperatorID, OperatorName, Action = insert)
+        #region PushEVSEDataXML(this EVSE, OperatorID, OperatorName, Action = insert)
 
-        public static XElement PushEVSEData(this EVSE   EVSE,
-                                            String      OperatorID,
-                                            String      OperatorName,
-                                            ActionType  Action = ActionType.insert)
+        public static XElement PushEVSEDataXML(this EVSE   EVSE,
+                                               String      OperatorID,
+                                               String      OperatorName,
+                                               ActionType  Action = ActionType.insert)
         {
 
-            return new EVSE[1] { EVSE }.PushEVSEData(OperatorID,
+            return new EVSE[1] { EVSE }.PushEVSEDataXML(OperatorID,
                                                      OperatorName,
                                                      Action);
 
@@ -333,19 +483,19 @@ namespace org.emi3group.IO.OICP
         #endregion
 
 
-        #region PushEVSEStatus(this EVSEOperator, Action = fullLoad, OperatorID = null, OperatorName = null)
+        #region PushEVSEStatusXML(this EVSEOperator, Action = fullLoad, OperatorID = null, OperatorName = null)
 
-        public static XElement PushEVSEStatus(this EVSEOperator  EVSEOperator,
-                                              ActionType         Action       = ActionType.fullLoad,
-                                              String             OperatorID   = null,
-                                              String             OperatorName = null)
+        public static XElement PushEVSEStatusXML(this EVSEOperator  EVSEOperator,
+                                                 ActionType         Action       = ActionType.fullLoad,
+                                                 String             OperatorID   = null,
+                                                 String             OperatorName = null)
         {
 
             return EVSEOperator.EVSPools.
                                 SelectMany(pool    => pool.ChargingStations).
                                 SelectMany(station => station.EVSEs).
 
-                                PushEVSEStatus((OperatorID   == null) ? EVSEOperator.Id.ToString()      : OperatorID,
+                                PushEVSEStatusXML((OperatorID   == null) ? EVSEOperator.Id.ToString()      : OperatorID,
                                                (OperatorName == null) ? EVSEOperator.Name.First().Value : OperatorName,
                                                 Action);
 
@@ -353,15 +503,15 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region PushEVSEStatus(this EVSEs, OperatorID, OperatorName, Action)
+        #region PushEVSEStatusXML(this EVSEs, OperatorID, OperatorName, Action)
 
-        public static XElement PushEVSEStatus(this IEnumerable<EVSE>  EVSEs,
-                                              String                  OperatorID,
-                                              String                  OperatorName,
-                                              ActionType              Action)
+        public static XElement PushEVSEStatusXML(this IEnumerable<EVSE>  EVSEs,
+                                                 String                  OperatorID,
+                                                 String                  OperatorName,
+                                                 ActionType              Action)
         {
 
-            return Encapsulate(new XElement(NS_OICPv1EVSEStatus + "HubjectPushEvseStatus",
+            return SOAPEncapsulation(new XElement(NS_OICPv1EVSEStatus + "HubjectPushEvseStatus",
                                  new XElement(NS_OICPv1EVSEStatus + "ActionType", Action.ToString()),
                                  new XElement(NS_OICPv1EVSEStatus + "OperatorEvseStatus",
 
@@ -384,14 +534,14 @@ namespace org.emi3group.IO.OICP
         #endregion
 
 
-        #region AuthorizeStart(this EVSE, PartnerSessionID, UID)
+        #region AuthorizeStartXML(this EVSE, PartnerSessionID, UID)
 
-        public static XElement AuthorizeStart(this EVSE   EVSE,
-                                              String      PartnerSessionID,
-                                              String      UID)
+        public static XElement AuthorizeStartXML(this EVSE   EVSE,
+                                                 String      PartnerSessionID,
+                                                 String      UID)
         {
 
-            return Encapsulate(new XElement(NS_OICPv1Authorization + "HubjectAuthorizeStart",
+            return SOAPEncapsulation(new XElement(NS_OICPv1Authorization + "HubjectAuthorizeStart",
                                  new XElement(NS_OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
                                  new XElement(NS_OICPv1Authorization + "OperatorID",       EVSE.ChargingStation.Pool.Operator.Id),
                                  new XElement(NS_OICPv1Authorization + "EVSEID",           EVSE.Id),
@@ -407,15 +557,15 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region AuthorizeStop(this EVSE, SessionID, PartnerSessionID, UID)
+        #region AuthorizeStopXML(this EVSE, SessionID, PartnerSessionID, UID)
 
-        public static XElement AuthorizeStop(this EVSE   EVSE,
-                                             String      SessionID,
-                                             String      PartnerSessionID,
-                                             String      UID)
+        public static XElement AuthorizeStopXML(this EVSE   EVSE,
+                                                String      SessionID,
+                                                String      PartnerSessionID,
+                                                String      UID)
         {
 
-            return Encapsulate(new XElement(NS_OICPv1Authorization + "HubjectAuthorizeStop",
+            return SOAPEncapsulation(new XElement(NS_OICPv1Authorization + "HubjectAuthorizeStop",
                                  new XElement(NS_OICPv1Authorization + "SessionID",        SessionID),
                                  new XElement(NS_OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
                                  new XElement(NS_OICPv1Authorization + "OperatorID",       EVSE.ChargingStation.Pool.Operator.Id),
@@ -432,21 +582,27 @@ namespace org.emi3group.IO.OICP
         #endregion
 
 
-        #region SendChargeDetailRecord(this EVSE, SessionID, PartnerSessionID, UID)
+        #region SendChargeDetailRecordXML(this EVSE, SessionID, PartnerSessionID, UID, ...)
 
-        public static XElement SendChargeDetailRecord(this EVSE  EVSE,
-                                                      String     SessionID,
-                                                      String     PartnerSessionID,
-                                                      String     PartnerProductID,
-                                                      String     UID)
+        public static XElement SendChargeDetailRecordXML(this EVSE  EVSE,
+                                                         String     SessionID,
+                                                         String     PartnerSessionID,
+                                                         String     PartnerProductID,
+                                                         String     UID,
+                                                         DateTime   ChargeStart,
+                                                         DateTime   ChargeEnd,
+                                                         DateTime?  SessionStart    = null,
+                                                         DateTime?  SessionEnd      = null,
+                                                         UInt64?    MeterValueStart = null,
+                                                         UInt64?    MeterValueEnd   = null)
         {
 
-            return Encapsulate(new XElement(NS_OICPv1Authorization + "HubjectChargeDetailRecord",
+            return SOAPEncapsulation(new XElement(NS_OICPv1Authorization + "HubjectChargeDetailRecord",
 
                                  new XElement(NS_OICPv1Authorization + "SessionID",        SessionID),
                                  new XElement(NS_OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
                                  new XElement(NS_OICPv1Authorization + "PartnerProductID", PartnerProductID),
-                                 new XElement(NS_OICPv1Authorization + "EVSEID",           EVSE.Id),
+                                 new XElement(NS_OICPv1Authorization + "EvseID",           EVSE.Id.ToString()),
 
                                  new XElement(NS_OICPv1Authorization + "Identification",
                                      new XElement(NS_OICPv1CommonTypes + "RFIDdesfireIdentification",
@@ -454,27 +610,57 @@ namespace org.emi3group.IO.OICP
                                      )
                                  ),
 
-                                 new XElement(NS_OICPv1Authorization + "ChargingStart",   "..."),
-                                 new XElement(NS_OICPv1Authorization + "ChargingEnd",     "..."),
-                                 new XElement(NS_OICPv1Authorization + "SessionStart",    "..."),
-                                 new XElement(NS_OICPv1Authorization + "SessionEnd",      "..."),
-                                 new XElement(NS_OICPv1Authorization + "MeterValueStart", "..."),
-                                 new XElement(NS_OICPv1Authorization + "MeterValueEnd",   "..."),
+                                 new XElement(NS_OICPv1Authorization + "ChargingStart",   ChargeStart),
+                                 new XElement(NS_OICPv1Authorization + "ChargingEnd",     ChargeEnd),
+                                 (SessionStart.   HasValue) ? new XElement(NS_OICPv1Authorization + "SessionStart",    SessionStart)    : null,
+                                 (SessionEnd.     HasValue) ? new XElement(NS_OICPv1Authorization + "SessionEnd",      SessionEnd)      : null,
+                                 (MeterValueStart.HasValue) ? new XElement(NS_OICPv1Authorization + "MeterValueStart", MeterValueStart) : null,
+                                 (MeterValueEnd.  HasValue) ? new XElement(NS_OICPv1Authorization + "MeterValueEnd",   MeterValueStart) : null
 
-                                 new XElement(NS_OICPv1Authorization + "MeterValueInBetween",
-                                     new XElement(NS_OICPv1CommonTypes + "MeterValue", "...")
-                                 ),
+                                 //new XElement(NS_OICPv1Authorization + "MeterValueInBetween",
+                                 //    new XElement(NS_OICPv1CommonTypes + "MeterValue", "...")
+                                 //),
 
-                                 new XElement(NS_OICPv1Authorization + "ConsumedEnergy",    "..."),
-                                 new XElement(NS_OICPv1Authorization + "MeteringSignature", "..."),
-                                 new XElement(NS_OICPv1Authorization + "HubOperatorID",     "..."),
-                                 new XElement(NS_OICPv1Authorization + "HubProviderID",     "...")
+                                 //new XElement(NS_OICPv1Authorization + "ConsumedEnergy",    "..."),
+                                 //new XElement(NS_OICPv1Authorization + "MeteringSignature", "..."),
+                                 //new XElement(NS_OICPv1Authorization + "HubOperatorID",     "..."),
+                                 //new XElement(NS_OICPv1Authorization + "HubProviderID",     "...")
 
                              ));
 
         }
 
         #endregion
+
+
+        // EMP...
+
+        #region SearchRequestXML(GeoCoordinate, Distance, ProviderId = "8BD")
+
+        public static XElement SearchRequestXML(GeoCoordinate Geo,
+                                                UInt64         Distance,
+                                                String         ProviderId = "8BD")
+        {
+
+            return SOAPEncapsulation(new XElement(NS_OICPv1EVSESearch + "HubjectChargeDetailRecord",
+
+                                   new XElement(NS_OICPv1EVSESearch + "GeoCoordinates",
+                                       new XElement(NS_OICPv1CommonTypes + "DecimalDegree",
+                                          new XElement(NS_OICPv1CommonTypes + "Longitude", Geo.Longitude),
+                                          new XElement(NS_OICPv1CommonTypes + "Latitude",  Geo.Latitude)
+                                       )
+                                   ),
+
+                                   new XElement(NS_OICPv1EVSESearch + "ProviderID", ProviderId),
+
+                                   new XElement(NS_OICPv1EVSESearch + "Range", Distance)
+
+                               ));
+
+        }
+
+        #endregion
+
 
     }
 

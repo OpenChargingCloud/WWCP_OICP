@@ -51,9 +51,17 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Aegir\Aegir\Aegir.csproj">
+      <Project>{4d8ffccd-738d-41aa-a527-8cfdfe0a681d}</Project>
+      <Name>Aegir</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\eMI3_Core\eMI3_Core\eMI3_Core.csproj">
       <Project>{33836742-af1d-4aa4-963f-b0a8e60e6480}</Project>
       <Name>eMI3_Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Illias\Geometry\Geometry.csproj">
+      <Project>{9f38dcc9-cd80-4b71-8a9c-b3f37e471cab}</Project>
+      <Name>Geometry</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
