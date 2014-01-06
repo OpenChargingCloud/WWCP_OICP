@@ -4,10 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using org.emi3group;
-
-
-namespace de.eMI3.IO.OICP
+namespace org.emi3group.IO.OICP
 {
 
     public static class HubjectMapper

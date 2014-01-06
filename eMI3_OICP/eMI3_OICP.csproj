@@ -43,8 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionType.cs" />
+    <Compile Include="Results\HubjectEVSESearchReply.cs" />
+    <Compile Include="Results\HubjectAuthorization.cs" />
+    <Compile Include="Results\HubjectAcknowledgement.cs" />
+    <Compile Include="NS.cs" />
+    <Compile Include="SOAP.cs" />
+    <Compile Include="EMPMethods.cs" />
     <Compile Include="HubjectMapper.cs" />
-    <Compile Include="EVSEMethods.cs" />
+    <Compile Include="CPOMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
