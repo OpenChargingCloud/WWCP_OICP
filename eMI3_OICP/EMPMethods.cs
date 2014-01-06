@@ -39,10 +39,10 @@ namespace org.emi3group.IO.OICP
         /// Create a new EVSE SEarch request.
         /// </summary>
         /// <param name="GeoCoordinate">The geo coordinate of the search center.</param>
-        /// <param name="Distance">The search distance relative to the search center.</param>
+        /// <param name="DistanceKM">The search distance relative to the search center.</param>
         /// <param name="ProviderId">Your electromobility provider identification (EMP Id).</param>
         public static XElement SearchRequestXML(GeoCoordinate  GeoCoordinate,
-                                                UInt64         Distance,
+                                                UInt64         DistanceKM,
                                                 String         ProviderId = "8BD")
         {
 
@@ -57,7 +57,7 @@ namespace org.emi3group.IO.OICP
 
                                           new XElement(NS.OICPv1EVSESearch + "ProviderID", ProviderId),
 
-                                          new XElement(NS.OICPv1EVSESearch + "Range", Distance)
+                                          new XElement(NS.OICPv1EVSESearch + "Range", DistanceKM)
 
                                      ));
 
