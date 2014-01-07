@@ -316,22 +316,52 @@ namespace org.emi3group.IO.OICP
 
         #region AuthorizeStartXML(this EVSE, PartnerSessionID, UID)
 
+        /// <summary>
+        /// Create an OICP authorize start XML request.
+        /// </summary>
+        /// <param name="EVSE">An EVSE.</param>
+        /// <param name="PartnerSessionID">Your own session identification.</param>
+        /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStartXML(this EVSE   EVSE,
                                                  String      PartnerSessionID,
                                                  String      UID)
         {
 
+            return AuthorizeStartXML(EVSE.ChargingStation.Pool.Operator.Id,
+                                     EVSE.Id,
+                                     PartnerSessionID,
+                                     UID);
+
+        }
+
+        #endregion
+
+        #region AuthorizeStartXML(OperatorId, EVSEId, PartnerSessionID, UID)
+
+        /// <summary>
+        /// Create an OICP authorize start XML request.
+        /// </summary>
+        /// <param name="OperatorId">An EVSE Operator identification.</param>
+        /// <param name="EVSEId">An EVSE identification.</param>
+        /// <param name="PartnerSessionID">Your own session identification.</param>
+        /// <param name="UID">A RFID user identification.</param>
+        public static XElement AuthorizeStartXML(EVSEOperator_Id  OperatorId,
+                                                 EVSE_Id          EVSEId,
+                                                 String           PartnerSessionID,
+                                                 String           UID)
+        {
+
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectAuthorizeStart",
-                                 new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
-                                 new XElement(NS.OICPv1Authorization + "OperatorID",       EVSE.ChargingStation.Pool.Operator.Id),
-                                 new XElement(NS.OICPv1Authorization + "EVSEID",           EVSE.Id),
-                                 new XElement(NS.OICPv1Authorization + "Identification",
-                                     new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
-                                     //new XElement(NS.OICPv1CommonTypes + "RFIDclassicIdentification",
-                                        new XElement(NS.OICPv1CommonTypes + "UID", UID)
-                                     )
-                                 )
-                             ));
+                                          new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
+                                          new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.ToString()),
+                                          new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.ToString()),
+                                          new XElement(NS.OICPv1Authorization + "Identification",
+                                              new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
+                                              //new XElement(NS.OICPv1CommonTypes + "RFIDclassicIdentification",
+                                                 new XElement(NS.OICPv1CommonTypes + "UID", UID)
+                                              )
+                                          )
+                                      ));
 
         }
 
@@ -339,23 +369,57 @@ namespace org.emi3group.IO.OICP
 
         #region AuthorizeStopXML(this EVSE, SessionID, PartnerSessionID, UID)
 
+        /// <summary>
+        /// Create an OICP authorize stop XML request.
+        /// </summary>
+        /// <param name="EVSE">An EVSE.</param>
+        /// <param name="SessionID">The OICP session identification from the AuthorizeStart request.</param>
+        /// <param name="PartnerSessionID">Your own session identification.</param>
+        /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStopXML(this EVSE   EVSE,
                                                 String      SessionID,
                                                 String      PartnerSessionID,
                                                 String      UID)
         {
 
+            return AuthorizeStopXML(EVSE.ChargingStation.Pool.Operator.Id,
+                                    EVSE.Id,
+                                    SessionID,
+                                    PartnerSessionID,
+                                    UID);
+
+        }
+
+        #endregion
+
+        #region AuthorizeStopXML(OperatorId, EVSEId, SessionID, PartnerSessionID, UID)
+
+        /// <summary>
+        /// Create an OICP authorize stop XML request.
+        /// </summary>
+        /// <param name="OperatorId">An EVSE Operator identification.</param>
+        /// <param name="EVSEId">An EVSE identification.</param>
+        /// <param name="SessionID">The OICP session identification from the AuthorizeStart request.</param>
+        /// <param name="PartnerSessionID">Your own session identification.</param>
+        /// <param name="UID">A RFID user identification.</param>
+        public static XElement AuthorizeStopXML(EVSEOperator_Id  OperatorId,
+                                                EVSE_Id          EVSEId,
+                                                String           SessionID,
+                                                String           PartnerSessionID,
+                                                String           UID)
+        {
+
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectAuthorizeStop",
-                                 new XElement(NS.OICPv1Authorization + "SessionID",        SessionID),
-                                 new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
-                                 new XElement(NS.OICPv1Authorization + "OperatorID",       EVSE.ChargingStation.Pool.Operator.Id),
-                                 new XElement(NS.OICPv1Authorization + "EVSEID",           EVSE.Id),
-                                 new XElement(NS.OICPv1Authorization + "Identification",
-                                     new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
-                                        new XElement(NS.OICPv1CommonTypes + "UID", UID)
-                                     )
-                                 )
-                             ));
+                                          new XElement(NS.OICPv1Authorization + "SessionID",        SessionID),
+                                          new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
+                                          new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.ToString()),
+                                          new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.ToString()),
+                                          new XElement(NS.OICPv1Authorization + "Identification",
+                                              new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
+                                                 new XElement(NS.OICPv1CommonTypes + "UID", UID)
+                                              )
+                                          )
+                                      ));
 
         }
 
