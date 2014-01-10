@@ -165,14 +165,68 @@ namespace org.emi3group.IO.OICP
 
             var ack                   = XML.Descendants(NS.OICPv1Authorization + "HubjectAuthorization" + AuthorizationType.ToString()).FirstOrDefault();
 
-            this._SessionID           = ack.Element(NS.OICPv1Authorization + "SessionID").Value;
+            this._SessionID           = (ack.Element(NS.OICPv1Authorization + "SessionID") != null)  ? ack.Element(NS.OICPv1Authorization + "SessionID"). Value : "";
             this._PartnerSessionID    = ack.Element(NS.OICPv1Authorization + "PartnerSessionID").Value;
-            this._ProviderID          = ack.Element(NS.OICPv1Authorization + "ProviderID").Value;
+            this._ProviderID          = (ack.Element(NS.OICPv1Authorization + "ProviderID") != null) ? ack.Element(NS.OICPv1Authorization + "ProviderID").Value : "";
             this._AuthorizationStatus = ack.Element(NS.OICPv1Authorization + "AuthorizationStatus").Value;
 
             var StatusCode            = ack.Element(NS.OICPv1Authorization + "StatusCode");
             this._Code                = UInt16.Parse(StatusCode.Element(NS.OICPv1CommonTypes + "Code").Value);
             this._Description         = StatusCode.Element(NS.OICPv1CommonTypes + "Description").Value;
+
+            // - Auth Start --------------------------------------------------------------------------------------------
+
+            // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+            //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+            //   <soapenv:Body>
+            //     <tns:HubjectAuthorizationStart>
+            //       <tns:SessionID>60ce73f6-0a88-1296-3d3d-623fdd276ddc</tns:SessionID> 
+            //       <tns:PartnerSessionID>9ab07cb6-ac05-4f17-b944-8fe87682d646</tns:PartnerSessionID> 
+            //       <tns:ProviderID>BMW</tns:ProviderID> 
+            //       <tns:AuthorizationStatus>Authorized</tns:AuthorizationStatus> 
+            //       <tns:StatusCode>
+            //         <cmn:Code>000</cmn:Code> 
+            //         <cmn:Description>Success</cmn:Description> 
+            //       </tns:StatusCode>
+            //     </tns:HubjectAuthorizationStart>
+            //   </soapenv:Body>
+            // </soapenv:Envelope>
+
+            // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+            //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+            //   <soapenv:Body>
+            //     <tns:HubjectAuthorizationStart>
+            //       <tns:PartnerSessionID>0815</tns:PartnerSessionID> 
+            //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus> 
+            //       <tns:StatusCode>
+            //         <cmn:Code>320</cmn:Code> 
+            //         <cmn:Description>Service not available</cmn:Description> 
+            //       </tns:StatusCode>
+            //     </tns:HubjectAuthorizationStart>
+            //   </soapenv:Body>
+            // </soapenv:Envelope>
+
+            // - Auth Stop ---------------------------------------------------------------------------------------------
+
+            // <?xml version="1.0" encoding="UTF-8" ?> 
+            // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+            //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+            //   <soapenv:Body>
+            //     <tns:HubjectAuthorizationStop>
+            //       <tns:SessionID>60dfacc8-0a88-1296-1aef-b675131f4510</tns:SessionID> 
+            //       <tns:PartnerSessionID>5d4d5ff4-6f08-4f49-8e2b-db46ae3f2bc9</tns:PartnerSessionID> 
+            //       <tns:ProviderID>BMW</tns:ProviderID> 
+            //       <tns:AuthorizationStatus>Authorized</tns:AuthorizationStatus> 
+            //       <tns:StatusCode>
+            //         <cmn:Code>000</cmn:Code> 
+            //         <cmn:Description>Success</cmn:Description> 
+            //       </tns:StatusCode>
+            //     </tns:HubjectAuthorizationStop>
+            //   </soapenv:Body>
+            // </soapenv:Envelope>
 
         }
 
