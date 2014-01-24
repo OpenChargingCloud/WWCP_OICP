@@ -15,17 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-using System.Linq;
-using System.Xml.Linq;
-using System.Collections.Generic;
-
-using eu.Vanaheimr.Aegir;
-
-#endregion
-
 namespace org.emi3group.IO.OICP
 {
 
@@ -37,7 +26,8 @@ namespace org.emi3group.IO.OICP
         fullLoad,
         update,
         insert,
-        delete
+        delete,
+        upsert      // unknown when this will be available!
     }
 
 }
