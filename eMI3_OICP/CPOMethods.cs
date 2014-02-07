@@ -292,22 +292,22 @@ namespace org.emi3group.IO.OICP
         {
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1EVSEStatus + "HubjectPushEvseStatus",
-                                 new XElement(NS.OICPv1EVSEStatus + "ActionType", Action.ToString()),
-                                 new XElement(NS.OICPv1EVSEStatus + "OperatorEvseStatus",
+                                          new XElement(NS.OICPv1EVSEStatus + "ActionType", Action.ToString()),
+                                          new XElement(NS.OICPv1EVSEStatus + "OperatorEvseStatus",
 
-                                     new XElement(NS.OICPv1EVSEStatus + "OperatorID", OperatorID),
-                                     (OperatorName != null) ?
-                                     new XElement(NS.OICPv1EVSEStatus + "OperatorName", OperatorName) : null,
+                                              new XElement(NS.OICPv1EVSEStatus + "OperatorID", OperatorID),
+                                              (OperatorName != null) ?
+                                              new XElement(NS.OICPv1EVSEStatus + "OperatorName", OperatorName) : null,
 
-                                     EVSEs.Select(EVSE =>
-                                         new XElement(NS.OICPv1EVSEStatus + "EvseStatusRecord",
-                                             new XElement(NS.OICPv1EVSEStatus + "EvseId",     EVSE.Id.    ToString()),
-                                             new XElement(NS.OICPv1EVSEStatus + "EvseStatus", EVSE.Status.ToString())
-                                         )
-                                     )
+                                              EVSEs.Select(EVSE =>
+                                                  new XElement(NS.OICPv1EVSEStatus + "EvseStatusRecord",
+                                                      new XElement(NS.OICPv1EVSEStatus + "EvseId",     EVSE.Id.    ToString()),
+                                                      new XElement(NS.OICPv1EVSEStatus + "EvseStatus", EVSE.Status.ToString())
+                                                  )
+                                              )
 
-                                 )
-                             ));
+                                          )
+                                      ));
 
         }
 
