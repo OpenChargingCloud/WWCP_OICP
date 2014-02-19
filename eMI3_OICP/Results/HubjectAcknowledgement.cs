@@ -104,7 +104,9 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region Constructor
+        #region Constructor(s)
+
+        #region HubjectAcknowledgement(XML)
 
         /// <summary>
         /// Create a new Hubject Acknowledgement result.
@@ -122,6 +124,8 @@ namespace org.emi3group.IO.OICP
             this._AdditionalInfo  = (StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo") != null) ? StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo").Value : String.Empty;
 
         }
+
+        #endregion
 
         #endregion
 

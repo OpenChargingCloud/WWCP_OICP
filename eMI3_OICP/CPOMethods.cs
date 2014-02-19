@@ -367,6 +367,7 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
+
         #region AuthorizeStopXML(this EVSE, SessionID, PartnerSessionID, UID)
 
         /// <summary>
@@ -441,12 +442,43 @@ namespace org.emi3group.IO.OICP
                                                          UInt64?    MeterValueEnd   = null)
         {
 
+            return SendChargeDetailRecordXML(EVSE.Id,
+                                             SessionID,
+                                             PartnerSessionID,
+                                             PartnerProductID,
+                                             UID,
+                                             ChargeStart,
+                                             ChargeEnd,
+                                             SessionStart,
+                                             SessionEnd,
+                                             MeterValueStart,
+                                             MeterValueEnd);
+
+        }
+
+        #endregion
+
+        #region SendChargeDetailRecordXML(EVSEID, SessionID, PartnerSessionID, UID, ...)
+
+        public static XElement SendChargeDetailRecordXML(EVSE_Id    EVSEID,
+                                                         String     SessionID,
+                                                         String     PartnerSessionID,
+                                                         String     PartnerProductID,
+                                                         String     UID,
+                                                         DateTime   ChargeStart,
+                                                         DateTime   ChargeEnd,
+                                                         DateTime?  SessionStart    = null,
+                                                         DateTime?  SessionEnd      = null,
+                                                         UInt64?    MeterValueStart = null,
+                                                         UInt64?    MeterValueEnd   = null)
+        {
+
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectChargeDetailRecord",
 
                                  new XElement(NS.OICPv1Authorization + "SessionID",        SessionID),
                                  new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
                                  new XElement(NS.OICPv1Authorization + "PartnerProductID", PartnerProductID),
-                                 new XElement(NS.OICPv1Authorization + "EvseID",           EVSE.Id.ToString()),
+                                 new XElement(NS.OICPv1Authorization + "EvseID",           EVSEID.ToString()),
 
                                  new XElement(NS.OICPv1Authorization + "Identification",
                                      new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
