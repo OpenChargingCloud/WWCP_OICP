@@ -491,7 +491,7 @@ namespace org.emi3group.IO.OICP
                                  (SessionStart.   HasValue) ? new XElement(NS.OICPv1Authorization + "SessionStart",    SessionStart)    : null,
                                  (SessionEnd.     HasValue) ? new XElement(NS.OICPv1Authorization + "SessionEnd",      SessionEnd)      : null,
                                  (MeterValueStart.HasValue) ? new XElement(NS.OICPv1Authorization + "MeterValueStart", MeterValueStart) : null,
-                                 (MeterValueEnd.  HasValue) ? new XElement(NS.OICPv1Authorization + "MeterValueEnd",   MeterValueStart) : null
+                                 (MeterValueEnd.  HasValue) ? new XElement(NS.OICPv1Authorization + "MeterValueEnd",   MeterValueEnd)   : null
 
                                  //new XElement(NS.OICPv1Authorization + "MeterValueInBetween",
                                  //    new XElement(NS.OICPv1CommonTypes + "MeterValue", "...")
