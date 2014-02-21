@@ -438,8 +438,8 @@ namespace org.emi3group.IO.OICP
                                                          DateTime   ChargeEnd,
                                                          DateTime?  SessionStart    = null,
                                                          DateTime?  SessionEnd      = null,
-                                                         UInt64?    MeterValueStart = null,
-                                                         UInt64?    MeterValueEnd   = null)
+                                                         Double?    MeterValueStart = null,
+                                                         Double?    MeterValueEnd   = null)
         {
 
             return SendChargeDetailRecordXML(EVSE.Id,
@@ -469,8 +469,8 @@ namespace org.emi3group.IO.OICP
                                                          DateTime   ChargeEnd,
                                                          DateTime?  SessionStart    = null,
                                                          DateTime?  SessionEnd      = null,
-                                                         UInt64?    MeterValueStart = null,
-                                                         UInt64?    MeterValueEnd   = null)
+                                                         Double?    MeterValueStart = null,
+                                                         Double?    MeterValueEnd   = null)
         {
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectChargeDetailRecord",
