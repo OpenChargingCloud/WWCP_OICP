@@ -27,6 +27,35 @@ using System.Collections.Generic;
 namespace org.emi3group.IO.OICP
 {
 
+    public static class Ext2
+    {
+
+        public static String SubstringMax(this String Text, Int32 Length)
+        {
+            try
+            {
+
+                return Text.Substring(0, Math.Min(Text.Length, Length));
+
+            }
+            catch (Exception e)
+            {
+                return "";
+            }
+        }
+
+    }
+
+
+    public enum HubjectEVSEState
+    {
+        Available,
+        Reserved,
+        Occupied,
+        OutOfService,
+        Unknown
+    }
+
     /// <summary>
     /// CPO management operations.
     /// </summary>
@@ -121,8 +150,8 @@ namespace org.emi3group.IO.OICP
 
                                                       new XElement(NS.OICPv1EVSEData + "EvseId",                 EVSE.Id.ToString()),
                                                       new XElement(NS.OICPv1EVSEData + "ChargingStationId",      EVSE.ChargingStation.Id.ToString()),
-                                                      new XElement(NS.OICPv1EVSEData + "ChargingStationName",    EVSE.ChargingStation.Pool.Name.First().Value),
-                                                      new XElement(NS.OICPv1EVSEData + "EnChargingStationName",  EVSE.ChargingStation.Pool.Name.First().Value),
+                                                      new XElement(NS.OICPv1EVSEData + "ChargingStationName",    EVSE.ChargingStation.Pool.Name[Languages.de].SubstringMax(50)),
+                                                      new XElement(NS.OICPv1EVSEData + "EnChargingStationName",  EVSE.ChargingStation.Pool.Name[Languages.en].SubstringMax(50)),
 
                                                       new XElement(NS.OICPv1EVSEData + "Address",
                                                           new XElement(NS.OICPv1CommonTypes + "Country",     EVSE.ChargingStation.Pool.Address.Country.Alpha3Code),
@@ -303,6 +332,36 @@ namespace org.emi3group.IO.OICP
                                                   new XElement(NS.OICPv1EVSEStatus + "EvseStatusRecord",
                                                       new XElement(NS.OICPv1EVSEStatus + "EvseId",     EVSE.Id.    ToString()),
                                                       new XElement(NS.OICPv1EVSEStatus + "EvseStatus", EVSE.Status.ToString())
+                                                  )
+                                              )
+
+                                          )
+                                      ));
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatusXML(this EVSEs, OperatorID, OperatorName, Action)
+
+        public static XElement PushEVSEStatusXML(this IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>  EVSEStates,
+                                                 String                                                     OperatorID,
+                                                 String                                                     OperatorName,
+                                                 ActionType                                                 Action)
+        {
+
+            return SOAP.Encapsulation(new XElement(NS.OICPv1EVSEStatus + "HubjectPushEvseStatus",
+                                          new XElement(NS.OICPv1EVSEStatus + "ActionType", Action.ToString()),
+                                          new XElement(NS.OICPv1EVSEStatus + "OperatorEvseStatus",
+
+                                              new XElement(NS.OICPv1EVSEStatus + "OperatorID", OperatorID),
+                                              (OperatorName != null) ?
+                                              new XElement(NS.OICPv1EVSEStatus + "OperatorName", OperatorName) : null,
+
+                                              EVSEStates.Select(EvseIdAndState =>
+                                                  new XElement(NS.OICPv1EVSEStatus + "EvseStatusRecord",
+                                                      new XElement(NS.OICPv1EVSEStatus + "EvseId",     EvseIdAndState.Key.  ToString()),
+                                                      new XElement(NS.OICPv1EVSEStatus + "EvseStatus", EvseIdAndState.Value.ToString())
                                                   )
                                               )
 
