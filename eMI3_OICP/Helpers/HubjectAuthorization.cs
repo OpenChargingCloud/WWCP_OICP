@@ -26,33 +26,26 @@ using System.Xml.Linq;
 namespace org.emi3group.IO.OICP
 {
 
-    #region AuthorizationType
-
-    /// <summary>
-    /// Type of authorization result.
-    /// </summary>
-    public enum AuthorizationType
-    {
-        Start,
-        Stop
-    }
-
-    #endregion
-
-
-    public enum AuthorizationStatusType
-    {
-        Authorized,
-        NotAuthorized
-    }
-
-    #region HubjectAuthorization
+    #region (abstract) HubjectAuthorization
 
     /// <summary>
     /// An abstract Hubject Authorization result.
     /// </summary>
     public abstract class HubjectAuthorization
     {
+
+        #region (enum) AuthorizationType
+
+        /// <summary>
+        /// Type of authorization result.
+        /// </summary>
+        public enum AuthorizationType
+        {
+            Start,
+            Stop
+        }
+
+        #endregion
 
         #region Properties
 

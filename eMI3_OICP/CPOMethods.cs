@@ -27,35 +27,6 @@ using System.Collections.Generic;
 namespace org.emi3group.IO.OICP
 {
 
-    public static class Ext2
-    {
-
-        public static String SubstringMax(this String Text, Int32 Length)
-        {
-            try
-            {
-
-                return Text.Substring(0, Math.Min(Text.Length, Length));
-
-            }
-            catch (Exception e)
-            {
-                return "";
-            }
-        }
-
-    }
-
-
-    public enum HubjectEVSEState
-    {
-        Available,
-        Reserved,
-        Occupied,
-        OutOfService,
-        Unknown
-    }
-
     /// <summary>
     /// CPO management operations.
     /// </summary>
@@ -175,7 +146,7 @@ namespace org.emi3group.IO.OICP
 
                                                       new XElement(NS.OICPv1EVSEData + "Plugs",
                                                           EVSE.SocketOutlets.Select(Outlet =>
-                                                             new XElement(NS.OICPv1EVSEData + "Plug", HubjectMapper.MapToPlugType(Outlet)))
+                                                             new XElement(NS.OICPv1EVSEData + "Plug", eMI3_OICP_Mapper.MapToPlugType(Outlet)))
                                                       ),
 
                                                       new XElement(NS.OICPv1EVSEData + "ChargingFacilities",
@@ -305,8 +276,8 @@ namespace org.emi3group.IO.OICP
                                 SelectMany(station => station.EVSEs).
 
                                 PushEVSEStatusXML((OperatorID   == null) ? EVSEOperator.Id.ToString()      : OperatorID,
-                                               (OperatorName == null) ? EVSEOperator.Name.First().Value : OperatorName,
-                                                Action);
+                                                  (OperatorName == null) ? EVSEOperator.Name.First().Value : OperatorName,
+                                                   Action);
 
         }
 
@@ -342,7 +313,7 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region PushEVSEStatusXML(this EVSEs, OperatorID, OperatorName, Action)
+        #region PushEVSEStatusXML(this EVSEStates, OperatorID, OperatorName, Action)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>  EVSEStates,
                                                  String                                                     OperatorID,

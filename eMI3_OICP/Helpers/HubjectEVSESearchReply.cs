@@ -20,41 +20,19 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using System.Globalization;
 
 using eu.Vanaheimr.Aegir;
-using System.Collections.Generic;
-using System.Globalization;
 
 #endregion
 
 namespace org.emi3group.IO.OICP
 {
 
-    public static class XMLExt
-    {
-
-        public static String ElementOrDefault(this XElement  ParentXElement,
-                                              XName          XName,
-                                              String         Default)
-        {
-
-            var XElement = ParentXElement.Element(XName);
-
-            if (XElement != null)
-                return ParentXElement.Element(XName).Value;
-
-            else
-                return Default;
-
-        }
-
-    }
-
-
-    #region HubjectEVSESearchReply
-
     public class HubjectEVSESearchReply
     {
+
+        #region Properties
 
         public Double           Distance                { get; private set; }
         public String           EVSEId                  { get; private set; }
@@ -69,6 +47,10 @@ namespace org.emi3group.IO.OICP
         public String[]         AuthenticationModes     { get; private set; }
         public UInt16           MaxCapacity             { get; private set; }
         public String[]         PaymentOptions          { get; private set; }
+
+        #endregion
+
+        #region Constructor(s)
 
         public HubjectEVSESearchReply(XElement EvseMatch)
         {
@@ -111,6 +93,15 @@ namespace org.emi3group.IO.OICP
 
         }
 
+        #endregion
+
+
+        #region (static) Parse(XML)
+
+        /// <summary>
+        /// Create a new Hubject Acknowledgement result.
+        /// </summary>
+        /// <param name="XML">The XML to parse.</param>
         public static HubjectEVSESearchReply Parse(XElement XML)
         {
             try
@@ -123,25 +114,19 @@ namespace org.emi3group.IO.OICP
             }
         }
 
+        #endregion
+
+        #region (override) ToString()
+
+        /// <summary>
+        /// Return a string representation of this object.
+        /// </summary>
         public override String ToString()
         {
             return EVSEId + ", distance: " + Distance + "m";
         }
 
-    }
-
-    #endregion
-
-
-    public static class Ext
-    {
-
-        public static IEnumerable<HubjectEVSESearchReply> ParseSearchReplies(XElement XML)
-        {
-            return (from   EvseMatch
-                    in     XML.Descendants(NS.OICPv1EVSESearch + "EvseMatch")
-                    select new HubjectEVSESearchReply(EvseMatch)).ToArray();
-        }
+        #endregion
 
     }
 

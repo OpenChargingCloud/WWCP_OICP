@@ -18,16 +18,10 @@
 namespace org.emi3group.IO.OICP
 {
 
-    /// <summary>
-    /// The type of action when updating remote data.
-    /// </summary>
-    public enum ActionType
+    public enum AuthorizationStatusType
     {
-        fullLoad,
-        update,
-        insert,
-        delete,
-        upsert      // unknown when this will be available!
+        Authorized,
+        NotAuthorized
     }
 
 }
