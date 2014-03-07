@@ -33,7 +33,31 @@ using org.emi3group.LocalServer;
 namespace org.emi3group.IO.OICP
 {
 
-    public class OICPUpstreamService : IAuthorizationService
+    public class AuthSOAPClient : HTTPClient
+    {
+
+        public AuthSOAPClient(IPv4Address OICPHost, IPPort OICPPort)
+            : base(OICPHost, OICPPort)
+        { }
+
+        public HTTPResponse Query(String Query, String SOAPAction)
+        {
+
+            var builder = this.POST("/ibis/ws/HubjectAuthorization_V1");
+            builder.Host         = "portal-qa.hubject.com";
+            builder.Content      = Query.ToUTF8Bytes();
+            builder.ContentType  = HTTPContentType.XMLTEXT_UTF8;
+            builder.Set("SOAPAction", SOAPAction);
+            builder.UserAgent    = "Belectric Drive Hubject Gateway";
+
+            return this.Execute_Synced(builder);
+
+        }
+
+    }
+
+
+    public class OICPUpstreamService : IEMobilityService
     {
 
         #region Properties
@@ -109,27 +133,20 @@ namespace org.emi3group.IO.OICP
             try
             {
 
-                var AuthorizeStartXML = CPOMethods.AuthorizeStartXML(OperatorId,
-                                                                     EVSEId,
-                                                                     PartnerSessionId,
-                                                                     UID).
-                                                                     ToString();
-
-                using (var httpClient = new HTTPClient(OICPHost, OICPPort))
+                using (var SOAPClient = new AuthSOAPClient(OICPHost, OICPPort))
                 {
 
-                    var builder = httpClient.POST("/ibis/ws/HubjectAuthorization_V1");
-                    builder.Host         = "portal-qa.hubject.com";
-                    builder.Content      = AuthorizeStartXML.ToUTF8Bytes();
-                    builder.ContentType  = HTTPContentType.XMLTEXT_UTF8;
-                    builder.Set("SOAPAction", "HubjectAuthorizeStart");
-                    builder.UserAgent    = "Belectric Drive Hubject Gateway";
-
-                    var HttpResponse = httpClient.Execute_Synced(builder);
+                    var HttpResponse = SOAPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
+                                                                                     EVSEId,
+                                                                                     PartnerSessionId,
+                                                                                     UID).
+                                                                                     ToString(),
+                                                        "HubjectAuthorizeStart");
 
                     //ToDo: In case of errors this will not parse!
                     var AuthStartResult = HubjectAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
 
+                    #region Authorized
 
                     if (AuthStartResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
 
@@ -158,6 +175,9 @@ namespace org.emi3group.IO.OICP
                                        Description          = AuthStartResult.Description
                                    };
 
+                    #endregion
+
+                    #region NotAuthorized
 
                     else // AuthorizationStatus == AuthorizationStatusType.NotAuthorized
                     {
@@ -216,6 +236,8 @@ namespace org.emi3group.IO.OICP
 
                     }
 
+                    #endregion
+
                 }
 
             }
@@ -247,27 +269,21 @@ namespace org.emi3group.IO.OICP
             try
             {
 
-                var AuthorizeStopXML = CPOMethods.AuthorizeStopXML(OperatorId,
-                                                                   EVSEId,
-                                                                   SessionId,
-                                                                   PartnerSessionId,
-                                                                   UID).
-                                                                   ToString();
-
-                using (var httpClient = new HTTPClient(OICPHost, OICPPort))
+                using (var SOAPClient = new AuthSOAPClient(OICPHost, OICPPort))
                 {
 
-                    var builder = httpClient.POST("/ibis/ws/HubjectAuthorization_V1");
-                    builder.Host         = "portal-qa.hubject.com";
-                    builder.Content      = AuthorizeStopXML.ToUTF8Bytes();
-                    builder.ContentType  = HTTPContentType.XMLTEXT_UTF8;
-                    builder.Set("SOAPAction", "HubjectAuthorizeStop");
-                    builder.UserAgent    = "Belectric Drive Hubject Gateway";
-
-                    var HttpResponse = httpClient.Execute_Synced(builder);
+                    var HttpResponse = SOAPClient.Query(CPOMethods.AuthorizeStopXML(OperatorId,
+                                                                                    EVSEId,
+                                                                                    SessionId,
+                                                                                    PartnerSessionId,
+                                                                                    UID).
+                                                                                    ToString(),
+                                                        "HubjectAuthorizeStop");
 
                     //ToDo: In case of errors this will not parse!
                     var AuthStopResult = HubjectAuthorizationStop.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+
+                    #region Authorized
 
                     if (AuthStopResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
 
@@ -296,6 +312,9 @@ namespace org.emi3group.IO.OICP
                                        Description          = AuthStopResult.Description
                                    };
 
+                    #endregion
+
+                    #region NotAuthorized
 
                     else // AuthorizationStatus == AuthorizationStatusType.NotAuthorized
                     {
@@ -384,6 +403,8 @@ namespace org.emi3group.IO.OICP
 
                     }
 
+                    #endregion
+
                 }
 
             }
@@ -403,6 +424,90 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
+        #region SendCDR(EVSEId, SessionId, PartnerSessionId, PartnerProductId, UID, ChargeStart, ChargeEnd, SessionStart = null, SessionEnd = null, MeterValueStart = null, MeterValueEnd = null)
+
+        public SENDCDRResult SendCDR(EVSE_Id     EVSEId,
+                                     String      SessionId,
+                                     String      PartnerSessionId,
+                                     String      PartnerProductId,
+                                     String      UID,
+                                     DateTime    ChargeStart,
+                                     DateTime    ChargeEnd,
+                                     DateTime?   SessionStart    = null,
+                                     DateTime?   SessionEnd      = null,
+                                     Double?     MeterValueStart = null,
+                                     Double?     MeterValueEnd   = null)
+        {
+
+            try
+            {
+
+                using (var SOAPClient = new AuthSOAPClient(OICPHost, OICPPort))
+                {
+
+                    var HttpResponse = SOAPClient.Query(CPOMethods.SendChargeDetailRecordXML(EVSEId,
+                                                                                             SessionId,
+                                                                                             PartnerSessionId,
+                                                                                             PartnerProductId,
+                                                                                             UID,
+                                                                                             ChargeStart,
+                                                                                             ChargeEnd,
+                                                                                             SessionStart,
+                                                                                             SessionEnd,
+                                                                                             MeterValueStart,
+                                                                                             MeterValueEnd).
+                                                                                             ToString(),
+                                                        "HubjectChargeDetailRecord");
+
+                    //ToDo: In case of errors this will not parse!
+                    var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+
+                    Log.Timestamp("SendCDR: " + ack.Result + " / " + ack.Code + " / " + ack.Description + " / " + ack.AdditionalInfo);
+
+                    #region Ok
+
+                    if (ack.Result)
+                        return new SENDCDRResult(AuthorizatorId) {
+                            State             = true,
+                            PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                    #region Error
+
+                    else
+                    {
+
+                        return new SENDCDRResult(AuthorizatorId) {
+                            State             = false,
+                            PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    }
+
+                    #endregion
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                return new SENDCDRResult(AuthorizatorId) {
+                               State             = false,
+                               PartnerSessionId  = PartnerSessionId,
+                               Description       = "An exception occured: " + e.Message
+                           };
+
+            }
+
+        }
+
+        #endregion
 
     }
 

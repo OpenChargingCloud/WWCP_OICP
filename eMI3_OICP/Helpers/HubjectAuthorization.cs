@@ -183,13 +183,13 @@ namespace org.emi3group.IO.OICP
             var ack                   = XML.Descendants(NS.OICPv1Authorization + "HubjectAuthorization" + AuthorizationType.ToString()).FirstOrDefault();
 
             this._SessionID           = (ack.Element(NS.OICPv1Authorization + "SessionID") != null)  ? ack.Element(NS.OICPv1Authorization + "SessionID"). Value : "";
-            this._PartnerSessionID    = ack.Element(NS.OICPv1Authorization + "PartnerSessionID").Value;
+            this._PartnerSessionID    =  ack.Element(NS.OICPv1Authorization + "PartnerSessionID").Value;
             this._ProviderID          = (ack.Element(NS.OICPv1Authorization + "ProviderID") != null) ? ack.Element(NS.OICPv1Authorization + "ProviderID").Value : "";
             this._AuthorizationStatus = (ack.Element(NS.OICPv1Authorization + "AuthorizationStatus").Value.ToLower() == "authorized") ? AuthorizationStatusType.Authorized : AuthorizationStatusType.NotAuthorized;
 
             var StatusCode            = ack.Element(NS.OICPv1Authorization + "StatusCode");
             this._Code                = UInt16.Parse(StatusCode.Element(NS.OICPv1CommonTypes + "Code").Value);
-            this._Description         = StatusCode.Element(NS.OICPv1CommonTypes + "Description").Value;
+            this._Description         =  StatusCode.Element(NS.OICPv1CommonTypes + "Description").Value;
             this._AdditionalInfo      = (StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo") != null) ? StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo").Value : String.Empty;
 
             // - Auth Start --------------------------------------------------------------------------------------------
