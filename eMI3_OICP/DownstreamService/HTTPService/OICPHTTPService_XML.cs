@@ -87,48 +87,39 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region (private) ParseRequestBody()
-
-        private HTTPResult<XDocument> ParseRequestBody()
-        {
-
-            var RequestBodyString = GetRequestBodyAsUTF8String(HTTPContentType.XMLTEXT_UTF8);
-            if (RequestBodyString.HasErrors)
-                return new HTTPResult<XDocument>(RequestBodyString.Error);
-
-
-            // Parse XML string
-            XDocument RequestBodyXML;
-            try
-            {
-                RequestBodyXML = XDocument.Parse(RequestBodyString.Data);
-            }
-            catch (Exception)
-            {
-                return new HTTPResult<XDocument>(IHTTPConnection.RequestHeader, HTTPStatusCode.BadRequest);
-            }
-
-            return new HTTPResult<XDocument>(RequestBodyXML);
-
-        }
-
-        #endregion
-
 
         #region POST_RemoteStartStop()
 
         public override HTTPResponse POST_RemoteStartStop()
         {
 
-            var XMLRequest = ParseRequestBody();
+            #region ParseXMLRequestBody
+
+            var XMLRequest = ParseXMLRequestBody();
             if (XMLRequest.HasErrors)
+            {
+
+                InternalHTTPServer.URLMapping.EventSource(Semantics.DebugLog).
+                    SubmitSubEvent("InvalidXMLRequest",
+                                   new JObject(
+                                       new JProperty("@context",      "http://emi3group.org/contexts/InvalidXMLRequest.jsonld"),
+                                       new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
+                                       new JProperty("RemoteSocket",  IHTTPConnection.RemoteSocket.ToString()),
+                                       new JProperty("XMLRequest",    IHTTPConnection.RequestBody.ToUTF8String()) //ToDo: Handle errors!
+                                   ).ToString().
+                                     Replace(Environment.NewLine, ""));
+
                 return XMLRequest.Error;
 
-            Log.WriteLine("");
-            Log.Timestamp("Incoming XML request:");
-            Log.WriteLine("XML payload:");
-            Log.WriteLine(XMLRequest.Data.ToString());
-            Log.WriteLine("");
+            }
+
+            #endregion
+
+            //Log.WriteLine("");
+            //Log.Timestamp("Incoming XML request:");
+            //Log.WriteLine("XML payload:");
+            //Log.WriteLine(XMLRequest.Data.ToString());
+            //Log.WriteLine("");
 
             #region Get SOAP request...
 
@@ -143,7 +134,18 @@ namespace org.emi3group.IO.OICP
             catch (Exception e)
             {
 
-                Log.Timestamp("Bad request: " + e.Message);
+                //Log.Timestamp("Bad request: " + e.Message);
+
+                InternalHTTPServer.URLMapping.EventSource(Semantics.DebugLog).
+                    SubmitSubEvent("InvalidXMLRequest",
+                                   new JObject(
+                                       new JProperty("@context",      "http://emi3group.org/contexts/InvalidXMLRequest.jsonld"),
+                                       new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
+                                       new JProperty("RemoteSocket",  IHTTPConnection.RemoteSocket.ToString()),
+                                       new JProperty("Exception",     e.Message),
+                                       new JProperty("XMLRequest",    IHTTPConnection.RequestBody.ToUTF8String()) //ToDo: Handle errors!
+                                   ).ToString().
+                                     Replace(Environment.NewLine, ""));
 
                 return new HTTPResponseBuilder() {
 
@@ -178,7 +180,18 @@ namespace org.emi3group.IO.OICP
             else
             {
 
-                Log.Timestamp("Must be either RemoteStart or RemoteStop!");
+                //Log.Timestamp("Must be either a RemoteStart or RemoteStop request!");
+
+                InternalHTTPServer.URLMapping.EventSource(Semantics.DebugLog).
+                    SubmitSubEvent("InvalidXMLRequest",
+                                   new JObject(
+                                       new JProperty("@context",      "http://emi3group.org/contexts/InvalidXMLRequest.jsonld"),
+                                       new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
+                                       new JProperty("RemoteSocket",  IHTTPConnection.RemoteSocket.ToString()),
+                                       new JProperty("Exception",     "Must be either a RemoteStart or RemoteStop request!"),
+                                       new JProperty("XMLRequest",    IHTTPConnection.RequestBody.ToUTF8String()) //ToDo: Handle errors!
+                                   ).ToString().
+                                     Replace(Environment.NewLine, ""));
 
                 return new HTTPResponseBuilder() {
 
