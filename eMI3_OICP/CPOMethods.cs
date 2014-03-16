@@ -383,13 +383,21 @@ namespace org.emi3group.IO.OICP
                                                  String           UID)
         {
 
+            #region Hubject RFID Type workaround...
+
+            var RFIDType = "RFIDclassicIdentification";
+
+            if (UID.Length >= 14)
+                RFIDType = "RFIDdesfireIdentification";
+
+            #endregion
+
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectAuthorizeStart",
                                           new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
                                           new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.ToString()),
                                           new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.ToString()),
                                           new XElement(NS.OICPv1Authorization + "Identification",
-                                              new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
-                                              //new XElement(NS.OICPv1CommonTypes + "RFIDclassicIdentification",
+                                              new XElement(NS.OICPv1CommonTypes + RFIDType,
                                                  new XElement(NS.OICPv1CommonTypes + "UID", UID)
                                               )
                                           )

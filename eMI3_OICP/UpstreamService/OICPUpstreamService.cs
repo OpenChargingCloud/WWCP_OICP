@@ -20,11 +20,12 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
-using System.Collections.Generic;
+using System.Net.NetworkInformation;
 
 using eu.Vanaheimr.Illias.Commons;
 using eu.Vanaheimr.Hermod;
 using eu.Vanaheimr.Hermod.HTTP;
+using eu.Vanaheimr.Hermod.Services.DNS;
 
 using org.emi3group.LocalService;
 
@@ -36,15 +37,45 @@ namespace org.emi3group.IO.OICP
     public class AuthSOAPClient : HTTPClient
     {
 
-        public AuthSOAPClient(IPv4Address OICPHost, IPPort OICPPort)
+        #region Properties
+
+        #region HTTPVirtualHost
+
+        private readonly String _HTTPVirtualHost;
+
+        public String HTTPVirtualHost
+        {
+            get
+            {
+                return _HTTPVirtualHost;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Constructor
+
+        public AuthSOAPClient(IPv4Address  OICPHost,
+                              IPPort       OICPPort,
+                              String       HTTPVirtualHost)
+
             : base(OICPHost, OICPPort)
-        { }
+
+        {
+            this._HTTPVirtualHost = HTTPVirtualHost;
+        }
+
+        #endregion
+
+        #region Query
 
         public HTTPResponse Query(String Query, String SOAPAction)
         {
 
             var builder = this.POST("/ibis/ws/HubjectAuthorization_V1");
-            builder.Host         = "portal-qa.hubject.com";
+            builder.Host         = HTTPVirtualHost;
             builder.Content      = Query.ToUTF8Bytes();
             builder.ContentType  = HTTPContentType.XMLTEXT_UTF8;
             builder.Set("SOAPAction", SOAPAction);
@@ -54,11 +85,19 @@ namespace org.emi3group.IO.OICP
 
         }
 
+        #endregion
+
     }
 
 
     public class OICPUpstreamService : IEMobilityService
     {
+
+        #region Data
+
+        private DNSClient DNSClient;
+
+        #endregion
 
         #region Properties
 
@@ -78,9 +117,9 @@ namespace org.emi3group.IO.OICP
 
         #region OICPHost
 
-        private readonly IPv4Address _OICPHost;
+        private readonly String _OICPHost;
 
-        public IPv4Address OICPHost
+        public String OICPHost
         {
             get
             {
@@ -104,18 +143,45 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
+        #region HTTPVirtualHost
+
+        private readonly String _HTTPVirtualHost;
+
+        public String HTTPVirtualHost
+        {
+            get
+            {
+                return _HTTPVirtualHost;
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Constructor(s)
 
-        public OICPUpstreamService(IPv4Address  OICPHost,
-                                   IPPort       OICPPort,
-                                   String       AuthorizatorId  = "OICP Gateway")
+        public OICPUpstreamService(String  OICPHost,
+                                   IPPort  OICPPort,
+                                   String  HTTPVirtualHost = null,
+                                   String  AuthorizatorId  = "OICP Gateway")
         {
 
-            this._OICPHost        = OICPHost;
-            this._OICPPort        = OICPPort;
-            this._AuthorizatorId  = AuthorizatorId;
+            this._OICPHost         = OICPHost;
+            this._OICPPort         = OICPPort;
+            this._HTTPVirtualHost  = (HTTPVirtualHost != null) ? HTTPVirtualHost : OICPHost;
+            this._AuthorizatorId   = AuthorizatorId;
+
+            //ToDo: Will fail when DNS servers change!
+            var DNSServer          = NetworkInterface.
+                                         GetAllNetworkInterfaces().
+                                         Where     (NI        => NI.OperationalStatus == OperationalStatus.Up).
+                                         SelectMany(NI        => NI.GetIPProperties().DnsAddresses).
+                                         Where     (IPAddress => IPAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).
+                                         Select    (IPAddress => new IPv4Address(IPAddress.ToString())).
+                                         First();
+
+            this.DNSClient         = new DNSClient(DNSServer.ToString());
 
         }
 
@@ -133,7 +199,9 @@ namespace org.emi3group.IO.OICP
             try
             {
 
-                using (var SOAPClient = new AuthSOAPClient(OICPHost, OICPPort))
+                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
+
+                using (var SOAPClient = new AuthSOAPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
                 {
 
                     var HttpResponse = SOAPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
@@ -269,7 +337,9 @@ namespace org.emi3group.IO.OICP
             try
             {
 
-                using (var SOAPClient = new AuthSOAPClient(OICPHost, OICPPort))
+                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
+
+                using (var SOAPClient = new AuthSOAPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
                 {
 
                     var HttpResponse = SOAPClient.Query(CPOMethods.AuthorizeStopXML(OperatorId,
@@ -442,7 +512,9 @@ namespace org.emi3group.IO.OICP
             try
             {
 
-                using (var SOAPClient = new AuthSOAPClient(OICPHost, OICPPort))
+                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
+
+                using (var SOAPClient = new AuthSOAPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
                 {
 
                     var HttpResponse = SOAPClient.Query(CPOMethods.SendChargeDetailRecordXML(EVSEId,
