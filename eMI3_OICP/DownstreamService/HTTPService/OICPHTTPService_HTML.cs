@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2013-2014 Achim Friedland <achim.friedland@belectric.com>
- * This file is part of eMI3 HTTP <http://www.github.com/eMI3/HTTP>
+ * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ namespace org.emi3group.IO.OICP
             return new HTTPResponseBuilder() {
                 HTTPStatusCode  = HTTPStatusCode.OK,
                 ContentType     = HTTPContentType.HTML_UTF8,
-                Content         = "/RemoteStartStop".ToUTF8Bytes()
+                Content         = "/RemoteStartStop is a HTTP/SOAP endpoint!".ToUTF8Bytes()
             };
         }
 

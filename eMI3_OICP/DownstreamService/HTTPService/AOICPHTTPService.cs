@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2013-2014 Achim Friedland <achim.friedland@belectric.com>
- * This file is part of eMI3 HTTP <http://www.github.com/eMI3/HTTP>
+ * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,9 @@
 #region Usings
 
 using System;
-using System.IO;
-using System.Web;
-using System.Linq;
 using System.Threading;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
-using eu.Vanaheimr.Illias.Commons;
-using eu.Vanaheimr.Illias.Commons.Collections;
 using eu.Vanaheimr.Hermod.HTTP;
 
 #endregion
@@ -35,7 +29,7 @@ namespace org.emi3group.IO.OICP
 {
 
     /// <summary>
-    /// This class provides the generic IeMI3HTTPService functionality
+    /// This class provides a abstract OICP HTTP service
     /// without being bound to any specific content representation.
     /// </summary>
     public abstract class AOICPHTTPService : AHTTPService,
@@ -44,15 +38,15 @@ namespace org.emi3group.IO.OICP
 
         #region Data
 
-        private ThreadLocal<HTTPResponse> HTTPErrorResponse;
-        private const String EdarHTTPRoot = "org.emi3group.APIService.HTTPRoot.";
+        private ThreadLocal<HTTPResponse>  HTTPErrorResponse;
+        private const String               EdarHTTPRoot = "org.emi3group.APIService.HTTPRoot.";
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// The internal GraphServer object.
+        /// The internal OICP HTTP server.
         /// </summary>
         public OICPHTTPServer InternalHTTPServer { get; set; }
 
@@ -63,7 +57,7 @@ namespace org.emi3group.IO.OICP
         #region AOICPHTTPService()
 
         /// <summary>
-        /// Creates a new abstract graph service.
+        /// Creates a new abstract OICP HTTP service.
         /// </summary>
         public AOICPHTTPService()
         { }
@@ -73,7 +67,7 @@ namespace org.emi3group.IO.OICP
         #region AOICPHTTPService(HTTPContentType)
 
         /// <summary>
-        /// Creates a new abstract graph service.
+        /// Creates a new abstract OICP HTTP service.
         /// </summary>
         /// <param name="HTTPContentType">A content type.</param>
         public AOICPHTTPService(HTTPContentType HTTPContentType)
@@ -85,7 +79,7 @@ namespace org.emi3group.IO.OICP
         #region AOICPHTTPService(HTTPContentTypes)
 
         /// <summary>
-        /// Creates a new abstract graph service.
+        /// Creates a new abstract OICP HTTP service.
         /// </summary>
         /// <param name="HTTPContentTypes">A content type.</param>
         public AOICPHTTPService(IEnumerable<HTTPContentType> HTTPContentTypes)
@@ -97,7 +91,7 @@ namespace org.emi3group.IO.OICP
         #region AOICPHTTPService(IHTTPConnection, HTTPContentType)
 
         /// <summary>
-        /// Creates a new abstract graph service.
+        /// Creates a new abstract OICP HTTP service.
         /// </summary>
         /// <param name="IHTTPConnection">The http connection for this request.</param>
         /// <param name="HTTPContentType">A http content type.</param>
@@ -114,7 +108,7 @@ namespace org.emi3group.IO.OICP
         #region AOICPHTTPService(IHTTPConnection, HTTPContentTypes)
 
         /// <summary>
-        /// Creates a new abstract graph service.
+        /// Creates a new abstract OICP HTTP service.
         /// </summary>
         /// <param name="IHTTPConnection">The http connection for this request.</param>
         /// <param name="HTTPContentTypes">An enumeration of content types.</param>
@@ -129,7 +123,6 @@ namespace org.emi3group.IO.OICP
         #endregion
 
         #endregion
-
 
 
         #region GET /
@@ -152,16 +145,23 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
+        #region GET /RemoteStartStop
 
         public virtual HTTPResponse GET_RemoteStartStop()
         {
             return new HTTPResult<Object>(IHTTPConnection.RequestHeader, HTTPStatusCode.NotAcceptable).Error;
         }
 
+        #endregion
+
+        #region POST /RemoteStartStop
+
         public virtual HTTPResponse POST_RemoteStartStop()
         {
             return new HTTPResult<Object>(IHTTPConnection.RequestHeader, HTTPStatusCode.NotAcceptable).Error;
         }
+
+        #endregion
 
     }
 

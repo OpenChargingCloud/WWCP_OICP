@@ -26,7 +26,7 @@ using eu.Vanaheimr.Illias.Commons;
 using eu.Vanaheimr.Hermod;
 using eu.Vanaheimr.Hermod.HTTP;
 
-using org.emi3group.LocalServer;
+using org.emi3group.LocalService;
 
 #endregion
 

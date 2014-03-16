@@ -7,8 +7,8 @@
     <ProjectGuid>{9BE2DABC-D5EE-4970-9543-8764B42FD4C8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>de.eMI3.IO.OICP</RootNamespace>
-    <AssemblyName>eMI3_IO_OICP</AssemblyName>
+    <RootNamespace>org.emi3group.IO.OICP</RootNamespace>
+    <AssemblyName>org.emi3group.IO.OICP</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -21,7 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\eMI3_IO_OICP.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\org.emi3group.IO.OICP.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +31,7 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\eMI3_IO_OICP.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\org.emi3group.IO.OICP.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -71,14 +71,6 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\eMI3_HTTP\eMI3_HTTP.csproj">
-      <Project>{100255b0-3c7a-4f6f-9661-1ff220613660}</Project>
-      <Name>eMI3_HTTP</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\LocalServer\LocalServer.csproj">
-      <Project>{e2a0b455-2c66-47d3-b2fb-57c12c9bae6c}</Project>
-      <Name>LocalServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Aegir\Aegir\Aegir.csproj">
       <Project>{4d8ffccd-738d-41aa-a527-8cfdfe0a681d}</Project>
       <Name>Aegir</Name>

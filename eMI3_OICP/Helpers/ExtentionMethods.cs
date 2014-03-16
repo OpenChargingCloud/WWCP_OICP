@@ -30,35 +30,6 @@ namespace org.emi3group.IO.OICP
     public static class ExtentionMethods
     {
 
-        public static String SubstringMax(this String Text, Int32 Length)
-        {
-            try
-            {
-
-                return Text.Substring(0, Math.Min(Text.Length, Length));
-
-            }
-            catch (Exception e)
-            {
-                return "";
-            }
-        }
-
-        public static String ElementOrDefault(this XElement  ParentXElement,
-                                              XName          XName,
-                                              String         Default)
-        {
-
-            var XElement = ParentXElement.Element(XName);
-
-            if (XElement != null)
-                return ParentXElement.Element(XName).Value;
-
-            else
-                return Default;
-
-        }
-
         public static IEnumerable<HubjectEVSESearchReply> ParseSearchReplies(XElement XML)
         {
             return (from   EvseMatch

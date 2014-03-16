@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2013-2014 Achim Friedland <achim.friedland@belectric.com>
- * This file is part of eMI3 HTTP <http://www.github.com/eMI3/HTTP>
+ * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ using System.Diagnostics;
 using eu.Vanaheimr.Illias.Commons;
 using eu.Vanaheimr.Hermod.HTTP;
 using Newtonsoft.Json.Linq;
-using org.emi3group.HTTP;
+//using org.emi3group.HTTP;
 
 #endregion
 
@@ -294,12 +294,12 @@ namespace org.emi3group.IO.OICP
 
             #endregion
 
-            Log.Timestamp("Hubject downstream request:");
-            Log.WriteLine("RemoteStart for EVSE '" + EVSEId + "' for provider/user '" + ProviderId + " / " + EVCOId + "'");
-            Log.WriteLine("Hubject SessionID: '" + SessionId + "'");
-            Log.WriteLine("");
+            //Log.Timestamp("Hubject downstream request:");
+            //Log.WriteLine("RemoteStart for EVSE '" + EVSEId + "' for provider/user '" + ProviderId + " / " + EVCOId + "'");
+            //Log.WriteLine("Hubject SessionID: '" + SessionId + "'");
+            //Log.WriteLine("");
 
-            InternalHTTPServer.eMI3_HTTPServer.URLMapping.EventSource(Semantics.DebugLog).
+            InternalHTTPServer.FrontendHTTPServer.EventSource(Semantics.DebugLog).
                 SubmitSubEvent("REMOTESTARTRequest",
                                new JObject(
                                    new JProperty("Timestamp",   DateTime.Now.ToIso8601()),
@@ -372,16 +372,16 @@ namespace org.emi3group.IO.OICP
             //
             // </isns:Envelope>
 
-            String   SessionID;
-            String   ProviderID;
-            EVSE_Id  EVSEID;
+            String   SessionId;
+            String   ProviderId;
+            EVSE_Id  EVSEId;
 
             try
             {
 
-                SessionID   = RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "SessionID", "");
-                ProviderID  = RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "ProviderID", "");
-                EVSEID      = EVSE_Id.Parse(RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "EVSEID", ""));
+                SessionId   = RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "SessionID", "");
+                ProviderId  = RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "ProviderID", "");
+                EVSEId      = EVSE_Id.Parse(RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "EVSEID", ""));
 
             }
             catch (Exception e)
@@ -409,10 +409,20 @@ namespace org.emi3group.IO.OICP
 
             }
 
-            Log.Timestamp("Hubject downstream request:");
-            Log.WriteLine("RemoteStop for EVSE '" + EVSEID + "' by provider '" + ProviderID + "'");
-            Log.WriteLine("Hubject SessionID: '" + SessionID + "'");
-            Log.WriteLine("");
+            //Log.Timestamp("Hubject downstream request:");
+            //Log.WriteLine("RemoteStop for EVSE '" + EVSEID + "' by provider '" + ProviderID + "'");
+            //Log.WriteLine("Hubject SessionID: '" + SessionID + "'");
+            //Log.WriteLine("");
+
+            InternalHTTPServer.FrontendHTTPServer.EventSource(Semantics.DebugLog).
+                SubmitSubEvent("REMOTESTOPRequest",
+                               new JObject(
+                                   new JProperty("Timestamp",   DateTime.Now.ToIso8601()),
+                                   new JProperty("SessionId",   SessionId),
+                                   new JProperty("ProviderId",  ProviderId),
+                                   new JProperty("EVSEId",      EVSEId)
+                               ).ToString().
+                                 Replace(Environment.NewLine, ""));
 
             var Content = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
 
@@ -424,7 +434,7 @@ namespace org.emi3group.IO.OICP
                                                      new XElement(NS.OICPv1CommonTypes + "AdditionalInfo", "Reserved for testing!")
                                                  ),
 
-                                                 new XElement(NS.OICPv1CommonTypes + "SessionID",        SessionID)
+                                                 new XElement(NS.OICPv1CommonTypes + "SessionID",        SessionId)
                                                  //new XElement(NS.OICPv1CommonTypes + "PartnerSessionID", SessionID),
 
                                             )).ToString();
