@@ -171,17 +171,7 @@ namespace org.emi3group.IO.OICP
             this._OICPPort         = OICPPort;
             this._HTTPVirtualHost  = (HTTPVirtualHost != null) ? HTTPVirtualHost : OICPHost;
             this._AuthorizatorId   = AuthorizatorId;
-
-            //ToDo: Will fail when DNS servers change!
-            var DNSServer          = NetworkInterface.
-                                         GetAllNetworkInterfaces().
-                                         Where     (NI        => NI.OperationalStatus == OperationalStatus.Up).
-                                         SelectMany(NI        => NI.GetIPProperties().DnsAddresses).
-                                         Where     (IPAddress => IPAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).
-                                         Select    (IPAddress => new IPv4Address(IPAddress.ToString())).
-                                         First();
-
-            this.DNSClient         = new DNSClient(DNSServer.ToString());
+            this.DNSClient         = new DNSClient(SearchForIPv6Servers: false);
 
         }
 
