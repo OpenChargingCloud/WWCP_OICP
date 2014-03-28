@@ -19,12 +19,15 @@
 
 using System;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using System.Diagnostics;
 
 using eu.Vanaheimr.Illias.Commons;
 using eu.Vanaheimr.Hermod.HTTP;
 using Newtonsoft.Json.Linq;
+using eu.Vanaheimr.Hermod.Services.DNS;
+using eu.Vanaheimr.Hermod;
 //using org.emi3group.HTTP;
 
 #endregion
@@ -266,7 +269,7 @@ namespace org.emi3group.IO.OICP
             EVSE_Id  EVSEId;
             XElement IdentificationXML;
             XElement QRCodeIdentificationXML;
-            String   EVCOId;
+            String   eMAId;
 
             try
             {
@@ -277,7 +280,7 @@ namespace org.emi3group.IO.OICP
 
                 IdentificationXML        = RemoteStartXML.         Element         (NS.OICPv1Authorization + "Identification");
                 QRCodeIdentificationXML  = IdentificationXML.      Element         (NS.OICPv1CommonTypes   + "QRCodeIdentification");
-                EVCOId                   = QRCodeIdentificationXML.ElementOrDefault(NS.OICPv1CommonTypes   + "EVCOID", "");
+                eMAId                    = QRCodeIdentificationXML.ElementOrDefault(NS.OICPv1CommonTypes   + "EVCOID", "");
 
             }
             catch (Exception e)
@@ -296,7 +299,7 @@ namespace org.emi3group.IO.OICP
                                                                  new XElement(NS.OICPv1CommonTypes + "StatusCode",
                                                                      new XElement(NS.OICPv1CommonTypes + "Code",           "022"),
                                                                      new XElement(NS.OICPv1CommonTypes + "Description",    "Request lead to an exception!"),
-                                                                     new XElement(NS.OICPv1CommonTypes + "AdditionalInfo", e.Message)
+                                                                     new XElement(NS.OICPv1CommonTypes + "AdditionalInfo",  e.Message)
                                                                  )
 
                                                              )).ToString().ToUTF8Bytes()
@@ -318,34 +321,236 @@ namespace org.emi3group.IO.OICP
                                    new JProperty("Timestamp",   DateTime.Now.ToIso8601()),
                                    new JProperty("SessionId",   SessionId),
                                    new JProperty("ProviderId",  ProviderId),
-                                   new JProperty("EVSEId",      EVSEId),
-                                   new JProperty("EVCOId",      EVCOId)
+                                   new JProperty("EVSEId",      EVSEId.ToString()),
+                                   new JProperty("eMAId",       eMAId.ToString())
                                ).ToString().
                                  Replace(Environment.NewLine, ""));
 
+            var SOAPContent = "";
 
-            var Content = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
+            var RequestPDU  = "";
+            var ResponsePDU = "";
+
+            try
+            {
+
+                var DNSClient      = new DNSClient();
+                var IPv4Addresses  = DNSClient.Query<A>("portal.belectric-drive.de").Select(a => a.IPv4Address).ToArray();
+
+                using (var HTTPClient1 = new HTTPClient(IPv4Addresses.First(), new IPPort(20080)))//, "portal.belectric-drive.de"))
+                {
+
+                    var HTTPRequestBuilder = HTTPClient1.CreateRequest(new HTTPMethod("REMOTESTART"), "/ps/rest/hubject/RNs/QA1/EVSEs/" + EVSEId.ToString().Replace("+", ""));
+                    HTTPRequestBuilder.Host = "portal.belectric-drive.de";
+                    HTTPRequestBuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                    HTTPRequestBuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+
+                    var JSON = new JObject(new JProperty("@context",   "http://emi3group.org/contexts/REMOTESTART-request.jsonld"),
+                                           new JProperty("@id",        SessionId),
+                                           new JProperty("ProviderId", ProviderId),
+                                           new JProperty("eMAId",      eMAId)).ToString();
+
+                    HTTPRequestBuilder.Content = JSON.ToUTF8Bytes();
+
+                    RequestPDU = HTTPRequestBuilder.AsImmutable().EntirePDU;
+
+                    var Task01 = HTTPClient1.Execute_Synced(HTTPRequestBuilder, Timeout: 60000);
+
+                    ResponsePDU = Task01.EntirePDU;
+
+                    // HTTP/1.1 200 OK
+                    // Date: Fri, 28 Mar 2014 13:31:27 GMT
+                    // Server: Apache/2.2.9 (Debian) mod_jk/1.2.26
+                    // Content-Length: 34
+                    // Content-Type: application/json
+                    // 
+                    // {
+                    //   "code" : "EVSE_AlreadyInUse"
+                    // }
+
+                    JObject  JSONResponse = null;
+
+                    var ReturnCode             = "";
+                    var HubjectCode            = "";
+                    var HubjectDescription     = "";
+                    var HubjectAdditionalInfo  = "";
+
+                    try
+                    {
+
+                        JSONResponse = JObject.Parse(Task01.Content.ToUTF8String());
+                        ReturnCode   = JSONResponse["code"].ToString();
+
+                        switch (ReturnCode)
+                        {
+
+                            case "EVSE_AlreadyInUse":
+                                HubjectCode         = "602";
+                                HubjectDescription  = "EVSE is already in use!";
+                                break;
+
+                            case "SessionId_AlreadyInUse":
+                                HubjectCode         = "400";
+                                HubjectDescription  = "Session is invalid";
+                                break;
+
+                            case "EVSE_NotReachable":
+                                HubjectCode         = "501";
+                                HubjectDescription  = "Communication to EVSE failed!";
+                                break;
+
+                            case "Success":
+                                HubjectCode         = "000";
+                                HubjectDescription  = "Ready to charge!";
+                                break;
+
+                            default:
+                                HubjectCode         = "000";
+                                break;
+
+                        }
+
+
+                    }
+                    catch (Exception)
+                    {
+                        HubjectCode = "ERROR!";
+                    }
+
+                    SOAPContent = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
 
                                                  new XElement(NS.OICPv1CommonTypes + "Result", "true"),
 
                                                  new XElement(NS.OICPv1CommonTypes + "StatusCode",
-                                                     new XElement(NS.OICPv1CommonTypes + "Code",           "000"),
-                                                     new XElement(NS.OICPv1CommonTypes + "Description",    "Out of service!"),
-                                                     new XElement(NS.OICPv1CommonTypes + "AdditionalInfo", "Reserved for testing!")
+                                                     new XElement(NS.OICPv1CommonTypes + "Code",            HubjectCode),
+                                                     new XElement(NS.OICPv1CommonTypes + "Description",     HubjectDescription),
+                                                     new XElement(NS.OICPv1CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
                                                  ),
 
-                                                 new XElement(NS.OICPv1CommonTypes + "SessionID",        SessionId)
-                                                 //new XElement(NS.OICPv1CommonTypes + "PartnerSessionID", SessionID),
+                                                 new XElement(NS.OICPv1CommonTypes + "SessionID", SessionId)
+                        //new XElement(NS.OICPv1CommonTypes + "PartnerSessionID", SessionID),
 
                                             )).ToString();
 
+              //      Task01.Wait(60000);
+
+                    //ToDo: In case of errors this will not parse!
+             //       var AuthStartResult = HubjectAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+
+                    #region Authorized
+
+                    //if (AuthStartResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
+
+                    //    // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+                    //    //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //    //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+                    //    //   <soapenv:Body>
+                    //    //     <tns:HubjectAuthorizationStart>
+                    //    //       <tns:SessionID>8fade8bd-0a88-1296-0f2f-41ae8a80af1b</tns:SessionID>
+                    //    //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
+                    //    //       <tns:ProviderID>BMW</tns:ProviderID>
+                    //    //       <tns:AuthorizationStatus>Authorized</tns:AuthorizationStatus>
+                    //    //       <tns:StatusCode>
+                    //    //         <cmn:Code>000</cmn:Code>
+                    //    //         <cmn:Description>Success</cmn:Description>
+                    //    //       </tns:StatusCode>
+                    //    //     </tns:HubjectAuthorizationStart>
+                    //    //   </soapenv:Body>
+                    //    // </soapenv:Envelope>
+
+                    //    return new AUTHSTARTResult(AuthorizatorId) {
+                    //                   AuthorizationResult  = AuthorizationResult.Authorized,
+                    //                   SessionId            = AuthStartResult.SessionID,
+                    //                   PartnerSessionId     = PartnerSessionId,
+                    //                   ProviderId           = EVServiceProvider_Id.Parse(AuthStartResult.ProviderID),
+                    //                   Description          = AuthStartResult.Description
+                    //               };
+
+                    //#endregion
+
+                    //#region NotAuthorized
+
+                    //else // AuthorizationStatus == AuthorizationStatusType.NotAuthorized
+                    //{
+
+                    //    //- Invalid OperatorId ----------------------------------------------------------------------
+
+                    //    // <isns:Envelope xmlns:fn   = "http://www.w3.org/2005/xpath-functions"
+                    //    //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //    //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
+                    //    //                xmlns:wsc  = "http://www.hubject.com/b2b/services/authorization/v1">
+                    //    //   <isns:Body>
+                    //    //     <wsc:HubjectAuthorizationStop>
+                    //    //       <wsc:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</wsc:SessionID>
+                    //    //       <wsc:PartnerSessionID>0815</wsc:PartnerSessionID>
+                    //    //       <wsc:AuthorizationStatus>NotAuthorized</wsc:AuthorizationStatus>
+                    //    //       <wsc:StatusCode>
+                    //    //         <v1:Code>017</v1:Code>
+                    //    //         <v1:Description>Unauthorized Access</v1:Description>
+                    //    //         <v1:AdditionalInfo>The identification criterion for the provider/operator with the ID "812" doesn't match the given identification information "/C=DE/ST=Bayern/L=Kitzingen/O=Hubject/OU=Belectric Drive GmbH/CN=Belectric ITS Software Development/emailAddress=achim.friedland@belectric.com" from the certificate.</v1:AdditionalInfo>
+                    //    //       </wsc:StatusCode>
+                    //    //     </wsc:HubjectAuthorizationStop>
+                    //    //   </isns:Body>
+                    //    // </isns:Envelope>
+
+                    //    if (AuthStartResult.Code == 017)
+                    //        return new AUTHSTARTResult(AuthorizatorId) {
+                    //                   AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                    //                   PartnerSessionId     = PartnerSessionId,
+                    //                   Description          = AuthStartResult.Description + " - " + AuthStartResult.AdditionalInfo
+                    //               };
+
+
+                    //    //- Invalid UID -----------------------------------------------------------------------------
+
+                    //    // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+                    //    //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //    //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+                    //    //   <soapenv:Body>
+                    //    //     <tns:HubjectAuthorizationStart>
+                    //    //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
+                    //    //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
+                    //    //       <tns:StatusCode>
+                    //    //         <cmn:Code>320</cmn:Code>
+                    //    //         <cmn:Description>Service not available</cmn:Description>
+                    //    //       </tns:StatusCode>
+                    //    //     </tns:HubjectAuthorizationStart>
+                    //    //   </soapenv:Body>
+                    //    // </soapenv:Envelope>
+
+                    //    else
+                    //        return new AUTHSTARTResult(AuthorizatorId) {
+                    //                       AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                    //                       PartnerSessionId     = PartnerSessionId,
+                    //                       Description          = AuthStartResult.Description
+                    //                   };
+
+                    //}
+
+                    #endregion
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                //return new AUTHSTARTResult(AuthorizatorId) {
+                //               AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                //               PartnerSessionId     = PartnerSessionId,
+                //               Description          = "An exception occured: " + e.Message
+                //           };
+
+            }
+
             Log.WriteLine("Result:");
-            Log.WriteLine(Content);
+            Log.WriteLine(SOAPContent);
 
             return new HTTPResponseBuilder() {
                 HTTPStatusCode  = HTTPStatusCode.OK,
                 ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                Content         = Content.ToUTF8Bytes()
+                Content         = SOAPContent.ToUTF8Bytes()
             };
 
         }
@@ -437,28 +642,220 @@ namespace org.emi3group.IO.OICP
                                ).ToString().
                                  Replace(Environment.NewLine, ""));
 
-            var Content = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
+            var SOAPContent = "";
+
+            var RequestPDU  = "";
+            var ResponsePDU = "";
+
+            try
+            {
+
+                var DNSClient      = new DNSClient();
+                var IPv4Addresses  = DNSClient.Query<A>("portal.belectric-drive.de").Select(a => a.IPv4Address).ToArray();
+
+                using (var HTTPClient1 = new HTTPClient(IPv4Addresses.First(), new IPPort(20080)))//, "portal.belectric-drive.de"))
+                {
+
+                    var HTTPRequestBuilder = HTTPClient1.CreateRequest(new HTTPMethod("REMOTESTOP"), "/ps/rest/hubject/RNs/QA1/EVSEs/" + EVSEId.ToString().Replace("+", ""));
+                    HTTPRequestBuilder.Host         = "portal.belectric-drive.de";
+                    HTTPRequestBuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                    HTTPRequestBuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+
+                    var JSON = new JObject(new JProperty("@context",   "http://emi3group.org/contexts/REMOTESTOP-request.jsonld"),
+                                           new JProperty("@id",        SessionId),
+                                           new JProperty("ProviderId", ProviderId)).ToString();
+
+                    HTTPRequestBuilder.Content = JSON.ToUTF8Bytes();
+
+                    RequestPDU = HTTPRequestBuilder.AsImmutable().EntirePDU;
+
+                    var Task01 = HTTPClient1.Execute_Synced(HTTPRequestBuilder, Timeout: 60000);
+
+                    ResponsePDU = Task01.EntirePDU;
+
+                    JObject  JSONResponse = null;
+
+                    var ReturnCode             = "";
+                    var HubjectCode            = "";
+                    var HubjectDescription     = "";
+                    var HubjectAdditionalInfo  = "";
+
+                    try
+                    {
+
+                        JSONResponse = JObject.Parse(Task01.Content.ToUTF8String());
+                        ReturnCode   = JSONResponse["code"].ToString();
+
+                        switch (ReturnCode)
+                        {
+
+                            case "EVSE_AlreadyInUse":
+                                HubjectCode         = "602";
+                                HubjectDescription  = "EVSE is already in use!";
+                                break;
+
+                            case "SessionId_AlreadyInUse":
+                                HubjectCode         = "400";
+                                HubjectDescription  = "Session is invalid";
+                                break;
+
+                            case "EVSE_NotReachable":
+                                HubjectCode         = "501";
+                                HubjectDescription  = "Communication to EVSE failed!";
+                                break;
+
+                            case "Success":
+                                HubjectCode         = "000";
+                                HubjectDescription  = "Ready to charge!";
+                                break;
+
+                            default:
+                                HubjectCode         = "000";
+                                break;
+
+                        }
+
+
+                    }
+                    catch (Exception)
+                    {
+                        HubjectCode = "ERROR!";
+                    }
+
+                    SOAPContent = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
 
                                                  new XElement(NS.OICPv1CommonTypes + "Result", "true"),
 
                                                  new XElement(NS.OICPv1CommonTypes + "StatusCode",
-                                                     new XElement(NS.OICPv1CommonTypes + "Code",           "000"),
-                                                     new XElement(NS.OICPv1CommonTypes + "Description",    "Out of service!"),
-                                                     new XElement(NS.OICPv1CommonTypes + "AdditionalInfo", "Reserved for testing!")
+                                                     new XElement(NS.OICPv1CommonTypes + "Code",            HubjectCode),
+                                                     new XElement(NS.OICPv1CommonTypes + "Description",     HubjectDescription),
+                                                     new XElement(NS.OICPv1CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
                                                  ),
 
-                                                 new XElement(NS.OICPv1CommonTypes + "SessionID",        SessionId)
-                                                 //new XElement(NS.OICPv1CommonTypes + "PartnerSessionID", SessionID),
+                                                 new XElement(NS.OICPv1CommonTypes + "SessionID", SessionId)
+                        //new XElement(NS.OICPv1CommonTypes + "PartnerSessionID", SessionID),
 
                                             )).ToString();
 
+              //      Task01.Wait(60000);
+
+                    //ToDo: In case of errors this will not parse!
+             //       var AuthStartResult = HubjectAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+
+                    #region Authorized
+
+                    //if (AuthStartResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
+
+                    //    // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+                    //    //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //    //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+                    //    //   <soapenv:Body>
+                    //    //     <tns:HubjectAuthorizationStart>
+                    //    //       <tns:SessionID>8fade8bd-0a88-1296-0f2f-41ae8a80af1b</tns:SessionID>
+                    //    //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
+                    //    //       <tns:ProviderID>BMW</tns:ProviderID>
+                    //    //       <tns:AuthorizationStatus>Authorized</tns:AuthorizationStatus>
+                    //    //       <tns:StatusCode>
+                    //    //         <cmn:Code>000</cmn:Code>
+                    //    //         <cmn:Description>Success</cmn:Description>
+                    //    //       </tns:StatusCode>
+                    //    //     </tns:HubjectAuthorizationStart>
+                    //    //   </soapenv:Body>
+                    //    // </soapenv:Envelope>
+
+                    //    return new AUTHSTARTResult(AuthorizatorId) {
+                    //                   AuthorizationResult  = AuthorizationResult.Authorized,
+                    //                   SessionId            = AuthStartResult.SessionID,
+                    //                   PartnerSessionId     = PartnerSessionId,
+                    //                   ProviderId           = EVServiceProvider_Id.Parse(AuthStartResult.ProviderID),
+                    //                   Description          = AuthStartResult.Description
+                    //               };
+
+                    //#endregion
+
+                    //#region NotAuthorized
+
+                    //else // AuthorizationStatus == AuthorizationStatusType.NotAuthorized
+                    //{
+
+                    //    //- Invalid OperatorId ----------------------------------------------------------------------
+
+                    //    // <isns:Envelope xmlns:fn   = "http://www.w3.org/2005/xpath-functions"
+                    //    //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //    //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
+                    //    //                xmlns:wsc  = "http://www.hubject.com/b2b/services/authorization/v1">
+                    //    //   <isns:Body>
+                    //    //     <wsc:HubjectAuthorizationStop>
+                    //    //       <wsc:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</wsc:SessionID>
+                    //    //       <wsc:PartnerSessionID>0815</wsc:PartnerSessionID>
+                    //    //       <wsc:AuthorizationStatus>NotAuthorized</wsc:AuthorizationStatus>
+                    //    //       <wsc:StatusCode>
+                    //    //         <v1:Code>017</v1:Code>
+                    //    //         <v1:Description>Unauthorized Access</v1:Description>
+                    //    //         <v1:AdditionalInfo>The identification criterion for the provider/operator with the ID "812" doesn't match the given identification information "/C=DE/ST=Bayern/L=Kitzingen/O=Hubject/OU=Belectric Drive GmbH/CN=Belectric ITS Software Development/emailAddress=achim.friedland@belectric.com" from the certificate.</v1:AdditionalInfo>
+                    //    //       </wsc:StatusCode>
+                    //    //     </wsc:HubjectAuthorizationStop>
+                    //    //   </isns:Body>
+                    //    // </isns:Envelope>
+
+                    //    if (AuthStartResult.Code == 017)
+                    //        return new AUTHSTARTResult(AuthorizatorId) {
+                    //                   AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                    //                   PartnerSessionId     = PartnerSessionId,
+                    //                   Description          = AuthStartResult.Description + " - " + AuthStartResult.AdditionalInfo
+                    //               };
+
+
+                    //    //- Invalid UID -----------------------------------------------------------------------------
+
+                    //    // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+                    //    //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //    //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+                    //    //   <soapenv:Body>
+                    //    //     <tns:HubjectAuthorizationStart>
+                    //    //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
+                    //    //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
+                    //    //       <tns:StatusCode>
+                    //    //         <cmn:Code>320</cmn:Code>
+                    //    //         <cmn:Description>Service not available</cmn:Description>
+                    //    //       </tns:StatusCode>
+                    //    //     </tns:HubjectAuthorizationStart>
+                    //    //   </soapenv:Body>
+                    //    // </soapenv:Envelope>
+
+                    //    else
+                    //        return new AUTHSTARTResult(AuthorizatorId) {
+                    //                       AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                    //                       PartnerSessionId     = PartnerSessionId,
+                    //                       Description          = AuthStartResult.Description
+                    //                   };
+
+                    //}
+
+                    #endregion
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                //return new AUTHSTARTResult(AuthorizatorId) {
+                //               AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                //               PartnerSessionId     = PartnerSessionId,
+                //               Description          = "An exception occured: " + e.Message
+                //           };
+
+            }
+
             Log.WriteLine("Result:");
-            Log.WriteLine(Content);
+            Log.WriteLine(SOAPContent);
 
             return new HTTPResponseBuilder() {
                 HTTPStatusCode  = HTTPStatusCode.OK,
                 ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                Content         = Content.ToUTF8Bytes()
+                Content         = SOAPContent.ToUTF8Bytes()
             };
 
         }
