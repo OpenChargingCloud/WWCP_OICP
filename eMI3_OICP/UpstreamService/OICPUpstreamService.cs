@@ -484,13 +484,14 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region SendCDR(EVSEId, SessionId, PartnerSessionId, PartnerProductId, UID, ChargeStart, ChargeEnd, SessionStart = null, SessionEnd = null, MeterValueStart = null, MeterValueEnd = null)
+        #region SendCDR(EVSEId, SessionId, PartnerSessionId, PartnerProductId, UID, EVCOId, ChargeStart, ChargeEnd, SessionStart = null, SessionEnd = null, MeterValueStart = null, MeterValueEnd = null)
 
         public SENDCDRResult SendCDR(EVSE_Id     EVSEId,
                                      String      SessionId,
                                      String      PartnerSessionId,
                                      String      PartnerProductId,
                                      String      UID,
+                                     String      EVCOId,
                                      DateTime    ChargeStart,
                                      DateTime    ChargeEnd,
                                      DateTime?   SessionStart    = null,
@@ -512,6 +513,7 @@ namespace org.emi3group.IO.OICP
                                                                                              PartnerSessionId,
                                                                                              PartnerProductId,
                                                                                              UID,
+                                                                                             EVCOId,
                                                                                              ChargeStart,
                                                                                              ChargeEnd,
                                                                                              SessionStart,

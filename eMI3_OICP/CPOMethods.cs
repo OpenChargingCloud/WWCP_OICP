@@ -467,13 +467,14 @@ namespace org.emi3group.IO.OICP
         #endregion
 
 
-        #region SendChargeDetailRecordXML(this EVSE, SessionID, PartnerSessionID, UID, ...)
+        #region SendChargeDetailRecordXML(this EVSE, SessionID, PartnerSessionID, UID, EVCOId, ...)
 
         public static XElement SendChargeDetailRecordXML(this EVSE  EVSE,
                                                          String     SessionID,
                                                          String     PartnerSessionID,
                                                          String     PartnerProductID,
                                                          String     UID,
+                                                         String     EVCOId,
                                                          DateTime   ChargeStart,
                                                          DateTime   ChargeEnd,
                                                          DateTime?  SessionStart    = null,
@@ -487,6 +488,7 @@ namespace org.emi3group.IO.OICP
                                              PartnerSessionID,
                                              PartnerProductID,
                                              UID,
+                                             EVCOId,
                                              ChargeStart,
                                              ChargeEnd,
                                              SessionStart,
@@ -498,13 +500,14 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region SendChargeDetailRecordXML(EVSEID, SessionID, PartnerSessionID, UID, ...)
+        #region SendChargeDetailRecordXML(EVSEID, SessionID, PartnerSessionID, UID, EVCOId, ...)
 
         public static XElement SendChargeDetailRecordXML(EVSE_Id    EVSEID,
                                                          String     SessionID,
                                                          String     PartnerSessionID,
                                                          String     PartnerProductID,
                                                          String     UID,
+                                                         String     EVCOId,
                                                          DateTime   ChargeStart,
                                                          DateTime   ChargeEnd,
                                                          DateTime?  SessionStart    = null,
@@ -521,9 +524,13 @@ namespace org.emi3group.IO.OICP
                                  new XElement(NS.OICPv1Authorization + "EvseID",           EVSEID.ToString()),
 
                                  new XElement(NS.OICPv1Authorization + "Identification",
-                                     new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
-                                        new XElement(NS.OICPv1CommonTypes + "UID", UID)
-                                     )
+                                     (UID != null)
+                                         ? new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
+                                                new XElement(NS.OICPv1CommonTypes + "UID", UID)
+                                           )
+                                         : new XElement(NS.OICPv1CommonTypes + "RemoteIdentificationType",
+                                                new XElement(NS.OICPv1CommonTypes + "EVCOID", EVCOId)
+                                           )
                                  ),
 
                                  new XElement(NS.OICPv1Authorization + "ChargingStart",   ChargeStart),
