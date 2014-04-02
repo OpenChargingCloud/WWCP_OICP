@@ -90,7 +90,7 @@ namespace org.emi3group.IO.OICP
     }
 
 
-    public class OICPUpstreamService : IEMobilityService
+    public class OICPUpstreamService : IUpstreamEMobilityService
     {
 
         #region Data
@@ -182,8 +182,8 @@ namespace org.emi3group.IO.OICP
 
         public AUTHSTARTResult AuthorizeStart(EVSEOperator_Id  OperatorId,
                                               EVSE_Id          EVSEId,
-                                              String           PartnerSessionId,
-                                              String           UID)
+                                              SessionId        PartnerSessionId,
+                                              Token            UID)
         {
 
             try
@@ -319,9 +319,9 @@ namespace org.emi3group.IO.OICP
 
         public AUTHSTOPResult AuthorizeStop(EVSEOperator_Id  OperatorId,
                                             EVSE_Id          EVSEId,
-                                            String           SessionId,
-                                            String           PartnerSessionId,
-                                            String           UID)
+                                            SessionId        SessionId,
+                                            SessionId        PartnerSessionId,
+                                            Token            UID)
         {
 
             try
@@ -487,11 +487,11 @@ namespace org.emi3group.IO.OICP
         #region SendCDR(EVSEId, SessionId, PartnerSessionId, PartnerProductId, UID, EVCOId, ChargeStart, ChargeEnd, SessionStart = null, SessionEnd = null, MeterValueStart = null, MeterValueEnd = null)
 
         public SENDCDRResult SendCDR(EVSE_Id     EVSEId,
-                                     String      SessionId,
-                                     String      PartnerSessionId,
+                                     SessionId   SessionId,
+                                     SessionId   PartnerSessionId,
                                      String      PartnerProductId,
-                                     String      UID,
-                                     String      EVCOId,
+                                     Token       UID,
+                                     eMA_Id      EVCOId,
                                      DateTime    ChargeStart,
                                      DateTime    ChargeEnd,
                                      DateTime?   SessionStart    = null,

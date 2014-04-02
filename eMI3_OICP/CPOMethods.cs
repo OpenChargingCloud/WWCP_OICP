@@ -355,8 +355,8 @@ namespace org.emi3group.IO.OICP
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStartXML(this EVSE   EVSE,
-                                                 String      PartnerSessionID,
-                                                 String      UID)
+                                                 SessionId   PartnerSessionID,
+                                                 Token       UID)
         {
 
             return AuthorizeStartXML(EVSE.ChargingStation.Pool.Operator.Id,
@@ -379,8 +379,8 @@ namespace org.emi3group.IO.OICP
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStartXML(EVSEOperator_Id  OperatorId,
                                                  EVSE_Id          EVSEId,
-                                                 String           PartnerSessionID,
-                                                 String           UID)
+                                                 SessionId        PartnerSessionID,
+                                                 Token            UID)
         {
 
             #region Hubject RFID Type workaround...
@@ -393,12 +393,12 @@ namespace org.emi3group.IO.OICP
             #endregion
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectAuthorizeStart",
-                                          new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
+                                          new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
                                           new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.ToString()),
                                           new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.ToString()),
                                           new XElement(NS.OICPv1Authorization + "Identification",
                                               new XElement(NS.OICPv1CommonTypes + RFIDType,
-                                                 new XElement(NS.OICPv1CommonTypes + "UID", UID)
+                                                 new XElement(NS.OICPv1CommonTypes + "UID", UID.ToString())
                                               )
                                           )
                                       ));
@@ -418,9 +418,9 @@ namespace org.emi3group.IO.OICP
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStopXML(this EVSE   EVSE,
-                                                String      SessionID,
-                                                String      PartnerSessionID,
-                                                String      UID)
+                                                SessionId   SessionID,
+                                                SessionId   PartnerSessionID,
+                                                Token       UID)
         {
 
             return AuthorizeStopXML(EVSE.ChargingStation.Pool.Operator.Id,
@@ -445,19 +445,19 @@ namespace org.emi3group.IO.OICP
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStopXML(EVSEOperator_Id  OperatorId,
                                                 EVSE_Id          EVSEId,
-                                                String           SessionID,
-                                                String           PartnerSessionID,
-                                                String           UID)
+                                                SessionId        SessionID,
+                                                SessionId        PartnerSessionID,
+                                                Token            UID)
         {
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectAuthorizeStop",
-                                          new XElement(NS.OICPv1Authorization + "SessionID",        SessionID),
-                                          new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
+                                          new XElement(NS.OICPv1Authorization + "SessionID",        SessionID.ToString()),
+                                          new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
                                           new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.ToString()),
                                           new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.ToString()),
                                           new XElement(NS.OICPv1Authorization + "Identification",
                                               new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
-                                                 new XElement(NS.OICPv1CommonTypes + "UID", UID)
+                                                 new XElement(NS.OICPv1CommonTypes + "UID", UID.ToString())
                                               )
                                           )
                                       ));
@@ -470,11 +470,11 @@ namespace org.emi3group.IO.OICP
         #region SendChargeDetailRecordXML(this EVSE, SessionID, PartnerSessionID, UID, EVCOId, ...)
 
         public static XElement SendChargeDetailRecordXML(this EVSE  EVSE,
-                                                         String     SessionID,
-                                                         String     PartnerSessionID,
+                                                         SessionId  SessionID,
+                                                         SessionId  PartnerSessionID,
                                                          String     PartnerProductID,
-                                                         String     UID,
-                                                         String     EVCOId,
+                                                         Token      UID,
+                                                         eMA_Id     EVCOId,
                                                          DateTime   ChargeStart,
                                                          DateTime   ChargeEnd,
                                                          DateTime?  SessionStart    = null,
@@ -503,11 +503,11 @@ namespace org.emi3group.IO.OICP
         #region SendChargeDetailRecordXML(EVSEID, SessionID, PartnerSessionID, UID, EVCOId, ...)
 
         public static XElement SendChargeDetailRecordXML(EVSE_Id    EVSEID,
-                                                         String     SessionID,
-                                                         String     PartnerSessionID,
+                                                         SessionId  SessionID,
+                                                         SessionId  PartnerSessionID,
                                                          String     PartnerProductID,
-                                                         String     UID,
-                                                         String     EVCOId,
+                                                         Token      UID,
+                                                         eMA_Id     EVCOId,
                                                          DateTime   ChargeStart,
                                                          DateTime   ChargeEnd,
                                                          DateTime?  SessionStart    = null,
@@ -518,18 +518,18 @@ namespace org.emi3group.IO.OICP
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectChargeDetailRecord",
 
-                                 new XElement(NS.OICPv1Authorization + "SessionID",        SessionID),
-                                 new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID),
+                                 new XElement(NS.OICPv1Authorization + "SessionID",        SessionID.ToString()),
+                                 new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
                                  new XElement(NS.OICPv1Authorization + "PartnerProductID", PartnerProductID),
                                  new XElement(NS.OICPv1Authorization + "EvseID",           EVSEID.ToString()),
 
                                  new XElement(NS.OICPv1Authorization + "Identification",
                                      (UID != null)
                                          ? new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
-                                                new XElement(NS.OICPv1CommonTypes + "UID", UID)
+                                                new XElement(NS.OICPv1CommonTypes + "UID", UID.ToString())
                                            )
-                                         : new XElement(NS.OICPv1CommonTypes + "RemoteIdentificationType",
-                                                new XElement(NS.OICPv1CommonTypes + "EVCOID", EVCOId)
+                                         : new XElement(NS.OICPv1CommonTypes + "RemoteIdentification",
+                                                new XElement(NS.OICPv1CommonTypes + "EVCOID", EVCOId.ToString())
                                            )
                                  ),
 

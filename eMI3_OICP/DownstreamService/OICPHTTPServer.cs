@@ -25,6 +25,7 @@ using System.Collections.Concurrent;
 
 using eu.Vanaheimr.Hermod;
 using eu.Vanaheimr.Hermod.HTTP;
+using org.emi3group.LocalService;
 
 #endregion
 
@@ -39,8 +40,25 @@ namespace org.emi3group.IO.OICP
 
         #region Properties
 
+        #region HTTPRoot
+
         public String       HTTPRoot            { get; set; }
-        public URLMapping   FrontendHTTPServer  { get; set; }
+
+        #endregion
+
+        #region RequestRouter
+
+        private readonly RequestRouter _RequestRouter;
+
+        public RequestRouter RequestRouter
+        {
+            get
+            {
+                return _RequestRouter;
+            }
+        }
+
+        #endregion
 
         #endregion
 
@@ -49,10 +67,16 @@ namespace org.emi3group.IO.OICP
         /// <summary>
         /// Initialize the OICP HTTP server using IPAddress.Any.
         /// </summary>
+        /// <param name="RequestRouter">The request router.</param>
         /// <param name="IPPort">The IP listing port.</param>
-        public OICPHTTPServer(IPPort IPPort)
+        public OICPHTTPServer(RequestRouter  RequestRouter,
+                              IPPort         IPPort)
+
             : base(IPv4Address.Any, IPPort, Autostart: false)
+
         {
+
+            this._RequestRouter = RequestRouter;
 
             OnNewHTTPService += IGraphDevroomService => {
                                     IGraphDevroomService.InternalHTTPServer = this;
