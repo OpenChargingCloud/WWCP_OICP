@@ -36,7 +36,7 @@ namespace org.emi3group.IO.OICP
         #region SearchRequestXML(GeoCoordinate, Distance, ProviderId = "8BD")
 
         /// <summary>
-        /// Create a new EVSE SEarch request.
+        /// Create a new EVSE Search request.
         /// </summary>
         /// <param name="GeoCoordinate">The geo coordinate of the search center.</param>
         /// <param name="DistanceKM">The search distance relative to the search center.</param>
@@ -59,6 +59,75 @@ namespace org.emi3group.IO.OICP
 
                                           new XElement(NS.OICPv1EVSESearch + "Range", DistanceKM)
 
+                                     ));
+
+        }
+
+        #endregion
+
+
+        #region MobileAuthorizeStartXML(EVSEId, EVCOId, PIN, PartnerProductId = null)
+
+        /// <summary>
+        /// Create a new mobile AuthorizeStart request.
+        /// </summary>
+        /// <param name="EVSEId">An EVSE identification.</param>
+        /// <param name="EVCOId"></param>
+        /// <param name="PIN"></param>
+        /// <param name="PartnerProductId">Your charging product identification (optional).</param>
+        public static XElement MobileAuthorizeStartXML(EVSE_Id  EVSEId,
+                                                       eMA_Id   EVCOId,
+                                                       String   PIN,
+                                                       String   PartnerProductId = null)
+        {
+
+            return SOAP.Encapsulation(new XElement(NS.OICPv1MobileAuthorization + "HubjectMobileAuthorizeStart",
+
+                                          new XElement(NS.OICPv1MobileAuthorization + "EvseID", EVSEId.ToString()),
+
+                                          new XElement(NS.OICPv1MobileAuthorization + "QRCodeIdentification",
+                                              new XElement(NS.OICPv1CommonTypes + "EVCOID", EVCOId.ToString()),
+                                              new XElement(NS.OICPv1CommonTypes + "PIN",    PIN)
+                                          ),
+
+                                          (PartnerProductId != null)
+                                              ? new XElement(NS.OICPv1MobileAuthorization + "PartnerProductID", PartnerProductId)
+                                              : null
+
+                                     ));
+
+        }
+
+        #endregion
+
+        #region MobileRemoteStartXML(SessionId = null)
+
+        /// <summary>
+        /// Create a new mobile AuthorizeStart request.
+        /// </summary>
+        /// <param name="SessionId">An OICP session identification from the MobileAuthorizationStart response.</param>
+        public static XElement MobileRemoteStartXML(SessionId  SessionId = null)
+        {
+
+            return SOAP.Encapsulation(new XElement(NS.OICPv1MobileAuthorization + "HubjectMobileRemoteStart",
+                                          new XElement(NS.OICPv1EVSESearch + "SessionID", (SessionId != null) ? SessionId : SessionId.New)
+                                     ));
+
+        }
+
+        #endregion
+
+        #region MobileRemoteStopXML(SessionId = null)
+
+        /// <summary>
+        /// Create a new mobile AuthorizeStop request.
+        /// </summary>
+        /// <param name="SessionId">The OICP session identification from the MobileAuthorizationStart response.</param>
+        public static XElement MobileRemoteStopXML(SessionId SessionId = null)
+        {
+
+            return SOAP.Encapsulation(new XElement(NS.OICPv1MobileAuthorization + "HubjectMobileRemoteStop",
+                                          new XElement(NS.OICPv1EVSESearch + "SessionID", (SessionId != null) ? SessionId : SessionId.New)
                                      ));
 
         }

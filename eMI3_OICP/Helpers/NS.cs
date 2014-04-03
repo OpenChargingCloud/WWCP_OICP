@@ -34,32 +34,37 @@ namespace org.emi3group.IO.OICP
         /// <summary>
         /// The namespace for the XML SOAP Envelope.
         /// </summary>
-        public static readonly XNamespace SOAPEnvelope          = "http://schemas.xmlsoap.org/soap/envelope/";
+        public static readonly XNamespace SOAPEnvelope              = "http://schemas.xmlsoap.org/soap/envelope/";
 
         /// <summary>
         /// The namespace for the common types within the Open Intercharge Protocol (OICP) Version 1.0.
         /// </summary>
-        public static readonly XNamespace OICPv1CommonTypes     = "http://www.hubject.com/b2b/services/commontypes/v1";
+        public static readonly XNamespace OICPv1CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v1";
 
         /// <summary>
         /// The namespace for the EVSE Data within the Open Intercharge Protocol (OICP) Version 1.0.
         /// </summary>
-        public static readonly XNamespace OICPv1EVSEData        = "http://www.hubject.com/b2b/services/evsedata/v1";
+        public static readonly XNamespace OICPv1EVSEData            = "http://www.hubject.com/b2b/services/evsedata/v1";
 
         /// <summary>
         /// The namespace for the EVSE Status within the Open Intercharge Protocol (OICP) Version 1.0.
         /// </summary>
-        public static readonly XNamespace OICPv1EVSEStatus      = "http://www.hubject.com/b2b/services/evsestatus/v1";
+        public static readonly XNamespace OICPv1EVSEStatus          = "http://www.hubject.com/b2b/services/evsestatus/v1";
 
         /// <summary>
         /// The namespace for the Authorization within the Open Intercharge Protocol (OICP) Version 1.0.
         /// </summary>
-        public static readonly XNamespace OICPv1Authorization   = "http://www.hubject.com/b2b/services/authorization/v1";
+        public static readonly XNamespace OICPv1Authorization       = "http://www.hubject.com/b2b/services/authorization/v1";
+
+        /// <summary>
+        /// The namespace for the Mobile Authorization within the Open Intercharge Protocol (OICP) Version 1.0.
+        /// </summary>
+        public static readonly XNamespace OICPv1MobileAuthorization = "http://www.hubject.com/b2b/services/mobileauthorization/v1";
 
         /// <summary>
         /// The namespace for EVSE Serach within the Open Intercharge Protocol (OICP) Version 1.0.
         /// </summary>
-        public static readonly XNamespace OICPv1EVSESearch      = "http://www.hubject.com/b2b/services/evsesearch/v1";
+        public static readonly XNamespace OICPv1EVSESearch          = "http://www.hubject.com/b2b/services/evsesearch/v1";
 
     }
 

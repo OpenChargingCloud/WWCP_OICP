@@ -467,12 +467,27 @@ namespace org.emi3group.IO.OICP
         #endregion
 
 
-        #region SendChargeDetailRecordXML(this EVSE, SessionID, PartnerSessionID, UID, EVCOId, ...)
+        #region SendChargeDetailRecordXML(this EVSE, SessionId, PartnerSessionId, UID, EVCOId, ...)
 
+        /// <summary>
+        /// Create an OICP SendChargeDetailRecord XML request.
+        /// </summary>
+        /// <param name="EVSEId">An EVSE identification.</param>
+        /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
+        /// <param name="PartnerSessionId">Your own session identification.</param>
+        /// <param name="PartnerProductId">Your charging product identification.</param>
+        /// <param name="UID">The optional RFID user identification.</param>
+        /// <param name="EVCOId"></param>
+        /// <param name="ChargeStart">The timestamp of the charging start.</param>
+        /// <param name="ChargeEnd">The timestamp of the charging end.</param>
+        /// <param name="SessionStart">The timestamp of the session start.</param>
+        /// <param name="SessionEnd">The timestamp of the session end.</param>
+        /// <param name="MeterValueStart">The initial value of the energy meter.</param>
+        /// <param name="MeterValueEnd">The final value of the energy meter.</param>
         public static XElement SendChargeDetailRecordXML(this EVSE  EVSE,
-                                                         SessionId  SessionID,
-                                                         SessionId  PartnerSessionID,
-                                                         String     PartnerProductID,
+                                                         SessionId  SessionId,
+                                                         SessionId  PartnerSessionId,
+                                                         String     PartnerProductId,
                                                          Token      UID,
                                                          eMA_Id     EVCOId,
                                                          DateTime   ChargeStart,
@@ -484,9 +499,9 @@ namespace org.emi3group.IO.OICP
         {
 
             return SendChargeDetailRecordXML(EVSE.Id,
-                                             SessionID,
-                                             PartnerSessionID,
-                                             PartnerProductID,
+                                             SessionId,
+                                             PartnerSessionId,
+                                             PartnerProductId,
                                              UID,
                                              EVCOId,
                                              ChargeStart,
@@ -500,12 +515,27 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region SendChargeDetailRecordXML(EVSEID, SessionID, PartnerSessionID, UID, EVCOId, ...)
+        #region SendChargeDetailRecordXML(EVSEId, SessionId, PartnerSessionId, UID, EVCOId, ...)
 
-        public static XElement SendChargeDetailRecordXML(EVSE_Id    EVSEID,
-                                                         SessionId  SessionID,
-                                                         SessionId  PartnerSessionID,
-                                                         String     PartnerProductID,
+        /// <summary>
+        /// Create an OICP SendChargeDetailRecord XML request.
+        /// </summary>
+        /// <param name="EVSEId">An EVSE identification.</param>
+        /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
+        /// <param name="PartnerSessionId">Your own session identification.</param>
+        /// <param name="PartnerProductId"></param>
+        /// <param name="UID">The optional RFID user identification.</param>
+        /// <param name="EVCOId"></param>
+        /// <param name="ChargeStart">The timestamp of the charging start.</param>
+        /// <param name="ChargeEnd">The timestamp of the charging end.</param>
+        /// <param name="SessionStart">The timestamp of the session start.</param>
+        /// <param name="SessionEnd">The timestamp of the session end.</param>
+        /// <param name="MeterValueStart">The initial value of the energy meter.</param>
+        /// <param name="MeterValueEnd">The final value of the energy meter.</param>
+        public static XElement SendChargeDetailRecordXML(EVSE_Id    EVSEId,
+                                                         SessionId  SessionId,
+                                                         SessionId  PartnerSessionId,
+                                                         String     PartnerProductId,
                                                          Token      UID,
                                                          eMA_Id     EVCOId,
                                                          DateTime   ChargeStart,
@@ -518,10 +548,10 @@ namespace org.emi3group.IO.OICP
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectChargeDetailRecord",
 
-                                 new XElement(NS.OICPv1Authorization + "SessionID",        SessionID.ToString()),
-                                 new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
-                                 new XElement(NS.OICPv1Authorization + "PartnerProductID", PartnerProductID),
-                                 new XElement(NS.OICPv1Authorization + "EvseID",           EVSEID.ToString()),
+                                 new XElement(NS.OICPv1Authorization + "SessionID",        SessionId.ToString()),
+                                 new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionId.ToString()),
+                                 new XElement(NS.OICPv1Authorization + "PartnerProductID", PartnerProductId),
+                                 new XElement(NS.OICPv1Authorization + "EvseID",           EVSEId.ToString()),
 
                                  new XElement(NS.OICPv1Authorization + "Identification",
                                      (UID != null)

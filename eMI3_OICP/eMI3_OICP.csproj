@@ -54,6 +54,7 @@
     <Compile Include="DownstreamService\OICPHTTPServer.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
+    <Compile Include="Helpers\HubjectMobileAuthorization.cs" />
     <Compile Include="Helpers\ExtentionMethods.cs" />
     <Compile Include="Helpers\HubjectEVSEState.cs" />
     <Compile Include="UpstreamService\OICPUpstreamService.cs" />
