@@ -34,7 +34,7 @@ using org.emi3group.LocalService;
 namespace org.emi3group.IO.OICP
 {
 
-    public class AuthSOAPClient : HTTPClient
+    public class OICPClient : HTTPClient
     {
 
         #region Properties
@@ -57,7 +57,7 @@ namespace org.emi3group.IO.OICP
 
         #region Constructor
 
-        public AuthSOAPClient(IPv4Address  OICPHost,
+        public OICPClient(IPv4Address  OICPHost,
                               IPPort       OICPPort,
                               String       HTTPVirtualHost)
 
@@ -103,9 +103,9 @@ namespace org.emi3group.IO.OICP
 
         #region AuthorizatorId
 
-        private readonly String _AuthorizatorId;
+        private readonly AuthorizatorId _AuthorizatorId;
 
-        public String AuthorizatorId
+        public AuthorizatorId AuthorizatorId
         {
             get
             {
@@ -161,16 +161,16 @@ namespace org.emi3group.IO.OICP
 
         #region Constructor(s)
 
-        public OICPUpstreamService(String  OICPHost,
-                                   IPPort  OICPPort,
-                                   String  HTTPVirtualHost = null,
-                                   String  AuthorizatorId  = "OICP Gateway")
+        public OICPUpstreamService(String          OICPHost,
+                                   IPPort          OICPPort,
+                                   String          HTTPVirtualHost = null,
+                                   AuthorizatorId  AuthorizatorId  = null)
         {
 
             this._OICPHost         = OICPHost;
             this._OICPPort         = OICPPort;
             this._HTTPVirtualHost  = (HTTPVirtualHost != null) ? HTTPVirtualHost : OICPHost;
-            this._AuthorizatorId   = AuthorizatorId;
+            this._AuthorizatorId   = (AuthorizatorId  == null) ? AuthorizatorId.Parse("OICP Gateway") : AuthorizatorId;
             this.DNSClient         = new DNSClient(SearchForIPv6Servers: false);
 
         }
@@ -191,15 +191,15 @@ namespace org.emi3group.IO.OICP
 
                 var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
 
-                using (var SOAPClient = new AuthSOAPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
                 {
 
-                    var HttpResponse = SOAPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
-                                                                                     EVSEId,
-                                                                                     PartnerSessionId,
-                                                                                     UID).
-                                                                                     ToString(),
-                                                        "HubjectAuthorizeStart");
+                    var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
+                                                                                      EVSEId,
+                                                                                      PartnerSessionId,
+                                                                                      UID).
+                                                                                      ToString(),
+                                                         "HubjectAuthorizeStart");
 
                     //ToDo: In case of errors this will not parse!
                     var AuthStartResult = HubjectAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
@@ -329,16 +329,16 @@ namespace org.emi3group.IO.OICP
 
                 var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
 
-                using (var SOAPClient = new AuthSOAPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
                 {
 
-                    var HttpResponse = SOAPClient.Query(CPOMethods.AuthorizeStopXML(OperatorId,
-                                                                                    EVSEId,
-                                                                                    SessionId,
-                                                                                    PartnerSessionId,
-                                                                                    UID).
-                                                                                    ToString(),
-                                                        "HubjectAuthorizeStop");
+                    var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStopXML(OperatorId,
+                                                                                     EVSEId,
+                                                                                     SessionId,
+                                                                                     PartnerSessionId,
+                                                                                     UID).
+                                                                                     ToString(),
+                                                         "HubjectAuthorizeStop");
 
                     //ToDo: In case of errors this will not parse!
                     var AuthStopResult = HubjectAuthorizationStop.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
@@ -505,28 +505,26 @@ namespace org.emi3group.IO.OICP
 
                 var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
 
-                using (var SOAPClient = new AuthSOAPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
                 {
 
-                    var HttpResponse = SOAPClient.Query(CPOMethods.SendChargeDetailRecordXML(EVSEId,
-                                                                                             SessionId,
-                                                                                             PartnerSessionId,
-                                                                                             PartnerProductId,
-                                                                                             UID,
-                                                                                             EVCOId,
-                                                                                             ChargeStart,
-                                                                                             ChargeEnd,
-                                                                                             SessionStart,
-                                                                                             SessionEnd,
-                                                                                             MeterValueStart,
-                                                                                             MeterValueEnd).
-                                                                                             ToString(),
-                                                        "HubjectChargeDetailRecord");
+                    var HttpResponse = _OICPClient.Query(CPOMethods.SendChargeDetailRecordXML(EVSEId,
+                                                                                              SessionId,
+                                                                                              PartnerSessionId,
+                                                                                              PartnerProductId,
+                                                                                              UID,
+                                                                                              EVCOId,
+                                                                                              ChargeStart,
+                                                                                              ChargeEnd,
+                                                                                              SessionStart,
+                                                                                              SessionEnd,
+                                                                                              MeterValueStart,
+                                                                                              MeterValueEnd).
+                                                                                              ToString(),
+                                                         "HubjectChargeDetailRecord");
 
                     //ToDo: In case of errors this will not parse!
                     var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
-
-                    Log.Timestamp("SendCDR: " + ack.Result + " / " + ack.Code + " / " + ack.Description + " / " + ack.AdditionalInfo);
 
                     #region Ok
 
@@ -542,15 +540,11 @@ namespace org.emi3group.IO.OICP
                     #region Error
 
                     else
-                    {
-
                         return new SENDCDRResult(AuthorizatorId) {
                             State             = false,
                             PartnerSessionId  = PartnerSessionId,
                             Description       = ack.Description
                         };
-
-                    }
 
                     #endregion
 
@@ -561,11 +555,12 @@ namespace org.emi3group.IO.OICP
             catch (Exception e)
             {
 
-                return new SENDCDRResult(AuthorizatorId) {
-                               State             = false,
-                               PartnerSessionId  = PartnerSessionId,
-                               Description       = "An exception occured: " + e.Message
-                           };
+                return
+                    new SENDCDRResult(AuthorizatorId) {
+                        State             = false,
+                        PartnerSessionId  = PartnerSessionId,
+                        Description       = "An exception occured: " + e.Message
+                    };
 
             }
 
