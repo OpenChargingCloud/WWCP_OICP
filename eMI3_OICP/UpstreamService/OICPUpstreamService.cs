@@ -20,7 +20,6 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
-using System.Net.NetworkInformation;
 
 using eu.Vanaheimr.Illias.Commons;
 using eu.Vanaheimr.Hermod;
@@ -185,7 +184,7 @@ namespace org.emi3group.IO.OICP
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="PartnerSessionID">Your own session identification.</param>
+        /// <param name="PartnerSessionId">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
         public AUTHSTARTResult AuthorizeStart(EVSEOperator_Id  OperatorId,
                                               EVSE_Id          EVSEId,
@@ -329,8 +328,8 @@ namespace org.emi3group.IO.OICP
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="SessionID">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="PartnerSessionID">Your own session identification.</param>
+        /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
+        /// <param name="PartnerSessionId">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
         public AUTHSTOPResult AuthorizeStop(EVSEOperator_Id  OperatorId,
                                             EVSE_Id          EVSEId,
@@ -505,8 +504,8 @@ namespace org.emi3group.IO.OICP
         /// Create an OICP SendChargeDetailRecord request.
         /// </summary>
         /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="SessionID">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="PartnerSessionID">Your own session identification.</param>
+        /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
+        /// <param name="PartnerSessionId">Your own session identification.</param>
         /// <param name="PartnerProductId"></param>
         /// <param name="UID">The optional RFID user identification.</param>
         /// <param name="EVCOId"></param>
@@ -599,7 +598,7 @@ namespace org.emi3group.IO.OICP
         #endregion
 
 
-        #region HubjectMobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductID = null)
+        #region HubjectMobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductId = null)
 
         /// <summary>
         /// Create a new mobile AuthorizeStart request.
@@ -619,10 +618,10 @@ namespace org.emi3group.IO.OICP
 
                 var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
 
-                using (var SOAPClient = new AuthSOAPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                using (var OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
                 {
 
-                    var HttpResponse = SOAPClient.Query(EMPMethods.MobileAuthorizeStartXML(EVSEId,
+                    var HttpResponse = OICPClient.Query(EMPMethods.MobileAuthorizeStartXML(EVSEId,
                                                                                            EVCOId,
                                                                                            PIN,
                                                                                            PartnerProductId).
@@ -747,15 +746,125 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region HubjectMobileRemoteStart
+        #region MobileRemoteStartXML(SessionId = null)
 
-        // => HubjectAck
+        public MobileRemoteStartResult MobileRemoteStartXML(SessionId SessionId = null)
+        {
+
+            try
+            {
+
+                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
+
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                {
+
+                    var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStartXML(SessionId).ToString(),
+                                                         "HubjectMobileRemoteStart");
+
+                    //ToDo: In case of errors this will not parse!
+                    var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+
+                    #region Ok
+
+                    if (ack.Result)
+                        return new MobileRemoteStartResult(AuthorizatorId) {
+                            State             = true,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                    #region Error
+
+                    else
+                        return new MobileRemoteStartResult(AuthorizatorId) {
+                            State             = false,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                return
+                    new MobileRemoteStartResult(AuthorizatorId) {
+                        State             = false,
+                        //PartnerSessionId  = PartnerSessionId,
+                        Description       = "An exception occured: " + e.Message
+                    };
+
+            }
+
+        }
 
         #endregion
 
-        #region HubjectMobileRemoteStop
+        #region MobileRemoteStopXML(SessionId = null)
 
-        // => HubjectAck
+        public MobileRemoteStopResult MobileRemoteStopXML(SessionId SessionId = null)
+        {
+
+            try
+            {
+
+                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
+
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                {
+
+                    var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStopXML(SessionId).ToString(),
+                                                         "HubjectMobileRemoteStop");
+
+                    //ToDo: In case of errors this will not parse!
+                    var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+
+                    #region Ok
+
+                    if (ack.Result)
+                        return new MobileRemoteStopResult(AuthorizatorId) {
+                            State             = true,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                    #region Error
+
+                    else
+                        return new MobileRemoteStopResult(AuthorizatorId) {
+                            State             = false,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                return
+                    new MobileRemoteStopResult(AuthorizatorId) {
+                        State             = false,
+                        //PartnerSessionId  = PartnerSessionId,
+                        Description       = "An exception occured: " + e.Message
+                    };
+
+            }
+
+        }
 
         #endregion
 
