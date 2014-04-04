@@ -52,18 +52,36 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
+        #region URLPrefix
+
+        private readonly String _URLPrefix;
+
+        public String URLPrefix
+        {
+            get
+            {
+                return _URLPrefix;
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Constructor
 
         public OICPClient(IPv4Address  OICPHost,
-                              IPPort       OICPPort,
-                              String       HTTPVirtualHost)
+                          IPPort       OICPPort,
+                          String       HTTPVirtualHost,
+                          String       URLPrefix)
 
             : base(OICPHost, OICPPort)
 
         {
-            this._HTTPVirtualHost = HTTPVirtualHost;
+
+            this._HTTPVirtualHost  = HTTPVirtualHost;
+            this._URLPrefix        = URLPrefix;
+
         }
 
         #endregion
@@ -73,7 +91,7 @@ namespace org.emi3group.IO.OICP
         public HTTPResponse Query(String Query, String SOAPAction)
         {
 
-            var builder = this.POST("/ibis/ws/HubjectAuthorization_V1");
+            var builder = this.POST(_URLPrefix);
             builder.Host         = HTTPVirtualHost;
             builder.Content      = Query.ToUTF8Bytes();
             builder.ContentType  = HTTPContentType.XMLTEXT_UTF8;
@@ -89,12 +107,12 @@ namespace org.emi3group.IO.OICP
     }
 
 
-    public class OICPUpstreamService : IUpstreamEMobilityService
+    public abstract class AOICPUpstreamService
     {
 
         #region Data
 
-        private DNSClient DNSClient;
+        protected readonly DNSClient DNSClient;
 
         #endregion
 
@@ -156,7 +174,60 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
+        #region OICPAuth_URLPrefix
+
+        private readonly String _OICPAuth_URLPrefix;
+
+        public String OICPAuth_URLPrefix
+        {
+            get
+            {
+                return _OICPAuth_URLPrefix;
+            }
+        }
+
         #endregion
+
+        #region OICPMobileAuth_URLPrefix
+
+        private readonly String _OICPMobileAuth_URLPrefix;
+
+        public String OICPMobileAuth_URLPrefix
+        {
+            get
+            {
+                return _OICPMobileAuth_URLPrefix;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Constructor(s)
+
+        public AOICPUpstreamService(String          OICPHost,
+                                    IPPort          OICPPort,
+                                    String          HTTPVirtualHost = null,
+                                    AuthorizatorId  AuthorizatorId  = null)
+        {
+
+            this._OICPHost                  = OICPHost;
+            this._OICPPort                  = OICPPort;
+            this._HTTPVirtualHost           = (HTTPVirtualHost != null) ? HTTPVirtualHost : OICPHost;
+            this._OICPAuth_URLPrefix        = "/ibis/ws/HubjectAuthorization_V1";
+            this._OICPMobileAuth_URLPrefix  = "/ibis/ws/HubjectMobileAuthorization_V1";
+            this._AuthorizatorId            = (AuthorizatorId  == null) ? AuthorizatorId.Parse("OICP Gateway") : AuthorizatorId;
+            this.DNSClient                  = new DNSClient(SearchForIPv6Servers: false);
+
+        }
+
+        #endregion
+
+    }
+
+    public class OICPUpstreamService : AOICPUpstreamService, IEVSEOperator2HubjectService
+    {
 
         #region Constructor(s)
 
@@ -164,15 +235,10 @@ namespace org.emi3group.IO.OICP
                                    IPPort          OICPPort,
                                    String          HTTPVirtualHost = null,
                                    AuthorizatorId  AuthorizatorId  = null)
-        {
 
-            this._OICPHost         = OICPHost;
-            this._OICPPort         = OICPPort;
-            this._HTTPVirtualHost  = (HTTPVirtualHost != null) ? HTTPVirtualHost : OICPHost;
-            this._AuthorizatorId   = (AuthorizatorId  == null) ? AuthorizatorId.Parse("OICP Gateway") : AuthorizatorId;
-            this.DNSClient         = new DNSClient(SearchForIPv6Servers: false);
+            : base(OICPHost, OICPPort, HTTPVirtualHost, AuthorizatorId)
 
-        }
+        { }
 
         #endregion
 
@@ -197,7 +263,7 @@ namespace org.emi3group.IO.OICP
 
                 var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
 
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, OICPAuth_URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
@@ -343,7 +409,7 @@ namespace org.emi3group.IO.OICP
 
                 var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
 
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, OICPAuth_URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStopXML(OperatorId,
@@ -534,7 +600,7 @@ namespace org.emi3group.IO.OICP
 
                 var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
 
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, OICPAuth_URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.SendChargeDetailRecordXML(EVSEId,
@@ -597,6 +663,24 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
+    }
+
+    public class OICPEMPService : AOICPUpstreamService, IEMP2HubjectService
+    {
+
+        #region Constructor(s)
+
+        public OICPEMPService(String          OICPHost,
+                              IPPort          OICPPort,
+                              String          HTTPVirtualHost = null,
+                              AuthorizatorId  AuthorizatorId  = null)
+
+            : base(OICPHost, OICPPort, HTTPVirtualHost, AuthorizatorId)
+
+        { }
+
+        #endregion
+
 
         #region HubjectMobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductId = null)
 
@@ -618,7 +702,7 @@ namespace org.emi3group.IO.OICP
 
                 var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
 
-                using (var OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                using (var OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, OICPMobileAuth_URLPrefix))
                 {
 
                     var HttpResponse = OICPClient.Query(EMPMethods.MobileAuthorizeStartXML(EVSEId,
@@ -628,8 +712,15 @@ namespace org.emi3group.IO.OICP
                                                                                            ToString(),
                                                         "HubjectMobileAuthorizeStart");
 
+                    var XML = XDocument.Parse(HttpResponse.Content.ToUTF8String());
+
                     //ToDo: In case of errors this will not parse!
-                    var AuthStartResult = HubjectAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+                    var AuthStartResult = HubjectMobileAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+
+
+                    
+
+
 
                     #region Authorized
 
@@ -756,7 +847,7 @@ namespace org.emi3group.IO.OICP
 
                 var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
 
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, OICPMobileAuth_URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStartXML(SessionId).ToString(),
@@ -817,7 +908,7 @@ namespace org.emi3group.IO.OICP
 
                 var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
 
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost))
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, OICPMobileAuth_URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStopXML(SessionId).ToString(),

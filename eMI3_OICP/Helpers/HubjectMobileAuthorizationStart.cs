@@ -31,7 +31,7 @@ namespace org.emi3group.IO.OICP
     /// <summary>
     /// An abstract Hubject Authorization result.
     /// </summary>
-    public class HubjectMobileAuthorization
+    public class HubjectMobileAuthorizationStart
     {
 
         #region Properties
@@ -160,14 +160,97 @@ namespace org.emi3group.IO.OICP
         #region Constructor
 
         /// <summary>
-        /// Create a new abstract Hubject Authorization result.
+        /// Create a new abstract Hubject Authorization Start result.
         /// </summary>
         /// <param name="AuthorizationType">The type of authorization [start|stop].</param>
         /// <param name="XML">The XML to parse.</param>
-        public HubjectMobileAuthorization(XElement XML)
+        public HubjectMobileAuthorizationStart(XElement XML)
         {
 
-            var ack                   = XML.Descendants(NS.OICPv1MobileAuthorization + "HubjectMobileAuthorization").FirstOrDefault();
+            var HubjectMobileAuthorizationStart = XML.Descendants(NS.OICPv1MobileAuthorization + "HubjectMobileAuthorizationStart").FirstOrDefault();
+
+
+            // <?xml version='1.0' encoding='UTF-8'?>
+            // <isns:Envelope xmlns:cmn  = "http://www.inubit.com/eMobility/SBP/CommonTypes"
+            //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                xmlns:ns   = "http://www.hubject.com/b2b/services/commontypes/v1"
+            //                xmlns:sbp  = "http://www.inubit.com/eMobility/SBP"
+            //                xmlns:tns  = "http://www.hubject.com/b2b/services/evsedata/v1"
+            //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
+            //                xmlns:wsc  = "http://www.hubject.com/b2b/services/mobileauthorization/v1">
+            //
+            //   <isns:Body>
+            //     <wsc:HubjectMobileAuthorizationStart>
+            //
+            //       <wsc:AuthorizationStatus>NotAuthorized</wsc:AuthorizationStatus>
+            //
+            //       <wsc:StatusCode>
+            //         <v1:Code>101</v1:Code>
+            //         <v1:Description>QR-Code Authentication failed - Invalid Credentials</v1:Description>
+            //       </wsc:StatusCode>
+            //
+            //       <wsc:GeoCoordinates>
+            //         <v1:DecimalDegree>
+            //           <v1:Longitude>0.000000</v1:Longitude>
+            //           <v1:Latitude>0.000000</v1:Latitude>
+            //         </v1:DecimalDegree>
+            //       </wsc:GeoCoordinates>
+            //
+            //     </wsc:HubjectMobileAuthorizationStart>
+            //   </isns:Body>
+            //
+            // </isns:Envelope>
+
+            // <?xml version='1.0' encoding='UTF-8'?>
+            // <isns:Envelope xmlns:cmn  = "http://www.inubit.com/eMobility/SBP/CommonTypes"
+            //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                xmlns:ns   = "http://www.hubject.com/b2b/services/commontypes/v1"
+            //                xmlns:sbp  = "http://www.inubit.com/eMobility/SBP"
+            //                xmlns:tns  = "http://www.hubject.com/b2b/services/evsedata/v1"
+            //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
+            //                xmlns:wsc  = "http://www.hubject.com/b2b/services/mobileauthorization/v1">
+            //
+            //   <isns:Body>
+            //     <wsc:HubjectMobileAuthorizationStart>
+            //
+            //       <wsc:SessionID>2cfc3548-0a88-1296-7141-df2c5e1864d3</wsc:SessionID>
+            //       <wsc:AuthorizationStatus>Authorized</wsc:AuthorizationStatus>
+            //
+            //       <wsc:StatusCode>
+            //         <v1:Code>000</v1:Code>
+            //         <v1:Description>Success</v1:Description>
+            //       </wsc:StatusCode>
+            //
+            //       <wsc:GeoCoordinates>
+            //         <v1:DecimalDegree>
+            //           <v1:Longitude>10.144537</v1:Longitude>
+            //           <v1:Latitude>49.729122</v1:Latitude>
+            //         </v1:DecimalDegree>
+            //       </wsc:GeoCoordinates>
+            //
+            //       <wsc:Address>
+            //         <v1:Country>DEU</v1:Country>
+            //         <v1:City>Kitzingen</v1:City>
+            //         <v1:Street>Steigweg</v1:Street>
+            //         <v1:PostalCode>97318</v1:PostalCode>
+            //         <v1:HouseNum>24</v1:HouseNum>
+            //       </wsc:Address>
+            //
+            //       <wsc:ChargingStationName>Innopark Kitzingen</wsc:ChargingStationName>
+            //       <wsc:EnChargingStationName>Innopark Kitzingen</wsc:EnChargingStationName>
+            //
+            //     </wsc:HubjectMobileAuthorizationStart>
+            //   </isns:Body>
+            // </isns:Envelope>
+
+            this._SessionID = SessionId.Parse((HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID") != null)
+                                             ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID").Value
+                                             : "");
+
+            var AuthorizationStatus = HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AuthorizationStatus");
+
+
+
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
             //                   xmlns:v1      = "http://www.hubject.com/b2b/services/mobileauthorization/v1"
@@ -230,69 +313,15 @@ namespace org.emi3group.IO.OICP
             //    </soapenv:Body>
             // </soapenv:Envelope>
 
-            this._SessionID           = SessionId .Parse((ack.Element(NS.OICPv1Authorization + "SessionID") != null)  ? ack.Element(NS.OICPv1Authorization + "SessionID"). Value : "");
-            this._PartnerSessionID    =  ack.Element(NS.OICPv1Authorization + "PartnerSessionID").Value;
-            this._ProviderID          = (ack.Element(NS.OICPv1Authorization + "ProviderID") != null) ? ack.Element(NS.OICPv1Authorization + "ProviderID").Value : "";
-            this._AuthorizationStatus = (ack.Element(NS.OICPv1Authorization + "AuthorizationStatus").Value.ToLower() == "authorized") ? AuthorizationStatusType.Authorized : AuthorizationStatusType.NotAuthorized;
+            //this._SessionID           = SessionId .Parse((ack.Element(NS.OICPv1Authorization + "SessionID") != null)  ? ack.Element(NS.OICPv1Authorization + "SessionID"). Value : "");
+            //this._PartnerSessionID    =  ack.Element(NS.OICPv1Authorization + "PartnerSessionID").Value;
+            //this._ProviderID          = (ack.Element(NS.OICPv1Authorization + "ProviderID") != null) ? ack.Element(NS.OICPv1Authorization + "ProviderID").Value : "";
+            //this._AuthorizationStatus = (ack.Element(NS.OICPv1Authorization + "AuthorizationStatus").Value.ToLower() == "authorized") ? AuthorizationStatusType.Authorized : AuthorizationStatusType.NotAuthorized;
 
-            var StatusCode            = ack.Element(NS.OICPv1Authorization + "StatusCode");
-            this._Code                = UInt16.Parse(StatusCode.Element(NS.OICPv1CommonTypes + "Code").Value);
-            this._Description         =  StatusCode.Element(NS.OICPv1CommonTypes + "Description").Value;
-            this._AdditionalInfo      = (StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo") != null) ? StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo").Value : String.Empty;
-
-            // - Auth Start --------------------------------------------------------------------------------------------
-
-            // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-            //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
-            //   <soapenv:Body>
-            //     <tns:HubjectAuthorizationStart>
-            //       <tns:SessionID>60ce73f6-0a88-1296-3d3d-623fdd276ddc</tns:SessionID> 
-            //       <tns:PartnerSessionID>9ab07cb6-ac05-4f17-b944-8fe87682d646</tns:PartnerSessionID> 
-            //       <tns:ProviderID>BMW</tns:ProviderID> 
-            //       <tns:AuthorizationStatus>Authorized</tns:AuthorizationStatus> 
-            //       <tns:StatusCode>
-            //         <cmn:Code>000</cmn:Code> 
-            //         <cmn:Description>Success</cmn:Description> 
-            //       </tns:StatusCode>
-            //     </tns:HubjectAuthorizationStart>
-            //   </soapenv:Body>
-            // </soapenv:Envelope>
-
-            // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-            //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
-            //   <soapenv:Body>
-            //     <tns:HubjectAuthorizationStart>
-            //       <tns:PartnerSessionID>0815</tns:PartnerSessionID> 
-            //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus> 
-            //       <tns:StatusCode>
-            //         <cmn:Code>320</cmn:Code> 
-            //         <cmn:Description>Service not available</cmn:Description> 
-            //       </tns:StatusCode>
-            //     </tns:HubjectAuthorizationStart>
-            //   </soapenv:Body>
-            // </soapenv:Envelope>
-
-            // - Auth Stop ---------------------------------------------------------------------------------------------
-
-            // <?xml version="1.0" encoding="UTF-8" ?> 
-            // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-            //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
-            //   <soapenv:Body>
-            //     <tns:HubjectAuthorizationStop>
-            //       <tns:SessionID>60dfacc8-0a88-1296-1aef-b675131f4510</tns:SessionID> 
-            //       <tns:PartnerSessionID>5d4d5ff4-6f08-4f49-8e2b-db46ae3f2bc9</tns:PartnerSessionID> 
-            //       <tns:ProviderID>BMW</tns:ProviderID> 
-            //       <tns:AuthorizationStatus>Authorized</tns:AuthorizationStatus> 
-            //       <tns:StatusCode>
-            //         <cmn:Code>000</cmn:Code> 
-            //         <cmn:Description>Success</cmn:Description> 
-            //       </tns:StatusCode>
-            //     </tns:HubjectAuthorizationStop>
-            //   </soapenv:Body>
-            // </soapenv:Envelope>
+            //var StatusCode            = ack.Element(NS.OICPv1Authorization + "StatusCode");
+            //this._Code                = UInt16.Parse(StatusCode.Element(NS.OICPv1CommonTypes + "Code").Value);
+            //this._Description         =  StatusCode.Element(NS.OICPv1CommonTypes + "Description").Value;
+            //this._AdditionalInfo      = (StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo") != null) ? StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo").Value : String.Empty;
 
         }
 
@@ -301,14 +330,14 @@ namespace org.emi3group.IO.OICP
         #region (static) Parse(XML)
 
         /// <summary>
-        /// Create a new Hubject Mobile Authorization result.
+        /// Create a new Hubject Mobile Authorization Start result.
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
-        public static HubjectMobileAuthorization Parse(XElement XML)
+        public static HubjectMobileAuthorizationStart Parse(XElement XML)
         {
             try
             {
-                return new HubjectMobileAuthorization(XML);
+                return new HubjectMobileAuthorizationStart(XML);
             }
             catch (Exception e)
             {
