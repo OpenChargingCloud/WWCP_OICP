@@ -247,9 +247,36 @@ namespace org.emi3group.IO.OICP
                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID").Value
                                              : "");
 
-            var AuthorizationStatus = HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AuthorizationStatus");
+            var AuthorizationStatus     = HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AuthorizationStatus");
 
+            var StatusCode              = HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "StatusCode");
+            this._Code                  = UInt16.Parse(StatusCode.Element(NS.OICPv1CommonTypes + "Code").Value);
+            this._Description           = (StatusCode.Element(NS.OICPv1CommonTypes + "Description") != null)
+                                              ? StatusCode.Element(NS.OICPv1CommonTypes + "Description").Value
+                                              : String.Empty;
+            this._AdditionalInfo        = (StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo") != null)
+                                              ? StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo").Value
+                                              : String.Empty;
 
+            var TermsOfUse              = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "TermsOfUse") != null)
+                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "TermsOfUse").Value
+                                              : String.Empty;
+
+            var AdditionalInfo          = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AdditionalInfo") != null)
+                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AdditionalInfo").Value
+                                              : String.Empty;
+
+            var EnAdditionalInfo        = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnAdditionalInfo") != null)
+                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnAdditionalInfo").Value
+                                              : String.Empty;
+
+            var ChargingStationName     = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "ChargingStationName") != null)
+                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "ChargingStationName").Value
+                                              : String.Empty;
+
+            var EnChargingStationName   = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnChargingStationName") != null)
+                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnChargingStationName").Value
+                                              : String.Empty;
 
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
@@ -312,16 +339,6 @@ namespace org.emi3group.IO.OICP
             //       </v1:HubjectMobileAuthorizationStart>
             //    </soapenv:Body>
             // </soapenv:Envelope>
-
-            //this._SessionID           = SessionId .Parse((ack.Element(NS.OICPv1Authorization + "SessionID") != null)  ? ack.Element(NS.OICPv1Authorization + "SessionID"). Value : "");
-            //this._PartnerSessionID    =  ack.Element(NS.OICPv1Authorization + "PartnerSessionID").Value;
-            //this._ProviderID          = (ack.Element(NS.OICPv1Authorization + "ProviderID") != null) ? ack.Element(NS.OICPv1Authorization + "ProviderID").Value : "";
-            //this._AuthorizationStatus = (ack.Element(NS.OICPv1Authorization + "AuthorizationStatus").Value.ToLower() == "authorized") ? AuthorizationStatusType.Authorized : AuthorizationStatusType.NotAuthorized;
-
-            //var StatusCode            = ack.Element(NS.OICPv1Authorization + "StatusCode");
-            //this._Code                = UInt16.Parse(StatusCode.Element(NS.OICPv1CommonTypes + "Code").Value);
-            //this._Description         =  StatusCode.Element(NS.OICPv1CommonTypes + "Description").Value;
-            //this._AdditionalInfo      = (StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo") != null) ? StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo").Value : String.Empty;
 
         }
 

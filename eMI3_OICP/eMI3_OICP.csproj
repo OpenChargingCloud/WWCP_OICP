@@ -47,17 +47,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DownstreamService\HTTPService\AOICPHTTPService.cs" />
-    <Compile Include="DownstreamService\HTTPService\IOICPHTTPService.cs" />
-    <Compile Include="DownstreamService\HTTPService\OICPHTTPService_HTML.cs" />
-    <Compile Include="DownstreamService\HTTPService\OICPHTTPService_XML.cs" />
-    <Compile Include="DownstreamService\OICPHTTPServer.cs" />
+    <Compile Include="DownstreamServices\HTTPService\AOICPHTTPService.cs" />
+    <Compile Include="DownstreamServices\HTTPService\IOICPHTTPService.cs" />
+    <Compile Include="DownstreamServices\HTTPService\OICPHTTPService_HTML.cs" />
+    <Compile Include="DownstreamServices\HTTPService\OICPHTTPService_XML.cs" />
+    <Compile Include="DownstreamServices\OICPHTTPServer.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
     <Compile Include="Helpers\HubjectMobileAuthorizationStart.cs" />
     <Compile Include="Helpers\ExtentionMethods.cs" />
     <Compile Include="Helpers\HubjectEVSEState.cs" />
-    <Compile Include="UpstreamService\OICPUpstreamService.cs" />
+    <Compile Include="UpstreamServices\AOICPUpstreamService.cs" />
+    <Compile Include="UpstreamServices\OICPClient.cs" />
+    <Compile Include="UpstreamServices\OICP_EMP_UpstreamService.cs" />
+    <Compile Include="UpstreamServices\OICP_EVSEOperator_UpstreamService.cs" />
     <Compile Include="Helpers\HubjectEVSESearchReply.cs" />
     <Compile Include="Helpers\HubjectAuthorization.cs" />
     <Compile Include="Helpers\HubjectAcknowledgement.cs" />
@@ -118,7 +121,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DownstreamService\HTTPRoot\index.html" />
+    <EmbeddedResource Include="DownstreamServices\HTTPRoot\index.html" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
