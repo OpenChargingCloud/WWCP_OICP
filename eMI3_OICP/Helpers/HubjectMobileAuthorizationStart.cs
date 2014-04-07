@@ -138,18 +138,88 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
+        //#region AdditionalInfo
+
+        //private readonly String _AdditionalInfo;
+
+        ///// <summary>
+        ///// An additional information on the result.
+        ///// </summary>
+        //public String AdditionalInfo
+        //{
+        //    get
+        //    {
+        //        return _AdditionalInfo;
+        //    }
+        //}
+
+        //#endregion
+
+        #region TermsOfUse
+
+        private readonly String _TermsOfUse;
+
+        public String TermsOfUse
+        {
+            get
+            {
+                return _TermsOfUse;
+            }
+        }
+
+        #endregion
+
         #region AdditionalInfo
 
         private readonly String _AdditionalInfo;
 
-        /// <summary>
-        /// An additional information on the result.
-        /// </summary>
         public String AdditionalInfo
         {
             get
             {
                 return _AdditionalInfo;
+            }
+        }
+
+        #endregion
+
+        #region EnAdditionalInfo
+
+        private readonly String _EnAdditionalInfo;
+
+        public String EnAdditionalInfo
+        {
+            get
+            {
+                return _EnAdditionalInfo;
+            }
+        }
+
+        #endregion
+
+        #region ChargingStationName
+
+        private readonly String _ChargingStationName;
+
+        public String ChargingStationName
+        {
+            get
+            {
+                return _ChargingStationName;
+            }
+        }
+
+        #endregion
+
+        #region EnChargingStationName
+
+        private readonly String _EnChargingStationName;
+
+        public String EnChargingStationName
+        {
+            get
+            {
+                return _EnChargingStationName;
             }
         }
 
@@ -162,7 +232,6 @@ namespace org.emi3group.IO.OICP
         /// <summary>
         /// Create a new abstract Hubject Authorization Start result.
         /// </summary>
-        /// <param name="AuthorizationType">The type of authorization [start|stop].</param>
         /// <param name="XML">The XML to parse.</param>
         public HubjectMobileAuthorizationStart(XElement XML)
         {
@@ -201,80 +270,42 @@ namespace org.emi3group.IO.OICP
             //
             // </isns:Envelope>
 
-            // <?xml version='1.0' encoding='UTF-8'?>
-            // <isns:Envelope xmlns:cmn  = "http://www.inubit.com/eMobility/SBP/CommonTypes"
-            //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                xmlns:ns   = "http://www.hubject.com/b2b/services/commontypes/v1"
-            //                xmlns:sbp  = "http://www.inubit.com/eMobility/SBP"
-            //                xmlns:tns  = "http://www.hubject.com/b2b/services/evsedata/v1"
-            //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
-            //                xmlns:wsc  = "http://www.hubject.com/b2b/services/mobileauthorization/v1">
-            //
-            //   <isns:Body>
-            //     <wsc:HubjectMobileAuthorizationStart>
-            //
-            //       <wsc:SessionID>2cfc3548-0a88-1296-7141-df2c5e1864d3</wsc:SessionID>
-            //       <wsc:AuthorizationStatus>Authorized</wsc:AuthorizationStatus>
-            //
-            //       <wsc:StatusCode>
-            //         <v1:Code>000</v1:Code>
-            //         <v1:Description>Success</v1:Description>
-            //       </wsc:StatusCode>
-            //
-            //       <wsc:GeoCoordinates>
-            //         <v1:DecimalDegree>
-            //           <v1:Longitude>10.144537</v1:Longitude>
-            //           <v1:Latitude>49.729122</v1:Latitude>
-            //         </v1:DecimalDegree>
-            //       </wsc:GeoCoordinates>
-            //
-            //       <wsc:Address>
-            //         <v1:Country>DEU</v1:Country>
-            //         <v1:City>Kitzingen</v1:City>
-            //         <v1:Street>Steigweg</v1:Street>
-            //         <v1:PostalCode>97318</v1:PostalCode>
-            //         <v1:HouseNum>24</v1:HouseNum>
-            //       </wsc:Address>
-            //
-            //       <wsc:ChargingStationName>Innopark Kitzingen</wsc:ChargingStationName>
-            //       <wsc:EnChargingStationName>Innopark Kitzingen</wsc:EnChargingStationName>
-            //
-            //     </wsc:HubjectMobileAuthorizationStart>
-            //   </isns:Body>
-            // </isns:Envelope>
+            
 
-            this._SessionID = SessionId.Parse((HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID") != null)
-                                             ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID").Value
-                                             : "");
+            this._SessionID             = SessionId.Parse((HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID") != null)
+                                                         ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID").Value
+                                                         : "");
 
-            var AuthorizationStatus     = HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AuthorizationStatus");
+            _AuthorizationStatus        = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AuthorizationStatus").Value == "Authorized")
+                                              ? AuthorizationStatusType.Authorized
+                                              : AuthorizationStatusType.NotAuthorized;
 
             var StatusCode              = HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "StatusCode");
             this._Code                  = UInt16.Parse(StatusCode.Element(NS.OICPv1CommonTypes + "Code").Value);
             this._Description           = (StatusCode.Element(NS.OICPv1CommonTypes + "Description") != null)
                                               ? StatusCode.Element(NS.OICPv1CommonTypes + "Description").Value
                                               : String.Empty;
-            this._AdditionalInfo        = (StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo") != null)
-                                              ? StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo").Value
-                                              : String.Empty;
+            //this._AdditionalInfo        = (StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo") != null)
+            //                                  ? StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo").Value
+            //                                  : String.Empty;
 
-            var TermsOfUse              = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "TermsOfUse") != null)
+            _TermsOfUse                 = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "TermsOfUse") != null)
                                               ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "TermsOfUse").Value
                                               : String.Empty;
 
-            var AdditionalInfo          = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AdditionalInfo") != null)
+            _AdditionalInfo             = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AdditionalInfo") != null)
                                               ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AdditionalInfo").Value
                                               : String.Empty;
 
-            var EnAdditionalInfo        = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnAdditionalInfo") != null)
+            _EnAdditionalInfo           = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnAdditionalInfo") != null)
                                               ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnAdditionalInfo").Value
                                               : String.Empty;
 
-            var ChargingStationName     = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "ChargingStationName") != null)
+            _ChargingStationName        = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "ChargingStationName") != null)
                                               ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "ChargingStationName").Value
                                               : String.Empty;
 
-            var EnChargingStationName   = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnChargingStationName") != null)
+            _EnChargingStationName      = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnChargingStationName") != null)
                                               ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnChargingStationName").Value
                                               : String.Empty;
 
@@ -285,9 +316,11 @@ namespace org.emi3group.IO.OICP
             //    <soapenv:Header/>
             //    <soapenv:Body>
             //       <v1:HubjectMobileAuthorizationStart>
+            //
             //          <!--Optional:-->
             //          <v1:SessionID>?</v1:SessionID>
             //          <v1:AuthorizationStatus>?</v1:AuthorizationStatus>
+            //
             //          <!--Optional:-->
             //          <v1:StatusCode>
             //             <v11:Code>?</v11:Code>
@@ -296,6 +329,7 @@ namespace org.emi3group.IO.OICP
             //             <!--Optional:-->
             //             <v11:AdditionalInfo>?</v11:AdditionalInfo>
             //          </v1:StatusCode>
+            //
             //          <!--Optional:-->
             //          <v1:TermsOfUse>?</v1:TermsOfUse>
             //          <v1:GeoCoordinates>
@@ -312,6 +346,7 @@ namespace org.emi3group.IO.OICP
             //                <v11:Latitude>?</v11:Latitude>
             //             </v11:DegreeMinuteSeconds>
             //          </v1:GeoCoordinates>
+            //
             //          <!--Optional:-->
             //          <v1:Address>
             //             <v11:Country>?</v11:Country>
@@ -328,6 +363,7 @@ namespace org.emi3group.IO.OICP
             //             <!--Optional:-->
             //             <v11:TimeZone>?</v11:TimeZone>
             //          </v1:Address>
+            //
             //          <!--Optional:-->
             //          <v1:AdditionalInfo>?</v1:AdditionalInfo>
             //          <!--Optional:-->
@@ -336,6 +372,7 @@ namespace org.emi3group.IO.OICP
             //          <v1:ChargingStationName>?</v1:ChargingStationName>
             //          <!--Optional:-->
             //          <v1:EnChargingStationName>?</v1:EnChargingStationName>
+            //
             //       </v1:HubjectMobileAuthorizationStart>
             //    </soapenv:Body>
             // </soapenv:Envelope>

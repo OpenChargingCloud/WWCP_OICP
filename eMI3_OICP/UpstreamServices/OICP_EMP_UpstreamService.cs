@@ -63,10 +63,10 @@ namespace org.emi3group.IO.OICP
         /// <param name="EVCOId"></param>
         /// <param name="PIN"></param>
         /// <param name="PartnerProductId">Your charging product identification (optional).</param>
-        public AUTHSTARTResult HubjectMobileAuthorizeStart(EVSE_Id  EVSEId,
-                                                           eMA_Id   EVCOId,
-                                                           String   PIN,
-                                                           String   PartnerProductId = null)
+        public HubjectMobileAuthorizationStart HubjectMobileAuthorizeStart(EVSE_Id  EVSEId,
+                                                                           eMA_Id   EVCOId,
+                                                                           String   PIN,
+                                                                           String   PartnerProductId = null)
         {
 
             try
@@ -87,29 +87,53 @@ namespace org.emi3group.IO.OICP
                     var XML = XDocument.Parse(HttpResponse.Content.ToUTF8String());
 
                     //ToDo: In case of errors this will not parse!
-                    var AuthStartResult = HubjectMobileAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
-
+                    var MobileAuthorizationStartResult = HubjectMobileAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
 
                     #region Authorized
 
-                    //if (AuthStartResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                    if (MobileAuthorizationStartResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
 
-                    //    // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                    //    //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //    //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
-                    //    //   <soapenv:Body>
-                    //    //     <tns:HubjectAuthorizationStart>
-                    //    //       <tns:SessionID>8fade8bd-0a88-1296-0f2f-41ae8a80af1b</tns:SessionID>
-                    //    //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
-                    //    //       <tns:ProviderID>BMW</tns:ProviderID>
-                    //    //       <tns:AuthorizationStatus>Authorized</tns:AuthorizationStatus>
-                    //    //       <tns:StatusCode>
-                    //    //         <cmn:Code>000</cmn:Code>
-                    //    //         <cmn:Description>Success</cmn:Description>
-                    //    //       </tns:StatusCode>
-                    //    //     </tns:HubjectAuthorizationStart>
-                    //    //   </soapenv:Body>
-                    //    // </soapenv:Envelope>
+                    //    // <?xml version='1.0' encoding='UTF-8'?>
+                    //    // <isns:Envelope xmlns:cmn  = "http://www.inubit.com/eMobility/SBP/CommonTypes"
+                    //    //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //    //                xmlns:ns   = "http://www.hubject.com/b2b/services/commontypes/v1"
+                    //    //                xmlns:sbp  = "http://www.inubit.com/eMobility/SBP"
+                    //    //                xmlns:tns  = "http://www.hubject.com/b2b/services/evsedata/v1"
+                    //    //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
+                    //    //                xmlns:wsc  = "http://www.hubject.com/b2b/services/mobileauthorization/v1">
+                    //    //
+                    //    //   <isns:Body>
+                    //    //     <wsc:HubjectMobileAuthorizationStart>
+                    //    //
+                    //    //       <wsc:SessionID>2cfc3548-0a88-1296-7141-df2c5e1864d3</wsc:SessionID>
+                    //    //       <wsc:AuthorizationStatus>Authorized</wsc:AuthorizationStatus>
+                    //    //
+                    //    //       <wsc:StatusCode>
+                    //    //         <v1:Code>000</v1:Code>
+                    //    //         <v1:Description>Success</v1:Description>
+                    //    //       </wsc:StatusCode>
+                    //    //
+                    //    //       <wsc:GeoCoordinates>
+                    //    //         <v1:DecimalDegree>
+                    //    //           <v1:Longitude>10.144537</v1:Longitude>
+                    //    //           <v1:Latitude>49.729122</v1:Latitude>
+                    //    //         </v1:DecimalDegree>
+                    //    //       </wsc:GeoCoordinates>
+                    //    //
+                    //    //       <wsc:Address>
+                    //    //         <v1:Country>DEU</v1:Country>
+                    //    //         <v1:City>Kitzingen</v1:City>
+                    //    //         <v1:Street>Steigweg</v1:Street>
+                    //    //         <v1:PostalCode>97318</v1:PostalCode>
+                    //    //         <v1:HouseNum>24</v1:HouseNum>
+                    //    //       </wsc:Address>
+                    //    //
+                    //    //       <wsc:ChargingStationName>Innopark Kitzingen</wsc:ChargingStationName>
+                    //    //       <wsc:EnChargingStationName>Innopark Kitzingen</wsc:EnChargingStationName>
+                    //    //
+                    //    //     </wsc:HubjectMobileAuthorizationStart>
+                    //    //   </isns:Body>
+                    //    // </isns:Envelope>
 
                     //    return new AUTHSTARTResult(AuthorizatorId) {
                     //                   AuthorizationResult  = AuthorizationResult.Authorized,
@@ -182,6 +206,8 @@ namespace org.emi3group.IO.OICP
 
                     #endregion
 
+                    return MobileAuthorizationStartResult;
+
                 }
 
             }
@@ -198,8 +224,6 @@ namespace org.emi3group.IO.OICP
             }
 
             return null;
-
-        // => HubjectMobileAuthorizationStart
 
         }
 
