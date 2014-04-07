@@ -92,6 +92,7 @@ namespace org.emi3group.IO.OICP
                     #region Authorized
 
                     if (MobileAuthorizationStartResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                    {
 
                     //    // <?xml version='1.0' encoding='UTF-8'?>
                     //    // <isns:Envelope xmlns:cmn  = "http://www.inubit.com/eMobility/SBP/CommonTypes"
@@ -143,12 +144,14 @@ namespace org.emi3group.IO.OICP
                     //                   Description          = AuthStartResult.Description
                     //               };
 
+                    }
+
                     #endregion
 
                     #region NotAuthorized
 
-                    //else // AuthorizationStatus == AuthorizationStatusType.NotAuthorized
-                    //{
+                    else // AuthorizationStatus == AuthorizationStatusType.NotAuthorized
+                    {
 
                     //    //- Invalid OperatorId ----------------------------------------------------------------------
 
@@ -202,7 +205,7 @@ namespace org.emi3group.IO.OICP
                     //                       Description          = AuthStartResult.Description
                     //                   };
 
-                    //}
+                    }
 
                     #endregion
 
