@@ -56,7 +56,7 @@ namespace org.emi3group.IO.OICP
 
         #region PushEVSEDataXML(this EVSPools, OperatorID, OperatorName, Action = fullLoad)
 
-        public static XElement PushEVSEDataXML(this IEnumerable<EVSPool>  EVSPools,
+        public static XElement PushEVSEDataXML(this IEnumerable<ChargingPool>  EVSPools,
                                                String                     OperatorID,
                                                String                     OperatorName,
                                                ActionType                 Action = ActionType.fullLoad)

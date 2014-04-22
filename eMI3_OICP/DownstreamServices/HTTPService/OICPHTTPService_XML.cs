@@ -92,12 +92,13 @@ namespace org.emi3group.IO.OICP
         #endregion
 
 
-        #region POST_RemoteStartStop()
+        #region POST_RemoteStartStop(RoamingNetwork_Id)
 
         /// <summary>
         /// Main SOAP/HTTP endpoint.
         /// </summary>
-        public override HTTPResponse POST_RemoteStartStop()
+        /// <param name="RoamingNetwork_Id">The unique identification of the roaming network.</param>
+        public override HTTPResponse POST_RemoteStartStop(String RoamingNetwork_Id)
         {
 
             #region ParseXMLRequestBody... or fail!
@@ -177,10 +178,10 @@ namespace org.emi3group.IO.OICP
             #endregion
 
             if (RemoteStartXML != null)
-                return DoRemoteStartXML(RemoteStartXML);
+                return DoRemoteStartXML(RoamingNetwork_Id, RemoteStartXML);
 
             else if (RemoteStopXML != null)
-                return DoRemoteStopXML(RemoteStopXML);
+                return DoRemoteStopXML(RoamingNetwork_Id, RemoteStopXML);
 
             #region ...or fail!
 
@@ -227,14 +228,16 @@ namespace org.emi3group.IO.OICP
         #endregion
 
 
-        #region (private) DoRemoteStartXML(RemoteStartXML)
+        #region (private) DoRemoteStartXML(RoamingNetwork_Id, RemoteStartXML)
 
         /// <summary>
         /// Process an OICP RemoteStart SOAP/XML/HTTP call.
         /// </summary>
+        /// <param name="RoamingNetwork_Id">The unique identification of the roaming network.</param>
         /// <param name="RemoteStartXML">The SOAP/XML PDU.</param>
         /// <returns>An appropriate SOAP/XML/HTTP response.</returns>
-        private HTTPResponse DoRemoteStartXML(XElement RemoteStartXML)
+        private HTTPResponse DoRemoteStartXML(String    RoamingNetwork_Id,
+                                              XElement  RemoteStartXML)
         {
 
             #region Parse request parameters
@@ -382,14 +385,16 @@ namespace org.emi3group.IO.OICP
 
         #endregion
 
-        #region (private) DoRemoteStopXML(RemoteStopXML)
+        #region (private) DoRemoteStopXML(RoamingNetwork_Id, RemoteStopXML)
 
         /// <summary>
         /// Process an OICP RemoteStop SOAP/XML/HTTP call.
         /// </summary>
+        /// <param name="RoamingNetwork_Id">The unique identification of the roaming network.</param>
         /// <param name="RemoteStopXML">The SOAP/XML PDU.</param>
         /// <returns>An appropriate SOAP/XML/HTTP response.</returns>
-        private HTTPResponse DoRemoteStopXML(XElement RemoteStopXML)
+        private HTTPResponse DoRemoteStopXML(String    RoamingNetwork_Id,
+                                             XElement  RemoteStopXML)
         {
 
             #region Parse request parameters

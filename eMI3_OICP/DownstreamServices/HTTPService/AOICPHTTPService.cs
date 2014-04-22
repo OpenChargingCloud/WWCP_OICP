@@ -147,7 +147,11 @@ namespace org.emi3group.IO.OICP
 
         #region GET /RemoteStartStop
 
-        public virtual HTTPResponse GET_RemoteStartStop()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="RoamingNetwork_Id">The unique identification of the roaming network.</param>
+        public virtual HTTPResponse GET_RemoteStartStop(String RoamingNetwork_Id)
         {
             return new HTTPResult<Object>(IHTTPConnection.RequestHeader, HTTPStatusCode.NotAcceptable).Error;
         }
@@ -156,7 +160,11 @@ namespace org.emi3group.IO.OICP
 
         #region POST /RemoteStartStop
 
-        public virtual HTTPResponse POST_RemoteStartStop()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="RoamingNetwork_Id">The unique identification of the roaming network.</param>
+        public virtual HTTPResponse POST_RemoteStartStop(String RoamingNetwork_Id)
         {
             return new HTTPResult<Object>(IHTTPConnection.RequestHeader, HTTPStatusCode.NotAcceptable).Error;
         }

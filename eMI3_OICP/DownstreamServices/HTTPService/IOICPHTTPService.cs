@@ -52,15 +52,23 @@ namespace org.emi3group.IO.OICP
 
         #region GET /RemoteStartStop
 
-        [HTTPMapping(HTTPMethods.GET,  "/RemoteStartStop"), NoAuthentication]
-        HTTPResponse GET_RemoteStartStop();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="RoamingNetwork_Id">The unique identification of the roaming network.</param>
+        [HTTPMapping(HTTPMethods.GET,  "/RNs/{RoamingNetwork}/RemoteStartStop"), NoAuthentication]
+        HTTPResponse GET_RemoteStartStop(String RoamingNetwork_Id);
 
         #endregion
 
         #region POST /RemoteStartStop
 
-        [HTTPMapping(HTTPMethods.POST, "/RemoteStartStop"), NoAuthentication]
-        HTTPResponse POST_RemoteStartStop();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="RoamingNetwork_Id">The unique identification of the roaming network.</param>
+        [HTTPMapping(HTTPMethods.POST, "/RNs/{RoamingNetwork}/RemoteStartStop"), NoAuthentication]
+        HTTPResponse POST_RemoteStartStop(String RoamingNetwork_Id);
 
         #endregion
 

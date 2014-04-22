@@ -84,13 +84,14 @@ namespace org.emi3group.IO.OICP
         /// <summary>
         /// Get /RemoteStartStop
         /// </summary>
+        /// <param name="RoamingNetwork_Id">The unique identification of the roaming network.</param>
         /// <example>curl -H "Accept: text/html" http://127.0.0.1:3001/RemoteStartStop</example>
-        public override HTTPResponse GET_RemoteStartStop()
+        public override HTTPResponse GET_RemoteStartStop(String RoamingNetwork_Id)
         {
             return new HTTPResponseBuilder() {
                 HTTPStatusCode  = HTTPStatusCode.OK,
                 ContentType     = HTTPContentType.HTML_UTF8,
-                Content         = "/RemoteStartStop is a HTTP/SOAP endpoint!".ToUTF8Bytes()
+                Content         = ("/RNs/" + RoamingNetwork_Id + "/RemoteStartStop is a HTTP/SOAP endpoint!").ToUTF8Bytes()
             };
         }
 
