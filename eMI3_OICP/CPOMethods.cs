@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2014 Achim Friedland <achim.friedland@belectric.com>
+ * Copyright (c) 2013-2014 Achim Friedland <achim.friedland@graphdefined.com>
  * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
@@ -43,7 +43,7 @@ namespace org.emi3group.IO.OICP
                                                String             OperatorName = null)
         {
 
-            return EVSEOperator.EVSPools.
+            return EVSEOperator.ChargingPools.
                                 SelectMany(Pool    => Pool.ChargingStations).
                                 SelectMany(Station => Station.EVSEs).
                                 PushEVSEDataXML((OperatorID   == null) ? EVSEOperator.Id.ToString()      : OperatorID,
@@ -273,7 +273,7 @@ namespace org.emi3group.IO.OICP
                                                  String             OperatorName = null)
         {
 
-            return EVSEOperator.EVSPools.
+            return EVSEOperator.ChargingPools.
                                 SelectMany(pool    => pool.ChargingStations).
                                 SelectMany(station => station.EVSEs).
 
