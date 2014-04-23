@@ -140,7 +140,7 @@ namespace org.emi3group.IO.OICP
                                          ? AuthorizatorId.Parse("OICP Gateway")
                                          : AuthorizatorId;
 
-            this.DNSClient         = (DNSClient       != null)
+            this.DNSClient         = (DNSClient       == null)
                                          ? new DNSClient(SearchForIPv6Servers: false)
                                          : DNSClient;
 
