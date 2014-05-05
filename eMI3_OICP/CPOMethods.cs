@@ -549,7 +549,7 @@ namespace org.emi3group.IO.OICP
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectChargeDetailRecord",
 
                                  new XElement(NS.OICPv1Authorization + "SessionID",        SessionId.ToString()),
-                                 new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionId.ToString()),
+                                 new XElement(NS.OICPv1Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
                                  new XElement(NS.OICPv1Authorization + "PartnerProductID", PartnerProductId),
                                  new XElement(NS.OICPv1Authorization + "EvseID",           EVSEId.ToString()),
 
