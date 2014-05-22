@@ -38,12 +38,12 @@ namespace org.emi3group.IO.OICP
 
         #region SessionID
 
-        private readonly SessionId _SessionID;
+        private readonly ChargingSessionId _SessionID;
 
         /// <summary>
         /// The Hubject session identification.
         /// </summary>
-        public SessionId SessionID
+        public ChargingSessionId SessionID
         {
             get
             {
@@ -272,7 +272,7 @@ namespace org.emi3group.IO.OICP
 
             
 
-            this._SessionID             = SessionId.Parse((HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID") != null)
+            this._SessionID             = ChargingSessionId.Parse((HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID") != null)
                                                          ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID").Value
                                                          : "");
 

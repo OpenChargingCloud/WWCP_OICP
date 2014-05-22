@@ -355,7 +355,7 @@ namespace org.emi3group.IO.OICP
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStartXML(this EVSE   EVSE,
-                                                 SessionId   PartnerSessionID,
+                                                 ChargingSessionId   PartnerSessionID,
                                                  Token       UID)
         {
 
@@ -379,7 +379,7 @@ namespace org.emi3group.IO.OICP
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStartXML(EVSEOperator_Id  OperatorId,
                                                  EVSE_Id          EVSEId,
-                                                 SessionId        PartnerSessionID,
+                                                 ChargingSessionId        PartnerSessionID,
                                                  Token            UID)
         {
 
@@ -418,8 +418,8 @@ namespace org.emi3group.IO.OICP
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStopXML(this EVSE   EVSE,
-                                                SessionId   SessionID,
-                                                SessionId   PartnerSessionID,
+                                                ChargingSessionId   SessionID,
+                                                ChargingSessionId   PartnerSessionID,
                                                 Token       UID)
         {
 
@@ -445,8 +445,8 @@ namespace org.emi3group.IO.OICP
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStopXML(EVSEOperator_Id  OperatorId,
                                                 EVSE_Id          EVSEId,
-                                                SessionId        SessionID,
-                                                SessionId        PartnerSessionID,
+                                                ChargingSessionId        SessionID,
+                                                ChargingSessionId        PartnerSessionID,
                                                 Token            UID)
         {
 
@@ -485,8 +485,8 @@ namespace org.emi3group.IO.OICP
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
         public static XElement SendChargeDetailRecordXML(this EVSE  EVSE,
-                                                         SessionId  SessionId,
-                                                         SessionId  PartnerSessionId,
+                                                         ChargingSessionId  SessionId,
+                                                         ChargingSessionId  PartnerSessionId,
                                                          String     PartnerProductId,
                                                          Token      UID,
                                                          eMA_Id     EVCOId,
@@ -533,8 +533,8 @@ namespace org.emi3group.IO.OICP
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
         public static XElement SendChargeDetailRecordXML(EVSE_Id    EVSEId,
-                                                         SessionId  SessionId,
-                                                         SessionId  PartnerSessionId,
+                                                         ChargingSessionId  SessionId,
+                                                         ChargingSessionId  PartnerSessionId,
                                                          String     PartnerProductId,
                                                          Token      UID,
                                                          eMA_Id     EVCOId,

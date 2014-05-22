@@ -65,7 +65,7 @@ namespace org.emi3group.IO.OICP
         /// <param name="UID">A RFID user identification.</param>
         public AUTHSTARTResult AuthorizeStart(EVSEOperator_Id  OperatorId,
                                               EVSE_Id          EVSEId,
-                                              SessionId        PartnerSessionId,
+                                              ChargingSessionId        PartnerSessionId,
                                               Token            UID)
         {
 
@@ -210,8 +210,8 @@ namespace org.emi3group.IO.OICP
         /// <param name="UID">A RFID user identification.</param>
         public AUTHSTOPResult AuthorizeStop(EVSEOperator_Id  OperatorId,
                                             EVSE_Id          EVSEId,
-                                            SessionId        SessionId,
-                                            SessionId        PartnerSessionId,
+                                            ChargingSessionId        SessionId,
+                                            ChargingSessionId        PartnerSessionId,
                                             Token            UID)
         {
 
@@ -393,8 +393,8 @@ namespace org.emi3group.IO.OICP
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
         public SENDCDRResult SendCDR(EVSE_Id     EVSEId,
-                                     SessionId   SessionId,
-                                     SessionId   PartnerSessionId,
+                                     ChargingSessionId   SessionId,
+                                     ChargingSessionId   PartnerSessionId,
                                      String      PartnerProductId,
                                      Token       UID,
                                      eMA_Id      EVCOId,

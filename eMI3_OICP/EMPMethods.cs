@@ -106,11 +106,11 @@ namespace org.emi3group.IO.OICP
         /// Create a new mobile AuthorizeStart request.
         /// </summary>
         /// <param name="SessionId">An OICP session identification from the MobileAuthorizationStart response.</param>
-        public static XElement MobileRemoteStartXML(SessionId  SessionId = null)
+        public static XElement MobileRemoteStartXML(ChargingSessionId  SessionId = null)
         {
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1MobileAuthorization + "HubjectMobileRemoteStart",
-                                          new XElement(NS.OICPv1EVSESearch + "SessionID", (SessionId != null) ? SessionId : SessionId.New)
+                                          new XElement(NS.OICPv1EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSessionId.New)
                                      ));
 
         }
@@ -123,11 +123,11 @@ namespace org.emi3group.IO.OICP
         /// Create a new mobile AuthorizeStop request.
         /// </summary>
         /// <param name="SessionId">The OICP session identification from the MobileAuthorizationStart response.</param>
-        public static XElement MobileRemoteStopXML(SessionId SessionId = null)
+        public static XElement MobileRemoteStopXML(ChargingSessionId SessionId = null)
         {
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1MobileAuthorization + "HubjectMobileRemoteStop",
-                                          new XElement(NS.OICPv1EVSESearch + "SessionID", (SessionId != null) ? SessionId : SessionId.New)
+                                          new XElement(NS.OICPv1EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSessionId.New)
                                      ));
 
         }

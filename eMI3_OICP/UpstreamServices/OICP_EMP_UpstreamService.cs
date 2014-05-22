@@ -234,7 +234,7 @@ namespace org.emi3group.IO.OICP
 
         #region MobileRemoteStartXML(SessionId = null)
 
-        public MobileRemoteStartResult MobileRemoteStartXML(SessionId SessionId = null)
+        public MobileRemoteStartResult MobileRemoteStartXML(ChargingSessionId SessionId = null)
         {
 
             try
@@ -295,7 +295,7 @@ namespace org.emi3group.IO.OICP
 
         #region MobileRemoteStopXML(SessionId = null)
 
-        public MobileRemoteStopResult MobileRemoteStopXML(SessionId SessionId = null)
+        public MobileRemoteStopResult MobileRemoteStopXML(ChargingSessionId SessionId = null)
         {
 
             try
