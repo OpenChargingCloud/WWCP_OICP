@@ -27,4 +27,59 @@ namespace org.emi3group.IO.OICP
         Unknown
     }
 
+    public static class Ext
+    {
+
+        public static EVSEStatusType AsEVSEStatusType(this HubjectEVSEState EVSEStatus)
+        {
+
+            switch (EVSEStatus)
+            {
+
+                case HubjectEVSEState.Available:
+                    return EVSEStatusType.Available;
+
+                case HubjectEVSEState.Reserved:
+                    return EVSEStatusType.Reserved;
+
+                case HubjectEVSEState.Occupied:
+                    return EVSEStatusType.Charging;
+
+                case HubjectEVSEState.OutOfService:
+                    return EVSEStatusType.OutOfService;
+
+                default:
+                    return EVSEStatusType.Unknown;
+
+            }
+
+        }
+
+        public static HubjectEVSEState AsHubjectEVSEState(this EVSEStatusType EVSEStatus)
+        {
+
+            switch (EVSEStatus)
+            {
+
+                case EVSEStatusType.Available:
+                    return HubjectEVSEState.Available;
+
+                case EVSEStatusType.Reserved:
+                    return HubjectEVSEState.Reserved;
+
+                case EVSEStatusType.Charging:
+                    return HubjectEVSEState.Occupied;
+
+                case EVSEStatusType.OutOfService:
+                    return HubjectEVSEState.OutOfService;
+
+                default:
+                    return HubjectEVSEState.Unknown;
+
+            }
+
+        }
+
+    }
+
 }
