@@ -25,7 +25,7 @@ using eu.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
     /// <summary>

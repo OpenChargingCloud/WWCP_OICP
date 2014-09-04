@@ -15,18 +15,13 @@
  * limitations under the License.
  */
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
-    /// <summary>
-    /// The type of action when updating remote data.
-    /// </summary>
-    public enum ActionType
+    public enum AuthorizationStatusType
     {
-        fullLoad,
-        update,     // will act like an 'upsert' for dynamic EVSE states!
-        insert,
-        delete
+        Authorized,
+        NotAuthorized
     }
 
 }

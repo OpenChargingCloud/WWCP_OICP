@@ -33,7 +33,7 @@ using com.graphdefined.eMI3.LocalService;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
     public static class Log
@@ -136,8 +136,8 @@ namespace com.graphdefined.eMI3.IO.OICP
 
             try
             {
-                RemoteStartXML = XMLRequest.Data.Root.Descendants(NS.OICPv1Authorization + "HubjectAuthorizeRemoteStart").FirstOrDefault();
-                RemoteStopXML  = XMLRequest.Data.Root.Descendants(NS.OICPv1Authorization + "HubjectAuthorizeRemoteStop"). FirstOrDefault();
+                RemoteStartXML = XMLRequest.Data.Root.Descendants(NS.OICPv1_2Authorization + "eRoamingAuthorizeRemoteStart").FirstOrDefault();
+                RemoteStopXML  = XMLRequest.Data.Root.Descendants(NS.OICPv1_2Authorization + "eRoamingAuthorizeRemoteStop"). FirstOrDefault();
             }
             catch (Exception e)
             {
@@ -159,14 +159,14 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                     HTTPStatusCode = HTTPStatusCode.OK,
                     ContentType    = HTTPContentType.XMLTEXT_UTF8,
-                    Content        = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
+                    Content        = SOAP.Encapsulation(new XElement(NS.OICPv1_2CommonTypes + "eRoamingAcknowledgement",
 
-                                                            new XElement(NS.OICPv1CommonTypes + "Result", "false"),
+                                                            new XElement(NS.OICPv1_2CommonTypes + "Result", "false"),
 
-                                                            new XElement(NS.OICPv1CommonTypes + "StatusCode",
-                                                                new XElement(NS.OICPv1CommonTypes + "Code",           "022"),
-                                                                new XElement(NS.OICPv1CommonTypes + "Description",    "Request lead to an exception!"),
-                                                                new XElement(NS.OICPv1CommonTypes + "AdditionalInfo", e.Message)
+                                                            new XElement(NS.OICPv1_2CommonTypes + "StatusCode",
+                                                                new XElement(NS.OICPv1_2CommonTypes + "Code",           "022"),
+                                                                new XElement(NS.OICPv1_2CommonTypes + "Description",    "Request lead to an exception!"),
+                                                                new XElement(NS.OICPv1_2CommonTypes + "AdditionalInfo", e.Message)
                                                             )
 
                                                         )).ToString().ToUTF8Bytes()
@@ -205,14 +205,14 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                     HTTPStatusCode = HTTPStatusCode.OK,
                     ContentType    = HTTPContentType.XMLTEXT_UTF8,
-                    Content        = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
+                    Content        = SOAP.Encapsulation(new XElement(NS.OICPv1_2CommonTypes + "eRoamingAcknowledgement",
 
-                                                            new XElement(NS.OICPv1CommonTypes + "Result", "false"),
+                                                            new XElement(NS.OICPv1_2CommonTypes + "Result", "false"),
 
-                                                            new XElement(NS.OICPv1CommonTypes + "StatusCode",
-                                                                new XElement(NS.OICPv1CommonTypes + "Code",           "022"),
-                                                                new XElement(NS.OICPv1CommonTypes + "Description",    "Unknown request!"),
-                                                                new XElement(NS.OICPv1CommonTypes + "AdditionalInfo", "Must be either RemoteStart or RemoteStop!")
+                                                            new XElement(NS.OICPv1_2CommonTypes + "StatusCode",
+                                                                new XElement(NS.OICPv1_2CommonTypes + "Code",           "022"),
+                                                                new XElement(NS.OICPv1_2CommonTypes + "Description",    "Unknown request!"),
+                                                                new XElement(NS.OICPv1_2CommonTypes + "AdditionalInfo", "Must be either RemoteStart or RemoteStop!")
                                                             )
 
                                                         )).ToString().ToUTF8Bytes()
@@ -287,13 +287,13 @@ namespace com.graphdefined.eMI3.IO.OICP
             try
             {
 
-                SessionId                = RemoteStartXML.    ElementOrDefault(NS.OICPv1Authorization + "SessionID", "");
-                ProviderId               = EVServiceProvider_Id.Parse(RemoteStartXML.ElementOrDefault(NS.OICPv1Authorization + "ProviderID", ""));
-                EVSEId                   = EVSE_Id.             Parse(RemoteStartXML.ElementOrDefault(NS.OICPv1Authorization + "EVSEID", ""));
+                SessionId                = RemoteStartXML.    ElementOrDefault(NS.OICPv1_2Authorization + "SessionID", "");
+                ProviderId               = EVServiceProvider_Id.Parse(RemoteStartXML.ElementOrDefault(NS.OICPv1_2Authorization + "ProviderID", ""));
+                EVSEId                   = EVSE_Id.             Parse(RemoteStartXML.ElementOrDefault(NS.OICPv1_2Authorization + "EVSEID", ""));
 
-                IdentificationXML        = RemoteStartXML.    Element         (NS.OICPv1Authorization + "Identification");
-                QRCodeIdentificationXML  = IdentificationXML. Element         (NS.OICPv1CommonTypes   + "QRCodeIdentification");
-                eMAId                    = eMA_Id.              Parse(QRCodeIdentificationXML.ElementOrDefault(NS.OICPv1CommonTypes   + "EVCOID", ""));
+                IdentificationXML        = RemoteStartXML.    Element         (NS.OICPv1_2Authorization + "Identification");
+                QRCodeIdentificationXML  = IdentificationXML. Element         (NS.OICPv1_2CommonTypes   + "QRCodeIdentification");
+                eMAId                    = eMA_Id.              Parse(QRCodeIdentificationXML.ElementOrDefault(NS.OICPv1_2CommonTypes   + "EVCOID", ""));
 
             }
             catch (Exception e)
@@ -305,14 +305,14 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
+                        Content         = SOAP.Encapsulation(new XElement(NS.OICPv1_2CommonTypes + "eRoamingAcknowledgement",
 
-                                                                 new XElement(NS.OICPv1CommonTypes + "Result", "false"),
+                                                                 new XElement(NS.OICPv1_2CommonTypes + "Result", "false"),
 
-                                                                 new XElement(NS.OICPv1CommonTypes + "StatusCode",
-                                                                     new XElement(NS.OICPv1CommonTypes + "Code",           "022"),
-                                                                     new XElement(NS.OICPv1CommonTypes + "Description",    "Request lead to an exception!"),
-                                                                     new XElement(NS.OICPv1CommonTypes + "AdditionalInfo",  e.Message)
+                                                                 new XElement(NS.OICPv1_2CommonTypes + "StatusCode",
+                                                                     new XElement(NS.OICPv1_2CommonTypes + "Code",           "022"),
+                                                                     new XElement(NS.OICPv1_2CommonTypes + "Description",    "Request lead to an exception!"),
+                                                                     new XElement(NS.OICPv1_2CommonTypes + "AdditionalInfo",  e.Message)
                                                                  )
 
                                                              )).ToString().ToUTF8Bytes()
@@ -364,18 +364,18 @@ namespace com.graphdefined.eMI3.IO.OICP
             return new HTTPResponseBuilder() {
                 HTTPStatusCode  = HTTPStatusCode.OK,
                 ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                Content         = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
+                Content         = SOAP.Encapsulation(new XElement(NS.OICPv1_2CommonTypes + "eRoamingAcknowledgement",
 
-                                                         new XElement(NS.OICPv1CommonTypes + "Result", "true"),
+                                                         new XElement(NS.OICPv1_2CommonTypes + "Result", "true"),
 
-                                                         new XElement(NS.OICPv1CommonTypes + "StatusCode",
-                                                             new XElement(NS.OICPv1CommonTypes + "Code",            HubjectCode),
-                                                             new XElement(NS.OICPv1CommonTypes + "Description",     HubjectDescription),
-                                                             new XElement(NS.OICPv1CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+                                                         new XElement(NS.OICPv1_2CommonTypes + "StatusCode",
+                                                             new XElement(NS.OICPv1_2CommonTypes + "Code",            HubjectCode),
+                                                             new XElement(NS.OICPv1_2CommonTypes + "Description",     HubjectDescription),
+                                                             new XElement(NS.OICPv1_2CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
                                                          ),
 
-                                                         new XElement(NS.OICPv1CommonTypes + "SessionID", SessionId)
-                                                         //new XElement(NS.OICPv1CommonTypes + "PartnerSessionID", SessionID),
+                                                         new XElement(NS.OICPv1_2CommonTypes + "SessionID", SessionId)
+                                                         //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
 
                                                     )).ToString().
                                                        ToUTF8Bytes()
@@ -435,9 +435,9 @@ namespace com.graphdefined.eMI3.IO.OICP
             try
             {
 
-                SessionId   = RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "SessionID", "");
-                ProviderId  = EVServiceProvider_Id.Parse(RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "ProviderID", ""));
-                EVSEId      = EVSE_Id.             Parse(RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "EVSEID",     ""));
+                SessionId   = RemoteStopXML.ElementOrDefault(NS.OICPv1_2Authorization + "SessionID", "");
+                ProviderId  = EVServiceProvider_Id.Parse(RemoteStopXML.ElementOrDefault(NS.OICPv1_2Authorization + "ProviderID", ""));
+                EVSEId      = EVSE_Id.             Parse(RemoteStopXML.ElementOrDefault(NS.OICPv1_2Authorization + "EVSEID",     ""));
 
             }
             catch (Exception e)
@@ -449,14 +449,14 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
+                        Content         = SOAP.Encapsulation(new XElement(NS.OICPv1_2CommonTypes + "eRoamingAcknowledgement",
 
-                                                                 new XElement(NS.OICPv1CommonTypes + "Result", "false"),
+                                                                 new XElement(NS.OICPv1_2CommonTypes + "Result", "false"),
 
-                                                                 new XElement(NS.OICPv1CommonTypes + "StatusCode",
-                                                                     new XElement(NS.OICPv1CommonTypes + "Code",           "022"),
-                                                                     new XElement(NS.OICPv1CommonTypes + "Description",    "Request lead to an exception!"),
-                                                                     new XElement(NS.OICPv1CommonTypes + "AdditionalInfo", e.Message)
+                                                                 new XElement(NS.OICPv1_2CommonTypes + "StatusCode",
+                                                                     new XElement(NS.OICPv1_2CommonTypes + "Code",           "022"),
+                                                                     new XElement(NS.OICPv1_2CommonTypes + "Description",    "Request lead to an exception!"),
+                                                                     new XElement(NS.OICPv1_2CommonTypes + "AdditionalInfo", e.Message)
                                                                  )
 
                                                              )).ToString().ToUTF8Bytes()
@@ -506,18 +506,18 @@ namespace com.graphdefined.eMI3.IO.OICP
 
             }
 
-            var SOAPContent = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
+            var SOAPContent = SOAP.Encapsulation(new XElement(NS.OICPv1_2CommonTypes + "eRoamingAcknowledgement",
 
-                                                     new XElement(NS.OICPv1CommonTypes + "Result", "true"),
+                                                     new XElement(NS.OICPv1_2CommonTypes + "Result", "true"),
 
-                                                     new XElement(NS.OICPv1CommonTypes + "StatusCode",
-                                                         new XElement(NS.OICPv1CommonTypes + "Code",            HubjectCode),
-                                                         new XElement(NS.OICPv1CommonTypes + "Description",     HubjectDescription),
-                                                         new XElement(NS.OICPv1CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+                                                     new XElement(NS.OICPv1_2CommonTypes + "StatusCode",
+                                                         new XElement(NS.OICPv1_2CommonTypes + "Code",            HubjectCode),
+                                                         new XElement(NS.OICPv1_2CommonTypes + "Description",     HubjectDescription),
+                                                         new XElement(NS.OICPv1_2CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
                                                      ),
 
-                                                     new XElement(NS.OICPv1CommonTypes + "SessionID", SessionId)
-                    //new XElement(NS.OICPv1CommonTypes + "PartnerSessionID", SessionID),
+                                                     new XElement(NS.OICPv1_2CommonTypes + "SessionID", SessionId)
+                    //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
 
                                                  )).ToString();
 

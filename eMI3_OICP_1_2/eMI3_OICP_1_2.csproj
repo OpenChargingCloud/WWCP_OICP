@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9BE2DABC-D5EE-4970-9543-8764B42FD4C8}</ProjectGuid>
+    <ProjectGuid>{6C9B80F1-E0C3-4E0F-8994-0E155C14E6DA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>org.emi3group.IO.OICP</RootNamespace>
-    <AssemblyName>org.emi3group.IO.OICP</AssemblyName>
+    <RootNamespace>eMI3_OICP_1_2</RootNamespace>
+    <AssemblyName>eMI3_OICP_1_2</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,22 +20,17 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\org.emi3group.IO.OICP.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\org.emi3group.IO.OICP.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\Hermod\libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -47,33 +42,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CPOMethods.cs" />
     <Compile Include="DownstreamServices\HTTPService\AOICPHTTPService.cs" />
     <Compile Include="DownstreamServices\HTTPService\IOICPHTTPService.cs" />
     <Compile Include="DownstreamServices\HTTPService\OICPHTTPService_HTML.cs" />
     <Compile Include="DownstreamServices\HTTPService\OICPHTTPService_XML.cs" />
     <Compile Include="DownstreamServices\OICPHTTPServer.cs" />
+    <Compile Include="eMI3_OICP_Mapper.cs" />
+    <Compile Include="EMPMethods.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
-    <Compile Include="Helpers\HubjectMobileAuthorizationStart.cs" />
     <Compile Include="Helpers\ExtentionMethods.cs" />
+    <Compile Include="Helpers\HubjectAcknowledgement.cs" />
+    <Compile Include="Helpers\HubjectAuthorization.cs" />
+    <Compile Include="Helpers\HubjectEVSESearchReply.cs" />
     <Compile Include="Helpers\HubjectEVSEState.cs" />
+    <Compile Include="Helpers\HubjectMobileAuthorizationStart.cs" />
+    <Compile Include="Helpers\NS.cs" />
+    <Compile Include="Helpers\SOAP.cs" />
     <Compile Include="HubjectExtentions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpstreamServices\AOICPUpstreamService.cs" />
     <Compile Include="UpstreamServices\OICPClient.cs" />
     <Compile Include="UpstreamServices\OICP_EMP_UpstreamService.cs" />
     <Compile Include="UpstreamServices\OICP_EVSEOperator_UpstreamService.cs" />
-    <Compile Include="Helpers\HubjectEVSESearchReply.cs" />
-    <Compile Include="Helpers\HubjectAuthorization.cs" />
-    <Compile Include="Helpers\HubjectAcknowledgement.cs" />
-    <Compile Include="Helpers\NS.cs" />
-    <Compile Include="Helpers\SOAP.cs" />
-    <Compile Include="EMPMethods.cs" />
-    <Compile Include="eMI3_OICP_Mapper.cs" />
-    <Compile Include="CPOMethods.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DownstreamServices\HTTPRoot\index.html" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Aegir\Aegir\Aegir.csproj">
@@ -125,10 +123,6 @@
       <Name>eMI3_WWCP</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DownstreamServices\HTTPRoot\index.html" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

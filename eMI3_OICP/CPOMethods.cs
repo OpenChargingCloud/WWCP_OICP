@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2014 Achim Friedland <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014 Achim Friedland <achim.friedland@graphdefined.com>
  * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
@@ -26,7 +26,7 @@ using eu.Vanaheimr.Illias.Commons;
 
 #endregion
 
-namespace org.emi3group.IO.OICP
+namespace com.graphdefined.eMI3.IO.OICP
 {
 
     /// <summary>
@@ -450,13 +450,22 @@ namespace org.emi3group.IO.OICP
                                                 Token            UID)
         {
 
+            #region Hubject RFID Type workaround...
+
+            var RFIDType = "RFIDclassicIdentification";
+
+            if (UID.Length >= 14)
+                RFIDType = "RFIDdesfireIdentification";
+
+            #endregion
+
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectAuthorizeStop",
                                           new XElement(NS.OICPv1Authorization + "SessionID",        SessionID.ToString()),
                                           new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
                                           new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.ToString()),
                                           new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.ToString()),
                                           new XElement(NS.OICPv1Authorization + "Identification",
-                                              new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
+                                              new XElement(NS.OICPv1CommonTypes + RFIDType,
                                                  new XElement(NS.OICPv1CommonTypes + "UID", UID.ToString())
                                               )
                                           )
@@ -546,6 +555,15 @@ namespace org.emi3group.IO.OICP
                                                          Double?    MeterValueEnd   = null)
         {
 
+            #region Hubject RFID Type workaround...
+
+            var RFIDType = "RFIDclassicIdentification";
+
+            if (UID.Length >= 14)
+                RFIDType = "RFIDdesfireIdentification";
+
+            #endregion
+
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectChargeDetailRecord",
 
                                  new XElement(NS.OICPv1Authorization + "SessionID",        SessionId.ToString()),
@@ -555,7 +573,7 @@ namespace org.emi3group.IO.OICP
 
                                  new XElement(NS.OICPv1Authorization + "Identification",
                                      (UID != null)
-                                         ? new XElement(NS.OICPv1CommonTypes + "RFIDdesfireIdentification",
+                                         ? new XElement(NS.OICPv1CommonTypes + RFIDType,
                                                 new XElement(NS.OICPv1CommonTypes + "UID", UID.ToString())
                                            )
                                          : new XElement(NS.OICPv1CommonTypes + "RemoteIdentification",

@@ -22,7 +22,7 @@ using System.Xml.Linq;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
     /// <summary>
@@ -41,13 +41,13 @@ namespace com.graphdefined.eMI3.IO.OICP
         {
 
             return new XElement(NS.SOAPEnvelope + "Envelope",
-                       new XAttribute(XNamespace.Xmlns + "eMI3",                NS.SOAPEnvelope.             NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "CommonTypes",         NS.OICPv1CommonTypes.        NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSEData",            NS.OICPv1EVSEData.           NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSEStatus",          NS.OICPv1EVSEStatus.         NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "MobileAuthorization", NS.OICPv1MobileAuthorization.NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "Authorization",       NS.OICPv1Authorization.      NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSESearch",          NS.OICPv1EVSESearch.         NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "eMI3",                NS.SOAPEnvelope.               NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "CommonTypes",         NS.OICPv1_2CommonTypes.        NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSEData",            NS.OICPv1_2EVSEData.           NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSEStatus",          NS.OICPv1_2EVSEStatus.         NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "MobileAuthorization", NS.OICPv1_2MobileAuthorization.NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "Authorization",       NS.OICPv1_2Authorization.      NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSESearch",          NS.OICPv1_2EVSESearch.         NamespaceName),
 
                        new XElement(NS.SOAPEnvelope + "Header"),
                        new XElement(NS.SOAPEnvelope + "Body", XML));

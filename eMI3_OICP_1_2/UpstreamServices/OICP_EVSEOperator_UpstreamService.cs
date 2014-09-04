@@ -29,7 +29,7 @@ using com.graphdefined.eMI3.LocalService;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
     public class OICP_EVSEOperator_UpstreamService : AOICPUpstreamService, IEVSEOperator2HubjectService
@@ -82,7 +82,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                                                                       PartnerSessionId,
                                                                                       UID).
                                                                                       ToString(),
-                                                         "HubjectAuthorizeStart");
+                                                         "eRoamingAuthorizeStart");
 
                     //ToDo: In case of errors this will not parse!
                     var AuthStartResult = HubjectAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
@@ -234,7 +234,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                                                                      PartnerSessionId,
                                                                                      UID).
                                                                                      ToString(),
-                                                         "HubjectAuthorizeStop");
+                                                         "eRoamingAuthorizeStop");
 
                     //ToDo: In case of errors this will not parse!
                     var AuthStopResult = HubjectAuthorizationStop.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
@@ -370,8 +370,8 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 return new AUTHSTOPResult(AuthorizatorId) {
                     AuthorizationResult  = AuthorizationResult.NotAuthorized,
-                    PartnerSessionId      = PartnerSessionId,
-                    Description           = "An exception occured: " + e.Message
+                    PartnerSessionId     = PartnerSessionId,
+                    Description          = "An exception occured: " + e.Message
                 };
 
             }
@@ -433,7 +433,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                                                                               MeterValueStart,
                                                                                               MeterValueEnd).
                                                                                               ToString(),
-                                                         "HubjectChargeDetailRecord");
+                                                         "eRoamingChargeDetailRecord");
 
                     //ToDo: In case of errors this will not parse!
                     var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);

@@ -15,18 +15,28 @@
  * limitations under the License.
  */
 
-namespace com.graphdefined.eMI3.IO.OICP
+#region Usings
+
+using System;
+using System.Linq;
+using System.Xml.Linq;
+using System.Collections.Generic;
+
+#endregion
+
+namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
-    /// <summary>
-    /// The type of action when updating remote data.
-    /// </summary>
-    public enum ActionType
+    public static class ExtentionMethods
     {
-        fullLoad,
-        update,     // will act like an 'upsert' for dynamic EVSE states!
-        insert,
-        delete
+
+        public static IEnumerable<HubjectEVSESearchReply> ParseSearchReplies(XElement XML)
+        {
+            return (from   EvseMatch
+                    in     XML.Descendants(NS.OICPv1_2EVSESearch + "EvseMatch")
+                    select new HubjectEVSESearchReply(EvseMatch)).ToArray();
+        }
+
     }
 
 }

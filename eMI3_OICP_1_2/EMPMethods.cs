@@ -19,12 +19,15 @@
 
 using System;
 using System.Xml.Linq;
+using System.Globalization;
 
 using eu.Vanaheimr.Aegir;
 
+using com.graphdefined.eMI3.IO.OICP;
+
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
     /// <summary>
@@ -33,31 +36,31 @@ namespace com.graphdefined.eMI3.IO.OICP
     public static class EMPMethods
     {
 
-        #region SearchRequestXML(GeoCoordinate, Distance, ProviderId = "8BD")
+        #region SearchRequestXML(GeoCoordinate, Distance, ProviderId)
 
         /// <summary>
         /// Create a new EVSE Search request.
         /// </summary>
         /// <param name="GeoCoordinate">The geo coordinate of the search center.</param>
         /// <param name="DistanceKM">The search distance relative to the search center.</param>
-        /// <param name="ProviderId">Your electromobility provider identification (EMP Id).</param>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         public static XElement SearchRequestXML(GeoCoordinate  GeoCoordinate,
                                                 UInt64         DistanceKM,
-                                                String         ProviderId = "8BD")
+                                                String         ProviderId)
         {
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1EVSESearch + "HubjectSearchEvse",
+            return SOAP.Encapsulation(new XElement(NS.OICPv1_2EVSESearch + "eRoamingSearchEvse",
 
-                                          new XElement(NS.OICPv1EVSESearch + "GeoCoordinates",
-                                              new XElement(NS.OICPv1CommonTypes + "DecimalDegree",
-                                                 new XElement(NS.OICPv1CommonTypes + "Longitude", GeoCoordinate.Longitude.ToString().Replace(',', '.')),
-                                                 new XElement(NS.OICPv1CommonTypes + "Latitude",  GeoCoordinate.Latitude.ToString().Replace(',', '.'))
+                                          new XElement(NS.OICPv1_2EVSESearch + "GeoCoordinates",
+                                              new XElement(NS.OICPv1_2CommonTypes + "DecimalDegree",
+                                                 new XElement(NS.OICPv1_2CommonTypes + "Longitude", GeoCoordinate.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
+                                                 new XElement(NS.OICPv1_2CommonTypes + "Latitude",  GeoCoordinate.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat))
                                               )
                                           ),
 
-                                          new XElement(NS.OICPv1EVSESearch + "ProviderID", ProviderId),
+                                          new XElement(NS.OICPv1_2EVSESearch + "ProviderID", ProviderId),
 
-                                          new XElement(NS.OICPv1EVSESearch + "Range", DistanceKM)
+                                          new XElement(NS.OICPv1_2EVSESearch + "Range", DistanceKM)
 
                                      ));
 
@@ -81,17 +84,17 @@ namespace com.graphdefined.eMI3.IO.OICP
                                                        String   PartnerProductId = null)
         {
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1MobileAuthorization + "HubjectMobileAuthorizeStart",
+            return SOAP.Encapsulation(new XElement(NS.OICPv1_2MobileAuthorization + "eRoamingMobileAuthorizeStart",
 
-                                          new XElement(NS.OICPv1MobileAuthorization + "EvseID", EVSEId.ToString()),
+                                          new XElement(NS.OICPv1_2MobileAuthorization + "EvseID", EVSEId.ToString()),
 
-                                          new XElement(NS.OICPv1MobileAuthorization + "QRCodeIdentification",
-                                              new XElement(NS.OICPv1CommonTypes + "EVCOID", EVCOId.ToString()),
-                                              new XElement(NS.OICPv1CommonTypes + "PIN",    PIN)
+                                          new XElement(NS.OICPv1_2MobileAuthorization + "QRCodeIdentification",
+                                              new XElement(NS.OICPv1_2CommonTypes + "EVCOID", EVCOId.ToString()),
+                                              new XElement(NS.OICPv1_2CommonTypes + "PIN",    PIN)
                                           ),
 
                                           (PartnerProductId != null)
-                                              ? new XElement(NS.OICPv1MobileAuthorization + "PartnerProductID", PartnerProductId)
+                                              ? new XElement(NS.OICPv1_2MobileAuthorization + "PartnerProductID", PartnerProductId)
                                               : null
 
                                      ));
@@ -109,8 +112,8 @@ namespace com.graphdefined.eMI3.IO.OICP
         public static XElement MobileRemoteStartXML(ChargingSessionId  SessionId = null)
         {
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1MobileAuthorization + "HubjectMobileRemoteStart",
-                                          new XElement(NS.OICPv1EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSessionId.New)
+            return SOAP.Encapsulation(new XElement(NS.OICPv1_2MobileAuthorization + "eRoamingMobileRemoteStart",
+                                          new XElement(NS.OICPv1_2EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSessionId.New)
                                      ));
 
         }
@@ -126,8 +129,8 @@ namespace com.graphdefined.eMI3.IO.OICP
         public static XElement MobileRemoteStopXML(ChargingSessionId SessionId = null)
         {
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1MobileAuthorization + "HubjectMobileRemoteStop",
-                                          new XElement(NS.OICPv1EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSessionId.New)
+            return SOAP.Encapsulation(new XElement(NS.OICPv1_2MobileAuthorization + "eRoamingMobileRemoteStop",
+                                          new XElement(NS.OICPv1_2EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSessionId.New)
                                      ));
 
         }

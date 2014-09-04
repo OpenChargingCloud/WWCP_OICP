@@ -23,7 +23,7 @@ using System.Xml.Linq;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
     #region HubjectMobileAuthorization
@@ -236,7 +236,7 @@ namespace com.graphdefined.eMI3.IO.OICP
         public HubjectMobileAuthorizationStart(XElement XML)
         {
 
-            var HubjectMobileAuthorizationStart = XML.Descendants(NS.OICPv1MobileAuthorization + "HubjectMobileAuthorizationStart").FirstOrDefault();
+            var HubjectMobileAuthorizationStart = XML.Descendants(NS.OICPv1_2MobileAuthorization + "eRoamingMobileAuthorizationStart").FirstOrDefault();
 
 
             // <?xml version='1.0' encoding='UTF-8'?>
@@ -272,41 +272,41 @@ namespace com.graphdefined.eMI3.IO.OICP
 
             
 
-            this._SessionID             = ChargingSessionId.Parse((HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID") != null)
-                                                         ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "SessionID").Value
+            this._SessionID             = ChargingSessionId.Parse((HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "SessionID") != null)
+                                                         ? HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "SessionID").Value
                                                          : "");
 
-            _AuthorizationStatus        = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AuthorizationStatus").Value == "Authorized")
+            _AuthorizationStatus        = (HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "AuthorizationStatus").Value == "Authorized")
                                               ? AuthorizationStatusType.Authorized
                                               : AuthorizationStatusType.NotAuthorized;
 
-            var StatusCode              = HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "StatusCode");
-            this._Code                  = UInt16.Parse(StatusCode.Element(NS.OICPv1CommonTypes + "Code").Value);
-            this._Description           = (StatusCode.Element(NS.OICPv1CommonTypes + "Description") != null)
-                                              ? StatusCode.Element(NS.OICPv1CommonTypes + "Description").Value
+            var StatusCode              = HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "StatusCode");
+            this._Code                  = UInt16.Parse(StatusCode.Element(NS.OICPv1_2CommonTypes + "Code").Value);
+            this._Description           = (StatusCode.Element(NS.OICPv1_2CommonTypes + "Description") != null)
+                                              ? StatusCode.Element(NS.OICPv1_2CommonTypes + "Description").Value
                                               : String.Empty;
-            //this._AdditionalInfo        = (StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo") != null)
-            //                                  ? StatusCode.Element(NS.OICPv1CommonTypes + "AdditionalInfo").Value
+            //this._AdditionalInfo        = (StatusCode.Element(NS.OICPv1_2CommonTypes + "AdditionalInfo") != null)
+            //                                  ? StatusCode.Element(NS.OICPv1_2CommonTypes + "AdditionalInfo").Value
             //                                  : String.Empty;
 
-            _TermsOfUse                 = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "TermsOfUse") != null)
-                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "TermsOfUse").Value
+            _TermsOfUse                 = (HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "TermsOfUse") != null)
+                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "TermsOfUse").Value
                                               : String.Empty;
 
-            _AdditionalInfo             = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AdditionalInfo") != null)
-                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "AdditionalInfo").Value
+            _AdditionalInfo             = (HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "AdditionalInfo") != null)
+                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "AdditionalInfo").Value
                                               : String.Empty;
 
-            _EnAdditionalInfo           = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnAdditionalInfo") != null)
-                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnAdditionalInfo").Value
+            _EnAdditionalInfo           = (HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "EnAdditionalInfo") != null)
+                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "EnAdditionalInfo").Value
                                               : String.Empty;
 
-            _ChargingStationName        = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "ChargingStationName") != null)
-                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "ChargingStationName").Value
+            _ChargingStationName        = (HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "ChargingStationName") != null)
+                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "ChargingStationName").Value
                                               : String.Empty;
 
-            _EnChargingStationName      = (HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnChargingStationName") != null)
-                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1MobileAuthorization + "EnChargingStationName").Value
+            _EnChargingStationName      = (HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "EnChargingStationName") != null)
+                                              ? HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "EnChargingStationName").Value
                                               : String.Empty;
 
 

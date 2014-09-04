@@ -30,7 +30,7 @@ using com.graphdefined.eMI3.LocalService;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
     public class OICP_EMP_UpstreamService : AOICPUpstreamService, IEMP2HubjectService
@@ -82,7 +82,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                                                                            PIN,
                                                                                            PartnerProductId).
                                                                                            ToString(),
-                                                        "HubjectMobileAuthorizeStart");
+                                                        "eRoamingMobileAuthorizeStart");
 
                     var XML = XDocument.Parse(HttpResponse.Content.ToUTF8String());
 
@@ -246,7 +246,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                 {
 
                     var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStartXML(SessionId).ToString(),
-                                                         "HubjectMobileRemoteStart");
+                                                         "eRoamingMobileRemoteStart");
 
                     //ToDo: In case of errors this will not parse!
                     var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
@@ -307,7 +307,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                 {
 
                     var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStopXML(SessionId).ToString(),
-                                                         "HubjectMobileRemoteStop");
+                                                         "eRoamingMobileRemoteStop");
 
                     //ToDo: In case of errors this will not parse!
                     var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
