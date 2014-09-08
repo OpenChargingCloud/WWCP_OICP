@@ -65,7 +65,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                 #region HTTP Logging
 
                 WWCP_HTTPServer.
-                    URLMapping.EventSource(Semantics.DebugLog).
+                    GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("INSERTEVSEStatesRequest",
                                        new JObject(
                                            new JProperty("Timestamp",       DateTime.Now.ToIso8601()),
@@ -100,7 +100,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                         #region HTTP Logging
 
                         WWCP_HTTPServer.
-                            URLMapping.EventSource(Semantics.DebugLog).
+                            GetEventSource(Semantics.DebugLog).
                                 SubmitSubEvent("INSERTEVSEStatesResponse",
                                                new JObject(
                                                    new JProperty("Timestamp",       DateTime.Now.ToIso8601()),
@@ -147,7 +147,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                 #region HTTP Logging
 
                 WWCP_HTTPServer.
-                    URLMapping.EventSource(Semantics.DebugLog).
+                    GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("UPDATEEVSEStatesRequest",
                                        new JObject(
                                            new JProperty("Timestamp",       DateTime.Now.ToIso8601()),
@@ -182,7 +182,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                         #region HTTP Logging
 
                         WWCP_HTTPServer.
-                            URLMapping.EventSource(Semantics.DebugLog).
+                            GetEventSource(Semantics.DebugLog).
                                 SubmitSubEvent("UPDATEEVSEStatesResponse",
                                                new JObject(
                                                    new JProperty("Timestamp",       DateTime.Now.ToIso8601()),
@@ -229,7 +229,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                 #region HTTP Logging
 
                 WWCP_HTTPServer.
-                    URLMapping.EventSource(Semantics.DebugLog).
+                    GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("REMOVEEVSEStatesRequest",
                                        new JObject(
                                            new JProperty("Timestamp",       DateTime.Now.ToIso8601()),
@@ -264,7 +264,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                         #region HTTP Logging
 
                         WWCP_HTTPServer.
-                            URLMapping.EventSource(Semantics.DebugLog).
+                            GetEventSource(Semantics.DebugLog).
                                 SubmitSubEvent("REMOVEEVSEStatesResponse",
                                                new JObject(
                                                    new JProperty("Timestamp",       DateTime.Now.ToIso8601()),

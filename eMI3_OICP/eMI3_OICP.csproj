@@ -88,10 +88,6 @@
       <Project>{0ab343e8-aa69-4685-9676-bfa27e418a20}</Project>
       <Name>HermodHTTPClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Hermod\HermodHTTPServer\HermodHTTPServer.csproj">
-      <Project>{9ce48dac-0512-4947-942b-ef4c42c52b47}</Project>
-      <Name>HermodHTTPServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Hermod\HermodHTTP\HermodHTTP.csproj">
       <Project>{9a00bd39-1385-4db4-8f38-363bb947ccb4}</Project>
       <Name>HermodHTTP</Name>

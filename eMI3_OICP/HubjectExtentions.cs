@@ -64,7 +64,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                 #region HTTP Logging
 
                 WWCP_HTTPServer.
-                    URLMapping.EventSource(Semantics.DebugLog).
+                    GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("INSERTEVSEStatesRequest",
                                        new JObject(
                                            new JProperty("Timestamp",       DateTime.Now.ToIso8601()),
@@ -77,7 +77,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 var EVSEStatesInsertXML = EVSEStatusDiff.NewEVSEStates.
                                               Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState())).
-                                              PushEVSEStatusXML(EVSEOperator.Id.ToString(),
+                                              PushEVSEStatusXML(EVSEOperator.Id,
                                                                 EVSEOperator.Name[Languages.de],
                                                                 ActionType.insert).
                                                                 ToString();
@@ -99,7 +99,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                         #region HTTP Logging
 
                         WWCP_HTTPServer.
-                            URLMapping.EventSource(Semantics.DebugLog).
+                            GetEventSource(Semantics.DebugLog).
                                 SubmitSubEvent("INSERTEVSEStatesResponse",
                                                new JObject(
                                                    new JProperty("Timestamp",       DateTime.Now.ToIso8601()),
@@ -146,7 +146,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                 #region HTTP Logging
 
                 WWCP_HTTPServer.
-                    URLMapping.EventSource(Semantics.DebugLog).
+                    GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("UPDATEEVSEStatesRequest",
                                        new JObject(
                                            new JProperty("Timestamp",       DateTime.Now.ToIso8601()),
@@ -159,7 +159,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 var EVSEStatesUpdateXML = EVSEStatusDiff.ChangedEVSEStates.
                                               Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState())).
-                                              PushEVSEStatusXML(EVSEOperator.Id.ToString(),
+                                              PushEVSEStatusXML(EVSEOperator.Id,
                                                                 EVSEOperator.Name[Languages.de],
                                                                 ActionType.update).
                                                                 ToString();
@@ -181,7 +181,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                         #region HTTP Logging
 
                         WWCP_HTTPServer.
-                            URLMapping.EventSource(Semantics.DebugLog).
+                            GetEventSource(Semantics.DebugLog).
                                 SubmitSubEvent("UPDATEEVSEStatesResponse",
                                                new JObject(
                                                    new JProperty("Timestamp",       DateTime.Now.ToIso8601()),
@@ -228,7 +228,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                 #region HTTP Logging
 
                 WWCP_HTTPServer.
-                    URLMapping.EventSource(Semantics.DebugLog).
+                    GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("REMOVEEVSEStatesRequest",
                                        new JObject(
                                            new JProperty("Timestamp",       DateTime.Now.ToIso8601()),
@@ -241,7 +241,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 var EVSEStatesUpdateXML = EVSEStatusDiff.RemovedEVSEIds.
                                               Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v, HubjectEVSEState.OutOfService)).
-                                              PushEVSEStatusXML(EVSEOperator.Id.ToString(),
+                                              PushEVSEStatusXML(EVSEOperator.Id,
                                                                 EVSEOperator.Name[Languages.de],
                                                                 ActionType.delete).
                                                                 ToString();
@@ -263,7 +263,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                         #region HTTP Logging
 
                         WWCP_HTTPServer.
-                            URLMapping.EventSource(Semantics.DebugLog).
+                            GetEventSource(Semantics.DebugLog).
                                 SubmitSubEvent("REMOVEEVSEStatesResponse",
                                                new JObject(
                                                    new JProperty("Timestamp",       DateTime.Now.ToIso8601()),
@@ -326,7 +326,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 var EVSEStatesInsertXML = XML_EVSEStates.
                                               Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState())).
-                                              PushEVSEStatusXML(EVSEOperator.Id.ToString(),
+                                              PushEVSEStatusXML(EVSEOperator.Id,
                                                                 EVSEOperator.Name[Languages.de],
                                                                 ActionType.fullLoad).
                                                                 ToString();
@@ -364,7 +364,7 @@ namespace com.graphdefined.eMI3.IO.OICP
         {
 
             var EVSEDataFullLoadXML = EVSEOperator.ChargingPools.
-                                          PushEVSEDataXML(EVSEOperator.Id.ToString(),
+                                          PushEVSEDataXML(EVSEOperator.Id,
                                                           EVSEOperator.Name[Languages.de],
                                                           ActionType.fullLoad).
                                           ToString();
@@ -384,7 +384,29 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 var Task01 = httpClient.Execute(builder, (req, resp) => {
                     var ack = HubjectAcknowledgement.Parse(XDocument.Parse(resp.Content.ToUTF8String()).Root);
+
+                    //<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+                    //  <S:Body>
+                    //    <S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope">
+                    //      <faultcode>S:Client</faultcode>
+                    //      <faultstring>Validation error: The request message is invalid</faultstring>
+                    //      <detail>
+                    //        <Validation>
+                    //          <Errors>
+                    //            <Error column="58" errorXpath="/eMI3:Envelope/eMI3:Body/EVSEData:HubjectPushEvseData/EVSEData:OperatorEvseData/EVSEData:OperatorID" line="4">Value 'DE*822' is not facet-valid with respect to pattern '[0-9]{3,6}' for type 'OperatorIDType'.</Error>
+                    //            <Error column="58" errorXpath="/eMI3:Envelope/eMI3:Body/EVSEData:HubjectPushEvseData/EVSEData:OperatorEvseData/EVSEData:OperatorID" line="4">The value 'DE*822' of element 'EVSEData:OperatorID' is not valid.</Error>
+                    //          </Errors>
+                    //          <OriginalDocument>
+                    //
+                    //          </OriginalDocument>
+                    //        </Validation>
+                    //      </detail>
+                    //    </S:Fault>
+                    //  </S:Body>
+                    //</S:Envelope>
+
                     Console.WriteLine("EVSE data fullload, except BITS: " + ack.Result + " / " + ack.Description + " [" + resp.HTTPStatusCode + "]");
+
                 });
 
                 Task01.Wait(TimeSpan.FromSeconds(30));

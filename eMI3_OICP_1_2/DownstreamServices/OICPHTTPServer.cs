@@ -35,7 +35,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
     /// <summary>
     /// OICP Downstream HTTP/SOAP server.
     /// </summary>
-    public class OICPHTTPServer : HTTPServer<IOICPHTTPService>
+    public class OICPHTTPServer : HTTPServer
     {
 
         #region Properties
@@ -72,17 +72,20 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         public OICPHTTPServer(RequestRouter  RequestRouter,
                               IPPort         IPPort)
 
-            : base(IPv4Address.Any, IPPort, Autostart: false)
+          //  : base(IPv4Address.Any, IPPort, Autostart: false)
 
         {
 
             this._RequestRouter = RequestRouter;
 
-            OnNewHTTPService += IGraphDevroomService => {
-                                    IGraphDevroomService.InternalHTTPServer = this;
-                                    IGraphDevroomService.AllResources       = AllResources;
-                                    IGraphDevroomService.HTTPRoot           = HTTPRoot;
-                                };
+            this.AttachTCPPort(IPPort);
+            this.Start();
+
+            //OnNewHTTPService += IGraphDevroomService => {
+            //                        IGraphDevroomService.InternalHTTPServer = this;
+            //                        IGraphDevroomService.AllResources       = AllResources;
+            //                        IGraphDevroomService.HTTPRoot           = HTTPRoot;
+            //                    };
 
         }
 

@@ -38,17 +38,17 @@ namespace com.graphdefined.eMI3.IO.OICP
         #region PushEVSEDataXML(this EVSEOperator, Action = fullLoad, OperatorID = null, OperatorName = null)
 
         public static XElement PushEVSEDataXML(this EVSEOperator  EVSEOperator,
-                                               ActionType         Action       = ActionType.fullLoad,
-                                               String             OperatorID   = null,
-                                               String             OperatorName = null)
+                                               ActionType         Action        = ActionType.fullLoad,
+                                               EVSEOperator_Id    OperatorID    = null,
+                                               String             OperatorName  = null)
         {
 
             return EVSEOperator.ChargingPools.
                                 SelectMany(Pool    => Pool.ChargingStations).
                                 SelectMany(Station => Station.EVSEs).
-                                PushEVSEDataXML((OperatorID   == null) ? EVSEOperator.Id.ToString()      : OperatorID,
-                                             (OperatorName == null) ? EVSEOperator.Name[Languages.de] : OperatorName,
-                                             Action);
+                                PushEVSEDataXML((OperatorID   == null) ? EVSEOperator.Id                 : OperatorID,
+                                                (OperatorName == null) ? EVSEOperator.Name[Languages.de] : OperatorName,
+                                                Action);
 
         }
 
@@ -57,16 +57,16 @@ namespace com.graphdefined.eMI3.IO.OICP
         #region PushEVSEDataXML(this EVSPools, OperatorID, OperatorName, Action = fullLoad)
 
         public static XElement PushEVSEDataXML(this IEnumerable<ChargingPool>  EVSPools,
-                                               String                     OperatorID,
-                                               String                     OperatorName,
-                                               ActionType                 Action = ActionType.fullLoad)
+                                               EVSEOperator_Id                 OperatorID,
+                                               String                          OperatorName,
+                                               ActionType                      Action  = ActionType.fullLoad)
         {
 
             return EVSPools.SelectMany(Pool    => Pool.ChargingStations).
                             SelectMany(Station => Station.EVSEs).
                             PushEVSEDataXML(OperatorID,
-                                         OperatorName,
-                                         Action);
+                                            OperatorName,
+                                            Action);
 
         }
 
@@ -75,15 +75,15 @@ namespace com.graphdefined.eMI3.IO.OICP
         #region PushEVSEDataXML(this ChargingStations, OperatorID, OperatorName, Action = fullLoad)
 
         public static XElement PushEVSEDataXML(this IEnumerable<ChargingStation>  ChargingStations,
-                                               String                             OperatorID,
+                                               EVSEOperator_Id                    OperatorID,
                                                String                             OperatorName,
-                                               ActionType                         Action = ActionType.fullLoad)
+                                               ActionType                         Action  = ActionType.fullLoad)
         {
 
             return ChargingStations.SelectMany(Station => Station.EVSEs).
                                     PushEVSEDataXML(OperatorID,
-                                                 OperatorName,
-                                                 Action);
+                                                    OperatorName,
+                                                    Action);
 
         }
 
@@ -92,9 +92,9 @@ namespace com.graphdefined.eMI3.IO.OICP
         #region PushEVSEDataXML(this EVSEs, OperatorID, OperatorName, Action = ActionType.fullLoad)
 
         public static XElement PushEVSEDataXML(this IEnumerable<EVSE>  EVSEs,
-                                               String                  OperatorID,
+                                               EVSEOperator_Id         OperatorID,
                                                String                  OperatorName,
-                                               ActionType              Action = ActionType.fullLoad)
+                                               ActionType              Action  = ActionType.fullLoad)
         {
 
             //if (Action == ActionType.fullLoad ||
@@ -105,7 +105,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                       new XElement(NS.OICPv1EVSEData + "ActionType", Action.ToString()),
                                       new XElement(NS.OICPv1EVSEData + "OperatorEvseData",
 
-                                          new XElement(NS.OICPv1EVSEData + "OperatorID", OperatorID),
+                                          new XElement(NS.OICPv1EVSEData + "OperatorID", OperatorID.OperatorId),
                                           (OperatorName != null) ?
                                           new XElement(NS.OICPv1EVSEData + "OperatorName", OperatorName) : null,
 
@@ -121,7 +121,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                                                   return new XElement(NS.OICPv1EVSEData + "EvseDataRecord",
 
-                                                      new XElement(NS.OICPv1EVSEData + "EvseId",                 EVSE.Id.ToString()),
+                                                      new XElement(NS.OICPv1EVSEData + "EvseId",                 EVSE.Id.OldEVSEId),
                                                       new XElement(NS.OICPv1EVSEData + "ChargingStationId",      EVSE.ChargingStation.Id.ToString()),
                                                       new XElement(NS.OICPv1EVSEData + "ChargingStationName",    EVSE.ChargingStation.Pool.Name[Languages.de].SubstringMax(50)),
                                                       new XElement(NS.OICPv1EVSEData + "EnChargingStationName",  EVSE.ChargingStation.Pool.Name[Languages.en].SubstringMax(50)),
@@ -250,15 +250,15 @@ namespace com.graphdefined.eMI3.IO.OICP
 
         #region PushEVSEDataXML(this EVSE, OperatorID, OperatorName, Action = insert)
 
-        public static XElement PushEVSEDataXML(this EVSE   EVSE,
-                                               String      OperatorID,
-                                               String      OperatorName,
-                                               ActionType  Action = ActionType.insert)
+        public static XElement PushEVSEDataXML(this EVSE        EVSE,
+                                               EVSEOperator_Id  OperatorID,
+                                               String           OperatorName,
+                                               ActionType       Action  = ActionType.insert)
         {
 
             return new EVSE[1] { EVSE }.PushEVSEDataXML(OperatorID,
-                                                     OperatorName,
-                                                     Action);
+                                                        OperatorName,
+                                                        Action);
 
         }
 
@@ -268,16 +268,16 @@ namespace com.graphdefined.eMI3.IO.OICP
         #region PushEVSEStatusXML(this EVSEOperator, Action = fullLoad, OperatorID = null, OperatorName = null)
 
         public static XElement PushEVSEStatusXML(this EVSEOperator  EVSEOperator,
-                                                 ActionType         Action       = ActionType.fullLoad,
-                                                 String             OperatorID   = null,
-                                                 String             OperatorName = null)
+                                                 ActionType         Action        = ActionType.fullLoad,
+                                                 EVSEOperator_Id    OperatorID    = null,
+                                                 String             OperatorName  = null)
         {
 
             return EVSEOperator.ChargingPools.
                                 SelectMany(pool    => pool.ChargingStations).
                                 SelectMany(station => station.EVSEs).
 
-                                PushEVSEStatusXML((OperatorID   == null) ? EVSEOperator.Id.ToString()      : OperatorID,
+                                PushEVSEStatusXML((OperatorID   == null) ? EVSEOperator.Id                 : OperatorID,
                                                   (OperatorName == null) ? EVSEOperator.Name.First().Value : OperatorName,
                                                    Action);
 
@@ -288,7 +288,7 @@ namespace com.graphdefined.eMI3.IO.OICP
         #region PushEVSEStatusXML(this EVSEs, OperatorID, OperatorName, Action)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<EVSE>  EVSEs,
-                                                 String                  OperatorID,
+                                                 EVSEOperator_Id         OperatorID,
                                                  String                  OperatorName,
                                                  ActionType              Action)
         {
@@ -297,7 +297,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                           new XElement(NS.OICPv1EVSEStatus + "ActionType", Action.ToString()),
                                           new XElement(NS.OICPv1EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(NS.OICPv1EVSEStatus + "OperatorID", OperatorID),
+                                              new XElement(NS.OICPv1EVSEStatus + "OperatorID", OperatorID.OperatorId),
                                               (OperatorName != null) ?
                                               new XElement(NS.OICPv1EVSEStatus + "OperatorName", OperatorName) : null,
 
@@ -318,7 +318,7 @@ namespace com.graphdefined.eMI3.IO.OICP
         #region PushEVSEStatusXML(this EVSEStates, OperatorID, OperatorName, Action)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>  EVSEStates,
-                                                 String                                                     OperatorID,
+                                                 EVSEOperator_Id                                            OperatorID,
                                                  String                                                     OperatorName,
                                                  ActionType                                                 Action)
         {
@@ -327,13 +327,13 @@ namespace com.graphdefined.eMI3.IO.OICP
                                           new XElement(NS.OICPv1EVSEStatus + "ActionType", Action.ToString()),
                                           new XElement(NS.OICPv1EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(NS.OICPv1EVSEStatus + "OperatorID", OperatorID),
+                                              new XElement(NS.OICPv1EVSEStatus + "OperatorID", OperatorID.OperatorId),
                                               (OperatorName != null) ?
                                               new XElement(NS.OICPv1EVSEStatus + "OperatorName", OperatorName) : null,
 
                                               EVSEStates.Select(EvseIdAndState =>
                                                   new XElement(NS.OICPv1EVSEStatus + "EvseStatusRecord",
-                                                      new XElement(NS.OICPv1EVSEStatus + "EvseId",     EvseIdAndState.Key.  ToString()),
+                                                      new XElement(NS.OICPv1EVSEStatus + "EvseId",     EvseIdAndState.Key.  OldEVSEId),
                                                       new XElement(NS.OICPv1EVSEStatus + "EvseStatus", EvseIdAndState.Value.ToString())
                                                   )
                                               )
@@ -354,9 +354,9 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="EVSE">An EVSE.</param>
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
-        public static XElement AuthorizeStartXML(this EVSE   EVSE,
-                                                 ChargingSessionId   PartnerSessionID,
-                                                 Token       UID)
+        public static XElement AuthorizeStartXML(this EVSE          EVSE,
+                                                 ChargingSessionId  PartnerSessionID,
+                                                 Token              UID)
         {
 
             return AuthorizeStartXML(EVSE.ChargingStation.Pool.Operator.Id,
@@ -377,10 +377,10 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="EVSEId">An EVSE identification.</param>
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
-        public static XElement AuthorizeStartXML(EVSEOperator_Id  OperatorId,
-                                                 EVSE_Id          EVSEId,
-                                                 ChargingSessionId        PartnerSessionID,
-                                                 Token            UID)
+        public static XElement AuthorizeStartXML(EVSEOperator_Id    OperatorId,
+                                                 EVSE_Id            EVSEId,
+                                                 ChargingSessionId  PartnerSessionID,
+                                                 Token              UID)
         {
 
             #region Hubject RFID Type workaround...
@@ -394,7 +394,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectAuthorizeStart",
                                           new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
-                                          new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.ToString()),
+                                          new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.OperatorId),
                                           new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.ToString()),
                                           new XElement(NS.OICPv1Authorization + "Identification",
                                               new XElement(NS.OICPv1CommonTypes + RFIDType,
@@ -417,10 +417,10 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="SessionID">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
-        public static XElement AuthorizeStopXML(this EVSE   EVSE,
-                                                ChargingSessionId   SessionID,
-                                                ChargingSessionId   PartnerSessionID,
-                                                Token       UID)
+        public static XElement AuthorizeStopXML(this EVSE          EVSE,
+                                                ChargingSessionId  SessionID,
+                                                ChargingSessionId  PartnerSessionID,
+                                                Token              UID)
         {
 
             return AuthorizeStopXML(EVSE.ChargingStation.Pool.Operator.Id,
@@ -443,11 +443,11 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="SessionID">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
-        public static XElement AuthorizeStopXML(EVSEOperator_Id  OperatorId,
-                                                EVSE_Id          EVSEId,
-                                                ChargingSessionId        SessionID,
-                                                ChargingSessionId        PartnerSessionID,
-                                                Token            UID)
+        public static XElement AuthorizeStopXML(EVSEOperator_Id    OperatorId,
+                                                EVSE_Id            EVSEId,
+                                                ChargingSessionId  SessionID,
+                                                ChargingSessionId  PartnerSessionID,
+                                                Token              UID)
         {
 
             #region Hubject RFID Type workaround...
@@ -462,7 +462,7 @@ namespace com.graphdefined.eMI3.IO.OICP
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectAuthorizeStop",
                                           new XElement(NS.OICPv1Authorization + "SessionID",        SessionID.ToString()),
                                           new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
-                                          new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.ToString()),
+                                          new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.OperatorId),
                                           new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.ToString()),
                                           new XElement(NS.OICPv1Authorization + "Identification",
                                               new XElement(NS.OICPv1CommonTypes + RFIDType,
@@ -493,18 +493,18 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="SessionEnd">The timestamp of the session end.</param>
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
-        public static XElement SendChargeDetailRecordXML(this EVSE  EVSE,
+        public static XElement SendChargeDetailRecordXML(this EVSE          EVSE,
                                                          ChargingSessionId  SessionId,
                                                          ChargingSessionId  PartnerSessionId,
-                                                         String     PartnerProductId,
-                                                         Token      UID,
-                                                         eMA_Id     EVCOId,
-                                                         DateTime   ChargeStart,
-                                                         DateTime   ChargeEnd,
-                                                         DateTime?  SessionStart    = null,
-                                                         DateTime?  SessionEnd      = null,
-                                                         Double?    MeterValueStart = null,
-                                                         Double?    MeterValueEnd   = null)
+                                                         String             PartnerProductId,
+                                                         Token              UID,
+                                                         eMA_Id             EVCOId,
+                                                         DateTime           ChargeStart,
+                                                         DateTime           ChargeEnd,
+                                                         DateTime?          SessionStart    = null,
+                                                         DateTime?          SessionEnd      = null,
+                                                         Double?            MeterValueStart = null,
+                                                         Double?            MeterValueEnd   = null)
         {
 
             return SendChargeDetailRecordXML(EVSE.Id,
@@ -541,18 +541,18 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="SessionEnd">The timestamp of the session end.</param>
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
-        public static XElement SendChargeDetailRecordXML(EVSE_Id    EVSEId,
+        public static XElement SendChargeDetailRecordXML(EVSE_Id            EVSEId,
                                                          ChargingSessionId  SessionId,
                                                          ChargingSessionId  PartnerSessionId,
-                                                         String     PartnerProductId,
-                                                         Token      UID,
-                                                         eMA_Id     EVCOId,
-                                                         DateTime   ChargeStart,
-                                                         DateTime   ChargeEnd,
-                                                         DateTime?  SessionStart    = null,
-                                                         DateTime?  SessionEnd      = null,
-                                                         Double?    MeterValueStart = null,
-                                                         Double?    MeterValueEnd   = null)
+                                                         String             PartnerProductId,
+                                                         Token              UID,
+                                                         eMA_Id             EVCOId,
+                                                         DateTime           ChargeStart,
+                                                         DateTime           ChargeEnd,
+                                                         DateTime?          SessionStart    = null,
+                                                         DateTime?          SessionEnd      = null,
+                                                         Double?            MeterValueStart = null,
+                                                         Double?            MeterValueEnd   = null)
         {
 
             #region Hubject RFID Type workaround...
