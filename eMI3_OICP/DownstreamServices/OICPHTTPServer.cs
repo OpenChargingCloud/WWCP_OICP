@@ -109,6 +109,9 @@ namespace com.graphdefined.eMI3.IO.OICP
                 if (XMLRequest.HasErrors)
                 {
 
+                    Log.WriteLine("XMLRequest.HasErrors!");
+                    Log.WriteLine(HTTPRequest.Content.ToUTF8String());
+
                     GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
                                        new JObject(
@@ -122,6 +125,8 @@ namespace com.graphdefined.eMI3.IO.OICP
                     return XMLRequest.Error;
 
                 }
+
+                Log.WriteLine("XMLRequest ok!");
 
                 #endregion
 
