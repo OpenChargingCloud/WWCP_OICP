@@ -99,6 +99,8 @@ namespace com.graphdefined.eMI3.IO.OICP
 
             HTTPDelegate RemoteStartStopDelegate = HTTPRequest => {
 
+                Log.WriteLine("Incoming RemoteStartStop SOAP request!");
+
                 var RoamingNetwork = HTTPRequest.ParsedQueryParameters[0];
 
                 #region ParseXMLRequestBody... or fail!
