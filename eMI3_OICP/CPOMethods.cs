@@ -395,7 +395,7 @@ namespace com.graphdefined.eMI3.IO.OICP
             return SOAP.Encapsulation(new XElement(NS.OICPv1Authorization + "HubjectAuthorizeStart",
                                           new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
                                           new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.OperatorId),
-                                          new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.ToString()),
+                                          new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.OldEVSEId),
                                           new XElement(NS.OICPv1Authorization + "Identification",
                                               new XElement(NS.OICPv1CommonTypes + RFIDType,
                                                  new XElement(NS.OICPv1CommonTypes + "UID", UID.ToString())
@@ -463,7 +463,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                           new XElement(NS.OICPv1Authorization + "SessionID",        SessionID.ToString()),
                                           new XElement(NS.OICPv1Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
                                           new XElement(NS.OICPv1Authorization + "OperatorID",       OperatorId.OperatorId),
-                                          new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.ToString()),
+                                          new XElement(NS.OICPv1Authorization + "EVSEID",           EVSEId.OldEVSEId),
                                           new XElement(NS.OICPv1Authorization + "Identification",
                                               new XElement(NS.OICPv1CommonTypes + RFIDType,
                                                  new XElement(NS.OICPv1CommonTypes + "UID", UID.ToString())
@@ -569,7 +569,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                  new XElement(NS.OICPv1Authorization + "SessionID",        SessionId.ToString()),
                                  new XElement(NS.OICPv1Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
                                  new XElement(NS.OICPv1Authorization + "PartnerProductID", PartnerProductId),
-                                 new XElement(NS.OICPv1Authorization + "EvseID",           EVSEId.ToString()),
+                                 new XElement(NS.OICPv1Authorization + "EvseID",           EVSEId.OldEVSEId),
 
                                  new XElement(NS.OICPv1Authorization + "Identification",
                                      (UID != null)
