@@ -20,9 +20,6 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
 
 using Newtonsoft.Json.Linq;
 
@@ -77,9 +74,6 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="IPPort">The IP listing port.</param>
         public OICPHTTPServer(RequestRouter  RequestRouter,
                               IPPort         IPPort)
-
-        //    : base(IPv4Address.Any, IPPort, Autostart: false)
-
         {
 
             this._RequestRouter = RequestRouter;
@@ -87,13 +81,43 @@ namespace com.graphdefined.eMI3.IO.OICP
             this.AttachTCPPort(IPPort);
             this.Start();
 
-            //OnNewHTTPService += IGraphDevroomService => {
-            //                        IGraphDevroomService.InternalHTTPServer = this;
-            //                        IGraphDevroomService.AllResources       = AllResources;
-            //                        IGraphDevroomService.HTTPRoot           = HTTPRoot;
-            //                    };
+            #region / (HTTPRoot)
 
-            #region RemoteStartStop(RoamingNetwork_Id)
+            this.AddMethodCallback(HTTPMethod.GET,
+                                   "/",
+                                   HTTPContentType.HTML_UTF8,
+                                   HTTPDelegate: HTTPRequest => {
+
+                                       var RoamingNetworkId = HTTPRequest.ParsedQueryParameters[0];
+
+                                       return new HTTPResponseBuilder() {
+                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                           ContentType     = HTTPContentType.HTML_UTF8,
+                                           Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Connection      = "close"
+                                       };
+
+                                   });
+
+            this.AddMethodCallback(HTTPMethod.GET,
+                                   "/",
+                                   HTTPContentType.TEXT_UTF8,
+                                   HTTPDelegate: HTTPRequest => {
+
+                                       var RoamingNetworkId = HTTPRequest.ParsedQueryParameters[0];
+
+                                       return new HTTPResponseBuilder() {
+                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                           ContentType     = HTTPContentType.HTML_UTF8,
+                                           Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Connection      = "close"
+                                       };
+
+                                   });
+
+            #endregion
+
+            #region /RNs/{RoamingNetworkId}/RemoteStartStop
 
             #region Generic RemoteStartStopDelegate
 
@@ -101,7 +125,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 Log.WriteLine("Incoming RemoteStartStop SOAP request!");
 
-                var RoamingNetwork = HTTPRequest.ParsedQueryParameters[0];
+                var RoamingNetworkId = HTTPRequest.ParsedQueryParameters[0];
 
                 #region ParseXMLRequestBody... or fail!
 
@@ -524,7 +548,7 @@ namespace com.graphdefined.eMI3.IO.OICP
             #region Register SOAP-XML Request via GET
 
             this.AddMethodCallback(HTTPMethod.GET,
-                                   "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                   "/RNs/{RoamingNetworkId}/RemoteStartStop",
                                    HTTPContentType.XMLTEXT_UTF8,
                                    HTTPDelegate: RemoteStartStopDelegate);
 
@@ -536,6 +560,42 @@ namespace com.graphdefined.eMI3.IO.OICP
                                    "/RNs/{RoamingNetwork}/RemoteStartStop",
                                    HTTPContentType.XMLTEXT_UTF8,
                                    HTTPDelegate: RemoteStartStopDelegate);
+
+            #endregion
+
+            #region Register HTML+Plaintext ErrorResponse
+
+            this.AddMethodCallback(HTTPMethod.GET,
+                                   "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                   HTTPContentType.HTML_UTF8,
+                                   HTTPDelegate: HTTPRequest => {
+
+                                       var RoamingNetworkId = HTTPRequest.ParsedQueryParameters[0];
+
+                                       return new HTTPResponseBuilder() {
+                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                           ContentType     = HTTPContentType.HTML_UTF8,
+                                           Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Connection      = "close"
+                                       };
+
+                                   });
+
+            this.AddMethodCallback(HTTPMethod.GET,
+                                   "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                   HTTPContentType.TEXT_UTF8,
+                                   HTTPDelegate: HTTPRequest => {
+
+                                       var RoamingNetworkId = HTTPRequest.ParsedQueryParameters[0];
+
+                                       return new HTTPResponseBuilder() {
+                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                           ContentType     = HTTPContentType.HTML_UTF8,
+                                           Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Connection      = "close"
+                                       };
+
+                                   });
 
             #endregion
 

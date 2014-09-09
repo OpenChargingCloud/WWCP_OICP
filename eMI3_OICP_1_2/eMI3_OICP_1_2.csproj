@@ -43,11 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CPOMethods.cs" />
-    <Compile Include="DownstreamServices\HTTPService\AOICPHTTPService.cs" />
-    <Compile Include="DownstreamServices\HTTPService\IOICPHTTPService.cs" />
-    <Compile Include="DownstreamServices\HTTPService\OICPHTTPService_HTML.cs" />
-    <Compile Include="DownstreamServices\HTTPService\OICPHTTPService_XML.cs" />
-    <Compile Include="DownstreamServices\OICPHTTPServer.cs" />
+    <Compile Include="RemoteStartStop\OICPHTTPServer.cs" />
     <Compile Include="eMI3_OICP_Mapper.cs" />
     <Compile Include="EMPMethods.cs" />
     <Compile Include="Helpers\ActionType.cs" />
@@ -69,9 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DownstreamServices\HTTPRoot\index.html" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Aegir\Aegir\Aegir.csproj">

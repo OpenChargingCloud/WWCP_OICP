@@ -47,11 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DownstreamServices\HTTPService\AOICPHTTPService.cs" />
-    <Compile Include="DownstreamServices\HTTPService\IOICPHTTPService.cs" />
-    <Compile Include="DownstreamServices\HTTPService\OICPHTTPService_HTML.cs" />
-    <Compile Include="DownstreamServices\HTTPService\OICPHTTPService_XML.cs" />
-    <Compile Include="DownstreamServices\OICPHTTPServer.cs" />
+    <Compile Include="RemoteStartStop\OICPHTTPServer.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
     <Compile Include="Helpers\HubjectMobileAuthorizationStart.cs" />
@@ -120,9 +116,6 @@
       <Project>{100255b0-3c7a-4f6f-9661-1ff220613660}</Project>
       <Name>eMI3_WWCP</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DownstreamServices\HTTPRoot\index.html" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
