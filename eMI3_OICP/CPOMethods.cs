@@ -559,7 +559,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
             var RFIDType = "RFIDclassicIdentification";
 
-            if (UID.Length >= 14)
+            if (UID != null && UID.Length >= 14)
                 RFIDType = "RFIDdesfireIdentification";
 
             #endregion
