@@ -123,8 +123,6 @@ namespace com.graphdefined.eMI3.IO.OICP
 
             HTTPDelegate RemoteStartStopDelegate = HTTPRequest => {
 
-                Log.WriteLine("Incoming RemoteStartStop SOAP request!");
-
                 var RoamingNetworkId = HTTPRequest.ParsedQueryParameters[0];
 
                 #region ParseXMLRequestBody... or fail!
@@ -154,11 +152,11 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 #endregion
 
-                Log.WriteLine("");
-                Log.Timestamp("Incoming XML request:");
-                Log.WriteLine("XML payload:");
-                Log.WriteLine(XMLRequest.Data.ToString());
-                Log.WriteLine("");
+                // Log.WriteLine("");
+                // Log.Timestamp("Incoming XML request:");
+                // Log.WriteLine("XML payload:");
+                // Log.WriteLine(XMLRequest.Data.ToString());
+                // Log.WriteLine("");
 
                 #region Get SOAP request...
 
@@ -300,7 +298,10 @@ namespace com.graphdefined.eMI3.IO.OICP
                     var HubjectDescription     = "";
                     var HubjectAdditionalInfo  = "";
 
-                    switch (RequestRouter.RemoteStart(EVSEId, SessionId, ProviderId, eMAId))
+                    var Response               = RequestRouter.RemoteStart(EVSEId, SessionId, ProviderId, eMAId);
+                    Log.WriteLine(Response.ToString());
+
+                    switch (Response)
                     {
 
                         case RemoteStartResult.EVSE_AlreadyInUse:
@@ -441,9 +442,11 @@ namespace com.graphdefined.eMI3.IO.OICP
                     var HubjectDescription     = "";
                     var HubjectAdditionalInfo  = "";
 
-                    switch (RequestRouter.RemoteStop(EVSEId, SessionId, ProviderId))
-                    {
+                    var Response               = RequestRouter.RemoteStop(EVSEId, SessionId, ProviderId);
+                    Log.WriteLine(Response.ToString());
 
+                    switch (Response)
+                    {
 
                         //case RemoteStopResult.EVSE_AlreadyInUse:
                         //    HubjectCode         = "602";
