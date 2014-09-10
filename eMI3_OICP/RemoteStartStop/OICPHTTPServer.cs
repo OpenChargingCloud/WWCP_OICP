@@ -247,12 +247,34 @@ namespace com.graphdefined.eMI3.IO.OICP
                     // 
                     // </isns:Envelope>
 
+                    // PlugSurfing:
+                    //
+                    // <soapenv:Envelope xmlns:auth    = "http://www.hubject.com/b2b/services/authorization/v1"
+                    //                   xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+                    //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/">
+                    // 
+                    //   <soapenv:Body>
+                    //     <auth:HubjectAuthorizeRemoteStart>
+                    //       <auth:SessionID>5f1230a1-0a88-1293-4fe7-c117fc5178cf</auth:SessionID>
+                    //       <auth:ProviderID>8PS</auth:ProviderID>
+                    //       <auth:EVSEID>+49*822*083431571*1</auth:EVSEID>
+                    //       <auth:Identification>
+                    //         <cmn:RemoteIdentification>
+                    //           <cmn:EVCOID>DE*8PS*9DC4AB*X</cmn:EVCOID>
+                    //         </cmn:RemoteIdentification>
+                    //       </auth:Identification>
+                    //     </auth:HubjectAuthorizeRemoteStart>
+                    //   </soapenv:Body>
+                    // 
+                    // </soapenv:Envelope>
+
 
                     String                SessionId;
                     EVServiceProvider_Id  ProviderId;
                     EVSE_Id               EVSEId;
                     XElement              IdentificationXML;
                     XElement              QRCodeIdentificationXML;
+                    XElement              RemoteIdentificationXML;
                     eMA_Id                eMAId;
 
                     try
@@ -263,8 +285,12 @@ namespace com.graphdefined.eMI3.IO.OICP
                         EVSEId                   = EVSE_Id.             Parse(RemoteStartXML.ElementOrDefault(NS.OICPv1Authorization + "EVSEID", ""));
 
                         IdentificationXML        = RemoteStartXML.    Element         (NS.OICPv1Authorization + "Identification");
+                        RemoteIdentificationXML  = IdentificationXML. Element         (NS.OICPv1CommonTypes   + "RemoteIdentification");
                         QRCodeIdentificationXML  = IdentificationXML. Element         (NS.OICPv1CommonTypes   + "QRCodeIdentification");
-                        eMAId                    = eMA_Id.              Parse(QRCodeIdentificationXML.ElementOrDefault(NS.OICPv1CommonTypes   + "EVCOID", ""));
+                        eMAId                    = eMA_Id.              Parse((RemoteIdentificationXML != null)
+                                                                                  ? RemoteIdentificationXML.ElementOrDefault(NS.OICPv1CommonTypes   + "EVCOID", "")
+                                                                                  : QRCodeIdentificationXML.ElementOrDefault(NS.OICPv1CommonTypes   + "EVCOID", "")
+                                                                             );
 
                     }
                     catch (Exception e)
