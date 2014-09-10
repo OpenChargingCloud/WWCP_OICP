@@ -152,11 +152,11 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 #endregion
 
-                // Log.WriteLine("");
-                // Log.Timestamp("Incoming XML request:");
-                // Log.WriteLine("XML payload:");
-                // Log.WriteLine(XMLRequest.Data.ToString());
-                // Log.WriteLine("");
+                Log.WriteLine("");
+                Log.Timestamp("Incoming XML request:");
+                Log.WriteLine("XML payload:");
+                Log.WriteLine(XMLRequest.Data.ToString());
+                Log.WriteLine("");
 
                 #region Get SOAP request...
 
