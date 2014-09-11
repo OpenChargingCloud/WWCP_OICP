@@ -355,8 +355,8 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStartXML(this EVSE          EVSE,
-                                                 ChargingSessionId  PartnerSessionID,
-                                                 Token              UID)
+                                                 ChargingSession_Id  PartnerSessionID,
+                                                 Auth_Token              UID)
         {
 
             return AuthorizeStartXML(EVSE.ChargingStation.Pool.Operator.Id,
@@ -379,8 +379,8 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStartXML(EVSEOperator_Id    OperatorId,
                                                  EVSE_Id            EVSEId,
-                                                 ChargingSessionId  PartnerSessionID,
-                                                 Token              UID)
+                                                 ChargingSession_Id  PartnerSessionID,
+                                                 Auth_Token              UID)
         {
 
             #region Hubject RFID Type workaround...
@@ -418,9 +418,9 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStopXML(this EVSE          EVSE,
-                                                ChargingSessionId  SessionID,
-                                                ChargingSessionId  PartnerSessionID,
-                                                Token              UID)
+                                                ChargingSession_Id  SessionID,
+                                                ChargingSession_Id  PartnerSessionID,
+                                                Auth_Token              UID)
         {
 
             return AuthorizeStopXML(EVSE.ChargingStation.Pool.Operator.Id,
@@ -445,9 +445,9 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStopXML(EVSEOperator_Id    OperatorId,
                                                 EVSE_Id            EVSEId,
-                                                ChargingSessionId  SessionID,
-                                                ChargingSessionId  PartnerSessionID,
-                                                Token              UID)
+                                                ChargingSession_Id  SessionID,
+                                                ChargingSession_Id  PartnerSessionID,
+                                                Auth_Token              UID)
         {
 
             #region Hubject RFID Type workaround...
@@ -493,28 +493,28 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="SessionEnd">The timestamp of the session end.</param>
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
-        public static XElement SendChargeDetailRecordXML(this EVSE          EVSE,
-                                                         ChargingSessionId  SessionId,
-                                                         ChargingSessionId  PartnerSessionId,
-                                                         String             PartnerProductId,
-                                                         Token              UID,
-                                                         eMA_Id             EVCOId,
-                                                         DateTime           ChargeStart,
-                                                         DateTime           ChargeEnd,
-                                                         DateTime?          SessionStart    = null,
-                                                         DateTime?          SessionEnd      = null,
-                                                         Double?            MeterValueStart = null,
-                                                         Double?            MeterValueEnd   = null)
+        public static XElement SendChargeDetailRecordXML(this EVSE           EVSE,
+                                                         ChargingSession_Id  SessionId,
+                                                         ChargingSession_Id  PartnerSessionId,
+                                                         String              PartnerProductId,
+                                                         DateTime            ChargeStart,
+                                                         DateTime            ChargeEnd,
+                                                         Auth_Token               UID             = null,
+                                                         eMA_Id              EVCOId          = null,
+                                                         DateTime?           SessionStart    = null,
+                                                         DateTime?           SessionEnd      = null,
+                                                         Double?             MeterValueStart = null,
+                                                         Double?             MeterValueEnd   = null)
         {
 
             return SendChargeDetailRecordXML(EVSE.Id,
                                              SessionId,
                                              PartnerSessionId,
                                              PartnerProductId,
-                                             UID,
-                                             EVCOId,
                                              ChargeStart,
                                              ChargeEnd,
+                                             UID,
+                                             EVCOId,
                                              SessionStart,
                                              SessionEnd,
                                              MeterValueStart,
@@ -541,18 +541,18 @@ namespace com.graphdefined.eMI3.IO.OICP
         /// <param name="SessionEnd">The timestamp of the session end.</param>
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
-        public static XElement SendChargeDetailRecordXML(EVSE_Id            EVSEId,
-                                                         ChargingSessionId  SessionId,
-                                                         ChargingSessionId  PartnerSessionId,
-                                                         String             PartnerProductId,
-                                                         Token              UID,
-                                                         eMA_Id             EVCOId,
-                                                         DateTime           ChargeStart,
-                                                         DateTime           ChargeEnd,
-                                                         DateTime?          SessionStart    = null,
-                                                         DateTime?          SessionEnd      = null,
-                                                         Double?            MeterValueStart = null,
-                                                         Double?            MeterValueEnd   = null)
+        public static XElement SendChargeDetailRecordXML(EVSE_Id             EVSEId,
+                                                         ChargingSession_Id  SessionId,
+                                                         ChargingSession_Id  PartnerSessionId,
+                                                         String              PartnerProductId,
+                                                         DateTime            ChargeStart,
+                                                         DateTime            ChargeEnd,
+                                                         Auth_Token               UID             = null,
+                                                         eMA_Id              EVCOId          = null,
+                                                         DateTime?           SessionStart    = null,
+                                                         DateTime?           SessionEnd      = null,
+                                                         Double?             MeterValueStart = null,
+                                                         Double?             MeterValueEnd   = null)
         {
 
             #region Hubject RFID Type workaround...

@@ -46,9 +46,9 @@ namespace com.graphdefined.eMI3.IO.OICP
 
         #region AuthorizatorId
 
-        private readonly AuthorizatorId _AuthorizatorId;
+        private readonly Authorizator_Id _AuthorizatorId;
 
-        public AuthorizatorId AuthorizatorId
+        public Authorizator_Id AuthorizatorId
         {
             get
             {
@@ -122,7 +122,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                     IPPort          OICPPort,
                                     String          HTTPVirtualHost = null,
                                     String          URLPrefix       = "",
-                                    AuthorizatorId  AuthorizatorId  = null,
+                                    Authorizator_Id  AuthorizatorId  = null,
                                     DNSClient       DNSClient       = null)
         {
 
@@ -137,7 +137,7 @@ namespace com.graphdefined.eMI3.IO.OICP
             this._URLPrefix        = URLPrefix;
 
             this._AuthorizatorId   = (AuthorizatorId  == null)
-                                         ? AuthorizatorId.Parse("OICP Gateway")
+                                         ? Authorizator_Id.Parse("OICP Gateway")
                                          : AuthorizatorId;
 
             this.DNSClient         = (DNSClient       == null)

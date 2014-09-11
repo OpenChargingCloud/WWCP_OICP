@@ -33,7 +33,7 @@ using com.graphdefined.eMI3.LocalService;
 namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
-    public class OICP_EMP_UpstreamService : AOICPUpstreamService, IEMP2HubjectService
+    public class OICP_EMP_UpstreamService : AOICPUpstreamService, IRoamingProviderProvided_EVSPServices
     {
 
         #region Constructor(s)
@@ -41,7 +41,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         public OICP_EMP_UpstreamService(String          OICPHost,
                                         IPPort          OICPPort,
                                         String          HTTPVirtualHost = null,
-                                        AuthorizatorId  AuthorizatorId  = null)
+                                        Authorizator_Id  AuthorizatorId  = null)
 
             : base(OICPHost,
                    OICPPort,
@@ -234,7 +234,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
         #region MobileRemoteStartXML(SessionId = null)
 
-        public MobileRemoteStartResult MobileRemoteStartXML(ChargingSessionId SessionId = null)
+        public MobileRemoteStartResult MobileRemoteStartXML(ChargingSession_Id SessionId = null)
         {
 
             try
@@ -295,7 +295,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
         #region MobileRemoteStopXML(SessionId = null)
 
-        public MobileRemoteStopResult MobileRemoteStopXML(ChargingSessionId SessionId = null)
+        public MobileRemoteStopResult MobileRemoteStopXML(ChargingSession_Id SessionId = null)
         {
 
             try

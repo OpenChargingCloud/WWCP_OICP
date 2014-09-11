@@ -51,12 +51,12 @@ namespace com.graphdefined.eMI3.IO.OICP
 
         #region SessionID
 
-        private readonly ChargingSessionId _SessionID;
+        private readonly ChargingSession_Id _SessionID;
 
         /// <summary>
         /// The Hubject session identification.
         /// </summary>
-        public ChargingSessionId SessionID
+        public ChargingSession_Id SessionID
         {
             get
             {
@@ -182,7 +182,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
             var ack                   = XML.Descendants(NS.OICPv1Authorization + "HubjectAuthorization" + AuthorizationType.ToString()).FirstOrDefault();
 
-            this._SessionID           = ChargingSessionId .Parse((ack.Element(NS.OICPv1Authorization + "SessionID") != null)  ? ack.Element(NS.OICPv1Authorization + "SessionID"). Value : "");
+            this._SessionID           = ChargingSession_Id .Parse((ack.Element(NS.OICPv1Authorization + "SessionID") != null)  ? ack.Element(NS.OICPv1Authorization + "SessionID"). Value : "");
             this._PartnerSessionID    =  ack.Element(NS.OICPv1Authorization + "PartnerSessionID").Value;
             this._ProviderID          = (ack.Element(NS.OICPv1Authorization + "ProviderID") != null) ? ack.Element(NS.OICPv1Authorization + "ProviderID").Value : "";
             this._AuthorizationStatus = (ack.Element(NS.OICPv1Authorization + "AuthorizationStatus").Value.ToLower() == "authorized") ? AuthorizationStatusType.Authorized : AuthorizationStatusType.NotAuthorized;

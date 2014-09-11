@@ -20,6 +20,7 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -123,7 +124,8 @@ namespace com.graphdefined.eMI3.IO.OICP
 
             HTTPDelegate RemoteStartStopDelegate = HTTPRequest => {
 
-                var RoamingNetworkId = HTTPRequest.ParsedQueryParameters[0];
+                var EventTrackingId = EventTracking_Id.New;
+                Log.WriteLine("Event tracking: " + EventTrackingId);
 
                 #region ParseXMLRequestBody... or fail!
 
@@ -131,7 +133,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                 if (XMLRequest.HasErrors)
                 {
 
-                    Log.WriteLine("XMLRequest.HasErrors!");
+                    Log.WriteLine("Invalid XML request!");
                     Log.WriteLine(HTTPRequest.Content.ToUTF8String());
 
                     GetEventSource(Semantics.DebugLog).
@@ -148,8 +150,6 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 }
 
-                Log.WriteLine("XMLRequest ok!");
-
                 #endregion
 
                 Log.WriteLine("");
@@ -160,18 +160,29 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 #region Get SOAP request...
 
-                XElement RemoteStartXML;
-                XElement RemoteStopXML;
+                IEnumerable<XElement> RemoteStartXMLs;
+                IEnumerable<XElement> RemoteStopXMLs;
 
                 try
                 {
-                    RemoteStartXML = XMLRequest.Data.Root.Descendants(NS.OICPv1Authorization + "HubjectAuthorizeRemoteStart").FirstOrDefault();
-                    RemoteStopXML  = XMLRequest.Data.Root.Descendants(NS.OICPv1Authorization + "HubjectAuthorizeRemoteStop"). FirstOrDefault();
+
+                    RemoteStartXMLs = XMLRequest.Data.Root.Descendants(NS.OICPv1Authorization + "HubjectAuthorizeRemoteStart");
+                    RemoteStopXMLs  = XMLRequest.Data.Root.Descendants(NS.OICPv1Authorization + "HubjectAuthorizeRemoteStop");
+
+                    if (!RemoteStartXMLs.Any() && !RemoteStopXMLs.Any())
+                        throw new Exception("Must be either RemoteStart or RemoteStop XML request!");
+
+                    if (RemoteStartXMLs.Count() > 1)
+                        throw new Exception("Multiple RemoteStart XML tags within a single request are not supported!");
+
+                    if (RemoteStopXMLs.Count() > 1)
+                        throw new Exception("Multiple RemoteStop XML tags within a single request are not supported!");
+
                 }
                 catch (Exception e)
                 {
 
-                    //Log.Timestamp("Bad request: " + e.Message);
+                    Log.WriteLine("Invalid XML request!");
 
                     GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
@@ -180,7 +191,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
                                            new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
                                            new JProperty("Exception",     e.Message),
-                                           new JProperty("XMLRequest",    HTTPRequest.Content.ToUTF8String()) //ToDo: Handle errors!
+                                           new JProperty("XMLRequest",    XMLRequest.ToString())
                                        ).ToString().
                                          Replace(Environment.NewLine, ""));
 
@@ -206,13 +217,20 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 #endregion
 
-                #region Process an OICP RemoteStart SOAP/XML/HTTP call.
+                #region Process an OICP RemoteStart SOAP/XML/HTTP call
+
+                var RemoteStartXML = RemoteStartXMLs.FirstOrDefault();
+                var RemoteStopXML  = RemoteStopXMLs. FirstOrDefault();
 
                 if (RemoteStartXML != null)
                 {
 
                     #region Parse request parameters
 
+                    // ------------------------
+                    // Hubject/Intercharge App
+                    // ------------------------
+                    //
                     // POST /RemoteStartStop HTTP/1.1
                     // Content-type: text/xml;charset=utf-8
                     // Soapaction: ""
@@ -247,7 +265,9 @@ namespace com.graphdefined.eMI3.IO.OICP
                     // 
                     // </isns:Envelope>
 
-                    // PlugSurfing:
+                    // ----------------
+                    // PlugSurfing App
+                    // ----------------
                     //
                     // <soapenv:Envelope xmlns:auth    = "http://www.hubject.com/b2b/services/authorization/v1"
                     //                   xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
@@ -270,7 +290,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
 
                     String                SessionId;
-                    EVServiceProvider_Id  ProviderId;
+                    EVSP_Id  ProviderId;
                     EVSE_Id               EVSEId;
                     XElement              IdentificationXML;
                     XElement              QRCodeIdentificationXML;
@@ -280,23 +300,23 @@ namespace com.graphdefined.eMI3.IO.OICP
                     try
                     {
 
-                        SessionId                = RemoteStartXML.    ElementOrDefault(NS.OICPv1Authorization + "SessionID", "");
-                        ProviderId               = EVServiceProvider_Id.Parse(RemoteStartXML.ElementOrDefault(NS.OICPv1Authorization + "ProviderID", ""));
-                        EVSEId                   = EVSE_Id.             Parse(RemoteStartXML.ElementOrDefault(NS.OICPv1Authorization + "EVSEID", ""));
+                        SessionId                =               RemoteStartXML.    ElementValueOrFail(NS.OICPv1Authorization + "SessionID",            "No SessionID XML tag provided!");
+                        ProviderId               = EVSP_Id.Parse(RemoteStartXML.    ElementValueOrFail(NS.OICPv1Authorization + "ProviderID",           "No ProviderID XML tag provided!"));
+                        EVSEId                   = EVSE_Id.Parse(RemoteStartXML.    ElementValueOrFail(NS.OICPv1Authorization + "EVSEID",               "No EVSEID XML tag provided!"));
 
-                        IdentificationXML        = RemoteStartXML.    Element         (NS.OICPv1Authorization + "Identification");
-                        RemoteIdentificationXML  = IdentificationXML. Element         (NS.OICPv1CommonTypes   + "RemoteIdentification");
-                        QRCodeIdentificationXML  = IdentificationXML. Element         (NS.OICPv1CommonTypes   + "QRCodeIdentification");
-                        eMAId                    = eMA_Id.              Parse((RemoteIdentificationXML != null)
-                                                                                  ? RemoteIdentificationXML.ElementOrDefault(NS.OICPv1CommonTypes   + "EVCOID", "")
-                                                                                  : QRCodeIdentificationXML.ElementOrDefault(NS.OICPv1CommonTypes   + "EVCOID", "")
-                                                                             );
+                        IdentificationXML        =               RemoteStartXML.    ElementOrFail     (NS.OICPv1Authorization + "Identification",       "No EVSEID XML tag provided!");
+                        RemoteIdentificationXML  =               IdentificationXML. ElementOrFail     (NS.OICPv1CommonTypes   + "RemoteIdentification", "No RemoteIdentification XML tag provided!");
+                        QRCodeIdentificationXML  =               IdentificationXML. ElementOrFail     (NS.OICPv1CommonTypes   + "QRCodeIdentification", "No QRCodeIdentification XML tag provided!");
+                        eMAId                    = eMA_Id. Parse((RemoteIdentificationXML != null)
+                                                                     ? RemoteIdentificationXML.ElementValueOrFail(NS.OICPv1CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
+                                                                     : QRCodeIdentificationXML.ElementValueOrFail(NS.OICPv1CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
+                                                                );
 
                     }
                     catch (Exception e)
                     {
 
-                        Log.Timestamp("Bad request: " + e.Message);
+                        Log.Timestamp("Invalid RemoteStartXML: " + e.Message);
 
                         return new HTTPResponseBuilder() {
 
@@ -324,7 +344,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                     var HubjectDescription     = "";
                     var HubjectAdditionalInfo  = "";
 
-                    var Response               = RequestRouter.RemoteStart(EVSEId, SessionId, ProviderId, eMAId);
+                    var Response               = RequestRouter.RemoteStart(EVSEId, SessionId, ProviderId, eMAId, EventTrackingId);
                     Log.WriteLine(Response.ToString());
 
                     switch (Response)
@@ -389,13 +409,17 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                 #endregion
 
-                #region Process an OICP RemoteStop SOAP/XML/HTTP call.
+                #region Process an OICP RemoteStop SOAP/XML/HTTP call
 
-                else if (RemoteStopXML != null)
+                else
                 {
 
                     #region Parse request parameters
 
+                    // ------------------------
+                    // Hubject/Intercharge App
+                    // ------------------------
+                    //
                     // POST /RemoteStartStop HTTP/1.1
                     // Content-type: text/xml;charset=utf-8
                     // Soapaction: ""
@@ -426,21 +450,21 @@ namespace com.graphdefined.eMI3.IO.OICP
 
 
                     String                SessionId;
-                    EVServiceProvider_Id  ProviderId;
+                    EVSP_Id  ProviderId;
                     EVSE_Id               EVSEId;
 
                     try
                     {
 
-                        SessionId   = RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "SessionID", "");
-                        ProviderId  = EVServiceProvider_Id.Parse(RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "ProviderID", ""));
-                        EVSEId      = EVSE_Id.             Parse(RemoteStopXML.ElementOrDefault(NS.OICPv1Authorization + "EVSEID",     ""));
+                        SessionId   =               RemoteStartXML.ElementValueOrFail(NS.OICPv1Authorization + "SessionID",  "No SessionID XML tag provided!");
+                        ProviderId  = EVSP_Id.Parse(RemoteStartXML.ElementValueOrFail(NS.OICPv1Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId      = EVSE_Id.Parse(RemoteStartXML.ElementValueOrFail(NS.OICPv1Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                     }
                     catch (Exception e)
                     {
 
-                        Log.Timestamp("Bad request: " + e.Message);
+                        Log.Timestamp("Invalid RemoteStopXML: " + e.Message);
 
                         return new HTTPResponseBuilder() {
 
@@ -468,7 +492,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                     var HubjectDescription     = "";
                     var HubjectAdditionalInfo  = "";
 
-                    var Response               = RequestRouter.RemoteStop(EVSEId, SessionId, ProviderId);
+                    var Response               = RequestRouter.RemoteStop(EVSEId, SessionId, ProviderId, EventTrackingId);
                     Log.WriteLine(Response.ToString());
 
                     switch (Response)
@@ -524,46 +548,6 @@ namespace com.graphdefined.eMI3.IO.OICP
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAPContent.ToUTF8Bytes()
-                    };
-
-                }
-
-                #endregion
-
-                #region ...or fail!
-
-                else
-                {
-
-                    //Log.Timestamp("Must be either a RemoteStart or RemoteStop request!");
-
-                    GetEventSource(Semantics.DebugLog).
-                        SubmitSubEvent("InvalidXMLRequest",
-                                       new JObject(
-                                           new JProperty("@context",      "http://emi3group.org/contexts/InvalidXMLRequest.jsonld"),
-                                           new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
-                                           new JProperty("Exception",     "Must be either a RemoteStart or RemoteStop request!"),
-                                           new JProperty("XMLRequest",    HTTPRequest.Content.ToUTF8String()) //ToDo: Handle errors!
-                                       ).ToString().
-                                         Replace(Environment.NewLine, ""));
-
-                    return new HTTPResponseBuilder() {
-
-                        HTTPStatusCode = HTTPStatusCode.OK,
-                        ContentType    = HTTPContentType.XMLTEXT_UTF8,
-                        Content        = SOAP.Encapsulation(new XElement(NS.OICPv1CommonTypes + "HubjectAcknowledgement",
-
-                                                                new XElement(NS.OICPv1CommonTypes + "Result", "false"),
-
-                                                                new XElement(NS.OICPv1CommonTypes + "StatusCode",
-                                                                    new XElement(NS.OICPv1CommonTypes + "Code",           "022"),
-                                                                    new XElement(NS.OICPv1CommonTypes + "Description",    "Unknown request!"),
-                                                                    new XElement(NS.OICPv1CommonTypes + "AdditionalInfo", "Must be either RemoteStart or RemoteStop!")
-                                                                )
-
-                                                            )).ToString().ToUTF8Bytes()
-
                     };
 
                 }

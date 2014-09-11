@@ -32,7 +32,7 @@ using com.graphdefined.eMI3.LocalService;
 namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
-    public class OICP_EVSEOperator_UpstreamService : AOICPUpstreamService, IEVSEOperator2HubjectService
+    public class OICP_EVSEOperator_UpstreamService : AOICPUpstreamService, IRoamingProviderProvided_EVSEOperatorServices
     {
 
         #region Constructor(s)
@@ -40,7 +40,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         public OICP_EVSEOperator_UpstreamService(String          OICPHost,
                                                  IPPort          OICPPort,
                                                  String          HTTPVirtualHost = null,
-                                                 AuthorizatorId  AuthorizatorId  = null)
+                                                 Authorizator_Id  AuthorizatorId  = null)
 
             : base(OICPHost,
                    OICPPort,
@@ -64,8 +64,8 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         /// <param name="UID">A RFID user identification.</param>
         public AUTHSTARTResult AuthorizeStart(EVSEOperator_Id    OperatorId,
                                               EVSE_Id            EVSEId,
-                                              ChargingSessionId  PartnerSessionId,
-                                              Token              UID)
+                                              ChargingSession_Id  PartnerSessionId,
+                                              Auth_Token              UID)
 
         {
 
@@ -112,7 +112,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                        AuthorizationResult  = AuthorizationResult.Authorized,
                                        SessionId            = AuthStartResult.SessionID,
                                        PartnerSessionId     = PartnerSessionId,
-                                       ProviderId           = EVServiceProvider_Id.Parse(AuthStartResult.ProviderID),
+                                       ProviderId           = EVSP_Id.Parse(AuthStartResult.ProviderID),
                                        Description          = AuthStartResult.Description
                                    };
 
@@ -214,9 +214,9 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         /// <param name="UID">A RFID user identification.</param>
         public AUTHSTOPResult AuthorizeStop(EVSEOperator_Id    OperatorId,
                                             EVSE_Id            EVSEId,
-                                            ChargingSessionId  SessionId,
-                                            ChargingSessionId  PartnerSessionId,
-                                            Token              UID)
+                                            ChargingSession_Id  SessionId,
+                                            ChargingSession_Id  PartnerSessionId,
+                                            Auth_Token              UID)
 
         {
 
@@ -264,7 +264,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                        AuthorizationResult  = AuthorizationResult.Authorized,
                                        SessionId            = AuthStopResult.SessionID,
                                        PartnerSessionId     = PartnerSessionId,
-                                       ProviderId           = EVServiceProvider_Id.Parse(AuthStopResult.ProviderID),
+                                       ProviderId           = EVSP_Id.Parse(AuthStopResult.ProviderID),
                                        Description          = AuthStopResult.Description
                                    };
 
@@ -380,7 +380,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
         #endregion
 
-        #region SendCDR(EVSEId, SessionId, PartnerSessionId, PartnerProductId, UID, EVCOId, ChargeStart, ChargeEnd, SessionStart = null, SessionEnd = null, MeterValueStart = null, MeterValueEnd = null)
+        #region SendCDR(EVSEId, SessionId, PartnerSessionId, PartnerProductId, ChargeStart, ChargeEnd, UID = null, EVCOId = null, SessionStart = null, SessionEnd = null, MeterValueStart = null, MeterValueEnd = null)
 
         /// <summary>
         /// Create an OICP SendChargeDetailRecord request.
@@ -397,18 +397,18 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         /// <param name="SessionEnd">The timestamp of the session end.</param>
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
-        public SENDCDRResult SendCDR(EVSE_Id            EVSEId,
-                                     ChargingSessionId  SessionId,
-                                     ChargingSessionId  PartnerSessionId,
-                                     String             PartnerProductId,
-                                     Token              UID,
-                                     eMA_Id             EVCOId,
-                                     DateTime           ChargeStart,
-                                     DateTime           ChargeEnd,
-                                     DateTime?          SessionStart    = null,
-                                     DateTime?          SessionEnd      = null,
-                                     Double?            MeterValueStart = null,
-                                     Double?            MeterValueEnd   = null)
+        public SENDCDRResult SendCDR(EVSE_Id             EVSEId,
+                                     ChargingSession_Id  SessionId,
+                                     ChargingSession_Id  PartnerSessionId,
+                                     String              PartnerProductId,
+                                     DateTime            ChargeStart,
+                                     DateTime            ChargeEnd,
+                                     Auth_Token               UID             = null,
+                                     eMA_Id              EVCOId          = null,
+                                     DateTime?           SessionStart    = null,
+                                     DateTime?           SessionEnd      = null,
+                                     Double?             MeterValueStart = null,
+                                     Double?             MeterValueEnd   = null)
 
         {
 
@@ -424,10 +424,10 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                                                                               SessionId,
                                                                                               PartnerSessionId,
                                                                                               PartnerProductId,
-                                                                                              UID,
-                                                                                              EVCOId,
                                                                                               ChargeStart,
                                                                                               ChargeEnd,
+                                                                                              UID,
+                                                                                              EVCOId,
                                                                                               SessionStart,
                                                                                               SessionEnd,
                                                                                               MeterValueStart,

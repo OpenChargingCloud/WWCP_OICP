@@ -61,35 +61,35 @@ namespace com.graphdefined.eMI3.IO.OICP
             var AddressXML              = EVSE.Element(NS.OICPv1EVSEData + "Address");
 
             this.Address                = new Address() {
-                                                  Country       = Country.Parse(AddressXML.ElementOrDefault(NS.OICPv1CommonTypes + "Country", "").
+                                                  Country       = Country.Parse(AddressXML.ElementValueOrDefault(NS.OICPv1CommonTypes + "Country", "").
                                                                                    Replace("Deutschland", "Germany") // Stupid work-around!
                                                                                ),
-                                                  City          = AddressXML.ElementOrDefault(NS.OICPv1CommonTypes + "City",       ""),
-                                                  Street        = AddressXML.ElementOrDefault(NS.OICPv1CommonTypes + "Street",     ""),
-                                                  PostalCode    = AddressXML.ElementOrDefault(NS.OICPv1CommonTypes + "PostalCode", ""),
-                                                  FloorLevel    = AddressXML.ElementOrDefault(NS.OICPv1CommonTypes + "Floor",      ""),
+                                                  City          = AddressXML.ElementValueOrDefault(NS.OICPv1CommonTypes + "City",       ""),
+                                                  Street        = AddressXML.ElementValueOrDefault(NS.OICPv1CommonTypes + "Street",     ""),
+                                                  PostalCode    = AddressXML.ElementValueOrDefault(NS.OICPv1CommonTypes + "PostalCode", ""),
+                                                  FloorLevel    = AddressXML.ElementValueOrDefault(NS.OICPv1CommonTypes + "Floor",      ""),
                                                   //Region        = Address.Element(NS.OICPv1CommonTypes + "Region"    ).Value,
                                                   //TimeZone      = Address.Element(NS.OICPv1CommonTypes + "TimeZone"  ).Value
                                               };
 
-            this.Distance               = Double.Parse(EvseMatch.ElementOrDefault(NS.OICPv1EVSESearch + "Distance", "0.0"), NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo);
+            this.Distance               = Double.Parse(EvseMatch.ElementValueOrDefault(NS.OICPv1EVSESearch + "Distance", "0.0"), NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo);
 
-            this.EVSEId                 = EVSE.     ElementOrDefault(NS.OICPv1EVSEData + "EvseId",                "");
-            this.ChargingStationId      = EVSE.     ElementOrDefault(NS.OICPv1EVSEData + "ChargingStationId",     "");
-            this.ChargingStationName    = EVSE.     ElementOrDefault(NS.OICPv1EVSEData + "ChargingStationName",   "");
-            this.EnChargingStationName  = EVSE.     ElementOrDefault(NS.OICPv1EVSEData + "EnChargingStationName", "");
+            this.EVSEId                 = EVSE.     ElementValueOrDefault(NS.OICPv1EVSEData + "EvseId",                "");
+            this.ChargingStationId      = EVSE.     ElementValueOrDefault(NS.OICPv1EVSEData + "ChargingStationId",     "");
+            this.ChargingStationName    = EVSE.     ElementValueOrDefault(NS.OICPv1EVSEData + "ChargingStationName",   "");
+            this.EnChargingStationName  = EVSE.     ElementValueOrDefault(NS.OICPv1EVSEData + "EnChargingStationName", "");
 
             var GeoCoordinatesXML       = EVSE.Element(NS.OICPv1EVSEData + "GeoCoordinates").Element(NS.OICPv1CommonTypes + "DecimalDegree");
 
-            this.GeoCoordinate          = new GeoCoordinate(new Latitude (Double.Parse(GeoCoordinatesXML.ElementOrDefault(NS.OICPv1CommonTypes + "Latitude",  "0.0"), NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo)),
-                                                            new Longitude(Double.Parse(GeoCoordinatesXML.ElementOrDefault(NS.OICPv1CommonTypes + "Longitude", "0.0"), NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo)));
+            this.GeoCoordinate          = new GeoCoordinate(new Latitude (Double.Parse(GeoCoordinatesXML.ElementValueOrDefault(NS.OICPv1CommonTypes + "Latitude",  "0.0"), NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo)),
+                                                            new Longitude(Double.Parse(GeoCoordinatesXML.ElementValueOrDefault(NS.OICPv1CommonTypes + "Longitude", "0.0"), NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo)));
 
             this.Plugs                  = EVSE.Element (NS.OICPv1EVSEData + "Plugs"              ).Elements(NS.OICPv1EVSEData + "Plug"              ).Select(v => v.Value).ToArray();
             this.ChargingFacilities     = EVSE.Elements(NS.OICPv1EVSEData + "ChargingFacilities" ).Elements(NS.OICPv1EVSEData + "ChargingFacility"  ).Select(v => v.Value).ToArray();
             this.ChargingModes          = EVSE.Elements(NS.OICPv1EVSEData + "ChargingModes"      ).Elements(NS.OICPv1EVSEData + "ChargingMode"      ).Select(v => v.Value).ToArray();
             this.AuthenticationModes    = EVSE.Elements(NS.OICPv1EVSEData + "AuthenticationModes").Elements(NS.OICPv1EVSEData + "AuthenticationMode").Select(v => v.Value).ToArray();
 
-            this.MaxCapacity            = UInt16.Parse(EVSE.ElementOrDefault(NS.OICPv1EVSEData + "MaxCapacity", "0"));
+            this.MaxCapacity            = UInt16.Parse(EVSE.ElementValueOrDefault(NS.OICPv1EVSEData + "MaxCapacity", "0"));
             this.PaymentOptions         = EVSE.Elements(NS.OICPv1EVSEData + "PaymentOptions"     ).Elements(NS.OICPv1EVSEData + "PaymentOption"     ).Select(v => v.Value).ToArray();
 
         }

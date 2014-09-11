@@ -361,8 +361,8 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStartXML(this EVSE          EVSE,
-                                                 ChargingSessionId  PartnerSessionID,
-                                                 Token              UID)
+                                                 ChargingSession_Id  PartnerSessionID,
+                                                 Auth_Token              UID)
         {
 
             return AuthorizeStartXML(EVSE.ChargingStation.Pool.Operator.Id,
@@ -385,8 +385,8 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStartXML(EVSEOperator_Id    OperatorId,
                                                  EVSE_Id            EVSEId,
-                                                 ChargingSessionId  PartnerSessionID,
-                                                 Token              UID)
+                                                 ChargingSession_Id  PartnerSessionID,
+                                                 Auth_Token              UID)
         {
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1_2Authorization + "eRoamingAuthorizeStart",
@@ -415,9 +415,9 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         /// <param name="PartnerSessionID">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStopXML(this EVSE          EVSE,
-                                                ChargingSessionId  SessionID,
-                                                ChargingSessionId  PartnerSessionID,
-                                                Token              UID)
+                                                ChargingSession_Id  SessionID,
+                                                ChargingSession_Id  PartnerSessionID,
+                                                Auth_Token              UID)
         {
 
             return AuthorizeStopXML(EVSE.ChargingStation.Pool.Operator.Id,
@@ -442,9 +442,9 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         /// <param name="UID">A RFID user identification.</param>
         public static XElement AuthorizeStopXML(EVSEOperator_Id    OperatorId,
                                                 EVSE_Id            EVSEId,
-                                                ChargingSessionId  SessionId,
-                                                ChargingSessionId  PartnerSessionId,
-                                                Token              UID)
+                                                ChargingSession_Id  SessionId,
+                                                ChargingSession_Id  PartnerSessionId,
+                                                Auth_Token              UID)
         {
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1_2Authorization + "eRoamingAuthorizeStop",
@@ -473,36 +473,37 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="PartnerSessionId">Your own session identification.</param>
         /// <param name="PartnerProductId">Your charging product identification.</param>
-        /// <param name="UID">The optional RFID user identification.</param>
-        /// <param name="EVCOId"></param>
         /// <param name="ChargeStart">The timestamp of the charging start.</param>
         /// <param name="ChargeEnd">The timestamp of the charging end.</param>
+        /// <param name="UID">The optional RFID user identification.</param>
+        /// <param name="EVCOId"></param>
         /// <param name="SessionStart">The timestamp of the session start.</param>
         /// <param name="SessionEnd">The timestamp of the session end.</param>
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
-        public static XElement SendChargeDetailRecordXML(this EVSE          EVSE,
-                                                         ChargingSessionId  SessionId,
-                                                         ChargingSessionId  PartnerSessionId,
-                                                         String             PartnerProductId,
-                                                         Token              UID,
-                                                         eMA_Id             EVCOId,
-                                                         DateTime           ChargeStart,
-                                                         DateTime           ChargeEnd,
-                                                         DateTime?          SessionStart    = null,
-                                                         DateTime?          SessionEnd      = null,
-                                                         Double?            MeterValueStart = null,
-                                                         Double?            MeterValueEnd   = null)
+        public static XElement SendChargeDetailRecordXML(this EVSE           EVSE,
+                                                         ChargingSession_Id  SessionId,
+                                                         ChargingSession_Id  PartnerSessionId,
+                                                         String              PartnerProductId,
+                                                         DateTime            ChargeStart,
+                                                         DateTime            ChargeEnd,
+                                                         Auth_Token               UID              = null,
+                                                         eMA_Id              EVCOId           = null,
+                                                         DateTime?           SessionStart     = null,
+                                                         DateTime?           SessionEnd       = null,
+                                                         Double?             MeterValueStart  = null,
+                                                         Double?             MeterValueEnd    = null)
+
         {
 
             return SendChargeDetailRecordXML(EVSE.Id,
                                              SessionId,
                                              PartnerSessionId,
                                              PartnerProductId,
-                                             UID,
-                                             EVCOId,
                                              ChargeStart,
                                              ChargeEnd,
+                                             UID,
+                                             EVCOId,
                                              SessionStart,
                                              SessionEnd,
                                              MeterValueStart,
@@ -521,26 +522,27 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="PartnerSessionId">Your own session identification.</param>
         /// <param name="PartnerProductId"></param>
-        /// <param name="UID">The optional RFID user identification.</param>
-        /// <param name="EVCOId"></param>
         /// <param name="ChargeStart">The timestamp of the charging start.</param>
         /// <param name="ChargeEnd">The timestamp of the charging end.</param>
+        /// <param name="UID">The optional RFID user identification.</param>
+        /// <param name="EVCOId"></param>
         /// <param name="SessionStart">The timestamp of the session start.</param>
         /// <param name="SessionEnd">The timestamp of the session end.</param>
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
-        public static XElement SendChargeDetailRecordXML(EVSE_Id            EVSEId,
-                                                         ChargingSessionId  SessionId,
-                                                         ChargingSessionId  PartnerSessionId,
-                                                         String             PartnerProductId,
-                                                         Token              UID,
-                                                         eMA_Id             EVCOId,
-                                                         DateTime           ChargeStart,
-                                                         DateTime           ChargeEnd,
-                                                         DateTime?          SessionStart    = null,
-                                                         DateTime?          SessionEnd      = null,
-                                                         Double?            MeterValueStart = null,
-                                                         Double?            MeterValueEnd   = null)
+        public static XElement SendChargeDetailRecordXML(EVSE_Id             EVSEId,
+                                                         ChargingSession_Id  SessionId,
+                                                         ChargingSession_Id  PartnerSessionId,
+                                                         String              PartnerProductId,
+                                                         DateTime            ChargeStart,
+                                                         DateTime            ChargeEnd,
+                                                         Auth_Token               UID              = null,
+                                                         eMA_Id              EVCOId           = null,
+                                                         DateTime?           SessionStart     = null,
+                                                         DateTime?           SessionEnd       = null,
+                                                         Double?             MeterValueStart  = null,
+                                                         Double?             MeterValueEnd    = null)
+
         {
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1_2Authorization + "eRoamingChargeDetailRecord",

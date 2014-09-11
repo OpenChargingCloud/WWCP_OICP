@@ -38,12 +38,12 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
         #region SessionID
 
-        private readonly ChargingSessionId _SessionID;
+        private readonly ChargingSession_Id _SessionID;
 
         /// <summary>
         /// The Hubject session identification.
         /// </summary>
-        public ChargingSessionId SessionID
+        public ChargingSession_Id SessionID
         {
             get
             {
@@ -272,7 +272,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
             
 
-            this._SessionID             = ChargingSessionId.Parse((HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "SessionID") != null)
+            this._SessionID             = ChargingSession_Id.Parse((HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "SessionID") != null)
                                                          ? HubjectMobileAuthorizationStart.Element(NS.OICPv1_2MobileAuthorization + "SessionID").Value
                                                          : "");
 
