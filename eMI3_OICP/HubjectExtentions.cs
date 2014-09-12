@@ -358,10 +358,18 @@ namespace com.graphdefined.eMI3.IO.OICP
 
         #endregion
 
-        #region InitialEVSEData_Upload(EVSE_Operator, Hostname, Port, FakeHostname)
+        #region InitialEVSEData_Upload(EVSEOperator, DNSClient, Hostname, Port, HTTPVirtualHost, UserAgent = "Belectric Drive Hubject Gateway")
 
-        public static void InitialEVSEData_Upload(EVSEOperator EVSEOperator, DNSClient DNSClient, String Hostname, IPPort Port, String FakeHostname)
+        public static void InitialEVSEData_Upload(EVSEOperator  EVSEOperator,
+                                                  DNSClient     DNSClient,
+                                                  String        Hostname,
+                                                  IPPort        Port,
+                                                  String        HTTPVirtualHost,
+                                                  String        UserAgent  = "Belectric Drive Hubject Gateway")
+
         {
+
+            Console.WriteLine("FullLoad of EVSE static data at " + HTTPVirtualHost + "...");
 
             var EVSEDataFullLoadXML = EVSEOperator.ChargingPools.
                                           PushEVSEDataXML(EVSEOperator.Id,
@@ -369,14 +377,13 @@ namespace com.graphdefined.eMI3.IO.OICP
                                                           ActionType.fullLoad).
                                           ToString();
 
-            Console.WriteLine("Searching for hostname: " + Hostname);
             var IPv4Addresses = DNSClient.Query<A>(Hostname).Select(a => a.IPv4Address).ToArray();
 
             using (var httpClient = new HTTPClient(IPv4Addresses.First(), Port))
             {
 
                 var builder = httpClient.POST("/ibis/ws/HubjectEvseData_V1");
-                builder.Host        = FakeHostname;
+                builder.Host        = HTTPVirtualHost;
                 builder.Content     = EVSEDataFullLoadXML.ToUTF8Bytes();
                 builder.ContentType = HTTPContentType.XMLTEXT_UTF8;
                 builder.Set("SOAPAction", "HubjectPushEvseData");
@@ -405,7 +412,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                     //  </S:Body>
                     //</S:Envelope>
 
-                    Console.WriteLine("EVSE data fullload, except BITS: " + ack.Result + " / " + ack.Description + " [" + resp.HTTPStatusCode + "]");
+                    Console.WriteLine("EVSE data fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
 
                 });
 
