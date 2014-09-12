@@ -322,7 +322,7 @@ namespace com.graphdefined.eMI3.IO.OICP
             if (XML_EVSEStates.Any())
             {
 
-                Console.WriteLine("FullLoad of " + XML_EVSEStates.Length + " new EVSE states at " + HTTPVirtualHost + "...");
+                Console.WriteLine("FullLoad of " + XML_EVSEStates.Length + " EVSE states at " + HTTPVirtualHost + "...");
 
                 var EVSEStatesInsertXML = XML_EVSEStates.
                                               Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState())).
@@ -343,7 +343,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
                     var Task02 = httpClient.Execute(builder, (req, resp) => {
                         var ack = HubjectAcknowledgement.Parse(XDocument.Parse(resp.Content.ToUTF8String()).Root);
-                        Console.WriteLine("EVSE states fullload: " + ack.Result + " / " + ack.Description + " [" + resp.HTTPStatusCode + "]");
+                        Console.WriteLine("EVSE states fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
                     });
 
                     Task02.Wait(TimeSpan.FromSeconds(30));
@@ -369,7 +369,7 @@ namespace com.graphdefined.eMI3.IO.OICP
 
         {
 
-            Console.WriteLine("FullLoad of EVSE static data at " + HTTPVirtualHost + "...");
+            Console.WriteLine("FullLoad of " + EVSEOperator.ChargingPools.SelectMany(Pool => Pool.ChargingStations).SelectMany(Station => Station.EVSEs).Count() + " EVSE static data sets at " + HTTPVirtualHost + "...");
 
             var EVSEDataFullLoadXML = EVSEOperator.ChargingPools.
                                           PushEVSEDataXML(EVSEOperator.Id,
