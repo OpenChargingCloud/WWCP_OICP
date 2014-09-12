@@ -304,9 +304,14 @@ namespace com.graphdefined.eMI3.IO.OICP
                         ProviderId               = EVSP_Id.Parse(RemoteStartXML.    ElementValueOrFail(NS.OICPv1Authorization + "ProviderID",           "No ProviderID XML tag provided!"));
                         EVSEId                   = EVSE_Id.Parse(RemoteStartXML.    ElementValueOrFail(NS.OICPv1Authorization + "EVSEID",               "No EVSEID XML tag provided!"));
 
-                        IdentificationXML        =               RemoteStartXML.    ElementOrFail     (NS.OICPv1Authorization + "Identification",       "No EVSEID XML tag provided!");
-                        RemoteIdentificationXML  =               IdentificationXML. ElementOrFail     (NS.OICPv1CommonTypes   + "RemoteIdentification", "No RemoteIdentification XML tag provided!");
-                        QRCodeIdentificationXML  =               IdentificationXML. ElementOrFail     (NS.OICPv1CommonTypes   + "QRCodeIdentification", "No QRCodeIdentification XML tag provided!");
+                        IdentificationXML        =               RemoteStartXML.    ElementOrFail     (NS.OICPv1Authorization + "Identification",       "No Identification XML tag provided!");
+                        RemoteIdentificationXML  =               IdentificationXML. Element           (NS.OICPv1CommonTypes   + "RemoteIdentification");
+                        QRCodeIdentificationXML  =               IdentificationXML. Element           (NS.OICPv1CommonTypes   + "QRCodeIdentification");
+
+                        if (RemoteIdentificationXML == null &&
+                            QRCodeIdentificationXML == null)
+                            throw new Exception("Neither a RemoteIdentificationXML, nor a QRCodeIdentificationXML was provided!");
+
                         eMAId                    = eMA_Id. Parse((RemoteIdentificationXML != null)
                                                                      ? RemoteIdentificationXML.ElementValueOrFail(NS.OICPv1CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
                                                                      : QRCodeIdentificationXML.ElementValueOrFail(NS.OICPv1CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
