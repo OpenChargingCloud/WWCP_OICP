@@ -124,7 +124,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
                                                   return new XElement(NS.OICPv1_2EVSEData + "EvseDataRecord",
 
-                                                      new XElement(NS.OICPv1_2EVSEData + "EvseId",                 EVSE.Id.OldEVSEId), //ToString()),// 
+                                                      new XElement(NS.OICPv1_2EVSEData + "EvseId",                 EVSE.Id.ToString()),// OldEVSEId), //
                                                       new XElement(NS.OICPv1_2EVSEData + "ChargingStationId",      EVSE.ChargingStation.Id.ToString()),
                                                       new XElement(NS.OICPv1_2EVSEData + "ChargingStationName",    EVSE.ChargingStation.Pool.Name[Languages.de].SubstringMax(50)),
                                                       new XElement(NS.OICPv1_2EVSEData + "EnChargingStationName",  EVSE.ChargingStation.Pool.Name[Languages.en].SubstringMax(50)),
