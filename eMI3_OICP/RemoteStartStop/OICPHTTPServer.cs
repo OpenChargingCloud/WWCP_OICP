@@ -454,16 +454,16 @@ namespace com.graphdefined.eMI3.IO.OICP
                     // </isns:Envelope>
 
 
-                    String                SessionId;
+                    String   SessionId;
                     EVSP_Id  ProviderId;
-                    EVSE_Id               EVSEId;
+                    EVSE_Id  EVSEId;
 
                     try
                     {
 
-                        SessionId   =               RemoteStartXML.ElementValueOrFail(NS.OICPv1Authorization + "SessionID",  "No SessionID XML tag provided!");
-                        ProviderId  = EVSP_Id.Parse(RemoteStartXML.ElementValueOrFail(NS.OICPv1Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId      = EVSE_Id.Parse(RemoteStartXML.ElementValueOrFail(NS.OICPv1Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        SessionId   =               RemoteStopXML.ElementValueOrFail(NS.OICPv1Authorization + "SessionID",  "No SessionID XML tag provided!");
+                        ProviderId  = EVSP_Id.Parse(RemoteStopXML.ElementValueOrFail(NS.OICPv1Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId      = EVSE_Id.Parse(RemoteStopXML.ElementValueOrFail(NS.OICPv1Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                     }
                     catch (Exception e)
