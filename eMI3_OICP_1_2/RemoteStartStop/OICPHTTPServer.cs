@@ -24,10 +24,10 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
-using eu.Vanaheimr.Illias.Commons;
-using eu.Vanaheimr.Illias.Commons.ConsoleLog;
-using eu.Vanaheimr.Hermod;
-using eu.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Illias.ConsoleLog;
+using org.GraphDefined.Vanaheimr.Hermod;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 using com.graphdefined.eMI3.LocalService;
 

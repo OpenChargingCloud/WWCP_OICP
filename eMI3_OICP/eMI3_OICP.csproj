@@ -80,29 +80,17 @@
       <Project>{33836742-af1d-4aa4-963f-b0a8e60e6480}</Project>
       <Name>eMI3_Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Hermod\HermodHTTPClient\HermodHTTPClient.csproj">
-      <Project>{0ab343e8-aa69-4685-9676-bfa27e418a20}</Project>
-      <Name>HermodHTTPClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Hermod\HermodHTTP\HermodHTTP.csproj">
-      <Project>{9a00bd39-1385-4db4-8f38-363bb947ccb4}</Project>
-      <Name>HermodHTTP</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Hermod\Hermod\Hermod.csproj">
       <Project>{477efd16-3627-4473-957d-44ca9a9dfb79}</Project>
       <Name>Hermod</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Illias\Commons.NET4.5\Commons.NET4.5.csproj">
-      <Project>{ccc826d7-9ac7-4ce6-82f8-b835168eba35}</Project>
-      <Name>Commons.NET4.5</Name>
+    <ProjectReference Include="..\..\Illias\Illias.NET4.5\Illias.NET4.5.csproj">
+      <Project>{23d37453-2d4e-4bd8-b40f-3e731fee7712}</Project>
+      <Name>Illias.NET4.5</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Illias\Commons\Commons.csproj">
-      <Project>{d3b1af79-161f-4299-8b14-133286d635b8}</Project>
-      <Name>Commons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Illias\Geometry\Geometry.csproj">
-      <Project>{9f38dcc9-cd80-4b71-8a9c-b3f37e471cab}</Project>
-      <Name>Geometry</Name>
+    <ProjectReference Include="..\..\Illias\Illias\Illias.csproj">
+      <Project>{e156f18d-d41c-4529-9bcc-9962e6ee25da}</Project>
+      <Name>Illias</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Styx\Styx.NET4.5\Styx.NET4.5.csproj">
       <Project>{af76ecc0-2ca5-4cff-9e1e-ff5478c4b6e4}</Project>

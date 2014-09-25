@@ -19,9 +19,9 @@
 
 using System;
 
-using eu.Vanaheimr.Illias.Commons;
-using eu.Vanaheimr.Hermod;
-using eu.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
