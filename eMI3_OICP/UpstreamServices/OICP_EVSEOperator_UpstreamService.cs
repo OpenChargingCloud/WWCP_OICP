@@ -26,6 +26,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
 using com.graphdefined.eMI3.LocalService;
+using System.Collections.Generic;
 
 #endregion
 
@@ -51,6 +52,39 @@ namespace com.graphdefined.eMI3.IO.OICP
         { }
 
         #endregion
+
+
+        public IEnumerable<KeyValuePair<Auth_Token, AuthorizationResult>> AllTokens
+        {
+            get
+            {
+                return new KeyValuePair<Auth_Token, AuthorizationResult>[0];
+            }
+        }
+
+        public IEnumerable<KeyValuePair<Auth_Token, AuthorizationResult>> AuthorizedTokens
+        {
+            get
+            {
+                return new KeyValuePair<Auth_Token, AuthorizationResult>[0];
+            }
+        }
+
+        public IEnumerable<KeyValuePair<Auth_Token, AuthorizationResult>> NotAuthorizedTokens
+        {
+            get
+            {
+                return new KeyValuePair<Auth_Token, AuthorizationResult>[0];
+            }
+        }
+
+        public IEnumerable<KeyValuePair<Auth_Token, AuthorizationResult>> BlockedTokens
+        {
+            get
+            {
+                return new KeyValuePair<Auth_Token, AuthorizationResult>[0];
+            }
+        }
 
 
         #region AuthorizeStart(OperatorId, EVSEId, PartnerSessionId, UID)
