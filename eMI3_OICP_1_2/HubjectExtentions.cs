@@ -383,7 +383,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
             var IPv4Addresses = DNSClient.Query<A>(Hostname).Select(a => a.IPv4Address).ToArray();
 
-            Console.WriteLine(IPv4Addresses.First().ToString());
+            Console.WriteLine(Hostname + " => " + IPv4Addresses.First().ToString());
 
             using (var httpClient = new HTTPClient(IPv4Addresses.First(), Port))
             {
