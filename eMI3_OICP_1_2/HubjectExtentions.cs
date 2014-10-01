@@ -372,6 +372,8 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         {
 
             Console.WriteLine("FullLoad of " + EVSEOperator.ChargingPools.SelectMany(Pool => Pool.ChargingStations).SelectMany(Station => Station.EVSEs).Count() + " EVSE static data sets at " + HTTPVirtualHost + "...");
+            try
+            {
 
             var EVSEDataFullLoadXML = EVSEOperator.ChargingPools.
                                           PushEVSEDataXML(EVSEOperator.Id,
@@ -398,6 +400,11 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
                 Task01.Wait(TimeSpan.FromSeconds(30));
 
+            }
+
+            } catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
 
         }
