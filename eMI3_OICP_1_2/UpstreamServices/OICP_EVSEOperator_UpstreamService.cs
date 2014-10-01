@@ -46,7 +46,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
             : base(OICPHost,
                    OICPPort,
                    HTTPVirtualHost,
-                   "/ibis/ws/HubjectAuthorization_V1",
+                   "/ibis/ws/eRoamingAuthorization_V1",
                    AuthorizatorId)
 
         { }
@@ -96,10 +96,10 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         /// <param name="EVSEId">An EVSE identification.</param>
         /// <param name="PartnerSessionId">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
-        public AUTHSTARTResult AuthorizeStart(EVSEOperator_Id    OperatorId,
-                                              EVSE_Id            EVSEId,
+        public AUTHSTARTResult AuthorizeStart(EVSEOperator_Id     OperatorId,
+                                              EVSE_Id             EVSEId,
                                               ChargingSession_Id  PartnerSessionId,
-                                              Auth_Token              UID)
+                                              Auth_Token          UID)
 
         {
 
@@ -110,6 +110,12 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
                 using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
                 {
+
+                    var aaa = CPOMethods.AuthorizeStartXML(OperatorId,
+                                                                                      EVSEId,
+                                                                                      PartnerSessionId,
+                                                                                      UID).
+                                                                                      ToString();
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
                                                                                       EVSEId,
