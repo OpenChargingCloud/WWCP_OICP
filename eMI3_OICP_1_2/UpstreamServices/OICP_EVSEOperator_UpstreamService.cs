@@ -124,6 +124,8 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                                                                       ToString(),
                                                          "eRoamingAuthorizeStart");
 
+                    Console.WriteLine(HttpResponse.Content.ToUTF8String());
+
                     //ToDo: In case of errors this will not parse!
                     var AuthStartResult = HubjectAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
 
