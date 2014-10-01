@@ -392,7 +392,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
             return SOAP.Encapsulation(new XElement(NS.OICPv1_2Authorization + "eRoamingAuthorizeStart",
                                           new XElement(NS.OICPv1_2Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
                                           new XElement(NS.OICPv1_2Authorization + "OperatorID",       OperatorId.Id2),
-                                          new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.ToString()),
+                                          new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.OldEVSEId), //.ToString()),
                                           new XElement(NS.OICPv1_2Authorization + "Identification",
                                               new XElement(NS.OICPv1_2CommonTypes + "RFIDmifarefamilyIdentification",
                                                  new XElement(NS.OICPv1_2CommonTypes + "UID", UID.ToString())
@@ -451,7 +451,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                           new XElement(NS.OICPv1_2Authorization + "SessionID",        SessionId.ToString()),
                                           new XElement(NS.OICPv1_2Authorization + "PartnerSessionID", PartnerSessionId.ToString()),
                                           new XElement(NS.OICPv1_2Authorization + "OperatorID",       OperatorId.Id2),
-                                          new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.ToString()),
+                                          new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.OldEVSEId), //.ToString()),
                                           new XElement(NS.OICPv1_2Authorization + "Identification",
                                               new XElement(NS.OICPv1_2CommonTypes + "RFIDmifarefamilyIdentification",
                                                  new XElement(NS.OICPv1_2CommonTypes + "UID", UID.ToString())
@@ -536,7 +536,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                                          String              PartnerProductId,
                                                          DateTime            ChargeStart,
                                                          DateTime            ChargeEnd,
-                                                         Auth_Token               UID              = null,
+                                                         Auth_Token          UID              = null,
                                                          eMA_Id              EVCOId           = null,
                                                          DateTime?           SessionStart     = null,
                                                          DateTime?           SessionEnd       = null,
@@ -550,7 +550,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                  new XElement(NS.OICPv1_2Authorization + "SessionID",        SessionId.ToString()),
                                  new XElement(NS.OICPv1_2Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
                                  new XElement(NS.OICPv1_2Authorization + "PartnerProductID", PartnerProductId),
-                                 new XElement(NS.OICPv1_2Authorization + "EvseID",           EVSEId.ToString()),
+                                 new XElement(NS.OICPv1_2Authorization + "EvseID",           EVSEId.OldEVSEId), //.ToString()),
 
                                  new XElement(NS.OICPv1_2Authorization + "Identification",
                                      (UID != null)
