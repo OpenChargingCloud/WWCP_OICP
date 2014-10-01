@@ -46,7 +46,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
             : base(OICPHost,
                    OICPPort,
                    HTTPVirtualHost,
-                   "/ibis/ws/eRoamingAuthorization_V1",
+                   "/ibis/ws/eRoamingAuthorization_V1.2",
                    AuthorizatorId)
 
         { }
