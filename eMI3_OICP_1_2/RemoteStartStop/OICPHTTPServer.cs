@@ -288,6 +288,27 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                     // 
                     // </soapenv:Envelope>
 
+                    // ---------------------------------
+                    // Hubject/Intercharge App OICPv1.2
+                    // ---------------------------------
+                    // <soapenv:Envelope xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2"
+                    //                   xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                    //                   xmlns:tns="http://www.hubject.com/b2b/services/authorization/v1.2">
+                    //   <soapenv:Body>
+                    //     <tns:eRoamingAuthorizeRemoteStart>
+                    //       <tns:SessionID>cb7e6492-0a88-1294-3f1b-9edc7be427e2</tns:SessionID>
+                    //       <tns:ProviderID>DE*BMW</tns:ProviderID>
+                    //       <tns:EVSEID>+49*822*028630241*1</tns:EVSEID>
+                    //       <tns:Identification>
+                    //         <cmn:QRCodeIdentification>
+                    //           <cmn:EVCOID>DE*BMW*0010LT*7</cmn:EVCOID>
+                    //         </cmn:QRCodeIdentification>
+                    //       </tns:Identification>
+                    //     </tns:eRoamingAuthorizeRemoteStart>
+                    //   </soapenv:Body>
+                    //   
+                    // </soapenv:Envelope>
+
 
                     String                SessionId;
                     EVSP_Id  ProviderId;
@@ -305,8 +326,13 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                         EVSEId                   = EVSE_Id.Parse(RemoteStartXML.    ElementValueOrFail(NS.OICPv1_2Authorization + "EVSEID",               "No EVSEID XML tag provided!"));
 
                         IdentificationXML        =               RemoteStartXML.    ElementOrFail     (NS.OICPv1_2Authorization + "Identification",       "No EVSEID XML tag provided!");
-                        RemoteIdentificationXML  =               IdentificationXML. ElementOrFail     (NS.OICPv1_2CommonTypes   + "RemoteIdentification", "No RemoteIdentification XML tag provided!");
-                        QRCodeIdentificationXML  =               IdentificationXML. ElementOrFail     (NS.OICPv1_2CommonTypes   + "QRCodeIdentification", "No QRCodeIdentification XML tag provided!");
+                        RemoteIdentificationXML  =               IdentificationXML. Element           (NS.OICPv1_2CommonTypes   + "RemoteIdentification");
+                        QRCodeIdentificationXML  =               IdentificationXML. Element           (NS.OICPv1_2CommonTypes   + "QRCodeIdentification");
+
+                        if (RemoteIdentificationXML == null &&
+                            QRCodeIdentificationXML == null)
+                            throw new Exception("Neither a RemoteIdentificationXML, nor a QRCodeIdentificationXML was provided!");
+
                         eMAId                    = eMA_Id. Parse((RemoteIdentificationXML != null)
                                                                      ? RemoteIdentificationXML.ElementValueOrFail(NS.OICPv1_2CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
                                                                      : QRCodeIdentificationXML.ElementValueOrFail(NS.OICPv1_2CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
