@@ -484,7 +484,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
                     if (ack.Result)
                         return new SENDCDRResult(AuthorizatorId) {
-                            State             = SENDCDRState.True,
+                            State             = SENDCDRState.Forwarded,
                             PartnerSessionId  = PartnerSessionId,
                             Description       = ack.Description
                         };
