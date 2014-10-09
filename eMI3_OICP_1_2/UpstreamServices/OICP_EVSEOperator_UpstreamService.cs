@@ -484,7 +484,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
                     if (ack.Result)
                         return new SENDCDRResult(AuthorizatorId) {
-                            State             = true,
+                            State             = SENDCDRState.True,
                             PartnerSessionId  = PartnerSessionId,
                             Description       = ack.Description
                         };
@@ -495,7 +495,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
                     else
                         return new SENDCDRResult(AuthorizatorId) {
-                            State             = false,
+                            State             = SENDCDRState.False,
                             PartnerSessionId  = PartnerSessionId,
                             Description       = ack.Description
                         };
@@ -511,7 +511,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
                 return
                     new SENDCDRResult(AuthorizatorId) {
-                        State             = false,
+                        State             = SENDCDRState.False,
                         PartnerSessionId  = PartnerSessionId,
                         Description       = "An exception occured: " + e.Message
                     };
