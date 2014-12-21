@@ -89,7 +89,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                    HTTPContentType.HTML_UTF8,
                                    HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedQueryParameters[0];
+                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
@@ -105,7 +105,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                    HTTPContentType.TEXT_UTF8,
                                    HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedQueryParameters[0];
+                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
@@ -609,7 +609,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                    HTTPContentType.HTML_UTF8,
                                    HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedQueryParameters[0];
+                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
@@ -625,7 +625,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                    HTTPContentType.TEXT_UTF8,
                                    HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedQueryParameters[0];
+                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
