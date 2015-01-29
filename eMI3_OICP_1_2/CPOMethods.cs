@@ -155,24 +155,54 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                                       ),
 
                                                       new XElement(NS.OICPv1_2EVSEData + "ChargingFacilities",
-                                                          EVSE.SocketOutlets.Select(Outlet =>
-                                                             new XElement(NS.OICPv1_2EVSEData + "ChargingFacility", "Unspecified"))//Outlet.Plug.ToString()))
+                                                          EVSE.SocketOutlets.Select(Outlet => {
+
+                                                              var ChargingFacility = "Unspecified";
+
+                                                              if (Outlet.Plug == PlugType.Mennekes_Type_2)
+                                                              {
+
+                                                                  if (Outlet.MaxPower <= 44.0)
+                                                                      ChargingFacility = "380 - 480V, 3-Phase ≤63A";
+
+                                                                  if (Outlet.MaxPower <= 22.0)
+                                                                      ChargingFacility = "380 - 480V, 3-Phase ≤32A";
+
+                                                                  if (Outlet.MaxPower <= 11.0)
+                                                                      ChargingFacility = "380 - 480V, 3-Phase ≤16A";
+
+                                                              }
+
+                                                              else if (Outlet.Plug == PlugType.SCHUKO)
+                                                              {
+
+                                                                  if (Outlet.MaxPower >  7.2)
+                                                                      ChargingFacility = "200 - 240V, 1-Phase >32A";
+
+                                                                  if (Outlet.MaxPower <= 7.2)
+                                                                      ChargingFacility = "200 - 240V, 1-Phase ≤32A";
+
+                                                                  if (Outlet.MaxPower <= 3.6)
+                                                                      ChargingFacility = "200 - 240V, 1-Phase ≤16A";
+
+                                                                  if (Outlet.MaxPower <= 2.25)
+                                                                      ChargingFacility = "200 - 240V, 1-Phase ≤10A";
+
+                                                              }
 
                                                              // 100 - 120V, 1-Phase ≤10A
                                                              // 100 - 120V, 1-Phase ≤16A
                                                              // 100 - 120V, 1-Phase ≤32A
-                                                             // 200 - 240V, 1-Phase ≤10A
-                                                             // 200 - 240V, 1-Phase ≤16A
-                                                             // 200 - 240V, 1-Phase ≤32A
-                                                             // 200 - 240V, 1-Phase >32A
-                                                             // 380 - 480V, 3-Phase ≤16A
-                                                             // 380 - 480V, 3-Phase ≤32A
-                                                             // 380 - 480V, 3-Phase ≤63A
+
                                                              // Battery exchange
                                                              // Unspecified
                                                              // DC Charging ≤20kW
                                                              // DC Charging ≤50kW
                                                              // DC Charging >50kW
+
+                                                              return new XElement(NS.OICPv1_2EVSEData + "ChargingFacility", ChargingFacility);
+
+                                                          })
 
                                                       ),
 
