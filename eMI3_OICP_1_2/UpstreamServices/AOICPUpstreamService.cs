@@ -141,7 +141,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                          : AuthorizatorId;
 
             this.DNSClient         = (DNSClient       == null)
-                                         ? new DNSClient(SearchForIPv6Servers: false)
+                                         ? new DNSClient(SearchForIPv6DNSServers: false)
                                          : DNSClient;
 
         }

@@ -20,6 +20,7 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -27,6 +28,7 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
 using com.graphdefined.eMI3.LocalService;
+using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
@@ -38,9 +40,9 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
         #region Constructor(s)
 
-        public OICP_EMP_UpstreamService(String          OICPHost,
-                                        IPPort          OICPPort,
-                                        String          HTTPVirtualHost = null,
+        public OICP_EMP_UpstreamService(String           OICPHost,
+                                        IPPort           OICPPort,
+                                        String           HTTPVirtualHost = null,
                                         Authorizator_Id  AuthorizatorId  = null)
 
             : base(OICPHost,
@@ -50,6 +52,209 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                    AuthorizatorId)
 
         { }
+
+        #endregion
+
+
+        #region PullEVSEDataRequestXML(...)
+
+        // HubjectEVSEData
+        public MobileRemoteStartResult PullEVSEDataRequestXML(String         ProviderId,
+                                                              DateTime?      LastCall       = null,
+                                                              GeoCoordinate  GeoCoordinate  = null,
+                                                              UInt64         DistanceKM     = 0)
+        {
+
+            try
+            {
+
+                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
+
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                {
+
+                    var HttpResponse = _OICPClient.Query(EMPMethods.PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, DistanceKM).ToString(),
+                                                         "eRoamingPullEVSEData");
+
+                    //ToDo: In case of errors this will not parse!
+                    var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+
+                    #region Ok
+
+                    if (ack.Result)
+                        return new MobileRemoteStartResult(AuthorizatorId) {
+                            State             = true,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                    #region Error
+
+                    else
+                        return new MobileRemoteStartResult(AuthorizatorId) {
+                            State             = false,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                return
+                    new MobileRemoteStartResult(AuthorizatorId) {
+                        State             = false,
+                        Description       = "An exception occured: " + e.Message
+                    };
+
+            }
+
+        }
+
+        #endregion
+
+        #region PullEVSEStatusRequestXML(...)
+
+        // HubjectEVSEData
+        public MobileRemoteStartResult PullEVSEStatusRequestXML(String         ProviderId,
+                                                                DateTime?      LastCall       = null,
+                                                                GeoCoordinate  GeoCoordinate  = null,
+                                                                UInt64         DistanceKM     = 0)
+        {
+
+            try
+            {
+
+                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
+
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                {
+
+                    var HttpResponse = _OICPClient.Query(EMPMethods.PullEVSEStatusRequestXML(ProviderId, GeoCoordinate, DistanceKM).ToString(),
+                                                         "eRoamingPullEVSEStatus");
+
+                    // Response message: eRoamingEVSEStatus
+
+                    // Hubject groups all resulting EVSE status records according to the related CPO. The
+                    // response structure contains an “EVSEStatuses” node that envelopes an “OperatorEVSEStatus”
+                    // node for every CPO with currently valid and accessible status data records.
+
+                    //ToDo: In case of errors this will not parse!
+                    var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+
+                    #region Ok
+
+                    if (ack.Result)
+                        return new MobileRemoteStartResult(AuthorizatorId) {
+                            State             = true,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                    #region Error
+
+                    else
+                        return new MobileRemoteStartResult(AuthorizatorId) {
+                            State             = false,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                return
+                    new MobileRemoteStartResult(AuthorizatorId) {
+                        State             = false,
+                        Description       = "An exception occured: " + e.Message
+                    };
+
+            }
+
+        }
+
+        #endregion
+
+        #region PullEVSEStatusByIdRequestXML(...)
+
+        // HubjectEVSEData
+        public MobileRemoteStartResult PullEVSEStatusByIdRequestXML(String                ProviderId,
+                                                                    IEnumerable<EVSE_Id>  EVSEIds)
+        {
+
+            try
+            {
+
+                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
+
+                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                {
+
+                    var HttpResponse = _OICPClient.Query(EMPMethods.PullEVSEStatusByIdRequestXML(ProviderId, new EVSE_Id[] { EVSE_Id.Parse("") }).ToString(),
+                                                         "eRoamingPullEVSEStatusById");
+
+                    // Response message: eRoamingEVSEStatusById
+                    // -> EVSEStatusRecords    == List (EVSEStatusRecord)
+
+                    // In case that a requested EVSEID does not exist in the Hubject database Hubject
+                    // sets the value of the corresponding response field EVSEStatus to “EVSENotFound”. 
+
+                    //ToDo: In case of errors this will not parse!
+                    var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+
+                    #region Ok
+
+                    if (ack.Result)
+                        return new MobileRemoteStartResult(AuthorizatorId) {
+                            State             = true,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                    #region Error
+
+                    else
+                        return new MobileRemoteStartResult(AuthorizatorId) {
+                            State             = false,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                return
+                    new MobileRemoteStartResult(AuthorizatorId) {
+                        State             = false,
+                        Description       = "An exception occured: " + e.Message
+                    };
+
+            }
+
+        }
 
         #endregion
 

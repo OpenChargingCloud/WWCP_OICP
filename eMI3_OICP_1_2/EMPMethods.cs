@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014 Achim Friedland <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2015 Achim Friedland <achim.friedland@graphdefined.com>
  * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
@@ -18,8 +18,10 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Xml.Linq;
 using System.Globalization;
+using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 
@@ -61,6 +63,115 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                           new XElement(NS.OICPv1_2EVSESearch + "ProviderID", ProviderId),
 
                                           new XElement(NS.OICPv1_2EVSESearch + "Range", DistanceKM)
+
+                                     ));
+
+        }
+
+        #endregion
+
+        #region PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, Distance)
+
+        /// <summary>
+        /// Create a new Pull EVSE Data request.
+        /// </summary>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="LastCall">An optional timestamp of the last call.</param>
+        /// <param name="GeoCoordinate">An optional geo coordinate of the search center.</param>
+        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
+        public static XElement PullEVSEDataRequestXML(String         ProviderId,
+                                                      DateTime?      LastCall       = null,
+                                                      GeoCoordinate  GeoCoordinate  = null,
+                                                      UInt64         DistanceKM     = 0)
+        {
+
+            return SOAP.Encapsulation(new XElement(NS.OICPv1_2EVSEData + "eRoamingPullEvseData",
+
+                                          new XElement(NS.OICPv1_2EVSESearch + "ProviderID", ProviderId),
+
+                                          (GeoCoordinate != null && DistanceKM > 0)
+                                              ? new XElement(NS.OICPv1_2EVSEData + "SearchCenter",
+
+                                                    new XElement(NS.OICPv1_2CommonTypes + "GeoCoordinates",
+                                                        new XElement(NS.OICPv1_2CommonTypes + "DecimalDegree",
+                                                           new XElement(NS.OICPv1_2CommonTypes + "Longitude", GeoCoordinate.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
+                                                           new XElement(NS.OICPv1_2CommonTypes + "Latitude",  GeoCoordinate.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat))
+                                                        )
+                                                    ),
+
+                                                    new XElement(NS.OICPv1_2CommonTypes + "Radius", DistanceKM)
+
+                                                )
+                                              : null,
+
+                                          (LastCall.HasValue)
+                                              ? new XElement(NS.OICPv1_2EVSEData + "LastCall",  LastCall.Value)
+                                              : null,
+
+                                          new XElement(NS.OICPv1_2EVSEData + "GeoCoordinatesResponseFormat",  "DecimalDegree")
+
+                                     ));
+
+        }
+
+        #endregion
+
+        #region PullEVSEStatusRequestXML(ProviderId, LastCall, GeoCoordinate, Distance)
+
+        /// <summary>
+        /// Create a new Pull EVSE Status request.
+        /// </summary>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="GeoCoordinate">An optional geo coordinate of the search center.</param>
+        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
+        public static XElement PullEVSEStatusRequestXML(String         ProviderId,
+                                                   //     DateTime?      LastCall       = null,
+                                                        GeoCoordinate  GeoCoordinate  = null,
+                                                        UInt64         DistanceKM     = 0)
+        {
+
+            return SOAP.Encapsulation(new XElement(NS.OICPv1_2EVSEData + "eRoamingPullEvseStatus",
+
+                                          new XElement(NS.OICPv1_2EVSESearch + "ProviderID", ProviderId),
+
+                                          (GeoCoordinate != null && DistanceKM > 0)
+                                              ? new XElement(NS.OICPv1_2EVSEData + "SearchCenter",
+
+                                                    new XElement(NS.OICPv1_2CommonTypes + "GeoCoordinates",
+                                                        new XElement(NS.OICPv1_2CommonTypes + "DecimalDegree",
+                                                           new XElement(NS.OICPv1_2CommonTypes + "Longitude", GeoCoordinate.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
+                                                           new XElement(NS.OICPv1_2CommonTypes + "Latitude",  GeoCoordinate.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat))
+                                                        )
+                                                    ),
+
+                                                    new XElement(NS.OICPv1_2CommonTypes + "Radius", DistanceKM)
+
+                                                )
+                                              : null
+
+                                     ));
+
+        }
+
+        #endregion
+
+        #region PullEVSEStatusByIdRequestXML(ProviderId, LastCall, GeoCoordinate, Distance)
+
+        /// <summary>
+        /// Create a new Pull EVSE Status-By-Id request.
+        /// </summary>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
+        public static XElement PullEVSEStatusByIdRequestXML(String                ProviderId,
+                                                            IEnumerable<EVSE_Id>  EVSEIds)
+        {
+
+            return SOAP.Encapsulation(new XElement(NS.OICPv1_2EVSEData + "eRoamingPullEvseStatusById",
+
+                                          new XElement(NS.OICPv1_2EVSESearch + "ProviderID", ProviderId),
+
+                                          EVSEIds.Select(EVSEId => new XElement(NS.OICPv1_2EVSEStatus + "EvseId", EVSEId.ToString())).
+                                                  ToArray()
 
                                      ));
 
