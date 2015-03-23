@@ -18,15 +18,9 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Xml.Linq;
 
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
-
-using com.graphdefined.eMI3.LocalService;
 
 #endregion
 
@@ -118,12 +112,12 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
         #region Constructor(s)
 
-        public AOICPUpstreamService(String          OICPHost,
-                                    IPPort          OICPPort,
-                                    String          HTTPVirtualHost = null,
-                                    String          URLPrefix       = "",
-                                    Authorizator_Id  AuthorizatorId  = null,
-                                    DNSClient       DNSClient       = null)
+        public AOICPUpstreamService(String           OICPHost,
+                                    IPPort           OICPPort,
+                                    String           HTTPVirtualHost  = null,
+                                    String           URLPrefix        = "",
+                                    Authorizator_Id  AuthorizatorId   = null,
+                                    DNSClient        DNSClient        = null)
         {
 
             this._OICPHost         = OICPHost;

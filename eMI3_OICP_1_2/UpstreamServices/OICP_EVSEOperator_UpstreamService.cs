@@ -18,15 +18,13 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
 using com.graphdefined.eMI3.LocalService;
-using System.Collections.Generic;
 
 #endregion
 

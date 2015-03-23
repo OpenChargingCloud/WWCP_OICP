@@ -18,17 +18,14 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
+using org.GraphDefined.Vanaheimr.Aegir;
 
 using com.graphdefined.eMI3.LocalService;
-using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
@@ -68,7 +65,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix, DNSClient: DNSClient))
                 {
 
                     var HttpResponse = _OICPClient.Query(EMPMethods.PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, DistanceKM).ToString(),
@@ -130,7 +127,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix, DNSClient: DNSClient))
                 {
 
                     var HttpResponse = _OICPClient.Query(EMPMethods.PullEVSEStatusRequestXML(ProviderId, GeoCoordinate, DistanceKM).ToString(),
@@ -195,7 +192,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix, DNSClient: DNSClient))
                 {
 
                     // <soapenv:Envelope xmlns:fn      = "http://www.w3.org/2005/xpath-functions"
