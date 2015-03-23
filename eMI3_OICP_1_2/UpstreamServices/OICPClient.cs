@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014 Achim Friedland <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2015 GraphDefined GmbH
  * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
@@ -22,20 +22,18 @@ using System;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
 #endregion
 
 namespace com.graphdefined.eMI3.IO.OICP_1_2
 {
 
+    /// <summary>
+    /// A specialized HTTP client for the Open InterCharge Protocol.
+    /// </summary>
     public class OICPClient : HTTPClient
     {
-
-        #region Data
-
-        private readonly String UserAgent;
-
-        #endregion
 
         #region Properties
 
@@ -43,6 +41,9 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
         private readonly String _HTTPVirtualHost;
 
+        /// <summary>
+        /// The HTTP virtual host to use.
+        /// </summary>
         public String HTTPVirtualHost
         {
             get
@@ -53,15 +54,35 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
         #endregion
 
-        #region URLPrefix
+        #region URIPrefix
 
-        private readonly String _URLPrefix;
+        private readonly String _URIPrefix;
 
-        public String URLPrefix
+        /// <summary>
+        /// The URI-prefix of the OICP service.
+        /// </summary>
+        public String URIPrefix
         {
             get
             {
-                return _URLPrefix;
+                return _URIPrefix;
+            }
+        }
+
+        #endregion
+
+        #region UserAgent
+
+        private readonly String _UserAgent;
+
+        /// <summary>
+        /// The HTTP user agent.
+        /// </summary>
+        public String UserAgent
+        {
+            get
+            {
+                return _UserAgent;
             }
         }
 
@@ -71,19 +92,28 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
         #region Constructor
 
-        public OICPClient(IPv4Address  OICPHost,
-                          IPPort       OICPPort,
-                          String       HTTPVirtualHost,
-                          String       URLPrefix,
-                          String       UserAgent = "Belectric Drive Hubject Gateway")
+        /// <summary>
+        /// Create a new specialized HTTP client for the Open InterCharge Protocol.
+        /// </summary>
+        /// <param name="OICPHost">The hostname of the remote OICP service.</param>
+        /// <param name="OICPPort">The TCP port of the remote OICP service.</param>
+        /// <param name="HTTPVirtualHost">The HTTP virtual host to use.</param>
+        /// <param name="URIPrefix">The URI-prefix of the OICP service.</param>
+        /// <param name="UserAgent">The HTTP user agent to use.</param>
+        public OICPClient(String     OICPHost,
+                          IPPort     OICPPort,
+                          String     HTTPVirtualHost,
+                          String     URIPrefix,
+                          String     UserAgent  = "GraphDefined Hubject Gateway",
+                          DNSClient  DNSClient  = null)
 
-            : base(OICPHost, OICPPort)
+            : base(OICPHost, OICPPort, DNSClient)
 
         {
 
             this._HTTPVirtualHost  = HTTPVirtualHost;
-            this._URLPrefix        = URLPrefix;
-            this.UserAgent         = UserAgent;
+            this._URIPrefix        = URIPrefix;
+            this._UserAgent        = UserAgent;
 
         }
 
@@ -95,7 +125,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         public HTTPResponse Query(String Query, String SOAPAction)
         {
 
-            var builder = this.POST(_URLPrefix);
+            var builder = this.POST(_URIPrefix);
             builder.Host         = HTTPVirtualHost;
             builder.Content      = Query.ToUTF8Bytes();
             builder.ContentType  = HTTPContentType.XMLTEXT_UTF8;

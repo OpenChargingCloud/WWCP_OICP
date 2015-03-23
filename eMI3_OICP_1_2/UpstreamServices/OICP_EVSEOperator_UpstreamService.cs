@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014 Achim Friedland <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2015 GraphDefined GmbH
  * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
@@ -106,9 +106,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
             try
             {
 
-                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
-
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var aaa = CPOMethods.AuthorizeStartXML(OperatorId,
@@ -254,20 +252,18 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="PartnerSessionId">Your own session identification.</param>
         /// <param name="UID">A RFID user identification.</param>
-        public AUTHSTOPResult AuthorizeStop(EVSEOperator_Id    OperatorId,
-                                            EVSE_Id            EVSEId,
+        public AUTHSTOPResult AuthorizeStop(EVSEOperator_Id     OperatorId,
+                                            EVSE_Id             EVSEId,
                                             ChargingSession_Id  SessionId,
                                             ChargingSession_Id  PartnerSessionId,
-                                            Auth_Token              UID)
+                                            Auth_Token          UID)
 
         {
 
             try
             {
 
-                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
-
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStopXML(OperatorId,
@@ -457,9 +453,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
             try
             {
 
-                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
-
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.SendChargeDetailRecordXML(EVSEId,
