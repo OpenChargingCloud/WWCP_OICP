@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014 Achim Friedland <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2015 GraphDefined GmbH
  * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
@@ -106,9 +106,7 @@ namespace com.graphdefined.eMI3.IO.OICP
             try
             {
 
-                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
-
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
@@ -257,9 +255,7 @@ namespace com.graphdefined.eMI3.IO.OICP
             try
             {
 
-                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
-
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStopXML(OperatorId,
@@ -449,9 +445,7 @@ namespace com.graphdefined.eMI3.IO.OICP
             try
             {
 
-                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
-
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.SendChargeDetailRecordXML(EVSEId,

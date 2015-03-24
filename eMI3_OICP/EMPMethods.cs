@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014 Achim Friedland <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2015 GraphDefined GmbH
  * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
@@ -18,7 +18,9 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 
@@ -58,6 +60,31 @@ namespace com.graphdefined.eMI3.IO.OICP
                                           new XElement(NS.OICPv1EVSESearch + "ProviderID", ProviderId),
 
                                           new XElement(NS.OICPv1EVSESearch + "Range", DistanceKM)
+
+                                     ));
+
+        }
+
+        #endregion
+
+
+        #region PullEVSEStatusByIdRequestXML(ProviderId, LastCall, GeoCoordinate, Distance)
+
+        /// <summary>
+        /// Create a new Pull EVSE Status-By-Id request.
+        /// </summary>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
+        public static XElement PullEVSEStatusByIdRequestXML(String                ProviderId,
+                                                            IEnumerable<EVSE_Id>  EVSEIds)
+        {
+
+            return SOAP.Encapsulation(new XElement(NS.OICPv1EVSEStatus + "HubjectPullEvseStatusById",
+
+                                          new XElement(NS.OICPv1EVSEStatus + "ProviderID", ProviderId),
+
+                                          EVSEIds.Select(EVSEId => new XElement(NS.OICPv1EVSEStatus + "EvseId", EVSEId.OldEVSEId)).
+                                                  ToArray()
 
                                      ));
 

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014 Achim Friedland <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2015 GraphDefined GmbH
  * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
@@ -20,6 +20,7 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -54,6 +55,98 @@ namespace com.graphdefined.eMI3.IO.OICP
         #endregion
 
 
+        #region PullEVSEStatusByIdRequestXML(...)
+
+        public MobileRemoteStartResult PullEVSEStatusByIdRequestXML(String                ProviderId,
+                                                                    IEnumerable<EVSE_Id>  EVSEIds)
+        {
+
+            try
+            {
+
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, "portal-qa.hubject.com", "/ibis/ws/HubjectEvseStatus_V1", DNSClient: DNSClient))
+                {
+
+                    // <soapenv:Envelope xmlns:fn      = "http://www.w3.org/2005/xpath-functions"
+                    //                   xmlns:sbp     = "http://www.inubit.com/eMobility/SBP"
+                    //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //                   xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+                    //                   xmlns:tns     = "http://www.hubject.com/b2b/services/evsestatus/v1">
+                    // 
+                    //    <soapenv:Body>
+                    // 
+                    //       <tns:HubjectEvseStatusById>
+                    //          <tns:EvseStatusRecords>
+                    // 
+                    //             <tns:EvseStatusRecord>
+                    //                <tns:EvseId>+45*045*010*096296</tns:EvseId>
+                    //                <tns:EvseStatus>Occupied</tns:EvseStatus>
+                    //             </tns:EvseStatusRecord>
+                    // 
+                    //             <tns:EvseStatusRecord>
+                    //                <tns:EvseId>+46*899*02423*01</tns:EvseId>
+                    //                <tns:EvseStatus>Unknown</tns:EvseStatus>
+                    //             </tns:EvseStatusRecord>
+                    // 
+                    //          </tns:EvseStatusRecords>
+                    //       </tns:HubjectEvseStatusById>
+                    // 
+                    //    </soapenv:Body>
+                    // 
+                    // </soapenv:Envelope>
+
+                    var HttpResponse = _OICPClient.Query(EMPMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds).
+                                                                    ToString(),
+                                                         "HubjectPullEVSEStatusById");
+
+                    // In case that a requested EVSEID does not exist in the Hubject database Hubject
+                    // sets the value of the corresponding response field EVSEStatus to “EVSENotFound”. 
+
+                    //ToDo: In case of errors this will not parse!
+                    var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+
+                    #region Ok
+
+                    if (ack.Result)
+                        return new MobileRemoteStartResult(AuthorizatorId) {
+                            State             = true,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                    #region Error
+
+                    else
+                        return new MobileRemoteStartResult(AuthorizatorId) {
+                            State             = false,
+                            //PartnerSessionId  = PartnerSessionId,
+                            Description       = ack.Description
+                        };
+
+                    #endregion
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                return
+                    new MobileRemoteStartResult(AuthorizatorId) {
+                        State             = false,
+                        Description       = "An exception occured: " + e.Message
+                    };
+
+            }
+
+        }
+
+        #endregion
+
+
         #region HubjectMobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductId = null)
 
         /// <summary>
@@ -72,9 +165,7 @@ namespace com.graphdefined.eMI3.IO.OICP
             try
             {
 
-                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
-
-                using (var OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var HttpResponse = OICPClient.Query(EMPMethods.MobileAuthorizeStartXML(EVSEId,
@@ -240,9 +331,7 @@ namespace com.graphdefined.eMI3.IO.OICP
             try
             {
 
-                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
-
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStartXML(SessionId).ToString(),
@@ -301,9 +390,7 @@ namespace com.graphdefined.eMI3.IO.OICP
             try
             {
 
-                var IPv4Addresses = DNSClient.Query<A>(OICPHost).Select(a => a.IPv4Address).ToArray();
-
-                using (var _OICPClient = new OICPClient(IPv4Addresses.First(), OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStopXML(SessionId).ToString(),

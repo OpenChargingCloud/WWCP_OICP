@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
@@ -185,76 +186,87 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
 
         #region PullEVSEStatusByIdRequestXML(...)
 
-        public MobileRemoteStartResult PullEVSEStatusByIdRequestXML(String                ProviderId,
-                                                                    IEnumerable<EVSE_Id>  EVSEIds)
+        public IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>> PullEVSEStatusByIdRequestXML(String                ProviderId,
+                                                                                                 IEnumerable<EVSE_Id>  EVSEIds)
         {
 
             try
             {
 
-                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix, DNSClient: DNSClient))
+                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, "portal-qa.hubject.com", "/ibis/ws/eRoamingEvseStatus_V1.2", DNSClient: DNSClient))
                 {
 
-                    // <soapenv:Envelope xmlns:fn      = "http://www.w3.org/2005/xpath-functions"
-                    //                   xmlns:sbp     = "http://www.inubit.com/eMobility/SBP"
+                    var HttpResponse = _OICPClient.Query(EMPMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds).
+                                                                    ToString(),
+                                                         "HubjectPullEvseStatusById");
+
+                    var XML                = XDocument.Parse(HttpResponse.Content.ToUTF8String()).
+                                                 Root.
+                                                 Element(OICP_1_2.NS.SOAPEnvelope + "Body").
+                                                 Descendants().
+                                                 FirstOrDefault();
+
+                    // <S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope" xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+                    //   <faultcode>S:Client</faultcode>
+                    //   <faultstring>Validation error: The request message is invalid</faultstring>
+                    //   <detail>
+                    //     <Validation>
+                    //       <Errors>
+                    //         <Error column="65" errorXpath="/eMI3:Envelope/eMI3:Body/EVSEStatus:eRoamingPullEvseStatusById/EVSEStatus:EvseId" line="3">Value '+45*045*010*0A96296' is not facet-valid with respect to pattern '([A-Za-z]{2}\*?[A-Za-z0-9]{3}\*?E[A-Za-z0-9\*]{1,30})|(\+?[0-9]{1,3}\*[0-9]{3,6}\*[0-9\*]{1,32})' for type 'EvseIDType'.</Error>
+                    //         <Error column="65" errorXpath="/eMI3:Envelope/eMI3:Body/EVSEStatus:eRoamingPullEvseStatusById/EVSEStatus:EvseId" line="3">The value '+45*045*010*0A96296' of element 'EVSEStatus:EvseId' is not valid.</Error>
+                    //       </Errors>
+                    //       <OriginalDocument>
+                    //         <eMI3:Envelope xmlns:eMI3="http://schemas.xmlsoap.org/soap/envelope/" xmlns:Authorization="http://www.hubject.com/b2b/services/authorization/v1.2" xmlns:CommonTypes="http://www.hubject.com/b2b/services/commontypes/v1.2" xmlns:EVSEData="http://www.hubject.com/b2b/services/evsedata/v1.2" xmlns:EVSESearch="http://www.hubject.com/b2b/services/evsesearch/v1.2" xmlns:EVSEStatus="http://www.hubject.com/b2b/services/evsestatus/v1.2" xmlns:MobileAuthorization="http://www.hubject.com/b2b/services/mobileauthorization/v1.2">
+                    //           <eMI3:Header />
+                    //           <eMI3:Body>
+                    //             <EVSEStatus:eRoamingPullEvseStatusById>
+                    //               <EVSEStatus:ProviderID>DE-8BD</EVSEStatus:ProviderID>
+                    //               <EVSEStatus:EvseId>+45*045*010*0A96296</EVSEStatus:EvseId>
+                    //               <EVSEStatus:EvseId>+46*899*02423*01</EVSEStatus:EvseId>
+                    //             </EVSEStatus:eRoamingPullEvseStatusById>
+                    //           </eMI3:Body>
+                    //         </eMI3:Envelope>
+                    //       </OriginalDocument>
+                    //     </Validation>
+                    //   </detail>
+                    // </S:Fault>
+
+                    if (XML.Name.LocalName == "Fault")
+                    {
+
+                    }
+
+                    // <?xml version='1.0' encoding='UTF-8'?>
+                    // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1.2"
                     //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                   xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                    //                   xmlns:tns     = "http://www.hubject.com/b2b/services/evsestatus/v1">
-                    // 
-                    //    <soapenv:Body>
-                    // 
-                    //       <tns:HubjectEvseStatusById>
-                    //          <tns:EvseStatusRecords>
-                    // 
-                    //             <tns:EvseStatusRecord>
-                    //                <tns:EvseId>+45*045*010*096296</tns:EvseId>
-                    //                <tns:EvseStatus>Occupied</tns:EvseStatus>
-                    //             </tns:EvseStatusRecord>
-                    // 
-                    //             <tns:EvseStatusRecord>
-                    //                <tns:EvseId>+46*899*02423*01</tns:EvseId>
-                    //                <tns:EvseStatus>Unknown</tns:EvseStatus>
-                    //             </tns:EvseStatusRecord>
-                    // 
-                    //          </tns:EvseStatusRecords>
-                    //       </tns:HubjectEvseStatusById>
-                    // 
-                    //    </soapenv:Body>
-                    // 
+                    //                   xmlns:tns     = "http://www.hubject.com/b2b/services/evsestatus/v1.2">
+                    //
+                    //   <soapenv:Body>
+                    //     <tns:eRoamingEvseStatusById>
+                    //       <tns:EvseStatusRecords>
+                    //
+                    //         <tns:EvseStatusRecord>
+                    //           <tns:EvseId>DK*045*E010*096296</tns:EvseId>
+                    //           <tns:EvseStatus>EvseNotFound</tns:EvseStatus>
+                    //         </tns:EvseStatusRecord>
+                    //
+                    //         <tns:EvseStatusRecord>
+                    //           <tns:EvseId>SE*899*E02423*01</tns:EvseId>
+                    //           <tns:EvseStatus>EvseNotFound</tns:EvseStatus>
+                    //         </tns:EvseStatusRecord>
+                    //
+                    //       </tns:EvseStatusRecords>
+                    //     </tns:eRoamingEvseStatusById>
+                    //
+                    //   </soapenv:Body>
+                    //
                     // </soapenv:Envelope>
 
-                    var HttpResponse = _OICPClient.Query(EMPMethods.PullEVSEStatusByIdRequestXML(ProviderId,
-                                                                                                 new EVSE_Id[] { EVSE_Id.Parse("") }).
-                                                                    ToString(),
-                                                         "eRoamingPullEVSEStatusById");
-
-                    // In case that a requested EVSEID does not exist in the Hubject database Hubject
-                    // sets the value of the corresponding response field EVSEStatus to “EVSENotFound”. 
-
-                    //ToDo: In case of errors this will not parse!
-                    var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
-
-                    #region Ok
-
-                    if (ack.Result)
-                        return new MobileRemoteStartResult(AuthorizatorId) {
-                            State             = true,
-                            //PartnerSessionId  = PartnerSessionId,
-                            Description       = ack.Description
-                        };
-
-                    #endregion
-
-                    #region Error
-
-                    else
-                        return new MobileRemoteStartResult(AuthorizatorId) {
-                            State             = false,
-                            //PartnerSessionId  = PartnerSessionId,
-                            Description       = ack.Description
-                        };
-
-                    #endregion
+                    return XML.Element(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatusRecords").
+                                       Elements(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatusRecord").
+                                       Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseId").Value),
+                                                                                               (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatus").Value))).
+                                       ToArray();
 
                 }
 
@@ -263,11 +275,13 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
             catch (Exception e)
             {
 
-                return
-                    new MobileRemoteStartResult(AuthorizatorId) {
-                        State             = false,
-                        Description       = "An exception occured: " + e.Message
-                    };
+                return null;
+
+                //return
+                //    new MobileRemoteStartResult(AuthorizatorId) {
+                //        State             = false,
+                //        Description       = "An exception occured: " + e.Message
+                //    };
 
             }
 

@@ -24,7 +24,8 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         Reserved,
         Occupied,
         OutOfService,
-        Unknown
+        Unknown,
+        EvseNotFound   // PullEVSEStatusById!
     }
 
     public static class Ext

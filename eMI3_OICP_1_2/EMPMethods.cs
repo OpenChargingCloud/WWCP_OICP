@@ -166,11 +166,27 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                                             IEnumerable<EVSE_Id>  EVSEIds)
         {
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1_2EVSEData + "eRoamingPullEvseStatusById",
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v1      = "http://www.hubject.com/b2b/services/evsestatus/v1">
+            // 
+            //    <soapenv:Header/>
+            //
+            //    <soapenv:Body>
+            //       <v1:HubjectPullEvseStatusById>
+            //          <v1:ProviderID>8BD</v1:ProviderID>
+            //          <!--1 to 100 repetitions:-->
+            //          <v1:EvseId>+45*045*010*096296</v1:EvseId>
+            //          <v1:EvseId>+46*899*02423*01</v1:EvseId>
+            //       </v1:HubjectPullEvseStatusById>
+            //    </soapenv:Body>
+            // 
+            // </soapenv:Envelope>
 
-                                          new XElement(NS.OICPv1_2EVSESearch + "ProviderID", ProviderId),
+            return SOAP.Encapsulation(new XElement(NS.OICPv1_2EVSEStatus + "eRoamingPullEvseStatusById",
 
-                                          EVSEIds.Select(EVSEId => new XElement(NS.OICPv1_2EVSEStatus + "EvseId", EVSEId.ToString())).
+                                          new XElement(NS.OICPv1_2EVSEStatus + "ProviderID", ProviderId),
+
+                                          EVSEIds.Select(EVSEId => new XElement(NS.OICPv1_2EVSEStatus + "EvseId", EVSEId.OriginEVSEId)).
                                                   ToArray()
 
                                      ));
