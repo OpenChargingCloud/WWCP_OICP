@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace com.graphdefined.eMI3.IO.OICP_1_2
+namespace org.GraphDefined.eMI3.IO.OICP_1_2
 {
 
     /// <summary>

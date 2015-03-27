@@ -23,7 +23,7 @@ using System.Xml.Linq;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP_1_2
+namespace org.GraphDefined.eMI3.IO.OICP_1_2
 {
 
     #region (abstract) HubjectAuthorization

@@ -21,7 +21,7 @@ using System;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace org.GraphDefined.eMI3.IO.OICP
 {
 
     public static class eMI3_OICP_Mapper

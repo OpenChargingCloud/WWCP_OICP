@@ -25,11 +25,11 @@ using System.Globalization;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
-using com.graphdefined.eMI3.IO.OICP;
+using org.GraphDefined.eMI3.IO.OICP;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP_1_2
+namespace org.GraphDefined.eMI3.IO.OICP_1_2
 {
 
     /// <summary>
@@ -395,7 +395,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                                  Auth_Token              UID)
         {
 
-            return AuthorizeStartXML(EVSE.ChargingStation.Pool.Operator.Id,
+            return AuthorizeStartXML(EVSE.ChargingStation.Pool.EVSEOperator.Id,
                                      EVSE.Id,
                                      PartnerSessionID,
                                      UID);
@@ -450,7 +450,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
                                                 Auth_Token              UID)
         {
 
-            return AuthorizeStopXML(EVSE.ChargingStation.Pool.Operator.Id,
+            return AuthorizeStopXML(EVSE.ChargingStation.Pool.EVSEOperator.Id,
                                     EVSE.Id,
                                     SessionID,
                                     PartnerSessionID,

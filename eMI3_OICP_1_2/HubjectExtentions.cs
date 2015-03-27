@@ -24,8 +24,8 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
-using com.graphdefined.eMI3.IO.OICP;
-using com.graphdefined.eMI3.IO.WWCP;
+using org.GraphDefined.eMI3.IO.OICP;
+using org.GraphDefined.eMI3.IO.WWCP;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -34,7 +34,7 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP_1_2
+namespace org.GraphDefined.eMI3.IO.OICP_1_2
 {
 
     public static class HubjectExtentions

@@ -18,15 +18,19 @@
 #region Usings
 
 using System;
+using System.Linq;
+using System.Xml.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP_1_2
+namespace org.GraphDefined.eMI3.IO.OICP_1_2
 {
 
     /// <summary>
@@ -120,7 +124,7 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
         #endregion
 
 
-        #region Query
+        #region Query(Query, SOAPAction)
 
         public HTTPResponse Query(String Query, String SOAPAction)
         {
@@ -133,6 +137,81 @@ namespace com.graphdefined.eMI3.IO.OICP_1_2
             builder.UserAgent    = UserAgent;
 
             return this.Execute_Synced(builder);
+
+        }
+
+        #endregion
+
+        #region Query(Query, SOAPAction, OnSuccess, OnFault, TimeoutMSec = 20000)
+
+        public Task<T> Query<T>(String             Query,
+                                String             SOAPAction,
+                                Func<XElement, T>  OnSuccess,
+                                Func<XElement, T>  OnFault,
+                                UInt32             TimeoutMSec = 20000)
+
+        {
+
+            var builder = this.POST(_URIPrefix);
+            builder.Host               = HTTPVirtualHost;
+            builder.Content            = Query.ToUTF8Bytes();
+            builder.ContentType        = HTTPContentType.XMLTEXT_UTF8;
+            builder.Set("SOAPAction",  SOAPAction);
+            builder.UserAgent          = UserAgent;
+
+            return this.ExecuteReturnResult(builder, TimeoutMSec: TimeoutMSec).
+                        ContinueWith(HttpResponseTask => {
+
+                            if (HttpResponseTask.Result == null)
+                                return default(T);
+
+                            var XML = XDocument.Parse(HttpResponseTask.Result.Content.ToUTF8String()).
+                                      Root.
+                                      Element(OICP_1_2.NS.SOAPEnvelope + "Body").
+                                      Descendants().
+                                      FirstOrDefault();
+
+                            // <S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope" xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+                            //   <faultcode>S:Client</faultcode>
+                            //   <faultstring>Validation error: The request message is invalid</faultstring>
+                            //   <detail>
+                            //     <Validation>
+                            //       <Errors>
+                            //         <Error column="65" errorXpath="/eMI3:Envelope/eMI3:Body/EVSEStatus:eRoamingPullEvseStatusById/EVSEStatus:EvseId" line="3">Value '+45*045*010*0A96296' is not facet-valid with respect to pattern '([A-Za-z]{2}\*?[A-Za-z0-9]{3}\*?E[A-Za-z0-9\*]{1,30})|(\+?[0-9]{1,3}\*[0-9]{3,6}\*[0-9\*]{1,32})' for type 'EvseIDType'.</Error>
+                            //         <Error column="65" errorXpath="/eMI3:Envelope/eMI3:Body/EVSEStatus:eRoamingPullEvseStatusById/EVSEStatus:EvseId" line="3">The value '+45*045*010*0A96296' of element 'EVSEStatus:EvseId' is not valid.</Error>
+                            //       </Errors>
+                            //       <OriginalDocument>
+                            //         <eMI3:Envelope xmlns:eMI3="http://schemas.xmlsoap.org/soap/envelope/" xmlns:Authorization="http://www.hubject.com/b2b/services/authorization/v1.2" xmlns:CommonTypes="http://www.hubject.com/b2b/services/commontypes/v1.2" xmlns:EVSEData="http://www.hubject.com/b2b/services/evsedata/v1.2" xmlns:EVSESearch="http://www.hubject.com/b2b/services/evsesearch/v1.2" xmlns:EVSEStatus="http://www.hubject.com/b2b/services/evsestatus/v1.2" xmlns:MobileAuthorization="http://www.hubject.com/b2b/services/mobileauthorization/v1.2">
+                            //           <eMI3:Header />
+                            //           <eMI3:Body>
+                            //             <EVSEStatus:eRoamingPullEvseStatusById>
+                            //               <EVSEStatus:ProviderID>DE-8BD</EVSEStatus:ProviderID>
+                            //               <EVSEStatus:EvseId>+45*045*010*0A96296</EVSEStatus:EvseId>
+                            //               <EVSEStatus:EvseId>+46*899*02423*01</EVSEStatus:EvseId>
+                            //             </EVSEStatus:eRoamingPullEvseStatusById>
+                            //           </eMI3:Body>
+                            //         </eMI3:Envelope>
+                            //       </OriginalDocument>
+                            //     </Validation>
+                            //   </detail>
+                            // </S:Fault>
+
+                            if (XML.Name.LocalName != "Fault")
+                            {
+
+                                var OnSuccessLocal = OnSuccess;
+                                if (OnSuccessLocal != null)
+                                    return OnSuccessLocal(XML);
+
+                            }
+
+                            var OnFaultLocal = OnFault;
+                            if (OnFaultLocal != null)
+                                return OnFaultLocal(XML);
+
+                            return default(T);
+
+                        });
 
         }
 
