@@ -59,7 +59,6 @@
     <Compile Include="HubjectExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpstreamServices\AOICPUpstreamService.cs" />
-    <Compile Include="UpstreamServices\OICPClient.cs" />
     <Compile Include="UpstreamServices\OICP_EMP_UpstreamService.cs" />
     <Compile Include="UpstreamServices\OICP_EVSEOperator_UpstreamService.cs" />
   </ItemGroup>

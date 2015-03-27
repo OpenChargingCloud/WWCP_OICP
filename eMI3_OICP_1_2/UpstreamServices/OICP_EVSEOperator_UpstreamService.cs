@@ -23,6 +23,8 @@ using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 using org.GraphDefined.eMI3.LocalService;
 
@@ -104,7 +106,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new SOAPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var aaa = CPOMethods.AuthorizeStartXML(OperatorId,
@@ -261,7 +263,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new SOAPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStopXML(OperatorId,
@@ -451,7 +453,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new OICPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new SOAPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.SendChargeDetailRecordXML(EVSEId,

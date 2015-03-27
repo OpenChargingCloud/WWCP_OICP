@@ -20,6 +20,8 @@
 using System;
 using System.Xml.Linq;
 
+using SOAPNS = org.GraphDefined.Vanaheimr.Hermod.SOAP;
+
 #endregion
 
 namespace org.GraphDefined.eMI3.IO.OICP_1_2
@@ -40,8 +42,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         public static XElement Encapsulation(XElement XML)
         {
 
-            return new XElement(NS.SOAPEnvelope + "Envelope",
-                       new XAttribute(XNamespace.Xmlns + "eMI3",                NS.SOAPEnvelope.               NamespaceName),
+            return new XElement(SOAPNS.NS.SOAPEnvelope + "Envelope",
+                       new XAttribute(XNamespace.Xmlns + "eMI3",                SOAPNS.NS.SOAPEnvelope.        NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "CommonTypes",         NS.OICPv1_2CommonTypes.        NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "EVSEData",            NS.OICPv1_2EVSEData.           NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "EVSEStatus",          NS.OICPv1_2EVSEStatus.         NamespaceName),
@@ -49,8 +51,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                        new XAttribute(XNamespace.Xmlns + "Authorization",       NS.OICPv1_2Authorization.      NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "EVSESearch",          NS.OICPv1_2EVSESearch.         NamespaceName),
 
-                       new XElement(NS.SOAPEnvelope + "Header"),
-                       new XElement(NS.SOAPEnvelope + "Body", XML));
+                       new XElement(SOAPNS.NS.SOAPEnvelope + "Header"),
+                       new XElement(SOAPNS.NS.SOAPEnvelope + "Body", XML));
 
         }
 

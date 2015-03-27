@@ -32,11 +32,6 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
     {
 
         /// <summary>
-        /// The namespace for the XML SOAP Envelope.
-        /// </summary>
-        public static readonly XNamespace SOAPEnvelope                = "http://schemas.xmlsoap.org/soap/envelope/";
-
-        /// <summary>
         /// The namespace for the common types within the Open Intercharge Protocol (OICP) Version 1.2.
         /// </summary>
         public static readonly XNamespace OICPv1_2CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v1.2";
