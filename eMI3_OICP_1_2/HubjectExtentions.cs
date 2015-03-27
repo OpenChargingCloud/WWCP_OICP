@@ -315,7 +315,10 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                     String        UserAgent  = "Belectric Drive Hubject Gateway")
         {
 
-            var XML_EVSEStates = EVSEOperator.AllEVSEStates.ToArray();
+            var XML_EVSEStates = EVSEOperator.
+                                     AllEVSEStatus.
+                                     Where(v => !EVSEOperator.InvalidEVSEIds.Contains(v.Key)).
+                                     ToArray();
 
             var IPv4Addresses = DNSClient.Query<A>(Hostname).Select(a => a.IPv4Address).ToArray();
 
@@ -371,7 +374,10 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
         {
 
-            Console.WriteLine("FullLoad of " + EVSEOperator.ChargingPools.SelectMany(Pool => Pool.ChargingStations).SelectMany(Station => Station.EVSEs).Count() + " EVSE static data sets at " + HTTPVirtualHost + "...");
+            Console.WriteLine("FullLoad of " + EVSEOperator.ChargingPools.
+                                                            SelectMany(Pool    => Pool.ChargingStations).
+                                                            SelectMany(Station => Station.EVSEs).
+                                                            Count() + " EVSE static data sets at " + HTTPVirtualHost + "...");
             try
             {
 

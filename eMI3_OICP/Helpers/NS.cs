@@ -22,7 +22,7 @@ using System.Xml.Linq;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace org.GraphDefined.eMI3.IO.OICP
 {
 
     /// <summary>

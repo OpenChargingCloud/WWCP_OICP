@@ -26,7 +26,7 @@ using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace org.GraphDefined.eMI3.IO.OICP
 {
 
     /// <summary>

@@ -29,11 +29,11 @@ using org.GraphDefined.Vanaheimr.Illias.ConsoleLog;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
-using com.graphdefined.eMI3.LocalService;
+using org.GraphDefined.eMI3.LocalService;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace org.GraphDefined.eMI3.IO.OICP
 {
 
     /// <summary>

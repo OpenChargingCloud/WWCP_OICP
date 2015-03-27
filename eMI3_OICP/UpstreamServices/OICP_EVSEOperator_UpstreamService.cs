@@ -25,12 +25,12 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
-using com.graphdefined.eMI3.LocalService;
+using org.GraphDefined.eMI3.LocalService;
 using System.Collections.Generic;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace org.GraphDefined.eMI3.IO.OICP
 {
 
     public class OICP_EVSEOperator_UpstreamService : AOICPUpstreamService, IRoamingProviderProvided_EVSEOperatorServices

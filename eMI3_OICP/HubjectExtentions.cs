@@ -24,8 +24,8 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
-using com.graphdefined.eMI3.IO.OICP;
-using com.graphdefined.eMI3.IO.WWCP;
+using org.GraphDefined.eMI3.IO.OICP;
+using org.GraphDefined.eMI3.IO.WWCP;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -34,7 +34,7 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace org.GraphDefined.eMI3.IO.OICP
 {
 
     public static class HubjectExtentions
@@ -313,7 +313,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                                     String        HTTPVirtualHost)
         {
 
-            var XML_EVSEStates = EVSEOperator.AllEVSEStates.ToArray();
+            var XML_EVSEStates = EVSEOperator.AllEVSEStatus.ToArray();
 
             var IPv4Addresses = DNSClient.Query<A>(Hostname).Select(a => a.IPv4Address).ToArray();
 

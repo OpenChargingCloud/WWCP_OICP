@@ -26,7 +26,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace org.GraphDefined.eMI3.IO.OICP
 {
 
     /// <summary>
@@ -359,7 +359,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                                  Auth_Token              UID)
         {
 
-            return AuthorizeStartXML(EVSE.ChargingStation.Pool.Operator.Id,
+            return AuthorizeStartXML(EVSE.ChargingStation.Pool.EVSEOperator.Id,
                                      EVSE.Id,
                                      PartnerSessionID,
                                      UID);
@@ -423,7 +423,7 @@ namespace com.graphdefined.eMI3.IO.OICP
                                                 Auth_Token              UID)
         {
 
-            return AuthorizeStopXML(EVSE.ChargingStation.Pool.Operator.Id,
+            return AuthorizeStopXML(EVSE.ChargingStation.Pool.EVSEOperator.Id,
                                     EVSE.Id,
                                     SessionID,
                                     PartnerSessionID,

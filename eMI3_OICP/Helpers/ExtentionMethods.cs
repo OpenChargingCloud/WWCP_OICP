@@ -24,7 +24,7 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace com.graphdefined.eMI3.IO.OICP
+namespace org.GraphDefined.eMI3.IO.OICP
 {
 
     public static class ExtentionMethods
