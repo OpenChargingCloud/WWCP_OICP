@@ -517,7 +517,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                          String              PartnerProductId,
                                                          DateTime            ChargeStart,
                                                          DateTime            ChargeEnd,
-                                                         Auth_Token               UID              = null,
+                                                         Auth_Token          UID              = null,
                                                          eMA_Id              EVCOId           = null,
                                                          DateTime?           SessionStart     = null,
                                                          DateTime?           SessionEnd       = null,
@@ -592,7 +592,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                            )
                                  ),
 
-                                 new XElement(NS.OICPv1_2Authorization + "ChargingStart",   ChargeStart),
+                                 new XElement(NS.OICPv1_2Authorization + "ChargingStart",   ChargeStart),  // "2014-02-01T15:45:00+02:00"
                                  new XElement(NS.OICPv1_2Authorization + "ChargingEnd",     ChargeEnd),
                                  (SessionStart.   HasValue) ? new XElement(NS.OICPv1_2Authorization + "SessionStart",    SessionStart)    : null,
                                  (SessionEnd.     HasValue) ? new XElement(NS.OICPv1_2Authorization + "SessionEnd",      SessionEnd)      : null,
