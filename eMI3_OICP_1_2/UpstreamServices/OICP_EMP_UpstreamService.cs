@@ -37,12 +37,33 @@ using org.GraphDefined.eMI3.LocalService;
 namespace org.GraphDefined.eMI3.IO.OICP_1_2
 {
 
+    /// <summary>
+    /// OICP EMP Upstream Services.
+    /// </summary>
     public class OICP_EMP_UpstreamService : AOICPUpstreamService, IRoamingProviderProvided_EVSPServices
     {
 
         #region Data
 
         private const String UserAgent = "GraphDefined OICP-Client";
+
+        #endregion
+
+        #region Events
+
+        #region OnException
+
+        /// <summary>
+        /// A delegate called whenever an exception occured.
+        /// </summary>
+        public delegate void OnExceptionDelegate(DateTime Timestamp, Object Sender, Exception Exception);
+
+        /// <summary>
+        /// An event fired whenever an exception occured.
+        /// </summary>
+        public event OnExceptionDelegate OnException;
+
+        #endregion
 
         #endregion
 
@@ -84,18 +105,28 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                              "eRoamingEvseById",
                                              TimeoutMSec: 180000,
 
-                                             OnSuccess: XMLData => 
+                                             OnSuccess: XMLData =>
                                                  new HTTPResponse<XElement>(
                                                      XMLData.HttpResponse,
                                                      XMLData.Content),
 
-                                             OnFault: Fault =>
+                                             OnSOAPFault: Fault =>
                                                  new HTTPResponse<XElement>(
                                                      Fault.HttpResponse,
                                                      Fault.Content,
-                                                     IsFault: true)
+                                                     IsFault: true),
 
-                                             );
+                                             OnHTTPError: e => { },
+
+                                             OnException: (t, s, e) => {
+
+                                                 var OnExceptionLocal = OnException;
+                                                 if (OnExceptionLocal != null)
+                                                     OnExceptionLocal(t, s, e);
+
+                                             }
+
+                                            );
 
                 }
 
@@ -103,6 +134,10 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
             catch (Exception e)
             {
+
+                var OnExceptionLocal = OnException;
+                if (OnExceptionLocal != null)
+                    OnExceptionLocal(DateTime.Now, this, e);
 
                 return new Task<HTTPResponse<XElement>>(
                     () => new HTTPResponse<XElement>(e));
@@ -213,7 +248,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                                                                  Elements(OICP_1_2.NS.OICPv1_2EVSEData + "OperatorEvseData").
                                                                                                  Elements(OICP_1_2.NS.OICPv1_2EVSEData + "EvseDataRecord")),
 
-                                             OnFault: Fault => {
+                                             OnSOAPFault: Fault => {
 
                                                  Debug.WriteLine("[" + DateTime.Now + "] 'PullEVSEDataRequest' lead to a fault!");
 
@@ -222,7 +257,19 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                      new XElement[1] { Fault.Content },
                                                      IsFault: true);
 
-                                             });
+                                             },
+
+                                             OnHTTPError: e => { },
+
+                                             OnException: (t, s, e) => {
+
+                                                 var OnExceptionLocal = OnException;
+                                                 if (OnExceptionLocal != null)
+                                                     OnExceptionLocal(t, s, e);
+
+                                             }
+
+                                            );
 
                 }
 
@@ -230,6 +277,10 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
             catch (Exception e)
             {
+
+                var OnExceptionLocal = OnException;
+                if (OnExceptionLocal != null)
+                    OnExceptionLocal(DateTime.Now, this, e);
 
                 return new Task<HTTPResponse<IEnumerable<XElement>>>(
                     () => new HTTPResponse<IEnumerable<XElement>>(e));
@@ -313,7 +364,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                              ToArray() as IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>),
 
 
-                                             OnFault: Fault => {
+                                             OnSOAPFault: Fault => {
 
                                                  Debug.WriteLine("[" + DateTime.Now + "] 'PullEVSEStatusByIdRequest' lead to a fault!");
 
@@ -322,7 +373,19 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                      new KeyValuePair<EVSE_Id, HubjectEVSEState>[0],
                                                      IsFault: true);
 
-                                             });
+                                             },
+
+                                             OnHTTPError: e => { },
+
+                                             OnException: (t, s, e) => {
+
+                                                 var OnExceptionLocal = OnException;
+                                                 if (OnExceptionLocal != null)
+                                                     OnExceptionLocal(t, s, e);
+
+                                             }
+
+                                            );
 
                 }
 
@@ -330,6 +393,10 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
             catch (Exception e)
             {
+
+                var OnExceptionLocal = OnException;
+                if (OnExceptionLocal != null)
+                    OnExceptionLocal(DateTime.Now, this, e);
 
                 return new Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>>(
                     () => new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(e));
