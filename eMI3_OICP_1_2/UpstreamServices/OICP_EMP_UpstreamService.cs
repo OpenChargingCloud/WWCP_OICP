@@ -19,7 +19,6 @@
 
 using System;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -27,11 +26,11 @@ using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 using org.GraphDefined.Vanaheimr.Aegir;
 
 using org.GraphDefined.eMI3.LocalService;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -40,6 +39,12 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
     public class OICP_EMP_UpstreamService : AOICPUpstreamService, IRoamingProviderProvided_EVSPServices
     {
+
+        #region Data
+
+        private const String UserAgent = "GraphDefined OICP-Client";
+
+        #endregion
 
         #region Constructor(s)
 
@@ -67,20 +72,30 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new SOAPClient(OICPHost, OICPPort, "service-qa.hubject.com", "/ibis/ws/eRoamingEvseData_V1.2", DNSClient: DNSClient))
+                using (var _OICPClient = new SOAPClient(OICPHost,
+                                                        OICPPort,
+                                                        "service-qa.hubject.com",
+                                                        "/ibis/ws/eRoamingEvseData_V1.2",
+                                                        UserAgent,
+                                                        DNSClient))
                 {
 
                     return _OICPClient.Query(EMPMethods.GetEVSEByIdRequestXML(EVSEId),
                                              "eRoamingEvseById",
-                                             XMLData => 
+                                             TimeoutMSec: 180000,
 
-                                                 // 
+                                             OnSuccess: XMLData => 
+                                                 new HTTPResponse<XElement>(
+                                                     XMLData.HttpResponse,
+                                                     XMLData.Content),
 
-                                                 new HTTPResponse<XElement>(XMLData.HttpResponse, XMLData.Content),
+                                             OnFault: Fault =>
+                                                 new HTTPResponse<XElement>(
+                                                     Fault.HttpResponse,
+                                                     Fault.Content,
+                                                     IsFault: true)
 
-                                             Fault => {
-                                                 return new HTTPResponse<XElement>(Fault.HttpResponse, new XElement("fault"));
-                                             });
+                                             );
 
                 }
 
@@ -89,13 +104,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             catch (Exception e)
             {
 
-                return null;
-
-                //return
-                //    new MobileRemoteStartResult(AuthorizatorId) {
-                //        State             = false,
-                //        Description       = "An exception occured: " + e.Message
-                //    };
+                return new Task<HTTPResponse<XElement>>(
+                    () => new HTTPResponse<XElement>(e));
 
             }
 
@@ -105,6 +115,15 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
         #region PullEVSEDataRequest(...)
 
+        /// <summary>
+        /// Create a new task requesting all EVSE data.
+        /// The request might either have none, a 'LastCall' or 'GeoCoordinate+DistanceKM' parameter.
+        /// </summary>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="LastCall">An optional timestamp of the last call.</param>
+        /// <param name="GeoCoordinate">An optional geo coordinate as search center.</param>
+        /// <param name="DistanceKM">An optional geo coordinate as search radius.</param>
+        /// <returns>A list of EVSE datasets.</returns>
         public Task<HTTPResponse<IEnumerable<XElement>>>
 
             PullEVSEDataRequest(EVSP_Id        ProviderId,
@@ -117,13 +136,21 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new SOAPClient(OICPHost, OICPPort, "service-qa.hubject.com", "/ibis/ws/eRoamingEvseData_V1.2", DNSClient: DNSClient))
+                using (var _OICPClient = new SOAPClient(OICPHost,
+                                                        OICPPort,
+                                                        "service-qa.hubject.com",
+                                                        "/ibis/ws/eRoamingEvseData_V1.2",
+                                                        UserAgent,
+                                                        DNSClient))
                 {
 
                     return _OICPClient.Query(EMPMethods.PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, DistanceKM),
                                              "eRoamingPullEVSEData",
-                                             TimeoutMSec:  180000,
-                                             OnSuccess:    XMLData => 
+                                             TimeoutMSec: 180000,
+
+                                             OnSuccess: XMLData =>
+
+                                                 #region Documentation
 
                                                  // <tns:eRoamingEvseData xmlns:tns="http://www.hubject.com/b2b/services/evsedata/v1.2">
                                                  //   <tns:EvseData>
@@ -178,19 +205,22 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                  //   </tns:EvseData>
                                                  // </tns:eRoamingEvseData>
 
+                                                 #endregion
+
                                                  new HTTPResponse<IEnumerable<XElement>>(XMLData.HttpResponse,
                                                                                          XMLData.Content.
                                                                                                  Element (OICP_1_2.NS.OICPv1_2EVSEData + "EvseData").
                                                                                                  Elements(OICP_1_2.NS.OICPv1_2EVSEData + "OperatorEvseData").
                                                                                                  Elements(OICP_1_2.NS.OICPv1_2EVSEData + "EvseDataRecord")),
 
-
                                              OnFault: Fault => {
 
                                                  Debug.WriteLine("[" + DateTime.Now + "] 'PullEVSEDataRequest' lead to a fault!");
 
-                                                 return new HTTPResponse<IEnumerable<XElement>>(Fault.HttpResponse,
-                                                                                                new XElement[1] { Fault.Content });
+                                                 return new HTTPResponse<IEnumerable<XElement>>(
+                                                     Fault.HttpResponse,
+                                                     new XElement[1] { Fault.Content },
+                                                     IsFault: true);
 
                                              });
 
@@ -201,13 +231,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             catch (Exception e)
             {
 
-                return null;
-
-                //return
-                //    new MobileRemoteStartResult(AuthorizatorId) {
-                //        State             = false,
-                //        Description       = "An exception occured: " + e.Message
-                //    };
+                return new Task<HTTPResponse<IEnumerable<XElement>>>(
+                    () => new HTTPResponse<IEnumerable<XElement>>(e));
 
             }
 
@@ -217,6 +242,12 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
         #region PullEVSEStatusByIdRequest(...)
 
+        /// <summary>
+        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// </summary>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
+        /// <returns>An enumeration of EVSE Ids and their current status.</returns>
         public Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>>
 
             PullEVSEStatusByIdRequest(EVSP_Id               ProviderId,
@@ -227,13 +258,22 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new SOAPClient(OICPHost, OICPPort, "service-qa.hubject.com", "/ibis/ws/eRoamingEvseStatus_V1.2", DNSClient: DNSClient))
+                using (var _OICPClient = new SOAPClient(OICPHost,
+                                                        OICPPort,
+                                                        "service-qa.hubject.com",
+                                                        "/ibis/ws/eRoamingEvseStatus_V1.2",
+                                                        UserAgent,
+                                                        DNSClient))
+
                 {
 
                     return _OICPClient.Query(EMPMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds),
                                              "eRoamingPullEvseStatusById",
-                                             TimeoutMSec:  180000,
-                                             OnSuccess:    XMLData =>
+                                             TimeoutMSec: 180000,
+
+                                             OnSuccess: XMLData =>
+
+                                                 #region Documentation
 
                                                  // <?xml version='1.0' encoding='UTF-8'?>
                                                  // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1.2"
@@ -261,21 +301,26 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                  //
                                                  // </soapenv:Envelope>
 
-                                                 new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(XMLData.HttpResponse,
+                                                 #endregion
 
-                                                 XMLData.Content.Element(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatusRecords").
-                                                                 Elements(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatusRecord").
-                                                                 Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseId").Value),
-                                                                                                                         (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatus").Value))).
-                                                                 ToArray() as IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>),
+                                                 new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(
+                                                     XMLData.HttpResponse,
+                                                     XMLData.Content.
+                                                             Element (OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatusRecords").
+                                                             Elements(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatusRecord").
+                                                             Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseId").Value),
+                                                                                                                     (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatus").Value))).
+                                                             ToArray() as IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>),
 
 
                                              OnFault: Fault => {
 
                                                  Debug.WriteLine("[" + DateTime.Now + "] 'PullEVSEStatusByIdRequest' lead to a fault!");
 
-                                                 return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(Fault.HttpResponse,
-                                                                                                                               new KeyValuePair<EVSE_Id, HubjectEVSEState>[0]);
+                                                 return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(
+                                                     Fault.HttpResponse,
+                                                     new KeyValuePair<EVSE_Id, HubjectEVSEState>[0],
+                                                     IsFault: true);
 
                                              });
 
@@ -286,13 +331,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             catch (Exception e)
             {
 
-                return null;
-
-                //return
-                //    new MobileRemoteStartResult(AuthorizatorId) {
-                //        State             = false,
-                //        Description       = "An exception occured: " + e.Message
-                //    };
+                return new Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>>(
+                    () => new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(e));
 
             }
 
@@ -325,8 +365,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                     var HttpResponse = OICPClient.Query(EMPMethods.MobileAuthorizeStartXML(EVSEId,
                                                                                            EVCOId,
                                                                                            PIN,
-                                                                                           PartnerProductId).
-                                                                                           ToString(),
+                                                                                           PartnerProductId),
                                                         "eRoamingMobileAuthorizeStart");
 
                     var XML = XDocument.Parse(HttpResponse.Content.ToUTF8String());
@@ -488,7 +527,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                 using (var _OICPClient = new SOAPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
-                    var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStartXML(SessionId).ToString(),
+                    var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStartXML(SessionId),
                                                          "eRoamingMobileRemoteStart");
 
                     //ToDo: In case of errors this will not parse!
@@ -547,7 +586,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                 using (var _OICPClient = new SOAPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
-                    var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStopXML(SessionId).ToString(),
+                    var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStopXML(SessionId),
                                                          "eRoamingMobileRemoteStop");
 
                     //ToDo: In case of errors this will not parse!

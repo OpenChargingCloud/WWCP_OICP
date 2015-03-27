@@ -109,17 +109,10 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                 using (var _OICPClient = new SOAPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
                 {
 
-                    var aaa = CPOMethods.AuthorizeStartXML(OperatorId,
-                                                                                      EVSEId,
-                                                                                      PartnerSessionId,
-                                                                                      UID).
-                                                                                      ToString();
-
                     var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
                                                                                       EVSEId,
                                                                                       PartnerSessionId,
-                                                                                      UID).
-                                                                                      ToString(),
+                                                                                      UID),
                                                          "eRoamingAuthorizeStart");
 
                     Console.WriteLine(HttpResponse.Content.ToUTF8String());
@@ -270,8 +263,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                                                      EVSEId,
                                                                                      SessionId,
                                                                                      PartnerSessionId,
-                                                                                     UID).
-                                                                                     ToString(),
+                                                                                     UID),
                                                          "eRoamingAuthorizeStop");
 
                     //ToDo: In case of errors this will not parse!
@@ -467,8 +459,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                                                               SessionStart,
                                                                                               SessionEnd,
                                                                                               MeterValueStart,
-                                                                                              MeterValueEnd).
-                                                                                              ToString(),
+                                                                                              MeterValueEnd),
                                                          "eRoamingChargeDetailRecord");
 
                     //ToDo: In case of errors this will not parse!
