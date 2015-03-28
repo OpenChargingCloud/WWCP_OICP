@@ -65,6 +65,20 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
         #endregion
 
+        #region OnHTTPError
+
+        /// <summary>
+        /// A delegate called whenever a HTTP error occured.
+        /// </summary>
+        public delegate void OnHTTPErrorDelegate(DateTime Timestamp, Object Sender, HTTPResponse HttpResponse);
+
+        /// <summary>
+        /// An event fired whenever a HTTP error occured.
+        /// </summary>
+        public event OnHTTPErrorDelegate OnHTTPError;
+
+        #endregion
+
         #endregion
 
         #region Constructor(s)
@@ -116,7 +130,13 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                      Fault.Content,
                                                      IsFault: true),
 
-                                             OnHTTPError: e => { },
+                                             OnHTTPError: (t, s, e) => {
+
+                                                 var OnHTTPErrorLocal = OnHTTPError;
+                                                 if (OnHTTPErrorLocal != null)
+                                                     OnHTTPErrorLocal(t, s, e);
+
+                                             },
 
                                              OnException: (t, s, e) => {
 
@@ -259,7 +279,13 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                                              },
 
-                                             OnHTTPError: e => { },
+                                             OnHTTPError: (t, s, e) => {
+
+                                                 var OnHTTPErrorLocal = OnHTTPError;
+                                                 if (OnHTTPErrorLocal != null)
+                                                     OnHTTPErrorLocal(t, s, e);
+
+                                             },
 
                                              OnException: (t, s, e) => {
 
@@ -375,7 +401,13 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                                              },
 
-                                             OnHTTPError: e => { },
+                                             OnHTTPError: (t, s, e) => {
+
+                                                 var OnHTTPErrorLocal = OnHTTPError;
+                                                 if (OnHTTPErrorLocal != null)
+                                                     OnHTTPErrorLocal(t, s, e);
+
+                                             },
 
                                              OnException: (t, s, e) => {
 
