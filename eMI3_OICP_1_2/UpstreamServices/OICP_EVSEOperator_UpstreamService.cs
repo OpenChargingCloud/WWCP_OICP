@@ -201,6 +201,21 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                         //   </soapenv:Body>
                         // </soapenv:Envelope>
 
+                        // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1.2"
+                        //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                        //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1.2">
+                        //   <soapenv:Body>
+                        //     <tns:eRoamingAuthorizationStart>
+                        //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
+                        //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
+                        //       <tns:StatusCode>
+                        //         <cmn:Code>102</cmn:Code>
+                        //         <cmn:Description>RFID Authentication failed – invalid UID</cmn:Description>
+                        //       </tns:StatusCode>
+                        //     </tns:eRoamingAuthorizationStart>
+                        //   </soapenv:Body>
+                        // </soapenv:Envelope>
+
                         else
                             return new AUTHSTARTResult(AuthorizatorId) {
                                            AuthorizationResult  = AuthorizationResult.NotAuthorized,
