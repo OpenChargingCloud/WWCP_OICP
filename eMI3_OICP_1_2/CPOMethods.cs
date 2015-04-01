@@ -20,8 +20,9 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -273,6 +274,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                               }
                                               catch (Exception e)
                                               {
+                                                  Debug.WriteLine("Exception in CPOMethods: " + e.Message);
                                                   return null;
                                               }
 
