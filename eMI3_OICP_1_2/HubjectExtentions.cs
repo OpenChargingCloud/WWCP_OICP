@@ -44,12 +44,12 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
         public static void SendEVSEStatusUpdate(EVSEOperator     EVSEOperator,
                                                 EVSEStatusDiff   EVSEStatusDiff,
-                                                DNSClient        DNSClient,
                                                 String           Hostname,
                                                 IPPort           Port,
                                                 String           HTTPVirtualHost,
                                                 WWCP_HTTPServer  WWCP_HTTPServer,
-                                                String           UserAgent  = "GraphDefined Drive Hubject Gateway")
+                                                String           UserAgent  = "GraphDefined Drive Hubject Gateway",
+                                                DNSClient        DNSClient  = null)
 
         {
 
@@ -310,7 +310,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                     String        Hostname,
                                                     IPPort        Port,
                                                     String        HTTPVirtualHost,
-                                                    String        UserAgent  = "Belectric Drive Hubject Gateway")
+                                                    String        UserAgent  = "GraphDefined Hubject Gateway")
         {
 
             try
@@ -375,7 +375,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                   String        Hostname,
                                                   IPPort        Port,
                                                   String        HTTPVirtualHost,
-                                                  String        UserAgent  = "Belectric Drive Hubject Gateway")
+                                                  String        UserAgent  = "GraphDefined Drive Hubject Gateway")
 
         {
 
