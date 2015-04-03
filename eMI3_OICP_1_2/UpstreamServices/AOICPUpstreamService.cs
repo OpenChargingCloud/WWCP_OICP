@@ -121,7 +121,6 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         {
 
             this._OICPHost         = OICPHost;
-
             this._OICPPort         = OICPPort;
 
             this._HTTPVirtualHost  = (HTTPVirtualHost != null)
@@ -135,7 +134,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                          : AuthorizatorId;
 
             this.DNSClient         = (DNSClient       == null)
-                                         ? new DNSClient(SearchForIPv6DNSServers: false)
+                                         ? new DNSClient()
                                          : DNSClient;
 
         }

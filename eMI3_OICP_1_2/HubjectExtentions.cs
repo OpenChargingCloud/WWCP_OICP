@@ -49,11 +49,9 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                 IPPort           Port,
                                                 String           HTTPVirtualHost,
                                                 WWCP_HTTPServer  WWCP_HTTPServer,
-                                                String           UserAgent  = "Belectric Drive Hubject Gateway")
+                                                String           UserAgent  = "GraphDefined Drive Hubject Gateway")
 
         {
-
-            var IPv4Addresses = DNSClient.Query<A>(Hostname).Select(a => a.IPv4Address).ToArray();
 
             #region Insert new EVSEs...
 
@@ -83,7 +81,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                                 ActionType.insert).
                                                                 ToString();
 
-                using (var httpClient = new HTTPClient(IPv4Addresses.First(), Port))
+                using (var httpClient = new HTTPClient(Hostname, Port, DNSClient))
                 {
 
                     var builder = httpClient.POST("/ibis/ws/eRoamingEvseStatus_V1.2");
@@ -165,7 +163,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                                 ActionType.update).
                                                                 ToString();
 
-                using (var httpClient = new HTTPClient(IPv4Addresses.First(), Port))
+                using (var httpClient = new HTTPClient(Hostname, Port, DNSClient))
                 {
 
                     var builder = httpClient.POST("/ibis/ws/eRoamingEvseStatus_V1.2");
@@ -247,7 +245,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                                 ActionType.delete).
                                                                 ToString();
 
-                using (var httpClient = new HTTPClient(IPv4Addresses.First(), Port))
+                using (var httpClient = new HTTPClient(Hostname, Port, DNSClient))
                 {
 
                     var builder = httpClient.POST("/ibis/ws/eRoamingEvseStatus_V1.2");
@@ -320,8 +318,6 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                      Where(v => !EVSEOperator.InvalidEVSEIds.Contains(v.Key)).
                                      ToArray();
 
-            var IPv4Addresses = DNSClient.Query<A>(Hostname).Select(a => a.IPv4Address).ToArray();
-
             #region FullLoad EVSEs...
 
             if (XML_EVSEStates.Any())
@@ -336,7 +332,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                                 ActionType.fullLoad).
                                                                 ToString();
 
-                using (var httpClient = new HTTPClient(IPv4Addresses.First(), Port))
+                using (var httpClient = new HTTPClient(Hostname, Port, DNSClient))
                 {
 
                     var builder = httpClient.POST("/ibis/ws/eRoamingEvseStatus_V1.2");
@@ -387,11 +383,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                           ActionType.fullLoad).
                                           ToString();
 
-            var IPv4Addresses = DNSClient.Query<A>(Hostname).Select(a => a.IPv4Address).ToArray();
-
-            Console.WriteLine(Hostname + " => " + IPv4Addresses.First().ToString() + ":" + Port.ToString());
-
-            using (var httpClient = new HTTPClient(IPv4Addresses.First(), Port))
+            using (var httpClient = new HTTPClient(Hostname, Port, DNSClient))
             {
 
                 var builder = httpClient.POST("/ibis/ws/eRoamingEvseData_V1.2");

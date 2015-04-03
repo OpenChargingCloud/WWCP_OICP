@@ -31,6 +31,7 @@ using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 using org.GraphDefined.Vanaheimr.Aegir;
 
 using org.GraphDefined.eMI3.LocalService;
+using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
 #endregion
 
@@ -38,7 +39,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 {
 
     /// <summary>
-    /// OICP EMP Upstream Services.
+    /// OICP EMP Upstream Service(s).
     /// </summary>
     public class OICP_EMP_UpstreamService : AOICPUpstreamService, IRoamingProviderProvided_EVSPServices
     {
@@ -83,16 +84,26 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
         #region Constructor(s)
 
+        /// <summary>
+        /// Create a new OICP EMP Upstream Service(s).
+        /// </summary>
+        /// <param name="OICPHost"></param>
+        /// <param name="OICPPort"></param>
+        /// <param name="HTTPVirtualHost"></param>
+        /// <param name="AuthorizatorId"></param>
+        /// <param name="DNSClient"></param>
         public OICP_EMP_UpstreamService(String           OICPHost,
                                         IPPort           OICPPort,
                                         String           HTTPVirtualHost = null,
-                                        Authorizator_Id  AuthorizatorId  = null)
+                                        Authorizator_Id  AuthorizatorId  = null,
+                                        DNSClient        DNSClient       = null)
 
             : base(OICPHost,
                    OICPPort,
                    HTTPVirtualHost,
                    "/ibis/ws/HubjectMobileAuthorization_V1",
-                   AuthorizatorId)
+                   AuthorizatorId,
+                   DNSClient)
 
         { }
 
