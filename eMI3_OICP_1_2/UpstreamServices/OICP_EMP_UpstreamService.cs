@@ -128,7 +128,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                     return _OICPClient.Query(EMPMethods.GetEVSEByIdRequestXML(EVSEId),
                                              "eRoamingEvseById",
-                                             TimeoutMSec: 180000,
+                                             Timeout: TimeSpan.FromSeconds(180),
 
                                              OnSuccess: XMLData =>
                                                  new HTTPResponse<XElement>(
@@ -212,7 +212,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                     return _OICPClient.Query(EMPMethods.PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, DistanceKM),
                                              "eRoamingPullEVSEData",
-                                             TimeoutMSec: 180000,
+                                             Timeout: TimeSpan.FromSeconds(180),
 
                                              OnSuccess: XMLData =>
 
@@ -357,7 +357,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                     return _OICPClient.Query(EMPMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds),
                                              "eRoamingPullEvseStatusById",
-                                             TimeoutMSec: 180000,
+                                             Timeout: TimeSpan.FromSeconds(180),
 
                                              OnSuccess: XMLData =>
 
