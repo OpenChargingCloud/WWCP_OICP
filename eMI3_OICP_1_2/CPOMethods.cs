@@ -145,8 +145,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                                                       new XElement(NS.OICPv1_2EVSEData + "GeoCoordinates",
                                                           new XElement(NS.OICPv1_2CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                                                              new XElement(NS.OICPv1_2CommonTypes + "Longitude", EVSE.ChargingStation.GeoLocation.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
-                                                              new XElement(NS.OICPv1_2CommonTypes + "Latitude",  EVSE.ChargingStation.GeoLocation.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat))
+                                                              new XElement(NS.OICPv1_2CommonTypes + "Longitude", EVSE.ChargingStation.GeoLocation.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                                                              new XElement(NS.OICPv1_2CommonTypes + "Latitude",  EVSE.ChargingStation.GeoLocation.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
                                                           )
                                                       ),
 

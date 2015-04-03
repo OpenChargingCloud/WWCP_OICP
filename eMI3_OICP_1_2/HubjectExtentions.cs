@@ -313,47 +313,56 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                     String        UserAgent  = "Belectric Drive Hubject Gateway")
         {
 
-            var XML_EVSEStates = EVSEOperator.
-                                     AllEVSEStatus.
-                                     Where(v => !EVSEOperator.InvalidEVSEIds.Contains(v.Key)).
-                                     ToArray();
-
-            #region FullLoad EVSEs...
-
-            if (XML_EVSEStates.Any())
+            try
             {
 
-                Console.WriteLine("FullLoad of " + XML_EVSEStates.Length + " EVSE states at " + HTTPVirtualHost + "...");
+                var XML_EVSEStates = EVSEOperator.
+                                         AllEVSEStatus.
+                                         Where(v => !EVSEOperator.InvalidEVSEIds.Contains(v.Key)).
+                                         ToArray();
 
-                var EVSEStatesInsertXML = XML_EVSEStates.
-                                              Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState())).
-                                              PushEVSEStatusXML(EVSEOperator.Id,
-                                                                EVSEOperator.Name[Languages.de],
-                                                                ActionType.fullLoad).
-                                                                ToString();
+                #region FullLoad EVSEs...
 
-                using (var httpClient = new HTTPClient(Hostname, Port, DNSClient))
+                if (XML_EVSEStates.Any())
                 {
 
-                    var builder = httpClient.POST("/ibis/ws/eRoamingEvseStatus_V1.2");
-                    builder.Host         = HTTPVirtualHost;
-                    builder.Content      = EVSEStatesInsertXML.ToUTF8Bytes();
-                    builder.ContentType  = HTTPContentType.XMLTEXT_UTF8;
-                    builder.Set("SOAPAction", "eRoamingPushEvseStatus");
-                    builder.UserAgent    = UserAgent;
+                    Console.WriteLine("FullLoad of " + XML_EVSEStates.Length + " EVSE states at " + HTTPVirtualHost + "...");
 
-                    var Task02 = httpClient.Execute(builder, (req, resp) => {
-                        var ack = HubjectAcknowledgement.Parse(XDocument.Parse(resp.Content.ToUTF8String()).Root);
-                        Console.WriteLine("EVSE states fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
-                    });
+                    var EVSEStatesInsertXML = XML_EVSEStates.
+                                                  Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState())).
+                                                  PushEVSEStatusXML(EVSEOperator.Id,
+                                                                    EVSEOperator.Name[Languages.de],
+                                                                    ActionType.fullLoad).
+                                                                    ToString();
 
-                    Task02.Wait(TimeSpan.FromSeconds(30));
+                    using (var httpClient = new HTTPClient(Hostname, Port, DNSClient))
+                    {
+
+                        var builder = httpClient.POST("/ibis/ws/eRoamingEvseStatus_V1.2");
+                        builder.Host         = HTTPVirtualHost;
+                        builder.Content      = EVSEStatesInsertXML.ToUTF8Bytes();
+                        builder.ContentType  = HTTPContentType.XMLTEXT_UTF8;
+                        builder.Set("SOAPAction", "eRoamingPushEvseStatus");
+                        builder.UserAgent    = UserAgent;
+
+                        var Task02 = httpClient.Execute(builder, (req, resp) => {
+                            var ack = HubjectAcknowledgement.Parse(XDocument.Parse(resp.Content.ToUTF8String()).Root);
+                            Console.WriteLine("EVSE states fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
+                        });
+
+                        Task02.Wait(TimeSpan.FromSeconds(30));
+
+                    }
 
                 }
 
-            }
+                #endregion
 
-            #endregion
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
         }
 
@@ -374,33 +383,34 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                             SelectMany(Pool    => Pool.ChargingStations).
                                                             SelectMany(Station => Station.EVSEs).
                                                             Count() + " EVSE static data sets at " + HTTPVirtualHost + "...");
+
             try
             {
 
-            var EVSEDataFullLoadXML = EVSEOperator.ChargingPools.
-                                          PushEVSEDataXML(EVSEOperator.Id,
-                                                          EVSEOperator.Name[Languages.de],
-                                                          ActionType.fullLoad).
-                                          ToString();
+                var EVSEDataFullLoadXML = EVSEOperator.ChargingPools.
+                                              PushEVSEDataXML(EVSEOperator.Id,
+                                                              EVSEOperator.Name[Languages.de],
+                                                              ActionType.fullLoad).
+                                              ToString();
 
-            using (var httpClient = new HTTPClient(Hostname, Port, DNSClient))
-            {
+                using (var httpClient = new HTTPClient(Hostname, Port, DNSClient))
+                {
 
-                var builder = httpClient.POST("/ibis/ws/eRoamingEvseData_V1.2");
-                builder.Host        = HTTPVirtualHost;
-                builder.Content     = EVSEDataFullLoadXML.ToUTF8Bytes();
-                builder.ContentType = HTTPContentType.XMLTEXT_UTF8;
-                builder.Set("SOAPAction", "eRoamingPushEvseData");
-                builder.UserAgent   = UserAgent;
+                    var builder = httpClient.POST("/ibis/ws/eRoamingEvseData_V1.2");
+                    builder.Host        = HTTPVirtualHost;
+                    builder.Content     = EVSEDataFullLoadXML.ToUTF8Bytes();
+                    builder.ContentType = HTTPContentType.XMLTEXT_UTF8;
+                    builder.Set("SOAPAction", "eRoamingPushEvseData");
+                    builder.UserAgent   = UserAgent;
 
-                var Task01 = httpClient.Execute(builder, (req, resp) => {
-                    var ack = HubjectAcknowledgement.Parse(XDocument.Parse(resp.Content.ToUTF8String()).Root);
-                    Console.WriteLine("EVSE data fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
-                });
+                    var Task01 = httpClient.Execute(builder, (req, resp) => {
+                        var ack = HubjectAcknowledgement.Parse(XDocument.Parse(resp.Content.ToUTF8String()).Root);
+                        Console.WriteLine("EVSE data fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
+                    });
 
-                Task01.Wait(TimeSpan.FromSeconds(30));
+                    Task01.Wait(TimeSpan.FromSeconds(30));
 
-            }
+                }
 
             } catch (Exception e)
             {
