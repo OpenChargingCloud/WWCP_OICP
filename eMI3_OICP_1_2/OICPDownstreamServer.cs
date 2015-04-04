@@ -39,14 +39,22 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
     /// <summary>
     /// OICP Downstream HTTP/SOAP server.
     /// </summary>
-    public class OICPHTTPServer : HTTPServer
+    public class OICPDownstreamServer : HTTPServer
     {
 
         #region Properties
 
         #region HTTPRoot
 
-        public String       HTTPRoot            { get; set; }
+        private readonly String _HTTPRoot;
+
+        public String HTTPRoot
+        {
+            get
+            {
+                return _HTTPRoot;
+            }
+        }
 
         #endregion
 
@@ -69,15 +77,17 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         #region Constructor(s)
 
         /// <summary>
-        /// Initialize the OICP HTTP server using IPAddress.Any.
+        /// Initialize the OICP HTTP/SOAP server using IPAddress.Any.
         /// </summary>
         /// <param name="RequestRouter">The request router.</param>
         /// <param name="IPPort">The IP listing port.</param>
-        public OICPHTTPServer(RequestRouter  RequestRouter,
-                              IPPort         IPPort)
+        public OICPDownstreamServer(RequestRouter  RequestRouter,
+                                    IPPort         IPPort,
+                                    String         HTTPRoot)
         {
 
-            this._RequestRouter = RequestRouter;
+            this._RequestRouter  = RequestRouter;
+            this._HTTPRoot       = HTTPRoot;
 
             this.AttachTCPPort(IPPort);
             this.Start();

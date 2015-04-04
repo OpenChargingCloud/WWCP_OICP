@@ -39,18 +39,23 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
     public static class CPOMethods
     {
 
-        #region PushEVSEDataXML(this EVSEOperator, Action = fullLoad, OperatorId = null, OperatorName = null)
+        #region PushEVSEDataXML(this EVSEOperator, Action = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
-        public static XElement PushEVSEDataXML(this EVSEOperator  EVSEOperator,
-                                               ActionType         Action        = ActionType.fullLoad,
-                                               EVSEOperator_Id    OperatorId    = null,
-                                               String             OperatorName  = null)
+        public static XElement PushEVSEDataXML(this EVSEOperator       EVSEOperator,
+                                               ActionType              Action        = ActionType.fullLoad,
+                                               EVSEOperator_Id         OperatorId    = null,
+                                               String                  OperatorName  = null,
+                                               Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
         {
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
 
             return EVSEOperator.ChargingPools.
                                 SelectMany(Pool    => Pool.ChargingStations).
                                 SelectMany(Station => Station.EVSEs).
-                                PushEVSEDataXML((OperatorId   == null) ? EVSEOperator.Id                 : OperatorId,
+                                Where     (EVSE    => IncludeEVSEs(EVSE.Id)).
+                                PushEVSEDataXML((OperatorId == null) ? EVSEOperator.Id : OperatorId,
                                                 (OperatorName == null) ? EVSEOperator.Name[Languages.de] : OperatorName,
                                                 Action);
 
@@ -58,16 +63,21 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
         #endregion
 
-        #region PushEVSEDataXML(this EVSPools, OperatorId, OperatorName, Action = fullLoad)
+        #region PushEVSEDataXML(this EVSPools, OperatorId, OperatorName, Action = fullLoad, IncludeEVSEs = null)
 
         public static XElement PushEVSEDataXML(this IEnumerable<ChargingPool>  EVSPools,
                                                EVSEOperator_Id                 OperatorId,
                                                String                          OperatorName,
-                                               ActionType                      Action  = ActionType.fullLoad)
+                                               ActionType                      Action        = ActionType.fullLoad,
+                                               Func<EVSE_Id, Boolean>          IncludeEVSEs  = null)
         {
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
 
             return EVSPools.SelectMany(Pool    => Pool.ChargingStations).
                             SelectMany(Station => Station.EVSEs).
+                            Where     (EVSE    => IncludeEVSEs(EVSE.Id)).
                             PushEVSEDataXML(OperatorId,
                                             OperatorName,
                                             Action);
@@ -76,15 +86,20 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
         #endregion
 
-        #region PushEVSEDataXML(this ChargingStations, OperatorId, OperatorName, Action = fullLoad)
+        #region PushEVSEDataXML(this ChargingStations, OperatorId, OperatorName, Action = fullLoad, IncludeEVSEs = null)
 
         public static XElement PushEVSEDataXML(this IEnumerable<ChargingStation>  ChargingStations,
                                                EVSEOperator_Id                    OperatorId,
                                                String                             OperatorName,
-                                               ActionType                         Action  = ActionType.fullLoad)
+                                               ActionType                         Action        = ActionType.fullLoad,
+                                               Func<EVSE_Id, Boolean>             IncludeEVSEs  = null)
         {
 
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
             return ChargingStations.SelectMany(Station => Station.EVSEs).
+                                    Where     (EVSE    => IncludeEVSEs(EVSE.Id)).
                                     PushEVSEDataXML(OperatorId,
                                                     OperatorName,
                                                     Action);

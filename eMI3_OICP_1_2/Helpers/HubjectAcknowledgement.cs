@@ -167,6 +167,9 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                 var ack              = XML.Descendants(NS.OICPv1_2CommonTypes + "eRoamingAcknowledgement").
                                            FirstOrDefault();
 
+                if (ack == null && XML.Name == NS.OICPv1_2CommonTypes + "eRoamingAcknowledgement")
+                    ack = XML;
+
                 if (ack == null)
                     return false;
 

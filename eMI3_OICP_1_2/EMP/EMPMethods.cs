@@ -33,7 +33,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 {
 
     /// <summary>
-    /// EMP management operations.
+    /// OICP v1.2 EMP management methods.
     /// </summary>
     public static class EMPMethods
     {

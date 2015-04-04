@@ -39,48 +39,11 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 {
 
     /// <summary>
-    /// OICP EMP Upstream Service(s).
+    /// OICPv1.2 EMP Upstream Service(s).
     /// </summary>
-    public class OICP_EMP_UpstreamService : AOICPUpstreamService, IRoamingProviderProvided_EVSPServices
+    public class EMPUpstreamService : AOICPUpstreamService,
+                                      IRoamingProviderProvided_EVSPServices
     {
-
-        #region Data
-
-        private const String UserAgent = "GraphDefined OICP-Client";
-
-        #endregion
-
-        #region Events
-
-        #region OnException
-
-        /// <summary>
-        /// A delegate called whenever an exception occured.
-        /// </summary>
-        public delegate void OnExceptionDelegate(DateTime Timestamp, Object Sender, Exception Exception);
-
-        /// <summary>
-        /// An event fired whenever an exception occured.
-        /// </summary>
-        public event OnExceptionDelegate OnException;
-
-        #endregion
-
-        #region OnHTTPError
-
-        /// <summary>
-        /// A delegate called whenever a HTTP error occured.
-        /// </summary>
-        public delegate void OnHTTPErrorDelegate(DateTime Timestamp, Object Sender, HTTPResponse HttpResponse);
-
-        /// <summary>
-        /// An event fired whenever a HTTP error occured.
-        /// </summary>
-        public event OnHTTPErrorDelegate OnHTTPError;
-
-        #endregion
-
-        #endregion
 
         #region Constructor(s)
 
@@ -92,17 +55,18 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         /// <param name="HTTPVirtualHost"></param>
         /// <param name="AuthorizatorId"></param>
         /// <param name="DNSClient"></param>
-        public OICP_EMP_UpstreamService(String           OICPHost,
-                                        IPPort           OICPPort,
-                                        String           HTTPVirtualHost = null,
-                                        Authorizator_Id  AuthorizatorId  = null,
-                                        DNSClient        DNSClient       = null)
+        public EMPUpstreamService(String           OICPHost,
+                                  IPPort           OICPPort,
+                                  String           HTTPVirtualHost = null,
+                                  Authorizator_Id  AuthorizatorId  = null,
+                                  String           UserAgent       = "GraphDefined OICP Gateway",
+                                  DNSClient        DNSClient       = null)
 
             : base(OICPHost,
                    OICPPort,
                    HTTPVirtualHost,
-                   "/ibis/ws/HubjectMobileAuthorization_V1",
                    AuthorizatorId,
+                   UserAgent,
                    DNSClient)
 
         { }
@@ -118,8 +82,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new SOAPClient(OICPHost,
-                                                        OICPPort,
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
                                                         "service-qa.hubject.com",
                                                         "/ibis/ws/eRoamingEvseData_V1.2",
                                                         UserAgent,
@@ -141,21 +105,9 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                      Fault.Content,
                                                      IsFault: true),
 
-                                             OnHTTPError: (t, s, e) => {
+                                             OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
 
-                                                 var OnHTTPErrorLocal = OnHTTPError;
-                                                 if (OnHTTPErrorLocal != null)
-                                                     OnHTTPErrorLocal(t, s, e);
-
-                                             },
-
-                                             OnException: (t, s, e) => {
-
-                                                 var OnExceptionLocal = OnException;
-                                                 if (OnExceptionLocal != null)
-                                                     OnExceptionLocal(t, s, e);
-
-                                             }
+                                             OnException: (t, s, e) => SendOnException(t, s, e)
 
                                             );
 
@@ -166,9 +118,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             catch (Exception e)
             {
 
-                var OnExceptionLocal = OnException;
-                if (OnExceptionLocal != null)
-                    OnExceptionLocal(DateTime.Now, this, e);
+                SendOnException(DateTime.Now, this, e);
 
                 return new Task<HTTPResponse<XElement>>(
                     () => new HTTPResponse<XElement>(e));
@@ -202,8 +152,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new SOAPClient(OICPHost,
-                                                        OICPPort,
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
                                                         "service-qa.hubject.com",
                                                         "/ibis/ws/eRoamingEvseData_V1.2",
                                                         UserAgent,
@@ -290,21 +240,9 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                                              },
 
-                                             OnHTTPError: (t, s, e) => {
+                                             OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
 
-                                                 var OnHTTPErrorLocal = OnHTTPError;
-                                                 if (OnHTTPErrorLocal != null)
-                                                     OnHTTPErrorLocal(t, s, e);
-
-                                             },
-
-                                             OnException: (t, s, e) => {
-
-                                                 var OnExceptionLocal = OnException;
-                                                 if (OnExceptionLocal != null)
-                                                     OnExceptionLocal(t, s, e);
-
-                                             }
+                                             OnException: (t, s, e) => SendOnException(t, s, e)
 
                                             );
 
@@ -315,9 +253,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             catch (Exception e)
             {
 
-                var OnExceptionLocal = OnException;
-                if (OnExceptionLocal != null)
-                    OnExceptionLocal(DateTime.Now, this, e);
+                SendOnException(DateTime.Now, this, e);
 
                 return new Task<HTTPResponse<IEnumerable<XElement>>>(
                     () => new HTTPResponse<IEnumerable<XElement>>(e));
@@ -346,8 +282,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new SOAPClient(OICPHost,
-                                                        OICPPort,
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
                                                         "service-qa.hubject.com",
                                                         "/ibis/ws/eRoamingEvseStatus_V1.2",
                                                         UserAgent,
@@ -412,21 +348,9 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                                              },
 
-                                             OnHTTPError: (t, s, e) => {
+                                             OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
 
-                                                 var OnHTTPErrorLocal = OnHTTPError;
-                                                 if (OnHTTPErrorLocal != null)
-                                                     OnHTTPErrorLocal(t, s, e);
-
-                                             },
-
-                                             OnException: (t, s, e) => {
-
-                                                 var OnExceptionLocal = OnException;
-                                                 if (OnExceptionLocal != null)
-                                                     OnExceptionLocal(t, s, e);
-
-                                             }
+                                             OnException: (t, s, e) => SendOnException(t, s, e)
 
                                             );
 
@@ -437,9 +361,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             catch (Exception e)
             {
 
-                var OnExceptionLocal = OnException;
-                if (OnExceptionLocal != null)
-                    OnExceptionLocal(DateTime.Now, this, e);
+                SendOnException(DateTime.Now, this, e);
 
                 return new Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>>(
                     () => new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(e));
@@ -469,7 +391,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var OICPClient = new SOAPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
                 {
 
                     var HttpResponse = OICPClient.Query(EMPMethods.MobileAuthorizeStartXML(EVSEId,
@@ -634,7 +556,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new SOAPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
                 {
 
                     var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStartXML(SessionId),
@@ -693,7 +615,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             try
             {
 
-                using (var _OICPClient = new SOAPClient(OICPHost, OICPPort, HTTPVirtualHost, URLPrefix))
+                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
                 {
 
                     var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStopXML(SessionId),

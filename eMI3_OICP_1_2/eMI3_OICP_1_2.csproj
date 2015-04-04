@@ -42,10 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CPOMethods.cs" />
-    <Compile Include="RemoteStartStop\OICPHTTPServer.cs" />
+    <Compile Include="CPO\CPOMethods.cs" />
+    <Compile Include="OICPDownstreamServer.cs" />
     <Compile Include="eMI3_OICP_Mapper.cs" />
-    <Compile Include="EMPMethods.cs" />
+    <Compile Include="EMP\EMPMethods.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
     <Compile Include="Helpers\ExtentionMethods.cs" />
@@ -56,11 +56,10 @@
     <Compile Include="Helpers\HubjectMobileAuthorizationStart.cs" />
     <Compile Include="Helpers\NS.cs" />
     <Compile Include="Helpers\SOAP.cs" />
-    <Compile Include="HubjectExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UpstreamServices\AOICPUpstreamService.cs" />
-    <Compile Include="UpstreamServices\OICP_EMP_UpstreamService.cs" />
-    <Compile Include="UpstreamServices\OICP_EVSEOperator_UpstreamService.cs" />
+    <Compile Include="AOICPUpstreamService.cs" />
+    <Compile Include="EMP\EMPUpstreamService.cs" />
+    <Compile Include="CPO\CPOUpstreamService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
