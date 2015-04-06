@@ -42,7 +42,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
         #region Data
 
-        private readonly EMPUpstreamService  HubjectUpstreamService;
+        private readonly EMPUpstreamService  OICPUpstreamService;
         private readonly Object              UpdateEVSEsLock                 = new Object();
 
         private readonly Timer               UpdateEVSEDataTimer;
@@ -161,11 +161,11 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
             #region Init OICP EMP UpstreamService
 
-            HubjectUpstreamService  = new EMPUpstreamService(_Hostname,
-                                                             _TCPPort,
-                                                             DNSClient: _DNSClient);
+            OICPUpstreamService  = new EMPUpstreamService(_Hostname,
+                                                          _TCPPort,
+                                                          DNSClient: _DNSClient);
 
-            HubjectUpstreamService.OnException += (Timestamp, Sender, Exception) => {
+            OICPUpstreamService.OnException += (Timestamp, Sender, Exception) => {
 
                 if (Exception.Message.StartsWith("Unexpected end of file while parsing") ||
                     Exception.Message.StartsWith("Unexpected end of file has occurred. The following elements are not closed:"))
@@ -175,8 +175,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
             };
 
-            HubjectUpstreamService.OnHTTPError += (Timestamp, Sender, HttpResponse) => {
-                Debug.WriteLine("[" + Timestamp + "] '" + Sender.ToString() + "' " + HttpResponse);
+            OICPUpstreamService.OnHTTPError += (Timestamp, Sender, HttpResponse) => {
+                Debug.WriteLine("[" + Timestamp + "] '" + Sender.ToString() + "' " + HttpResponse != null ? HttpResponse.ToString() : "<null>");
             };
 
             #endregion
@@ -211,7 +211,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                     Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEData' started");
 
-                    HubjectUpstreamService.
+                    OICPUpstreamService.
                         PullEVSEDataRequest(_ProviderId).
                         ContinueWith(PullEVSEDataTask => {
 
@@ -222,8 +222,6 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                         Wait();
 
                     Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEData' finished!");
-
-                    Console.WriteLine("changed!");
 
                 }
                 catch (Exception e)
@@ -267,7 +265,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                      ToPartitions(100). // Hubject has a limit of 100 EVSEIds per request!
                                      Select(EVSEPartition =>
 
-                                         HubjectUpstreamService.
+                                         OICPUpstreamService.
                                              PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
                                              ContinueWith(NewEVSEStatusTask => {
 
