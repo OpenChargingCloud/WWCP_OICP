@@ -176,7 +176,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             };
 
             OICPUpstreamService.OnHTTPError += (Timestamp, Sender, HttpResponse) => {
-                Debug.WriteLine("[" + Timestamp + "] '" + Sender.ToString() + "' " + HttpResponse != null ? HttpResponse.ToString() : "<null>");
+                Debug.WriteLine("[" + Timestamp + "] '" + Sender.ToString() + "' " + (HttpResponse != null ? HttpResponse.ToString() : "<null>"));
             };
 
             #endregion
