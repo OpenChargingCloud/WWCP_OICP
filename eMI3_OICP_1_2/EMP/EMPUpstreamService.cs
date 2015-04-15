@@ -226,8 +226,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                  new HTTPResponse<IEnumerable<XElement>>(XMLData.HttpResponse,
                                                                                          XMLData.Content.
                                                                                                  Element (OICP_1_2.NS.OICPv1_2EVSEData + "EvseData").
-                                                                                                 Elements(OICP_1_2.NS.OICPv1_2EVSEData + "OperatorEvseData").
-                                                                                                 Elements(OICP_1_2.NS.OICPv1_2EVSEData + "EvseDataRecord")),
+                                                                                                 Elements(OICP_1_2.NS.OICPv1_2EVSEData + "OperatorEvseData")),
 
                                              OnSOAPFault: Fault => {
 

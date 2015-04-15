@@ -54,7 +54,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         public static readonly TimeSpan      DefaultUpdateEVSEStatusTimeout  = TimeSpan.FromSeconds(120);
 
         private readonly Func<IEnumerable<EVSE_Id>>                       _GetEVSEIds;
-        private readonly Action<XElement>                                 _EVSEDataHandler;
+        private readonly Action<XElement>                                 _OperatorDataHandler;
         private readonly Action<KeyValuePair<EVSE_Id, HubjectEVSEState>>  _EVSEStatusHandler;
 
         #endregion
@@ -100,7 +100,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                             TimeSpan?                                        UpdateEVSEStatusTimeout  = null,
                             DNSClient                                        DNSClient                = null,
                             Func<IEnumerable<EVSE_Id>>                       GetEVSEIds               = null,
-                            Action<XElement>                                 EVSEDataHandler          = null,
+                            Action<XElement>                                 OperatorDataHandler      = null,
                             Action<KeyValuePair<EVSE_Id, HubjectEVSEState>>  EVSEStatusHandler        = null)
 
         {
@@ -122,8 +122,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             if (GetEVSEIds == null)
                 throw new ArgumentNullException("The given GetEVSEIds must not be null!");
 
-            if (EVSEDataHandler == null)
-                throw new ArgumentNullException("The given EVSEDataHandler must not be null!");
+            if (OperatorDataHandler == null)
+                throw new ArgumentNullException("The given OperatorDataHandler must not be null!");
 
             if (EVSEStatusHandler == null)
                 throw new ArgumentNullException("The given EVSEStatusHandler must not be null!");
@@ -154,7 +154,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                               : new DNSClient();
 
             this._GetEVSEIds            = GetEVSEIds;
-            this._EVSEDataHandler       = EVSEDataHandler;
+            this._OperatorDataHandler   = OperatorDataHandler;
             this._EVSEStatusHandler     = EVSEStatusHandler;
 
             #endregion
@@ -216,7 +216,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                         ContinueWith(PullEVSEDataTask => {
 
                             if (PullEVSEDataTask.Result != null)
-                                PullEVSEDataTask.Result.Content.ForEach(_EVSEDataHandler);
+                                PullEVSEDataTask.Result.Content.ForEach(_OperatorDataHandler);
 
                         }).
                         Wait();
