@@ -60,17 +60,17 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
             var AddressXML              = EVSE.Element(NS.OICPv1_2EVSEData + "Address");
 
-            this.Address                = new Address() {
-                                                  Country       = Country.Parse(AddressXML.ElementValueOrDefault(NS.OICPv1_2CommonTypes + "Country", "").
-                                                                                   Replace("Deutschland", "Germany") // Stupid work-around!
-                                                                               ),
-                                                  City          = AddressXML.ElementValueOrDefault(NS.OICPv1_2CommonTypes + "City",       ""),
-                                                  Street        = AddressXML.ElementValueOrDefault(NS.OICPv1_2CommonTypes + "Street",     ""),
-                                                  PostalCode    = AddressXML.ElementValueOrDefault(NS.OICPv1_2CommonTypes + "PostalCode", ""),
-                                                  FloorLevel    = AddressXML.ElementValueOrDefault(NS.OICPv1_2CommonTypes + "Floor",      ""),
-                                                  //Region        = Address.Element(NS.OICPv1_2CommonTypes + "Region"    ).Value,
-                                                  //TimeZone      = Address.Element(NS.OICPv1_2CommonTypes + "TimeZone"  ).Value
-                                              };
+            this.Address                = new Address(AddressXML.ElementValueOrDefault(NS.OICPv1_2CommonTypes + "Floor",       ""),
+                                                      AddressXML.ElementValueOrDefault(NS.OICPv1_2CommonTypes + "Housenumber", ""),
+                                                      AddressXML.ElementValueOrDefault(NS.OICPv1_2CommonTypes + "Street",      ""),
+                                                      AddressXML.ElementValueOrDefault(NS.OICPv1_2CommonTypes + "PostalCode",  ""),
+                                                      "",
+                                                      AddressXML.ElementValueOrDefault(NS.OICPv1_2CommonTypes + "City",        ""),
+                                                      Country.Parse(AddressXML.ElementValueOrDefault(NS.OICPv1_2CommonTypes + "Country", "").
+                                                                               Replace("Deutschland", "Germany")) // Stupid work-around!
+                                                      //Region        = Address.Element(NS.OICPv1_2CommonTypes + "Region"    ).Value,
+                                                      //TimeZone      = Address.Element(NS.OICPv1_2CommonTypes + "TimeZone"  ).Value
+                                                     );
 
             this.Distance               = Double.Parse(EvseMatch.ElementValueOrDefault(NS.OICPv1_2EVSESearch + "Distance", "0.0"), NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo);
 

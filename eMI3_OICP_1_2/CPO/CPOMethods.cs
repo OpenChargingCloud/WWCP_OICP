@@ -175,7 +175,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                                                               var ChargingFacility = "Unspecified";
 
-                                                              if (Outlet.Plug == PlugType.Mennekes_Type_2)
+                                                              if (Outlet.Plug == PlugType.Type2Connector_CableAttached)// .Mennekes_Type_2)
                                                               {
 
                                                                   if (Outlet.MaxPower <= 44.0)
@@ -189,7 +189,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                                                               }
 
-                                                              else if (Outlet.Plug == PlugType.SCHUKO)
+                                                              else if (Outlet.Plug == PlugType.TypeFSchuko)// .SCHUKO)
                                                               {
 
                                                                   if (Outlet.MaxPower >  7.2)
@@ -331,7 +331,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                 SelectMany(station => station.EVSEs).
 
                                 PushEVSEStatusXML((OperatorId   == null) ? EVSEOperator.Id                 : OperatorId,
-                                                  (OperatorName == null) ? EVSEOperator.Name.First().Value : OperatorName,
+                                                  (OperatorName == null) ? EVSEOperator.Name.First().Text : OperatorName,
                                                    Action);
 
         }

@@ -28,7 +28,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         EvseNotFound   // PullEVSEStatusById!
     }
 
-    public static class Ext
+    public static partial class Ext
     {
 
         public static EVSEStatusType AsEVSEStatusType(this HubjectEVSEState EVSEStatus)
