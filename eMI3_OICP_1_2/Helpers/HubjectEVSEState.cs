@@ -44,10 +44,13 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                     return EVSEStatusType.Reserved;
 
                 case HubjectEVSEState.Occupied:
-                    return EVSEStatusType.Charging;
+                    return EVSEStatusType.Occupied;
 
                 case HubjectEVSEState.OutOfService:
                     return EVSEStatusType.OutOfService;
+
+                case HubjectEVSEState.EvseNotFound:
+                    return EVSEStatusType.EvseNotFound;
 
                 default:
                     return EVSEStatusType.Unknown;
@@ -68,11 +71,14 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                 case EVSEStatusType.Reserved:
                     return HubjectEVSEState.Reserved;
 
-                case EVSEStatusType.Charging:
+                case EVSEStatusType.Occupied:
                     return HubjectEVSEState.Occupied;
 
                 case EVSEStatusType.OutOfService:
                     return HubjectEVSEState.OutOfService;
+
+                case EVSEStatusType.EvseNotFound:
+                    return HubjectEVSEState.EvseNotFound;
 
                 default:
                     return HubjectEVSEState.Unknown;

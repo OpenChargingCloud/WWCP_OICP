@@ -356,8 +356,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                                               EVSEs.Select(EVSE =>
                                                   new XElement(NS.OICPv1_2EVSEStatus + "EvseStatusRecord",
-                                                      new XElement(NS.OICPv1_2EVSEStatus + "EvseId",     EVSE.Id.    ToString()),
-                                                      new XElement(NS.OICPv1_2EVSEStatus + "EvseStatus", EVSE.Status.ToString())
+                                                      new XElement(NS.OICPv1_2EVSEStatus + "EvseId",     EVSE.Id.                 ToString()),
+                                                      new XElement(NS.OICPv1_2EVSEStatus + "EvseStatus", EVSE.Status.Value.ToString())
                                                   )
                                               )
 

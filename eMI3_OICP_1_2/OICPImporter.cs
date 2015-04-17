@@ -53,9 +53,9 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         public static readonly TimeSpan      DefaultUpdateEVSEStatusEvery    = TimeSpan.FromSeconds(20);
         public static readonly TimeSpan      DefaultUpdateEVSEStatusTimeout  = TimeSpan.FromSeconds(120);
 
-        private readonly Func<IEnumerable<EVSE_Id>>                       _GetEVSEIds;
-        private readonly Action<XElement>                                 _OperatorDataHandler;
-        private readonly Action<KeyValuePair<EVSE_Id, HubjectEVSEState>>  _EVSEStatusHandler;
+        private readonly Func<IEnumerable<EVSE_Id>>         _GetEVSEIds;
+        private readonly Action<XElement>                   _OperatorDataHandler;
+        private readonly Action<EVSE_Id, HubjectEVSEState>  _EVSEStatusHandler;
 
         #endregion
 
@@ -90,18 +90,18 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         /// <param name="UpdateEVSEStatusTimeout"></param>
         /// <param name="DNSClient"></param>
         /// <param name="GetEVSEIds"></param>
-        public OICPImporter(String                                           Identification,
-                            String                                           Hostname,
-                            IPPort                                           TCPPort,
-                            EVSP_Id                                          ProviderId,
-                            TimeSpan?                                        UpdateEVSEDataEvery      = null,
-                            TimeSpan?                                        UpdateEVSEDataTimeout    = null,
-                            TimeSpan?                                        UpdateEVSEStatusEvery    = null,
-                            TimeSpan?                                        UpdateEVSEStatusTimeout  = null,
-                            DNSClient                                        DNSClient                = null,
-                            Func<IEnumerable<EVSE_Id>>                       GetEVSEIds               = null,
-                            Action<XElement>                                 OperatorDataHandler      = null,
-                            Action<KeyValuePair<EVSE_Id, HubjectEVSEState>>  EVSEStatusHandler        = null)
+        public OICPImporter(String                             Identification,
+                            String                             Hostname,
+                            IPPort                             TCPPort,
+                            EVSP_Id                            ProviderId,
+                            TimeSpan?                          UpdateEVSEDataEvery      = null,
+                            TimeSpan?                          UpdateEVSEDataTimeout    = null,
+                            TimeSpan?                          UpdateEVSEStatusEvery    = null,
+                            TimeSpan?                          UpdateEVSEStatusTimeout  = null,
+                            DNSClient                          DNSClient                = null,
+                            Func<IEnumerable<EVSE_Id>>         GetEVSEIds               = null,
+                            Action<XElement>                   OperatorDataHandler      = null,
+                            Action<EVSE_Id, HubjectEVSEState>  EVSEStatusHandler        = null)
 
         {
 
@@ -270,7 +270,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                              ContinueWith(NewEVSEStatusTask => {
 
                                                  if (NewEVSEStatusTask.Result != null)
-                                                     NewEVSEStatusTask.Result.Content.ForEach(_EVSEStatusHandler);
+                                                     NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus => _EVSEStatusHandler(NewEVSEStatus.Key, NewEVSEStatus.Value));
 
                                              }))
                                              .ToArray(),
