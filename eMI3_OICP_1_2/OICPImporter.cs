@@ -37,7 +37,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
     /// <summary>
     /// A service to import EVSE data from OICP/Hubject.
     /// </summary>
-    public class OICPImporter
+    public class OICPImporter<TContext>
     {
 
         #region Data
@@ -53,16 +53,17 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         public static readonly TimeSpan      DefaultUpdateEVSEStatusEvery    = TimeSpan.FromSeconds(20);
         public static readonly TimeSpan      DefaultUpdateEVSEStatusTimeout  = TimeSpan.FromSeconds(120);
 
-        private readonly Func<IEnumerable<EVSE_Id>>         _GetEVSEIds;
-        private readonly Action<XElement>                   _OperatorDataHandler;
-        private readonly Action<EVSE_Id, HubjectEVSEState>  _EVSEStatusHandler;
+        private readonly Func<IEnumerable<EVSE_Id>>                   _GetEVSEIds;
+        private readonly Func<TContext>                               _UpdateContextCreator;
+        private readonly Action                                       _StartBulkUpdate;
+        private readonly Action<TContext, XElement>                   _OperatorDataHandler;
+        private readonly Action<TContext, EVSE_Id, HubjectEVSEState>  _EVSEStatusHandler;
 
         #endregion
 
         #region Properties
 
         private readonly String         _Identification;
-     //   private readonly EVSEDatabase   _EVSEDatabase;
         private readonly String         _Hostname;
         private readonly IPPort         _TCPPort;
         private readonly EVSP_Id        _ProviderId;
@@ -84,24 +85,26 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         /// <param name="Hostname"></param>
         /// <param name="TCPPort"></param>
         /// <param name="ProviderId"></param>
+        /// <param name="DNSClient"></param>
         /// <param name="UpdateEVSEDataEvery"></param>
         /// <param name="UpdateEVSEDataTimeout"></param>
         /// <param name="UpdateEVSEStatusEvery"></param>
         /// <param name="UpdateEVSEStatusTimeout"></param>
-        /// <param name="DNSClient"></param>
         /// <param name="GetEVSEIds"></param>
-        public OICPImporter(String                             Identification,
-                            String                             Hostname,
-                            IPPort                             TCPPort,
-                            EVSP_Id                            ProviderId,
-                            TimeSpan?                          UpdateEVSEDataEvery      = null,
-                            TimeSpan?                          UpdateEVSEDataTimeout    = null,
-                            TimeSpan?                          UpdateEVSEStatusEvery    = null,
-                            TimeSpan?                          UpdateEVSEStatusTimeout  = null,
-                            DNSClient                          DNSClient                = null,
-                            Func<IEnumerable<EVSE_Id>>         GetEVSEIds               = null,
-                            Action<XElement>                   OperatorDataHandler      = null,
-                            Action<EVSE_Id, HubjectEVSEState>  EVSEStatusHandler        = null)
+        public OICPImporter(String                                       Identification,
+                            String                                       Hostname,
+                            IPPort                                       TCPPort,
+                            EVSP_Id                                      ProviderId,
+                            DNSClient                                    DNSClient                = null,
+                            TimeSpan?                                    UpdateEVSEDataEvery      = null,
+                            TimeSpan?                                    UpdateEVSEDataTimeout    = null,
+                            TimeSpan?                                    UpdateEVSEStatusEvery    = null,
+                            TimeSpan?                                    UpdateEVSEStatusTimeout  = null,
+                            Func<IEnumerable<EVSE_Id>>                   GetEVSEIds               = null,
+                            Func<TContext>                               UpdateContextCreator     = null,
+                            Action                                       StartBulkUpdate          = null,
+                            Action<TContext, XElement>                   OperatorDataHandler      = null,
+                            Action<TContext, EVSE_Id, HubjectEVSEState>  EVSEStatusHandler        = null)
 
         {
 
@@ -154,6 +157,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                               : new DNSClient();
 
             this._GetEVSEIds            = GetEVSEIds;
+            this._UpdateContextCreator  = UpdateContextCreator;
+            this._StartBulkUpdate       = StartBulkUpdate;
             this._OperatorDataHandler   = OperatorDataHandler;
             this._EVSEStatusHandler     = EVSEStatusHandler;
 
@@ -211,12 +216,21 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                     Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEData' started");
 
+                    var StartBulkUpdateLocal = _StartBulkUpdate;
+                    if (StartBulkUpdateLocal != null)
+                        StartBulkUpdateLocal();
+
                     OICPUpstreamService.
                         PullEVSEDataRequest(_ProviderId).
                         ContinueWith(PullEVSEDataTask => {
 
+                            var UpdateContextCreatorLocal = _UpdateContextCreator;
+                            var UpdateContext = UpdateContextCreatorLocal != null
+                                                    ? UpdateContextCreatorLocal()
+                                                    : default(TContext);
+
                             if (PullEVSEDataTask.Result != null)
-                                PullEVSEDataTask.Result.Content.ForEach(_OperatorDataHandler);
+                                PullEVSEDataTask.Result.Content.ForEach(UpdateContext, _OperatorDataHandler);
 
                         }).
                         Wait();
@@ -261,6 +275,10 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                     Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEStatus' started");
 
+                    var StartBulkUpdateLocal = _StartBulkUpdate;
+                    if (StartBulkUpdateLocal != null)
+                        StartBulkUpdateLocal();
+
                     Task.WaitAll(_GetEVSEIds(). // Get the data via the GetEVSEIds delegate!
                                      ToPartitions(100). // Hubject has a limit of 100 EVSEIds per request!
                                      Select(EVSEPartition =>
@@ -269,8 +287,13 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                              PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
                                              ContinueWith(NewEVSEStatusTask => {
 
+                                                 var UpdateContextCreatorLocal = _UpdateContextCreator;
+                                                 var UpdateContext = UpdateContextCreatorLocal != null
+                                                                         ? UpdateContextCreatorLocal()
+                                                                         : default(TContext);
+
                                                  if (NewEVSEStatusTask.Result != null)
-                                                     NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus => _EVSEStatusHandler(NewEVSEStatus.Key, NewEVSEStatus.Value));
+                                                     NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus => _EVSEStatusHandler(UpdateContext, NewEVSEStatus.Key, NewEVSEStatus.Value));
 
                                              }))
                                              .ToArray(),
