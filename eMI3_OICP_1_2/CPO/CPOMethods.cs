@@ -124,7 +124,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                       new XElement(NS.OICPv1_2EVSEData + "ActionType", Action.ToString()),
                                       new XElement(NS.OICPv1_2EVSEData + "OperatorEvseData",
 
-                                          new XElement(NS.OICPv1_2EVSEData + "OperatorID", OperatorId.Id2),//ToString()),//
+                                          new XElement(NS.OICPv1_2EVSEData + "OperatorID", OperatorId.IdOld),//ToString()),//
                                           (OperatorName != null) ?
                                           new XElement(NS.OICPv1_2EVSEData + "OperatorName", OperatorName) : null,
 
@@ -350,7 +350,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                           new XElement(NS.OICPv1_2EVSEStatus + "ActionType", Action.ToString()),
                                           new XElement(NS.OICPv1_2EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(NS.OICPv1_2EVSEStatus + "OperatorID", OperatorId.Id2),
+                                              new XElement(NS.OICPv1_2EVSEStatus + "OperatorID", OperatorId.IdOld),
                                               (OperatorName != null) ?
                                               new XElement(NS.OICPv1_2EVSEStatus + "OperatorName", OperatorName) : null,
 
@@ -380,7 +380,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                           new XElement(NS.OICPv1_2EVSEStatus + "ActionType", Action.ToString()),
                                           new XElement(NS.OICPv1_2EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(NS.OICPv1_2EVSEStatus + "OperatorID", OperatorId.Id2),
+                                              new XElement(NS.OICPv1_2EVSEStatus + "OperatorID", OperatorId.IdOld),
                                               (OperatorName != null) ?
                                               new XElement(NS.OICPv1_2EVSEStatus + "OperatorName", OperatorName) : null,
 
@@ -438,7 +438,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1_2Authorization + "eRoamingAuthorizeStart",
                                           new XElement(NS.OICPv1_2Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
-                                          new XElement(NS.OICPv1_2Authorization + "OperatorID",       OperatorId.Id2),
+                                          new XElement(NS.OICPv1_2Authorization + "OperatorID",       OperatorId.IdOld),
                                           new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.OldEVSEId), //.ToString()),
                                           new XElement(NS.OICPv1_2Authorization + "Identification",
                                               new XElement(NS.OICPv1_2CommonTypes + "RFIDmifarefamilyIdentification",
@@ -497,7 +497,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             return SOAP.Encapsulation(new XElement(NS.OICPv1_2Authorization + "eRoamingAuthorizeStop",
                                           new XElement(NS.OICPv1_2Authorization + "SessionID",        SessionId.ToString()),
                                           new XElement(NS.OICPv1_2Authorization + "PartnerSessionID", PartnerSessionId.ToString()),
-                                          new XElement(NS.OICPv1_2Authorization + "OperatorID",       OperatorId.Id2),
+                                          new XElement(NS.OICPv1_2Authorization + "OperatorID",       OperatorId.IdOld),
                                           new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.OldEVSEId), //.ToString()),
                                           new XElement(NS.OICPv1_2Authorization + "Identification",
                                               new XElement(NS.OICPv1_2CommonTypes + "RFIDmifarefamilyIdentification",
