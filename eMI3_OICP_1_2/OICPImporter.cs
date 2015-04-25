@@ -55,7 +55,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         private readonly Func<IEnumerable<EVSE_Id>>                     _GetEVSEIds;
         private readonly Func<TContext>                                 _UpdateContextCreator;
         private readonly Action<TContext>                               _UpdateContextDisposer;
-        private readonly Action                                         _StartBulkUpdate;
+        private readonly Action<TContext>                               _StartBulkUpdate;
         private readonly Action<TContext, XElement>                     _EVSEOperatorDataHandler;
         private readonly Action<TContext, EVSE_Id, HubjectEVSEState>    _EVSEStatusHandler;
         private readonly Action                                         _StopBulkUpdate;
@@ -110,7 +110,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                             Func<IEnumerable<EVSE_Id>>                   GetEVSEIds               = null,
                             Func<TContext>                               UpdateContextCreator     = null,
                             Action<TContext>                             UpdateContextDisposer    = null,
-                            Action                                       StartBulkUpdate          = null,
+                            Action<TContext>                             StartBulkUpdate          = null,
                             Action<TContext, XElement>                   EVSEOperatorDataHandler  = null,
                             Action<TContext, EVSE_Id, HubjectEVSEState>  EVSEStatusHandler        = null,
                             Action                                       StopBulkUpdate           = null)
@@ -232,28 +232,32 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                     var StopWatch = new Stopwatch();
                     StopWatch.Start();
 
+                    var UpdateContextCreatorLocal = _UpdateContextCreator;
+                    var UpdateContext = UpdateContextCreatorLocal != null
+                                            ? UpdateContextCreatorLocal()
+                                            : default(TContext);
+
                     var StartBulkUpdateLocal = _StartBulkUpdate;
                     if (StartBulkUpdateLocal != null)
-                        StartBulkUpdateLocal();
+                        StartBulkUpdateLocal(UpdateContext);
 
                     OICPUpstreamService.
                         PullEVSEDataRequest(_ProviderId).
                         ContinueWith(PullEVSEDataTask => {
 
-                            var UpdateContextCreatorLocal = _UpdateContextCreator;
-                            var UpdateContext = UpdateContextCreatorLocal != null
-                                                    ? UpdateContextCreatorLocal()
-                                                    : default(TContext);
-
                             if (PullEVSEDataTask.Result != null)
                                 PullEVSEDataTask.Result.Content.ForEach(UpdateContext, _EVSEOperatorDataHandler);
 
-                            var UpdateContextDisposerLocal = _UpdateContextDisposer;
-                            if (UpdateContextDisposerLocal != null)
-                                UpdateContextDisposerLocal(UpdateContext);
-
                         }).
                         Wait();
+
+                    var UpdateContextDisposerLocal = _UpdateContextDisposer;
+                    if (UpdateContextDisposerLocal != null)
+                        UpdateContextDisposerLocal(UpdateContext);
+
+                    var StopBulkUpdateLocal = _StopBulkUpdate;
+                    if (StopBulkUpdateLocal != null)
+                        StopBulkUpdateLocal();
 
                     StopWatch.Stop();
 
@@ -268,13 +272,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                 finally
                 {
-
                     Monitor.Exit(UpdateEVSEsLock);
-
-                    var StopBulkUpdateLocal = _StopBulkUpdate;
-                    if (StopBulkUpdateLocal != null)
-                        StopBulkUpdateLocal();
-
                 }
 
             }
@@ -309,9 +307,14 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                     var StopWatch = new Stopwatch();
                     StopWatch.Start();
 
+                    var UpdateContextCreatorLocal = _UpdateContextCreator;
+                    var UpdateContext = UpdateContextCreatorLocal != null
+                                            ? UpdateContextCreatorLocal()
+                                            : default(TContext);
+
                     var StartBulkUpdateLocal = _StartBulkUpdate;
                     if (StartBulkUpdateLocal != null)
-                        StartBulkUpdateLocal();
+                        StartBulkUpdateLocal(UpdateContext);
 
                     Task.WaitAll(_GetEVSEIds().         // Get the data via the GetEVSEIds delegate!
                                      ToPartitions(100). // Hubject has a limit of 100 EVSEIds per request!
@@ -321,17 +324,17 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                              PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
                                              ContinueWith(NewEVSEStatusTask => {
 
-                                                 var UpdateContextCreatorLocal = _UpdateContextCreator;
-                                                 var UpdateContext = UpdateContextCreatorLocal != null
-                                                                         ? UpdateContextCreatorLocal()
-                                                                         : default(TContext);
+                                                 var UpdateContextPerTaskCreatorLocal = _UpdateContextCreator;
+                                                 var UpdateContextPerTask = UpdateContextPerTaskCreatorLocal != null
+                                                                                ? UpdateContextPerTaskCreatorLocal()
+                                                                                : default(TContext);
 
                                                  if (NewEVSEStatusTask.Result != null)
                                                      NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus => _EVSEStatusHandler(UpdateContext, NewEVSEStatus.Key, NewEVSEStatus.Value));
 
-                                                 var UpdateContextDisposerLocal = _UpdateContextDisposer;
-                                                 if (UpdateContextDisposerLocal != null)
-                                                     UpdateContextDisposerLocal(UpdateContext);
+                                                 var UpdateContextPerTaskDisposerLocal = _UpdateContextDisposer;
+                                                 if (UpdateContextPerTaskDisposerLocal != null)
+                                                     UpdateContextPerTaskDisposerLocal(UpdateContextPerTask);
 
                                              }))
                                              .ToArray(),
@@ -339,6 +342,15 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                  millisecondsTimeout: (Int32) _UpdateEVSEStatusTimeout.TotalMilliseconds
                                  //CancellationToken cancellationToken
                                 );
+
+
+                    var StopBulkUpdateLocal = _StopBulkUpdate;
+                    if (StopBulkUpdateLocal != null)
+                        StopBulkUpdateLocal();
+
+                    var UpdateContextDisposerLocal = _UpdateContextDisposer;
+                    if (UpdateContextDisposerLocal != null)
+                        UpdateContextDisposerLocal(UpdateContext);
 
                     StopWatch.Stop();
 
@@ -352,13 +364,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                 finally
                 {
-
                     Monitor.Exit(UpdateEVSEsLock);
-
-                    var StopBulkUpdateLocal = _StopBulkUpdate;
-                    if (StopBulkUpdateLocal != null)
-                        StopBulkUpdateLocal();
-
                 }
 
             }
