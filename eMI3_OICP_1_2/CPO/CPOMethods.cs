@@ -142,16 +142,16 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                                                       new XElement(NS.OICPv1_2EVSEData + "EvseId",                 EVSE.Id.OldEVSEId), //ToString()),// 
                                                       new XElement(NS.OICPv1_2EVSEData + "ChargingStationId",      EVSE.ChargingStation.Id.ToString()),
-                                                      new XElement(NS.OICPv1_2EVSEData + "ChargingStationName",    EVSE.ChargingStation.Pool.Name[Languages.de].SubstringMax(50)),
-                                                      new XElement(NS.OICPv1_2EVSEData + "EnChargingStationName",  EVSE.ChargingStation.Pool.Name[Languages.en].SubstringMax(50)),
+                                                      new XElement(NS.OICPv1_2EVSEData + "ChargingStationName",    EVSE.ChargingStation.ChargingPool.Name[Languages.de].SubstringMax(50)),
+                                                      new XElement(NS.OICPv1_2EVSEData + "EnChargingStationName",  EVSE.ChargingStation.ChargingPool.Name[Languages.en].SubstringMax(50)),
 
                                                       new XElement(NS.OICPv1_2EVSEData + "Address",
-                                                          new XElement(NS.OICPv1_2CommonTypes + "Country",     EVSE.ChargingStation.Pool.Address.Country.Alpha3Code),
-                                                          new XElement(NS.OICPv1_2CommonTypes + "City",        EVSE.ChargingStation.Pool.Address.City),
-                                                          new XElement(NS.OICPv1_2CommonTypes + "Street",      EVSE.ChargingStation.Pool.Address.Street), // OICPv1.2 requires at least 5 characters!
-                                                          new XElement(NS.OICPv1_2CommonTypes + "PostalCode",  EVSE.ChargingStation.Pool.Address.PostalCode),
-                                                          new XElement(NS.OICPv1_2CommonTypes + "HouseNum",    EVSE.ChargingStation.Pool.Address.HouseNumber),
-                                                          new XElement(NS.OICPv1_2CommonTypes + "Floor",       EVSE.ChargingStation.Pool.Address.FloorLevel)
+                                                          new XElement(NS.OICPv1_2CommonTypes + "Country",     EVSE.ChargingStation.ChargingPool.Address.Country.Alpha3Code),
+                                                          new XElement(NS.OICPv1_2CommonTypes + "City",        EVSE.ChargingStation.ChargingPool.Address.City),
+                                                          new XElement(NS.OICPv1_2CommonTypes + "Street",      EVSE.ChargingStation.ChargingPool.Address.Street), // OICPv1.2 requires at least 5 characters!
+                                                          new XElement(NS.OICPv1_2CommonTypes + "PostalCode",  EVSE.ChargingStation.ChargingPool.Address.PostalCode),
+                                                          new XElement(NS.OICPv1_2CommonTypes + "HouseNum",    EVSE.ChargingStation.ChargingPool.Address.HouseNumber),
+                                                          new XElement(NS.OICPv1_2CommonTypes + "Floor",       EVSE.ChargingStation.ChargingPool.Address.FloorLevel)
                                                       // <!--Optional:-->
                                                       // <v11:Region>?</v11:Region>
                                                       // <!--Optional:-->
@@ -412,7 +412,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                  Auth_Token              UID)
         {
 
-            return AuthorizeStartXML(EVSE.ChargingStation.Pool.EVSEOperator.Id,
+            return AuthorizeStartXML(EVSE.ChargingStation.ChargingPool.EVSEOperator.Id,
                                      EVSE.Id,
                                      PartnerSessionID,
                                      UID);
@@ -467,7 +467,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                 Auth_Token              UID)
         {
 
-            return AuthorizeStopXML(EVSE.ChargingStation.Pool.EVSEOperator.Id,
+            return AuthorizeStopXML(EVSE.ChargingStation.ChargingPool.EVSEOperator.Id,
                                     EVSE.Id,
                                     SessionID,
                                     PartnerSessionID,
