@@ -297,6 +297,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             if (Monitor.TryEnter(UpdateEVSEsLock))
             {
 
+                //UpdateEVSEStatusTimer.Change
+
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
                 try
