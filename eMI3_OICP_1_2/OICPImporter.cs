@@ -267,7 +267,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEData' lead to an exception: " + e.Message);
+                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEData' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
                 }
 
                 finally
@@ -278,7 +278,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             }
 
             else
-                Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEData' skipped!");
+                Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEData' skipped!");
 
         }
 
@@ -304,7 +304,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                 try
                 {
 
-                    Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEStatus' started");
+                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEStatus' started");
 
                     var StopWatch = new Stopwatch();
                     StopWatch.Start();
@@ -361,7 +361,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEStatus' lead to an exception: " + e.Message);
+                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEStatus' lead to an exception: " + e.Message);
                 }
 
                 finally
@@ -372,7 +372,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             }
 
             else
-                Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEStatus' skipped!");
+                Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEStatus' skipped!");
 
         }
 
