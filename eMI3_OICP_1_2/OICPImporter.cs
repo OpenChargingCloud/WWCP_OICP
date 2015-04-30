@@ -361,7 +361,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEStatus' lead to an exception: " + e.Message);
+                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEStatus' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
                 }
 
                 finally
