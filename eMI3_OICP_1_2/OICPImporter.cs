@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
+using System.Collections.Concurrent;
 
 #endregion
 
@@ -318,6 +319,10 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                     if (StartBulkUpdateLocal != null)
                         StartBulkUpdateLocal(UpdateContext);
 
+                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", Starting all Update-SubTasks!");
+
+                    var CD = new ConcurrentDictionary<EVSE_Id, HubjectEVSEState>();
+
                     Task.WaitAll(_GetEVSEIds().         // Get the data via the GetEVSEIds delegate!
                                      ToPartitions(100). // Hubject has a limit of 100 EVSEIds per request!
                                      Select(EVSEPartition =>
@@ -326,17 +331,23 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                              PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
                                              ContinueWith(NewEVSEStatusTask => {
 
-                                                 var UpdateContextPerTaskCreatorLocal = _UpdateContextCreator;
-                                                 var UpdateContextPerTask = UpdateContextPerTaskCreatorLocal != null
-                                                                                ? UpdateContextPerTaskCreatorLocal()
-                                                                                : default(TContext);
+                                                 //var UpdateContextPerTaskCreatorLocal = _UpdateContextCreator;
+                                                 //var UpdateContextPerTask = UpdateContextPerTaskCreatorLocal != null
+                                                 //                               ? UpdateContextPerTaskCreatorLocal()
+                                                 //                               : default(TContext);
+
+                                                 //if (NewEVSEStatusTask.Result != null)
+                                                 //    NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus => _EVSEStatusHandler(UpdateContext, NewEVSEStatus.Key, NewEVSEStatus.Value));
 
                                                  if (NewEVSEStatusTask.Result != null)
-                                                     NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus => _EVSEStatusHandler(UpdateContext, NewEVSEStatus.Key, NewEVSEStatus.Value));
+                                                     NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus => {
+                                                             CD.TryAdd(NewEVSEStatus.Key, NewEVSEStatus.Value);
+                                                             Debug.WriteLine("Adding " + NewEVSEStatus.Key + " => " + NewEVSEStatus.Value + "!");
+                                                         });
 
-                                                 var UpdateContextPerTaskDisposerLocal = _UpdateContextDisposer;
-                                                 if (UpdateContextPerTaskDisposerLocal != null)
-                                                     UpdateContextPerTaskDisposerLocal(UpdateContextPerTask);
+                                                 //var UpdateContextPerTaskDisposerLocal = _UpdateContextDisposer;
+                                                 //if (UpdateContextPerTaskDisposerLocal != null)
+                                                 //    UpdateContextPerTaskDisposerLocal(UpdateContextPerTask);
 
                                              }))
                                              .ToArray(),
@@ -345,6 +356,11 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                  //CancellationToken cancellationToken
                                 );
 
+                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", All Update-SubTasks finished!");
+
+                    CD.ForEach(kvp => _EVSEStatusHandler(UpdateContext, kvp.Key, kvp.Value));
+
+                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", 'UpdateEVSEStatus' finished external update delegates!");
 
                     var StopBulkUpdateLocal = _StopBulkUpdate;
                     if (StopBulkUpdateLocal != null)
