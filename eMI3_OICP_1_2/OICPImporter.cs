@@ -53,13 +53,13 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         private readonly Timer                                          UpdateEVSEDataTimer;
         private readonly Timer                                          UpdateEVSEStatusTimer;
 
-        private readonly Func<IEnumerable<EVSE_Id>>                     _GetEVSEIds;
-        private readonly Func<TContext>                                 _UpdateContextCreator;
-        private readonly Action<TContext>                               _UpdateContextDisposer;
-        private readonly Action<TContext>                               _StartBulkUpdate;
-        private readonly Action<TContext, XElement>                     _EVSEOperatorDataHandler;
-        private readonly Action<TContext, EVSE_Id, HubjectEVSEState>    _EVSEStatusHandler;
-        private readonly Action                                         _StopBulkUpdate;
+        private readonly Func<IEnumerable<EVSE_Id>>                             _GetEVSEIds;
+        private readonly Func<TContext>                                         _UpdateContextCreator;
+        private readonly Action<TContext>                                       _UpdateContextDisposer;
+        private readonly Action<TContext>                                       _StartBulkUpdate;
+        private readonly Action<TContext, DateTime, XElement>                   _EVSEOperatorDataHandler;
+        private readonly Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  _EVSEStatusHandler;
+        private readonly Action                                                 _StopBulkUpdate;
 
         #endregion
 
@@ -99,22 +99,22 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
         /// <param name="EVSEOperatorDataHandler"></param>
         /// <param name="EVSEStatusHandler"></param>
         /// <param name="StopBulkUpdate"></param>
-        public OICPImporter(String                                       Identification,
-                            String                                       Hostname,
-                            IPPort                                       TCPPort,
-                            EVSP_Id                                      ProviderId,
-                            DNSClient                                    DNSClient                = null,
-                            TimeSpan?                                    UpdateEVSEDataEvery      = null,
-                            TimeSpan?                                    UpdateEVSEDataTimeout    = null,
-                            TimeSpan?                                    UpdateEVSEStatusEvery    = null,
-                            TimeSpan?                                    UpdateEVSEStatusTimeout  = null,
-                            Func<IEnumerable<EVSE_Id>>                   GetEVSEIds               = null,
-                            Func<TContext>                               UpdateContextCreator     = null,
-                            Action<TContext>                             UpdateContextDisposer    = null,
-                            Action<TContext>                             StartBulkUpdate          = null,
-                            Action<TContext, XElement>                   EVSEOperatorDataHandler  = null,
-                            Action<TContext, EVSE_Id, HubjectEVSEState>  EVSEStatusHandler        = null,
-                            Action                                       StopBulkUpdate           = null)
+        public OICPImporter(String                                                 Identification,
+                            String                                                 Hostname,
+                            IPPort                                                 TCPPort,
+                            EVSP_Id                                                ProviderId,
+                            DNSClient                                              DNSClient                = null,
+                            TimeSpan?                                              UpdateEVSEDataEvery      = null,
+                            TimeSpan?                                              UpdateEVSEDataTimeout    = null,
+                            TimeSpan?                                              UpdateEVSEStatusEvery    = null,
+                            TimeSpan?                                              UpdateEVSEStatusTimeout  = null,
+                            Func<IEnumerable<EVSE_Id>>                             GetEVSEIds               = null,
+                            Func<TContext>                                         UpdateContextCreator     = null,
+                            Action<TContext>                                       UpdateContextDisposer    = null,
+                            Action<TContext>                                       StartBulkUpdate          = null,
+                            Action<TContext, DateTime, XElement>                   EVSEOperatorDataHandler  = null,
+                            Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  EVSEStatusHandler        = null,
+                            Action                                                 StopBulkUpdate           = null)
 
         {
 
@@ -247,7 +247,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                         ContinueWith(PullEVSEDataTask => {
 
                             if (PullEVSEDataTask.Result != null)
-                                PullEVSEDataTask.Result.Content.ForEach(UpdateContext, _EVSEOperatorDataHandler);
+                                PullEVSEDataTask.Result.Content.ForEach(XML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, XML));
 
                         }).
                         Wait();
@@ -319,9 +319,9 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                     if (StartBulkUpdateLocal != null)
                         StartBulkUpdateLocal(UpdateContext);
 
-                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", Starting all Update-SubTasks!");
+                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", Starting all data collection subtasks concurrently...");
 
-                    var CD = new ConcurrentDictionary<EVSE_Id, HubjectEVSEState>();
+                    var EVSEStatusUpdateBuffer = new ConcurrentDictionary<EVSE_Id, HubjectEVSEState>();
 
                     Task.WaitAll(_GetEVSEIds().         // Get the data via the GetEVSEIds delegate!
                                      ToPartitions(100). // Hubject has a limit of 100 EVSEIds per request!
@@ -331,23 +331,9 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                              PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
                                              ContinueWith(NewEVSEStatusTask => {
 
-                                                 //var UpdateContextPerTaskCreatorLocal = _UpdateContextCreator;
-                                                 //var UpdateContextPerTask = UpdateContextPerTaskCreatorLocal != null
-                                                 //                               ? UpdateContextPerTaskCreatorLocal()
-                                                 //                               : default(TContext);
-
-                                                 //if (NewEVSEStatusTask.Result != null)
-                                                 //    NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus => _EVSEStatusHandler(UpdateContext, NewEVSEStatus.Key, NewEVSEStatus.Value));
-
+                                                 // Add data to internal buffer...
                                                  if (NewEVSEStatusTask.Result != null)
-                                                     NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus => {
-                                                             CD.TryAdd(NewEVSEStatus.Key, NewEVSEStatus.Value);
-                                                             Debug.WriteLine("Adding " + NewEVSEStatus.Key + " => " + NewEVSEStatus.Value + "!");
-                                                         });
-
-                                                 //var UpdateContextPerTaskDisposerLocal = _UpdateContextDisposer;
-                                                 //if (UpdateContextPerTaskDisposerLocal != null)
-                                                 //    UpdateContextPerTaskDisposerLocal(UpdateContextPerTask);
+                                                     NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus => EVSEStatusUpdateBuffer.TryAdd(NewEVSEStatus.Key, NewEVSEStatus.Value));
 
                                              }))
                                              .ToArray(),
@@ -356,9 +342,9 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                  //CancellationToken cancellationToken
                                 );
 
-                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", All Update-SubTasks finished!");
+                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", Starting external data processing...");
 
-                    CD.ForEach(kvp => _EVSEStatusHandler(UpdateContext, kvp.Key, kvp.Value));
+                    EVSEStatusUpdateBuffer.ForEach(StatusUpdate => _EVSEStatusHandler(UpdateContext, DateTime.Now, StatusUpdate.Key, StatusUpdate.Value));
 
                     Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", 'UpdateEVSEStatus' finished external update delegates!");
 
