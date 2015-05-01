@@ -298,8 +298,6 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             if (Monitor.TryEnter(UpdateEVSEsLock))
             {
 
-                //UpdateEVSEStatusTimer.Change
-
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
                 try
@@ -323,20 +321,23 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                     var EVSEStatusUpdateBuffer = new ConcurrentDictionary<EVSE_Id, HubjectEVSEState>();
 
-                    Task.WaitAll(_GetEVSEIds().         // Get the data via the GetEVSEIds delegate!
-                                     ToPartitions(100). // Hubject has a limit of 100 EVSEIds per request!
-                                     Select(EVSEPartition =>
+                                 // Get the data via the GetEVSEIds delegate!
+                    Task.WaitAll(_GetEVSEIds().
 
-                                         OICPUpstreamService.
-                                             PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
-                                             ContinueWith(NewEVSEStatusTask => {
+                                     // Hubject has a limit of 100 EVSEIds per request!
+                                     ToPartitions(100).
 
-                                                 // Add data to internal buffer...
-                                                 if (NewEVSEStatusTask.Result != null)
-                                                     NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus => EVSEStatusUpdateBuffer.TryAdd(NewEVSEStatus.Key, NewEVSEStatus.Value));
+                                     Select(EVSEPartition => OICPUpstreamService.
+                                                                 PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
+                                                                 ContinueWith(NewEVSEStatusTask => {
 
-                                             }))
-                                             .ToArray(),
+                                                                     // Add data to internal buffer...
+                                                                     if (NewEVSEStatusTask.Result != null)
+                                                                         NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus =>
+                                                                             EVSEStatusUpdateBuffer.TryAdd(NewEVSEStatus.Key, NewEVSEStatus.Value));
+
+                                                                 }))
+                                                                 .ToArray(),
 
                                  millisecondsTimeout: (Int32) _UpdateEVSEStatusTimeout.TotalMilliseconds
                                  //CancellationToken cancellationToken
@@ -344,7 +345,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                     Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", Starting external data processing...");
 
-                    EVSEStatusUpdateBuffer.ForEach(StatusUpdate => _EVSEStatusHandler(UpdateContext, DateTime.Now, StatusUpdate.Key, StatusUpdate.Value));
+                    var Now = DateTime.Now;
+                    EVSEStatusUpdateBuffer.ForEach(StatusUpdate => _EVSEStatusHandler(UpdateContext, Now, StatusUpdate.Key, StatusUpdate.Value));
 
                     Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", 'UpdateEVSEStatus' finished external update delegates!");
 
