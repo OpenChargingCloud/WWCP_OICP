@@ -24,11 +24,11 @@ using System.Threading;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
-using System.Collections.Concurrent;
 
 #endregion
 
@@ -228,7 +228,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                 try
                 {
 
-                    Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEData' started");
+                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' started");
 
                     var StopWatch = new Stopwatch();
                     StopWatch.Start();
@@ -262,13 +262,13 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                     StopWatch.Stop();
 
-                    Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEData' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
+                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
 
 
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEData' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
+                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
                 }
 
                 finally
@@ -279,7 +279,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             }
 
             else
-                Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEData' skipped!");
+                Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' skipped!");
 
         }
 
@@ -303,7 +303,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                 try
                 {
 
-                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEStatus' started");
+                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' started");
 
                     var StopWatch = new Stopwatch();
                     StopWatch.Start();
@@ -316,8 +316,6 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                     var StartBulkUpdateLocal = _StartBulkUpdate;
                     if (StartBulkUpdateLocal != null)
                         StartBulkUpdateLocal(UpdateContext);
-
-                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", Starting all data collection subtasks concurrently...");
 
                     var EVSEStatusUpdateBuffer = new ConcurrentDictionary<EVSE_Id, HubjectEVSEState>();
 
@@ -343,12 +341,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                  //CancellationToken cancellationToken
                                 );
 
-                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", Starting external data processing...");
-
                     var Now = DateTime.Now;
                     EVSEStatusUpdateBuffer.ForEach(StatusUpdate => _EVSEStatusHandler(UpdateContext, Now, StatusUpdate.Key, StatusUpdate.Value));
-
-                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ", 'UpdateEVSEStatus' finished external update delegates!");
 
                     var StopBulkUpdateLocal = _StopBulkUpdate;
                     if (StopBulkUpdateLocal != null)
@@ -360,12 +354,12 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                     StopWatch.Stop();
 
-                    Debug.WriteLine("[" + DateTime.Now + "] 'UpdateEVSEStatus' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
+                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
 
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEStatus' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
+                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
                 }
 
                 finally
@@ -376,7 +370,7 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
             }
 
             else
-                Debug.WriteLine("[" + DateTime.Now + "] Thread " + Thread.CurrentThread.ManagedThreadId + ",  'UpdateEVSEStatus' skipped!");
+                Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' skipped!");
 
         }
 
