@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2015 GraphDefined GmbH
- * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
+ * This file is part of WWCP OICPClient <https://github.com/WorldWideCharging/WWCP_OICPClient>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,12 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 using org.GraphDefined.Vanaheimr.Aegir;
 
-using org.GraphDefined.eMI3.LocalService;
+using org.GraphDefined.WWCP.LocalService;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
 #endregion
 
-namespace org.GraphDefined.eMI3.IO.OICP_1_2
+namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>
@@ -225,8 +225,8 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
 
                                                  new HTTPResponse<IEnumerable<XElement>>(XMLData.HttpResponse,
                                                                                          XMLData.Content.
-                                                                                                 Element (OICP_1_2.NS.OICPv1_2EVSEData + "EvseData").
-                                                                                                 Elements(OICP_1_2.NS.OICPv1_2EVSEData + "OperatorEvseData")),
+                                                                                                 Element (NS.OICPv1_2EVSEData + "EvseData").
+                                                                                                 Elements(NS.OICPv1_2EVSEData + "OperatorEvseData")),
 
                                              OnSOAPFault: Fault => {
 
@@ -329,10 +329,10 @@ namespace org.GraphDefined.eMI3.IO.OICP_1_2
                                                  new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(
                                                      XMLData.HttpResponse,
                                                      XMLData.Content.
-                                                             Element (OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatusRecords").
-                                                             Elements(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatusRecord").
-                                                             Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseId").Value),
-                                                                                                                     (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(OICP_1_2.NS.OICPv1_2EVSEStatus + "EvseStatus").Value))).
+                                                             Element (NS.OICPv1_2EVSEStatus + "EvseStatusRecords").
+                                                             Elements(NS.OICPv1_2EVSEStatus + "EvseStatusRecord").
+                                                             Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(NS.OICPv1_2EVSEStatus + "EvseId").Value),
+                                                                                                                     (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(NS.OICPv1_2EVSEStatus + "EvseStatus").Value))).
                                                              ToArray() as IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>),
 
 

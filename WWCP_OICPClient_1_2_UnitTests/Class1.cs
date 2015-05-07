@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eMI3_OICP_UnitTests
+namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
 {
+
     public class Class1
     {
     }
+
 }

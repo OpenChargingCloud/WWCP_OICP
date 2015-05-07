@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2015 GraphDefined GmbH
- * This file is part of eMI3 OICP <http://www.github.com/eMI3/OICP-Bindings>
+ * This file is part of WWCP OICPClient <https://github.com/WorldWideCharging/WWCP_OICPClient>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 
-using org.GraphDefined.eMI3.IO.OICP;
+using org.GraphDefined.WWCP.IO.OICP;
 
 #endregion
 
-namespace org.GraphDefined.eMI3.IO.OICP_1_2
+namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>

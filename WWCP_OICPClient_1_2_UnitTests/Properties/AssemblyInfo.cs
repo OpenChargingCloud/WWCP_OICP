@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("eMI3 OICPv1.2 Bindings")]
-[assembly: AssemblyDescription("Communication between eMI3 and OICPv1.2 services")]
+[assembly: AssemblyTitle("WWCP OICPv1.2 Client UnitTests")]
+[assembly: AssemblyDescription("UnitTests for OICP content mapping and representation for eMI3 data structures.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GraphDefined GmbH")]
-[assembly: AssemblyProduct("eMI3 OICPv1.2 Bindings")]
+[assembly: AssemblyProduct("WWCP OICPv1.2 UnitTests")]
 [assembly: AssemblyCopyright("Copyright © 2014-2015 GraphDefined GmbH")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("9c041ee7-a4e7-4827-9ab6-f20530b00ea5")]
+[assembly: Guid("085ca593-7585-4c15-af02-fa0989eb90cc")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.0.0")]
-[assembly: AssemblyFileVersion("0.9.0.0")]
+[assembly: AssemblyVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion("0.1.0.0")]
