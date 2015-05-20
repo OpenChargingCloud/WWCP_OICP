@@ -162,11 +162,11 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                 #endregion
 
-                Log.WriteLine("");
-                Log.Timestamp("Incoming XML request:");
-                Log.WriteLine("XML payload:");
-                Log.WriteLine(XMLRequest.Data.ToString());
-                Log.WriteLine("");
+                //Log.WriteLine("");
+                //Log.Timestamp("Incoming XML request:");
+                //Log.WriteLine("XML payload:");
+                //Log.WriteLine(XMLRequest.Data.ToString());
+                //Log.WriteLine("");
 
                 #region Get SOAP request...
 
