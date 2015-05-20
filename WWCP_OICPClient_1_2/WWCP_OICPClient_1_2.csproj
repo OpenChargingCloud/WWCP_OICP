@@ -74,7 +74,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\WWCP_Core\WWCP_Core\WWCP_Core.csproj">
       <Project>{33836742-af1d-4aa4-963f-b0a8e60e6480}</Project>
-      <Name>eMI3_Core</Name>
+      <Name>WWCP_Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Hermod\Hermod\Hermod.csproj">
       <Project>{477efd16-3627-4473-957d-44ca9a9dfb79}</Project>
