@@ -320,20 +320,20 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                     // </soapenv:Envelope>
 
 
-                    String                SessionId;
-                    EVSP_Id  ProviderId;
-                    EVSE_Id               EVSEId;
-                    XElement              IdentificationXML;
-                    XElement              QRCodeIdentificationXML;
-                    XElement              RemoteIdentificationXML;
-                    eMA_Id                eMAId;
+                    ChargingSession_Id  SessionId;
+                    EVSP_Id             ProviderId;
+                    EVSE_Id             EVSEId;
+                    XElement            IdentificationXML;
+                    XElement            QRCodeIdentificationXML;
+                    XElement            RemoteIdentificationXML;
+                    eMA_Id              eMAId;
 
                     try
                     {
 
-                        SessionId                =               RemoteStartXML.    ElementValueOrFail(NS.OICPv1_2Authorization + "SessionID",            "No SessionID XML tag provided!");
-                        ProviderId               = EVSP_Id.Parse(RemoteStartXML.    ElementValueOrFail(NS.OICPv1_2Authorization + "ProviderID",           "No ProviderID XML tag provided!"));
-                        EVSEId                   = EVSE_Id.Parse(RemoteStartXML.    ElementValueOrFail(NS.OICPv1_2Authorization + "EVSEID",               "No EVSEID XML tag provided!"));
+                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrFail(NS.OICPv1_2Authorization + "SessionID",  "No SessionID XML tag provided!"));
+                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail(NS.OICPv1_2Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail(NS.OICPv1_2Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                         IdentificationXML        =               RemoteStartXML.    ElementOrFail     (NS.OICPv1_2Authorization + "Identification",       "No EVSEID XML tag provided!");
                         RemoteIdentificationXML  =               IdentificationXML. Element           (NS.OICPv1_2CommonTypes   + "RemoteIdentification");
@@ -485,16 +485,16 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                     // </isns:Envelope>
 
 
-                    String                SessionId;
-                    EVSP_Id  ProviderId;
-                    EVSE_Id               EVSEId;
+                    ChargingSession_Id  SessionId;
+                    EVSP_Id             ProviderId;
+                    EVSE_Id             EVSEId;
 
                     try
                     {
 
-                        SessionId   =               RemoteStopXML.ElementValueOrFail(NS.OICPv1_2Authorization + "SessionID",  "No SessionID XML tag provided!");
-                        ProviderId  = EVSP_Id.Parse(RemoteStopXML.ElementValueOrFail(NS.OICPv1_2Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId      = EVSE_Id.Parse(RemoteStopXML.ElementValueOrFail(NS.OICPv1_2Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        SessionId   = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail(NS.OICPv1_2Authorization + "SessionID",  "No SessionID XML tag provided!"));
+                        ProviderId  = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail(NS.OICPv1_2Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId      = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail(NS.OICPv1_2Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                     }
                     catch (Exception e)
