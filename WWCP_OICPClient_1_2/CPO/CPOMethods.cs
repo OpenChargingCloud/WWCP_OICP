@@ -175,7 +175,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                               var ChargingFacility = "Unspecified";
 
-                                                              if (Outlet.Plug == PlugType.Type2Connector_CableAttached)// Mennekes_Type_2
+                                                              if (Outlet.Plug == PlugType.Type2Outlet ||
+                                                                  Outlet.Plug == PlugType.Type2Connector_CableAttached)// Mennekes_Type_2
                                                               {
 
                                                                   if (Outlet.MaxPower <= 44.0)
