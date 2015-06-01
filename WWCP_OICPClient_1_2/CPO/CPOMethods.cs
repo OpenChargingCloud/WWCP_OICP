@@ -175,7 +175,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                               var ChargingFacility = "Unspecified";
 
-                                                              if (Outlet.Plug == PlugType.Type2Connector_CableAttached)// .Mennekes_Type_2)
+                                                              if (Outlet.Plug == PlugType.Type2Connector_CableAttached)// Mennekes_Type_2
                                                               {
 
                                                                   if (Outlet.MaxPower <= 44.0)
@@ -189,7 +189,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                               }
 
-                                                              else if (Outlet.Plug == PlugType.TypeFSchuko)// .SCHUKO)
+                                                              else if (Outlet.Plug == PlugType.TypeFSchuko)
                                                               {
 
                                                                   if (Outlet.MaxPower >  7.2)
@@ -270,10 +270,11 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                       //                  </v11:DecimalDegree>
                                                       //               </v1:GeoChargingPointEntrance>
 
-                                                      new XElement(NS.OICPv1_2EVSEData + "IsOpen24Hours", "true"),
+                                                      new XElement(NS.OICPv1_2EVSEData + "IsOpen24Hours", EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours ? "true" : "false"),
 
-                            //                    <!--Optional:-->
-                                                      //               <v1:OpeningTime>?</v1:OpeningTime>
+                                                      EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours
+                                                          ? null
+                                                          : new XElement(NS.OICPv1_2EVSEData + "OpeningTime",   EVSE.ChargingStation.ChargingPool.OpeningTime.Simple),
 
                             //                    <!--Optional:-->
                                                       //               <v1:HubOperatorID>?</v1:HubOperatorID>
