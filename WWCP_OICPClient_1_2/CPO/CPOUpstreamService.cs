@@ -41,7 +41,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
     /// OICPv1.2 CPO Upstream Service(s).
     /// </summary>
     public class CPOUpstreamService : AOICPUpstreamService,
-                                      IRoamingProviderProvided_EVSEOperatorServices
+                                      IAuthServices
     {
 
         #region Constructor(s)
