@@ -124,7 +124,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                       new XElement(NS.OICPv1_2EVSEData + "ActionType", Action.ToString()),
                                       new XElement(NS.OICPv1_2EVSEData + "OperatorEvseData",
 
-                                          new XElement(NS.OICPv1_2EVSEData + "OperatorID", OperatorId.IdOld),//ToString()),//
+                                          new XElement(NS.OICPv1_2EVSEData + "OperatorID", OperatorId.ToFormat(IdFormatType.OLD)),
                                           (OperatorName != null) ?
                                           new XElement(NS.OICPv1_2EVSEData + "OperatorName", OperatorName) : null,
 
@@ -140,7 +140,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                   return new XElement(NS.OICPv1_2EVSEData + "EvseDataRecord",
 
-                                                      new XElement(NS.OICPv1_2EVSEData + "EvseId",                 EVSE.Id.OldEVSEId), //ToString()),// 
+                                                      new XElement(NS.OICPv1_2EVSEData + "EvseId",                 EVSE.Id.ToFormat(IdFormatType.OLD)),
                                                       new XElement(NS.OICPv1_2EVSEData + "ChargingStationId",      EVSE.ChargingStation.Id.ToString()),
                                                       new XElement(NS.OICPv1_2EVSEData + "ChargingStationName",    EVSE.ChargingStation.ChargingPool.Name[Languages.de].SubstringMax(50)),
                                                       new XElement(NS.OICPv1_2EVSEData + "EnChargingStationName",  EVSE.ChargingStation.ChargingPool.Name[Languages.en].SubstringMax(50)),
@@ -352,7 +352,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                           new XElement(NS.OICPv1_2EVSEStatus + "ActionType", Action.ToString()),
                                           new XElement(NS.OICPv1_2EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(NS.OICPv1_2EVSEStatus + "OperatorID", OperatorId.IdOld),
+                                              new XElement(NS.OICPv1_2EVSEStatus + "OperatorID", OperatorId.ToFormat(IdFormatType.OLD)),
                                               (OperatorName != null) ?
                                               new XElement(NS.OICPv1_2EVSEStatus + "OperatorName", OperatorName) : null,
 
@@ -382,13 +382,13 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                           new XElement(NS.OICPv1_2EVSEStatus + "ActionType", Action.ToString()),
                                           new XElement(NS.OICPv1_2EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(NS.OICPv1_2EVSEStatus + "OperatorID", OperatorId.IdOld),
+                                              new XElement(NS.OICPv1_2EVSEStatus + "OperatorID", OperatorId.ToFormat(IdFormatType.OLD)),
                                               (OperatorName != null) ?
                                               new XElement(NS.OICPv1_2EVSEStatus + "OperatorName", OperatorName) : null,
 
                                               EVSEStates.Select(EvseIdAndState =>
                                                   new XElement(NS.OICPv1_2EVSEStatus + "EvseStatusRecord",
-                                                      new XElement(NS.OICPv1_2EVSEStatus + "EvseId",     EvseIdAndState.Key.OldEVSEId), //.  ToString()),
+                                                      new XElement(NS.OICPv1_2EVSEStatus + "EvseId",     EvseIdAndState.Key.  ToFormat(IdFormatType.OLD)),
                                                       new XElement(NS.OICPv1_2EVSEStatus + "EvseStatus", EvseIdAndState.Value.ToString())
                                                   )
                                               )
@@ -440,8 +440,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1_2Authorization + "eRoamingAuthorizeStart",
                                           new XElement(NS.OICPv1_2Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
-                                          new XElement(NS.OICPv1_2Authorization + "OperatorID",       OperatorId.IdOld),
-                                          new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.OldEVSEId), //.ToString()),
+                                          new XElement(NS.OICPv1_2Authorization + "OperatorID",       OperatorId.ToFormat(IdFormatType.OLD)),
+                                          new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.    ToFormat(IdFormatType.OLD)),
                                           new XElement(NS.OICPv1_2Authorization + "Identification",
                                               new XElement(NS.OICPv1_2CommonTypes + "RFIDmifarefamilyIdentification",
                                                  new XElement(NS.OICPv1_2CommonTypes + "UID", UID.ToString())
@@ -499,8 +499,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             return SOAP.Encapsulation(new XElement(NS.OICPv1_2Authorization + "eRoamingAuthorizeStop",
                                           new XElement(NS.OICPv1_2Authorization + "SessionID",        SessionId.ToString()),
                                           new XElement(NS.OICPv1_2Authorization + "PartnerSessionID", PartnerSessionId.ToString()),
-                                          new XElement(NS.OICPv1_2Authorization + "OperatorID",       OperatorId.IdOld),
-                                          new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.OldEVSEId), //.ToString()),
+                                          new XElement(NS.OICPv1_2Authorization + "OperatorID",       OperatorId.ToFormat(IdFormatType.OLD)),
+                                          new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.    ToFormat(IdFormatType.OLD)),
                                           new XElement(NS.OICPv1_2Authorization + "Identification",
                                               new XElement(NS.OICPv1_2CommonTypes + "RFIDmifarefamilyIdentification",
                                                  new XElement(NS.OICPv1_2CommonTypes + "UID", UID.ToString())
@@ -599,7 +599,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                  new XElement(NS.OICPv1_2Authorization + "SessionID",        SessionId.ToString()),
                                  new XElement(NS.OICPv1_2Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
                                  new XElement(NS.OICPv1_2Authorization + "PartnerProductID", PartnerProductId),
-                                 new XElement(NS.OICPv1_2Authorization + "EvseID",           EVSEId.OldEVSEId), //.ToString()),
+                                 new XElement(NS.OICPv1_2Authorization + "EvseID",           EVSEId.ToFormat(IdFormatType.OLD)),
 
                                  new XElement(NS.OICPv1_2Authorization + "Identification",
                                      (UID != null)

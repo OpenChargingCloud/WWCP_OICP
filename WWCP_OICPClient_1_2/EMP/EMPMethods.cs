@@ -94,7 +94,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             // </soapenv:Envelope>
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1_2EVSEData + "eRoamingGetEvseById",
-                                          new XElement(NS.OICPv1_2EVSEData + "EvseId", EVSEId.OldEVSEId)
+                                          new XElement(NS.OICPv1_2EVSEData + "EvseId", EVSEId.ToFormat(IdFormatType.OLD))
                                      ));
 
         }
@@ -178,7 +178,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                           new XElement(NS.OICPv1_2EVSEStatus + "ProviderID", ProviderId.ToString()),
 
-                                          EVSEIds.Select(EVSEId => new XElement(NS.OICPv1_2EVSEStatus + "EvseId", EVSEId.OriginEVSEId)).
+                                          EVSEIds.Select(EVSEId => new XElement(NS.OICPv1_2EVSEStatus + "EvseId", EVSEId.OriginId)).
                                                   ToArray()
 
                                      ));
