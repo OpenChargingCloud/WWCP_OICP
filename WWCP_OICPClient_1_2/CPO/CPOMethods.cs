@@ -63,9 +63,9 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #endregion
 
-        #region PushEVSEDataXML(this EVSPools, OperatorId, OperatorName, Action = fullLoad, IncludeEVSEs = null)
+        #region PushEVSEDataXML(this ChargingPools, OperatorId, OperatorName, Action = fullLoad, IncludeEVSEs = null)
 
-        public static XElement PushEVSEDataXML(this IEnumerable<ChargingPool>  EVSPools,
+        public static XElement PushEVSEDataXML(this IEnumerable<ChargingPool>  ChargingPools,
                                                EVSEOperator_Id                 OperatorId,
                                                String                          OperatorName,
                                                ActionType                      Action        = ActionType.fullLoad,
@@ -75,12 +75,12 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             if (IncludeEVSEs == null)
                 IncludeEVSEs = EVSEId => true;
 
-            return EVSPools.SelectMany(Pool    => Pool.ChargingStations).
-                            SelectMany(Station => Station.EVSEs).
-                            Where     (EVSE    => IncludeEVSEs(EVSE.Id)).
-                            PushEVSEDataXML(OperatorId,
-                                            OperatorName,
-                                            Action);
+            return ChargingPools.SelectMany(Pool    => Pool.ChargingStations).
+                                 SelectMany(Station => Station.EVSEs).
+                                 Where     (EVSE    => IncludeEVSEs(EVSE.Id)).
+                                 PushEVSEDataXML(OperatorId,
+                                                 OperatorName,
+                                                 Action);
 
         }
 
@@ -129,8 +129,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                           new XElement(NS.OICPv1_2EVSEData + "OperatorName", OperatorName) : null,
 
                                           // EVSE => EvseDataRecord
-                                          //EVSPools.Select(EVSPool =>
-                                          //EVSPool.ChargingStations.Select(ChargingStation =>
+                                          //charging pools.Select(charging pool =>
+                                          //charging pool.ChargingStations.Select(ChargingStation =>
                                           //ChargingStation.EVSEs.Select(EVSE => {
 
                                           EVSEs.Select(EVSE => {

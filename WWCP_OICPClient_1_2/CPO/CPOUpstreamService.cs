@@ -532,6 +532,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                        var ack = HubjectAcknowledgement.Parse(XMLData.Content);
 
+                                       DebugX.Log("eRoamingPushEvseStatus => " + ack.Result);
+
                                        var OnChangedEVSEStatusSentLocal = OnChangedEVSEStatusSent;
                                        if (OnChangedEVSEStatusSentLocal != null)
                                            OnChangedEVSEStatusSentLocal(DateTime.Now, TrackingId, ack);
