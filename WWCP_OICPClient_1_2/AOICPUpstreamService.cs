@@ -22,6 +22,7 @@ using System;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -192,6 +193,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                        HTTPResponse  HttpResponse)
         {
 
+            DebugX.Log("AOICPUpstreamService => HTTP Status Code: " + HttpResponse.HTTPStatusCode);
+
             var OnHTTPErrorLocal = OnHTTPError;
             if (OnHTTPErrorLocal != null)
                 OnHTTPErrorLocal(Timestamp, Sender, HttpResponse);
@@ -202,6 +205,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                        Object     Sender,
                                        Exception  Exception)
         {
+
+            DebugX.Log("AOICPUpstreamService => Exception: " + Exception.Message);
 
             var OnExceptionLocal = OnException;
             if (OnExceptionLocal != null)

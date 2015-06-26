@@ -164,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                              "eRoamingPullEVSEData",
                                              Timeout: TimeSpan.FromSeconds(180),
 
-                                             OnSuccess: XMLData =>
+                                             OnSuccess: XMLData => {
 
                                                  #region Documentation
 
@@ -223,10 +223,29 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                  #endregion
 
-                                                 new HTTPResponse<IEnumerable<XElement>>(XMLData.HttpResponse,
-                                                                                         XMLData.Content.
-                                                                                                 Element (NS.OICPv1_2EVSEData + "EvseData").
-                                                                                                 Elements(NS.OICPv1_2EVSEData + "OperatorEvseData")),
+                                                 try
+                                                 {
+
+                                                     var OperatorEvseData = XMLData.Content.
+                                                                                Element (NS.OICPv1_2EVSEData + "EvseData").
+                                                                                Elements(NS.OICPv1_2EVSEData + "OperatorEvseData").
+                                                                                ToArray();
+
+                                                     if (OperatorEvseData.Length == 0)
+                                                         SendOnException(DateTime.Now, this, new Exception("Could not fetch any 'OperatorEvseData' from the database!"));
+
+                                                     return new HTTPResponse<IEnumerable<XElement>>(XMLData.HttpResponse,
+                                                                                                    OperatorEvseData);
+
+                                                 }
+                                                 catch (Exception e)
+                                                 {
+                                                     SendOnException(DateTime.Now, this, e);
+                                                 }
+
+                                                 return new HTTPResponse<IEnumerable<XElement>>(XMLData.HttpResponse, new XElement[0]);
+
+                                             },
 
                                              OnSOAPFault: Fault => {
 
