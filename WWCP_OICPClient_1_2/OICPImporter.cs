@@ -43,23 +43,23 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #region Data
 
-        public static readonly TimeSpan      DefaultUpdateEVSEDataEvery      = TimeSpan.FromHours(2);
-        public static readonly TimeSpan      DefaultUpdateEVSEDataTimeout    = TimeSpan.FromMinutes(10);
-        public static readonly TimeSpan      DefaultUpdateEVSEStatusEvery    = TimeSpan.FromSeconds(20);
+        public static readonly TimeSpan      DefaultUpdateEVSEDataEvery      = TimeSpan.FromHours  (  2);
+        public static readonly TimeSpan      DefaultUpdateEVSEDataTimeout    = TimeSpan.FromMinutes( 10);
+        public static readonly TimeSpan      DefaultUpdateEVSEStatusEvery    = TimeSpan.FromSeconds( 20);
         public static readonly TimeSpan      DefaultUpdateEVSEStatusTimeout  = TimeSpan.FromSeconds(120);
 
-        private readonly EMPUpstreamService                             OICPUpstreamService;
-        private readonly Object                                         UpdateEVSEsLock  = new Object();
-        private readonly Timer                                          UpdateEVSEDataTimer;
-        private readonly Timer                                          UpdateEVSEStatusTimer;
+        private readonly EMPUpstreamService                                     OICPUpstreamService;
+        private readonly Object                                                 UpdateEVSEsLock  = new Object();
+        private readonly Timer                                                  UpdateEVSEDataTimer;
+        private readonly Timer                                                  UpdateEVSEStatusTimer;
 
-        private readonly Func<IEnumerable<EVSE_Id>>                             _GetEVSEIds;
+        private readonly Func<IEnumerable<EVSE_Id>>                             _GetEVSEIdsForStatusUpdate;
         private readonly Func<TContext>                                         _UpdateContextCreator;
         private readonly Action<TContext>                                       _UpdateContextDisposer;
         private readonly Action<TContext>                                       _StartBulkUpdate;
         private readonly Action<TContext, DateTime, XElement>                   _EVSEOperatorDataHandler;
         private readonly Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  _EVSEStatusHandler;
-        private readonly Action                                                 _StopBulkUpdate;
+        private readonly Action<TContext>                                       _StopBulkUpdate;
 
         #endregion
 
@@ -92,7 +92,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// <param name="UpdateEVSEDataTimeout"></param>
         /// <param name="UpdateEVSEStatusEvery"></param>
         /// <param name="UpdateEVSEStatusTimeout"></param>
-        /// <param name="GetEVSEIds"></param>
+        /// <param name="GetEVSEIdsForStatusUpdate"></param>
         /// <param name="UpdateContextCreator"></param>
         /// <param name="UpdateContextDisposer"></param>
         /// <param name="StartBulkUpdate"></param>
@@ -103,18 +103,18 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                             String                                                 Hostname,
                             IPPort                                                 TCPPort,
                             EVSP_Id                                                ProviderId,
-                            DNSClient                                              DNSClient                = null,
-                            TimeSpan?                                              UpdateEVSEDataEvery      = null,
-                            TimeSpan?                                              UpdateEVSEDataTimeout    = null,
-                            TimeSpan?                                              UpdateEVSEStatusEvery    = null,
-                            TimeSpan?                                              UpdateEVSEStatusTimeout  = null,
-                            Func<IEnumerable<EVSE_Id>>                             GetEVSEIds               = null,
-                            Func<TContext>                                         UpdateContextCreator     = null,
-                            Action<TContext>                                       UpdateContextDisposer    = null,
-                            Action<TContext>                                       StartBulkUpdate          = null,
-                            Action<TContext, DateTime, XElement>                   EVSEOperatorDataHandler  = null,
-                            Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  EVSEStatusHandler        = null,
-                            Action                                                 StopBulkUpdate           = null)
+                            DNSClient                                              DNSClient                    = null,
+                            TimeSpan?                                              UpdateEVSEDataEvery          = null,
+                            TimeSpan?                                              UpdateEVSEDataTimeout        = null,
+                            TimeSpan?                                              UpdateEVSEStatusEvery        = null,
+                            TimeSpan?                                              UpdateEVSEStatusTimeout      = null,
+                            Func<IEnumerable<EVSE_Id>>                             GetEVSEIdsForStatusUpdate    = null,
+                            Func<TContext>                                         UpdateContextCreator         = null,
+                            Action<TContext>                                       UpdateContextDisposer        = null,
+                            Action<TContext>                                       StartBulkUpdate              = null,
+                            Action<TContext, DateTime, XElement>                   EVSEOperatorDataHandler      = null,
+                            Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  EVSEStatusHandler            = null,
+                            Action<TContext>                                       StopBulkUpdate               = null)
 
         {
 
@@ -132,7 +132,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             if (ProviderId == null)
                 throw new ArgumentNullException("The given EV Service Provider identification (EVSP Id) must not be null!");
 
-            if (GetEVSEIds == null)
+            if (GetEVSEIdsForStatusUpdate == null)
                 throw new ArgumentNullException("The given GetEVSEIds must not be null!");
 
             if (EVSEOperatorDataHandler == null)
@@ -145,10 +145,10 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
             #region Init parameters
 
-            this._Identification           = Identification;
-            this._Hostname                 = Hostname;
-            this._TCPPort                  = TCPPort;
-            this._ProviderId               = ProviderId;
+            this._Identification               = Identification;
+            this._Hostname                     = Hostname;
+            this._TCPPort                      = TCPPort;
+            this._ProviderId                   = ProviderId;
 
             if (!UpdateEVSEDataEvery.HasValue)
                 this._UpdateEVSEDataEvery      = DefaultUpdateEVSEDataEvery;
@@ -162,17 +162,17 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             if (!UpdateEVSEStatusTimeout.HasValue)
                 this._UpdateEVSEStatusTimeout  = DefaultUpdateEVSEStatusTimeout;
 
-            this._DNSClient                = DNSClient != null
-                                                 ? DNSClient
-                                                 : new DNSClient();
+            this._DNSClient                    = DNSClient != null
+                                                     ? DNSClient
+                                                     : new DNSClient();
 
-            this._GetEVSEIds               = GetEVSEIds;
-            this._UpdateContextCreator     = UpdateContextCreator;
-            this._UpdateContextDisposer    = UpdateContextDisposer;
-            this._StartBulkUpdate          = StartBulkUpdate;
-            this._EVSEOperatorDataHandler  = EVSEOperatorDataHandler;
-            this._EVSEStatusHandler        = EVSEStatusHandler;
-            this._StopBulkUpdate           = StopBulkUpdate;
+            this._GetEVSEIdsForStatusUpdate    = GetEVSEIdsForStatusUpdate;
+            this._UpdateContextCreator         = UpdateContextCreator;
+            this._UpdateContextDisposer        = UpdateContextDisposer;
+            this._StartBulkUpdate              = StartBulkUpdate;
+            this._EVSEOperatorDataHandler      = EVSEOperatorDataHandler;
+            this._EVSEStatusHandler            = EVSEStatusHandler;
+            this._StopBulkUpdate               = StopBulkUpdate;
 
             #endregion
 
@@ -208,7 +208,6 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         }
 
         #endregion
-
 
         #region (threaded!) UpdateEVSEData(State)
 
@@ -258,7 +257,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     var StopBulkUpdateLocal = _StopBulkUpdate;
                     if (StopBulkUpdateLocal != null)
-                        StopBulkUpdateLocal();
+                        StopBulkUpdateLocal(UpdateContext);
 
                     StopWatch.Stop();
 
@@ -320,7 +319,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                     var EVSEStatusUpdateBuffer = new ConcurrentDictionary<EVSE_Id, HubjectEVSEState>();
 
                                  // Get the data via the GetEVSEIds delegate!
-                    Task.WaitAll(_GetEVSEIds().
+                    Task.WaitAll(_GetEVSEIdsForStatusUpdate().
 
                                      // Hubject has a limit of 100 EVSEIds per request!
                                      ToPartitions(100).
@@ -346,7 +345,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     var StopBulkUpdateLocal = _StopBulkUpdate;
                     if (StopBulkUpdateLocal != null)
-                        StopBulkUpdateLocal();
+                        StopBulkUpdateLocal(UpdateContext);
 
                     var UpdateContextDisposerLocal = _UpdateContextDisposer;
                     if (UpdateContextDisposerLocal != null)
@@ -375,7 +374,6 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         }
 
         #endregion
-
 
     }
 

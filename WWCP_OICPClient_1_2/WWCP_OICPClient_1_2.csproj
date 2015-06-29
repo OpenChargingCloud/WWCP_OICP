@@ -45,6 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CPO\CPOMethods.cs" />
+    <Compile Include="Helpers\Import\EVSEInfo.cs" />
+    <Compile Include="Helpers\Import\EVSEIdLookup.cs" />
+    <Compile Include="Helpers\Import\CPInfoList.cs" />
+    <Compile Include="Helpers\Import\ChargeStationInfo.cs" />
+    <Compile Include="Helpers\Import\ChargingPoolInfo.cs" />
     <Compile Include="OICPDownstreamServer.cs" />
     <Compile Include="eMI3_OICP_Mapper.cs" />
     <Compile Include="EMP\EMPMethods.cs" />
