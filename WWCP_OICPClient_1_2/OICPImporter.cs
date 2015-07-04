@@ -29,6 +29,7 @@ using System.Collections.Concurrent;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
+using System.IO;
 
 #endregion
 
@@ -60,6 +61,9 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         private readonly Action<TContext, DateTime, XElement>                   _EVSEOperatorDataHandler;
         private readonly Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  _EVSEStatusHandler;
         private readonly Action<TContext>                                       _StopBulkUpdate;
+
+        private readonly Func<StreamReader>                                     _LoadStaticDataFromStream;
+        private readonly Func<StreamReader>                                     _LoadDynamicDataFromStream;
 
         #endregion
 
@@ -104,6 +108,10 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                             IPPort                                                 TCPPort,
                             EVSP_Id                                                ProviderId,
                             DNSClient                                              DNSClient                    = null,
+
+                            Func<StreamReader>                                     LoadStaticDataFromStream     = null,
+                            Func<StreamReader>                                     LoadDynamicDataFromStream    = null,
+
                             TimeSpan?                                              UpdateEVSEDataEvery          = null,
                             TimeSpan?                                              UpdateEVSEDataTimeout        = null,
                             TimeSpan?                                              UpdateEVSEStatusEvery        = null,
@@ -166,6 +174,9 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                      ? DNSClient
                                                      : new DNSClient();
 
+            this._LoadStaticDataFromStream     = LoadStaticDataFromStream;
+            this._LoadDynamicDataFromStream    = LoadDynamicDataFromStream;
+
             this._GetEVSEIdsForStatusUpdate    = GetEVSEIdsForStatusUpdate;
             this._UpdateContextCreator         = UpdateContextCreator;
             this._UpdateContextDisposer        = UpdateContextDisposer;
@@ -227,47 +238,130 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 try
                 {
 
-                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' started");
+                    #region Debug info
 
-                    var StopWatch = new Stopwatch();
-                    StopWatch.Start();
+                    #if DEBUG
 
-                    var UpdateContextCreatorLocal = _UpdateContextCreator;
-                    var UpdateContext = UpdateContextCreatorLocal != null
-                                            ? UpdateContextCreatorLocal()
-                                            : default(TContext);
+                        DebugX.Log(" Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' started");
 
-                    var StartBulkUpdateLocal = _StartBulkUpdate;
-                    if (StartBulkUpdateLocal != null)
-                        StartBulkUpdateLocal(UpdateContext);
+                        var StopWatch = new Stopwatch();
+                        StopWatch.Start();
 
-                    OICPUpstreamService.
-                        PullEVSEDataRequest(_ProviderId).
-                        ContinueWith(PullEVSEDataTask => {
+                    #endif
 
-                            if (PullEVSEDataTask.Result != null)
-                                PullEVSEDataTask.Result.Content.ForEach(XML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, XML));
+                    #endregion
 
-                        }).
-                        Wait();
+                    #region Create update context and start bulk update
 
-                    var UpdateContextDisposerLocal = _UpdateContextDisposer;
-                    if (UpdateContextDisposerLocal != null)
-                        UpdateContextDisposerLocal(UpdateContext);
+                    TContext UpdateContext = default(TContext);
 
-                    var StopBulkUpdateLocal = _StopBulkUpdate;
-                    if (StopBulkUpdateLocal != null)
-                        StopBulkUpdateLocal(UpdateContext);
+                    try
+                    {
 
-                    StopWatch.Stop();
+                        var UpdateContextCreatorLocal = _UpdateContextCreator;
+                        if (UpdateContextCreatorLocal != null)
+                            UpdateContext = UpdateContextCreatorLocal();
 
-                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("Could not create OICP importer update context: " + e.Message);
+                    }
 
+                    try
+                    {
+
+                        var StartBulkUpdateLocal = _StartBulkUpdate;
+                        if (StartBulkUpdateLocal != null)
+                            StartBulkUpdateLocal(UpdateContext);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("Could not start OICP importer bulk update: " + e.Message);
+                    }
+
+                    #endregion
+
+                    if (_LoadStaticDataFromStream != null)
+                    {
+
+                        var XML     = XDocument.Parse(_LoadStaticDataFromStream().ReadToEnd()).Root;
+
+                        var SOAPXML = XML.Element(org.GraphDefined.Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope + "Body").
+                                          Descendants().
+                                          FirstOrDefault();
+
+                        var OperatorEvseData = (SOAPXML != null ? SOAPXML : XML).
+                                                   Element (NS.OICPv1_2EVSEData + "EvseData").
+                                                   Elements(NS.OICPv1_2EVSEData + "OperatorEvseData").
+                                                   ToArray();
+
+                        if (OperatorEvseData.Length > 0)
+                            OperatorEvseData.ForEach(OperatorXML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, OperatorXML));
+
+                        else
+                            DebugX.Log("Could not fetch any 'OperatorEvseData' from XML stream!");
+
+                    }
+
+                    else
+                        OICPUpstreamService.
+                            PullEVSEDataRequest(_ProviderId).
+                            ContinueWith(PullEVSEDataTask => {
+
+                                if (PullEVSEDataTask.Result != null)
+                                    PullEVSEDataTask.Result.Content.ForEach(XML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, XML));
+
+                            }).
+                            Wait();
+
+                    #region Stop bulk update and dispose update context
+
+                    try
+                    {
+
+                        var StopBulkUpdateLocal = _StopBulkUpdate;
+                        if (StopBulkUpdateLocal != null)
+                            StopBulkUpdateLocal(UpdateContext);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("Could not stop OICP importer bulk update: " + e.Message);
+                    }
+
+                    try
+                    {
+
+                        var UpdateContextDisposerLocal = _UpdateContextDisposer;
+                        if (UpdateContextDisposerLocal != null)
+                            UpdateContextDisposerLocal(UpdateContext);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("Could not dispose OICP importer context: " + e.Message);
+                    }
+
+                    #endregion
+
+                    #region Debug info
+
+                    #if DEBUG
+
+                        StopWatch.Stop();
+
+                        DebugX.Log(" Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
+
+                    #endif
+
+                    #endregion
 
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
+                    DebugX.Log(" Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
                 }
 
                 finally
@@ -278,7 +372,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             }
 
             else
-                Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' skipped!");
+                DebugX.Log(" Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' skipped!");
 
         }
 
@@ -302,63 +396,143 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 try
                 {
 
-                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' started");
+                    #region Debug info
 
-                    var StopWatch = new Stopwatch();
-                    StopWatch.Start();
+                    #if DEBUG
 
-                    var UpdateContextCreatorLocal = _UpdateContextCreator;
-                    var UpdateContext = UpdateContextCreatorLocal != null
-                                            ? UpdateContextCreatorLocal()
-                                            : default(TContext);
+                        DebugX.Log("Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' started");
 
-                    var StartBulkUpdateLocal = _StartBulkUpdate;
-                    if (StartBulkUpdateLocal != null)
-                        StartBulkUpdateLocal(UpdateContext);
+                        var StopWatch = new Stopwatch();
+                        StopWatch.Start();
 
-                    var EVSEStatusUpdateBuffer = new ConcurrentDictionary<EVSE_Id, HubjectEVSEState>();
+                    #endif
 
-                                 // Get the data via the GetEVSEIds delegate!
-                    Task.WaitAll(_GetEVSEIdsForStatusUpdate().
+                    #endregion
 
-                                     // Hubject has a limit of 100 EVSEIds per request!
-                                     ToPartitions(100).
+                    #region Create update context and start bulk update
 
-                                     Select(EVSEPartition => OICPUpstreamService.
-                                                                 PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
-                                                                 ContinueWith(NewEVSEStatusTask => {
+                    TContext UpdateContext = default(TContext);
 
-                                                                     // Add data to internal buffer...
-                                                                     if (NewEVSEStatusTask.Result != null)
-                                                                         NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus =>
-                                                                             EVSEStatusUpdateBuffer.TryAdd(NewEVSEStatus.Key, NewEVSEStatus.Value));
+                    try
+                    {
 
-                                                                 }))
-                                                                 .ToArray(),
+                        var UpdateContextCreatorLocal = _UpdateContextCreator;
+                        if (UpdateContextCreatorLocal != null)
+                            UpdateContext = UpdateContextCreatorLocal();
 
-                                 millisecondsTimeout: (Int32) _UpdateEVSEStatusTimeout.TotalMilliseconds
-                                 //CancellationToken cancellationToken
-                                );
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("Could not create OICP importer update context: " + e.Message);
+                    }
 
-                    var Now = DateTime.Now;
-                    EVSEStatusUpdateBuffer.ForEach(StatusUpdate => _EVSEStatusHandler(UpdateContext, Now, StatusUpdate.Key, StatusUpdate.Value));
+                    try
+                    {
 
-                    var StopBulkUpdateLocal = _StopBulkUpdate;
-                    if (StopBulkUpdateLocal != null)
-                        StopBulkUpdateLocal(UpdateContext);
+                        var StartBulkUpdateLocal = _StartBulkUpdate;
+                        if (StartBulkUpdateLocal != null)
+                            StartBulkUpdateLocal(UpdateContext);
 
-                    var UpdateContextDisposerLocal = _UpdateContextDisposer;
-                    if (UpdateContextDisposerLocal != null)
-                        UpdateContextDisposerLocal(UpdateContext);
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("Could not start OICP importer bulk update: " + e.Message);
+                    }
 
-                    StopWatch.Stop();
+                    #endregion
 
-                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
+                    #region Fetch EVSEIds to update
+
+                    IEnumerable<EVSE_Id> EVSEIds = null;
+
+                    try
+                    {
+
+                        EVSEIds = _GetEVSEIdsForStatusUpdate();
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("Could not fetch the list of EVSE Ids for dynamic EVSE status update!");
+                    }
+
+                    if (EVSEIds == null)
+                        DebugX.Log("Could not fetch the list of EVSE Ids for dynamic EVSE status update!");
+
+                    #endregion
+
+                    // Get the data via the GetEVSEIds delegate!
+                    else
+                        Task.WaitAll(_GetEVSEIdsForStatusUpdate().
+
+                                         // Hubject has a limit of 100 EVSEIds per request!
+                                         ToPartitions(100).
+
+                                         Select(EVSEPartition => OICPUpstreamService.
+                                                                     PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
+                                                                     ContinueWith(NewEVSEStatusTask => {
+
+                                                                         if (NewEVSEStatusTask.Result != null)
+                                                                             NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus =>
+                                                                                 _EVSEStatusHandler(UpdateContext, DateTime.Now, NewEVSEStatus.Key, NewEVSEStatus.Value));
+
+                                                                     })
+                                                                     )
+                                                                     .ToArray(),
+
+                                     millisecondsTimeout: (Int32) _UpdateEVSEStatusTimeout.TotalMilliseconds
+
+                                     //CancellationToken cancellationToken
+
+                                    );
+
+
+                    #region Stop bulk update and dispose update context
+
+                    try
+                    {
+
+                        var StopBulkUpdateLocal = _StopBulkUpdate;
+                        if (StopBulkUpdateLocal != null)
+                            StopBulkUpdateLocal(UpdateContext);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("Could not stop OICP importer bulk update: " + e.Message);
+                    }
+
+                    try
+                    {
+
+                        var UpdateContextDisposerLocal = _UpdateContextDisposer;
+                        if (UpdateContextDisposerLocal != null)
+                            UpdateContextDisposerLocal(UpdateContext);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("Could not dispose OICP importer context: " + e.Message);
+                    }
+
+                    #endregion
+
+                    #region Debug info
+
+                    #if DEBUG
+
+                        StopWatch.Stop();
+
+                        DebugX.Log("Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
+
+                    #endif
+
+                    #endregion
 
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
+                    DebugX.Log("Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
                 }
 
                 finally
@@ -369,7 +543,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             }
 
             else
-                Debug.WriteLine("[" + DateTime.Now + " Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' skipped!");
+                DebugX.Log("Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' skipped!");
 
         }
 
