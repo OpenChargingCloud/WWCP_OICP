@@ -18,18 +18,17 @@
 #region Usings
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Threading;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
-using System.IO;
 
 #endregion
 
@@ -37,7 +36,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>
-    /// A service to import EVSE data from OICP/Hubject.
+    /// A service to import EVSE data (from Hubject) via OICP v1.2.
     /// </summary>
     public class OICPImporter<TContext>
     {
@@ -220,13 +219,13 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #endregion
 
-        #region (threaded!) UpdateEVSEData(State)
+        #region (private, Timer) UpdateEVSEData(State)
 
         /// <summary>
         /// A timer controlled method to update all EVSE data.
         /// </summary>
         /// <param name="State">State object.</param>
-        public void UpdateEVSEData(Object State)
+        private void UpdateEVSEData(Object State)
         {
 
             // Wait till a concurrent UpdateEVSEStatus(...) has finished!
@@ -378,13 +377,13 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #endregion
 
-        #region (threaded!) UpdateEVSEStatus(State)
+        #region (private, Timer!) UpdateEVSEStatus(State)
 
         /// <summary>
         /// A timer controlled method to update all EVSE status.
         /// </summary>
         /// <param name="State">State object.</param>
-        public void UpdateEVSEStatus(Object State)
+        private void UpdateEVSEStatus(Object State)
         {
 
             // If a concurrent UpdateEVSEData/UpdateEVSEStatus(...) is still running, skip this round!
