@@ -44,20 +44,20 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #region Data
 
         public static readonly TimeSpan      DefaultUpdateEVSEDataEvery      = TimeSpan.FromHours  (  2);
-        public static readonly TimeSpan      DefaultUpdateEVSEDataTimeout    = TimeSpan.FromMinutes( 10);
+        public static readonly TimeSpan      DefaultUpdateEVSEDataTimeout    = TimeSpan.FromMinutes( 15);   // First import might be big and slow!
         public static readonly TimeSpan      DefaultUpdateEVSEStatusEvery    = TimeSpan.FromSeconds( 20);
-        public static readonly TimeSpan      DefaultUpdateEVSEStatusTimeout  = TimeSpan.FromSeconds(120);
+        public static readonly TimeSpan      DefaultUpdateEVSEStatusTimeout  = TimeSpan.FromMinutes( 15);   // First import might be big and slow!
 
         private readonly EMPUpstreamService                                     OICPUpstreamService;
         private readonly Object                                                 UpdateEVSEsLock  = new Object();
         private readonly Timer                                                  UpdateEVSEDataTimer;
         private readonly Timer                                                  UpdateEVSEStatusTimer;
 
-        private readonly Func<IEnumerable<EVSE_Id>>                             _GetEVSEIdsForStatusUpdate;
         private readonly Func<TContext>                                         _UpdateContextCreator;
         private readonly Action<TContext>                                       _UpdateContextDisposer;
         private readonly Action<TContext>                                       _StartBulkUpdate;
         private readonly Action<TContext, DateTime, XElement>                   _EVSEOperatorDataHandler;
+        private readonly Func<TContext, DateTime, IEnumerable<EVSE_Id>>         _GetEVSEIdsForStatusUpdate;
         private readonly Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  _EVSEStatusHandler;
         private readonly Action<TContext>                                       _StopBulkUpdate;
 
@@ -115,11 +115,11 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                             TimeSpan?                                              UpdateEVSEDataTimeout        = null,
                             TimeSpan?                                              UpdateEVSEStatusEvery        = null,
                             TimeSpan?                                              UpdateEVSEStatusTimeout      = null,
-                            Func<IEnumerable<EVSE_Id>>                             GetEVSEIdsForStatusUpdate    = null,
                             Func<TContext>                                         UpdateContextCreator         = null,
                             Action<TContext>                                       UpdateContextDisposer        = null,
                             Action<TContext>                                       StartBulkUpdate              = null,
                             Action<TContext, DateTime, XElement>                   EVSEOperatorDataHandler      = null,
+                            Func<TContext, DateTime, IEnumerable<EVSE_Id>>         GetEVSEIdsForStatusUpdate    = null,
                             Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  EVSEStatusHandler            = null,
                             Action<TContext>                                       StopBulkUpdate               = null)
 
@@ -139,11 +139,11 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             if (ProviderId == null)
                 throw new ArgumentNullException("The given EV Service Provider identification (EVSP Id) must not be null!");
 
-            if (GetEVSEIdsForStatusUpdate == null)
-                throw new ArgumentNullException("The given GetEVSEIds must not be null!");
-
             if (EVSEOperatorDataHandler == null)
-                throw new ArgumentNullException("The given OperatorDataHandler must not be null!");
+                throw new ArgumentNullException("The given EVSEOperatorDataHandler must not be null!");
+
+            if (GetEVSEIdsForStatusUpdate == null)
+                throw new ArgumentNullException("The given GetEVSEIdsForStatusUpdate must not be null!");
 
             if (EVSEStatusHandler == null)
                 throw new ArgumentNullException("The given EVSEStatusHandler must not be null!");
@@ -176,11 +176,11 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             this._LoadStaticDataFromStream     = LoadStaticDataFromStream;
             this._LoadDynamicDataFromStream    = LoadDynamicDataFromStream;
 
-            this._GetEVSEIdsForStatusUpdate    = GetEVSEIdsForStatusUpdate;
             this._UpdateContextCreator         = UpdateContextCreator;
             this._UpdateContextDisposer        = UpdateContextDisposer;
             this._StartBulkUpdate              = StartBulkUpdate;
             this._EVSEOperatorDataHandler      = EVSEOperatorDataHandler;
+            this._GetEVSEIdsForStatusUpdate    = GetEVSEIdsForStatusUpdate;
             this._EVSEStatusHandler            = EVSEStatusHandler;
             this._StopBulkUpdate               = StopBulkUpdate;
 
@@ -218,6 +218,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         }
 
         #endregion
+
 
         #region (private, Timer) UpdateEVSEData(State)
 
@@ -282,27 +283,43 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     #endregion
 
+                    #region Load static EVSE data from stream...
+
                     if (_LoadStaticDataFromStream != null)
                     {
 
-                        var XML     = XDocument.Parse(_LoadStaticDataFromStream().ReadToEnd()).Root;
+                        try
+                        {
 
-                        var SOAPXML = XML.Element(org.GraphDefined.Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope + "Body").
-                                          Descendants().
-                                          FirstOrDefault();
+                            var XML               = XDocument.Parse(_LoadStaticDataFromStream().ReadToEnd()).Root;
 
-                        var OperatorEvseData = (SOAPXML != null ? SOAPXML : XML).
-                                                   Element (NS.OICPv1_2EVSEData + "EvseData").
-                                                   Elements(NS.OICPv1_2EVSEData + "OperatorEvseData").
-                                                   ToArray();
+                            var SOAPXML           = XML.Element(org.GraphDefined.Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope + "Body").
+                                                        Descendants().
+                                                        FirstOrDefault();
 
-                        if (OperatorEvseData.Length > 0)
-                            OperatorEvseData.ForEach(OperatorXML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, OperatorXML));
+                            // Either with SOAP-XML tags or without...
+                            var OperatorEvseData  = (SOAPXML != null ? SOAPXML : XML).
+                                                        Element (NS.OICPv1_2EVSEData + "EvseData").
+                                                        Elements(NS.OICPv1_2EVSEData + "OperatorEvseData").
+                                                        ToArray();
 
-                        else
-                            DebugX.Log("Could not fetch any 'OperatorEvseData' from XML stream!");
+                            if (OperatorEvseData.Length > 0)
+                                OperatorEvseData.ForEach(OperatorXML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, OperatorXML));
+
+                            else
+                                DebugX.Log("Could not fetch any 'OperatorEvseData' from XML stream!");
+
+                        }
+                        catch (Exception e)
+                        {
+                            DebugX.LogT("Could not fetch any 'OperatorEvseData' from XML stream: " + e.Message + Environment.NewLine + e.StackTrace);
+                        }
 
                     }
+
+                    #endregion
+
+                    #region ...or load it (from Hubject) via OICP v1.2
 
                     else
                         OICPUpstreamService.
@@ -314,6 +331,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                             }).
                             Wait();
+
+                    #endregion
 
                     #region Stop bulk update and dispose update context
 
@@ -377,7 +396,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #endregion
 
-        #region (private, Timer!) UpdateEVSEStatus(State)
+        #region (private, Timer) UpdateEVSEStatus(State)
 
         /// <summary>
         /// A timer controlled method to update all EVSE status.
@@ -440,51 +459,114 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     #endregion
 
-                    #region Fetch EVSEIds to update
+                    #region Load static EVSE data from stream...
 
-                    IEnumerable<EVSE_Id> EVSEIds = null;
-
-                    try
+                    if (_LoadStaticDataFromStream != null)
                     {
 
-                        EVSEIds = _GetEVSEIdsForStatusUpdate();
+                        try
+                        {
+
+                            var XML         = XDocument.Parse(_LoadDynamicDataFromStream().ReadToEnd()).Root;
+
+                            var SOAPXML     = XML.Element(org.GraphDefined.Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope + "Body").
+                                                  Descendants().
+                                                  FirstOrDefault();
+
+                            // Either with SOAP-XML tags or without...
+                            var EvseStatus  = (SOAPXML != null ? SOAPXML : XML).
+                                                        Element (NS.OICPv1_2EVSEStatus + "EvseStatusRecords").
+                                                        Elements(NS.OICPv1_2EVSEStatus + "EvseStatusRecord").
+                                                        Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(NS.OICPv1_2EVSEStatus + "EvseId").Value),
+                                                                                                                (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(NS.OICPv1_2EVSEStatus + "EvseStatus").Value))).
+                                                        ToArray();
+
+                            if (EvseStatus.Length > 0)
+                                EvseStatus.ForEach(EVSEStatusKVP => _EVSEStatusHandler(UpdateContext, DateTime.Now, EVSEStatusKVP.Key, EVSEStatusKVP.Value));
+
+                            else
+                                DebugX.Log("Could not fetch any 'EvseStatusRecords' from XML stream!");
+
+                        }
+                        catch (Exception e)
+                        {
+                            DebugX.LogT("Could not fetch any 'EvseStatusRecords' from XML stream: " + e.Message + Environment.NewLine + e.StackTrace);
+                        }
 
                     }
-                    catch (Exception e)
-                    {
-                        DebugX.Log("Could not fetch the list of EVSE Ids for dynamic EVSE status update!");
-                    }
-
-                    if (EVSEIds == null)
-                        DebugX.Log("Could not fetch the list of EVSE Ids for dynamic EVSE status update!");
 
                     #endregion
 
-                    // Get the data via the GetEVSEIds delegate!
+                    #region ...or load it (from Hubject) via OICP v1.2
+
                     else
-                        Task.WaitAll(_GetEVSEIdsForStatusUpdate().
+                    {
 
-                                         // Hubject has a limit of 100 EVSEIds per request!
-                                         ToPartitions(100).
+                        Boolean Finished = false;
 
-                                         Select(EVSEPartition => OICPUpstreamService.
-                                                                     PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
-                                                                     ContinueWith(NewEVSEStatusTask => {
+                        var cancellationTokenS = new CancellationTokenSource();
 
-                                                                         if (NewEVSEStatusTask.Result != null)
-                                                                             NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus =>
-                                                                                 _EVSEStatusHandler(UpdateContext, DateTime.Now, NewEVSEStatus.Key, NewEVSEStatus.Value));
+                        #region 1) Fetch EVSEIds to update
 
-                                                                     })
-                                                                     )
-                                                                     .ToArray(),
+                        IEnumerable<EVSE_Id> EVSEIds = null;
 
-                                     millisecondsTimeout: (Int32) _UpdateEVSEStatusTimeout.TotalMilliseconds
+                        try
+                        {
 
-                                     //CancellationToken cancellationToken
+                            EVSEIds = _GetEVSEIdsForStatusUpdate(UpdateContext, DateTime.Now);
 
-                                    );
+                        }
+                        catch (Exception e)
+                        {
+                            DebugX.Log("Could not fetch the list of EVSE Ids for dynamic EVSE status update!");
+                        }
 
+                        if (EVSEIds == null)
+                            DebugX.Log("Could not fetch the list of EVSE Ids for dynamic EVSE status update!");
+
+                        #endregion
+
+                        #region 2) Load the data (from Hubject) via OICP v1.2
+
+                        // Get the data via the GetEVSEIds delegate!
+                        else
+                            Finished = Task.WaitAll(EVSEIds.
+
+                                                        // Hubject has a limit of 100 EVSEIds per request!
+                                                        ToPartitions(100).
+
+                                                        Select(EVSEPartition => OICPUpstreamService.
+                                                                                    PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
+                                                                                    ContinueWith(NewEVSEStatusTask => {
+
+                                                                                        if (NewEVSEStatusTask.Result != null)
+                                                                                            NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus =>
+                                                                                                _EVSEStatusHandler(UpdateContext, DateTime.Now, NewEVSEStatus.Key, NewEVSEStatus.Value));
+
+                                                                                    }, cancellationTokenS.Token)
+                                                                                    )
+                                                                                    .ToArray(),
+
+                                                    millisecondsTimeout: (Int32) _UpdateEVSEStatusTimeout.TotalMilliseconds
+
+                                                    //CancellationToken cancellationToken
+
+                                                   );
+
+
+                        // Wait 15 seconds and then cancel all subtasks!
+                        if (!Finished)
+                        {
+                            Thread.Sleep(TimeSpan.FromSeconds(15));
+                            cancellationTokenS.Cancel();
+                            DebugX.Log("Canceled all 'UpdateEVSEStatus' subtasks!");
+                        }
+
+                        #endregion
+
+                    }
+
+                    #endregion
 
                     #region Stop bulk update and dispose update context
 
@@ -531,7 +613,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 }
                 catch (Exception e)
                 {
-                    DebugX.Log("Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
+                    DebugX.LogT("'UpdateEVSEStatus' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
                 }
 
                 finally

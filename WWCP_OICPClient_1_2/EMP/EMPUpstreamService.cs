@@ -313,7 +313,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                              "eRoamingPullEvseStatusById",
                                              Timeout: TimeSpan.FromSeconds(180),
 
-                                             OnSuccess: XMLData =>
+                                             OnSuccess: XMLData => {
 
                                                  #region Documentation
 
@@ -345,15 +345,44 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                  #endregion
 
-                                                 new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(
-                                                     XMLData.HttpResponse,
-                                                     XMLData.Content.
-                                                             Element (NS.OICPv1_2EVSEStatus + "EvseStatusRecords").
-                                                             Elements(NS.OICPv1_2EVSEStatus + "EvseStatusRecord").
-                                                             Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(NS.OICPv1_2EVSEStatus + "EvseId").Value),
-                                                                                                                     (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(NS.OICPv1_2EVSEStatus + "EvseStatus").Value))).
-                                                             ToArray() as IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>),
+                                                 if (XMLData.
+                                                         Content.
+                                                         Element(NS.OICPv1_2EVSEStatus + "StatusCode") != null)
+                                                 {
 
+                                                     // <tns:eRoamingEvseStatusById xmlns:tns="http://www.hubject.com/b2b/services/evsestatus/v1.2">
+                                                     //   <tns:StatusCode>
+                                                     //     <cmn:Code xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">002</cmn:Code>
+                                                     //     <cmn:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">Hubject database error</cmn:Description>
+                                                     //   </tns:StatusCode>
+                                                     // </tns:eRoamingEvseStatusById>
+
+
+                                                 }
+
+                                                 try
+                                                 {
+
+                                                     return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(
+                                                                XMLData.HttpResponse,
+                                                                XMLData.Content.
+                                                                        Element (NS.OICPv1_2EVSEStatus + "EvseStatusRecords").
+                                                                        Elements(NS.OICPv1_2EVSEStatus + "EvseStatusRecord").
+                                                                        Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(NS.OICPv1_2EVSEStatus + "EvseId").Value),
+                                                                                                                                (HubjectEVSEState)Enum.Parse(typeof(HubjectEVSEState), v.Element(NS.OICPv1_2EVSEStatus + "EvseStatus").Value))).
+                                                                        ToArray() as IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>);
+
+                                                 }
+                                                 catch (Exception e)
+                                                 {
+                                                     
+                                                 }
+
+                                                 return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(
+                                                            new HTTPResponse(),
+                                                            new List<KeyValuePair<EVSE_Id, HubjectEVSEState>>() as IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>);
+
+                                             },
 
                                              OnSOAPFault: Fault => {
 
