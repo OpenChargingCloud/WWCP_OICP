@@ -232,7 +232,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                         return _OICPClient.Query(EVSEDataFullLoadXML,
                                                    "eRoamingPushEvseData",
-                                                   Timeout: TimeSpan.FromSeconds(60),
+                                                   QueryTimeout: TimeSpan.FromSeconds(60),
 
                                                    OnSuccess: XMLData =>
                                                    {
@@ -331,7 +331,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                         return _OICPClient.Query(EVSEStatesInsertXML,
                                                    "eRoamingPushEvseStatus",
-                                                   Timeout: TimeSpan.FromSeconds(60),
+                                                   QueryTimeout: TimeSpan.FromSeconds(60),
 
                                                    OnSuccess: XMLData =>
                                                    {
@@ -438,7 +438,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                         _OICPClient.
                              Query(EVSEStatesInsertXML,
                                    "eRoamingPushEvseStatus",
-                                   Timeout: TimeSpan.FromSeconds(180),
+                                   QueryTimeout: TimeSpan.FromSeconds(180),
 
                                    OnSuccess: XMLData => {
 
@@ -526,7 +526,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                         _OICPClient.
                              Query(EVSEStatesUpdateXML,
                                    "eRoamingPushEvseStatus",
-                                   Timeout: TimeSpan.FromSeconds(180),
+                                   QueryTimeout: TimeSpan.FromSeconds(180),
 
                                    OnSuccess: XMLData => {
 
@@ -614,7 +614,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                         _OICPClient.
                              Query(EVSEStatesRemoveXML,
                                    "eRoamingPushEvseStatus",
-                                   Timeout: TimeSpan.FromSeconds(180),
+                                   QueryTimeout: TimeSpan.FromSeconds(180),
 
                                    OnSuccess: XMLData => {
 

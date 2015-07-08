@@ -19,10 +19,10 @@
 
 using System;
 
-using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
 #endregion
 
@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>
-    /// An abstract base class for all OICPv1.2 Upstream Service(s).
+    /// An abstract base class for all OICP upstream services.
     /// </summary>
     public abstract class AOICPUpstreamService
     {
@@ -157,6 +157,15 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #region Constructor(s)
 
+        /// <summary>
+        /// Create an abstract OICP upstream service.
+        /// </summary>
+        /// <param name="Hostname">The OICP hostname to connect to.</param>
+        /// <param name="TCPPort">The OICP IP port to connect to.</param>
+        /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
+        /// <param name="AuthorizatorId">An optional authorizator identification to use.</param>
+        /// <param name="UserAgent">An optional HTTP user agent to use.</param>
+        /// <param name="DNSClient">An optional DNS client.</param>
         public AOICPUpstreamService(String           Hostname,
                                     IPPort           TCPPort,
                                     String           HTTPVirtualHost  = null,
@@ -187,7 +196,14 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #endregion
 
 
+        #region (protected) SendOnHTTPError(Timestamp, Sender, HttpResponse)
 
+        /// <summary>
+        /// Notify that an HTTP error occured.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the error received.</param>
+        /// <param name="Sender">The sender of this error message.</param>
+        /// <param name="HttpResponse">The HTTP response related to this error message.</param>
         protected void SendOnHTTPError(DateTime      Timestamp,
                                        Object        Sender,
                                        HTTPResponse  HttpResponse)
@@ -201,6 +217,16 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         }
 
+        #endregion
+
+        #region (protected) SendOnException(Timestamp, Sender, Exception)
+
+        /// <summary>
+        /// Notify that an exception occured.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the exception.</param>
+        /// <param name="Sender">The sender of this exception.</param>
+        /// <param name="Exception">The exception itself.</param>
         protected void SendOnException(DateTime   Timestamp,
                                        Object     Sender,
                                        Exception  Exception)
@@ -214,6 +240,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         }
 
+        #endregion
 
     }
 

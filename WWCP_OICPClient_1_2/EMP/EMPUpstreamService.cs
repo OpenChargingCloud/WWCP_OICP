@@ -20,7 +20,6 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -28,10 +27,10 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 using org.GraphDefined.Vanaheimr.Aegir;
 
 using org.GraphDefined.WWCP.LocalService;
-using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
 #endregion
 
@@ -39,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>
-    /// OICPv1.2 EMP Upstream Service(s).
+    /// OICP v1.2 EMP upstream services.
     /// </summary>
     public class EMPUpstreamService : AOICPUpstreamService,
                                       IRoamingProviderProvided_EVSPServices
@@ -48,22 +47,23 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new OICP EMP Upstream Service(s).
+        /// Create a new OICP v1.2 EMP upstream service.
         /// </summary>
-        /// <param name="OICPHost"></param>
-        /// <param name="OICPPort"></param>
-        /// <param name="HTTPVirtualHost"></param>
-        /// <param name="AuthorizatorId"></param>
-        /// <param name="DNSClient"></param>
-        public EMPUpstreamService(String           OICPHost,
-                                  IPPort           OICPPort,
+        /// <param name="Hostname">The OICP hostname to connect to.</param>
+        /// <param name="TCPPort">The OICP IP port to connect to.</param>
+        /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
+        /// <param name="AuthorizatorId">An optional authorizator identification to use.</param>
+        /// <param name="UserAgent">An optional HTTP user agent to use.</param>
+        /// <param name="DNSClient">An optional DNS client.</param>
+        public EMPUpstreamService(String           Hostname,
+                                  IPPort           TCPPort,
                                   String           HTTPVirtualHost = null,
                                   Authorizator_Id  AuthorizatorId  = null,
                                   String           UserAgent       = "GraphDefined OICP Gateway",
                                   DNSClient        DNSClient       = null)
 
-            : base(OICPHost,
-                   OICPPort,
+            : base(Hostname,
+                   TCPPort,
                    HTTPVirtualHost,
                    AuthorizatorId,
                    UserAgent,
@@ -92,7 +92,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     return _OICPClient.Query(EMPMethods.GetEVSEByIdRequestXML(EVSEId),
                                              "eRoamingEvseById",
-                                             Timeout: TimeSpan.FromSeconds(180),
+                                             QueryTimeout: TimeSpan.FromSeconds(180),
 
                                              OnSuccess: XMLData =>
                                                  new HTTPResponse<XElement>(
@@ -139,13 +139,15 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="GeoCoordinate">An optional geo coordinate as search center.</param>
         /// <param name="DistanceKM">An optional geo coordinate as search radius.</param>
+        /// <param name="QueryTimeout">an optional timeout of the SOAP client [default 180 sec.]</param>
         /// <returns>A list of EVSE datasets.</returns>
         public Task<HTTPResponse<IEnumerable<XElement>>>
 
             PullEVSEDataRequest(EVSP_Id        ProviderId,
                                 DateTime?      LastCall       = null,
                                 GeoCoordinate  GeoCoordinate  = null,
-                                UInt64         DistanceKM     = 0)
+                                UInt64         DistanceKM     = 0,
+                                TimeSpan?      QueryTimeout   = null)
 
         {
 
@@ -162,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     return _OICPClient.Query(EMPMethods.PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, DistanceKM),
                                              "eRoamingPullEVSEData",
-                                             Timeout: TimeSpan.FromSeconds(180),
+                                             QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : TimeSpan.FromSeconds(180),
 
                                              OnSuccess: XMLData => {
 
@@ -223,33 +225,58 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                  #endregion
 
+                                                 #region Hubject error?
+
+                                                 var HubjectError = XMLData.
+                                                                        Content.
+                                                                        Element(NS.OICPv1_2EVSEStatus + "StatusCode");
+
+                                                 if (HubjectError != null)
+                                                 {
+
+                                                     // <tns:eRoamingEvseStatusById xmlns:tns="http://www.hubject.com/b2b/services/evsestatus/v1.2">
+                                                     //   <tns:StatusCode>
+                                                     //     <cmn:Code        xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">002</cmn:Code>
+                                                     //     <cmn:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">Hubject database error</cmn:Description>
+                                                     //   </tns:StatusCode>
+                                                     // </tns:eRoamingEvseStatusById>
+
+                                                     var Code         = HubjectError.Element(NS.OICPv1_2CommonTypes + "Code").       Value;
+                                                     var Description  = HubjectError.Element(NS.OICPv1_2CommonTypes + "Description").Value;
+                                                     var Exception    = new ApplicationException(Code + " - " + Description);
+
+                                                     SendOnException(DateTime.Now, this, Exception);
+
+                                                     return new HTTPResponse<IEnumerable<XElement>>(Exception);
+
+                                                 }
+
+                                                 #endregion
+
                                                  try
                                                  {
 
-                                                     var OperatorEvseData = XMLData.Content.
-                                                                                Element (NS.OICPv1_2EVSEData + "EvseData").
-                                                                                Elements(NS.OICPv1_2EVSEData + "OperatorEvseData").
-                                                                                ToArray();
-
-                                                     if (OperatorEvseData.Length == 0)
-                                                         SendOnException(DateTime.Now, this, new Exception("Could not fetch any 'OperatorEvseData' from the database!"));
-
-                                                     return new HTTPResponse<IEnumerable<XElement>>(XMLData.HttpResponse,
-                                                                                                    OperatorEvseData);
+                                                     return new HTTPResponse<IEnumerable<XElement>>(
+                                                                XMLData.HttpResponse,
+                                                                XMLData.Content.
+                                                                    Element (NS.OICPv1_2EVSEData + "EvseData").
+                                                                    Elements(NS.OICPv1_2EVSEData + "OperatorEvseData"));
 
                                                  }
                                                  catch (Exception e)
                                                  {
+                                                     DebugX.Log("'PullEVSEDataRequest' led to an exception: " + e.Message);
                                                      SendOnException(DateTime.Now, this, e);
+                                                     return new HTTPResponse<IEnumerable<XElement>>(e);
                                                  }
-
-                                                 return new HTTPResponse<IEnumerable<XElement>>(XMLData.HttpResponse, new XElement[0]);
 
                                              },
 
+                                             #region SOAP fault, HTTP error, exception...
+
                                              OnSOAPFault: Fault => {
 
-                                                 Debug.WriteLine("[" + DateTime.Now + "] 'PullEVSEDataRequest' lead to a fault!");
+                                                 DebugX.Log("'PullEVSEDataRequest' lead to a SOAP fault!");
 
                                                  return new HTTPResponse<IEnumerable<XElement>>(
                                                      Fault.HttpResponse,
@@ -261,6 +288,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                              OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
 
                                              OnException: (t, s, e) => SendOnException(t, s, e)
+
+                                             #endregion
 
                                             );
 
@@ -289,11 +318,13 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// </summary>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
+        /// <param name="QueryTimeout">an optional timeout of the SOAP client [default 180 sec.]</param>
         /// <returns>An enumeration of EVSE Ids and their current status.</returns>
         public Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>>
 
             PullEVSEStatusByIdRequest(EVSP_Id               ProviderId,
-                                      IEnumerable<EVSE_Id>  EVSEIds)
+                                      IEnumerable<EVSE_Id>  EVSEIds,
+                                      TimeSpan?             QueryTimeout = null)
 
         {
 
@@ -311,7 +342,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     return _OICPClient.Query(EMPMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds),
                                              "eRoamingPullEvseStatusById",
-                                             Timeout: TimeSpan.FromSeconds(180),
+                                             QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : TimeSpan.FromSeconds(180),
 
                                              OnSuccess: XMLData => {
 
@@ -345,20 +376,33 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                  #endregion
 
-                                                 if (XMLData.
-                                                         Content.
-                                                         Element(NS.OICPv1_2EVSEStatus + "StatusCode") != null)
+                                                 #region Hubject error?
+
+                                                 var HubjectError = XMLData.
+                                                                        Content.
+                                                                        Element(NS.OICPv1_2EVSEStatus + "StatusCode");
+
+                                                 if (HubjectError != null)
                                                  {
 
                                                      // <tns:eRoamingEvseStatusById xmlns:tns="http://www.hubject.com/b2b/services/evsestatus/v1.2">
                                                      //   <tns:StatusCode>
-                                                     //     <cmn:Code xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">002</cmn:Code>
+                                                     //     <cmn:Code        xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">002</cmn:Code>
                                                      //     <cmn:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">Hubject database error</cmn:Description>
                                                      //   </tns:StatusCode>
                                                      // </tns:eRoamingEvseStatusById>
 
+                                                     var Code         = HubjectError.Element(NS.OICPv1_2CommonTypes + "Code").       Value;
+                                                     var Description  = HubjectError.Element(NS.OICPv1_2CommonTypes + "Description").Value;
+                                                     var Exception    = new ApplicationException(Code + " - " + Description);
+
+                                                     SendOnException(DateTime.Now, this, Exception);
+
+                                                     return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(Exception);
 
                                                  }
+
+                                                 #endregion
 
                                                  try
                                                  {
@@ -375,18 +419,18 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                  }
                                                  catch (Exception e)
                                                  {
-                                                     
+                                                     DebugX.Log("'PullEVSEStatusByIdRequest' led to an exception: " + e.Message);
+                                                     SendOnException(DateTime.Now, this, e);
+                                                     return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(e);
                                                  }
-
-                                                 return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(
-                                                            new HTTPResponse(),
-                                                            new List<KeyValuePair<EVSE_Id, HubjectEVSEState>>() as IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>);
 
                                              },
 
+                                             #region SOAP fault, HTTP error, exception...
+
                                              OnSOAPFault: Fault => {
 
-                                                 Debug.WriteLine("[" + DateTime.Now + "] 'PullEVSEStatusByIdRequest' lead to a fault!");
+                                                 DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
                                                  return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(
                                                      Fault.HttpResponse,
@@ -398,6 +442,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                              OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
 
                                              OnException: (t, s, e) => SendOnException(t, s, e)
+
+                                             #endregion
 
                                             );
 

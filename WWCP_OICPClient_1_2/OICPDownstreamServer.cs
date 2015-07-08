@@ -215,7 +215,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                                 new XElement(NS.OICPv1_2CommonTypes + "StatusCode",
                                                                     new XElement(NS.OICPv1_2CommonTypes + "Code",           "022"),
-                                                                    new XElement(NS.OICPv1_2CommonTypes + "Description",    "Request lead to an exception!"),
+                                                                    new XElement(NS.OICPv1_2CommonTypes + "Description",    "Request led to an exception!"),
                                                                     new XElement(NS.OICPv1_2CommonTypes + "AdditionalInfo", e.Message)
                                                                 )
 
@@ -364,7 +364,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                                          new XElement(NS.OICPv1_2CommonTypes + "StatusCode",
                                                                              new XElement(NS.OICPv1_2CommonTypes + "Code",           "022"),
-                                                                             new XElement(NS.OICPv1_2CommonTypes + "Description",    "Request lead to an exception!"),
+                                                                             new XElement(NS.OICPv1_2CommonTypes + "Description",    "Request led to an exception!"),
                                                                              new XElement(NS.OICPv1_2CommonTypes + "AdditionalInfo",  e.Message)
                                                                          )
 
@@ -512,7 +512,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                                          new XElement(NS.OICPv1_2CommonTypes + "StatusCode",
                                                                              new XElement(NS.OICPv1_2CommonTypes + "Code",           "022"),
-                                                                             new XElement(NS.OICPv1_2CommonTypes + "Description",    "Request lead to an exception!"),
+                                                                             new XElement(NS.OICPv1_2CommonTypes + "Description",    "Request led to an exception!"),
                                                                              new XElement(NS.OICPv1_2CommonTypes + "AdditionalInfo", e.Message)
                                                                          )
 

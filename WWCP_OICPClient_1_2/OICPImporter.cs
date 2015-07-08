@@ -61,8 +61,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         private readonly Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  _EVSEStatusHandler;
         private readonly Action<TContext>                                       _StopBulkUpdate;
 
-        private readonly Func<StreamReader>                                     _LoadStaticDataFromStream;
-        private readonly Func<StreamReader>                                     _LoadDynamicDataFromStream;
+        private readonly Func<UInt64, StreamReader>                             _LoadStaticDataFromStream;
+        private readonly Func<UInt64, StreamReader>                             _LoadDynamicDataFromStream;
 
         #endregion
 
@@ -72,12 +72,53 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         private readonly String         _Hostname;
         private readonly IPPort         _TCPPort;
         private readonly EVSP_Id        _ProviderId;
+
         private readonly TimeSpan       _UpdateEVSEDataEvery;
         private readonly TimeSpan       _UpdateEVSEDataTimeout;
         private readonly TimeSpan       _UpdateEVSEStatusEvery;
         private readonly TimeSpan       _UpdateEVSEStatusTimeout;
 
-        private readonly DNSClient      _DNSClient;
+        #region LoadStaticDataCounter
+
+        private UInt64 _LoadStaticDataCounter;
+
+        public UInt64 LoadStaticDataCounter
+        {
+            get
+            {
+                return _LoadStaticDataCounter;
+            }
+        }
+
+        #endregion
+
+        #region LoadDynamicDataCounter
+
+        private UInt64 _LoadDynamicDataCounter;
+
+        public UInt64 LoadDynamicDataCounter
+        {
+            get
+            {
+                return _LoadDynamicDataCounter;
+            }
+        }
+
+        #endregion
+
+        #region DNSClient
+
+        private readonly DNSClient _DNSClient;
+
+        public DNSClient DNSClient
+        {
+            get
+            {
+                return _DNSClient;
+            }
+        }
+
+        #endregion
 
         #endregion
 
@@ -95,21 +136,20 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// <param name="UpdateEVSEDataTimeout"></param>
         /// <param name="UpdateEVSEStatusEvery"></param>
         /// <param name="UpdateEVSEStatusTimeout"></param>
-        /// <param name="GetEVSEIdsForStatusUpdate"></param>
         /// <param name="UpdateContextCreator"></param>
         /// <param name="UpdateContextDisposer"></param>
         /// <param name="StartBulkUpdate"></param>
-        /// <param name="EVSEOperatorDataHandler"></param>
-        /// <param name="EVSEStatusHandler"></param>
         /// <param name="StopBulkUpdate"></param>
+        /// <param name="LoadStaticDataFromStream"></param>
+        /// <param name="LoadDynamicDataFromStream"></param>
+        /// <param name="EVSEOperatorDataHandler"></param>
+        /// <param name="GetEVSEIdsForStatusUpdate"></param>
+        /// <param name="EVSEStatusHandler"></param>
         public OICPImporter(String                                                 Identification,
                             String                                                 Hostname,
                             IPPort                                                 TCPPort,
                             EVSP_Id                                                ProviderId,
                             DNSClient                                              DNSClient                    = null,
-
-                            Func<StreamReader>                                     LoadStaticDataFromStream     = null,
-                            Func<StreamReader>                                     LoadDynamicDataFromStream    = null,
 
                             TimeSpan?                                              UpdateEVSEDataEvery          = null,
                             TimeSpan?                                              UpdateEVSEDataTimeout        = null,
@@ -118,10 +158,14 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                             Func<TContext>                                         UpdateContextCreator         = null,
                             Action<TContext>                                       UpdateContextDisposer        = null,
                             Action<TContext>                                       StartBulkUpdate              = null,
+                            Action<TContext>                                       StopBulkUpdate               = null,
+
+                            Func<UInt64, StreamReader>                             LoadStaticDataFromStream     = null,
+                            Func<UInt64, StreamReader>                             LoadDynamicDataFromStream    = null,
+
                             Action<TContext, DateTime, XElement>                   EVSEOperatorDataHandler      = null,
                             Func<TContext, DateTime, IEnumerable<EVSE_Id>>         GetEVSEIdsForStatusUpdate    = null,
-                            Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  EVSEStatusHandler            = null,
-                            Action<TContext>                                       StopBulkUpdate               = null)
+                            Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  EVSEStatusHandler            = null)
 
         {
 
@@ -291,7 +335,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                         try
                         {
 
-                            var XML               = XDocument.Parse(_LoadStaticDataFromStream().ReadToEnd()).Root;
+                            var XML               = XDocument.Parse(_LoadStaticDataFromStream(_LoadStaticDataCounter++).ReadToEnd()).Root;
 
                             var SOAPXML           = XML.Element(org.GraphDefined.Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope + "Body").
                                                         Descendants().
@@ -312,7 +356,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                         }
                         catch (Exception e)
                         {
-                            DebugX.LogT("Could not fetch any 'OperatorEvseData' from XML stream: " + e.Message + Environment.NewLine + e.StackTrace);
+                            DebugX.LogT("Could not fetch any 'OperatorEvseData' from XML stream: " + e.Message);
                         }
 
                     }
@@ -379,7 +423,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 }
                 catch (Exception e)
                 {
-                    DebugX.Log(" Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
+                    DebugX.LogT("'UpdateEVSEData' led to an exception: " + e.Message);
                 }
 
                 finally
@@ -390,7 +434,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             }
 
             else
-                DebugX.Log(" Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' skipped!");
+                DebugX.LogT("'UpdateEVSEData' skipped!");
 
         }
 
@@ -467,7 +511,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                         try
                         {
 
-                            var XML         = XDocument.Parse(_LoadDynamicDataFromStream().ReadToEnd()).Root;
+                            var XML         = XDocument.Parse(_LoadDynamicDataFromStream(_LoadDynamicDataCounter++).ReadToEnd()).Root;
 
                             var SOAPXML     = XML.Element(org.GraphDefined.Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope + "Body").
                                                   Descendants().
@@ -490,7 +534,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                         }
                         catch (Exception e)
                         {
-                            DebugX.LogT("Could not fetch any 'EvseStatusRecords' from XML stream: " + e.Message + Environment.NewLine + e.StackTrace);
+                            DebugX.Log("Could not fetch any 'EvseStatusRecords' from XML stream: " + e.Message);
                         }
 
                     }
@@ -613,7 +657,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 }
                 catch (Exception e)
                 {
-                    DebugX.LogT("'UpdateEVSEStatus' lead to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
+                    DebugX.LogT("'UpdateEVSEStatus' led to an exception: " + e.Message);
                 }
 
                 finally
@@ -624,7 +668,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             }
 
             else
-                DebugX.Log("Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' skipped!");
+                DebugX.LogT("'UpdateEVSEStatus' skipped!");
 
         }
 
