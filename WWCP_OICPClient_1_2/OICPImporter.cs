@@ -44,9 +44,9 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #region Data
 
         public static readonly TimeSpan      DefaultUpdateEVSEDataEvery      = TimeSpan.FromHours  (  2);
-        public static readonly TimeSpan      DefaultUpdateEVSEDataTimeout    = TimeSpan.FromMinutes( 15);   // First import might be big and slow!
+        public static readonly TimeSpan      DefaultUpdateEVSEDataTimeout    = TimeSpan.FromMinutes( 30);   // First import might be big and slow!
         public static readonly TimeSpan      DefaultUpdateEVSEStatusEvery    = TimeSpan.FromSeconds( 20);
-        public static readonly TimeSpan      DefaultUpdateEVSEStatusTimeout  = TimeSpan.FromMinutes( 15);   // First import might be big and slow!
+        public static readonly TimeSpan      DefaultUpdateEVSEStatusTimeout  = TimeSpan.FromMinutes( 30);   // First import might be big and slow!
 
         private readonly EMPUpstreamService                                     OICPUpstreamService;
         private readonly Object                                                 UpdateEVSEsLock  = new Object();
@@ -80,7 +80,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #region LoadStaticDataCounter
 
-        private UInt64 _LoadStaticDataCounter;
+        private UInt64 _LoadStaticDataCounter = 1;
 
         public UInt64 LoadStaticDataCounter
         {
@@ -94,7 +94,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #region LoadDynamicDataCounter
 
-        private UInt64 _LoadDynamicDataCounter;
+        private UInt64 _LoadDynamicDataCounter = 1;
 
         public UInt64 LoadDynamicDataCounter
         {
@@ -286,7 +286,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     #if DEBUG
 
-                        DebugX.Log(" Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' started");
+                        DebugX.LogT("'UpdateEVSEData' started");
 
                         var StopWatch = new Stopwatch();
                         StopWatch.Start();
@@ -414,7 +414,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                         StopWatch.Stop();
 
-                        DebugX.Log(" Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEData' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
+                        DebugX.LogT("'UpdateEVSEData' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
 
                     #endif
 
@@ -462,7 +462,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     #if DEBUG
 
-                        DebugX.Log("Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' started");
+                        DebugX.LogT("'UpdateEVSEStatus' started");
 
                         var StopWatch = new Stopwatch();
                         StopWatch.Start();
@@ -584,8 +584,12 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                                                     ContinueWith(NewEVSEStatusTask => {
 
                                                                                         if (NewEVSEStatusTask.Result != null)
-                                                                                            NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus =>
-                                                                                                _EVSEStatusHandler(UpdateContext, DateTime.Now, NewEVSEStatus.Key, NewEVSEStatus.Value));
+                                                                                            if (NewEVSEStatusTask.Result.Content != null)
+                                                                                                NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus =>
+                                                                                                    _EVSEStatusHandler(UpdateContext,
+                                                                                                                       DateTime.Now,
+                                                                                                                       NewEVSEStatus.Key,
+                                                                                                                       NewEVSEStatus.Value));
 
                                                                                     }, cancellationTokenS.Token)
                                                                                     )
@@ -648,7 +652,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                         StopWatch.Stop();
 
-                        DebugX.Log("Thread " + Thread.CurrentThread.ManagedThreadId + "] 'UpdateEVSEStatus' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
+                        DebugX.LogT("'UpdateEVSEStatus' finished after " + StopWatch.Elapsed.TotalSeconds + " seconds!");
 
                     #endif
 
