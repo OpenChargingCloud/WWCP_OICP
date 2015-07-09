@@ -275,7 +275,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                       EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours
                                                           ? null
-                                                          : new XElement(NS.OICPv1_2EVSEData + "OpeningTime",   EVSE.ChargingStation.ChargingPool.OpeningTime.Simple),
+                                                          : new XElement(NS.OICPv1_2EVSEData + "OpeningTime",   EVSE.ChargingStation.ChargingPool.OpeningTime.Text),
 
                             //                    <!--Optional:-->
                                                       //               <v1:HubOperatorID>?</v1:HubOperatorID>
