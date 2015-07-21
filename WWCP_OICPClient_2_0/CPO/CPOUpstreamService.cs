@@ -225,7 +225,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(_Hostname,
                                                         _TCPPort,
                                                         _HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingEvseData_V1.2",
+                                                        "/ibis/ws/eRoamingEvseData_V2.0",
                                                         _UserAgent,
                                                         _DNSClient))
                     {
@@ -324,7 +324,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,
                                                             _HTTPVirtualHost,
-                                                            "/ibis/ws/eRoamingEvseStatus_V1.2",
+                                                            "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                             _UserAgent,
                                                             _DNSClient))
                     {
@@ -428,7 +428,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(_Hostname,
                                                         _TCPPort,
                                                         _HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingEvseStatus_V1.2",
+                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                         UserAgent,
                                                         DNSClient))
 
@@ -516,7 +516,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(_Hostname,
                                                         _TCPPort,
                                                         _HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingEvseStatus_V1.2",
+                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                         UserAgent,
                                                         DNSClient))
 
@@ -604,7 +604,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(_Hostname,
                                                         _TCPPort,
                                                         _HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingEvseStatus_V1.2",
+                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                         UserAgent,
                                                         DNSClient))
 
@@ -702,7 +702,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             try
             {
 
-                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V1.2", DNSClient: _DNSClient))
+                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V2.0", DNSClient: _DNSClient))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
@@ -867,7 +867,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             try
             {
 
-                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V1.2", DNSClient: _DNSClient))
+                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V2.0", DNSClient: _DNSClient))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStopXML(OperatorId,
@@ -1056,7 +1056,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             try
             {
 
-                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V1.2", DNSClient: _DNSClient))
+                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V2.0", DNSClient: _DNSClient))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.SendChargeDetailRecordXML(EVSEId,

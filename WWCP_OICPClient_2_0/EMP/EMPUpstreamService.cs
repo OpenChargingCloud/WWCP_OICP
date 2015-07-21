@@ -85,7 +85,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         "service-qa.hubject.com",
-                                                        "/ibis/ws/eRoamingEvseData_V1.2",
+                                                        "/ibis/ws/eRoamingEvseData_V2.0",
                                                         UserAgent,
                                                         DNSClient))
                 {
@@ -157,7 +157,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         "service-qa.hubject.com",
-                                                        "/ibis/ws/eRoamingEvseData_V1.2",
+                                                        "/ibis/ws/eRoamingEvseData_V2.0",
                                                         UserAgent,
                                                         DNSClient))
                 {
@@ -334,7 +334,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         "service-qa.hubject.com",
-                                                        "/ibis/ws/eRoamingEvseStatus_V1.2",
+                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                         UserAgent,
                                                         DNSClient))
 
