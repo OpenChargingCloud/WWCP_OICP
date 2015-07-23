@@ -449,13 +449,14 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         {
 
             return SOAP.Encapsulation(new XElement(NS.OICPv2_0Authorization + "eRoamingAuthorizeStart",
+                                          PartnerSessionId != null ? new XElement(NS.OICPv2_0Authorization + "PartnerSessionID", PartnerSessionId.ToString())                 : null,
                                           new XElement(NS.OICPv2_0Authorization + "OperatorID",       OperatorId.ToFormat(IdFormatType.OLD)),
+                                          EVSEId           != null ? new XElement(NS.OICPv2_0Authorization + "EVSEID",           EVSEId.          ToFormat(IdFormatType.OLD)) : null,
                                           new XElement(NS.OICPv2_0Authorization + "Identification",
                                               new XElement(NS.OICPv2_0CommonTypes + "RFIDmifarefamilyIdentification",
                                                  new XElement(NS.OICPv2_0CommonTypes + "UID", AuthToken.ToString())
                                               )
                                           ),
-                                          EVSEId           != null ? new XElement(NS.OICPv2_0Authorization + "EVSEID",           EVSEId.          ToFormat(IdFormatType.OLD)) : null,
                                           PartnerSessionId != null ? new XElement(NS.OICPv2_0Authorization + "PartnerSessionID", PartnerSessionId.ToString())                 : null
                                      ));
 

@@ -449,15 +449,36 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         {
 
             return SOAP.Encapsulation(new XElement(NS.OICPv1_2Authorization + "eRoamingAuthorizeStart",
+                                          PartnerSessionId != null ? new XElement(NS.OICPv1_2Authorization + "PartnerSessionID", PartnerSessionId.ToString())                 : null,
                                           new XElement(NS.OICPv1_2Authorization + "OperatorID",       OperatorId.ToFormat(IdFormatType.OLD)),
+                                          EVSEId           != null ? new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.          ToFormat(IdFormatType.OLD)) : null,
                                           new XElement(NS.OICPv1_2Authorization + "Identification",
                                               new XElement(NS.OICPv1_2CommonTypes + "RFIDmifarefamilyIdentification",
                                                  new XElement(NS.OICPv1_2CommonTypes + "UID", AuthToken.ToString())
                                               )
-                                          ),
-                                          EVSEId           != null ? new XElement(NS.OICPv1_2Authorization + "EVSEID",           EVSEId.          ToFormat(IdFormatType.OLD)) : null,
-                                          PartnerSessionId != null ? new XElement(NS.OICPv1_2Authorization + "PartnerSessionID", PartnerSessionId.ToString())                 : null
+                                          )
+                                          
                                       ));
+
+
+            // <eMI3:Envelope xmlns:eMI3="http://schemas.xmlsoap.org/soap/envelope/"
+            //                xmlns:Authorization="http://www.hubject.com/b2b/services/authorization/v1.2"
+            //                xmlns:CommonTypes="http://www.hubject.com/b2b/services/commontypes/v1.2"
+            //                xmlns:EVSEData="http://www.hubject.com/b2b/services/evsedata/v1.2"
+            //                xmlns:EVSESearch="http://www.hubject.com/b2b/services/evsesearch/v1.2"
+            //                xmlns:EVSEStatus="http://www.hubject.com/b2b/services/evsestatus/v1.2"
+            //                xmlns:MobileAuthorization="http://www.hubject.com/b2b/services/mobileauthorization/v1.2">
+            //   <eMI3:Header/>
+            //   <eMI3:Body>
+            //     <Authorization:eRoamingAuthorizeStart>
+            //       <Authorization:OperatorID>+49*822</Authorization:OperatorID>
+            //       <Authorization:Identification>
+            //         <CommonTypes:RFIDmifarefamilyIdentification>
+            //           <CommonTypes:UID>8027C0FA1B7604</CommonTypes:UID>
+            //         </CommonTypes:RFIDmifarefamilyIdentification>
+            //       </Authorization:Identification>
+            //       <Authorization:EVSEID>+49*822*285808576*1</Authorization:EVSEID>
+            //     </Authorization:eRoamingAuthorizeStart></eMI3:Body></eMI3:Envelope>
 
         }
 
