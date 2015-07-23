@@ -455,8 +455,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                  new XElement(NS.OICPv2_0CommonTypes + "UID", AuthToken.ToString())
                                               )
                                           ),
-                                          new XElement(NS.OICPv2_0Authorization + "EVSEID",           EVSEId.    ToFormat(IdFormatType.OLD)),
-                                          new XElement(NS.OICPv2_0Authorization + "PartnerSessionID", PartnerSessionId.ToString())
+                                          EVSEId           != null ? new XElement(NS.OICPv2_0Authorization + "EVSEID",           EVSEId.          ToFormat(IdFormatType.OLD)) : null,
+                                          PartnerSessionId != null ? new XElement(NS.OICPv2_0Authorization + "PartnerSessionID", PartnerSessionId.ToString())                 : null
                                      ));
 
         }
