@@ -280,7 +280,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// Create a new Hubject Authorization Start result.
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
-        public HubjectAuthorizationStart(XElement XML)
+        private HubjectAuthorizationStart(XElement XML)
             : base(AuthorizationType.Start, XML)
         { }
 
@@ -324,7 +324,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// Create a new Hubject Authorization Stop result.
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
-        public HubjectAuthorizationStop(XElement XML)
+        private HubjectAuthorizationStop(XElement XML)
             : base(AuthorizationType.Stop, XML)
         { }
 

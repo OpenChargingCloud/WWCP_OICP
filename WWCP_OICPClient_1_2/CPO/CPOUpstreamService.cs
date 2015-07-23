@@ -683,20 +683,23 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #endregion
 
 
-        #region AuthorizeStart(OperatorId, EVSEId, PartnerSessionId, UID)
+        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, PartnerProductId = null, HubjectSessionId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP authorize start request.
+        /// Create an OICP v1.2 authorize start request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
-        /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="PartnerSessionId">Your own session identification.</param>
-        /// <param name="UID">A RFID user identification.</param>
+        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="EVSEId">An optional EVSE identification.</param>
+        /// <param name="PartnerProductId">An optional partner product identification.</param>
+        /// <param name="HubjectSessionId">An optional Hubject session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner session identification.</param>
         public AUTHSTARTResult AuthorizeStart(EVSEOperator_Id     OperatorId,
-                                              EVSE_Id             EVSEId,
-                                              ChargingSession_Id  PartnerSessionId,
-                                              Auth_Token          UID)
-
+                                              Auth_Token          AuthToken,
+                                              EVSE_Id             EVSEId            = null,   // OICP v1.2: Optional
+                                              String              PartnerProductId  = null,   // OICP v1.2: Optional [100]
+                                              ChargingSession_Id  HubjectSessionId  = null,   // OICP v1.2: Optional
+                                              ChargingSession_Id  PartnerSessionId  = null)   // OICP v1.2: Optional [50]
         {
 
             try
@@ -706,9 +709,11 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 {
 
                     var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
+                                                                                      AuthToken,
                                                                                       EVSEId,
-                                                                                      PartnerSessionId,
-                                                                                      UID),
+                                                                                      PartnerProductId,
+                                                                                      HubjectSessionId,
+                                                                                      PartnerSessionId),
                                                          "eRoamingAuthorizeStart");
 
                     Console.WriteLine(HttpResponse.Content.ToUTF8String());

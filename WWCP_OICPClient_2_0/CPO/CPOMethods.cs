@@ -401,53 +401,63 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #endregion
 
 
-        #region AuthorizeStartXML(this EVSE, PartnerSessionID, UID)
+        #region AuthorizeStartXML(this EVSE, AuthToken, PartnerProductId = null, HubjectSessionId = null, PartnerSessionId = null)
 
         /// <summary>
         /// Create an OICP authorize start XML request.
         /// </summary>
         /// <param name="EVSE">An EVSE.</param>
-        /// <param name="PartnerSessionID">Your own session identification.</param>
-        /// <param name="UID">A RFID user identification.</param>
-        public static XElement AuthorizeStartXML(this EVSE          EVSE,
-                                                 ChargingSession_Id  PartnerSessionID,
-                                                 Auth_Token              UID)
+        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="PartnerProductId">An optional partner product identification.</param>
+        /// <param name="PartnerSessionId">An optional Hubject session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        public static XElement AuthorizeStartXML(this EVSE           EVSE,
+                                                 Auth_Token          AuthToken,
+                                                 String              PartnerProductId  = null,   // OICP v2.0: Optional [100]
+                                                 ChargingSession_Id  HubjectSessionId  = null,   // OICP v2.0: Optional
+                                                 ChargingSession_Id  PartnerSessionId  = null)   // OICP v2.0: Optional [50]
         {
 
             return AuthorizeStartXML(EVSE.ChargingStation.ChargingPool.EVSEOperator.Id,
+                                     AuthToken,
                                      EVSE.Id,
-                                     PartnerSessionID,
-                                     UID);
+                                     PartnerProductId,
+                                     HubjectSessionId,
+                                     PartnerSessionId);
 
         }
 
         #endregion
 
-        #region AuthorizeStartXML(OperatorId, EVSEId, PartnerSessionID, UID)
+        #region AuthorizeStartXML(OperatorId, AuthToken, EVSEId = null, PartnerProductId = null, HubjectSessionId = null, PartnerSessionId = null)
 
         /// <summary>
         /// Create an OICP authorize start XML request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
-        /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="PartnerSessionID">Your own session identification.</param>
-        /// <param name="UID">A RFID user identification.</param>
-        public static XElement AuthorizeStartXML(EVSEOperator_Id    OperatorId,
-                                                 EVSE_Id            EVSEId,
-                                                 ChargingSession_Id  PartnerSessionID,
-                                                 Auth_Token              UID)
+        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="EVSEId">An optional EVSE identification.</param>
+        /// <param name="PartnerProductId">An optional partner product identification.</param>
+        /// <param name="HubjectSessionId">An optional Hubject session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        public static XElement AuthorizeStartXML(EVSEOperator_Id     OperatorId,
+                                                 Auth_Token          AuthToken,
+                                                 EVSE_Id             EVSEId            = null,   // OICP v2.0: Optional
+                                                 String              PartnerProductId  = null,   // OICP v2.0: Optional [100]
+                                                 ChargingSession_Id  HubjectSessionId  = null,   // OICP v2.0: Optional
+                                                 ChargingSession_Id  PartnerSessionId  = null)   // OICP v2.0: Optional [50]
         {
 
             return SOAP.Encapsulation(new XElement(NS.OICPv2_0Authorization + "eRoamingAuthorizeStart",
-                                          new XElement(NS.OICPv2_0Authorization + "PartnerSessionID", PartnerSessionID.ToString()),
                                           new XElement(NS.OICPv2_0Authorization + "OperatorID",       OperatorId.ToFormat(IdFormatType.OLD)),
-                                          new XElement(NS.OICPv2_0Authorization + "EVSEID",           EVSEId.    ToFormat(IdFormatType.OLD)),
                                           new XElement(NS.OICPv2_0Authorization + "Identification",
                                               new XElement(NS.OICPv2_0CommonTypes + "RFIDmifarefamilyIdentification",
-                                                 new XElement(NS.OICPv2_0CommonTypes + "UID", UID.ToString())
+                                                 new XElement(NS.OICPv2_0CommonTypes + "UID", AuthToken.ToString())
                                               )
-                                          )
-                                      ));
+                                          ),
+                                          new XElement(NS.OICPv2_0Authorization + "EVSEID",           EVSEId.    ToFormat(IdFormatType.OLD)),
+                                          new XElement(NS.OICPv2_0Authorization + "PartnerSessionID", PartnerSessionId.ToString())
+                                     ));
 
         }
 
