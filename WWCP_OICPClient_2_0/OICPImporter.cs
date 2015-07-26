@@ -242,12 +242,12 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     Exception.Message.StartsWith("Unexpected end of file has occurred. The following elements are not closed:"))
                     return;
 
-                Debug.WriteLine("[" + Timestamp + "] '" + Sender.ToString() + "' " + Exception.Message);
+                DebugX.Log("'" + Sender.ToString() + "' " + Exception.Message);
 
             };
 
             OICPUpstreamService.OnHTTPError += (Timestamp, Sender, HttpResponse) => {
-                Debug.WriteLine("[" + Timestamp + "] '" + Sender.ToString() + "' " + (HttpResponse != null ? HttpResponse.ToString() : "<null>"));
+                DebugX.Log("'" + Sender.ToString() + "' " + (HttpResponse != null ? HttpResponse.ToString() : "<null>"));
             };
 
             #endregion

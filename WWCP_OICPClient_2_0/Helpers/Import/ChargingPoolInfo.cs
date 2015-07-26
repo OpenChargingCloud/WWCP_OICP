@@ -21,6 +21,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
@@ -163,9 +164,14 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                       EVSE_Id  EVSEId)
         {
 
-            var ExCSInfos = _ChargingStations.
-                                Where(CSInfo => CSInfo.StationXMLId == ChargingStationXMLId).
-                                FirstOrDefault();
+            var ExCSInfos = ChargingStationXMLId.IsNotNullOrEmpty()
+                                ? _ChargingStations.
+                                      Where(CSInfo => CSInfo.StationXMLId == ChargingStationXMLId).
+                                      //Where(CSInfo => CSInfo.StationId    == ChargingStation_Id.Create(EVSEId)).
+                                      FirstOrDefault()
+                                : _ChargingStations.
+                                      Where(CSInfo => CSInfo.StationId    == ChargingStation_Id.Create(EVSEId)).
+                                      FirstOrDefault();
 
             if (ExCSInfos == null)
                 AddCSInfo(ChargingStationXMLId, EVSEId);
