@@ -90,7 +90,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                         DNSClient))
                 {
 
-                    return _OICPClient.Query(EMPMethods.GetEVSEByIdRequestXML(EVSEId),
+                    return _OICPClient.Query(EMP_XMLMethods.GetEVSEByIdRequestXML(EVSEId),
                                              "eRoamingEvseById",
                                              QueryTimeout: TimeSpan.FromSeconds(180),
 
@@ -162,7 +162,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                         DNSClient))
                 {
 
-                    return _OICPClient.Query(EMPMethods.PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, DistanceKM),
+                    return _OICPClient.Query(EMP_XMLMethods.PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, DistanceKM),
                                              "eRoamingPullEVSEData",
                                              QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : TimeSpan.FromSeconds(180),
 
@@ -340,7 +340,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 {
 
-                    return _OICPClient.Query(EMPMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds),
+                    return _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds),
                                              "eRoamingPullEvseStatusById",
                                              QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : TimeSpan.FromSeconds(180),
 
@@ -487,7 +487,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
                 {
 
-                    var HttpResponse = OICPClient.Query(EMPMethods.MobileAuthorizeStartXML(EVSEId,
+                    var HttpResponse = OICPClient.Query(EMP_XMLMethods.MobileAuthorizeStartXML(EVSEId,
                                                                                            EVCOId,
                                                                                            PIN,
                                                                                            PartnerProductId),
@@ -652,7 +652,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
                 {
 
-                    var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStartXML(SessionId),
+                    var HttpResponse = _OICPClient.Query(EMP_XMLMethods.MobileRemoteStartXML(SessionId),
                                                          "eRoamingMobileRemoteStart");
 
                     //ToDo: In case of errors this will not parse!
@@ -711,7 +711,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
                 {
 
-                    var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStopXML(SessionId),
+                    var HttpResponse = _OICPClient.Query(EMP_XMLMethods.MobileRemoteStopXML(SessionId),
                                                          "eRoamingMobileRemoteStop");
 
                     //ToDo: In case of errors this will not parse!

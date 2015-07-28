@@ -25,7 +25,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 {
 
     /// <summary>
-    /// Helper methods to map OICP data type values to WWCP data type values.
+    /// Helper methods to map OICP data type values to
+    /// WWCP data type values and vice versa.
     /// </summary>
     public static class OICPMapper
     {
@@ -209,6 +210,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #endregion
 
 
+        #region AsString(PlugType)
+
         public static String AsString(this PlugTypes PlugType)
         {
 
@@ -277,6 +280,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         }
 
+        #endregion
+
+        #region AsString(SocketOutlet)
+
         public static String AsString(SocketOutlet SocketOutlet)
         {
 
@@ -317,6 +324,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             }
 
         }
+
+        #endregion
 
     }
 

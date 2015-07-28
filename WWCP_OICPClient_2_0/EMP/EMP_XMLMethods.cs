@@ -33,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
     /// <summary>
     /// OICP v2.0 EMP management methods.
     /// </summary>
-    public static class EMPMethods
+    public static class EMP_XMLMethods
     {
 
         #region SearchRequestXML(GeoCoordinate, Distance, ProviderId)

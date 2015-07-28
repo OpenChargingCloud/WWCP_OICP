@@ -31,9 +31,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 {
 
     /// <summary>
-    /// CPO management operations.
+    /// OICP v2.0 CPO management operations.
     /// </summary>
-    public static class CPOMethods
+    public static class CPO_XMLMethods
     {
 
         #region PushEVSEDataXML(this GroupedData,      Action = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
@@ -330,7 +330,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                         new XElement(OICPNS.EVSEData + "Address",
                             new XElement(OICPNS.CommonTypes + "Country",        EVSE.ChargingStation.Address.Country.Alpha3Code),
                             new XElement(OICPNS.CommonTypes + "City",           EVSE.ChargingStation.Address.City),
-                            new XElement(OICPNS.CommonTypes + "Street",         EVSE.ChargingStation.Address.Street), // OICPv1.2 requires at least 5 characters!
+                            new XElement(OICPNS.CommonTypes + "Street",         EVSE.ChargingStation.Address.Street), // OICPv2.0 requires at least 5 characters!
                             new XElement(OICPNS.CommonTypes + "PostalCode",     EVSE.ChargingStation.Address.PostalCode),
                             new XElement(OICPNS.CommonTypes + "HouseNum",       EVSE.ChargingStation.Address.HouseNumber),
                             new XElement(OICPNS.CommonTypes + "Floor",          EVSE.ChargingStation.Address.FloorLevel)

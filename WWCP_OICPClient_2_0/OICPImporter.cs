@@ -63,6 +63,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         private readonly Func<UInt64, StreamReader>                             _LoadStaticDataFromStream;
         private readonly Func<UInt64, StreamReader>                             _LoadDynamicDataFromStream;
+        private          Boolean                                                Paused = false;
 
         #endregion
 
@@ -264,6 +265,37 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #endregion
 
 
+        #region Pause()
+
+        /// <summary>
+        /// Pause the OICP importer (after the current run).
+        /// </summary>
+        public void Pause()
+        {
+            lock (UpdateEVSEsLock)
+            {
+                Paused = true;
+            }
+        }
+
+        #endregion
+
+        #region Continue()
+
+        /// <summary>
+        /// Continue the OICP importer (with the next scheduled run).
+        /// </summary>
+        public void Continue()
+        {
+            lock (UpdateEVSEsLock)
+            {
+                Paused = false;
+            }
+        }
+
+        #endregion
+
+
         #region (private, Timer) UpdateEVSEData(State)
 
         /// <summary>
@@ -272,6 +304,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// <param name="State">State object.</param>
         private void UpdateEVSEData(Object State)
         {
+
+            if (Paused)
+                return;
 
             // Wait till a concurrent UpdateEVSEStatus(...) has finished!
             if (Monitor.TryEnter(UpdateEVSEsLock, _UpdateEVSEDataTimeout))
@@ -448,6 +483,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// <param name="State">State object.</param>
         private void UpdateEVSEStatus(Object State)
         {
+
+            if (Paused)
+                return;
 
             // If a concurrent UpdateEVSEData/UpdateEVSEStatus(...) is still running, skip this round!
             if (Monitor.TryEnter(UpdateEVSEsLock))
@@ -677,6 +715,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         }
 
         #endregion
+
 
     }
 

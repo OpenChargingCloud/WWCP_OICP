@@ -298,9 +298,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     // 
                     // </soapenv:Envelope>
 
-                    // ---------------------------------
+                    // ----------------------------------
                     // Hubject/Intercharge App OICPv1.2
-                    // ---------------------------------
+                    // ----------------------------------
                     // <soapenv:Envelope xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2"
                     //                   xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
                     //                   xmlns:tns="http://www.hubject.com/b2b/services/authorization/v1.2">

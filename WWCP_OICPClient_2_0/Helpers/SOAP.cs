@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Xml.Linq;
 
 using SOAPNS = org.GraphDefined.Vanaheimr.Hermod.SOAP;
@@ -33,8 +32,6 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
     public static class SOAP
     {
 
-        #region Encapsulation(XML)
-
         /// <summary>
         /// Encapsulate the given XML within a XML SOAP frame.
         /// </summary>
@@ -43,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         {
 
             return new XElement(SOAPNS.NS.SOAPEnvelope + "Envelope",
-                       new XAttribute(XNamespace.Xmlns + "eMI3",                SOAPNS.NS.SOAPEnvelope.        NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "eMI3",                SOAPNS.NS.SOAPEnvelope.    NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.        NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.           NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.         NamespaceName),
@@ -55,8 +52,6 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                        new XElement(SOAPNS.NS.SOAPEnvelope + "Body", XML));
 
         }
-
-        #endregion
 
     }
 

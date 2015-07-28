@@ -38,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 {
 
     /// <summary>
-    /// OICPv1.2 CPO Upstream Service(s).
+    /// OICP v2.0 CPO Upstream Service(s).
     /// </summary>
     public class CPOUpstreamService : AOICPUpstreamService,
                                       IAuthServices,
@@ -136,7 +136,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new OICPv1.2 CPO Upstream Service.
+        /// Create a new OICP v2.0 CPO Upstream Service.
         /// </summary>
         /// <param name="OICPHost">The hostname of the OICP service.</param>
         /// <param name="OICPPort">The IP port of the OICP service.</param>
@@ -148,7 +148,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                   IPPort           OICPPort,
                                   String           HTTPVirtualHost  = null,
                                   Authorizator_Id  AuthorizatorId   = null,
-                                  String           HTTPUserAgent    = "GraphDefined OICPv1.2 Gateway CPO Upstream Services",
+                                  String           HTTPUserAgent    = "GraphDefined OICP v2.0 Gateway CPO Upstream Services",
                                   DNSClient        DNSClient        = null)
 
             : base(OICPHost,
@@ -709,7 +709,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V2.0", DNSClient: _DNSClient))
                 {
 
-                    var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
+                    var HttpResponse = _OICPClient.Query(CPO_XMLMethods.AuthorizeStartXML(OperatorId,
                                                                                       AuthToken,
                                                                                       EVSEId,
                                                                                       PartnerProductId,
@@ -876,7 +876,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V2.0", DNSClient: _DNSClient))
                 {
 
-                    var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStopXML(OperatorId,
+                    var HttpResponse = _OICPClient.Query(CPO_XMLMethods.AuthorizeStopXML(OperatorId,
                                                                                      EVSEId,
                                                                                      SessionId,
                                                                                      PartnerSessionId,
@@ -1065,7 +1065,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V2.0", DNSClient: _DNSClient))
                 {
 
-                    var HttpResponse = _OICPClient.Query(CPOMethods.SendChargeDetailRecordXML(EVSEId,
+                    var HttpResponse = _OICPClient.Query(CPO_XMLMethods.SendChargeDetailRecordXML(EVSEId,
                                                                                               SessionId,
                                                                                               PartnerSessionId,
                                                                                               PartnerProductId,

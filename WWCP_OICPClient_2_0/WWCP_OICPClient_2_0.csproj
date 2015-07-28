@@ -44,9 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AOICPUpstreamService.cs" />
-    <Compile Include="CPO\CPOMethods.cs" />
+    <Compile Include="CPO\CPO_XMLMethods.cs" />
     <Compile Include="CPO\CPOUpstreamService.cs" />
-    <Compile Include="EMP\EMPMethods.cs" />
+    <Compile Include="EMP\EMP_XMLMethods.cs" />
     <Compile Include="EMP\EMPUpstreamService.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
