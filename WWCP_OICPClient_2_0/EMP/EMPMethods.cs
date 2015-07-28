@@ -25,8 +25,6 @@ using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 
-using org.GraphDefined.WWCP.IO.OICP;
-
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPClient_2_0

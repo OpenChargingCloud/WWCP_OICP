@@ -21,12 +21,9 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 using System.Diagnostics;
-using System.Globalization;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
-
-using org.GraphDefined.WWCP.IO.OICP;
 
 #endregion
 
@@ -39,7 +36,38 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
     public static class CPOMethods
     {
 
-        #region PushEVSEDataXML(this EVSEOperator, Action = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEDataXML(this GroupedData,      Action = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEDataXML(Dictionary<EVSEOperator, IEnumerable<EVSE>>  GroupedData,
+                                               ActionType                                   Action        = ActionType.fullLoad,
+                                               EVSEOperator_Id                              OperatorId    = null,
+                                               String                                       OperatorName  = null)
+        {
+
+            #region Initial checks
+
+            if (GroupedData == null)
+                throw new ArgumentNullException("Data", "The given parameter must not be null!");
+
+            #endregion
+
+            return SOAP.Encapsulation(new XElement(NS.OICPv2_0EVSEData + "eRoamingPushEvseData",
+                                      new XElement(NS.OICPv2_0EVSEData + "ActionType", Action.ToString()),
+                                      GroupedData.Select(datagroup =>
+                                          new XElement(NS.OICPv2_0EVSEData + "OperatorEvseData",
+
+                                              new XElement(NS.OICPv2_0EVSEData + "OperatorID",   (OperatorId   != null ? OperatorId   : datagroup.Key.Id).ToFormat(IdFormatType.OLD)),
+                                              new XElement(NS.OICPv2_0EVSEData + "OperatorName", (OperatorName != null ? OperatorName : datagroup.Key.Name.First().Text)),
+                                              datagroup.Value.ToEvseDataRecords().ToArray()
+
+                                          )).ToArray()
+                                      ));
+
+        }
+
+        #endregion
+
+        #region PushEVSEDataXML(this EVSEOperator,     Action = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
         public static XElement PushEVSEDataXML(this EVSEOperator       EVSEOperator,
                                                ActionType              Action        = ActionType.fullLoad,
@@ -48,254 +76,232 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
         {
 
-            if (IncludeEVSEs == null)
-                IncludeEVSEs = EVSEId => true;
+            #region Initial checks
 
-            return EVSEOperator.ChargingPools.
-                                SelectMany(Pool    => Pool.ChargingStations).
-                                SelectMany(Station => Station.EVSEs).
-                                Where     (EVSE    => IncludeEVSEs(EVSE.Id)).
-                                PushEVSEDataXML((OperatorId == null) ? EVSEOperator.Id : OperatorId,
-                                                (OperatorName == null) ? EVSEOperator.Name[Languages.de] : OperatorName,
-                                                Action);
+            if (EVSEOperator == null)
+                throw new ArgumentNullException("EVSEOperator", "The given parameter must not be null!");
+
+            #endregion
+
+            return new EVSEOperator[] { EVSEOperator }.
+                       PushEVSEDataXML(Action,
+                                       OperatorId,
+                                       OperatorName,
+                                       IncludeEVSEs);
 
         }
 
         #endregion
 
-        #region PushEVSEDataXML(this ChargingPools, OperatorId, OperatorName, Action = fullLoad, IncludeEVSEs = null)
+        #region PushEVSEDataXML(this EVSEOperators,    Action = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
-        public static XElement PushEVSEDataXML(this IEnumerable<ChargingPool>  ChargingPools,
-                                               EVSEOperator_Id                 OperatorId,
-                                               String                          OperatorName,
+        public static XElement PushEVSEDataXML(this IEnumerable<EVSEOperator>  EVSEOperators,
                                                ActionType                      Action        = ActionType.fullLoad,
+                                               EVSEOperator_Id                 OperatorId    = null,
+                                               String                          OperatorName  = null,
                                                Func<EVSE_Id, Boolean>          IncludeEVSEs  = null)
         {
 
+            #region Initial checks
+
+            if (EVSEOperators == null)
+                throw new ArgumentNullException("EVSEOperators", "The given parameter must not be null!");
+
+            var _EVSEOperators = EVSEOperators.ToArray();
+
+            if (_EVSEOperators.Length == 0)
+                throw new ArgumentNullException("EVSEOperators", "The given parameter must not be empty!");
+
             if (IncludeEVSEs == null)
                 IncludeEVSEs = EVSEId => true;
 
-            return ChargingPools.SelectMany(Pool    => Pool.ChargingStations).
-                                 SelectMany(Station => Station.EVSEs).
-                                 Where     (EVSE    => IncludeEVSEs(EVSE.Id)).
-                                 PushEVSEDataXML(OperatorId,
-                                                 OperatorName,
-                                                 Action);
+            #endregion
+
+            return PushEVSEDataXML(_EVSEOperators.ToDictionary(evseoperator => evseoperator,
+                                                               evseoperator => evseoperator.SelectMany(pool    => pool.ChargingStations).
+                                                                                            SelectMany(station => station.EVSEs).
+                                                                                            Where     (evse    => IncludeEVSEs(evse.Id))),
+                                   Action,
+                                   OperatorId,
+                                   OperatorName);
 
         }
 
         #endregion
 
-        #region PushEVSEDataXML(this ChargingStations, OperatorId, OperatorName, Action = fullLoad, IncludeEVSEs = null)
+        #region PushEVSEDataXML(this ChargingPool,     Action = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEDataXML(this ChargingPool       ChargingPool,
+                                               ActionType              Action        = ActionType.insert,
+                                               EVSEOperator_Id         OperatorId    = null,
+                                               String                  OperatorName  = null,
+                                               Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        {
+
+            #region Initial checks
+
+            if (ChargingPool == null)
+                throw new ArgumentNullException("ChargingPool", "The given parameter must not be null!");
+
+            #endregion
+
+            return new ChargingPool[] { ChargingPool }.
+                       PushEVSEDataXML(Action,
+                                       OperatorId,
+                                       OperatorName,
+                                       IncludeEVSEs);
+
+        }
+
+        #endregion
+
+        #region PushEVSEDataXML(this ChargingPools,    Action = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEDataXML(this IEnumerable<ChargingPool>  ChargingPools,
+                                               ActionType                      Action        = ActionType.insert,
+                                               EVSEOperator_Id                 OperatorId    = null,
+                                               String                          OperatorName  = null,
+                                               Func<EVSE_Id, Boolean>          IncludeEVSEs  = null)
+        {
+
+            #region Initial checks
+
+            if (ChargingPools == null)
+                throw new ArgumentNullException("ChargingPools", "The given parameter must not be null!");
+
+            var _ChargingPools = ChargingPools.ToArray();
+
+            if (_ChargingPools.Length == 0)
+                throw new ArgumentNullException("ChargingPools", "The given parameter must not be empty!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
+            #endregion
+
+            return PushEVSEDataXML(_ChargingPools.ToDictionary(pool => pool.EVSEOperator,
+                                                               pool => pool.SelectMany(station => station.EVSEs).
+                                                                            Where     (evse    => IncludeEVSEs(evse.Id))),
+                                   Action,
+                                   OperatorId,
+                                   OperatorName);
+
+        }
+
+        #endregion
+
+        #region PushEVSEDataXML(this ChargingStation,  Action = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEDataXML(this ChargingStation    ChargingStation,
+                                               ActionType              Action        = ActionType.insert,
+                                               EVSEOperator_Id         OperatorId    = null,
+                                               String                  OperatorName  = null,
+                                               Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        {
+
+            #region Initial checks
+
+            if (ChargingStation == null)
+                throw new ArgumentNullException("ChargingStation", "The given parameter must not be null!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
+            #endregion
+
+            return new ChargingStation[] { ChargingStation }.
+                       PushEVSEDataXML(Action,
+                                       OperatorId,
+                                       OperatorName,
+                                       IncludeEVSEs);
+
+        }
+
+        #endregion
+
+        #region PushEVSEDataXML(this ChargingStations, Action = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
         public static XElement PushEVSEDataXML(this IEnumerable<ChargingStation>  ChargingStations,
-                                               EVSEOperator_Id                    OperatorId,
-                                               String                             OperatorName,
-                                               ActionType                         Action        = ActionType.fullLoad,
+                                               ActionType                         Action        = ActionType.insert,
+                                               EVSEOperator_Id                    OperatorId    = null,
+                                               String                             OperatorName  = null,
                                                Func<EVSE_Id, Boolean>             IncludeEVSEs  = null)
         {
 
+            #region Initial checks
+
+            if (ChargingStations == null)
+                throw new ArgumentNullException("ChargingStations", "The given parameter must not be null!");
+
+            var _ChargingStations = ChargingStations.ToArray();
+
+            if (_ChargingStations.Length == 0)
+                throw new ArgumentNullException("ChargingStations", "The given parameter must not be empty!");
+
             if (IncludeEVSEs == null)
                 IncludeEVSEs = EVSEId => true;
 
-            return ChargingStations.SelectMany(Station => Station.EVSEs).
-                                    Where     (EVSE    => IncludeEVSEs(EVSE.Id)).
-                                    PushEVSEDataXML(OperatorId,
-                                                    OperatorName,
-                                                    Action);
+            #endregion
+
+            return PushEVSEDataXML(_ChargingStations.ToDictionary(station => station.ChargingPool.EVSEOperator,
+                                                                  station => station.Where(evse => IncludeEVSEs(evse.Id))),
+                                   Action,
+                                   OperatorId,
+                                   OperatorName);
 
         }
 
         #endregion
 
-        #region PushEVSEDataXML(this EVSEs, OperatorId, OperatorName, Action = ActionType.fullLoad)
+        #region PushEVSEDataXML(this EVSE,             Action = insert,   OperatorId = null, OperatorName = null)
 
-        public static XElement PushEVSEDataXML(this IEnumerable<EVSE>  EVSEs,
-                                               EVSEOperator_Id         OperatorId,
-                                               String                  OperatorName,
-                                               ActionType              Action  = ActionType.fullLoad)
+        public static XElement PushEVSEDataXML(this EVSE        EVSE,
+                                               EVSEOperator_Id  OperatorId    = null,
+                                               String           OperatorName  = null,
+                                               ActionType       Action        = ActionType.insert)
         {
 
-            //if (Action == ActionType.fullLoad ||
-            //    Action == ActionType.insert   ||
-            //    Action == ActionType.update)
+            return new EVSE[] { EVSE }.
+                       PushEVSEDataXML(Action,
+                                       OperatorId,
+                                       OperatorName);
+
+        }
+
+        #endregion
+
+        #region PushEVSEDataXML(this EVSEs,            Action = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEDataXML(this IEnumerable<EVSE>  EVSEs,
+                                               ActionType              Action        = ActionType.insert,
+                                               EVSEOperator_Id         OperatorId    = null,
+                                               String                  OperatorName  = null,
+                                               Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        {
+
+            #region Initial checks
+
+            if (EVSEs == null)
+                throw new ArgumentNullException("EVSEs", "The given parameter must not be null!");
+
+            var _EVSEs = EVSEs.ToArray();
+
+            if (_EVSEs.Length == 0)
+                throw new ArgumentNullException("EVSEs", "The given parameter must not be empty!");
+
+            #endregion
 
             return SOAP.Encapsulation(new XElement(NS.OICPv2_0EVSEData + "eRoamingPushEvseData",
                                       new XElement(NS.OICPv2_0EVSEData + "ActionType", Action.ToString()),
                                       new XElement(NS.OICPv2_0EVSEData + "OperatorEvseData",
 
-                                          new XElement(NS.OICPv2_0EVSEData + "OperatorID", OperatorId.ToFormat(IdFormatType.OLD)),
-                                          (OperatorName != null) ?
-                                          new XElement(NS.OICPv2_0EVSEData + "OperatorName", OperatorName) : null,
+                                          new XElement(NS.OICPv2_0EVSEData + "OperatorID",   (OperatorId   != null ? OperatorId   : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Id).ToFormat(IdFormatType.OLD)),
+                                          new XElement(NS.OICPv2_0EVSEData + "OperatorName", (OperatorName != null ? OperatorName : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.FirstOrDefault().Text)),
+                                          _EVSEs.
+                                              Where(evse => IncludeEVSEs(evse.Id)).
+                                              ToEvseDataRecords().
+                                              ToArray()
 
-                                          // EVSE => EvseDataRecord
-                                          //charging pools.Select(charging pool =>
-                                          //charging pool.ChargingStations.Select(ChargingStation =>
-                                          //ChargingStation.EVSEs.Select(EVSE => {
-
-                                          EVSEs.Select(EVSE => {
-
-                                              try
-                                              {
-
-                                                  return new XElement(NS.OICPv2_0EVSEData + "EvseDataRecord",
-
-                                                      new XElement(NS.OICPv2_0EVSEData + "EvseId",                 EVSE.Id.ToFormat(IdFormatType.OLD)),
-                                                      new XElement(NS.OICPv2_0EVSEData + "ChargingStationId",      EVSE.ChargingStation.Id.ToString()),
-                                                      new XElement(NS.OICPv2_0EVSEData + "ChargingStationName",    EVSE.ChargingStation.ChargingPool.Name[Languages.de].SubstringMax(50)),
-                                                      new XElement(NS.OICPv2_0EVSEData + "EnChargingStationName",  EVSE.ChargingStation.ChargingPool.Name[Languages.en].SubstringMax(50)),
-
-                                                      new XElement(NS.OICPv2_0EVSEData + "Address",
-                                                          new XElement(NS.OICPv2_0CommonTypes + "Country",     EVSE.ChargingStation.ChargingPool.Address.Country.Alpha3Code),
-                                                          new XElement(NS.OICPv2_0CommonTypes + "City",        EVSE.ChargingStation.ChargingPool.Address.City),
-                                                          new XElement(NS.OICPv2_0CommonTypes + "Street",      EVSE.ChargingStation.ChargingPool.Address.Street), // OICPv1.2 requires at least 5 characters!
-                                                          new XElement(NS.OICPv2_0CommonTypes + "PostalCode",  EVSE.ChargingStation.ChargingPool.Address.PostalCode),
-                                                          new XElement(NS.OICPv2_0CommonTypes + "HouseNum",    EVSE.ChargingStation.ChargingPool.Address.HouseNumber),
-                                                          new XElement(NS.OICPv2_0CommonTypes + "Floor",       EVSE.ChargingStation.ChargingPool.Address.FloorLevel)
-                                                      // <!--Optional:-->
-                                                      // <v11:Region>?</v11:Region>
-                                                      // <!--Optional:-->
-                                                      // <v11:TimeZone>?</v11:TimeZone>
-                                                      ),
-
-                                                      new XElement(NS.OICPv2_0EVSEData + "GeoCoordinates",
-                                                          new XElement(NS.OICPv2_0CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                                                              new XElement(NS.OICPv2_0CommonTypes + "Longitude", EVSE.ChargingStation.GeoLocation.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-                                                              new XElement(NS.OICPv2_0CommonTypes + "Latitude",  EVSE.ChargingStation.GeoLocation.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
-                                                          )
-                                                      ),
-
-                                                      new XElement(NS.OICPv2_0EVSEData + "Plugs",
-                                                          EVSE.SocketOutlets.Select(Outlet =>
-                                                             new XElement(NS.OICPv2_0EVSEData + "Plug", eMI3_OICP_Mapper.MapToPlugType(Outlet)))
-                                                      ),
-
-                                                      new XElement(NS.OICPv2_0EVSEData + "ChargingFacilities",
-                                                          EVSE.SocketOutlets.Select(Outlet => {
-
-                                                              var ChargingFacility = "Unspecified";
-
-                                                              if (Outlet.Plug == PlugTypes.Type2Outlet ||
-                                                                  Outlet.Plug == PlugTypes.Type2Connector_CableAttached)// Mennekes_Type_2
-                                                              {
-
-                                                                  if (EVSE.MaxPower <= 44.0)
-                                                                      ChargingFacility = "380 - 480V, 3-Phase ≤63A";
-
-                                                                  if (EVSE.MaxPower <= 22.0)
-                                                                      ChargingFacility = "380 - 480V, 3-Phase ≤32A";
-
-                                                                  if (EVSE.MaxPower <= 11.0)
-                                                                      ChargingFacility = "380 - 480V, 3-Phase ≤16A";
-
-                                                              }
-
-                                                              else if (Outlet.Plug == PlugTypes.TypeFSchuko)
-                                                              {
-
-                                                                  if (EVSE.MaxPower >  7.2)
-                                                                      ChargingFacility = "200 - 240V, 1-Phase >32A";
-
-                                                                  if (EVSE.MaxPower <= 7.2)
-                                                                      ChargingFacility = "200 - 240V, 1-Phase ≤32A";
-
-                                                                  if (EVSE.MaxPower <= 3.6)
-                                                                      ChargingFacility = "200 - 240V, 1-Phase ≤16A";
-
-                                                                  if (EVSE.MaxPower <= 2.25)
-                                                                      ChargingFacility = "200 - 240V, 1-Phase ≤10A";
-
-                                                              }
-
-                                                             // 100 - 120V, 1-Phase ≤10A
-                                                             // 100 - 120V, 1-Phase ≤16A
-                                                             // 100 - 120V, 1-Phase ≤32A
-
-                                                             // Battery exchange
-                                                             // Unspecified
-                                                             // DC Charging ≤20kW
-                                                             // DC Charging ≤50kW
-                                                             // DC Charging >50kW
-
-                                                              return new XElement(NS.OICPv2_0EVSEData + "ChargingFacility", ChargingFacility);
-
-                                                          })
-
-                                                      ),
-
-                            //                    <!--Optional:-->
-                                                      //               <v1:ChargingModes>
-                                                      //                  <!--1 or more repetitions:-->
-                                                      //                  <v1:ChargingMode>?</v1:ChargingMode>
-
-                                                      // Mode_1      IEC 61851-1
-                                                      // Mode_2      IEC 61851-1
-                                                      // Mode_3      IEC 61851-1
-                                                      // Mode_4      IEC 61851-1
-                                                      // CHAdeMO     CHAdeMo Specification
-
-                                                      //               </v1:ChargingModes>
-
-                                                      new XElement(NS.OICPv2_0EVSEData + "AuthenticationModes",
-                                                          new XElement(NS.OICPv2_0EVSEData + "AuthenticationMode", "NFC RFID Classic"),
-                                                          new XElement(NS.OICPv2_0EVSEData + "AuthenticationMode", "NFC RFID DESFire"),
-                                                          new XElement(NS.OICPv2_0EVSEData + "AuthenticationMode", "REMOTE"),
-                                                          //new XElement(NS.OICPv1_2EVSEData + "AuthenticationMode", "PnC"),
-                                                          new XElement(NS.OICPv2_0EVSEData + "AuthenticationMode", "Direct Payment")
-                                                      // EVSE.SocketOutlets.Select(Outlet =>
-                                                      //    new XElement(NS.OICPv1_2EVSEData + "AuthenticationMode", "Unspecified"))//Outlet.Plug.ToString()))
-                                                      ),
-
-                            //                    <!--Optional:-->
-                                                      //               <v1:MaxCapacity>?</v1:MaxCapacity>
-
-                                                      new XElement(NS.OICPv2_0EVSEData + "PaymentOptions",
-                                                          new XElement(NS.OICPv2_0EVSEData + "PaymentOption", "Contract")
-                                                          // ??????????????????????? SMS!
-                                                      ),
-
-                                                      new XElement(NS.OICPv2_0EVSEData + "Accessibility", "Free publicly accessible"),
-                                                      new XElement(NS.OICPv2_0EVSEData + "HotlinePhoneNum", "+8000670000"),  // RegEx: \+[0-9]{5,15}
-
-                            //                    <!--Optional:-->
-                                                      //               <v1:AdditionalInfo>?</v1:AdditionalInfo>
-
-                            //                    <!--Optional:-->
-                                                      //               <v1:EnAdditionalInfo>?</v1:EnAdditionalInfo>
-
-                            //                    <!--Optional:-->
-                                                      //               <v1:GeoChargingPointEntrance>
-                                                      //                  <v11:DecimalDegree>
-                                                      //                     <v11:Longitude>?</v11:Longitude>
-                                                      //                     <v11:Latitude>?</v11:Latitude>
-                                                      //                  </v11:DecimalDegree>
-                                                      //               </v1:GeoChargingPointEntrance>
-
-                                                      new XElement(NS.OICPv2_0EVSEData + "IsOpen24Hours", EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours ? "true" : "false"),
-
-                                                      EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours
-                                                          ? null
-                                                          : new XElement(NS.OICPv2_0EVSEData + "OpeningTime",   EVSE.ChargingStation.ChargingPool.OpeningTime.Text),
-
-                            //                    <!--Optional:-->
-                                                      //               <v1:HubOperatorID>?</v1:HubOperatorID>
-
-                            //                    <!--Optional:-->
-                                                      //               <v1:ClearinghouseID>?</v1:ClearinghouseID>
-
-                                                      new XElement(NS.OICPv2_0EVSEData + "IsHubjectCompatible",  "true"),
-                                                      new XElement(NS.OICPv2_0EVSEData + "DynamicInfoAvailable", "true")
-
-                                                  );
-
-                                              }
-                                              catch (Exception e)
-                                              {
-                                                  Debug.WriteLine("Exception in CPOMethods: " + e.Message);
-                                                  return null;
-                                              }
-
-                                          })
                                       )
                                   ));
 
@@ -303,17 +309,175 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEDataXML(this EVSE, OperatorId, OperatorName, Action = insert)
+        #region (private) ToEvseDataRecords(this EVSEs)
 
-        public static XElement PushEVSEDataXML(this EVSE        EVSE,
-                                               EVSEOperator_Id  OperatorId,
-                                               String           OperatorName,
-                                               ActionType       Action  = ActionType.insert)
+        private static IEnumerable<XElement> ToEvseDataRecords(this IEnumerable<EVSE> EVSEs)
         {
 
-            return new EVSE[1] { EVSE }.PushEVSEDataXML(OperatorId,
-                                                        OperatorName,
-                                                        Action);
+            return EVSEs.Select(EVSE => {
+
+                try
+                {
+
+                    return new XElement(NS.OICPv2_0EVSEData + "EvseDataRecord",
+
+                        new XElement(NS.OICPv2_0EVSEData + "EvseId",                EVSE.Id.ToFormat(IdFormatType.OLD)),
+                        new XElement(NS.OICPv2_0EVSEData + "ChargingStationId",     EVSE.ChargingStation.Id.ToString()),
+                        new XElement(NS.OICPv2_0EVSEData + "ChargingStationName",   EVSE.ChargingStation.ChargingPool.Name[Languages.de].SubstringMax(50)),
+                        new XElement(NS.OICPv2_0EVSEData + "EnChargingStationName", EVSE.ChargingStation.ChargingPool.Name[Languages.en].SubstringMax(50)),
+
+                        new XElement(NS.OICPv2_0EVSEData + "Address",
+                            new XElement(NS.OICPv2_0CommonTypes + "Country",        EVSE.ChargingStation.Address.Country.Alpha3Code),
+                            new XElement(NS.OICPv2_0CommonTypes + "City",           EVSE.ChargingStation.Address.City),
+                            new XElement(NS.OICPv2_0CommonTypes + "Street",         EVSE.ChargingStation.Address.Street), // OICPv1.2 requires at least 5 characters!
+                            new XElement(NS.OICPv2_0CommonTypes + "PostalCode",     EVSE.ChargingStation.Address.PostalCode),
+                            new XElement(NS.OICPv2_0CommonTypes + "HouseNum",       EVSE.ChargingStation.Address.HouseNumber),
+                            new XElement(NS.OICPv2_0CommonTypes + "Floor",          EVSE.ChargingStation.Address.FloorLevel)
+                        // <!--Optional:-->
+                        // <v11:Region>?</v11:Region>
+                        // <!--Optional:-->
+                        // <v11:TimeZone>?</v11:TimeZone>
+                        ),
+
+                        new XElement(NS.OICPv2_0EVSEData + "GeoCoordinates",
+                            new XElement(NS.OICPv2_0CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
+                                new XElement(NS.OICPv2_0CommonTypes + "Longitude",  EVSE.ChargingStation.GeoLocation.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                                new XElement(NS.OICPv2_0CommonTypes + "Latitude",   EVSE.ChargingStation.GeoLocation.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                            )
+                        ),
+
+                        new XElement(NS.OICPv2_0EVSEData + "Plugs",
+                            EVSE.SocketOutlets.Select(Outlet =>
+                               new XElement(NS.OICPv2_0EVSEData + "Plug", OICPMapper.AsString(Outlet)))
+                        ),
+
+                        new XElement(NS.OICPv2_0EVSEData + "ChargingFacilities",
+                            EVSE.SocketOutlets.Select(Outlet =>
+                            {
+
+                                var ChargingFacility = "Unspecified";
+
+                                if (Outlet.Plug == PlugTypes.Type2Outlet ||
+                                    Outlet.Plug == PlugTypes.Type2Connector_CableAttached)// Mennekes_Type_2
+                                {
+
+                                    if (EVSE.MaxPower <= 44.0)
+                                        ChargingFacility = "380 - 480V, 3-Phase ≤63A";
+
+                                    if (EVSE.MaxPower <= 22.0)
+                                        ChargingFacility = "380 - 480V, 3-Phase ≤32A";
+
+                                    if (EVSE.MaxPower <= 11.0)
+                                        ChargingFacility = "380 - 480V, 3-Phase ≤16A";
+
+                                }
+
+                                else if (Outlet.Plug == PlugTypes.TypeFSchuko)
+                                {
+
+                                    if (EVSE.MaxPower > 7.2)
+                                        ChargingFacility = "200 - 240V, 1-Phase >32A";
+
+                                    if (EVSE.MaxPower <= 7.2)
+                                        ChargingFacility = "200 - 240V, 1-Phase ≤32A";
+
+                                    if (EVSE.MaxPower <= 3.6)
+                                        ChargingFacility = "200 - 240V, 1-Phase ≤16A";
+
+                                    if (EVSE.MaxPower <= 2.25)
+                                        ChargingFacility = "200 - 240V, 1-Phase ≤10A";
+
+                                }
+
+                                // 100 - 120V, 1-Phase ≤10A
+                                // 100 - 120V, 1-Phase ≤16A
+                                // 100 - 120V, 1-Phase ≤32A
+
+                                // Battery exchange
+                                // Unspecified
+                                // DC Charging ≤20kW
+                                // DC Charging ≤50kW
+                                // DC Charging >50kW
+
+                                return new XElement(NS.OICPv2_0EVSEData + "ChargingFacility", ChargingFacility);
+
+                            })
+
+                        ),
+
+                        // <!--Optional:-->
+                        // <v1:ChargingModes>
+                        //     <!--1 or more repetitions:-->
+                        // <v1:ChargingMode>?</v1:ChargingMode>
+
+                        // Mode_1      IEC 61851-1
+                        // Mode_2      IEC 61851-1
+                        // Mode_3      IEC 61851-1
+                        // Mode_4      IEC 61851-1
+                        // CHAdeMO     CHAdeMo Specification
+
+                        // </v1:ChargingModes>
+
+                        new XElement(NS.OICPv2_0EVSEData + "AuthenticationModes",
+                            new XElement(NS.OICPv2_0EVSEData + "AuthenticationMode", "NFC RFID Classic"),
+                            new XElement(NS.OICPv2_0EVSEData + "AuthenticationMode", "NFC RFID DESFire"),
+                            new XElement(NS.OICPv2_0EVSEData + "AuthenticationMode", "REMOTE"),
+                        //new XElement(NS.OICPv1_2EVSEData + "AuthenticationMode", "PnC"),
+                            new XElement(NS.OICPv2_0EVSEData + "AuthenticationMode", "Direct Payment")
+                        // EVSE.SocketOutlets.Select(Outlet =>
+                        //    new XElement(NS.OICPv1_2EVSEData + "AuthenticationMode", "Unspecified"))//Outlet.Plug.ToString()))
+                        ),
+
+                        // <!--Optional:-->
+                        //               <v1:MaxCapacity>?</v1:MaxCapacity>
+
+                        new XElement(NS.OICPv2_0EVSEData + "PaymentOptions",
+                            new XElement(NS.OICPv2_0EVSEData + "PaymentOption", "Contract")
+                        // ??????????????????????? SMS!
+                        ),
+
+                        new XElement(NS.OICPv2_0EVSEData + "Accessibility", "Free publicly accessible"),
+                        new XElement(NS.OICPv2_0EVSEData + "HotlinePhoneNum", "+8000670000"),  // RegEx: \+[0-9]{5,15}
+
+                        // <!--Optional:-->
+                        // <v1:AdditionalInfo>?</v1:AdditionalInfo>
+
+                        // <!--Optional:-->
+                        // <v1:EnAdditionalInfo>?</v1:EnAdditionalInfo>
+
+                        // <!--Optional:-->
+                        // <v1:GeoChargingPointEntrance>
+                        //    <v11:DecimalDegree>
+                        //       <v11:Longitude>?</v11:Longitude>
+                        //       <v11:Latitude>?</v11:Latitude>
+                        //    </v11:DecimalDegree>
+                        // </v1:GeoChargingPointEntrance>
+
+                        new XElement(NS.OICPv2_0EVSEData + "IsOpen24Hours",         EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours ? "true" : "false"),
+
+                        EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours
+                            ? null
+                            : new XElement(NS.OICPv2_0EVSEData + "OpeningTime",     EVSE.ChargingStation.ChargingPool.OpeningTime.Text),
+
+                        // <!--Optional:-->
+                        // <v1:HubOperatorID>?</v1:HubOperatorID>
+
+                        // <!--Optional:-->
+                        // <v1:ClearinghouseID>?</v1:ClearinghouseID>
+
+                        new XElement(NS.OICPv2_0EVSEData + "IsHubjectCompatible",   EVSE.ChargingStation.IsHubjectCompatible ? "true" : "false"),
+                        new XElement(NS.OICPv2_0EVSEData + "DynamicInfoAvailable",  EVSE.ChargingStation.DynamicInfoAvailable ? "true" : "false")
+
+                    );
+
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("Exception in CPOMethods: " + e.Message);
+                    return null;
+                }
+
+            });
 
         }
 
@@ -332,7 +496,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                 SelectMany(pool    => pool.ChargingStations).
                                 SelectMany(station => station.EVSEs).
 
-                                PushEVSEStatusXML((OperatorId   == null) ? EVSEOperator.Id                 : OperatorId,
+                                PushEVSEStatusXML((OperatorId   == null) ? EVSEOperator.Id                : OperatorId,
                                                   (OperatorName == null) ? EVSEOperator.Name.First().Text : OperatorName,
                                                    Action);
 

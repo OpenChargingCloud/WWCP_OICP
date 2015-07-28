@@ -46,7 +46,6 @@
     <Compile Include="AOICPUpstreamService.cs" />
     <Compile Include="CPO\CPOMethods.cs" />
     <Compile Include="CPO\CPOUpstreamService.cs" />
-    <Compile Include="eMI3_OICP_Mapper.cs" />
     <Compile Include="EMP\EMPMethods.cs" />
     <Compile Include="EMP\EMPUpstreamService.cs" />
     <Compile Include="Helpers\ActionType.cs" />
