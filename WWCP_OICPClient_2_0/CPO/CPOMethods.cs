@@ -47,7 +47,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #region Initial checks
 
             if (GroupedData == null)
-                throw new ArgumentNullException("Data", "The given parameter must not be null!");
+                throw new ArgumentNullException("GroupedData", "The given parameter must not be null!");
 
             #endregion
 
@@ -58,6 +58,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                                               new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId   != null ? OperatorId   : datagroup.Key.Id).ToFormat(IdFormatType.OLD)),
                                               new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName != null ? OperatorName : datagroup.Key.Name.First().Text)),
+
                                               datagroup.Value.ToEvseDataRecords().ToArray()
 
                                           )).ToArray()
@@ -309,9 +310,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region (private) ToEvseDataRecords(this EVSEs)
+        #region (internal) ToEvseDataRecords(this EVSEs)
 
-        private static IEnumerable<XElement> ToEvseDataRecords(this IEnumerable<EVSE> EVSEs)
+        internal static IEnumerable<XElement> ToEvseDataRecords(this IEnumerable<EVSE> EVSEs)
         {
 
             return EVSEs.Select(EVSE => {
@@ -484,48 +485,273 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #endregion
 
 
-        #region PushEVSEStatusXML(this EVSEOperator, Action = fullLoad, OperatorId = null, OperatorName = null)
+        #region PushEVSEStatusXML(this GroupedData,      Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
-        public static XElement PushEVSEStatusXML(this EVSEOperator  EVSEOperator,
-                                                 ActionType         Action        = ActionType.fullLoad,
-                                                 EVSEOperator_Id    OperatorId    = null,
-                                                 String             OperatorName  = null)
+        public static XElement PushEVSEStatusXML(Dictionary<EVSEOperator, IEnumerable<EVSE>>  GroupedData,
+                                                 ActionType                                   Action        = ActionType.update,
+                                                 EVSEOperator_Id                              OperatorId    = null,
+                                                 String                                       OperatorName  = null)
         {
 
-            return EVSEOperator.ChargingPools.
-                                SelectMany(pool    => pool.ChargingStations).
-                                SelectMany(station => station.EVSEs).
+            #region Initial checks
 
-                                PushEVSEStatusXML((OperatorId   == null) ? EVSEOperator.Id                : OperatorId,
-                                                  (OperatorName == null) ? EVSEOperator.Name.First().Text : OperatorName,
-                                                   Action);
+            if (GroupedData == null)
+                throw new ArgumentNullException("GroupedData", "The given parameter must not be null!");
+
+            #endregion
+
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPushEvseStatus",
+                                      new XElement(OICPNS.EVSEData + "ActionType", Action.ToString()),
+                                      GroupedData.Select(datagroup =>
+                                          new XElement(OICPNS.EVSEData + "OperatorEvseStatus",
+
+                                              new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId   != null ? OperatorId   : datagroup.Key.Id).ToFormat(IdFormatType.OLD)),
+                                              new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName != null ? OperatorName : datagroup.Key.Name.First().Text)),
+
+                                              datagroup.Value.ToEvseDataRecords().ToArray()
+
+                                          )).ToArray()
+                                      ));
 
         }
 
         #endregion
 
-        #region PushEVSEStatusXML(this EVSEs, OperatorId, OperatorName, Action)
+        #region PushEVSEStatusXML(this EVSEOperator,     Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEStatusXML(this EVSEOperator       EVSEOperator,
+                                                 ActionType              Action        = ActionType.update,
+                                                 EVSEOperator_Id         OperatorId    = null,
+                                                 String                  OperatorName  = null,
+                                                 Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        {
+
+            #region Initial checks
+
+            if (EVSEOperator == null)
+                throw new ArgumentNullException("EVSEOperator", "The given parameter must not be null!");
+
+            #endregion
+
+            return new EVSEOperator[] { EVSEOperator }.
+                       PushEVSEStatusXML(Action,
+                                         OperatorId,
+                                         OperatorName,
+                                         IncludeEVSEs);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatusXML(this EVSEOperators,    Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEStatusXML(this IEnumerable<EVSEOperator>  EVSEOperators,
+                                                 ActionType                      Action        = ActionType.update,
+                                                 EVSEOperator_Id                 OperatorId    = null,
+                                                 String                          OperatorName  = null,
+                                                 Func<EVSE_Id, Boolean>          IncludeEVSEs  = null)
+        {
+
+            #region Initial checks
+
+            if (EVSEOperators == null)
+                throw new ArgumentNullException("EVSEOperators", "The given parameter must not be null!");
+
+            var _EVSEOperators = EVSEOperators.ToArray();
+
+            if (_EVSEOperators.Length == 0)
+                throw new ArgumentNullException("EVSEOperators", "The given parameter must not be empty!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
+            #endregion
+
+            return PushEVSEStatusXML(_EVSEOperators.ToDictionary(evseoperator => evseoperator,
+                                                                 evseoperator => evseoperator.SelectMany(pool    => pool.ChargingStations).
+                                                                                              SelectMany(station => station.EVSEs).
+                                                                                              Where     (evse    => IncludeEVSEs(evse.Id))),
+                                     Action,
+                                     OperatorId,
+                                     OperatorName);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatusXML(this ChargingPool,     Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEStatusXML(this ChargingPool       ChargingPool,
+                                                 ActionType              Action        = ActionType.update,
+                                                 EVSEOperator_Id         OperatorId    = null,
+                                                 String                  OperatorName  = null,
+                                                 Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        {
+
+            #region Initial checks
+
+            if (ChargingPool == null)
+                throw new ArgumentNullException("ChargingPool", "The given parameter must not be null!");
+
+            #endregion
+
+            return new ChargingPool[] { ChargingPool }.
+                       PushEVSEStatusXML(Action,
+                                         OperatorId,
+                                         OperatorName,
+                                         IncludeEVSEs);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatusXML(this ChargingPools,    Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEStatusXML(this IEnumerable<ChargingPool>  ChargingPools,
+                                                 ActionType                      Action        = ActionType.update,
+                                                 EVSEOperator_Id                 OperatorId    = null,
+                                                 String                          OperatorName  = null,
+                                                 Func<EVSE_Id, Boolean>          IncludeEVSEs  = null)
+        {
+
+            #region Initial checks
+
+            if (ChargingPools == null)
+                throw new ArgumentNullException("ChargingPools", "The given parameter must not be null!");
+
+            var _ChargingPools = ChargingPools.ToArray();
+
+            if (_ChargingPools.Length == 0)
+                throw new ArgumentNullException("ChargingPools", "The given parameter must not be empty!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
+            #endregion
+
+            return PushEVSEStatusXML(_ChargingPools.ToDictionary(pool => pool.EVSEOperator,
+                                                                 pool => pool.SelectMany(station => station.EVSEs).
+                                                                              Where     (evse    => IncludeEVSEs(evse.Id))),
+                                     Action,
+                                     OperatorId,
+                                     OperatorName);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatusXML(this ChargingStation,  Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEStatusXML(this ChargingStation    ChargingStation,
+                                                 ActionType              Action        = ActionType.update,
+                                                 EVSEOperator_Id         OperatorId    = null,
+                                                 String                  OperatorName  = null,
+                                                 Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        {
+
+            #region Initial checks
+
+            if (ChargingStation == null)
+                throw new ArgumentNullException("ChargingStation", "The given parameter must not be null!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
+            #endregion
+
+            return new ChargingStation[] { ChargingStation }.
+                       PushEVSEStatusXML(Action,
+                                         OperatorId,
+                                         OperatorName,
+                                         IncludeEVSEs);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatusXML(this ChargingStations, Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEStatusXML(this IEnumerable<ChargingStation>  ChargingStations,
+                                                 ActionType                         Action        = ActionType.update,
+                                                 EVSEOperator_Id                    OperatorId    = null,
+                                                 String                             OperatorName  = null,
+                                                 Func<EVSE_Id, Boolean>             IncludeEVSEs  = null)
+        {
+
+            #region Initial checks
+
+            if (ChargingStations == null)
+                throw new ArgumentNullException("ChargingStations", "The given parameter must not be null!");
+
+            var _ChargingStations = ChargingStations.ToArray();
+
+            if (_ChargingStations.Length == 0)
+                throw new ArgumentNullException("ChargingStations", "The given parameter must not be empty!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
+            #endregion
+
+            return PushEVSEStatusXML(_ChargingStations.ToDictionary(station => station.ChargingPool.EVSEOperator,
+                                                                    station => station.Where(evse => IncludeEVSEs(evse.Id))),
+                                     Action,
+                                     OperatorId,
+                                     OperatorName);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatusXML(this EVSE,             Action = update, OperatorId = null, OperatorName = null)
+
+        public static XElement PushEVSEStatusXML(this EVSE        EVSE,
+                                                 EVSEOperator_Id  OperatorId    = null,
+                                                 String           OperatorName  = null,
+                                                 ActionType       Action        = ActionType.update)
+        {
+
+            return new EVSE[] { EVSE }.
+                       PushEVSEStatusXML(Action,
+                                         OperatorId,
+                                         OperatorName);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatusXML(this EVSEs,            Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<EVSE>  EVSEs,
-                                                 EVSEOperator_Id         OperatorId,
-                                                 String                  OperatorName,
-                                                 ActionType              Action)
+                                                 ActionType              Action        = ActionType.update,
+                                                 EVSEOperator_Id         OperatorId    = null,
+                                                 String                  OperatorName  = null,
+                                                 Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
         {
+
+            #region Initial checks
+
+            if (EVSEs == null)
+                throw new ArgumentNullException("EVSEs", "The given parameter must not be null!");
+
+            var _EVSEs = EVSEs.ToArray();
+
+            if (_EVSEs.Length == 0)
+                throw new ArgumentNullException("EVSEs", "The given parameter must not be empty!");
+
+            #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
                                           new XElement(OICPNS.EVSEStatus + "ActionType", Action.ToString()),
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(OICPNS.EVSEStatus + "OperatorID", OperatorId.ToFormat(IdFormatType.OLD)),
-                                              (OperatorName != null) ?
-                                              new XElement(OICPNS.EVSEStatus + "OperatorName", OperatorName) : null,
+                                              new XElement(OICPNS.EVSEStatus + "OperatorID",   (OperatorId   != null ? OperatorId   : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Id).ToFormat(IdFormatType.OLD)),
+                                              new XElement(OICPNS.EVSEStatus + "OperatorName", (OperatorName != null ? OperatorName : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.FirstOrDefault().Text)),
 
-                                              EVSEs.Select(EVSE =>
-                                                  new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
-                                                      new XElement(OICPNS.EVSEStatus + "EvseId",     EVSE.Id.                 ToString()),
-                                                      new XElement(OICPNS.EVSEStatus + "EvseStatus", EVSE.Status.Value.ToString())
-                                                  )
-                                              )
+                                              _EVSEs.
+                                                  Where(evse => IncludeEVSEs(evse.Id)).
+                                                  ToEvseStatusRecords().
+                                                  ToArray()
 
                                           )
                                       ));
@@ -534,28 +760,44 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this EVSEStates, OperatorId, OperatorName, Action)
+        #region PushEVSEStatusXML(this EVSEIdAndStatus,       OperatorId, OperatorName, Action = update, IncludeEVSEIds = null)
 
-        public static XElement PushEVSEStatusXML(this IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>  EVSEStates,
-                                                 EVSEOperator_Id                                            OperatorId,
-                                                 String                                                     OperatorName,
-                                                 ActionType                                                 Action)
+        public static XElement PushEVSEStatusXML(this IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>>  EVSEIdAndStatus,
+                                                 EVSEOperator_Id                                          OperatorId,
+                                                 String                                                   OperatorName,
+                                                 ActionType                                               Action          = ActionType.update,
+                                                 Func<EVSE_Id, Boolean>                                   IncludeEVSEIds  = null)
         {
 
+            #region Initial checks
+
+            if (EVSEIdAndStatus == null)
+                throw new ArgumentNullException("EVSEIdAndStatus", "The given parameter must not be null!");
+
+            if (OperatorId == null)
+                throw new ArgumentNullException("OperatorId",      "The given parameter must not be null!");
+
+            if (OperatorName.IsNullOrEmpty())
+                throw new ArgumentNullException("OperatorName",    "The given parameter must not be null!");
+
+            var _EVSEIdAndStatus = EVSEIdAndStatus.ToArray();
+
+            if (_EVSEIdAndStatus.Length == 0)
+                throw new ArgumentNullException("EVSEIdAndStatus", "The given parameter must not be empty!");
+
+            #endregion
+
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
-                                          new XElement(OICPNS.EVSEStatus + "ActionType", Action.ToString()),
+                                          new XElement(OICPNS.EVSEStatus + "ActionType", ActionType.delete.ToString()),
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(OICPNS.EVSEStatus + "OperatorID", OperatorId.ToFormat(IdFormatType.OLD)),
-                                              (OperatorName != null) ?
-                                              new XElement(OICPNS.EVSEStatus + "OperatorName", OperatorName) : null,
+                                              new XElement(OICPNS.EVSEStatus + "OperatorID",   OperatorId.ToFormat(IdFormatType.OLD)),
+                                              new XElement(OICPNS.EVSEStatus + "OperatorName", OperatorName),
 
-                                              EVSEStates.Select(EvseIdAndState =>
-                                                  new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
-                                                      new XElement(OICPNS.EVSEStatus + "EvseId",     EvseIdAndState.Key.  ToFormat(IdFormatType.OLD)),
-                                                      new XElement(OICPNS.EVSEStatus + "EvseStatus", EvseIdAndState.Value.ToString())
-                                                  )
-                                              )
+                                              _EVSEIdAndStatus.
+                                                  Where(kvp => IncludeEVSEIds(kvp.Key)).
+                                                  ToEvseStatusRecords().
+                                                  ToArray()
 
                                           )
                                       ));
@@ -563,6 +805,140 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         }
 
         #endregion
+
+        #region PushEVSEStatusXML(this EVSEIds, CommonStatus, OperatorId, OperatorName, Action = update, IncludeEVSEIds = null)
+
+        public static XElement PushEVSEStatusXML(this IEnumerable<EVSE_Id>  EVSEIds,
+                                                 EVSEStatusType             CommonStatus,
+                                                 EVSEOperator_Id            OperatorId,
+                                                 String                     OperatorName,
+                                                 ActionType                 Action          = ActionType.update,
+                                                 Func<EVSE_Id, Boolean>     IncludeEVSEIds  = null)
+
+        {
+
+            #region Initial checks
+
+            if (EVSEIds == null)
+                throw new ArgumentNullException("EVSEIds", "The given parameter must not be null!");
+
+            if (OperatorId == null)
+                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+
+            if (OperatorName.IsNullOrEmpty())
+                throw new ArgumentNullException("OperatorName", "The given parameter must not be null!");
+
+            var _EVSEIds = EVSEIds.ToArray();
+
+            if (_EVSEIds.Length == 0)
+                throw new ArgumentNullException("EVSEIds", "The given parameter must not be empty!");
+
+            #endregion
+
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
+                                          new XElement(OICPNS.EVSEStatus + "ActionType", Action.ToString()),
+                                          new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
+
+                                              new XElement(OICPNS.EVSEStatus + "OperatorID",   OperatorId.ToFormat(IdFormatType.OLD)),
+                                              new XElement(OICPNS.EVSEStatus + "OperatorName", OperatorName),
+
+                                              _EVSEIds.
+                                                  Where(evseid => IncludeEVSEIds(evseid)).
+                                                  ToEvseStatusRecords(CommonStatus).
+                                                  ToArray()
+
+                                          )
+                                      ));
+
+        }
+
+        #endregion
+
+        #region (internal) ToEvseStatusRecords(this EVSEs)
+
+        internal static IEnumerable<XElement> ToEvseStatusRecords(this IEnumerable<EVSE> EVSEs)
+        {
+
+            return EVSEs.Select(evse => {
+
+                try
+                {
+
+                    return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
+                        new XElement(OICPNS.EVSEStatus + "EvseId",     evse.Id.                               ToFormat(IdFormatType.OLD)),
+                        new XElement(OICPNS.EVSEStatus + "EvseStatus", evse.Status.Value.AsHubjectEVSEState().ToString())
+                    );
+
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("Exception in CPOMethods: " + e.Message);
+                    return null;
+                }
+
+            });
+
+        }
+
+        #endregion
+
+        #region (internal) ToEvseStatusRecords(this EVSEIdAndStatus)
+
+        internal static IEnumerable<XElement> ToEvseStatusRecords(this IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>> EVSEIdAndStatus)
+        {
+
+            return EVSEIdAndStatus.Select(kvp => {
+
+                try
+                {
+
+                    return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
+                        new XElement(OICPNS.EVSEStatus + "EvseId",     kvp.Key.                       ToFormat(IdFormatType.OLD)),
+                        new XElement(OICPNS.EVSEStatus + "EvseStatus", kvp.Value.AsHubjectEVSEState().ToString())
+                    );
+
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("Exception in CPOMethods: " + e.Message);
+                    return null;
+                }
+
+            });
+
+        }
+
+        #endregion
+
+        #region (internal) ToEvseStatusRecords(this EVSEIds, CommonStatus)
+
+        internal static IEnumerable<XElement> ToEvseStatusRecords(this IEnumerable<EVSE_Id>  EVSEIds,
+                                                                  EVSEStatusType             CommonStatus)
+        {
+
+            return EVSEIds.Select(evseid => {
+
+                try
+                {
+
+                    return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
+                        new XElement(OICPNS.EVSEStatus + "EvseId",     evseid.                           ToFormat(IdFormatType.OLD)),
+                        new XElement(OICPNS.EVSEStatus + "EvseStatus", CommonStatus.AsHubjectEVSEState().ToString())
+                    );
+
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("Exception in CPOMethods: " + e.Message);
+                    return null;
+                }
+
+            });
+
+        }
+
+        #endregion
+
 
 
         #region AuthorizeStartXML(this EVSE, AuthToken, PartnerProductId = null, HubjectSessionId = null, PartnerSessionId = null)

@@ -52,7 +52,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// <summary>
         /// A delegate called whenever new EVSE status will be send upstream.
         /// </summary>
-        public delegate void OnNewEVSEStatusSendingDelegate(DateTime Timestamp, IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>> EVSEStatus, String Hostinfo, String TrackingId);
+        public delegate void OnNewEVSEStatusSendingDelegate(DateTime Timestamp, IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>> EVSEStatus, String Hostinfo, String TrackingId);
 
         /// <summary>
         /// An event fired whenever new EVSE status will be send upstream.
@@ -80,7 +80,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// <summary>
         /// A delegate called whenever changed EVSE status will be send upstream.
         /// </summary>
-        public delegate void OnChangedEVSEStatusSendingDelegate(DateTime Timestamp, IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>> EVSEStatus, String Hostinfo, String TrackingId);
+        public delegate void OnChangedEVSEStatusSendingDelegate(DateTime Timestamp, IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>> EVSEStatus, String Hostinfo, String TrackingId);
 
         /// <summary>
         /// An event fired whenever changed EVSE status will be send upstream.
@@ -305,21 +305,20 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             try
             {
 
-                var XML_EVSEStates = EVSEOperator.
-                                         AllEVSEStatus.
-                                         Where(v => !EVSEOperator.InvalidEVSEIds.Contains(v.Key)).
+                var XML_EVSEs = EVSEOperator.
+                                         AllEVSEs.
+                                         Where(v => !EVSEOperator.InvalidEVSEIds.Contains(v.Id)).
                                          ToArray();
 
-                if (XML_EVSEStates.Any())
+                if (XML_EVSEs.Any())
                 {
 
-                    DebugX.Log("FullLoad of " + XML_EVSEStates.Length + " EVSE states at " + _HTTPVirtualHost + "...");
+                    DebugX.Log("FullLoad of " + XML_EVSEs.Length + " EVSE states at " + _HTTPVirtualHost + "...");
 
-                    var EVSEStatesInsertXML = XML_EVSEStates.
-                                                  Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState())).
-                                                  PushEVSEStatusXML(EVSEOperator.Id,
-                                                                    EVSEOperator.Name[Languages.de],
-                                                                    ActionType.fullLoad);
+                    var EVSEStatesInsertXML = XML_EVSEs.
+                                                  PushEVSEStatusXML(ActionType.fullLoad,
+                                                                    EVSEOperator.Id,
+                                                                    EVSEOperator.Name[Languages.de]);
 
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,
@@ -413,7 +412,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 var NewEVSEStatus  = EVSEStatusDiff.
                                          NewEVSEStatus.
-                                         Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState()));
+                                         Select(v => new KeyValuePair<EVSE_Id, EVSEStatusType>(v.Key, v.Value));
 
                 var OnNewEVSEStatusSendingLocal = OnNewEVSEStatusSending;
                 if (OnNewEVSEStatusSendingLocal != null)
@@ -500,7 +499,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 var ChangedEVSEStatus = EVSEStatusDiff.
                                             ChangedEVSEStatus.
-                                            Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState()));
+                                            ToArray();
 
                 var OnChangedEVSEStatusSendingLocal = OnChangedEVSEStatusSending;
                 if (OnChangedEVSEStatusSendingLocal != null)
@@ -587,17 +586,18 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             if (EVSEStatusDiff.RemovedEVSEIds.Any())
             {
 
+                var RemovedEVSEStatus = EVSEStatusDiff.
+                                            RemovedEVSEIds.
+                                            ToArray();
+
                 var OnRemovedEVSEStatusSendingLocal = OnRemovedEVSEStatusSending;
                 if (OnRemovedEVSEStatusSendingLocal != null)
-                    OnRemovedEVSEStatusSendingLocal(DateTime.Now, EVSEStatusDiff.ChangedEVSEStatus.Select(v => v.Key), _HTTPVirtualHost, TrackingId);
+                    OnRemovedEVSEStatusSendingLocal(DateTime.Now, RemovedEVSEStatus, _HTTPVirtualHost, TrackingId);
 
-
-                var RemovedEVSEStatus = EVSEStatusDiff.
-                                            ChangedEVSEStatus.
-                                            Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState()));
 
                 var EVSEStatesRemoveXML = RemovedEVSEStatus.
-                                              PushEVSEStatusXML(EVSEStatusDiff.EVSEOperatorId,
+                                              PushEVSEStatusXML(EVSEStatusType.Unavailable,
+                                                                EVSEStatusDiff.EVSEOperatorId,
                                                                 EVSEStatusDiff.EVSEOperatorName[Languages.de],
                                                                 ActionType.delete);
 
