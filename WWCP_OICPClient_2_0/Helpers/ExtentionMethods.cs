@@ -33,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         public static IEnumerable<HubjectEVSESearchReply> ParseSearchReplies(XElement XML)
         {
             return (from   EvseMatch
-                    in     XML.Descendants(NS.OICPv2_0EVSESearch + "EvseMatch")
+                    in     XML.Descendants(OICPNS.EVSESearch + "EvseMatch")
                     select new HubjectEVSESearchReply(EvseMatch)).ToArray();
         }
 

@@ -62,7 +62,7 @@
     <Compile Include="Helpers\Import\CPInfoList.cs" />
     <Compile Include="Helpers\Import\EVSEIdLookup.cs" />
     <Compile Include="Helpers\Import\EVSEInfo.cs" />
-    <Compile Include="Helpers\NS.cs" />
+    <Compile Include="Helpers\OICPNS.cs" />
     <Compile Include="Helpers\SOAP.cs" />
     <Compile Include="OICPDownstreamServer.cs" />
     <Compile Include="OICPImporter.cs" />

@@ -343,8 +343,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                             // Either with SOAP-XML tags or without...
                             var OperatorEvseData  = (SOAPXML != null ? SOAPXML : XML).
-                                                        Element (NS.OICPv2_0EVSEData + "EvseData").
-                                                        Elements(NS.OICPv2_0EVSEData + "OperatorEvseData").
+                                                        Element (OICPNS.EVSEData + "EvseData").
+                                                        Elements(OICPNS.EVSEData + "OperatorEvseData").
                                                         ToArray();
 
                             if (OperatorEvseData.Length > 0)
@@ -519,10 +519,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                             // Either with SOAP-XML tags or without...
                             var EvseStatus  = (SOAPXML != null ? SOAPXML : XML).
-                                                        Element (NS.OICPv2_0EVSEStatus + "EvseStatusRecords").
-                                                        Elements(NS.OICPv2_0EVSEStatus + "EvseStatusRecord").
-                                                        Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(NS.OICPv2_0EVSEStatus + "EvseId").Value),
-                                                                                                                (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(NS.OICPv2_0EVSEStatus + "EvseStatus").Value))).
+                                                        Element (OICPNS.EVSEStatus + "EvseStatusRecords").
+                                                        Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
+                                                        Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
+                                                                                                                (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))).
                                                         ToArray();
 
                             if (EvseStatus.Length > 0)

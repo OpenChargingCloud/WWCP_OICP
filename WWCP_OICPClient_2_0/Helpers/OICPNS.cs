@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Xml.Linq;
 
 #endregion
@@ -28,38 +27,38 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
     /// <summary>
     /// (OICP) XML Namespaces
     /// </summary>
-    public static class NS
+    public static class OICPNS
     {
 
         /// <summary>
         /// The namespace for the common types within the Open Intercharge Protocol (OICP) Version 2.0.
         /// </summary>
-        public static readonly XNamespace OICPv2_0CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v2.0";
+        public static readonly XNamespace CommonTypes          = "http://www.hubject.com/b2b/services/commontypes/v2.0";
 
         /// <summary>
         /// The namespace for the EVSE Data within the Open Intercharge Protocol (OICP) Version 2.0.
         /// </summary>
-        public static readonly XNamespace OICPv2_0EVSEData            = "http://www.hubject.com/b2b/services/evsedata/v2.0";
+        public static readonly XNamespace EVSEData             = "http://www.hubject.com/b2b/services/evsedata/v2.0";
 
         /// <summary>
         /// The namespace for the EVSE Status within the Open Intercharge Protocol (OICP) Version 2.0.
         /// </summary>
-        public static readonly XNamespace OICPv2_0EVSEStatus          = "http://www.hubject.com/b2b/services/evsestatus/v2.0";
+        public static readonly XNamespace EVSEStatus           = "http://www.hubject.com/b2b/services/evsestatus/v2.0";
 
         /// <summary>
         /// The namespace for the Authorization within the Open Intercharge Protocol (OICP) Version 2.0.
         /// </summary>
-        public static readonly XNamespace OICPv2_0Authorization       = "http://www.hubject.com/b2b/services/authorization/v2.0";
+        public static readonly XNamespace Authorization        = "http://www.hubject.com/b2b/services/authorization/v2.0";
 
         /// <summary>
         /// The namespace for the Mobile Authorization within the Open Intercharge Protocol (OICP) Version 2.0.
         /// </summary>
-        public static readonly XNamespace OICPv2_0MobileAuthorization = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0";
+        public static readonly XNamespace MobileAuthorization  = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0";
 
         /// <summary>
         /// The namespace for EVSE Serach within the Open Intercharge Protocol (OICP) Version 2.0.
         /// </summary>
-        public static readonly XNamespace OICPv2_0EVSESearch          = "http://www.hubject.com/b2b/services/evsesearch/v2.0";
+        public static readonly XNamespace EVSESearch           = "http://www.hubject.com/b2b/services/evsesearch/v2.0";
 
     }
 

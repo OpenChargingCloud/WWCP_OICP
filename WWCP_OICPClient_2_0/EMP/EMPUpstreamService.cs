@@ -229,7 +229,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                                                  var HubjectError = XMLData.
                                                                         Content.
-                                                                        Element(NS.OICPv2_0EVSEStatus + "StatusCode");
+                                                                        Element(OICPNS.EVSEStatus + "StatusCode");
 
                                                  if (HubjectError != null)
                                                  {
@@ -241,8 +241,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                      //   </tns:StatusCode>
                                                      // </tns:eRoamingEvseStatusById>
 
-                                                     var Code         = HubjectError.Element(NS.OICPv2_0CommonTypes + "Code").       Value;
-                                                     var Description  = HubjectError.Element(NS.OICPv2_0CommonTypes + "Description").Value;
+                                                     var Code         = HubjectError.Element(OICPNS.CommonTypes + "Code").       Value;
+                                                     var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
                                                      var Exception    = new ApplicationException(Code + " - " + Description);
 
                                                      SendOnException(DateTime.Now, this, Exception);
@@ -259,8 +259,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                      return new HTTPResponse<IEnumerable<XElement>>(
                                                                 XMLData.HttpResponse,
                                                                 XMLData.Content.
-                                                                    Element (NS.OICPv2_0EVSEData + "EvseData").
-                                                                    Elements(NS.OICPv2_0EVSEData + "OperatorEvseData"));
+                                                                    Element (OICPNS.EVSEData + "EvseData").
+                                                                    Elements(OICPNS.EVSEData + "OperatorEvseData"));
 
                                                  }
                                                  catch (Exception e)
@@ -380,7 +380,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                                                  var HubjectError = XMLData.
                                                                         Content.
-                                                                        Element(NS.OICPv2_0EVSEStatus + "StatusCode");
+                                                                        Element(OICPNS.EVSEStatus + "StatusCode");
 
                                                  if (HubjectError != null)
                                                  {
@@ -392,8 +392,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                      //   </tns:StatusCode>
                                                      // </tns:eRoamingEvseStatusById>
 
-                                                     var Code         = HubjectError.Element(NS.OICPv2_0CommonTypes + "Code").       Value;
-                                                     var Description  = HubjectError.Element(NS.OICPv2_0CommonTypes + "Description").Value;
+                                                     var Code         = HubjectError.Element(OICPNS.CommonTypes + "Code").       Value;
+                                                     var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
                                                      var Exception    = new ApplicationException(Code + " - " + Description);
 
                                                      SendOnException(DateTime.Now, this, Exception);
@@ -410,10 +410,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                      return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(
                                                                 XMLData.HttpResponse,
                                                                 XMLData.Content.
-                                                                        Element (NS.OICPv2_0EVSEStatus + "EvseStatusRecords").
-                                                                        Elements(NS.OICPv2_0EVSEStatus + "EvseStatusRecord").
-                                                                        Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(NS.OICPv2_0EVSEStatus + "EvseId").Value),
-                                                                                                                                (HubjectEVSEState)Enum.Parse(typeof(HubjectEVSEState), v.Element(NS.OICPv2_0EVSEStatus + "EvseStatus").Value))).
+                                                                        Element (OICPNS.EVSEStatus + "EvseStatusRecords").
+                                                                        Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
+                                                                        Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
+                                                                                                                                (HubjectEVSEState)Enum.Parse(typeof(HubjectEVSEState), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))).
                                                                         ToArray() as IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>);
 
                                                  }

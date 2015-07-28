@@ -206,7 +206,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         {
 
-            Console.WriteLine("FullLoad of " + EVSEOperator.ChargingPools.
+            DebugX.Log("FullLoad of " + EVSEOperator.ChargingPools.
                                                             SelectMany(Pool    => Pool.ChargingStations).
                                                             SelectMany(Station => Station.EVSEs).
                                                             Where     (EVSE    => !EVSEOperator.InvalidEVSEIds.Contains(EVSE.Id)).
@@ -256,7 +256,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                        // </cmn:eRoamingAcknowledgement>
 
                                                        var ack = HubjectAcknowledgement.Parse(XMLData.Content);
-                                                       Console.WriteLine("EVSE data fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
+                                                       DebugX.Log("EVSE data fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(XMLData.HttpResponse, ack, false);
 
@@ -266,7 +266,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                    OnSOAPFault: Fault =>
                                                    {
 
-                                                       Console.WriteLine("EVSE data fullload lead to a fault!" + Environment.NewLine);
+                                                       DebugX.Log("EVSE data fullload lead to a fault!" + Environment.NewLine);
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(
                                                            Fault.HttpResponse,
@@ -313,7 +313,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 if (XML_EVSEStates.Any())
                 {
 
-                    Console.WriteLine("FullLoad of " + XML_EVSEStates.Length + " EVSE states at " + _HTTPVirtualHost + "...");
+                    DebugX.Log("FullLoad of " + XML_EVSEStates.Length + " EVSE states at " + _HTTPVirtualHost + "...");
 
                     var EVSEStatesInsertXML = XML_EVSEStates.
                                                   Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState())).
@@ -346,7 +346,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                        // </cmn:eRoamingAcknowledgement>
 
                                                        var ack = HubjectAcknowledgement.Parse(XMLData.Content);
-                                                       Console.WriteLine("EVSE states fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
+                                                       DebugX.Log("EVSE states fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(XMLData.HttpResponse, ack, false);
 
@@ -356,7 +356,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                    OnSOAPFault: Fault =>
                                                    {
 
-                                                       Console.WriteLine("EVSE states fullload lead to a fault!" + Environment.NewLine);
+                                                       DebugX.Log("EVSE states fullload lead to a fault!" + Environment.NewLine);
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(
                                                            Fault.HttpResponse,
@@ -717,7 +717,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                                                       PartnerSessionId),
                                                          "eRoamingAuthorizeStart");
 
-                    Console.WriteLine(HttpResponse.Content.ToUTF8String());
+                    DebugX.Log(HttpResponse.Content.ToUTF8String());
 
                     //ToDo: In case of errors this will not parse!
                     var AuthStartResult = HubjectAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);

@@ -44,12 +44,12 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             return new XElement(SOAPNS.NS.SOAPEnvelope + "Envelope",
                        new XAttribute(XNamespace.Xmlns + "eMI3",                SOAPNS.NS.SOAPEnvelope.        NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "CommonTypes",         NS.OICPv2_0CommonTypes.        NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSEData",            NS.OICPv2_0EVSEData.           NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSEStatus",          NS.OICPv2_0EVSEStatus.         NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "MobileAuthorization", NS.OICPv2_0MobileAuthorization.NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "Authorization",       NS.OICPv2_0Authorization.      NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSESearch",          NS.OICPv2_0EVSESearch.         NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.        NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.           NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.         NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "MobileAuthorization", OICPNS.MobileAuthorization.NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "Authorization",       OICPNS.Authorization.      NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSESearch",          OICPNS.EVSESearch.         NamespaceName),
 
                        new XElement(SOAPNS.NS.SOAPEnvelope + "Header"),
                        new XElement(SOAPNS.NS.SOAPEnvelope + "Body", XML));
