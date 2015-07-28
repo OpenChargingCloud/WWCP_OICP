@@ -34,18 +34,18 @@ namespace org.GraphDefined.WWCP.IO.OICP
             {
 
                 // Type F Schuko                      -> CEE 7/4
-                case PlugType.TypeFSchuko:                  return "Type F Schuko";
+                case PlugTypes.TypeFSchuko:                  return "Type F Schuko";
 
                 // Type 2 Outlet                      -> IEC 62196-1 type 2
                 // Type 2 Connector (Cable Attached)  -> Cable attached to IEC 62196-1 type 2 connector.
                 //case PlugType.IEC62196_Type_2   : return (SocketOutlet.CableAttached == CableType.attached)
                 //                                  ? "Type 2 Connector (Cable Attached)"
                 //                                  : "Type 2 Outlet";
-                case PlugType.Type2Outlet:                  return "Type 2 Outlet";
-                case PlugType.Type2Connector_CableAttached: return "Type 2 Connector (Cable Attached)";
+                case PlugTypes.Type2Outlet:                  return "Type 2 Outlet";
+                case PlugTypes.Type2Connector_CableAttached: return "Type 2 Connector (Cable Attached)";
 
                 // CHAdeMO, DC CHAdeMO Connector
-                case PlugType.CHAdeMO_DC_CHAdeMOConnector:  return "CHAdeMO";
+                case PlugTypes.CHAdeMO_DC_CHAdeMOConnector:  return "CHAdeMO";
 
                     // Small Paddle Inductive
                     // Large Paddle Inductive

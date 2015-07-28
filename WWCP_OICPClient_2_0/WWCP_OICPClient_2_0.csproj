@@ -51,6 +51,7 @@
     <Compile Include="EMP\EMPUpstreamService.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
+    <Compile Include="Helpers\OICPMapper.cs" />
     <Compile Include="Helpers\ExtentionMethods.cs" />
     <Compile Include="Helpers\HubjectAcknowledgement.cs" />
     <Compile Include="Helpers\HubjectAuthorization.cs" />
@@ -63,7 +64,6 @@
     <Compile Include="Helpers\Import\EVSEIdLookup.cs" />
     <Compile Include="Helpers\Import\EVSEInfo.cs" />
     <Compile Include="Helpers\NS.cs" />
-    <Compile Include="Helpers\PlugTypeMapper.cs" />
     <Compile Include="Helpers\SOAP.cs" />
     <Compile Include="OICPDownstreamServer.cs" />
     <Compile Include="OICPImporter.cs" />
