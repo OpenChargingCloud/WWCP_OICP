@@ -296,6 +296,103 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
+        #region EVSEDataInsert(EVSEOperator)
+
+        public Task<HTTPResponse<HubjectAcknowledgement>> EVSEDataInsert(EVSEOperator EVSEOperator)
+
+        {
+
+            Console.WriteLine("Insert of " + EVSEOperator.ChargingPools.
+                                                          SelectMany(Pool    => Pool.ChargingStations).
+                                                          SelectMany(Station => Station.EVSEs).
+                                                          Where     (EVSE    => !EVSEOperator.InvalidEVSEIds.Contains(EVSE.Id)).
+                                                          Count() + " EVSE static data sets at " + _HTTPVirtualHost + "...");
+
+            try
+            {
+
+                var EVSEDataInsertXML = EVSEOperator.
+                                              ChargingPools.
+                                              PushEVSEDataXML(EVSEOperator.Id,
+                                                              EVSEOperator.Name[Languages.de],
+                                                              ActionType.insert,
+                                                              IncludeEVSEs: EVSEId => !EVSEOperator.InvalidEVSEIds.Contains(EVSEId));
+
+                using (var _OICPClient = new SOAPClient(_Hostname,
+                                                        _TCPPort,
+                                                        _HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingEvseData_V2.0",
+                                                        _UserAgent,
+                                                        _DNSClient))
+                    {
+
+                        return _OICPClient.Query(EVSEDataInsertXML,
+                                                   "eRoamingPushEvseData",
+                                                   QueryTimeout: TimeSpan.FromSeconds(60),
+
+                                                   OnSuccess: XMLData =>
+                                                   {
+
+                                                       // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">
+                                                       //   <cmn:Result>true</cmn:Result>
+                                                       //   <cmn:StatusCode>
+                                                       //     <cmn:Code>000</cmn:Code>
+                                                       //     <cmn:Description>Success</cmn:Description>
+                                                       //     <cmn:AdditionalInfo />
+                                                       //   </cmn:StatusCode>
+                                                       // </cmn:eRoamingAcknowledgement>
+
+                                                       // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">
+                                                       //   <cmn:Result>false</cmn:Result>
+                                                       //   <cmn:StatusCode>
+                                                       //     <cmn:Code>009</cmn:Code>
+                                                       //     <cmn:Description>Data transaction error</cmn:Description>
+                                                       //     <cmn:AdditionalInfo>The Push of data is already in progress.</cmn:AdditionalInfo>
+                                                       //   </cmn:StatusCode>
+                                                       // </cmn:eRoamingAcknowledgement>
+
+                                                       var ack = HubjectAcknowledgement.Parse(XMLData.Content);
+                                                       Console.WriteLine("EVSE data insert: " + ack.Result + " / " + ack.Description + Environment.NewLine);
+
+                                                       return new HTTPResponse<HubjectAcknowledgement>(XMLData.HttpResponse, ack, false);
+
+                                                   },
+
+
+                                                   OnSOAPFault: Fault =>
+                                                   {
+
+                                                       Console.WriteLine("EVSE data insert lead to a fault!" + Environment.NewLine);
+
+                                                       return new HTTPResponse<HubjectAcknowledgement>(
+                                                           Fault.HttpResponse,
+                                                           new HubjectAcknowledgement(false, 0, "", ""),
+                                                           IsFault: true);
+
+                                                   },
+
+                                                   OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+    
+                                                   OnException: (t, s, e) => SendOnException(t, s, e)
+
+                                                  );
+
+                    }
+
+            } catch (Exception e)
+            {
+
+                SendOnException(DateTime.Now, this, e);
+
+            }
+
+            return Task.FromResult<HTTPResponse<HubjectAcknowledgement>>(new HTTPResponse<HubjectAcknowledgement>(null, null, true));
+
+        }
+
+        #endregion
+
+
         #region EVSEStatusFullload(EVSEOperator)
 
         public Task<HTTPResponse<HubjectAcknowledgement>> EVSEStatusFullload(EVSEOperator  EVSEOperator)
@@ -357,6 +454,99 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                    {
 
                                                        Console.WriteLine("EVSE states fullload lead to a fault!" + Environment.NewLine);
+
+                                                       return new HTTPResponse<HubjectAcknowledgement>(
+                                                           Fault.HttpResponse,
+                                                           new HubjectAcknowledgement(false, 0, "", ""),
+                                                           IsFault: true);
+
+                                                   },
+
+                                                   OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+    
+                                                   OnException: (t, s, e) => SendOnException(t, s, e)
+
+                                                  );
+
+                    }
+
+                }
+
+            }
+            catch (Exception e)
+            {
+
+                SendOnException(DateTime.Now, this, e);
+
+            }
+
+            return Task.FromResult<HTTPResponse<HubjectAcknowledgement>>(new HTTPResponse<HubjectAcknowledgement>(null, null, true));
+
+        }
+
+        #endregion
+
+        #region EVSEStatusInsert(EVSEOperator)
+
+        public Task<HTTPResponse<HubjectAcknowledgement>> EVSEStatusInsert(EVSEOperator EVSEOperator)
+
+        {
+
+            try
+            {
+
+                var XML_EVSEStates = EVSEOperator.
+                                         AllEVSEStatus.
+                                         Where(v => !EVSEOperator.InvalidEVSEIds.Contains(v.Key)).
+                                         ToArray();
+
+                if (XML_EVSEStates.Any())
+                {
+
+                    Console.WriteLine("Insert of " + XML_EVSEStates.Length + " EVSE states at " + _HTTPVirtualHost + "...");
+
+                    var EVSEStatesInsertXML = XML_EVSEStates.
+                                                  Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState())).
+                                                  PushEVSEStatusXML(EVSEOperator.Id,
+                                                                    EVSEOperator.Name[Languages.de],
+                                                                    ActionType.insert);
+
+                    using (var _OICPClient = new SOAPClient(_Hostname,
+                                                            _TCPPort,
+                                                            _HTTPVirtualHost,
+                                                            "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                            _UserAgent,
+                                                            _DNSClient))
+                    {
+
+                        return _OICPClient.Query(EVSEStatesInsertXML,
+                                                   "eRoamingPushEvseStatus",
+                                                   QueryTimeout: TimeSpan.FromSeconds(60),
+
+                                                   OnSuccess: XMLData =>
+                                                   {
+
+                                                       // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">
+                                                       //   <cmn:Result>true</cmn:Result>
+                                                       //   <cmn:StatusCode>
+                                                       //     <cmn:Code>000</cmn:Code>
+                                                       //     <cmn:Description>Success</cmn:Description>
+                                                       //     <cmn:AdditionalInfo />
+                                                       //   </cmn:StatusCode>
+                                                       // </cmn:eRoamingAcknowledgement>
+
+                                                       var ack = HubjectAcknowledgement.Parse(XMLData.Content);
+                                                       Console.WriteLine("EVSE states insert: " + ack.Result + " / " + ack.Description + Environment.NewLine);
+
+                                                       return new HTTPResponse<HubjectAcknowledgement>(XMLData.HttpResponse, ack, false);
+
+                                                   },
+
+
+                                                   OnSOAPFault: Fault =>
+                                                   {
+
+                                                       Console.WriteLine("EVSE states insert lead to a fault!" + Environment.NewLine);
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(
                                                            Fault.HttpResponse,
