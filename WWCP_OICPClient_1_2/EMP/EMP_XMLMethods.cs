@@ -25,17 +25,15 @@ using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 
-using org.GraphDefined.WWCP.IO.OICP;
-
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>
-    /// OICP v1.2 EMP management methods.
+    /// OICP v2.0 EMP management methods.
     /// </summary>
-    public static class EMPMethods
+    public static class EMP_XMLMethods
     {
 
         #region SearchRequestXML(GeoCoordinate, Distance, ProviderId)
@@ -51,18 +49,18 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                 String         ProviderId)
         {
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1_2EVSESearch + "eRoamingSearchEvse",
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSESearch + "eRoamingSearchEvse",
 
-                                          new XElement(NS.OICPv1_2EVSESearch + "GeoCoordinates",
-                                              new XElement(NS.OICPv1_2CommonTypes + "DecimalDegree",
-                                                 new XElement(NS.OICPv1_2CommonTypes + "Longitude", GeoCoordinate.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
-                                                 new XElement(NS.OICPv1_2CommonTypes + "Latitude",  GeoCoordinate.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat))
+                                          new XElement(OICPNS.EVSESearch + "GeoCoordinates",
+                                              new XElement(OICPNS.CommonTypes + "DecimalDegree",
+                                                 new XElement(OICPNS.CommonTypes + "Longitude", GeoCoordinate.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
+                                                 new XElement(OICPNS.CommonTypes + "Latitude",  GeoCoordinate.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat))
                                               )
                                           ),
 
-                                          new XElement(NS.OICPv1_2EVSESearch + "ProviderID", ProviderId),
+                                          new XElement(OICPNS.EVSESearch + "ProviderID", ProviderId),
 
-                                          new XElement(NS.OICPv1_2EVSESearch + "Range", DistanceKM)
+                                          new XElement(OICPNS.EVSESearch + "Range", DistanceKM)
 
                                      ));
 
@@ -93,8 +91,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             // 
             // </soapenv:Envelope>
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1_2EVSEData + "eRoamingGetEvseById",
-                                          new XElement(NS.OICPv1_2EVSEData + "EvseId", EVSEId.ToFormat(IdFormatType.OLD))
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingGetEvseById",
+                                          new XElement(OICPNS.EVSEData + "EvseId", EVSEId.ToFormat(IdFormatType.OLD))
                                      ));
 
         }
@@ -116,30 +114,30 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                       UInt64         DistanceKM     = 0)
         {
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1_2EVSEData + "eRoamingPullEvseData",
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPullEvseData",
 
-                                          new XElement(NS.OICPv1_2EVSEData + "ProviderID", ProviderId.ToString()),
+                                          new XElement(OICPNS.EVSEData + "ProviderID", ProviderId.ToString()),
 
                                           (GeoCoordinate != null && DistanceKM > 0)
-                                              ? new XElement(NS.OICPv1_2EVSEData + "SearchCenter",
+                                              ? new XElement(OICPNS.EVSEData + "SearchCenter",
 
-                                                    new XElement(NS.OICPv1_2CommonTypes + "GeoCoordinates",
-                                                        new XElement(NS.OICPv1_2CommonTypes + "DecimalDegree",
-                                                           new XElement(NS.OICPv1_2CommonTypes + "Longitude", GeoCoordinate.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
-                                                           new XElement(NS.OICPv1_2CommonTypes + "Latitude",  GeoCoordinate.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat))
+                                                    new XElement(OICPNS.CommonTypes + "GeoCoordinates",
+                                                        new XElement(OICPNS.CommonTypes + "DecimalDegree",
+                                                           new XElement(OICPNS.CommonTypes + "Longitude", GeoCoordinate.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
+                                                           new XElement(OICPNS.CommonTypes + "Latitude",  GeoCoordinate.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat))
                                                         )
                                                     ),
 
-                                                    new XElement(NS.OICPv1_2CommonTypes + "Radius", DistanceKM)
+                                                    new XElement(OICPNS.CommonTypes + "Radius", DistanceKM)
 
                                                 )
                                               : null,
 
                                           (LastCall.HasValue)
-                                              ? new XElement(NS.OICPv1_2EVSEData + "LastCall",  LastCall.Value)
+                                              ? new XElement(OICPNS.EVSEData + "LastCall",  LastCall.Value)
                                               : null,
 
-                                          new XElement(NS.OICPv1_2EVSEData + "GeoCoordinatesResponseFormat",  "DecimalDegree")
+                                          new XElement(OICPNS.EVSEData + "GeoCoordinatesResponseFormat",  "DecimalDegree")
 
                                      ));
 
@@ -174,11 +172,11 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             // 
             // </soapenv:Envelope>
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1_2EVSEStatus + "eRoamingPullEvseStatusById",
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById",
 
-                                          new XElement(NS.OICPv1_2EVSEStatus + "ProviderID", ProviderId.ToString()),
+                                          new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
 
-                                          EVSEIds.Select(EVSEId => new XElement(NS.OICPv1_2EVSEStatus + "EvseId", EVSEId.OriginId)).
+                                          EVSEIds.Select(EVSEId => new XElement(OICPNS.EVSEStatus + "EvseId", EVSEId.OriginId)).
                                                   ToArray()
 
                                      ));
@@ -203,17 +201,17 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                        String   PartnerProductId = null)
         {
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1_2MobileAuthorization + "eRoamingMobileAuthorizeStart",
+            return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileAuthorizeStart",
 
-                                          new XElement(NS.OICPv1_2MobileAuthorization + "EvseID", EVSEId.ToString()),
+                                          new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.ToString()),
 
-                                          new XElement(NS.OICPv1_2MobileAuthorization + "QRCodeIdentification",
-                                              new XElement(NS.OICPv1_2CommonTypes + "EVCOID", EVCOId.ToString()),
-                                              new XElement(NS.OICPv1_2CommonTypes + "PIN",    PIN)
+                                          new XElement(OICPNS.MobileAuthorization + "QRCodeIdentification",
+                                              new XElement(OICPNS.CommonTypes + "EVCOID", EVCOId.ToString()),
+                                              new XElement(OICPNS.CommonTypes + "PIN",    PIN)
                                           ),
 
                                           (PartnerProductId != null)
-                                              ? new XElement(NS.OICPv1_2MobileAuthorization + "PartnerProductID", PartnerProductId)
+                                              ? new XElement(OICPNS.MobileAuthorization + "PartnerProductID", PartnerProductId)
                                               : null
 
                                      ));
@@ -231,8 +229,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         public static XElement MobileRemoteStartXML(ChargingSession_Id  SessionId = null)
         {
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1_2MobileAuthorization + "eRoamingMobileRemoteStart",
-                                          new XElement(NS.OICPv1_2EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSession_Id.New)
+            return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileRemoteStart",
+                                          new XElement(OICPNS.EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSession_Id.New)
                                      ));
 
         }
@@ -248,8 +246,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         public static XElement MobileRemoteStopXML(ChargingSession_Id SessionId = null)
         {
 
-            return SOAP.Encapsulation(new XElement(NS.OICPv1_2MobileAuthorization + "eRoamingMobileRemoteStop",
-                                          new XElement(NS.OICPv1_2EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSession_Id.New)
+            return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileRemoteStop",
+                                          new XElement(OICPNS.EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSession_Id.New)
                                      ));
 
         }

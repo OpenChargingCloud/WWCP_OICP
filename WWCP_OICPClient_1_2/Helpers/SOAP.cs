@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Xml.Linq;
 
 using SOAPNS = org.GraphDefined.Vanaheimr.Hermod.SOAP;
@@ -33,8 +32,6 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
     public static class SOAP
     {
 
-        #region Encapsulation(XML)
-
         /// <summary>
         /// Encapsulate the given XML within a XML SOAP frame.
         /// </summary>
@@ -43,20 +40,18 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         {
 
             return new XElement(SOAPNS.NS.SOAPEnvelope + "Envelope",
-                       new XAttribute(XNamespace.Xmlns + "eMI3",                SOAPNS.NS.SOAPEnvelope.        NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "CommonTypes",         NS.OICPv1_2CommonTypes.        NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSEData",            NS.OICPv1_2EVSEData.           NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSEStatus",          NS.OICPv1_2EVSEStatus.         NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "MobileAuthorization", NS.OICPv1_2MobileAuthorization.NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "Authorization",       NS.OICPv1_2Authorization.      NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSESearch",          NS.OICPv1_2EVSESearch.         NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "eMI3",                SOAPNS.NS.SOAPEnvelope.    NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.        NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.           NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.         NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "MobileAuthorization", OICPNS.MobileAuthorization.NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "Authorization",       OICPNS.Authorization.      NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "EVSESearch",          OICPNS.EVSESearch.         NamespaceName),
 
                        new XElement(SOAPNS.NS.SOAPEnvelope + "Header"),
                        new XElement(SOAPNS.NS.SOAPEnvelope + "Body", XML));
 
         }
-
-        #endregion
 
     }
 

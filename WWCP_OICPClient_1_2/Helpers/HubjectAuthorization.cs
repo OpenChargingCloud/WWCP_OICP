@@ -180,17 +180,17 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         public HubjectAuthorization(AuthorizationType AuthorizationType, XElement XML)
         {
 
-            var ack                   = XML.Descendants(NS.OICPv1_2Authorization + "eRoamingAuthorization" + AuthorizationType.ToString()).FirstOrDefault();
+            var ack                   = XML.Descendants(OICPNS.Authorization + "eRoamingAuthorization" + AuthorizationType.ToString()).FirstOrDefault();
 
-            this._SessionID           = ChargingSession_Id .Parse((ack.Element(NS.OICPv1_2Authorization + "SessionID") != null)  ? ack.Element(NS.OICPv1_2Authorization + "SessionID"). Value : "");
-            this._PartnerSessionID    = (ack.Element(NS.OICPv1_2Authorization + "PartnerSessionID") != null) ? ack.Element(NS.OICPv1_2Authorization + "PartnerSessionID").Value : "";
-            this._ProviderID          = (ack.Element(NS.OICPv1_2Authorization + "ProviderID")       != null) ? ack.Element(NS.OICPv1_2Authorization + "ProviderID").Value : "";
-            this._AuthorizationStatus = (ack.Element(NS.OICPv1_2Authorization + "AuthorizationStatus").Value.ToLower() == "authorized") ? AuthorizationStatusType.Authorized : AuthorizationStatusType.NotAuthorized;
+            this._SessionID           = ChargingSession_Id .Parse((ack.Element(OICPNS.Authorization + "SessionID") != null)  ? ack.Element(OICPNS.Authorization + "SessionID"). Value : "");
+            this._PartnerSessionID    =  ack.Element(OICPNS.Authorization + "PartnerSessionID").Value;
+            this._ProviderID          = (ack.Element(OICPNS.Authorization + "ProviderID") != null) ? ack.Element(OICPNS.Authorization + "ProviderID").Value : "";
+            this._AuthorizationStatus = (ack.Element(OICPNS.Authorization + "AuthorizationStatus").Value.ToLower() == "authorized") ? AuthorizationStatusType.Authorized : AuthorizationStatusType.NotAuthorized;
 
-            var StatusCode            = ack.Element(NS.OICPv1_2Authorization + "StatusCode");
-            this._Code                = UInt16.Parse(StatusCode.Element(NS.OICPv1_2CommonTypes + "Code").Value);
-            this._Description         =  StatusCode.Element(NS.OICPv1_2CommonTypes + "Description").Value;
-            this._AdditionalInfo      = (StatusCode.Element(NS.OICPv1_2CommonTypes + "AdditionalInfo") != null) ? StatusCode.Element(NS.OICPv1_2CommonTypes + "AdditionalInfo").Value : String.Empty;
+            var StatusCode            = ack.Element(OICPNS.Authorization + "StatusCode");
+            this._Code                = UInt16.Parse(StatusCode.Element(OICPNS.CommonTypes + "Code").Value);
+            this._Description         =  StatusCode.Element(OICPNS.CommonTypes + "Description").Value;
+            this._AdditionalInfo      = (StatusCode.Element(OICPNS.CommonTypes + "AdditionalInfo") != null) ? StatusCode.Element(OICPNS.CommonTypes + "AdditionalInfo").Value : String.Empty;
 
             // - Auth Start --------------------------------------------------------------------------------------------
 

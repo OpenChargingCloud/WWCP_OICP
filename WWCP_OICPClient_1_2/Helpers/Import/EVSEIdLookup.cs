@@ -21,9 +21,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Aegir;
-
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPClient_1_2
@@ -34,29 +31,29 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #region Properties
 
-        #region OperatorId
+        #region EVSEOperatorId
 
-        private readonly EVSEOperator_Id _OperatorId;
+        private readonly EVSEOperator_Id _EVSEOperatorId;
 
-        public EVSEOperator_Id OperatorId
+        public EVSEOperator_Id EVSEOperatorId
         {
             get
             {
-                return _OperatorId;
+                return _EVSEOperatorId;
             }
         }
 
         #endregion
 
-        #region ChargingPools
+        #region EVSEs
 
-        private readonly Dictionary<EVSE_Id, EVSEInfo> _ChargingPools;
+        private readonly Dictionary<EVSE_Id, EVSEInfo> _EVSEs;
 
-        public IEnumerable<EVSEInfo> ChargingPools
+        public IEnumerable<EVSEInfo> EVSEs
         {
             get
             {
-                return _ChargingPools.Select(v => v.Value);
+                return _EVSEs.Select(v => v.Value);
             }
         }
 
@@ -67,7 +64,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #region Constructor(s)
 
         public EVSEIdLookup(EVSEOperator_Id                OperatorId,
-                            IEnumerable<ChargingPoolInfo>  Data)
+                            IEnumerable<ChargingPoolInfo>  ChargingPoolInfos)
         {
 
             #region Initial checks
@@ -77,16 +74,19 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
             #endregion
 
-            this._OperatorId     = OperatorId;
-            this._ChargingPools  = new Dictionary<EVSE_Id, EVSEInfo>();
+            this._EVSEOperatorId  = OperatorId;
+            this._EVSEs           = new Dictionary<EVSE_Id, EVSEInfo>();
 
-            foreach (var pool in Data)
-                foreach (var station in pool)
-                    foreach (var evseid in station)
+            foreach (var poolinfo in ChargingPoolInfos)
+                foreach (var stationinfo in poolinfo)
+                    foreach (var evseid in stationinfo)
 
                         // At least on HubjectQA one EVSEId is not unique!
-                        if (!_ChargingPools.ContainsKey(evseid))
-                            _ChargingPools.Add(evseid, new EVSEInfo(pool.PoolId, pool.Address, pool.GeoLocation, station.StationId));
+                        if (!_EVSEs.ContainsKey(evseid))
+                            _EVSEs.Add(evseid, new EVSEInfo(poolinfo.   PoolId,
+                                                            poolinfo.   Address,
+                                                            poolinfo.   GeoLocation,
+                                                            stationinfo.StationId));
 
         }
 
@@ -97,7 +97,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         {
             get
             {
-                return _ChargingPools[EVSEId];
+                return _EVSEs[EVSEId];
             }
         }
 
@@ -109,7 +109,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// </summary>
         public override String ToString()
         {
-            return _ChargingPools.Count + " charging pools";
+            return _EVSEs.Count + " EVSEs";
         }
 
         #endregion

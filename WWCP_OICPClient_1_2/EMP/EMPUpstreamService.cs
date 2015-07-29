@@ -38,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>
-    /// OICP v1.2 EMP upstream services.
+    /// OICP v2.0 EMP upstream services.
     /// </summary>
     public class EMPUpstreamService : AOICPUpstreamService,
                                       IRoamingProviderProvided_EVSPServices
@@ -47,7 +47,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new OICP v1.2 EMP upstream service.
+        /// Create a new OICP v2.0 EMP upstream service.
         /// </summary>
         /// <param name="Hostname">The OICP hostname to connect to.</param>
         /// <param name="TCPPort">The OICP IP port to connect to.</param>
@@ -85,12 +85,12 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         "service-qa.hubject.com",
-                                                        "/ibis/ws/eRoamingEvseData_V1.2",
+                                                        "/ibis/ws/eRoamingEvseData_V2.0",
                                                         UserAgent,
                                                         DNSClient))
                 {
 
-                    return _OICPClient.Query(EMPMethods.GetEVSEByIdRequestXML(EVSEId),
+                    return _OICPClient.Query(EMP_XMLMethods.GetEVSEByIdRequestXML(EVSEId),
                                              "eRoamingEvseById",
                                              QueryTimeout: TimeSpan.FromSeconds(180),
 
@@ -157,12 +157,12 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         "service-qa.hubject.com",
-                                                        "/ibis/ws/eRoamingEvseData_V1.2",
+                                                        "/ibis/ws/eRoamingEvseData_V2.0",
                                                         UserAgent,
                                                         DNSClient))
                 {
 
-                    return _OICPClient.Query(EMPMethods.PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, DistanceKM),
+                    return _OICPClient.Query(EMP_XMLMethods.PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, DistanceKM),
                                              "eRoamingPullEVSEData",
                                              QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : TimeSpan.FromSeconds(180),
 
@@ -229,7 +229,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                  var HubjectError = XMLData.
                                                                         Content.
-                                                                        Element(NS.OICPv1_2EVSEStatus + "StatusCode");
+                                                                        Element(OICPNS.EVSEStatus + "StatusCode");
 
                                                  if (HubjectError != null)
                                                  {
@@ -241,8 +241,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                      //   </tns:StatusCode>
                                                      // </tns:eRoamingEvseStatusById>
 
-                                                     var Code         = HubjectError.Element(NS.OICPv1_2CommonTypes + "Code").       Value;
-                                                     var Description  = HubjectError.Element(NS.OICPv1_2CommonTypes + "Description").Value;
+                                                     var Code         = HubjectError.Element(OICPNS.CommonTypes + "Code").       Value;
+                                                     var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
                                                      var Exception    = new ApplicationException(Code + " - " + Description);
 
                                                      SendOnException(DateTime.Now, this, Exception);
@@ -259,8 +259,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                      return new HTTPResponse<IEnumerable<XElement>>(
                                                                 XMLData.HttpResponse,
                                                                 XMLData.Content.
-                                                                    Element (NS.OICPv1_2EVSEData + "EvseData").
-                                                                    Elements(NS.OICPv1_2EVSEData + "OperatorEvseData"));
+                                                                    Element (OICPNS.EVSEData + "EvseData").
+                                                                    Elements(OICPNS.EVSEData + "OperatorEvseData"));
 
                                                  }
                                                  catch (Exception e)
@@ -334,13 +334,13 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         "service-qa.hubject.com",
-                                                        "/ibis/ws/eRoamingEvseStatus_V1.2",
+                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                         UserAgent,
                                                         DNSClient))
 
                 {
 
-                    return _OICPClient.Query(EMPMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds),
+                    return _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds),
                                              "eRoamingPullEvseStatusById",
                                              QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : TimeSpan.FromSeconds(180),
 
@@ -380,7 +380,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                  var HubjectError = XMLData.
                                                                         Content.
-                                                                        Element(NS.OICPv1_2EVSEStatus + "StatusCode");
+                                                                        Element(OICPNS.EVSEStatus + "StatusCode");
 
                                                  if (HubjectError != null)
                                                  {
@@ -392,8 +392,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                      //   </tns:StatusCode>
                                                      // </tns:eRoamingEvseStatusById>
 
-                                                     var Code         = HubjectError.Element(NS.OICPv1_2CommonTypes + "Code").       Value;
-                                                     var Description  = HubjectError.Element(NS.OICPv1_2CommonTypes + "Description").Value;
+                                                     var Code         = HubjectError.Element(OICPNS.CommonTypes + "Code").       Value;
+                                                     var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
                                                      var Exception    = new ApplicationException(Code + " - " + Description);
 
                                                      SendOnException(DateTime.Now, this, Exception);
@@ -410,10 +410,10 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                      return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>(
                                                                 XMLData.HttpResponse,
                                                                 XMLData.Content.
-                                                                        Element (NS.OICPv1_2EVSEStatus + "EvseStatusRecords").
-                                                                        Elements(NS.OICPv1_2EVSEStatus + "EvseStatusRecord").
-                                                                        Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(NS.OICPv1_2EVSEStatus + "EvseId").Value),
-                                                                                                                                (HubjectEVSEState)Enum.Parse(typeof(HubjectEVSEState), v.Element(NS.OICPv1_2EVSEStatus + "EvseStatus").Value))).
+                                                                        Element (OICPNS.EVSEStatus + "EvseStatusRecords").
+                                                                        Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
+                                                                        Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
+                                                                                                                                (HubjectEVSEState)Enum.Parse(typeof(HubjectEVSEState), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))).
                                                                         ToArray() as IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>);
 
                                                  }
@@ -487,7 +487,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
                 {
 
-                    var HttpResponse = OICPClient.Query(EMPMethods.MobileAuthorizeStartXML(EVSEId,
+                    var HttpResponse = OICPClient.Query(EMP_XMLMethods.MobileAuthorizeStartXML(EVSEId,
                                                                                            EVCOId,
                                                                                            PIN,
                                                                                            PartnerProductId),
@@ -652,7 +652,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
                 {
 
-                    var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStartXML(SessionId),
+                    var HttpResponse = _OICPClient.Query(EMP_XMLMethods.MobileRemoteStartXML(SessionId),
                                                          "eRoamingMobileRemoteStart");
 
                     //ToDo: In case of errors this will not parse!
@@ -711,7 +711,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
                 {
 
-                    var HttpResponse = _OICPClient.Query(EMPMethods.MobileRemoteStopXML(SessionId),
+                    var HttpResponse = _OICPClient.Query(EMP_XMLMethods.MobileRemoteStopXML(SessionId),
                                                          "eRoamingMobileRemoteStop");
 
                     //ToDo: In case of errors this will not parse!
