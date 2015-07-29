@@ -38,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>
-    /// OICP v2.0 CPO Upstream Service(s).
+    /// OICP v1.2 CPO Upstream Service(s).
     /// </summary>
     public class CPOUpstreamService : AOICPUpstreamService,
                                       IAuthServices,
@@ -136,7 +136,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new OICP v2.0 CPO Upstream Service.
+        /// Create a new OICP v1.2 CPO Upstream Service.
         /// </summary>
         /// <param name="OICPHost">The hostname of the OICP service.</param>
         /// <param name="OICPPort">The IP port of the OICP service.</param>
@@ -148,7 +148,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                   IPPort           OICPPort,
                                   String           HTTPVirtualHost  = null,
                                   Authorizator_Id  AuthorizatorId   = null,
-                                  String           HTTPUserAgent    = "GraphDefined OICP v2.0 Gateway CPO Upstream Services",
+                                  String           HTTPUserAgent    = "GraphDefined OICP v1.2 Gateway CPO Upstream Services",
                                   DNSClient        DNSClient        = null)
 
             : base(OICPHost,
@@ -225,7 +225,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,
                                                             _HTTPVirtualHost,
-                                                            "/ibis/ws/eRoamingEvseData_V2.0",
+                                                            "/ibis/ws/eRoamingEvseData_V1.2",
                                                             _UserAgent,
                                                             _DNSClient))
                     {
@@ -328,7 +328,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,
                                                             _HTTPVirtualHost,
-                                                            "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                            "/ibis/ws/eRoamingEvseStatus_V1.2",
                                                             _UserAgent,
                                                             _DNSClient))
                     {
@@ -435,7 +435,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(_Hostname,
                                                         _TCPPort,
                                                         _HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                        "/ibis/ws/eRoamingEvseStatus_V1.2",
                                                         UserAgent,
                                                         DNSClient))
 
@@ -523,7 +523,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(_Hostname,
                                                         _TCPPort,
                                                         _HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                        "/ibis/ws/eRoamingEvseStatus_V1.2",
                                                         UserAgent,
                                                         DNSClient))
 
@@ -612,7 +612,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(_Hostname,
                                                         _TCPPort,
                                                         _HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                        "/ibis/ws/eRoamingEvseStatus_V1.2",
                                                         UserAgent,
                                                         DNSClient))
 
@@ -704,17 +704,17 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         public AUTHSTARTResult AuthorizeStart(EVSEOperator_Id     OperatorId,
                                               Auth_Token          AuthToken,
-                                              EVSE_Id             EVSEId            = null,   // OICP v2.0: Optional
-                                              String              PartnerProductId  = null,   // OICP v2.0: Optional [100]
-                                              ChargingSession_Id  HubjectSessionId  = null,   // OICP v2.0: Optional
-                                              ChargingSession_Id  PartnerSessionId  = null)   // OICP v2.0: Optional [50]
+                                              EVSE_Id             EVSEId            = null,   // OICP v1.2: Optional
+                                              String              PartnerProductId  = null,   // OICP v1.2: Optional [100]
+                                              ChargingSession_Id  HubjectSessionId  = null,   // OICP v1.2: Optional
+                                              ChargingSession_Id  PartnerSessionId  = null)   // OICP v1.2: Optional [50]
 
         {
 
             try
             {
 
-                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V2.0", DNSClient: _DNSClient))
+                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V1.2", DNSClient: _DNSClient))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPO_XMLMethods.AuthorizeStartXML(OperatorId,
@@ -881,7 +881,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             try
             {
 
-                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V2.0", DNSClient: _DNSClient))
+                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V1.2", DNSClient: _DNSClient))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPO_XMLMethods.AuthorizeStopXML(OperatorId,
@@ -1070,7 +1070,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             try
             {
 
-                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V2.0", DNSClient: _DNSClient))
+                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V1.2", DNSClient: _DNSClient))
                 {
 
                     var HttpResponse = _OICPClient.Query(CPO_XMLMethods.SendChargeDetailRecordXML(EVSEId,

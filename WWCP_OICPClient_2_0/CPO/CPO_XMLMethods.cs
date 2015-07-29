@@ -999,8 +999,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                               new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
                                                  new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString())
                                               )
-                                          ),
-                                          PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())                 : null
+                                          )
                                      ));
 
         }
