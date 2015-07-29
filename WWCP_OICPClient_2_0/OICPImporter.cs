@@ -63,6 +63,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         private readonly Func<UInt64, StreamReader>                             _LoadStaticDataFromStream;
         private readonly Func<UInt64, StreamReader>                             _LoadDynamicDataFromStream;
+        private          Boolean                                                Paused = false;
 
         #endregion
 
@@ -242,12 +243,12 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     Exception.Message.StartsWith("Unexpected end of file has occurred. The following elements are not closed:"))
                     return;
 
-                Debug.WriteLine("[" + Timestamp + "] '" + Sender.ToString() + "' " + Exception.Message);
+                DebugX.Log("'" + Sender.ToString() + "' " + Exception.Message);
 
             };
 
             OICPUpstreamService.OnHTTPError += (Timestamp, Sender, HttpResponse) => {
-                Debug.WriteLine("[" + Timestamp + "] '" + Sender.ToString() + "' " + (HttpResponse != null ? HttpResponse.ToString() : "<null>"));
+                DebugX.Log("'" + Sender.ToString() + "' " + (HttpResponse != null ? HttpResponse.ToString() : "<null>"));
             };
 
             #endregion
@@ -264,6 +265,37 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #endregion
 
 
+        #region Pause()
+
+        /// <summary>
+        /// Pause the OICP importer (after the current run).
+        /// </summary>
+        public void Pause()
+        {
+            lock (UpdateEVSEsLock)
+            {
+                Paused = true;
+            }
+        }
+
+        #endregion
+
+        #region Continue()
+
+        /// <summary>
+        /// Continue the OICP importer (with the next scheduled run).
+        /// </summary>
+        public void Continue()
+        {
+            lock (UpdateEVSEsLock)
+            {
+                Paused = false;
+            }
+        }
+
+        #endregion
+
+
         #region (private, Timer) UpdateEVSEData(State)
 
         /// <summary>
@@ -272,6 +304,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// <param name="State">State object.</param>
         private void UpdateEVSEData(Object State)
         {
+
+            if (Paused)
+                return;
 
             // Wait till a concurrent UpdateEVSEStatus(...) has finished!
             if (Monitor.TryEnter(UpdateEVSEsLock, _UpdateEVSEDataTimeout))
@@ -343,8 +378,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                             // Either with SOAP-XML tags or without...
                             var OperatorEvseData  = (SOAPXML != null ? SOAPXML : XML).
-                                                        Element (NS.OICPv2_0EVSEData + "EvseData").
-                                                        Elements(NS.OICPv2_0EVSEData + "OperatorEvseData").
+                                                        Element (OICPNS.EVSEData + "EvseData").
+                                                        Elements(OICPNS.EVSEData + "OperatorEvseData").
                                                         ToArray();
 
                             if (OperatorEvseData.Length > 0)
@@ -449,6 +484,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         private void UpdateEVSEStatus(Object State)
         {
 
+            if (Paused)
+                return;
+
             // If a concurrent UpdateEVSEData/UpdateEVSEStatus(...) is still running, skip this round!
             if (Monitor.TryEnter(UpdateEVSEsLock))
             {
@@ -519,10 +557,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                             // Either with SOAP-XML tags or without...
                             var EvseStatus  = (SOAPXML != null ? SOAPXML : XML).
-                                                        Element (NS.OICPv2_0EVSEStatus + "EvseStatusRecords").
-                                                        Elements(NS.OICPv2_0EVSEStatus + "EvseStatusRecord").
-                                                        Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(NS.OICPv2_0EVSEStatus + "EvseId").Value),
-                                                                                                                (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(NS.OICPv2_0EVSEStatus + "EvseStatus").Value))).
+                                                        Element (OICPNS.EVSEStatus + "EvseStatusRecords").
+                                                        Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
+                                                        Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
+                                                                                                                (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))).
                                                         ToArray();
 
                             if (EvseStatus.Length > 0)
@@ -677,6 +715,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         }
 
         #endregion
+
 
     }
 

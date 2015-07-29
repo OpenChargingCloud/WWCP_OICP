@@ -175,34 +175,34 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                                               var ChargingFacility = "Unspecified";
 
-                                                              if (Outlet.Plug == PlugType.Type2Outlet ||
-                                                                  Outlet.Plug == PlugType.Type2Connector_CableAttached)// Mennekes_Type_2
+                                                              if (Outlet.Plug == PlugTypes.Type2Outlet ||
+                                                                  Outlet.Plug == PlugTypes.Type2Connector_CableAttached)// Mennekes_Type_2
                                                               {
 
-                                                                  if (Outlet.MaxPower <= 44.0)
+                                                                  if (EVSE.MaxPower <= 44.0)
                                                                       ChargingFacility = "380 - 480V, 3-Phase ≤63A";
 
-                                                                  if (Outlet.MaxPower <= 22.0)
+                                                                  if (EVSE.MaxPower <= 22.0)
                                                                       ChargingFacility = "380 - 480V, 3-Phase ≤32A";
 
-                                                                  if (Outlet.MaxPower <= 11.0)
+                                                                  if (EVSE.MaxPower <= 11.0)
                                                                       ChargingFacility = "380 - 480V, 3-Phase ≤16A";
 
                                                               }
 
-                                                              else if (Outlet.Plug == PlugType.TypeFSchuko)
+                                                              else if (Outlet.Plug == PlugTypes.TypeFSchuko)
                                                               {
 
-                                                                  if (Outlet.MaxPower >  7.2)
+                                                                  if (EVSE.MaxPower >  7.2)
                                                                       ChargingFacility = "200 - 240V, 1-Phase >32A";
 
-                                                                  if (Outlet.MaxPower <= 7.2)
+                                                                  if (EVSE.MaxPower <= 7.2)
                                                                       ChargingFacility = "200 - 240V, 1-Phase ≤32A";
 
-                                                                  if (Outlet.MaxPower <= 3.6)
+                                                                  if (EVSE.MaxPower <= 3.6)
                                                                       ChargingFacility = "200 - 240V, 1-Phase ≤16A";
 
-                                                                  if (Outlet.MaxPower <= 2.25)
+                                                                  if (EVSE.MaxPower <= 2.25)
                                                                       ChargingFacility = "200 - 240V, 1-Phase ≤10A";
 
                                                               }

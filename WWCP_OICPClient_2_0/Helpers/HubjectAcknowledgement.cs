@@ -164,29 +164,29 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             try
             {
 
-                var ack              = XML.Descendants(NS.OICPv2_0CommonTypes + "eRoamingAcknowledgement").
+                var ack              = XML.Descendants(OICPNS.CommonTypes + "eRoamingAcknowledgement").
                                            FirstOrDefault();
 
-                if (ack == null && XML.Name == NS.OICPv2_0CommonTypes + "eRoamingAcknowledgement")
+                if (ack == null && XML.Name == OICPNS.CommonTypes + "eRoamingAcknowledgement")
                     ack = XML;
 
                 if (ack == null)
                     return false;
 
-                var _Result          = (ack.Element(NS.OICPv2_0CommonTypes + "Result").Value == "true")
+                var _Result          = (ack.Element(OICPNS.CommonTypes + "Result").Value == "true")
                                            ? true
                                            : false;
 
-                var StatusCode       = ack.Element(NS.OICPv2_0CommonTypes + "StatusCode");
+                var StatusCode       = ack.Element(OICPNS.CommonTypes + "StatusCode");
 
                 UInt16 _Code;
-                if (!UInt16.TryParse(StatusCode.Element(NS.OICPv2_0CommonTypes + "Code").Value, out _Code))
+                if (!UInt16.TryParse(StatusCode.Element(OICPNS.CommonTypes + "Code").Value, out _Code))
                     return false;
 
-                var _Description     = StatusCode.Element(NS.OICPv2_0CommonTypes + "Description").Value;
+                var _Description     = StatusCode.Element(OICPNS.CommonTypes + "Description").Value;
 
-                var _AdditionalInfo  = (StatusCode.Element(NS.OICPv2_0CommonTypes + "AdditionalInfo") != null)
-                                           ? StatusCode.Element(NS.OICPv2_0CommonTypes + "AdditionalInfo").Value
+                var _AdditionalInfo  = (StatusCode.Element(OICPNS.CommonTypes + "AdditionalInfo") != null)
+                                           ? StatusCode.Element(OICPNS.CommonTypes + "AdditionalInfo").Value
                                            : String.Empty;
 
                 Acknowledgement = new HubjectAcknowledgement(_Result, _Code, _Description, _AdditionalInfo);

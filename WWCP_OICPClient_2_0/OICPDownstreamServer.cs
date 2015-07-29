@@ -176,8 +176,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 try
                 {
 
-                    RemoteStartXMLs = XMLRequest.Data.Root.Descendants(NS.OICPv2_0Authorization + "eRoamingAuthorizeRemoteStart");
-                    RemoteStopXMLs  = XMLRequest.Data.Root.Descendants(NS.OICPv2_0Authorization + "eRoamingAuthorizeRemoteStop");
+                    RemoteStartXMLs = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart");
+                    RemoteStopXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop");
 
                     if (!RemoteStartXMLs.Any() && !RemoteStopXMLs.Any())
                         throw new Exception("Must be either RemoteStart or RemoteStop XML request!");
@@ -209,14 +209,14 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                         HTTPStatusCode = HTTPStatusCode.OK,
                         ContentType    = HTTPContentType.XMLTEXT_UTF8,
-                        Content        = SOAP.Encapsulation(new XElement(NS.OICPv2_0CommonTypes + "eRoamingAcknowledgement",
+                        Content        = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                                                new XElement(NS.OICPv2_0CommonTypes + "Result", "false"),
+                                                                new XElement(OICPNS.CommonTypes + "Result", "false"),
 
-                                                                new XElement(NS.OICPv2_0CommonTypes + "StatusCode",
-                                                                    new XElement(NS.OICPv2_0CommonTypes + "Code",           "022"),
-                                                                    new XElement(NS.OICPv2_0CommonTypes + "Description",    "Request led to an exception!"),
-                                                                    new XElement(NS.OICPv2_0CommonTypes + "AdditionalInfo", e.Message)
+                                                                new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                    new XElement(OICPNS.CommonTypes + "Code",           "022"),
+                                                                    new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
+                                                                    new XElement(OICPNS.CommonTypes + "AdditionalInfo", e.Message)
                                                                 )
 
                                                             )).ToString().ToUTF8Bytes()
@@ -298,9 +298,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     // 
                     // </soapenv:Envelope>
 
-                    // ---------------------------------
+                    // ----------------------------------
                     // Hubject/Intercharge App OICPv1.2
-                    // ---------------------------------
+                    // ----------------------------------
                     // <soapenv:Envelope xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2"
                     //                   xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
                     //                   xmlns:tns="http://www.hubject.com/b2b/services/authorization/v1.2">
@@ -331,21 +331,21 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     try
                     {
 
-                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrFail(NS.OICPv2_0Authorization + "SessionID",  "No SessionID XML tag provided!"));
-                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail(NS.OICPv2_0Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail(NS.OICPv2_0Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
+                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
-                        IdentificationXML        =               RemoteStartXML.    ElementOrFail     (NS.OICPv2_0Authorization + "Identification",       "No EVSEID XML tag provided!");
-                        RemoteIdentificationXML  =               IdentificationXML. Element           (NS.OICPv2_0CommonTypes   + "RemoteIdentification");
-                        QRCodeIdentificationXML  =               IdentificationXML. Element           (NS.OICPv2_0CommonTypes   + "QRCodeIdentification");
+                        IdentificationXML        =               RemoteStartXML.    ElementOrFail     (OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
+                        RemoteIdentificationXML  =               IdentificationXML. Element           (OICPNS.CommonTypes   + "RemoteIdentification");
+                        QRCodeIdentificationXML  =               IdentificationXML. Element           (OICPNS.CommonTypes   + "QRCodeIdentification");
 
                         if (RemoteIdentificationXML == null &&
                             QRCodeIdentificationXML == null)
                             throw new Exception("Neither a RemoteIdentificationXML, nor a QRCodeIdentificationXML was provided!");
 
                         eMAId                    = eMA_Id. Parse((RemoteIdentificationXML != null)
-                                                                     ? RemoteIdentificationXML.ElementValueOrFail(NS.OICPv2_0CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
-                                                                     : QRCodeIdentificationXML.ElementValueOrFail(NS.OICPv2_0CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
+                                                                     ? RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
+                                                                     : QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
                                                                 );
 
                     }
@@ -358,14 +358,14 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                                 HTTPStatusCode  = HTTPStatusCode.OK,
                                 ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                                Content         = SOAP.Encapsulation(new XElement(NS.OICPv2_0CommonTypes + "eRoamingAcknowledgement",
+                                Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                                                         new XElement(NS.OICPv2_0CommonTypes + "Result", "false"),
+                                                                         new XElement(OICPNS.CommonTypes + "Result", "false"),
 
-                                                                         new XElement(NS.OICPv2_0CommonTypes + "StatusCode",
-                                                                             new XElement(NS.OICPv2_0CommonTypes + "Code",           "022"),
-                                                                             new XElement(NS.OICPv2_0CommonTypes + "Description",    "Request led to an exception!"),
-                                                                             new XElement(NS.OICPv2_0CommonTypes + "AdditionalInfo",  e.Message)
+                                                                         new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                             new XElement(OICPNS.CommonTypes + "Code",           "022"),
+                                                                             new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
+                                                                             new XElement(OICPNS.CommonTypes + "AdditionalInfo",  e.Message)
                                                                          )
 
                                                                      )).ToString().ToUTF8Bytes()
@@ -422,17 +422,17 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     return new HTTPResponseBuilder() {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(new XElement(NS.OICPv2_0CommonTypes + "eRoamingAcknowledgement",
+                        Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                                                 new XElement(NS.OICPv2_0CommonTypes + "Result", "true"),
+                                                                 new XElement(OICPNS.CommonTypes + "Result", "true"),
 
-                                                                 new XElement(NS.OICPv2_0CommonTypes + "StatusCode",
-                                                                     new XElement(NS.OICPv2_0CommonTypes + "Code",            HubjectCode),
-                                                                     new XElement(NS.OICPv2_0CommonTypes + "Description",     HubjectDescription),
-                                                                     new XElement(NS.OICPv2_0CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+                                                                 new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                     new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
+                                                                     new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
+                                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
                                                                  ),
 
-                                                                 new XElement(NS.OICPv2_0CommonTypes + "SessionID", SessionId)
+                                                                 new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
                                                                  //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
 
                                                             )).ToString().
@@ -492,9 +492,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     try
                     {
 
-                        SessionId   = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail(NS.OICPv2_0Authorization + "SessionID",  "No SessionID XML tag provided!"));
-                        ProviderId  = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail(NS.OICPv2_0Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId      = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail(NS.OICPv2_0Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        SessionId   = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
+                        ProviderId  = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId      = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                     }
                     catch (Exception e)
@@ -506,14 +506,14 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                                 HTTPStatusCode  = HTTPStatusCode.OK,
                                 ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                                Content         = SOAP.Encapsulation(new XElement(NS.OICPv2_0CommonTypes + "eRoamingAcknowledgement",
+                                Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                                                         new XElement(NS.OICPv2_0CommonTypes + "Result", "false"),
+                                                                         new XElement(OICPNS.CommonTypes + "Result", "false"),
 
-                                                                         new XElement(NS.OICPv2_0CommonTypes + "StatusCode",
-                                                                             new XElement(NS.OICPv2_0CommonTypes + "Code",           "022"),
-                                                                             new XElement(NS.OICPv2_0CommonTypes + "Description",    "Request led to an exception!"),
-                                                                             new XElement(NS.OICPv2_0CommonTypes + "AdditionalInfo", e.Message)
+                                                                         new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                             new XElement(OICPNS.CommonTypes + "Code",           "022"),
+                                                                             new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
+                                                                             new XElement(OICPNS.CommonTypes + "AdditionalInfo", e.Message)
                                                                          )
 
                                                                      )).ToString().ToUTF8Bytes()
@@ -565,17 +565,17 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                     }
 
-                    var SOAPContent = SOAP.Encapsulation(new XElement(NS.OICPv2_0CommonTypes + "eRoamingAcknowledgement",
+                    var SOAPContent = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                                             new XElement(NS.OICPv2_0CommonTypes + "Result", "true"),
+                                                             new XElement(OICPNS.CommonTypes + "Result", "true"),
 
-                                                             new XElement(NS.OICPv2_0CommonTypes + "StatusCode",
-                                                                 new XElement(NS.OICPv2_0CommonTypes + "Code",            HubjectCode),
-                                                                 new XElement(NS.OICPv2_0CommonTypes + "Description",     HubjectDescription),
-                                                                 new XElement(NS.OICPv2_0CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+                                                             new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                 new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
+                                                                 new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
+                                                                 new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
                                                              ),
 
-                                                             new XElement(NS.OICPv2_0CommonTypes + "SessionID", SessionId)
+                                                             new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
                             //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
 
                                                          )).ToString();
