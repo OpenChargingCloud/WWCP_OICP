@@ -36,7 +36,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>
-    /// A service to import EVSE data (from Hubject) via OICP v1.2.
+    /// A service to import EVSE data (from Hubject) via OICP v2.0.
     /// </summary>
     public class OICPImporter<TContext>
     {
@@ -398,7 +398,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     #endregion
 
-                    #region ...or load it (from Hubject) via OICP v1.2
+                    #region ...or load it (from Hubject) via OICP v2.0
 
                     else
                         OICPUpstreamService.
@@ -579,7 +579,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     #endregion
 
-                    #region ...or load it (from Hubject) via OICP v1.2
+                    #region ...or load it (from Hubject) via OICP v2.0
 
                     else
                     {
@@ -608,7 +608,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                         #endregion
 
-                        #region 2) Load the data (from Hubject) via OICP v1.2
+                        #region 2) Load the data (from Hubject) via OICP v2.0
 
                         // Get the data via the GetEVSEIds delegate!
                         else

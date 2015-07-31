@@ -44,9 +44,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="AOICPUpstreamService.cs" />
     <Compile Include="CPO\CPO_XMLMethods.cs" />
     <Compile Include="EMP\EMP_XMLMethods.cs" />
+=======
+    <Compile Include="CPO\CPO_XMLMethods.cs" />
+    <Compile Include="EMP\EMP_XMLMethods.cs" />
+    <Compile Include="Helpers\Import\EVSEInfo.cs" />
+    <Compile Include="Helpers\Import\EVSEIdLookup.cs" />
+    <Compile Include="Helpers\Import\CPInfoList.cs" />
+    <Compile Include="Helpers\Import\ChargeStationInfo.cs" />
+    <Compile Include="Helpers\Import\ChargingPoolInfo.cs" />
+    <Compile Include="Helpers\OICPMapper.cs" />
+    <Compile Include="Helpers\OICPNS.cs" />
+    <Compile Include="OICPDownstreamServer.cs" />
+>>>>>>> 82ef174822186ff809ae7e33f9ec1cc1b98e5f77
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
     <Compile Include="Helpers\ExtentionMethods.cs" />
@@ -55,6 +68,7 @@
     <Compile Include="Helpers\HubjectEVSESearchReply.cs" />
     <Compile Include="Helpers\HubjectEVSEState.cs" />
     <Compile Include="Helpers\HubjectMobileAuthorizationStart.cs" />
+<<<<<<< HEAD
     <Compile Include="Helpers\Import\ChargeStationInfo.cs" />
     <Compile Include="Helpers\Import\ChargingPoolInfo.cs" />
     <Compile Include="Helpers\Import\CPInfoList.cs" />
@@ -62,6 +76,8 @@
     <Compile Include="Helpers\Import\EVSEInfo.cs" />
     <Compile Include="Helpers\OICPMapper.cs" />
     <Compile Include="Helpers\OICPNS.cs" />
+=======
+>>>>>>> 82ef174822186ff809ae7e33f9ec1cc1b98e5f77
     <Compile Include="Helpers\SOAP.cs" />
     <Compile Include="OICPDownstreamServer.cs" />
     <Compile Include="OICPImporter.cs" />

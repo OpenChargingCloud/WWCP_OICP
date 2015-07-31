@@ -38,10 +38,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #region PushEVSEDataXML(this GroupedData,      Action = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
-        public static XElement PushEVSEDataXML(Dictionary<EVSEOperator, IEnumerable<EVSE>>  GroupedData,
-                                               ActionType                                   Action        = ActionType.fullLoad,
-                                               EVSEOperator_Id                              OperatorId    = null,
-                                               String                                       OperatorName  = null)
+        public static XElement PushEVSEDataXML(ILookup<EVSEOperator, IEnumerable<EVSE>>  GroupedData,
+                                               ActionType                                Action        = ActionType.fullLoad,
+                                               EVSEOperator_Id                           OperatorId    = null,
+                                               String                                    OperatorName  = null)
         {
 
             #region Initial checks
@@ -59,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                               new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId   != null ? OperatorId   : datagroup.Key.Id).ToFormat(IdFormatType.OLD)),
                                               new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName != null ? OperatorName : datagroup.Key.Name.First().Text)),
 
-                                              datagroup.Value.ToEvseDataRecords().ToArray()
+                                              datagroup.SelectMany(v => v.ToEvseDataRecords()).ToArray()
 
                                           )).ToArray()
                                       ));
@@ -118,10 +118,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             #endregion
 
-            return PushEVSEDataXML(_EVSEOperators.ToDictionary(evseoperator => evseoperator,
-                                                               evseoperator => evseoperator.SelectMany(pool    => pool.ChargingStations).
-                                                                                            SelectMany(station => station.EVSEs).
-                                                                                            Where     (evse    => IncludeEVSEs(evse.Id))),
+            return PushEVSEDataXML(_EVSEOperators.ToLookup(evseoperator => evseoperator,
+                                                           evseoperator => evseoperator.SelectMany(pool    => pool.ChargingStations).
+                                                                                        SelectMany(station => station.EVSEs).
+                                                                                        Where     (evse    => IncludeEVSEs(evse.Id))),
                                    Action,
                                    OperatorId,
                                    OperatorName);
@@ -180,9 +180,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             #endregion
 
-            return PushEVSEDataXML(_ChargingPools.ToDictionary(pool => pool.EVSEOperator,
-                                                               pool => pool.SelectMany(station => station.EVSEs).
-                                                                            Where     (evse    => IncludeEVSEs(evse.Id))),
+            return PushEVSEDataXML(_ChargingPools.ToLookup(pool => pool.EVSEOperator,
+                                                           pool => pool.SelectMany(station => station.EVSEs).
+                                                                        Where     (evse    => IncludeEVSEs(evse.Id))),
                                    Action,
                                    OperatorId,
                                    OperatorName);
@@ -244,8 +244,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             #endregion
 
-            return PushEVSEDataXML(_ChargingStations.ToDictionary(station => station.ChargingPool.EVSEOperator,
-                                                                  station => station.Where(evse => IncludeEVSEs(evse.Id))),
+            return PushEVSEDataXML(_ChargingStations.ToLookup(station => station.ChargingPool.EVSEOperator,
+                                                              station => station.Where(evse => IncludeEVSEs(evse.Id))),
                                    Action,
                                    OperatorId,
                                    OperatorName);
@@ -739,6 +739,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             if (_EVSEs.Length == 0)
                 throw new ArgumentNullException("EVSEs", "The given parameter must not be empty!");
 
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
             #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
@@ -996,8 +999,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                               new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
                                                  new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString())
                                               )
-                                          ),
-                                          PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())                 : null
+                                          )
                                      ));
 
         }
