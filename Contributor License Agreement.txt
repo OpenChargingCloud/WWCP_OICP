@@ -2,9 +2,9 @@
 Contributor License Agreement
 =============================
 
-Thank you for your interest in the Electro Mobility ICT Requirements Analysis (EM-ICT-RA) being administered by the Belectric Group (Belectric Drive GmbH / Belectric IT Solutions GmbH). The form of license below is a document that clarifies the terms under which You, the person listed below, may contribute software, bug fixes, configuration changes, documentation, or any other materials that you send to us related to the Project (each a "Contribution") to the project. We appreciate your participation in our project, and your help in improving the project, so we want you to understand what will be done with the Contributions. This license is for your protection as well as the protection of this project and its licensees; it does not change your rights to use your own Contributions for any other purpose.
+Thank you for your interest in the World Wide Charging Protocol Suite (WWCP) developed by GraphDefined GmbH. The form of license below is a document that clarifies the terms under which You, the person listed below, may contribute software, bug fixes, configuration changes, documentation, or any other materials that you send to us related to the Project (each a "Contribution") to the project. We appreciate your participation in our project, and your help in improving the project, so we want you to understand what will be done with the Contributions. This license is for your protection as well as the protection of this project and its licensees; it does not change your rights to use your own Contributions for any other purpose.
 
-If you have questions about these terms, please contact us at achim.friedland@belectric.com.
+If you have questions about these terms, please contact us at achim.friedland@graphdefined.com.
 
 Corporate Contributions:
 
