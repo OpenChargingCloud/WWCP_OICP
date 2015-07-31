@@ -52,7 +52,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// <summary>
         /// A delegate called whenever new EVSE status will be send upstream.
         /// </summary>
-        public delegate void OnNewEVSEStatusSendingDelegate(DateTime Timestamp, IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>> EVSEStatus, String Hostinfo, String TrackingId);
+        public delegate void OnNewEVSEStatusSendingDelegate(DateTime Timestamp, IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>> EVSEStatus, String Hostinfo, String TrackingId);
 
         /// <summary>
         /// An event fired whenever new EVSE status will be send upstream.
@@ -80,7 +80,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// <summary>
         /// A delegate called whenever changed EVSE status will be send upstream.
         /// </summary>
-        public delegate void OnChangedEVSEStatusSendingDelegate(DateTime Timestamp, IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>> EVSEStatus, String Hostinfo, String TrackingId);
+        public delegate void OnChangedEVSEStatusSendingDelegate(DateTime Timestamp, IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>> EVSEStatus, String Hostinfo, String TrackingId);
 
         /// <summary>
         /// An event fired whenever changed EVSE status will be send upstream.
@@ -136,7 +136,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new OICPv1.2 CPO Upstream Service.
+        /// Create a new OICP v1.2 CPO Upstream Service.
         /// </summary>
         /// <param name="OICPHost">The hostname of the OICP service.</param>
         /// <param name="OICPPort">The IP port of the OICP service.</param>
@@ -148,7 +148,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                   IPPort           OICPPort,
                                   String           HTTPVirtualHost  = null,
                                   Authorizator_Id  AuthorizatorId   = null,
-                                  String           HTTPUserAgent    = "GraphDefined OICPv1.2 Gateway CPO Upstream Services",
+                                  String           HTTPUserAgent    = "GraphDefined OICP v1.2 Gateway CPO Upstream Services",
                                   DNSClient        DNSClient        = null)
 
             : base(OICPHost,
@@ -206,7 +206,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         {
 
-            Console.WriteLine("FullLoad of " + EVSEOperator.ChargingPools.
+            DebugX.Log("FullLoad of " + EVSEOperator.ChargingPools.
                                                             SelectMany(Pool    => Pool.ChargingStations).
                                                             SelectMany(Station => Station.EVSEs).
                                                             Where     (EVSE    => !EVSEOperator.InvalidEVSEIds.Contains(EVSE.Id)).
@@ -217,9 +217,9 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                 var EVSEDataFullLoadXML = EVSEOperator.
                                               ChargingPools.
-                                              PushEVSEDataXML(EVSEOperator.Id,
+                                              PushEVSEDataXML(ActionType.fullLoad,
+                                                              EVSEOperator.Id,
                                                               EVSEOperator.Name[Languages.de],
-                                                              ActionType.fullLoad,
                                                               IncludeEVSEs: EVSEId => !EVSEOperator.InvalidEVSEIds.Contains(EVSEId));
 
                 using (var _OICPClient = new SOAPClient(_Hostname,
@@ -256,7 +256,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                        // </cmn:eRoamingAcknowledgement>
 
                                                        var ack = HubjectAcknowledgement.Parse(XMLData.Content);
-                                                       Console.WriteLine("EVSE data fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
+                                                       DebugX.Log("EVSE data fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(XMLData.HttpResponse, ack, false);
 
@@ -266,7 +266,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                    OnSOAPFault: Fault =>
                                                    {
 
-                                                       Console.WriteLine("EVSE data fullload lead to a fault!" + Environment.NewLine);
+                                                       DebugX.Log("EVSE data fullload lead to a fault!" + Environment.NewLine);
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(
                                                            Fault.HttpResponse,
@@ -305,21 +305,20 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             try
             {
 
-                var XML_EVSEStates = EVSEOperator.
-                                         AllEVSEStatus.
-                                         Where(v => !EVSEOperator.InvalidEVSEIds.Contains(v.Key)).
+                var XML_EVSEs = EVSEOperator.
+                                         AllEVSEs.
+                                         Where(v => !EVSEOperator.InvalidEVSEIds.Contains(v.Id)).
                                          ToArray();
 
-                if (XML_EVSEStates.Any())
+                if (XML_EVSEs.Any())
                 {
 
-                    Console.WriteLine("FullLoad of " + XML_EVSEStates.Length + " EVSE states at " + _HTTPVirtualHost + "...");
+                    DebugX.Log("FullLoad of " + XML_EVSEs.Length + " EVSE states at " + _HTTPVirtualHost + "...");
 
-                    var EVSEStatesInsertXML = XML_EVSEStates.
-                                                  Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState())).
-                                                  PushEVSEStatusXML(EVSEOperator.Id,
-                                                                    EVSEOperator.Name[Languages.de],
-                                                                    ActionType.fullLoad);
+                    var EVSEStatesInsertXML = XML_EVSEs.
+                                                  PushEVSEStatusXML(ActionType.fullLoad,
+                                                                    EVSEOperator.Id,
+                                                                    EVSEOperator.Name[Languages.de]);
 
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,
@@ -346,7 +345,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                        // </cmn:eRoamingAcknowledgement>
 
                                                        var ack = HubjectAcknowledgement.Parse(XMLData.Content);
-                                                       Console.WriteLine("EVSE states fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
+                                                       DebugX.Log("EVSE states fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(XMLData.HttpResponse, ack, false);
 
@@ -356,7 +355,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                    OnSOAPFault: Fault =>
                                                    {
 
-                                                       Console.WriteLine("EVSE states fullload lead to a fault!" + Environment.NewLine);
+                                                       DebugX.Log("EVSE states fullload lead to a fault!" + Environment.NewLine);
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(
                                                            Fault.HttpResponse,
@@ -413,7 +412,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                 var NewEVSEStatus  = EVSEStatusDiff.
                                          NewEVSEStatus.
-                                         Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState()));
+                                         Select(v => new KeyValuePair<EVSE_Id, EVSEStatusType>(v.Key, v.Value));
 
                 var OnNewEVSEStatusSendingLocal = OnNewEVSEStatusSending;
                 if (OnNewEVSEStatusSendingLocal != null)
@@ -500,7 +499,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                 var ChangedEVSEStatus = EVSEStatusDiff.
                                             ChangedEVSEStatus.
-                                            Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState()));
+                                            ToArray();
 
                 var OnChangedEVSEStatusSendingLocal = OnChangedEVSEStatusSending;
                 if (OnChangedEVSEStatusSendingLocal != null)
@@ -587,17 +586,18 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             if (EVSEStatusDiff.RemovedEVSEIds.Any())
             {
 
+                var RemovedEVSEStatus = EVSEStatusDiff.
+                                            RemovedEVSEIds.
+                                            ToArray();
+
                 var OnRemovedEVSEStatusSendingLocal = OnRemovedEVSEStatusSending;
                 if (OnRemovedEVSEStatusSendingLocal != null)
-                    OnRemovedEVSEStatusSendingLocal(DateTime.Now, EVSEStatusDiff.ChangedEVSEStatus.Select(v => v.Key), _HTTPVirtualHost, TrackingId);
+                    OnRemovedEVSEStatusSendingLocal(DateTime.Now, RemovedEVSEStatus, _HTTPVirtualHost, TrackingId);
 
-
-                var RemovedEVSEStatus = EVSEStatusDiff.
-                                            ChangedEVSEStatus.
-                                            Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(v.Key, v.Value.AsHubjectEVSEState()));
 
                 var EVSEStatesRemoveXML = RemovedEVSEStatus.
-                                              PushEVSEStatusXML(EVSEStatusDiff.EVSEOperatorId,
+                                              PushEVSEStatusXML(EVSEStatusType.Unavailable,
+                                                                EVSEStatusDiff.EVSEOperatorId,
                                                                 EVSEStatusDiff.EVSEOperatorName[Languages.de],
                                                                 ActionType.delete);
 
@@ -686,7 +686,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, PartnerProductId = null, HubjectSessionId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP v1.2 authorize start request.
+        /// Create an OICP authorize start request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
@@ -700,6 +700,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                               String              PartnerProductId  = null,   // OICP v1.2: Optional [100]
                                               ChargingSession_Id  HubjectSessionId  = null,   // OICP v1.2: Optional
                                               ChargingSession_Id  PartnerSessionId  = null)   // OICP v1.2: Optional [50]
+
         {
 
             try
@@ -708,7 +709,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V1.2", DNSClient: _DNSClient))
                 {
 
-                    var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStartXML(OperatorId,
+                    var HttpResponse = _OICPClient.Query(CPO_XMLMethods.AuthorizeStartXML(OperatorId,
                                                                                       AuthToken,
                                                                                       EVSEId,
                                                                                       PartnerProductId,
@@ -716,7 +717,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                                                       PartnerSessionId),
                                                          "eRoamingAuthorizeStart");
 
-                    Console.WriteLine(HttpResponse.Content.ToUTF8String());
+                    DebugX.Log(HttpResponse.Content.ToUTF8String());
 
                     //ToDo: In case of errors this will not parse!
                     var AuthStartResult = HubjectAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
@@ -875,7 +876,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V1.2", DNSClient: _DNSClient))
                 {
 
-                    var HttpResponse = _OICPClient.Query(CPOMethods.AuthorizeStopXML(OperatorId,
+                    var HttpResponse = _OICPClient.Query(CPO_XMLMethods.AuthorizeStopXML(OperatorId,
                                                                                      EVSEId,
                                                                                      SessionId,
                                                                                      PartnerSessionId,
@@ -1064,7 +1065,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/eRoamingAuthorization_V1.2", DNSClient: _DNSClient))
                 {
 
-                    var HttpResponse = _OICPClient.Query(CPOMethods.SendChargeDetailRecordXML(EVSEId,
+                    var HttpResponse = _OICPClient.Query(CPO_XMLMethods.SendChargeDetailRecordXML(EVSEId,
                                                                                               SessionId,
                                                                                               PartnerSessionId,
                                                                                               PartnerProductId,
