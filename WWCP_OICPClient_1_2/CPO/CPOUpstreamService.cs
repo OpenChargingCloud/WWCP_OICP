@@ -207,23 +207,6 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                                          ActionType           Action)
         {
 
-<<<<<<< HEAD
-            DebugX.Log("FullLoad of " + EVSEOperator.ChargingPools.
-                                                            SelectMany(Pool    => Pool.ChargingStations).
-                                                            SelectMany(Station => Station.EVSEs).
-                                                            Where     (EVSE    => !EVSEOperator.InvalidEVSEIds.Contains(EVSE.Id)).
-                                                            Count() + " EVSE static data sets at " + _HTTPVirtualHost + "...");
-
-            try
-            {
-
-                var EVSEDataFullLoadXML = EVSEOperator.
-                                              ChargingPools.
-                                              PushEVSEDataXML(ActionType.fullLoad,
-                                                              EVSEOperator.Id,
-                                                              EVSEOperator.Name[Languages.de],
-                                                              IncludeEVSEs: EVSEId => !EVSEOperator.InvalidEVSEIds.Contains(EVSEId));
-=======
             try
             {
 
@@ -233,7 +216,6 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                     Where     (evse    => IncludeEVSE != null ? IncludeEVSE(evse) : true).
                                     Where     (evse    => !EVSEOperator.InvalidEVSEIds.Contains(evse.Id)).
                                     ToArray();
->>>>>>> 82ef174822186ff809ae7e33f9ec1cc1b98e5f77
 
                 if (XML_EVSEs.Any())
                 {
@@ -269,10 +251,6 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                          //   </cmn:StatusCode>
                                                          // </cmn:eRoamingAcknowledgement>
 
-<<<<<<< HEAD
-                                                       var ack = HubjectAcknowledgement.Parse(XMLData.Content);
-                                                       DebugX.Log("EVSE data fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
-=======
                                                          // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">
                                                          //   <cmn:Result>false</cmn:Result>
                                                          //   <cmn:StatusCode>
@@ -281,7 +259,6 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                          //     <cmn:AdditionalInfo>The Push of data is already in progress.</cmn:AdditionalInfo>
                                                          //   </cmn:StatusCode>
                                                          // </cmn:eRoamingAcknowledgement>
->>>>>>> 82ef174822186ff809ae7e33f9ec1cc1b98e5f77
 
                                                          var ack = HubjectAcknowledgement.Parse(XMLData.Content);
                                                          DebugX.Log(Action + " of EVSE data: " + ack.Result + " / " + ack.Description + Environment.NewLine);
@@ -291,12 +268,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                      },
 
 
-<<<<<<< HEAD
-                                                       DebugX.Log("EVSE data fullload lead to a fault!" + Environment.NewLine);
-=======
                                                      OnSOAPFault: Fault =>
                                                      {
->>>>>>> 82ef174822186ff809ae7e33f9ec1cc1b98e5f77
 
                                                          DebugX.Log(Action + " of EVSE data lead to a fault!" + Environment.NewLine);
 
@@ -343,27 +316,14 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                 var XML_EVSEs = EVSEOperator.
                                          AllEVSEs.
-<<<<<<< HEAD
-                                         Where(v => !EVSEOperator.InvalidEVSEIds.Contains(v.Id)).
-=======
                                          Where(evse => IncludeEVSE != null ? IncludeEVSE(evse) : true).
                                          Where(evse => !EVSEOperator.InvalidEVSEIds.Contains(evse.Id)).
->>>>>>> 82ef174822186ff809ae7e33f9ec1cc1b98e5f77
                                          ToArray();
 
                 if (XML_EVSEs.Any())
                 {
 
-<<<<<<< HEAD
-                    DebugX.Log("FullLoad of " + XML_EVSEs.Length + " EVSE states at " + _HTTPVirtualHost + "...");
-
-                    var EVSEStatesInsertXML = XML_EVSEs.
-                                                  PushEVSEStatusXML(ActionType.fullLoad,
-                                                                    EVSEOperator.Id,
-                                                                    EVSEOperator.Name[Languages.de]);
-=======
                     DebugX.Log(Action + " of " + XML_EVSEs.Length + " EVSE states at " + _HTTPVirtualHost + "...");
->>>>>>> 82ef174822186ff809ae7e33f9ec1cc1b98e5f77
 
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,
@@ -393,11 +353,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                        // </cmn:eRoamingAcknowledgement>
 
                                                        var ack = HubjectAcknowledgement.Parse(XMLData.Content);
-<<<<<<< HEAD
-                                                       DebugX.Log("EVSE states fullload: " + ack.Result + " / " + ack.Description + Environment.NewLine);
-=======
                                                        DebugX.Log(Action + " of EVSE states: " + ack.Result + " / " + ack.Description + Environment.NewLine);
->>>>>>> 82ef174822186ff809ae7e33f9ec1cc1b98e5f77
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(XMLData.HttpResponse, ack, false);
 
@@ -407,11 +363,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                    OnSOAPFault: Fault =>
                                                    {
 
-<<<<<<< HEAD
-                                                       DebugX.Log("EVSE states fullload lead to a fault!" + Environment.NewLine);
-=======
                                                        DebugX.Log(Action + " of EVSE states lead to a fault!" + Environment.NewLine);
->>>>>>> 82ef174822186ff809ae7e33f9ec1cc1b98e5f77
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(
                                                            Fault.HttpResponse,

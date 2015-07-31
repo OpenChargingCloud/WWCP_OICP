@@ -31,7 +31,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>
-    /// OICP v2.0 EMP management methods.
+    /// OICP v1.2 EMP management methods.
     /// </summary>
     public static class EMP_XMLMethods
     {

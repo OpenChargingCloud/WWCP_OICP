@@ -38,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>
-    /// OICP v2.0 EMP upstream services.
+    /// OICP v1.2 EMP upstream services.
     /// </summary>
     public class EMPUpstreamService : AOICPUpstreamService,
                                       IRoamingProviderProvided_EVSPServices
@@ -47,7 +47,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new OICP v2.0 EMP upstream service.
+        /// Create a new OICP v1.2 EMP upstream service.
         /// </summary>
         /// <param name="Hostname">The OICP hostname to connect to.</param>
         /// <param name="TCPPort">The OICP IP port to connect to.</param>
@@ -85,7 +85,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         "service-qa.hubject.com",
-                                                        "/ibis/ws/eRoamingEvseData_V2.0",
+                                                        "/ibis/ws/eRoamingEvseData_V1.2",
                                                         UserAgent,
                                                         DNSClient))
                 {
@@ -157,7 +157,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         "service-qa.hubject.com",
-                                                        "/ibis/ws/eRoamingEvseData_V2.0",
+                                                        "/ibis/ws/eRoamingEvseData_V1.2",
                                                         UserAgent,
                                                         DNSClient))
                 {
@@ -334,7 +334,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         "service-qa.hubject.com",
-                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                        "/ibis/ws/eRoamingEvseStatus_V1.2",
                                                         UserAgent,
                                                         DNSClient))
 
