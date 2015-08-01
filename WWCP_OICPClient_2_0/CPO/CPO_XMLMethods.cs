@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Globalization;
 
 #endregion
 
@@ -944,62 +945,87 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
 
 
-        #region AuthorizeStartXML(this EVSE, AuthToken, PartnerProductId = null, HubjectSessionId = null, PartnerSessionId = null)
+        #region AuthorizeStartXML(this EVSE, AuthToken, PartnerProductId = null, SessionId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP authorize start XML request.
+        /// Create an OICP v2.0 Authorize Start XML request.
         /// </summary>
         /// <param name="EVSE">An EVSE.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
-        /// <param name="PartnerSessionId">An optional Hubject session identification.</param>
+        /// <param name="SessionId">An optional session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         public static XElement AuthorizeStartXML(this EVSE           EVSE,
                                                  Auth_Token          AuthToken,
                                                  String              PartnerProductId  = null,   // OICP v2.0: Optional [100]
-                                                 ChargingSession_Id  HubjectSessionId  = null,   // OICP v2.0: Optional
+                                                 ChargingSession_Id  SessionId         = null,   // OICP v2.0: Optional
                                                  ChargingSession_Id  PartnerSessionId  = null)   // OICP v2.0: Optional [50]
         {
+
+            #region Initial checks
+
+            if (EVSE      == null)
+                throw new ArgumentNullException("EVSE",      "The given parameter must not be null!");
+
+            if (AuthToken == null)
+                throw new ArgumentNullException("AuthToken", "The given parameter must not be null!");
+
+            #endregion
 
             return AuthorizeStartXML(EVSE.ChargingStation.ChargingPool.EVSEOperator.Id,
                                      AuthToken,
                                      EVSE.Id,
                                      PartnerProductId,
-                                     HubjectSessionId,
+                                     SessionId,
                                      PartnerSessionId);
 
         }
 
         #endregion
 
-        #region AuthorizeStartXML(OperatorId, AuthToken, EVSEId = null, PartnerProductId = null, HubjectSessionId = null, PartnerSessionId = null)
+        #region AuthorizeStartXML(OperatorId, AuthToken, EVSEId = null, PartnerProductId = null, SessionId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP authorize start XML request.
+        /// Create an OICP v2.0 Authorize Start XML request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
-        /// <param name="HubjectSessionId">An optional Hubject session identification.</param>
+        /// <param name="SessionId">An optional session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         public static XElement AuthorizeStartXML(EVSEOperator_Id     OperatorId,
                                                  Auth_Token          AuthToken,
                                                  EVSE_Id             EVSEId            = null,   // OICP v2.0: Optional
                                                  String              PartnerProductId  = null,   // OICP v2.0: Optional [100]
-                                                 ChargingSession_Id  HubjectSessionId  = null,   // OICP v2.0: Optional
+                                                 ChargingSession_Id  SessionId         = null,   // OICP v2.0: Optional
                                                  ChargingSession_Id  PartnerSessionId  = null)   // OICP v2.0: Optional [50]
         {
 
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+
+            if (AuthToken  == null)
+                throw new ArgumentNullException("AuthToken",  "The given parameter must not be null!");
+
+            #endregion
+
             return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeStart",
+
                                           PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())                 : null,
+
                                           new XElement(OICPNS.Authorization + "OperatorID",       OperatorId.ToFormat(IdFormatType.OLD)),
+
                                           EVSEId           != null ? new XElement(OICPNS.Authorization + "EVSEID",           EVSEId.          ToFormat(IdFormatType.OLD)) : null,
+
                                           new XElement(OICPNS.Authorization + "Identification",
                                               new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
                                                  new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString())
                                               )
                                           )
+
                                      ));
 
         }
@@ -1007,58 +1033,90 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #endregion
 
 
-        #region AuthorizeStopXML(this EVSE, SessionID, PartnerSessionID, UID)
+        #region AuthorizeStopXML(this EVSE, SessionId, AuthToken, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP authorize stop XML request.
+        /// Create an OICP v2.0 Authorize Stop XML request.
         /// </summary>
         /// <param name="EVSE">An EVSE.</param>
-        /// <param name="SessionID">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="PartnerSessionID">Your own session identification.</param>
-        /// <param name="UID">A RFID user identification.</param>
-        public static XElement AuthorizeStopXML(this EVSE          EVSE,
-                                                ChargingSession_Id  SessionID,
-                                                ChargingSession_Id  PartnerSessionID,
-                                                Auth_Token              UID)
+        /// <param name="SessionId">The session identification.</param>
+        /// <param name="AuthToken">The (RFID) user identification.</param>
+        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        public static XElement AuthorizeStopXML(this EVSE           EVSE,
+                                                ChargingSession_Id  SessionId,
+                                                Auth_Token          AuthToken,
+                                                ChargingSession_Id  PartnerSessionId = null)
         {
 
+            #region Initial checks
+
+            if (EVSE      == null)
+                throw new ArgumentNullException("EVSE",      "The given parameter must not be null!");
+
+            if (SessionId == null)
+                throw new ArgumentNullException("SessionId", "The given parameter must not be null!");
+
+            if (AuthToken == null)
+                throw new ArgumentNullException("AuthToken", "The given parameter must not be null!");
+
+            #endregion
+
             return AuthorizeStopXML(EVSE.ChargingStation.ChargingPool.EVSEOperator.Id,
+                                    SessionId,
+                                    AuthToken,
                                     EVSE.Id,
-                                    SessionID,
-                                    PartnerSessionID,
-                                    UID);
+                                    PartnerSessionId);
 
         }
 
         #endregion
 
-        #region AuthorizeStopXML(OperatorId, EVSEId, SessionID, PartnerSessionID, UID)
+        #region AuthorizeStopXML(OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP authorize stop XML request.
+        /// Create an OICP v2.0 Authorize Stop XML request.
         /// </summary>
-        /// <param name="OperatorId">An EVSE Operator identification.</param>
-        /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="PartnerSessionId">Your own session identification.</param>
-        /// <param name="UID">A RFID user identification.</param>
-        public static XElement AuthorizeStopXML(EVSEOperator_Id    OperatorId,
-                                                EVSE_Id            EVSEId,
+        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="SessionId">The session identification.</param>
+        /// <param name="AuthToken">The (RFID) user identification.</param>
+        /// <param name="EVSEId">An optional EVSE identification.</param>
+        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        public static XElement AuthorizeStopXML(EVSEOperator_Id     OperatorId,
                                                 ChargingSession_Id  SessionId,
-                                                ChargingSession_Id  PartnerSessionId,
-                                                Auth_Token              UID)
+                                                Auth_Token          AuthToken,
+                                                EVSE_Id             EVSEId            = null,
+                                                ChargingSession_Id  PartnerSessionId  = null)
         {
 
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+
+            if (SessionId  == null)
+                throw new ArgumentNullException("SessionId",  "The given parameter must not be null!");
+
+            if (AuthToken  == null)
+                throw new ArgumentNullException("AuthToken",  "The given parameter must not be null!");
+
+            #endregion
+
             return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeStop",
+
                                           new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
-                                          new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()),
+
+                                          PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())       : null,
+
                                           new XElement(OICPNS.Authorization + "OperatorID",       OperatorId.ToFormat(IdFormatType.OLD)),
-                                          new XElement(OICPNS.Authorization + "EVSEID",           EVSEId.    ToFormat(IdFormatType.OLD)),
+
+                                          EVSEId           != null ? new XElement(OICPNS.Authorization + "EVSEID",           EVSEId.ToFormat(IdFormatType.OLD)) : null,
+
                                           new XElement(OICPNS.Authorization + "Identification",
                                               new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                                 new XElement(OICPNS.CommonTypes + "UID", UID.ToString())
+                                                 new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString())
                                               )
                                           )
+
                                       ));
 
         }
@@ -1066,48 +1124,69 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #endregion
 
 
-        #region SendChargeDetailRecordXML(this EVSE, SessionId, PartnerSessionId, UID, EVCOId, ...)
+        #region SendChargeDetailRecordXML(this EVSE, SessionId, PartnerSessionId, AuthToken, EVCOId, ...)
 
         /// <summary>
         /// Create an OICP SendChargeDetailRecord XML request.
         /// </summary>
-        /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="PartnerSessionId">Your own session identification.</param>
+        /// <param name="EVSE">An EVSE.</param>
+        /// <param name="SessionId">The OICP session identification from the Authorize Start request.</param>
         /// <param name="PartnerProductId">Your charging product identification.</param>
-        /// <param name="ChargeStart">The timestamp of the charging start.</param>
-        /// <param name="ChargeEnd">The timestamp of the charging end.</param>
-        /// <param name="UID">The optional RFID user identification.</param>
-        /// <param name="EVCOId"></param>
         /// <param name="SessionStart">The timestamp of the session start.</param>
         /// <param name="SessionEnd">The timestamp of the session end.</param>
+        /// <param name="AuthToken">An optional (RFID) user identification.</param>
+        /// <param name="eMAId">An optional e-Mobility account identification.</param>
+        /// <param name="PartnerSessionId">The partner session identification.</param>
+        /// <param name="ChargingStart">The timestamp of the charging start.</param>
+        /// <param name="ChargingEnd">The timestamp of the charging end.</param>
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
-        public static XElement SendChargeDetailRecordXML(this EVSE           EVSE,
-                                                         ChargingSession_Id  SessionId,
-                                                         ChargingSession_Id  PartnerSessionId,
-                                                         String              PartnerProductId,
-                                                         DateTime            ChargeStart,
-                                                         DateTime            ChargeEnd,
-                                                         Auth_Token          UID              = null,
-                                                         eMA_Id              EVCOId           = null,
-                                                         DateTime?           SessionStart     = null,
-                                                         DateTime?           SessionEnd       = null,
-                                                         Double?             MeterValueStart  = null,
-                                                         Double?             MeterValueEnd    = null)
+        /// <param name="MeterValuesInBetween">Optional meter values during the charging session.</param>
+        public static XElement SendChargeDetailRecordXML(this EVSE            EVSE,
+                                                         ChargingSession_Id   SessionId,
+                                                         String               PartnerProductId,
+                                                         DateTime             SessionStart,
+                                                         DateTime             SessionEnd,
+                                                         Auth_Token           AuthToken             = null,
+                                                         eMA_Id               eMAId                 = null,
+                                                         ChargingSession_Id   PartnerSessionId      = null,
+                                                         DateTime?            ChargingStart         = null,
+                                                         DateTime?            ChargingEnd           = null,
+                                                         Double?              MeterValueStart       = null,
+                                                         Double?              MeterValueEnd         = null,
+                                                         IEnumerable<Double>  MeterValuesInBetween  = null)
 
         {
 
+            #region Initial checks
+
+            if (EVSE             == null)
+                throw new ArgumentNullException("EVSE",             "The given parameter must not be null!");
+
+            if (SessionId        == null)
+                throw new ArgumentNullException("SessionId",        "The given parameter must not be null!");
+
+            if (PartnerProductId == null)
+                throw new ArgumentNullException("PartnerProductId", "The given parameter must not be null!");
+
+            if (SessionStart     == null)
+                throw new ArgumentNullException("SessionStart",     "The given parameter must not be null!");
+
+            if (SessionEnd       == null)
+                throw new ArgumentNullException("SessionEnd",       "The given parameter must not be null!");
+
+            #endregion
+
             return SendChargeDetailRecordXML(EVSE.Id,
                                              SessionId,
-                                             PartnerSessionId,
                                              PartnerProductId,
-                                             ChargeStart,
-                                             ChargeEnd,
-                                             UID,
-                                             EVCOId,
                                              SessionStart,
                                              SessionEnd,
+                                             AuthToken,
+                                             eMAId,
+                                             PartnerSessionId,
+                                             ChargingStart,
+                                             ChargingEnd,
                                              MeterValueStart,
                                              MeterValueEnd);
 
@@ -1115,37 +1194,72 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region SendChargeDetailRecordXML(EVSEId, SessionId, PartnerSessionId, UID, EVCOId, ...)
+        #region SendChargeDetailRecordXML(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, AuthToken = null, eMAId = null, PartnerSessionId = null, ..., QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP SendChargeDetailRecord XML request.
         /// </summary>
         /// <param name="EVSEId">An EVSE identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="PartnerSessionId">Your own session identification.</param>
         /// <param name="PartnerProductId"></param>
-        /// <param name="ChargeStart">The timestamp of the charging start.</param>
-        /// <param name="ChargeEnd">The timestamp of the charging end.</param>
-        /// <param name="UID">The optional RFID user identification.</param>
-        /// <param name="EVCOId"></param>
         /// <param name="SessionStart">The timestamp of the session start.</param>
         /// <param name="SessionEnd">The timestamp of the session end.</param>
-        /// <param name="MeterValueStart">The initial value of the energy meter.</param>
-        /// <param name="MeterValueEnd">The final value of the energy meter.</param>
-        public static XElement SendChargeDetailRecordXML(EVSE_Id             EVSEId,
-                                                         ChargingSession_Id  SessionId,
-                                                         ChargingSession_Id  PartnerSessionId,
-                                                         String              PartnerProductId,
-                                                         DateTime            ChargeStart,
-                                                         DateTime            ChargeEnd,
-                                                         Auth_Token          UID              = null,
-                                                         eMA_Id              EVCOId           = null,
-                                                         DateTime?           SessionStart     = null,
-                                                         DateTime?           SessionEnd       = null,
-                                                         Double?             MeterValueStart  = null,
-                                                         Double?             MeterValueEnd    = null)
+        /// <param name="AuthToken">An optional (RFID) user identification.</param>
+        /// <param name="eMAId">An optional e-Mobility account identification.</param>
+        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="ChargingStart">An optional timestamp of the charging start.</param>
+        /// <param name="ChargingEnd">An optional timestamp of the charging end.</param>
+        /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
+        /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
+        /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
+        /// <param name="ConsumedEnergy">The optional amount of consumed energy.</param>
+        /// <param name="MeteringSignature">An optional signature for the metering values.</param>
+        /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
+        /// <param name="HubProviderId">An optional identification of the hub provider.</param>
+        public static XElement SendChargeDetailRecordXML(EVSE_Id              EVSEId,
+                                                         ChargingSession_Id   SessionId,
+                                                         String               PartnerProductId,
+                                                         DateTime             SessionStart,
+                                                         DateTime             SessionEnd,
+                                                         Auth_Token           AuthToken             = null,
+                                                         eMA_Id               eMAId                 = null,
+                                                         ChargingSession_Id   PartnerSessionId      = null,
+                                                         DateTime?            ChargingStart         = null,
+                                                         DateTime?            ChargingEnd           = null,
+                                                         Double?              MeterValueStart       = null,
+                                                         Double?              MeterValueEnd         = null,
+                                                         IEnumerable<Double>  MeterValuesInBetween  = null,
+                                                         Double?              ConsumedEnergy        = null,
+                                                         String               MeteringSignature     = null,
+                                                         EVSEOperator_Id      HubOperatorId         = null,
+                                                         EVSP_Id              HubProviderId         = null)
 
         {
+
+            #region Initial checks
+
+            if (EVSEId           == null)
+                throw new ArgumentNullException("EVSEId",            "The given parameter must not be null!");
+
+            if (SessionId        == null)
+                throw new ArgumentNullException("SessionId",         "The given parameter must not be null!");
+
+            if (PartnerProductId == null)
+                throw new ArgumentNullException("PartnerProductId",  "The given parameter must not be null!");
+
+            if (SessionStart     == null)
+                throw new ArgumentNullException("SessionStart",      "The given parameter must not be null!");
+
+            if (SessionEnd       == null)
+                throw new ArgumentNullException("SessionEnd",        "The given parameter must not be null!");
+
+            if (AuthToken        == null &&
+                eMAId            == null)
+                throw new ArgumentNullException("AuthToken / eMAId", "At least one of the given parameters must not be null!");
+
+            #endregion
+
+            var _MeterValuesInBetween = MeterValuesInBetween.ToArray();
 
             return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
 
@@ -1155,36 +1269,40 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                  new XElement(OICPNS.Authorization + "EvseID",           EVSEId.ToFormat(IdFormatType.OLD)),
 
                                  new XElement(OICPNS.Authorization + "Identification",
-                                     (UID != null)
+                                     (AuthToken != null)
                                          ? new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                                new XElement(OICPNS.CommonTypes + "UID", UID.ToString())
+                                                new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString())
                                            )
                                          : new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                                                new XElement(OICPNS.CommonTypes + "EVCOID", EVCOId.ToString())
+                                                new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
                                            )
                                  ),
 
-                                 new XElement(OICPNS.Authorization + "ChargingStart",   ChargeStart),  // "2014-02-01T15:45:00+02:00"
-                                 new XElement(OICPNS.Authorization + "ChargingEnd",     ChargeEnd),
-                                 (SessionStart.   HasValue) ? new XElement(OICPNS.Authorization + "SessionStart",    SessionStart)    : null,
-                                 (SessionEnd.     HasValue) ? new XElement(OICPNS.Authorization + "SessionEnd",      SessionEnd)      : null,
-                                 (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart", MeterValueStart) : null,
-                                 (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",   MeterValueEnd)   : null
+                                 (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart)   : null,  // "2014-02-01T15:45:00+02:00"
+                                 (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd)     : null,
+                                 new XElement(OICPNS.Authorization + "SessionStart", SessionStart),
+                                 new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd),
+                                 (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  MeterValueStart) : null,
+                                 (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    MeterValueEnd)   : null,
 
-                                 //new XElement(NS.OICPv1_2Authorization + "MeterValueInBetween",
-                                 //    new XElement(NS.OICPv1_2CommonTypes + "MeterValue", "...")
-                                 //),
+                                 _MeterValuesInBetween.Length > 0 ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
+                                                                        _MeterValuesInBetween.
+                                                                            Select(value => new XElement(OICPNS.CommonTypes + "MeterValue", value.ToString(CultureInfo.InvariantCulture.NumberFormat))).
+                                                                            ToArray()
+                                                                    )
+                                                                  : null,
 
-                                 //new XElement(NS.OICPv1_2Authorization + "ConsumedEnergy",    "..."),
-                                 //new XElement(NS.OICPv1_2Authorization + "MeteringSignature", "..."),
-                                 //new XElement(NS.OICPv1_2Authorization + "HubOperatorID",     "..."),
-                                 //new XElement(NS.OICPv1_2Authorization + "HubProviderID",     "...")
+                                 ConsumedEnergy    != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    ConsumedEnergy.Value.ToString(CultureInfo.InvariantCulture.NumberFormat)) : null,
+                                 MeteringSignature != null ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)        : null,
+                                 HubOperatorId     != null ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString()) : null,
+                                 HubProviderId     != null ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString()) : null
 
                              ));
 
         }
 
         #endregion
+
 
     }
 

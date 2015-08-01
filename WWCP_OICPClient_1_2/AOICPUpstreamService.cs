@@ -30,10 +30,19 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 {
 
     /// <summary>
-    /// An abstract base class for all OICP upstream services.
+    /// An abstract base class for all OICP v1.2 upstream services.
     /// </summary>
     public abstract class AOICPUpstreamService
     {
+
+        #region Data
+
+        /// <summary>
+        /// The default timeout for upstream queries.
+        /// </summary>
+        public static readonly TimeSpan DefaultQueryTimeout  = TimeSpan.FromSeconds(180);
+
+        #endregion
 
         #region Properties
 
@@ -107,6 +116,23 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #endregion
 
+        #region QueryTimeout
+
+        protected readonly TimeSpan _QueryTimeout;
+
+        /// <summary>
+        /// The timeout for upstream queries.
+        /// </summary>
+        public TimeSpan QueryTimeout
+        {
+            get
+            {
+                return _QueryTimeout;
+            }
+        }
+
+        #endregion
+
         #region DNSClient
 
         protected readonly DNSClient _DNSClient;
@@ -161,18 +187,30 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// Create an abstract OICP upstream service.
         /// </summary>
         /// <param name="Hostname">The OICP hostname to connect to.</param>
-        /// <param name="TCPPort">The OICP IP port to connect to.</param>
+        /// <param name="TCPPort">The OICP TCP port to connect to.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="AuthorizatorId">An optional authorizator identification to use.</param>
         /// <param name="UserAgent">An optional HTTP user agent to use.</param>
+        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
-        public AOICPUpstreamService(String           Hostname,
-                                    IPPort           TCPPort,
-                                    String           HTTPVirtualHost  = null,
-                                    Authorizator_Id  AuthorizatorId   = null,
-                                    String           UserAgent        = "GraphDefined OICP Gateway",
-                                    DNSClient        DNSClient        = null)
+        internal AOICPUpstreamService(String           Hostname,
+                                      IPPort           TCPPort,
+                                      String           HTTPVirtualHost  = null,
+                                      Authorizator_Id  AuthorizatorId   = null,
+                                      String           UserAgent        = "GraphDefined OICP Gateway",
+                                      TimeSpan?        QueryTimeout     = null,
+                                      DNSClient        DNSClient        = null)
         {
+
+            #region Initial checks
+
+            if (Hostname.IsNullOrEmpty())
+                throw new ArgumentNullException("Hostname", "The given parameter must not be null or empty!");
+
+            if (TCPPort == null)
+                throw new ArgumentNullException("TCPPort", "The given parameter must not be null!");
+
+            #endregion
 
             this._Hostname         = Hostname;
             this._TCPPort          = TCPPort;
@@ -186,6 +224,10 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                          : AuthorizatorId;
 
             this._UserAgent        = UserAgent;
+
+            this._QueryTimeout     = QueryTimeout != null
+                                         ? QueryTimeout.Value
+                                         : DefaultQueryTimeout;
 
             this._DNSClient        = (DNSClient == null)
                                          ? new DNSClient()

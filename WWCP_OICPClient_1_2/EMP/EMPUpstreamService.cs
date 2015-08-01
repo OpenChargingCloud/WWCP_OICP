@@ -50,23 +50,26 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// Create a new OICP v1.2 EMP upstream service.
         /// </summary>
         /// <param name="Hostname">The OICP hostname to connect to.</param>
-        /// <param name="TCPPort">The OICP IP port to connect to.</param>
+        /// <param name="TCPPort">The OICP TCP port to connect to.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="AuthorizatorId">An optional authorizator identification to use.</param>
         /// <param name="UserAgent">An optional HTTP user agent to use.</param>
+        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         public EMPUpstreamService(String           Hostname,
                                   IPPort           TCPPort,
-                                  String           HTTPVirtualHost = null,
-                                  Authorizator_Id  AuthorizatorId  = null,
-                                  String           UserAgent       = "GraphDefined OICP Gateway",
-                                  DNSClient        DNSClient       = null)
+                                  String           HTTPVirtualHost  = null,
+                                  Authorizator_Id  AuthorizatorId   = null,
+                                  String           UserAgent        = "GraphDefined OICP Gateway",
+                                  TimeSpan?        QueryTimeout     = null,
+                                  DNSClient        DNSClient        = null)
 
             : base(Hostname,
                    TCPPort,
                    HTTPVirtualHost,
                    AuthorizatorId,
                    UserAgent,
+                   QueryTimeout,
                    DNSClient)
 
         { }
@@ -74,9 +77,19 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         #endregion
 
 
-        #region GetEVSEByIdRequest(...)
+        #region GetEVSEByIdRequest(EVSEId, QueryTimeout = null)
 
-        public Task<HTTPResponse<XElement>> GetEVSEByIdRequest(EVSE_Id EVSEId)
+        /// <summary>
+        /// Create a new task requesting the static EVSE data
+        /// for the given EVSE identification.
+        /// </summary>
+        /// <param name="EVSEId">The unique identification of the EVSE.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public Task<HTTPResponse<XElement>>
+
+            GetEVSEByIdRequest(EVSE_Id   EVSEId,
+                               TimeSpan? QueryTimeout = null)
+
         {
 
             try
@@ -92,7 +105,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     return _OICPClient.Query(EMP_XMLMethods.GetEVSEByIdRequestXML(EVSEId),
                                              "eRoamingEvseById",
-                                             QueryTimeout: TimeSpan.FromSeconds(180),
+                                             QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                              OnSuccess: XMLData =>
                                                  new HTTPResponse<XElement>(
@@ -129,7 +142,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #endregion
 
-        #region PullEVSEDataRequest(...)
+        #region PullEVSEDataRequest(ProviderId, LastCall = null, GeoCoordinate = null, DistanceKM = 0, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task requesting all EVSE data.
@@ -139,8 +152,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="GeoCoordinate">An optional geo coordinate as search center.</param>
         /// <param name="DistanceKM">An optional geo coordinate as search radius.</param>
-        /// <param name="QueryTimeout">an optional timeout of the SOAP client [default 180 sec.]</param>
-        /// <returns>A list of EVSE datasets.</returns>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public Task<HTTPResponse<IEnumerable<XElement>>>
 
             PullEVSEDataRequest(EVSP_Id        ProviderId,
@@ -162,9 +174,12 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                                                         DNSClient))
                 {
 
-                    return _OICPClient.Query(EMP_XMLMethods.PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, DistanceKM),
+                    return _OICPClient.Query(EMP_XMLMethods.PullEVSEDataRequestXML(ProviderId,
+                                                                                   GeoCoordinate,
+                                                                                   DistanceKM,
+                                                                                   LastCall),
                                              "eRoamingPullEVSEData",
-                                             QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : TimeSpan.FromSeconds(180),
+                                             QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                              OnSuccess: XMLData => {
 
@@ -311,15 +326,14 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #endregion
 
-        #region PullEVSEStatusByIdRequest(...)
+        #region PullEVSEStatusByIdRequest(ProviderId, EVSEIds, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
         /// </summary>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
-        /// <param name="QueryTimeout">an optional timeout of the SOAP client [default 180 sec.]</param>
-        /// <returns>An enumeration of EVSE Ids and their current status.</returns>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, HubjectEVSEState>>>>
 
             PullEVSEStatusByIdRequest(EVSP_Id               ProviderId,
@@ -342,7 +356,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                     return _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds),
                                              "eRoamingPullEvseStatusById",
-                                             QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : TimeSpan.FromSeconds(180),
+                                             QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                              OnSuccess: XMLData => {
 

@@ -78,15 +78,22 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         public static XElement GetEVSEByIdRequestXML(EVSE_Id  EVSEId)
         {
 
+            #region Initial checks
+
+            if (EVSEId == null)
+                throw new ArgumentNullException("EVSEId", "The given parameter must not be null!");
+
+            #endregion
+
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v1      = "http://www.hubject.com/b2b/services/evsedata/v1">
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0">
             // 
             //    <soapenv:Body>
-            //     <tns:eRoamingGetEvseById>
-            //       <tns:EvseId>
+            //     <v2:eRoamingGetEvseById>
+            //       <v2:EvseId>
             //         +46*899*02423*01
-            //       </tns:EvseId>
-            //     </tns:eRoamingGetEvseById>
+            //       </v2:EvseId>
+            //     </v2:eRoamingGetEvseById>
             //   </soapenv:Body>
             // 
             // </soapenv:Envelope>
@@ -99,20 +106,28 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PullEVSEDataRequestXML(ProviderId, LastCall, GeoCoordinate, Distance)
+        #region PullEVSEDataRequestXML(ProviderId, GeoCoordinate = null, Distance = 0, LastCall = null)
 
         /// <summary>
         /// Create a new Pull EVSE Data request.
         /// </summary>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="GeoCoordinate">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
+        /// <param name="LastCall">An optional timestamp of the last call.</param>
         public static XElement PullEVSEDataRequestXML(EVSP_Id        ProviderId,
-                                                      DateTime?      LastCall       = null,
                                                       GeoCoordinate  GeoCoordinate  = null,
-                                                      UInt64         DistanceKM     = 0)
+                                                      UInt64         DistanceKM     = 0,
+                                                      DateTime?      LastCall       = null)
+
         {
+
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException("ProviderId", "The given parameter must not be null!");
+
+            #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPullEvseData",
 
@@ -133,7 +148,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                 )
                                               : null,
 
-                                          (LastCall.HasValue)
+                                          (LastCall != null && LastCall.HasValue)
                                               ? new XElement(OICPNS.EVSEData + "LastCall",  LastCall.Value)
                                               : null,
 
@@ -144,6 +159,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         }
 
         #endregion
+
 
         #region PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds)
 
@@ -156,14 +172,29 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                             IEnumerable<EVSE_Id>  EVSEIds)
         {
 
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException("ProviderId", "The given parameter must not be null!");
+
+            if (EVSEIds == null)
+                throw new ArgumentNullException("EVSEIds", "The given parameter must not be null!");
+
+            var _EVSEIds = EVSEIds.ToArray();
+
+            if (_EVSEIds.Length == 0)
+                throw new ArgumentNullException("EVSEIds", "The given enumeration must not be empty!");
+
+            #endregion
+
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v1      = "http://www.hubject.com/b2b/services/evsestatus/v1">
+            //                   xmlns:v1      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
             // 
             //    <soapenv:Header/>
             //
             //    <soapenv:Body>
             //       <v1:eRoamingPullEvseStatusById>
-            //          <v1:ProviderID>8BD</v1:ProviderID>
+            //          <v1:ProviderID>DE*8BD</v1:ProviderID>
             //          <!--1 to 100 repetitions:-->
             //          <v1:EvseId>+45*045*010*096296</v1:EvseId>
             //          <v1:EvseId>+46*899*02423*01</v1:EvseId>
@@ -178,6 +209,71 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                                           EVSEIds.Select(EVSEId => new XElement(OICPNS.EVSEStatus + "EvseId", EVSEId.OriginId)).
                                                   ToArray()
+
+                                     ));
+
+        }
+
+        #endregion
+
+        #region PullEVSEStatusRequestXML(ProviderId, GeoCoordinate = null, DistanceKM = 0, EVSEStatus = null)
+
+        /// <summary>
+        /// Create a new Pull EVSE Status request.
+        /// </summary>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="GeoCoordinate">An optional geo coordinate of the search center.</param>
+        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
+        /// <param name="EVSEStatus">An optional EVSE status as filter criteria.</param>
+        public static XElement PullEVSEStatusRequestXML(EVSP_Id           ProviderId,
+                                                        GeoCoordinate     GeoCoordinate  = null,
+                                                        UInt64            DistanceKM     = 0,
+                                                        HubjectEVSEState? EVSEStatus     = null)
+        {
+
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException("ProviderId", "The given parameter must not be null!");
+
+            #endregion
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            // 
+            //    <soapenv:Header/>
+            //
+            //    <soapenv:Body>
+            //       <v2:eRoamingPullEvseStatus>
+            //          <v2:ProviderID>DE*8BD</v1:ProviderID>
+            //       </v2:eRoamingPullEvseStatus>
+            //    </soapenv:Body>
+            // 
+            // </soapenv:Envelope>
+
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPullEvseStatus",
+
+                                          new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
+
+                                          (GeoCoordinate != null && DistanceKM > 0)
+                                              ? new XElement(OICPNS.EVSEStatus + "SearchCenter",
+
+                                                    new XElement(OICPNS.CommonTypes + "GeoCoordinates",
+                                                        new XElement(OICPNS.CommonTypes + "DecimalDegree",
+                                                           new XElement(OICPNS.CommonTypes + "Longitude", GeoCoordinate.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
+                                                           new XElement(OICPNS.CommonTypes + "Latitude",  GeoCoordinate.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat))
+                                                        )
+                                                    ),
+
+                                                    new XElement(OICPNS.CommonTypes + "Radius", DistanceKM)
+
+                                                )
+                                              : null,
+
+                                          (EVSEStatus != null && EVSEStatus.HasValue)
+                                              ? new XElement(OICPNS.EVSEStatus + "EvseStatus",  EVSEStatus.Value)
+                                              : null
 
                                      ));
 

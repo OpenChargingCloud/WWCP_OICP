@@ -19,8 +19,6 @@
 
 using System;
 using System.Linq;
-using System.Xml.Linq;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -139,16 +137,18 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// Create a new OICP v2.0 CPO Upstream Service.
         /// </summary>
         /// <param name="OICPHost">The hostname of the OICP service.</param>
-        /// <param name="OICPPort">The IP port of the OICP service.</param>
+        /// <param name="OICPPort">The TCP port of the OICP service.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the OICP service.</param>
         /// <param name="AuthorizatorId">An optional unique authorizator identification.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string.</param>
+        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CPOUpstreamService(String           OICPHost,
                                   IPPort           OICPPort,
                                   String           HTTPVirtualHost  = null,
                                   Authorizator_Id  AuthorizatorId   = null,
                                   String           HTTPUserAgent    = "GraphDefined OICP v2.0 Gateway CPO Upstream Services",
+                                  TimeSpan?        QueryTimeout     = null,
                                   DNSClient        DNSClient        = null)
 
             : base(OICPHost,
@@ -156,6 +156,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                    HTTPVirtualHost,
                    AuthorizatorId,
                    HTTPUserAgent,
+                   QueryTimeout,
                    DNSClient)
 
         { }
@@ -202,9 +203,12 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #region EVSEDataUpload  (EVSEOperator, IncludeEVSE, Action)
 
-        public Task<HTTPResponse<HubjectAcknowledgement>> EVSEDataUpload(EVSEOperator         EVSEOperator,
-                                                                         Func<EVSE, Boolean>  IncludeEVSE,
-                                                                         ActionType           Action)
+        public Task<HTTPResponse<HubjectAcknowledgement>>
+
+            EVSEDataUpload(EVSEOperator         EVSEOperator,
+                           Func<EVSE, Boolean>  IncludeEVSE,
+                           ActionType           Action)
+
         {
 
             try
@@ -271,7 +275,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                      OnSOAPFault: Fault =>
                                                      {
 
-                                                         DebugX.Log(Action + " of EVSE data lead to a fault!" + Environment.NewLine);
+                                                         DebugX.Log(Action + " of EVSE data led to a fault!" + Environment.NewLine);
 
                                                          return new HTTPResponse<HubjectAcknowledgement>(
                                                              Fault.HttpResponse,
@@ -306,9 +310,12 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #region EVSEStatusUpload(EVSEOperator, IncludeEVSE, Action)
 
-        public Task<HTTPResponse<HubjectAcknowledgement>> EVSEStatusUpload(EVSEOperator         EVSEOperator,
-                                                                           Func<EVSE, Boolean>  IncludeEVSE,
-                                                                           ActionType           Action)
+        public Task<HTTPResponse<HubjectAcknowledgement>>
+
+            EVSEStatusUpload(EVSEOperator         EVSEOperator,
+                             Func<EVSE, Boolean>  IncludeEVSE,
+                             ActionType           Action)
+
         {
 
             try
@@ -363,7 +370,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                    OnSOAPFault: Fault =>
                                                    {
 
-                                                       DebugX.Log(Action + " of EVSE states lead to a fault!" + Environment.NewLine);
+                                                       DebugX.Log(Action + " of EVSE states led to a fault!" + Environment.NewLine);
 
                                                        return new HTTPResponse<HubjectAcknowledgement>(
                                                            Fault.HttpResponse,
@@ -691,23 +698,28 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #endregion
 
 
-        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, PartnerProductId = null, HubjectSessionId = null, PartnerSessionId = null)
+        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP authorize start request.
         /// </summary>
-        /// <param name="OperatorId">An EVSE Operator identification.</param>
+        /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
+        /// <param name="SessionId">An optional session identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
-        /// <param name="HubjectSessionId">An optional Hubject session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        public async Task<HTTPResponse<AUTHSTARTResult>> AuthorizeStart(EVSEOperator_Id     OperatorId,
-                                                                        Auth_Token          AuthToken,
-                                                                        EVSE_Id             EVSEId            = null,   // OICP v2.0: Optional
-                                                                        String              PartnerProductId  = null,   // OICP v2.0: Optional [100]
-                                                                        ChargingSession_Id  HubjectSessionId  = null,   // OICP v2.0: Optional
-                                                                        ChargingSession_Id  PartnerSessionId  = null)   // OICP v2.0: Optional [50]
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<AUTHSTARTResult>>
+
+            AuthorizeStart(EVSEOperator_Id     OperatorId,
+                           Auth_Token          AuthToken,
+                           EVSE_Id             EVSEId            = null,   // OICP v2.0: Optional
+                           ChargingSession_Id  SessionId         = null,   // OICP v2.0: Optional
+                           String              PartnerProductId  = null,   // OICP v2.0: Optional [100]
+                           ChargingSession_Id  PartnerSessionId  = null,   // OICP v2.0: Optional [50]
+                           TimeSpan?           QueryTimeout      = null)
+
         {
 
             #region Initial checks
@@ -715,8 +727,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             if (OperatorId == null)
                 throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
 
-            if (AuthToken == null)
-                throw new ArgumentNullException("AuthToken", "The given parameter must not be null!");
+            if (AuthToken  == null)
+                throw new ArgumentNullException("AuthToken",  "The given parameter must not be null!");
 
             #endregion
 
@@ -730,152 +742,146 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    var T = _OICPClient.Query(CPO_XMLMethods.AuthorizeStartXML(OperatorId,
-                                                                                          AuthToken,
-                                                                                          EVSEId,
-                                                                                          PartnerProductId,
-                                                                                          HubjectSessionId,
-                                                                                          PartnerSessionId),
-                                                         "eRoamingAuthorizeStart",
-                                                         QueryTimeout: TimeSpan.FromSeconds(60),
+                    return await _OICPClient.Query(CPO_XMLMethods.AuthorizeStartXML(OperatorId,
+                                                                                   AuthToken,
+                                                                                   EVSEId,
+                                                                                   PartnerProductId,
+                                                                                   SessionId,
+                                                                                   PartnerSessionId),
+                                                  "eRoamingAuthorizeStart",
+                                                  QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                                         OnSuccess: XMLData =>
-                                                         {
+                                                  OnSuccess: XMLData =>
+                                                  {
 
-                                                             var AuthStartResult = HubjectAuthorizationStart.Parse(XMLData.Content);
+                                                      var AuthStartResult = HubjectAuthorizationStart.Parse(XMLData.Content);
 
-                                                             #region Authorized
+                                                      #region Authorized
 
-                                                             if (AuthStartResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                                                      if (AuthStartResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
 
-                                                                 // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                                                                 //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                                 //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
-                                                                 //   <soapenv:Body>
-                                                                 //     <tns:HubjectAuthorizationStart>
-                                                                 //       <tns:SessionID>8fade8bd-0a88-1296-0f2f-41ae8a80af1b</tns:SessionID>
-                                                                 //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
-                                                                 //       <tns:ProviderID>BMW</tns:ProviderID>
-                                                                 //       <tns:AuthorizationStatus>Authorized</tns:AuthorizationStatus>
-                                                                 //       <tns:StatusCode>
-                                                                 //         <cmn:Code>000</cmn:Code>
-                                                                 //         <cmn:Description>Success</cmn:Description>
-                                                                 //       </tns:StatusCode>
-                                                                 //     </tns:HubjectAuthorizationStart>
-                                                                 //   </soapenv:Body>
-                                                                 // </soapenv:Envelope>
+                                                          // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+                                                          //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                          //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+                                                          //   <soapenv:Body>
+                                                          //     <tns:HubjectAuthorizationStart>
+                                                          //       <tns:SessionID>8fade8bd-0a88-1296-0f2f-41ae8a80af1b</tns:SessionID>
+                                                          //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
+                                                          //       <tns:ProviderID>BMW</tns:ProviderID>
+                                                          //       <tns:AuthorizationStatus>Authorized</tns:AuthorizationStatus>
+                                                          //       <tns:StatusCode>
+                                                          //         <cmn:Code>000</cmn:Code>
+                                                          //         <cmn:Description>Success</cmn:Description>
+                                                          //       </tns:StatusCode>
+                                                          //     </tns:HubjectAuthorizationStart>
+                                                          //   </soapenv:Body>
+                                                          // </soapenv:Envelope>
 
-                                                                 return new HTTPResponse<AUTHSTARTResult>(XMLData.HttpResponse,
-                                                                                                          new AUTHSTARTResult(AuthorizatorId) {
-                                                                                                              AuthorizationResult  = AuthorizationResult.Authorized,
-                                                                                                              SessionId            = AuthStartResult.SessionID,
-                                                                                                              PartnerSessionId     = PartnerSessionId,
-                                                                                                              ProviderId           = EVSP_Id.Parse(AuthStartResult.ProviderID),
-                                                                                                              Description          = AuthStartResult.Description
-                                                                                                          });
+                                                          return new HTTPResponse<AUTHSTARTResult>(XMLData.HttpResponse,
+                                                                                                   new AUTHSTARTResult(AuthorizatorId) {
+                                                                                                       AuthorizationResult  = AuthorizationResult.Authorized,
+                                                                                                       SessionId            = AuthStartResult.SessionID,
+                                                                                                       PartnerSessionId     = PartnerSessionId,
+                                                                                                       ProviderId           = EVSP_Id.Parse(AuthStartResult.ProviderID),
+                                                                                                       Description          = AuthStartResult.Description
+                                                                                                   });
 
-                                                             #endregion
+                                                      #endregion
 
-                                                             #region NotAuthorized
+                                                      #region NotAuthorized
 
-                                                             //- Invalid OperatorId ----------------------------------------------------------------------
+                                                      //- Invalid OperatorId ----------------------------------------------------------------------
 
-                                                             // <isns:Envelope xmlns:fn   = "http://www.w3.org/2005/xpath-functions"
-                                                             //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                             //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
-                                                             //                xmlns:wsc  = "http://www.hubject.com/b2b/services/authorization/v1">
-                                                             //   <isns:Body>
-                                                             //     <wsc:HubjectAuthorizationStop>
-                                                             //       <wsc:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</wsc:SessionID>
-                                                             //       <wsc:PartnerSessionID>0815</wsc:PartnerSessionID>
-                                                             //       <wsc:AuthorizationStatus>NotAuthorized</wsc:AuthorizationStatus>
-                                                             //       <wsc:StatusCode>
-                                                             //         <v1:Code>017</v1:Code>
-                                                             //         <v1:Description>Unauthorized Access</v1:Description>
-                                                             //         <v1:AdditionalInfo>The identification criterion for the provider/operator with the ID "812" doesn't match the given identification information "/C=DE/ST=Bayern/L=Kitzingen/O=Hubject/OU=Belectric Drive GmbH/CN=Belectric ITS Software Development/emailAddress=achim.friedland@belectric.com" from the certificate.</v1:AdditionalInfo>
-                                                             //       </wsc:StatusCode>
-                                                             //     </wsc:HubjectAuthorizationStop>
-                                                             //   </isns:Body>
-                                                             // </isns:Envelope>
+                                                      // <isns:Envelope xmlns:fn   = "http://www.w3.org/2005/xpath-functions"
+                                                      //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                      //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
+                                                      //                xmlns:wsc  = "http://www.hubject.com/b2b/services/authorization/v1">
+                                                      //   <isns:Body>
+                                                      //     <wsc:HubjectAuthorizationStop>
+                                                      //       <wsc:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</wsc:SessionID>
+                                                      //       <wsc:PartnerSessionID>0815</wsc:PartnerSessionID>
+                                                      //       <wsc:AuthorizationStatus>NotAuthorized</wsc:AuthorizationStatus>
+                                                      //       <wsc:StatusCode>
+                                                      //         <v1:Code>017</v1:Code>
+                                                      //         <v1:Description>Unauthorized Access</v1:Description>
+                                                      //         <v1:AdditionalInfo>The identification criterion for the provider/operator with the ID "812" doesn't match the given identification information "/C=DE/ST=Bayern/L=Kitzingen/O=Hubject/OU=Belectric Drive GmbH/CN=Belectric ITS Software Development/emailAddress=achim.friedland@belectric.com" from the certificate.</v1:AdditionalInfo>
+                                                      //       </wsc:StatusCode>
+                                                      //     </wsc:HubjectAuthorizationStop>
+                                                      //   </isns:Body>
+                                                      // </isns:Envelope>
 
-                                                             if (AuthStartResult.Code == 017)
-                                                                 return new HTTPResponse<AUTHSTARTResult>(XMLData.HttpResponse,
-                                                                                                          new AUTHSTARTResult(AuthorizatorId) {
-                                                                                                              AuthorizationResult  = AuthorizationResult.NotAuthorized,
-                                                                                                              PartnerSessionId     = PartnerSessionId,
-                                                                                                              Description          = AuthStartResult.Description + " - " + AuthStartResult.AdditionalInfo
-                                                                                                          });
-
-
-                                                             //- Invalid UID -----------------------------------------------------------------------------
-
-                                                             // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                                                             //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                             //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
-                                                             //   <soapenv:Body>
-                                                             //     <tns:HubjectAuthorizationStart>
-                                                             //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
-                                                             //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
-                                                             //       <tns:StatusCode>
-                                                             //         <cmn:Code>320</cmn:Code>
-                                                             //         <cmn:Description>Service not available</cmn:Description>
-                                                             //       </tns:StatusCode>
-                                                             //     </tns:HubjectAuthorizationStart>
-                                                             //   </soapenv:Body>
-                                                             // </soapenv:Envelope>
-
-                                                             // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1.2"
-                                                             //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                             //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1.2">
-                                                             //   <soapenv:Body>
-                                                             //     <tns:eRoamingAuthorizationStart>
-                                                             //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
-                                                             //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
-                                                             //       <tns:StatusCode>
-                                                             //         <cmn:Code>102</cmn:Code>
-                                                             //         <cmn:Description>RFID Authentication failed – invalid UID</cmn:Description>
-                                                             //       </tns:StatusCode>
-                                                             //     </tns:eRoamingAuthorizationStart>
-                                                             //   </soapenv:Body>
-                                                             // </soapenv:Envelope>
-
-                                                             return new HTTPResponse<AUTHSTARTResult>(XMLData.HttpResponse,
-                                                                                                      new AUTHSTARTResult(AuthorizatorId) {
-                                                                                                          AuthorizationResult  = AuthorizationResult.NotAuthorized,
-                                                                                                          PartnerSessionId     = PartnerSessionId,
-                                                                                                          Description          = AuthStartResult.Description
-                                                                                                      });
-
-                                                             #endregion
-
-                                                         },
+                                                      if (AuthStartResult.Code == 017)
+                                                          return new HTTPResponse<AUTHSTARTResult>(XMLData.HttpResponse,
+                                                                                                   new AUTHSTARTResult(AuthorizatorId) {
+                                                                                                       AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                                                                                                       PartnerSessionId     = PartnerSessionId,
+                                                                                                       Description          = AuthStartResult.Description + " - " + AuthStartResult.AdditionalInfo
+                                                                                                   });
 
 
-                                                         OnSOAPFault: Fault =>
-                                                         {
+                                                      //- Invalid UID -----------------------------------------------------------------------------
 
-                                                             DebugX.Log("AUTHSTART of EVSE data lead to a fault!" + Environment.NewLine);
+                                                      // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+                                                      //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                      //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+                                                      //   <soapenv:Body>
+                                                      //     <tns:HubjectAuthorizationStart>
+                                                      //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
+                                                      //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
+                                                      //       <tns:StatusCode>
+                                                      //         <cmn:Code>320</cmn:Code>
+                                                      //         <cmn:Description>Service not available</cmn:Description>
+                                                      //       </tns:StatusCode>
+                                                      //     </tns:HubjectAuthorizationStart>
+                                                      //   </soapenv:Body>
+                                                      // </soapenv:Envelope>
 
-                                                             return new HTTPResponse<AUTHSTARTResult>(Fault.HttpResponse,
-                                                                                                      new AUTHSTARTResult(AuthorizatorId) {
-                                                                                                          AuthorizationResult  = AuthorizationResult.NotAuthorized,
-                                                                                                          PartnerSessionId     = PartnerSessionId,
-                                                                                                          Description          = Fault.ToString()
-                                                                                                      },
-                                                                                                      IsFault: true);
+                                                      // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1.2"
+                                                      //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                      //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1.2">
+                                                      //   <soapenv:Body>
+                                                      //     <tns:eRoamingAuthorizationStart>
+                                                      //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
+                                                      //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
+                                                      //       <tns:StatusCode>
+                                                      //         <cmn:Code>102</cmn:Code>
+                                                      //         <cmn:Description>RFID Authentication failed – invalid UID</cmn:Description>
+                                                      //       </tns:StatusCode>
+                                                      //     </tns:eRoamingAuthorizationStart>
+                                                      //   </soapenv:Body>
+                                                      // </soapenv:Envelope>
 
-                                                         },
+                                                      return new HTTPResponse<AUTHSTARTResult>(XMLData.HttpResponse,
+                                                                                               new AUTHSTARTResult(AuthorizatorId) {
+                                                                                                   AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                                                                                                   PartnerSessionId     = PartnerSessionId,
+                                                                                                   Description          = AuthStartResult.Description
+                                                                                               });
 
-                                                         OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+                                                      #endregion
 
-                                                         OnException: (t, s, e) => SendOnException(t, s, e)
+                                                  },
 
-                                                        );
+                                                  OnSOAPFault: Fault =>
+                                                  {
 
+                                                      DebugX.Log("AUTHSTART of EVSE data led to a fault!" + Environment.NewLine);
 
-                    await T;
+                                                      return new HTTPResponse<AUTHSTARTResult>(Fault.HttpResponse,
+                                                                                               new AUTHSTARTResult(AuthorizatorId) {
+                                                                                                   AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                                                                                                   PartnerSessionId     = PartnerSessionId,
+                                                                                                   Description          = Fault.ToString()
+                                                                                               },
+                                                                                               IsFault: true);
 
-                    return T.Result;
+                                                  },
+
+                                                  OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+
+                                                  OnException: (t, s, e) => SendOnException(t, s, e)
+
+                                                 );
 
                 }
 
@@ -897,7 +903,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region AuthorizeStop(OperatorId, EVSEId, SessionId, PartnerSessionId, UID)
+        #region AuthorizeStop(OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, QueryTimeout = null)
 
         // UID => Not everybody can stop any session, but maybe another
         //        UID than the UID which started the session!
@@ -907,16 +913,17 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// Create an OICP authorize stop request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
-        /// <param name="EVSEId">An EVSE identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="PartnerSessionId">Your own session identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        public AUTHSTOPResult AuthorizeStop(EVSEOperator_Id     OperatorId,
-                                            EVSE_Id             EVSEId,
-                                            ChargingSession_Id  SessionId,
-                                            ChargingSession_Id  PartnerSessionId,
-                                            Auth_Token          AuthToken)
-
+        /// <param name="EVSEId">An optional EVSE identification.</param>
+        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<AUTHSTOPResult>> AuthorizeStop(EVSEOperator_Id      OperatorId,
+                                                                      ChargingSession_Id   SessionId,
+                                                                      Auth_Token           AuthToken,
+                                                                      EVSE_Id              EVSEId            = null,   // OICP v2.0: Optional
+                                                                      ChargingSession_Id   PartnerSessionId  = null,   // OICP v2.0: Optional [50]
+                                                                      TimeSpan?            QueryTimeout      = null)
         {
 
             #region Initial checks
@@ -924,14 +931,11 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             if (OperatorId == null)
                 throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
 
-            if (EVSEId == null)
-                throw new ArgumentNullException("EVSEId", "The given parameter must not be null!");
+            if (SessionId  == null)
+                throw new ArgumentNullException("SessionId",  "The given parameter must not be null!");
 
-            if (SessionId == null)
-                throw new ArgumentNullException("SessionId", "The given parameter must not be null!");
-
-            if (AuthToken == null)
-                throw new ArgumentNullException("AuthToken", "The given parameter must not be null!");
+            if (AuthToken  == null)
+                throw new ArgumentNullException("AuthToken",  "The given parameter must not be null!");
 
             #endregion
 
@@ -945,137 +949,164 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    var HttpResponse = _OICPClient.Query(CPO_XMLMethods.AuthorizeStopXML(OperatorId,
-                                                                                         EVSEId,
-                                                                                         SessionId,
-                                                                                         PartnerSessionId,
-                                                                                         AuthToken),
-                                                         "eRoamingAuthorizeStop");
+                    var _Task = _OICPClient.Query(CPO_XMLMethods.AuthorizeStopXML(OperatorId,
+                                                                                  SessionId,
+                                                                                  AuthToken,
+                                                                                  EVSEId,
+                                                                                  PartnerSessionId),
+                                                  "eRoamingAuthorizeStop",
+                                                  QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                    //ToDo: In case of errors this will not parse!
-                    var AuthStopResult = HubjectAuthorizationStop.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+                                                  OnSuccess: XMLData =>
+                                                  {
 
-                    #region Authorized
+                                                      var AuthStopResult = HubjectAuthorizationStop.Parse(XMLData.Content);
 
-                    if (AuthStopResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                                                      #region Authorized
 
-                        // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                        //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                        //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
-                        //   <soapenv:Body>
-                        //     <tns:HubjectAuthorizationStop>
-                        //       <tns:SessionID>8f9cbd74-0a88-1296-2078-6e9cca762de2</tns:SessionID>
-                        //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
-                        //       <tns:ProviderID>BMW</tns:ProviderID>
-                        //       <tns:AuthorizationStatus>Authorized</tns:AuthorizationStatus>
-                        //       <tns:StatusCode>
-                        //         <cmn:Code>000</cmn:Code>
-                        //         <cmn:Description>Success</cmn:Description>
-                        //       </tns:StatusCode>
-                        //     </tns:HubjectAuthorizationStop>
-                        //   </soapenv:Body>
-                        // </soapenv:Envelope>
+                                                      if (AuthStopResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
 
-                        return new AUTHSTOPResult(AuthorizatorId) {
-                                       AuthorizationResult  = AuthorizationResult.Authorized,
-                                       SessionId            = AuthStopResult.SessionID,
-                                       PartnerSessionId     = PartnerSessionId,
-                                       ProviderId           = EVSP_Id.Parse(AuthStopResult.ProviderID),
-                                       Description          = AuthStopResult.Description
-                                   };
+                                                          // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+                                                          //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                          //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+                                                          //   <soapenv:Body>
+                                                          //     <tns:HubjectAuthorizationStop>
+                                                          //       <tns:SessionID>8f9cbd74-0a88-1296-2078-6e9cca762de2</tns:SessionID>
+                                                          //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
+                                                          //       <tns:ProviderID>BMW</tns:ProviderID>
+                                                          //       <tns:AuthorizationStatus>Authorized</tns:AuthorizationStatus>
+                                                          //       <tns:StatusCode>
+                                                          //         <cmn:Code>000</cmn:Code>
+                                                          //         <cmn:Description>Success</cmn:Description>
+                                                          //       </tns:StatusCode>
+                                                          //     </tns:HubjectAuthorizationStop>
+                                                          //   </soapenv:Body>
+                                                          // </soapenv:Envelope>
 
-                    #endregion
+                                                          return new HTTPResponse<AUTHSTOPResult>(XMLData.HttpResponse,
+                                                                                                  new AUTHSTOPResult(AuthorizatorId) {
+                                                                                                      AuthorizationResult  = AuthorizationResult.Authorized,
+                                                                                                      SessionId            = AuthStopResult.SessionID,
+                                                                                                      PartnerSessionId     = PartnerSessionId,
+                                                                                                      ProviderId           = EVSP_Id.Parse(AuthStopResult.ProviderID),
+                                                                                                      Description          = AuthStopResult.Description
+                                                                                                  });
 
-                    #region NotAuthorized
+                                                      #endregion
 
-                    else // AuthorizationStatus == AuthorizationStatusType.NotAuthorized
-                    {
+                                                      #region NotAuthorized
 
-                        //- Invalid OperatorId ----------------------------------------------------------------------
+                                                      //- Invalid OperatorId ----------------------------------------------------------------------
 
-                        // <isns:Envelope xmlns:fn   = "http://www.w3.org/2005/xpath-functions"
-                        //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
-                        //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
-                        //                xmlns:wsc  = "http://www.hubject.com/b2b/services/authorization/v1">
-                        //   <isns:Body>
-                        //     <wsc:HubjectAuthorizationStop>
-                        //       <wsc:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</wsc:SessionID>
-                        //       <wsc:PartnerSessionID>0815</wsc:PartnerSessionID>
-                        //       <wsc:AuthorizationStatus>NotAuthorized</wsc:AuthorizationStatus>
-                        //       <wsc:StatusCode>
-                        //         <v1:Code>017</v1:Code>
-                        //         <v1:Description>Unauthorized Access</v1:Description>
-                        //         <v1:AdditionalInfo>The identification criterion for the provider/operator with the ID "812" doesn't match the given identification information "/C=DE/ST=Bayern/L=Kitzingen/O=Hubject/OU=Belectric Drive GmbH/CN=Belectric ITS Software Development/emailAddress=achim.friedland@belectric.com" from the certificate.</v1:AdditionalInfo>
-                        //       </wsc:StatusCode>
-                        //     </wsc:HubjectAuthorizationStop>
-                        //   </isns:Body>
-                        // </isns:Envelope>
+                                                      // <isns:Envelope xmlns:fn   = "http://www.w3.org/2005/xpath-functions"
+                                                      //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                      //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
+                                                      //                xmlns:wsc  = "http://www.hubject.com/b2b/services/authorization/v1">
+                                                      //   <isns:Body>
+                                                      //     <wsc:HubjectAuthorizationStop>
+                                                      //       <wsc:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</wsc:SessionID>
+                                                      //       <wsc:PartnerSessionID>0815</wsc:PartnerSessionID>
+                                                      //       <wsc:AuthorizationStatus>NotAuthorized</wsc:AuthorizationStatus>
+                                                      //       <wsc:StatusCode>
+                                                      //         <v1:Code>017</v1:Code>
+                                                      //         <v1:Description>Unauthorized Access</v1:Description>
+                                                      //         <v1:AdditionalInfo>The identification criterion for the provider/operator with the ID "812" doesn't match the given identification information "/C=DE/ST=Bayern/L=Kitzingen/O=Hubject/OU=Belectric Drive GmbH/CN=Belectric ITS Software Development/emailAddress=achim.friedland@belectric.com" from the certificate.</v1:AdditionalInfo>
+                                                      //       </wsc:StatusCode>
+                                                      //     </wsc:HubjectAuthorizationStop>
+                                                      //   </isns:Body>
+                                                      // </isns:Envelope>
 
-                        if (AuthStopResult.Code == 017)
-                            return new AUTHSTOPResult(AuthorizatorId) {
-                                       AuthorizationResult  = AuthorizationResult.NotAuthorized,
-                                       PartnerSessionId     = PartnerSessionId,
-                                       Description          = AuthStopResult.Description + " - " + AuthStopResult.AdditionalInfo
-                                   };
-
-
-                        //- Invalid SessionId -----------------------------------------------------------------------
-
-                        // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                        //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                        //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
-                        //   <soapenv:Body>
-                        //     <tns:HubjectAuthorizationStop>
-                        //       <tns:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</tns:SessionID>
-                        //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
-                        //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
-                        //       <tns:StatusCode>
-                        //         <cmn:Code>400</cmn:Code>
-                        //         <cmn:Description>Session is invalid</cmn:Description>
-                        //       </tns:StatusCode>
-                        //     </tns:HubjectAuthorizationStop>
-                        //   </soapenv:Body>
-                        // </soapenv:Envelope>
-
-                        //- Invalid UID -----------------------------------------------------------------------------
-
-                        // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                        //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                        //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
-                        //   <soapenv:Body>
-                        //     <tns:HubjectAuthorizationStop>
-                        //       <tns:SessionID>8f9cbd74-0a88-1296-2078-6e9cca762de2</tns:SessionID>
-                        //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
-                        //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
-                        //       <tns:StatusCode>
-                        //         <cmn:Code>102</cmn:Code>
-                        //         <cmn:Description>RFID Authentication failed – invalid UID</cmn:Description>
-                        //       </tns:StatusCode>
-                        //     </tns:HubjectAuthorizationStop>
-                        //   </soapenv:Body>
-                        // </soapenv:Envelope>
+                                                      if (AuthStopResult.Code == 017)
+                                                          return new HTTPResponse<AUTHSTOPResult>(XMLData.HttpResponse,
+                                                                                                  new AUTHSTOPResult(AuthorizatorId) {
+                                                                                                      AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                                                                                                      PartnerSessionId     = PartnerSessionId,
+                                                                                                      Description          = AuthStopResult.Description + " - " + AuthStopResult.AdditionalInfo
+                                                                                                  });
 
 
-                        //- Invalid PartnerSessionId ----------------------------------------------------------------
+                                                      //- Invalid SessionId -----------------------------------------------------------------------
 
-                        // No checks!
+                                                      // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+                                                      //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                      //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+                                                      //   <soapenv:Body>
+                                                      //     <tns:HubjectAuthorizationStop>
+                                                      //       <tns:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</tns:SessionID>
+                                                      //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
+                                                      //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
+                                                      //       <tns:StatusCode>
+                                                      //         <cmn:Code>400</cmn:Code>
+                                                      //         <cmn:Description>Session is invalid</cmn:Description>
+                                                      //       </tns:StatusCode>
+                                                      //     </tns:HubjectAuthorizationStop>
+                                                      //   </soapenv:Body>
+                                                      // </soapenv:Envelope>
+
+                                                      //- Invalid UID -----------------------------------------------------------------------------
+
+                                                      // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
+                                                      //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                      //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
+                                                      //   <soapenv:Body>
+                                                      //     <tns:HubjectAuthorizationStop>
+                                                      //       <tns:SessionID>8f9cbd74-0a88-1296-2078-6e9cca762de2</tns:SessionID>
+                                                      //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
+                                                      //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
+                                                      //       <tns:StatusCode>
+                                                      //         <cmn:Code>102</cmn:Code>
+                                                      //         <cmn:Description>RFID Authentication failed – invalid UID</cmn:Description>
+                                                      //       </tns:StatusCode>
+                                                      //     </tns:HubjectAuthorizationStop>
+                                                      //   </soapenv:Body>
+                                                      // </soapenv:Envelope>
 
 
-                        //- EVSEID changed/is invalid! --------------------------------------------------------------
+                                                      //- Invalid PartnerSessionId ----------------------------------------------------------------
 
-                        //   => Session is invalid
+                                                      // No checks!
 
-                        else
 
-                            return new AUTHSTOPResult(AuthorizatorId) {
-                                           AuthorizationResult  = AuthorizationResult.NotAuthorized,
-                                           PartnerSessionId     = PartnerSessionId,
-                                           Description          = AuthStopResult.Description
-                                       };
+                                                      //- EVSEID changed/is invalid! --------------------------------------------------------------
 
-                    }
+                                                      //   => Session is invalid
 
-                    #endregion
+                                                      return new HTTPResponse<AUTHSTOPResult>(XMLData.HttpResponse,
+                                                                                              new AUTHSTOPResult(AuthorizatorId) {
+                                                                                                  AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                                                                                                  PartnerSessionId     = PartnerSessionId,
+                                                                                                  Description          = AuthStopResult.Description
+                                                                                              });
+
+                                                      #endregion
+
+                                                  },
+
+                                                  OnSOAPFault: Fault =>
+                                                  {
+
+                                                      DebugX.Log("AUTHSTOP of EVSE data led to a fault!" + Environment.NewLine);
+
+                                                      return new HTTPResponse<AUTHSTOPResult>(Fault.HttpResponse,
+                                                                                               new AUTHSTOPResult(AuthorizatorId) {
+                                                                                                   AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                                                                                                   PartnerSessionId     = PartnerSessionId,
+                                                                                                   Description          = Fault.ToString()
+                                                                                               },
+                                                                                               IsFault: true);
+
+                                                  },
+
+                                                  OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+
+                                                  OnException: (t, s, e) => SendOnException(t, s, e)
+
+                                                 );
+
+
+                    await _Task;
+
+                    return _Task.Result;
 
                 }
 
@@ -1084,11 +1115,12 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             catch (Exception e)
             {
 
-                return new AUTHSTOPResult(AuthorizatorId) {
-                    AuthorizationResult  = AuthorizationResult.NotAuthorized,
-                    PartnerSessionId     = PartnerSessionId,
-                    Description          = "An exception occured: " + e.Message
-                };
+                return new HTTPResponse<AUTHSTOPResult>(new HTTPResponse(),
+                                                        new AUTHSTOPResult(AuthorizatorId) {
+                                                            AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                                                            PartnerSessionId     = PartnerSessionId,
+                                                            Description          = "An exception occured: " + e.Message
+                                                        });
 
             }
 
@@ -1096,37 +1128,74 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region SendCDR(EVSEId, SessionId, PartnerSessionId, PartnerProductId, ChargeStart, ChargeEnd, UID = null, EVCOId = null, SessionStart = null, SessionEnd = null, MeterValueStart = null, MeterValueEnd = null)
+        #region SendCDR(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, AuthToken = null, eMAId = null, PartnerSessionId = null, ..., QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP SendChargeDetailRecord request.
         /// </summary>
         /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="PartnerSessionId">Your own session identification.</param>
+        /// <param name="SessionId">The OICP session identification from the Authorize Start request.</param>
         /// <param name="PartnerProductId"></param>
-        /// <param name="UID">The optional RFID user identification.</param>
-        /// <param name="EVCOId"></param>
-        /// <param name="ChargeStart">The timestamp of the charging start.</param>
-        /// <param name="ChargeEnd">The timestamp of the charging end.</param>
         /// <param name="SessionStart">The timestamp of the session start.</param>
         /// <param name="SessionEnd">The timestamp of the session end.</param>
-        /// <param name="MeterValueStart">The initial value of the energy meter.</param>
-        /// <param name="MeterValueEnd">The final value of the energy meter.</param>
-        public SENDCDRResult SendCDR(EVSE_Id             EVSEId,
-                                     ChargingSession_Id  SessionId,
-                                     ChargingSession_Id  PartnerSessionId,
-                                     String              PartnerProductId,
-                                     DateTime            ChargeStart,
-                                     DateTime            ChargeEnd,
-                                     Auth_Token          UID             = null,
-                                     eMA_Id              EVCOId          = null,
-                                     DateTime?           SessionStart    = null,
-                                     DateTime?           SessionEnd      = null,
-                                     Double?             MeterValueStart = null,
-                                     Double?             MeterValueEnd   = null)
+        /// <param name="AuthToken">An optional (RFID) user identification.</param>
+        /// <param name="eMAId">An optional e-Mobility account identification.</param>
+        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="ChargingStart">An optional timestamp of the charging start.</param>
+        /// <param name="ChargingEnd">An optional timestamp of the charging end.</param>
+        /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
+        /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
+        /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
+        /// <param name="ConsumedEnergy">The optional amount of consumed energy.</param>
+        /// <param name="MeteringSignature">An optional signature for the metering values.</param>
+        /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
+        /// <param name="HubProviderId">An optional identification of the hub provider.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<SENDCDRResult>>
+
+            SendCDR(EVSE_Id              EVSEId,
+                    ChargingSession_Id   SessionId,
+                    String               PartnerProductId,
+                    DateTime             SessionStart,
+                    DateTime             SessionEnd,
+                    Auth_Token           AuthToken             = null,
+                    eMA_Id               eMAId                 = null,
+                    ChargingSession_Id   PartnerSessionId      = null,
+                    DateTime?            ChargingStart         = null,
+                    DateTime?            ChargingEnd           = null,
+                    Double?              MeterValueStart       = null,
+                    Double?              MeterValueEnd         = null,
+                    IEnumerable<Double>  MeterValuesInBetween  = null,
+                    Double?              ConsumedEnergy        = null,
+                    String               MeteringSignature     = null,
+                    EVSEOperator_Id      HubOperatorId         = null,
+                    EVSP_Id              HubProviderId         = null,
+                    TimeSpan?            QueryTimeout          = null)
 
         {
+
+            #region Initial checks
+
+            if (EVSEId           == null)
+                throw new ArgumentNullException("EVSEId",            "The given parameter must not be null!");
+
+            if (SessionId        == null)
+                throw new ArgumentNullException("SessionId",         "The given parameter must not be null!");
+
+            if (PartnerProductId == null)
+                throw new ArgumentNullException("PartnerProductId",  "The given parameter must not be null!");
+
+            if (SessionStart     == null)
+                throw new ArgumentNullException("SessionStart",      "The given parameter must not be null!");
+
+            if (SessionEnd       == null)
+                throw new ArgumentNullException("SessionEnd",        "The given parameter must not be null!");
+
+            if (AuthToken        == null &&
+                eMAId            == null)
+                throw new ArgumentNullException("AuthToken / eMAId", "At least one of the given parameters must not be null!");
+
+            #endregion
 
             try
             {
@@ -1138,44 +1207,81 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    var HttpResponse = _OICPClient.Query(CPO_XMLMethods.SendChargeDetailRecordXML(EVSEId,
-                                                                                                  SessionId,
-                                                                                                  PartnerSessionId,
-                                                                                                  PartnerProductId,
-                                                                                                  ChargeStart,
-                                                                                                  ChargeEnd,
-                                                                                                  UID,
-                                                                                                  EVCOId,
-                                                                                                  SessionStart,
-                                                                                                  SessionEnd,
-                                                                                                  MeterValueStart,
-                                                                                                  MeterValueEnd),
-                                                         "eRoamingChargeDetailRecord");
+                    var _Task = _OICPClient.Query(CPO_XMLMethods.SendChargeDetailRecordXML(EVSEId,
+                                                                                           SessionId,
+                                                                                           PartnerProductId,
+                                                                                           SessionStart,
+                                                                                           SessionEnd,
+                                                                                           AuthToken,
+                                                                                           eMAId,
+                                                                                           PartnerSessionId,
+                                                                                           ChargingStart,
+                                                                                           ChargingEnd,
+                                                                                           MeterValueStart,
+                                                                                           MeterValueEnd,
+                                                                                           MeterValuesInBetween,
+                                                                                           ConsumedEnergy,
+                                                                                           MeteringSignature,
+                                                                                           HubOperatorId,
+                                                                                           HubProviderId),
+                                                         "eRoamingChargeDetailRecord",
+                                                         QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                    //ToDo: In case of errors this will not parse!
-                    var ack = HubjectAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
+                                                         OnSuccess: XMLData =>
+                                                         {
 
-                    #region Ok
+                                                             var ack = HubjectAcknowledgement.Parse(XMLData.Content);
 
-                    if (ack.Result)
-                        return new SENDCDRResult(AuthorizatorId) {
-                            State             = SENDCDRState.Forwarded,
-                            PartnerSessionId  = PartnerSessionId,
-                            Description       = ack.Description
-                        };
+                                                             #region Ok
 
-                    #endregion
+                                                             if (ack.Result)
+                                                                 return new HTTPResponse<SENDCDRResult>(XMLData.HttpResponse,
+                                                                                                        new SENDCDRResult(AuthorizatorId) {
+                                                                                                            State             = SENDCDRState.Forwarded,
+                                                                                                            PartnerSessionId  = PartnerSessionId,
+                                                                                                            Description       = ack.Description
+                                                                                                        });
 
-                    #region Error
+                                                             #endregion
 
-                    else
-                        return new SENDCDRResult(AuthorizatorId) {
-                            State             = SENDCDRState.False,
-                            PartnerSessionId  = PartnerSessionId,
-                            Description       = ack.Description
-                        };
+                                                             #region Error
 
-                    #endregion
+                                                             return new HTTPResponse<SENDCDRResult>(XMLData.HttpResponse,
+                                                                                                    new SENDCDRResult(AuthorizatorId) {
+                                                                                                        State             = SENDCDRState.False,
+                                                                                                        PartnerSessionId  = PartnerSessionId,
+                                                                                                        Description       = ack.Description
+                                                                                                    });
+
+                                                             #endregion
+
+                                                         },
+
+                                                         OnSOAPFault: Fault =>
+                                                         {
+
+                                                             DebugX.Log("SendCDR led to a fault!" + Environment.NewLine);
+
+                                                             return new HTTPResponse<SENDCDRResult>(Fault.HttpResponse,
+                                                                                                    new SENDCDRResult(AuthorizatorId) {
+                                                                                                        State             = SENDCDRState.False,
+                                                                                                        PartnerSessionId  = PartnerSessionId,
+                                                                                                        Description       = Fault.ToString()
+                                                                                                    },
+                                                                                                    IsFault: true);
+
+                                                         },
+
+                                                         OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+
+                                                         OnException: (t, s, e) => SendOnException(t, s, e)
+
+                                                        );
+
+
+                    await _Task;
+
+                    return _Task.Result;
 
                 }
 
@@ -1185,11 +1291,12 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             {
 
                 return
-                    new SENDCDRResult(AuthorizatorId) {
-                        State             = SENDCDRState.False,
-                        PartnerSessionId  = PartnerSessionId,
-                        Description       = "An exception occured: " + e.Message
-                    };
+                    new HTTPResponse<SENDCDRResult>(new HTTPResponse(),
+                                                    new SENDCDRResult(AuthorizatorId) {
+                                                        State             = SENDCDRState.False,
+                                                        PartnerSessionId  = PartnerSessionId,
+                                                        Description       = "An exception occured: " + e.Message
+                                                    });
 
             }
 

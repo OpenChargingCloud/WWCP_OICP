@@ -180,8 +180,20 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         public HubjectAuthorization(AuthorizationType AuthorizationType, XElement XML)
         {
 
-            if (XML.Name != OICPNS.Authorization + "eRoamingAuthorizationStart")
-                throw new ArgumentException("The given XML is not an 'eRoamingAuthorizationStart' message!", "XML");
+            switch (AuthorizationType)
+            {
+
+                case HubjectAuthorization.AuthorizationType.Start:
+                    if (XML.Name != OICPNS.Authorization + "eRoamingAuthorizationStart")
+                        throw new ArgumentException("The given XML is not an 'eRoamingAuthorizationStart' message!", "XML");
+                    break;
+
+                case HubjectAuthorization.AuthorizationType.Stop:
+                    if (XML.Name != OICPNS.Authorization + "eRoamingAuthorizationStop")
+                        throw new ArgumentException("The given XML is not an 'eRoamingAuthorizationStop' message!", "XML");
+                    break;
+
+            }
 
             this._SessionID           = ChargingSession_Id .Parse((XML.Element(OICPNS.Authorization + "SessionID") != null)  ? XML.Element(OICPNS.Authorization + "SessionID"). Value : "");
             this._PartnerSessionID    = (XML.Element(OICPNS.Authorization + "PartnerSessionID") != null) ? XML.Element(OICPNS.Authorization + "PartnerSessionID").Value : "";
