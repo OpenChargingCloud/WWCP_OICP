@@ -37,7 +37,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 {
 
     /// <summary>
-    /// OICP Downstream HTTP/SOAP server.
+    /// OICP v2.0 Downstream HTTP/SOAP server.
     /// </summary>
     public class OICPDownstreamServer : HTTPServer
     {
