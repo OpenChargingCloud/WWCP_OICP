@@ -180,14 +180,15 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         public HubjectAuthorization(AuthorizationType AuthorizationType, XElement XML)
         {
 
-            var ack                   = XML.Descendants(OICPNS.Authorization + "eRoamingAuthorization" + AuthorizationType.ToString()).FirstOrDefault();
+            if (XML.Name != OICPNS.Authorization + "eRoamingAuthorizationStart")
+                throw new ArgumentException("The given XML is not an 'eRoamingAuthorizationStart' message!", "XML");
 
-            this._SessionID           = ChargingSession_Id .Parse((ack.Element(OICPNS.Authorization + "SessionID") != null)  ? ack.Element(OICPNS.Authorization + "SessionID"). Value : "");
-            this._PartnerSessionID    =  ack.Element(OICPNS.Authorization + "PartnerSessionID").Value;
-            this._ProviderID          = (ack.Element(OICPNS.Authorization + "ProviderID") != null) ? ack.Element(OICPNS.Authorization + "ProviderID").Value : "";
-            this._AuthorizationStatus = (ack.Element(OICPNS.Authorization + "AuthorizationStatus").Value.ToLower() == "authorized") ? AuthorizationStatusType.Authorized : AuthorizationStatusType.NotAuthorized;
+            this._SessionID           = ChargingSession_Id .Parse((XML.Element(OICPNS.Authorization + "SessionID") != null)  ? XML.Element(OICPNS.Authorization + "SessionID"). Value : "");
+            this._PartnerSessionID    = (XML.Element(OICPNS.Authorization + "PartnerSessionID") != null) ? XML.Element(OICPNS.Authorization + "PartnerSessionID").Value : "";
+            this._ProviderID          = (XML.Element(OICPNS.Authorization + "ProviderID")       != null) ? XML.Element(OICPNS.Authorization + "ProviderID").      Value : "";
+            this._AuthorizationStatus = (XML.Element(OICPNS.Authorization + "AuthorizationStatus").Value.ToLower() == "authorized") ? AuthorizationStatusType.Authorized : AuthorizationStatusType.NotAuthorized;
 
-            var StatusCode            = ack.Element(OICPNS.Authorization + "StatusCode");
+            var StatusCode            = XML.Element(OICPNS.Authorization + "StatusCode");
             this._Code                = UInt16.Parse(StatusCode.Element(OICPNS.CommonTypes + "Code").Value);
             this._Description         =  StatusCode.Element(OICPNS.CommonTypes + "Description").Value;
             this._AdditionalInfo      = (StatusCode.Element(OICPNS.CommonTypes + "AdditionalInfo") != null) ? StatusCode.Element(OICPNS.CommonTypes + "AdditionalInfo").Value : String.Empty;

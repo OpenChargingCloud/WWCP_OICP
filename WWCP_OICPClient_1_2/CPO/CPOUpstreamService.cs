@@ -1132,6 +1132,13 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
         #endregion
 
+
+
+        Task<HTTPResponse<AUTHSTARTResult>> IAuthServices.AuthorizeStart(EVSEOperator_Id OperatorId, Auth_Token AuthToken, EVSE_Id EVSEId = null, string PartnerProductId = null, ChargingSession_Id HubjectSessionId = null, ChargingSession_Id PartnerSessionId = null)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
 }

@@ -183,8 +183,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             var ack                   = XML.Descendants(OICPNS.Authorization + "eRoamingAuthorization" + AuthorizationType.ToString()).FirstOrDefault();
 
             this._SessionID           = ChargingSession_Id .Parse((ack.Element(OICPNS.Authorization + "SessionID") != null)  ? ack.Element(OICPNS.Authorization + "SessionID"). Value : "");
-            this._PartnerSessionID    =  ack.Element(OICPNS.Authorization + "PartnerSessionID").Value;
-            this._ProviderID          = (ack.Element(OICPNS.Authorization + "ProviderID") != null) ? ack.Element(OICPNS.Authorization + "ProviderID").Value : "";
+            this._PartnerSessionID    = (ack.Element(OICPNS.Authorization + "PartnerSessionID") != null) ? ack.Element(OICPNS.Authorization + "PartnerSessionID").Value : "";
+            this._ProviderID          = (ack.Element(OICPNS.Authorization + "ProviderID")       != null) ? ack.Element(OICPNS.Authorization + "ProviderID").      Value : "";
             this._AuthorizationStatus = (ack.Element(OICPNS.Authorization + "AuthorizationStatus").Value.ToLower() == "authorized") ? AuthorizationStatusType.Authorized : AuthorizationStatusType.NotAuthorized;
 
             var StatusCode            = ack.Element(OICPNS.Authorization + "StatusCode");
