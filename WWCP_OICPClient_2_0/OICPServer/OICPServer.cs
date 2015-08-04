@@ -28,6 +28,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Illias.ConsoleLog;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
 using org.GraphDefined.WWCP.LocalService;
 
@@ -43,20 +44,6 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
     {
 
         #region Properties
-
-        #region HTTPRoot
-
-        private readonly String _HTTPRoot;
-
-        public String HTTPRoot
-        {
-            get
-            {
-                return _HTTPRoot;
-            }
-        }
-
-        #endregion
 
         #region RequestRouter
 
@@ -81,52 +68,64 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// </summary>
         /// <param name="RequestRouter">The request router.</param>
         /// <param name="IPPort">The TCP listing port.</param>
+        /// <param name="HTTPRoot">The document root for the HTTP service.</param>
+        /// <param name="RegisterHTTPRootService">Whether to register a simple webpage for '/', or not.</param>
+        /// 
         public OICPServer(RequestRouter  RequestRouter,
                           IPPort         IPPort,
-                          String         HTTPRoot)
+                          Boolean        RegisterHTTPRootService  = true,
+                          DNSClient      DNSClient                = null)
+
+            : base(//IPPort,
+                   DNSClient: DNSClient)
+
         {
 
             this._RequestRouter  = RequestRouter;
-            this._HTTPRoot       = HTTPRoot;
 
             this.AttachTCPPort(IPPort);
             this.Start();
 
-            #region / (HTTPRoot)
+            #region / (HTTPRoot), if RegisterHTTPRootService == true
 
-            // HTML
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   "/",
-                                   HTTPContentType.HTML_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+            if (RegisterHTTPRootService)
+            {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                // HTML
+                this.AddMethodCallback(HTTPMethod.GET,
+                                       "/",
+                                       HTTPContentType.HTML_UTF8,
+                                       HTTPDelegate: HTTPRequest => {
 
-                                       return new HTTPResponseBuilder() {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/{RoamingNetworkId} is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
+                                           var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
-                                   });
+                                           return new HTTPResponseBuilder() {
+                                               HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                               ContentType     = HTTPContentType.HTML_UTF8,
+                                               Content         = ("/RNs/{RoamingNetworkId} is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                               Connection      = "close"
+                                           };
 
-            // Text
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   "/",
-                                   HTTPContentType.TEXT_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+                                       });
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                // Text
+                this.AddMethodCallback(HTTPMethod.GET,
+                                       "/",
+                                       HTTPContentType.TEXT_UTF8,
+                                       HTTPDelegate: HTTPRequest => {
 
-                                       return new HTTPResponseBuilder() {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/{RoamingNetworkId} is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
+                                           var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
-                                   });
+                                           return new HTTPResponseBuilder() {
+                                               HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                               ContentType     = HTTPContentType.HTML_UTF8,
+                                               Content         = ("/RNs/{RoamingNetworkId} is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                               Connection      = "close"
+                                           };
+
+                                       });
+
+            }
 
             #endregion
 
@@ -812,7 +811,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             // Text
             this.AddMethodCallback(HTTPMethod.GET,
-                                   "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                   "/RNs/{RoamingNetwork}",
                                    HTTPContentType.TEXT_UTF8,
                                    HTTPDelegate: HTTPRequest => {
 
