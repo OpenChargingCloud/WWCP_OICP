@@ -66,6 +66,7 @@
     <Compile Include="Helpers\SOAP.cs" />
     <Compile Include="OICPDownstreamServer.cs" />
     <Compile Include="OICPImporter.cs" />
+    <Compile Include="OICPServer\OICPServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -100,6 +100,7 @@
     <Compile Include="Helpers\SOAP.cs" />
     <Compile Include="OICPDownstreamServer.cs" />
     <Compile Include="OICPImporter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

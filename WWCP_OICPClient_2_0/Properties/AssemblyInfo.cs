@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WWCP_OICPClient_2_0")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("WWCP OICP v2.0")]
+[assembly: AssemblyDescription("Communication between the World Wide Charging Protocol (WWCP) and the Open InterCharge Protocol (OICP v2.0).")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("WWCP_OICPClient_2_0")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("GraphDefined GmbH")]
+[assembly: AssemblyProduct("WWCP OICP v2.0 Bindings")]
+[assembly: AssemblyCopyright("Copyright © 2014-2015 GraphDefined GmbH")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

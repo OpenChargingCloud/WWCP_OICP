@@ -37,9 +37,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 {
 
     /// <summary>
-    /// OICP v2.0 downstream HTTP/SOAP server.
+    /// OICP v2.0 HTTP/SOAP server.
     /// </summary>
-    public class OICPDownstreamServer : HTTPServer
+    public class OICPServer : HTTPServer
     {
 
         #region Properties
@@ -77,13 +77,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #region Constructor(s)
 
         /// <summary>
-        /// Initialize the OICP HTTP/SOAP server using IPAddress.Any.
+        /// Initialize the OICP v2.0 HTTP/SOAP server using IPAddress.Any.
         /// </summary>
         /// <param name="RequestRouter">The request router.</param>
         /// <param name="IPPort">The TCP listing port.</param>
-        public OICPDownstreamServer(RequestRouter  RequestRouter,
-                                    IPPort         IPPort,
-                                    String         HTTPRoot)
+        public OICPServer(RequestRouter  RequestRouter,
+                          IPPort         IPPort,
+                          String         HTTPRoot)
         {
 
             this._RequestRouter  = RequestRouter;
@@ -105,7 +105,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                            ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Content         = ("/RNs/{RoamingNetworkId} is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
                                            Connection      = "close"
                                        };
 
@@ -122,7 +122,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                            ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Content         = ("/RNs/{RoamingNetworkId} is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
                                            Connection      = "close"
                                        };
 
@@ -130,11 +130,11 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             #endregion
 
-            #region /RNs/{RoamingNetworkId}/RemoteStartStop
+            #region /RNs/{RoamingNetworkId}
 
-            #region Generic RemoteStartStopDelegate
+            #region Generic OICPServerDelegate
 
-            HTTPDelegate RemoteStartStopDelegate = HTTPRequest => {
+            HTTPDelegate OICPServerDelegate = HTTPRequest => {
 
                 var _EventTrackingId = EventTracking_Id.New;
                 Log.WriteLine("Event tracking: " + _EventTrackingId);
@@ -170,25 +170,45 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 //Log.WriteLine(XMLRequest.Data.ToString());
                 //Log.WriteLine("");
 
+                XElement RemoteStartXML = null;
+                XElement RemoteStopXML  = null;
+
                 #region Get SOAP request...
 
-                IEnumerable<XElement> RemoteStartXMLs;
-                IEnumerable<XElement> RemoteStopXMLs;
+                IEnumerable<XElement> GetEVSEByIdXMLs;
+                IEnumerable<XElement> PullEVSEDataXMLs;
+                IEnumerable<XElement> PushEvseDataXMLs;
+
+                IEnumerable<XElement> PullEVSEStatusXMLs;
+                IEnumerable<XElement> PullEVSEStatusByIdXMLs;
+                IEnumerable<XElement> PushEVSEStatusXMLs;
 
                 try
                 {
 
-                    RemoteStartXMLs = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart");
-                    RemoteStopXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop");
+                    // EvseDataBinding
+                    GetEVSEByIdXMLs         = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingGetEvseById");
+                    PullEVSEDataXMLs        = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingPullEvseData");
+                    PushEvseDataXMLs        = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingPushEvseData");
 
-                    if (!RemoteStartXMLs.Any() && !RemoteStopXMLs.Any())
-                        throw new Exception("Must be either RemoteStart or RemoteStop XML request!");
+                    // EvseStatusBinding
+                    PullEVSEStatusXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingPullEvseStatus");
+                    PullEVSEStatusByIdXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingPullEvseStatusById");
+                    PushEVSEStatusXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingPushEvseStatus");
 
-                    if (RemoteStartXMLs.Count() > 1)
-                        throw new Exception("Multiple RemoteStart XML tags within a single request are not supported!");
+                    if (!PullEVSEStatusXMLs.    Any() &&
+                        !PullEVSEStatusByIdXMLs.Any() &&
+                        !PushEVSEStatusXMLs.    Any())
+                        throw new Exception("Unkown XML/SOAP request!");
 
-                    if (RemoteStopXMLs.Count() > 1)
-                        throw new Exception("Multiple RemoteStop XML tags within a single request are not supported!");
+                    //if (PullEVSEStatusXMLs.     Count() > 1)
+                    //    throw new Exception("Multiple PullEVSEStatus XML tags within a single request are not supported!");
+
+                    //if (PullEVSEStatusByIdXMLs. Count() > 1)
+                    //    throw new Exception("Multiple PullEVSEStatusById XML tags within a single request are not supported!");
+
+                    //if (PushEVSEStatusXMLs.     Count() > 1)
+                    //    throw new Exception("Multiple PushEVSEStatus XML tags within a single request are not supported!");
 
                 }
                 catch (Exception e)
@@ -229,12 +249,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 #endregion
 
-                #region Process an OICP RemoteStart SOAP/XML/HTTP call
+                #region Process an OICP PullEVSEStatus SOAP/XML/HTTP call
 
-                var RemoteStartXML = RemoteStartXMLs.FirstOrDefault();
-                var RemoteStopXML  = RemoteStopXMLs. FirstOrDefault();
-
-                if (RemoteStartXML != null)
+                var PullEVSEStatusXML = PullEVSEStatusXMLs.FirstOrDefault();
+                if (PullEVSEStatusXML != null)
                 {
 
                     #region Parse request parameters
@@ -447,9 +465,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 #endregion
 
-                #region Process an OICP RemoteStop SOAP/XML/HTTP call
+                #region Process an OICP PullEVSEStatusById SOAP/XML/HTTP call
 
-                else
+                var PullEVSEStatusByIdXML = PullEVSEStatusByIdXMLs.FirstOrDefault();
+                if (PullEVSEStatusByIdXML != null)
                 {
 
                     #region Parse request parameters
@@ -592,6 +611,164 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 #endregion
 
+                #region Process an OICP PushEVSEStatus SOAP/XML/HTTP call
+
+                var PushEVSEStatusXML = PushEVSEStatusXMLs.FirstOrDefault();
+                if (PushEVSEStatusXML != null)
+                {
+
+                    #region Parse request parameters
+
+                    ChargingSession_Id  SessionId;
+                    EVSP_Id             ProviderId;
+                    EVSE_Id             EVSEId;
+                    XElement            IdentificationXML;
+                    XElement            QRCodeIdentificationXML;
+                    XElement            RemoteIdentificationXML;
+                    eMA_Id              eMAId;
+
+                    try
+                    {
+
+                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
+                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+
+                        IdentificationXML        =               RemoteStartXML.    ElementOrFail     (OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
+                        RemoteIdentificationXML  =               IdentificationXML. Element           (OICPNS.CommonTypes   + "RemoteIdentification");
+                        QRCodeIdentificationXML  =               IdentificationXML. Element           (OICPNS.CommonTypes   + "QRCodeIdentification");
+
+                        if (RemoteIdentificationXML == null &&
+                            QRCodeIdentificationXML == null)
+                            throw new Exception("Neither a RemoteIdentificationXML, nor a QRCodeIdentificationXML was provided!");
+
+                        eMAId                    = eMA_Id. Parse((RemoteIdentificationXML != null)
+                                                                     ? RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
+                                                                     : QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
+                                                                );
+
+                    }
+                    catch (Exception e)
+                    {
+
+                        Log.Timestamp("Invalid RemoteStartXML: " + e.Message);
+
+                        return new HTTPResponseBuilder() {
+
+                                HTTPStatusCode  = HTTPStatusCode.OK,
+                                ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                                Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+
+                                                                         new XElement(OICPNS.CommonTypes + "Result", "false"),
+
+                                                                         new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                             new XElement(OICPNS.CommonTypes + "Code",           "022"),
+                                                                             new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
+                                                                             new XElement(OICPNS.CommonTypes + "AdditionalInfo",  e.Message)
+                                                                         )
+
+                                                                     )).ToString().ToUTF8Bytes()
+
+                        };
+
+                    }
+
+                    #endregion
+
+                    var HubjectCode            = "";
+                    var HubjectDescription     = "";
+                    var HubjectAdditionalInfo  = "";
+
+                    var Response               = RequestRouter.RemoteStart(EVSEId, SessionId, ProviderId, eMAId, _EventTrackingId);
+                    Log.WriteLine(Response.ToString());
+
+                    switch (Response)
+                    {
+
+                        case RemoteStartResult.EVSE_AlreadyInUse:
+                            HubjectCode         = "602";
+                            HubjectDescription  = "EVSE is already in use!";
+                            break;
+
+                        case RemoteStartResult.SessionId_AlreadyInUse:
+                            HubjectCode         = "400";
+                            HubjectDescription  = "Session is invalid";
+                            break;
+
+                        case RemoteStartResult.EVSE_NotReachable:
+                            HubjectCode         = "501";
+                            HubjectDescription  = "Communication to EVSE failed!";
+                            break;
+
+                        case RemoteStartResult.Start_Timeout:
+                            HubjectCode         = "501";
+                            HubjectDescription  = "Communication to EVSE failed!";
+                            break;
+
+                        case RemoteStartResult.Success:
+                            HubjectCode         = "000";
+                            HubjectDescription  = "Ready to charge!";
+                            break;
+
+                        default:
+                            HubjectCode         = "000";
+                            break;
+
+                    }
+
+                    #region HTTPResponse
+
+                    return new HTTPResponseBuilder() {
+                        HTTPStatusCode  = HTTPStatusCode.OK,
+                        ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                        Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+
+                                                                 new XElement(OICPNS.CommonTypes + "Result", "true"),
+
+                                                                 new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                     new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
+                                                                     new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
+                                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+                                                                 ),
+
+                                                                 new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
+                                                                 //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
+
+                                                            )).ToString().
+                                                               ToUTF8Bytes()
+                    };
+
+                    #endregion
+
+                }
+
+                #endregion
+
+
+                #region HTTPResponse: Unkown XML/SOAP message
+
+                return new HTTPResponseBuilder() {
+                    HTTPStatusCode  = HTTPStatusCode.OK,
+                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                    Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+
+                                                             new XElement(OICPNS.CommonTypes + "Result", "false"),
+
+                                                             new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                 new XElement(OICPNS.CommonTypes + "Code",            ""),
+                                                                 new XElement(OICPNS.CommonTypes + "Description",     "Unkown XML/SOAP message"),
+                                                                 new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
+                                                             ),
+
+                                                             new XElement(OICPNS.CommonTypes + "SessionID", "")
+                                                             //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
+
+                                                        )).ToString().
+                                                           ToUTF8Bytes()
+                };
+
+                #endregion
+
             };
 
             #endregion
@@ -599,18 +776,18 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #region Register SOAP-XML Request via GET
 
             this.AddMethodCallback(HTTPMethod.GET,
-                                   "/RNs/{RoamingNetworkId}/RemoteStartStop",
+                                   "/RNs/{RoamingNetworkId}",
                                    HTTPContentType.XMLTEXT_UTF8,
-                                   HTTPDelegate: RemoteStartStopDelegate);
+                                   HTTPDelegate: OICPServerDelegate);
 
             #endregion
 
             #region Register SOAP-XML Request via POST
 
             this.AddMethodCallback(HTTPMethod.POST,
-                                   "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                   "/RNs/{RoamingNetwork}",
                                    HTTPContentType.XMLTEXT_UTF8,
-                                   HTTPDelegate: RemoteStartStopDelegate);
+                                   HTTPDelegate: OICPServerDelegate);
 
             #endregion
 
@@ -618,7 +795,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             // HTML
             this.AddMethodCallback(HTTPMethod.GET,
-                                   "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                   "/RNs/{RoamingNetwork}",
                                    HTTPContentType.HTML_UTF8,
                                    HTTPDelegate: HTTPRequest => {
 
@@ -627,7 +804,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                            ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Content         = ("/RNs/" + RoamingNetworkId + " is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
                                            Connection      = "close"
                                        };
 
@@ -644,7 +821,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                            ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Content         = ("/RNs/" + RoamingNetworkId + " is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
                                            Connection      = "close"
                                        };
 
