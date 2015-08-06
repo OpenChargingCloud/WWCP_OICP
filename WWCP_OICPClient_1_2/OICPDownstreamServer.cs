@@ -331,9 +331,9 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                     try
                     {
 
-                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
-                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValue(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
+                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValue(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValue(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                         IdentificationXML        =               RemoteStartXML.    ElementOrFail     (OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
                         RemoteIdentificationXML  =               IdentificationXML. Element           (OICPNS.CommonTypes   + "RemoteIdentification");
@@ -344,8 +344,8 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                             throw new Exception("Neither a RemoteIdentificationXML, nor a QRCodeIdentificationXML was provided!");
 
                         eMAId                    = eMA_Id. Parse((RemoteIdentificationXML != null)
-                                                                     ? RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
-                                                                     : QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
+                                                                     ? RemoteIdentificationXML.ElementValue(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
+                                                                     : QRCodeIdentificationXML.ElementValue(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
                                                                 );
 
                     }
@@ -492,9 +492,9 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
                     try
                     {
 
-                        SessionId   = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
-                        ProviderId  = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId      = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        SessionId   = ChargingSession_Id.Parse(RemoteStopXML.ElementValue(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
+                        ProviderId  = EVSP_Id.           Parse(RemoteStopXML.ElementValue(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId      = EVSE_Id.           Parse(RemoteStopXML.ElementValue(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                     }
                     catch (Exception e)

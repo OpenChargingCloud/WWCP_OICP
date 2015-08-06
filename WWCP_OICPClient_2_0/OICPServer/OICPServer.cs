@@ -31,6 +31,7 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
 using org.GraphDefined.WWCP.LocalService;
+using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
@@ -135,8 +136,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             HTTPDelegate OICPServerDelegate = HTTPRequest => {
 
-                var _EventTrackingId = EventTracking_Id.New;
-                Log.WriteLine("Event tracking: " + _EventTrackingId);
+                //var _EventTrackingId = EventTracking_Id.New;
+                //Log.WriteLine("Event tracking: " + _EventTrackingId);
 
                 #region ParseXMLRequestBody... or fail!
 
@@ -169,45 +170,57 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 //Log.WriteLine(XMLRequest.Data.ToString());
                 //Log.WriteLine("");
 
-                XElement RemoteStartXML = null;
-                XElement RemoteStopXML  = null;
+                #region Get and verify XML/SOAP request...
 
-                #region Get SOAP request...
-
-                IEnumerable<XElement> GetEVSEByIdXMLs;
+                IEnumerable<XElement> PushEVSEDataXMLs;
                 IEnumerable<XElement> PullEVSEDataXMLs;
-                IEnumerable<XElement> PushEvseDataXMLs;
+                IEnumerable<XElement> GetEVSEByIdXMLs;
 
+                IEnumerable<XElement> PushEVSEStatusXMLs;
                 IEnumerable<XElement> PullEVSEStatusXMLs;
                 IEnumerable<XElement> PullEVSEStatusByIdXMLs;
-                IEnumerable<XElement> PushEVSEStatusXMLs;
 
                 try
                 {
 
                     // EvseDataBinding
-                    GetEVSEByIdXMLs         = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingGetEvseById");
-                    PullEVSEDataXMLs        = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingPullEvseData");
-                    PushEvseDataXMLs        = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingPushEvseData");
+                    PushEVSEDataXMLs        = XMLRequest.Data.Root.Descendants(OICPNS.EVSEData   + "eRoamingPushEvseData");
+                    PullEVSEDataXMLs        = XMLRequest.Data.Root.Descendants(OICPNS.EVSEData   + "eRoamingPullEvseData");
+                    GetEVSEByIdXMLs         = XMLRequest.Data.Root.Descendants(OICPNS.EVSEData   + "eRoamingGetEvseById");
 
                     // EvseStatusBinding
-                    PullEVSEStatusXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingPullEvseStatus");
-                    PullEVSEStatusByIdXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingPullEvseStatusById");
-                    PushEVSEStatusXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingPushEvseStatus");
+                    PushEVSEStatusXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPushEvseStatus");
+                    PullEVSEStatusXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatus");
+                    PullEVSEStatusByIdXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById");
 
-                    if (!PullEVSEStatusXMLs.    Any() &&
-                        !PullEVSEStatusByIdXMLs.Any() &&
-                        !PushEVSEStatusXMLs.    Any())
+                    if (!PushEVSEDataXMLs.      Any() &&
+                        !PullEVSEDataXMLs.      Any() &&
+                        !GetEVSEByIdXMLs.       Any() &&
+
+                        !PushEVSEStatusXMLs.    Any() &&
+                        !PullEVSEStatusXMLs.    Any() &&
+                        !PullEVSEStatusByIdXMLs.Any())
+
                         throw new Exception("Unkown XML/SOAP request!");
 
-                    //if (PullEVSEStatusXMLs.     Count() > 1)
-                    //    throw new Exception("Multiple PullEVSEStatus XML tags within a single request are not supported!");
+                    if (PushEVSEDataXMLs.       Count() > 1)
+                        throw new Exception("Multiple PushEvseData XML tags within a single request are not supported!");
 
-                    //if (PullEVSEStatusByIdXMLs. Count() > 1)
-                    //    throw new Exception("Multiple PullEVSEStatusById XML tags within a single request are not supported!");
+                    if (PullEVSEDataXMLs.       Count() > 1)
+                        throw new Exception("Multiple PullEVSEData XML tags within a single request are not supported!");
 
-                    //if (PushEVSEStatusXMLs.     Count() > 1)
-                    //    throw new Exception("Multiple PushEVSEStatus XML tags within a single request are not supported!");
+                    if (GetEVSEByIdXMLs.        Count() > 1)
+                        throw new Exception("Multiple GetEVSEById XML tags within a single request are not supported!");
+
+
+                    if (PushEVSEStatusXMLs.     Count() > 1)
+                        throw new Exception("Multiple PushEVSEStatus XML tags within a single request are not supported!");
+
+                    if (PullEVSEStatusXMLs.     Count() > 1)
+                        throw new Exception("Multiple PullEVSEStatus XML tags within a single request are not supported!");
+
+                    if (PullEVSEStatusByIdXMLs. Count() > 1)
+                        throw new Exception("Multiple PullEVSEStatusBy XML tags within a single request are not supported!");
 
                 }
                 catch (Exception e)
@@ -248,130 +261,272 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 #endregion
 
-                #region Process an OICP PullEVSEStatus SOAP/XML/HTTP call
+                #region PushEVSEData
 
-                var PullEVSEStatusXML = PullEVSEStatusXMLs.FirstOrDefault();
-                if (PullEVSEStatusXML != null)
+                var PushEVSEDataXML = PushEVSEDataXMLs.FirstOrDefault();
+                if (PushEVSEDataXML != null)
                 {
 
                     #region Parse request parameters
 
-                    // ------------------------
-                    // Hubject/Intercharge App
-                    // ------------------------
-                    //
-                    // POST /RemoteStartStop HTTP/1.1
-                    // Content-type: text/xml;charset=utf-8
-                    // Soapaction: ""
-                    // Accept: text/xml, multipart/related
-                    // User-Agent: JAX-WS RI 2.2-hudson-752-
-                    // Cache-Control: no-cache
-                    // Pragma: no-cache
-                    // Host: 80.148.29.35:3001
-                    // Connection: keep-alive
-                    // Content-Length: 794
-                    // 
-                    // <?xml version='1.0' encoding='UTF-8'?>
-                    // <isns:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                    //                xmlns:isns    = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                xmlns:sbp     = "http://www.inubit.com/eMobility/SBP"
-                    //                xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                xmlns:v1      = "http://www.hubject.com/b2b/services/mobileauthorization/v1"
-                    //                xmlns:wsc     = "http://www.hubject.com/b2b/services/authorization/v1">
-                    // 
-                    //   <isns:Body>
-                    //     <wsc:HubjectAuthorizeRemoteStart>
-                    //       <wsc:SessionID>5c24515b-0a88-1296-32ea-1226ce8a3cd0</wsc:SessionID>
-                    //       <wsc:ProviderID>ICE</wsc:ProviderID>
-                    //       <wsc:EVSEID>+49*822*4201*1</wsc:EVSEID>
-                    //       <wsc:Identification>
-                    //         <cmn:QRCodeIdentification>
-                    //           <cmn:EVCOID>DE*ICE*I00811*1</cmn:EVCOID>
-                    //         </cmn:QRCodeIdentification>
-                    //       </wsc:Identification>
-                    //     </wsc:HubjectAuthorizeRemoteStart>
-                    //   </isns:Body>
-                    // 
-                    // </isns:Envelope>
-
-                    // ----------------
-                    // PlugSurfing App
-                    // ----------------
-                    //
-                    // <soapenv:Envelope xmlns:auth    = "http://www.hubject.com/b2b/services/authorization/v1"
-                    //                   xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                    //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/">
-                    // 
-                    //   <soapenv:Body>
-                    //     <auth:HubjectAuthorizeRemoteStart>
-                    //       <auth:SessionID>5f1230a1-0a88-1293-4fe7-c117fc5178cf</auth:SessionID>
-                    //       <auth:ProviderID>8PS</auth:ProviderID>
-                    //       <auth:EVSEID>+49*822*083431571*1</auth:EVSEID>
-                    //       <auth:Identification>
-                    //         <cmn:RemoteIdentification>
-                    //           <cmn:EVCOID>DE*8PS*9DC4AB*X</cmn:EVCOID>
-                    //         </cmn:RemoteIdentification>
-                    //       </auth:Identification>
-                    //     </auth:HubjectAuthorizeRemoteStart>
-                    //   </soapenv:Body>
-                    // 
-                    // </soapenv:Envelope>
-
-                    // ----------------------------------
-                    // Hubject/Intercharge App OICPv1.2
-                    // ----------------------------------
-                    // <soapenv:Envelope xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2"
-                    //                   xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-                    //                   xmlns:tns="http://www.hubject.com/b2b/services/authorization/v1.2">
-                    //   <soapenv:Body>
-                    //     <tns:eRoamingAuthorizeRemoteStart>
-                    //       <tns:SessionID>cb7e6492-0a88-1294-3f1b-9edc7be427e2</tns:SessionID>
-                    //       <tns:ProviderID>DE*BMW</tns:ProviderID>
-                    //       <tns:EVSEID>+49*822*028630241*1</tns:EVSEID>
-                    //       <tns:Identification>
-                    //         <cmn:QRCodeIdentification>
-                    //           <cmn:EVCOID>DE*BMW*0010LT*7</cmn:EVCOID>
-                    //         </cmn:QRCodeIdentification>
-                    //       </tns:Identification>
-                    //     </tns:eRoamingAuthorizeRemoteStart>
-                    //   </soapenv:Body>
-                    //   
-                    // </soapenv:Envelope>
-
-
-                    ChargingSession_Id  SessionId;
-                    EVSP_Id             ProviderId;
-                    EVSE_Id             EVSEId;
-                    XElement            IdentificationXML;
-                    XElement            QRCodeIdentificationXML;
-                    XElement            RemoteIdentificationXML;
-                    eMA_Id              eMAId;
-
                     try
                     {
 
-                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
-                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        String                  ActionType;
+                        IEnumerable<XElement>   OperatorEvseDataXML;
 
-                        IdentificationXML        =               RemoteStartXML.    ElementOrFail     (OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
-                        RemoteIdentificationXML  =               IdentificationXML. Element           (OICPNS.CommonTypes   + "RemoteIdentification");
-                        QRCodeIdentificationXML  =               IdentificationXML. Element           (OICPNS.CommonTypes   + "QRCodeIdentification");
+                        ActionType           = PushEVSEDataXML.ElementValue  (OICPNS.EVSEData + "ActionType",       "No ActionType XML tag provided!");
+                        OperatorEvseDataXML  = PushEVSEDataXML.ElementsOrFail(OICPNS.EVSEData + "OperatorEvseData", "No OperatorEvseData XML tags provided!");
 
-                        if (RemoteIdentificationXML == null &&
-                            QRCodeIdentificationXML == null)
-                            throw new Exception("Neither a RemoteIdentificationXML, nor a QRCodeIdentificationXML was provided!");
+                        foreach (var SingleOperatorEvseDataXML in OperatorEvseDataXML)
+                        {
 
-                        eMAId                    = eMA_Id. Parse((RemoteIdentificationXML != null)
-                                                                     ? RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
-                                                                     : QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
-                                                                );
+                            EVSEOperator_Id         OperatorId;
+                            String                  OperatorName;
+                            IEnumerable<XElement>   EVSEDataRecordsXML;
+
+                            if (!EVSEOperator_Id.TryParse(SingleOperatorEvseDataXML.ElementValue(OICPNS.EVSEData + "OperatorID", "No OperatorID XML tag provided!"), out OperatorId))
+                                throw new ApplicationException("Invalid OperatorID XML tag provided!");
+
+                            OperatorName        = SingleOperatorEvseDataXML.ElementValueOrDefault(OICPNS.EVSEData + "OperatorName",   "");
+                            EVSEDataRecordsXML  = SingleOperatorEvseDataXML.ElementsOrFail       (OICPNS.EVSEData + "EvseDataRecord", "No EvseDataRecord XML tags provided!");
+
+                            foreach (var EVSEDataRecordXML in EVSEDataRecordsXML)
+                            {
+
+								#region Data
+							
+                                String                  EVSEDataRecord_deltaType;
+                                String                  EVSEDataRecord_lastUpdate;
+                                EVSE_Id                 EVSEId;
+                                String                  ChargingStationId;
+                                String                  ChargingStationName;
+                                String                  EnChargingStationName;
+
+                                XElement                AddressXML;
+                                Address                 Address;
+                                Country                 CountryValue;
+                                String                  City;
+                                String                  Street;
+                                String                  PostalCode;
+                                String                  HouseNum;
+                                String                  Floor;
+                                String                  Region;
+                                String                  Timezone;
+
+                                XElement                GeoCoordinatesXML;
+                                GeoCoordinate           EVSEGeoCoordinate;
+                                XElement                EVSEGoogleXML;
+                                XElement                EVSEDecimalDegreeXML;
+                                Longitude               EVSELongitudeValue;
+                                Latitude                EVSELatitudeValue;
+                                XElement                EVSEDegreeMinuteSecondsXML;
+
+                                XElement                GeoChargingPointEntranceXML;
+                                GeoCoordinate           EntranceGeoCoordinate;
+                                XElement                EntranceGoogleXML;
+                                XElement                EntranceDecimalDegreeXML;
+                                Longitude               EntranceLongitudeValue;
+                                Latitude                EntranceLatitudeValue;
+                                XElement                EntranceDegreeMinuteSecondsXML;
+
+                                XElement                PlugsXML;
+                                IEnumerable<String>     Plugs;
+                                XElement                ChargingFacilitiesXML;
+                                IEnumerable<String>     ChargingFacilities;
+                                XElement                ChargingModesXML;
+                                IEnumerable<String>     ChargingModes;
+                                XElement                AuthenticationModesXML;
+                                IEnumerable<String>     AuthenticationModes;
+                                XElement                PaymentOptionsXML;
+                                IEnumerable<String>     PaymentOptions;
+
+                                String                  MaxCapacity;
+                                String                  Accessibility;
+                                String                  HotlinePhoneNum;
+                                String                  AdditionalInfo;
+                                String                  EnAdditionalInfo;
+                                String                  IsOpen24Hours;
+                                String                  OpeningTimes;
+                                String                  HubOperatorId;
+                                String                  ClearinghouseId;
+                                String                  IsHubjectCompatible;
+                                String                  DynamicInfoAvailable;
+
+								#endregion
+								
+                                EVSEDataRecord_deltaType   = EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"),  "");
+                                EVSEDataRecord_lastUpdate  = EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), "");
+
+                                if (!EVSE_Id.TryParse(EVSEDataRecordXML.ElementValue(OICPNS.EVSEData + "EvseId", "No EvseId XML tag provided!"), out EVSEId))
+                                    throw new ApplicationException("Invalid EvseId XML tag provided!");
+
+                                ChargingStationId          = EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData    + "ChargingStationId",     "");
+                                ChargingStationName        = EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData    + "ChargingStationName",   "");
+                                EnChargingStationName      = EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData    + "EnChargingStationName", "");
+
+                                #region Parse Address
+
+                                AddressXML                 = EVSEDataRecordXML.ElementOrFail        (OICPNS.EVSEData    + "Address",               "No Address XML tags provided!");
+
+                                if (!Country.TryParse(       AddressXML.       ElementValue         (OICPNS.CommonTypes + "Country",               "No Address Country XML tags provided!"), out CountryValue))
+                                    throw new ApplicationException("Invalid Address Country XML tag provided!");
+
+                                City                       = AddressXML.       ElementValue         (OICPNS.CommonTypes + "City",                  "No Address City XML tags provided!");
+                                Street                     = AddressXML.       ElementValue         (OICPNS.CommonTypes + "Street",                "No Address Street XML tags provided!");
+                                PostalCode                 = AddressXML.       ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode",            "");
+                                HouseNum                   = AddressXML.       ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum",              "");
+                                Floor                      = AddressXML.       ElementValueOrDefault(OICPNS.CommonTypes + "Floor",                 "");
+                                Region                     = AddressXML.       ElementValueOrDefault(OICPNS.CommonTypes + "Region",                "");
+                                Timezone                   = AddressXML.       ElementValueOrDefault(OICPNS.CommonTypes + "Timezone",              "");
+
+                                Address = new Address(Street, HouseNum, Floor, PostalCode, "", City, CountryValue);
+
+                                #endregion
+
+                                #region Parse GeoCoordinates
+
+                                GeoCoordinatesXML          = EVSEDataRecordXML.ElementOrFail        (OICPNS.EVSEData    + "GeoCoordinates",        "No GeoCoordinates XML tag provided!");
+                                EVSEGoogleXML                  = GeoCoordinatesXML.Element              (OICPNS.CommonTypes + "Google");
+                                EVSEDecimalDegreeXML           = GeoCoordinatesXML.Element              (OICPNS.CommonTypes + "DecimalDegree");
+                                EVSEDegreeMinuteSecondsXML     = GeoCoordinatesXML.Element              (OICPNS.CommonTypes + "DegreeMinuteSeconds");
+
+                                if (EVSEGoogleXML              == null &&
+                                    EVSEDecimalDegreeXML       == null &&
+                                    EVSEDegreeMinuteSecondsXML == null)
+                                    throw new ApplicationException("Invalid GeoCoordinates XML tag: Should at least include one of the following XML tags Google, DecimalDegree or DegreeMinuteSeconds!");
+
+                                if ((EVSEGoogleXML              != null && EVSEDecimalDegreeXML       != null) ||
+                                    (EVSEGoogleXML              != null && EVSEDegreeMinuteSecondsXML != null) ||
+                                    (EVSEDecimalDegreeXML       != null && EVSEDegreeMinuteSecondsXML != null))
+                                    throw new ApplicationException("Invalid GeoCoordinates XML tag: Should only include one of the following XML tags Google, DecimalDegree or DegreeMinuteSeconds!");
+
+                                if (EVSEGoogleXML != null)
+                                {
+                                    throw new NotImplementedException("GeoCoordinates Google XML parsing!");
+                                }
+
+                                if (EVSEDecimalDegreeXML != null)
+                                {
+
+                                    if (!Longitude.TryParse(EVSEDecimalDegreeXML.ElementValue(OICPNS.CommonTypes + "Longitude", "No GeoCoordinates DecimalDegree Longitude XML tag provided!"), out EVSELongitudeValue))
+                                        throw new ApplicationException("Invalid Longitude XML tag provided!");
+
+                                    if (!Latitude. TryParse(EVSEDecimalDegreeXML.ElementValue(OICPNS.CommonTypes + "Latitude",  "No GeoCoordinates DecimalDegree Latitude XML tag provided!"),  out EVSELatitudeValue))
+                                        throw new ApplicationException("Invalid Latitude XML tag provided!");
+
+                                    EVSEGeoCoordinate = new GeoCoordinate(EVSELatitudeValue, EVSELongitudeValue);
+
+                                }
+
+                                if (EVSEDegreeMinuteSecondsXML != null)
+                                {
+                                    throw new NotImplementedException("GeoCoordinates DegreeMinuteSeconds XML parsing!");
+                                }
+
+                                #endregion
+
+                                #region Parse GeoChargingPointEntrance
+
+                                GeoChargingPointEntranceXML    = EVSEDataRecordXML.Element              (OICPNS.EVSEData    + "GeoChargingPointEntrance");
+
+                                if (GeoChargingPointEntranceXML != null)
+                                {
+
+                                    EntranceGoogleXML              = GeoChargingPointEntranceXML.Element    (OICPNS.CommonTypes + "Google");
+                                    EntranceDecimalDegreeXML       = GeoChargingPointEntranceXML.Element    (OICPNS.CommonTypes + "DecimalDegree");
+                                    EntranceDegreeMinuteSecondsXML = GeoChargingPointEntranceXML.Element    (OICPNS.CommonTypes + "DegreeMinuteSeconds");
+
+                                    if (EntranceGoogleXML              == null &&
+                                        EntranceDecimalDegreeXML       == null &&
+                                        EntranceDegreeMinuteSecondsXML == null)
+                                        throw new ApplicationException("Invalid GeoChargingPointEntrance XML tag: Should at least include one of the following XML tags Google, DecimalDegree or DegreeMinuteSeconds!");
+
+                                    if ((EntranceGoogleXML             != null && EntranceDecimalDegreeXML       != null) ||
+                                        (EntranceGoogleXML             != null && EntranceDegreeMinuteSecondsXML != null) ||
+                                        (EntranceDecimalDegreeXML      != null && EntranceDegreeMinuteSecondsXML != null))
+                                        throw new ApplicationException("Invalid GeoChargingPointEntrance XML tag: Should only include one of the following XML tags Google, DecimalDegree or DegreeMinuteSeconds!");
+
+                                    if (EntranceGoogleXML != null)
+                                    {
+                                        throw new NotImplementedException("GeoChargingPointEntrance Google XML parsing!");
+                                    }
+
+                                    if (EntranceDecimalDegreeXML != null)
+                                    {
+
+                                        if (!Longitude.TryParse(EntranceDecimalDegreeXML.ElementValue(OICPNS.CommonTypes + "Longitude", "No GeoCoordinates DecimalDegree Longitude XML tag provided!"), out EntranceLongitudeValue))
+                                            throw new ApplicationException("Invalid Longitude XML tag provided!");
+
+                                        if (!Latitude. TryParse(EntranceDecimalDegreeXML.ElementValue(OICPNS.CommonTypes + "Latitude",  "No GeoCoordinates DecimalDegree Latitude XML tag provided!"),  out EntranceLatitudeValue))
+                                            throw new ApplicationException("Invalid Latitude XML tag provided!");
+
+                                        EntranceGeoCoordinate = new GeoCoordinate(EntranceLatitudeValue, EntranceLongitudeValue);
+
+                                    }
+
+                                    if (EntranceDegreeMinuteSecondsXML != null)
+                                    {
+                                        throw new NotImplementedException("GeoChargingPointEntrance DegreeMinuteSeconds XML parsing!");
+                                    }
+
+                                }
+
+                                #endregion
+
+                                #region Parse Plugs, ChargingFacilities, ChargingModes, AuthenticationModes, PaymentOptions
+
+                                PlugsXML                   = EVSEDataRecordXML.     ElementOrFail    (OICPNS.EVSEData + "Plugs",                "No Plugs XML tag provided!");
+                                Plugs                      = PlugsXML.              Elements         (OICPNS.EVSEData + "Plug").              SafeSelect(XMLTag => XMLTag.Value).ToArray();
+                                if (!Plugs.Any())
+                                    throw new ApplicationException("Invalid Plugs XML tag provided: At least one Plug XML tag is required!");
+
+                                ChargingFacilitiesXML      = EVSEDataRecordXML.     Element          (OICPNS.EVSEData + "ChargingFacilities");
+                                ChargingFacilities         = ChargingFacilitiesXML. ElementsOrDefault(OICPNS.EVSEData + "ChargingFacility").ToArray();
+
+                                ChargingModesXML           = EVSEDataRecordXML.     Element          (OICPNS.EVSEData + "ChargingModes");
+                                ChargingModes              = ChargingModesXML.      ElementsOrDefault(OICPNS.EVSEData + "ChargingMode").ToArray();
+
+                                AuthenticationModesXML     = EVSEDataRecordXML.     ElementOrFail    (OICPNS.EVSEData + "AuthenticationModes",  "No AuthenticationModes XML tag provided!");
+                                AuthenticationModes        = AuthenticationModesXML.Elements         (OICPNS.EVSEData + "AuthenticationMode").SafeSelect(XMLTag => XMLTag.Value).ToArray();
+                                if (!AuthenticationModes.Any())
+                                    throw new ApplicationException("Invalid AuthenticationModes XML tag provided: At least one AuthenticationMode XML tag is required!");
+
+                                PaymentOptionsXML          = EVSEDataRecordXML.     Element          (OICPNS.EVSEData + "PaymentOptions");
+                                PaymentOptions             = PaymentOptionsXML.     ElementsOrDefault(OICPNS.EVSEData + "PaymentOption").ToArray();
+
+                                #endregion
+
+                                #region MaxCapacity, Accessibility, HotlinePhoneNum, AdditionalInfo, EnAdditionalInfo, IsOpen24Hours, OpeningTime, HubOperatorID, ClearinghouseID, IsHubjectCompatible, DynamicInfoAvailable
+
+                                MaxCapacity                = EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "MaxCapacity",          "");
+                                Accessibility              = EVSEDataRecordXML.ElementValue         (OICPNS.EVSEData + "Accessibility",        "No Accessibility XML tag provided!");
+                                HotlinePhoneNum            = EVSEDataRecordXML.ElementValue         (OICPNS.EVSEData + "HotlinePhoneNum",      "No HotlinePhoneNum XML tag provided!");
+                                AdditionalInfo             = EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "AdditionalInfo",       "");
+                                EnAdditionalInfo           = EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "EnAdditionalInfo",     "");
+                                IsOpen24Hours              = EVSEDataRecordXML.ElementValue         (OICPNS.EVSEData + "IsOpen24Hours",        "No IsOpen24Hours XML tag provided!");
+                                OpeningTimes               = EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "OpeningTime",          "");
+                                HubOperatorId              = EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "HubOperatorID",        "");
+                                ClearinghouseId            = EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "ClearinghouseID",      "");
+                                IsHubjectCompatible        = EVSEDataRecordXML.ElementValue         (OICPNS.EVSEData + "IsHubjectCompatible",  "No IsHubjectCompatible XML tag provided!");
+                                DynamicInfoAvailable       = EVSEDataRecordXML.ElementValue         (OICPNS.EVSEData + "DynamicInfoAvailable", "No DynamicInfoAvailable XML tag provided!");
+
+                                #endregion
+
+                            }
+
+                        }
 
                     }
+
+					#endregion
+
+                    #region Catch exceptions...
+					
                     catch (Exception e)
                     {
-
-                        Log.Timestamp("Invalid RemoteStartXML: " + e.Message);
+					
+                        Log.Timestamp("Invalid PushEVSEData XML: " + e.Message);
 
                         return new HTTPResponseBuilder() {
 
@@ -393,50 +548,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                     }
 
-                    #endregion
+					#endregion
 
-                    var HubjectCode            = "";
-                    var HubjectDescription     = "";
-                    var HubjectAdditionalInfo  = "";
-
-                    var Response               = RequestRouter.RemoteStart(EVSEId, SessionId, ProviderId, eMAId, _EventTrackingId);
-                    Log.WriteLine(Response.ToString());
-
-                    switch (Response)
-                    {
-
-                        case RemoteStartResult.EVSE_AlreadyInUse:
-                            HubjectCode         = "602";
-                            HubjectDescription  = "EVSE is already in use!";
-                            break;
-
-                        case RemoteStartResult.SessionId_AlreadyInUse:
-                            HubjectCode         = "400";
-                            HubjectDescription  = "Session is invalid";
-                            break;
-
-                        case RemoteStartResult.EVSE_NotReachable:
-                            HubjectCode         = "501";
-                            HubjectDescription  = "Communication to EVSE failed!";
-                            break;
-
-                        case RemoteStartResult.Start_Timeout:
-                            HubjectCode         = "501";
-                            HubjectDescription  = "Communication to EVSE failed!";
-                            break;
-
-                        case RemoteStartResult.Success:
-                            HubjectCode         = "000";
-                            HubjectDescription  = "Ready to charge!";
-                            break;
-
-                        default:
-                            HubjectCode         = "000";
-                            break;
-
-                    }
-
-                    #region HTTPResponse
+					#region HTTPResponse
 
                     return new HTTPResponseBuilder() {
                         HTTPStatusCode  = HTTPStatusCode.OK,
@@ -446,13 +560,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                                  new XElement(OICPNS.CommonTypes + "Result", "true"),
 
                                                                  new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                     new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
-                                                                     new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
-                                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
-                                                                 ),
-
-                                                                 new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-                                                                 //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
+                                                                     new XElement(OICPNS.CommonTypes + "Code",            "000"),
+                                                                     new XElement(OICPNS.CommonTypes + "Description",     "Success"),
+                                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
+                                                                 )
 
                                                             )).ToString().
                                                                ToUTF8Bytes()
@@ -464,153 +575,26 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 #endregion
 
-                #region Process an OICP PullEVSEStatusById SOAP/XML/HTTP call
+                #region PullEVSEData
 
-                var PullEVSEStatusByIdXML = PullEVSEStatusByIdXMLs.FirstOrDefault();
-                if (PullEVSEStatusByIdXML != null)
+                var PullEVSEDataXML = PullEVSEDataXMLs.FirstOrDefault();
+                if (PullEVSEDataXML != null)
                 {
-
-                    #region Parse request parameters
-
-                    // ------------------------
-                    // Hubject/Intercharge App
-                    // ------------------------
-                    //
-                    // POST /RemoteStartStop HTTP/1.1
-                    // Content-type: text/xml;charset=utf-8
-                    // Soapaction: ""
-                    // Accept: text/xml, multipart/related
-                    // User-Agent: JAX-WS RI 2.2-hudson-752-
-                    // Cache-Control: no-cache
-                    // Pragma: no-cache
-                    // Host: 80.148.29.35:3001
-                    // Connection: keep-alive
-                    // Content-Length: 794
-                    //
-                    // <?xml version='1.0' encoding='UTF-8'?>
-                    // <isns:Envelope xmlns:isns    = "http://schemas.xmlsoap.org/soap/envelope/" 
-                    //                xmlns:sbp     = "http://www.inubit.com/eMobility/SBP"
-                    //                xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                xmlns:v1      = "http://www.hubject.com/b2b/services/mobileauthorization/v1"
-                    //                xmlns:wsc     = "http://www.hubject.com/b2b/services/authorization/v1">
-                    // 
-                    //   <isns:Body>
-                    //     <wsc:HubjectAuthorizeRemoteStop>
-                    //       <wsc:SessionID>94407ee4-0a88-1295-13fe-d5e439c3381c</wsc:SessionID>
-                    //       <wsc:ProviderID>ICE</wsc:ProviderID>
-                    //       <wsc:EVSEID>+49*822*4201*1</wsc:EVSEID>
-                    //     </wsc:HubjectAuthorizeRemoteStop>
-                    //   </isns:Body>
-                    //
-                    // </isns:Envelope>
-
-
-                    ChargingSession_Id  SessionId;
-                    EVSP_Id             ProviderId;
-                    EVSE_Id             EVSEId;
-
-                    try
-                    {
-
-                        SessionId   = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
-                        ProviderId  = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId      = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
-
-                    }
-                    catch (Exception e)
-                    {
-
-                        Log.Timestamp("Invalid RemoteStopXML: " + e.Message);
-
-                        return new HTTPResponseBuilder() {
-
-                                HTTPStatusCode  = HTTPStatusCode.OK,
-                                ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                                Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-
-                                                                         new XElement(OICPNS.CommonTypes + "Result", "false"),
-
-                                                                         new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                             new XElement(OICPNS.CommonTypes + "Code",           "022"),
-                                                                             new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
-                                                                             new XElement(OICPNS.CommonTypes + "AdditionalInfo", e.Message)
-                                                                         )
-
-                                                                     )).ToString().ToUTF8Bytes()
-
-                        };
-
-                    }
-
-                    #endregion
-
-                    var HubjectCode            = "";
-                    var HubjectDescription     = "";
-                    var HubjectAdditionalInfo  = "";
-
-                    var Response               = RequestRouter.RemoteStop(EVSEId, SessionId, ProviderId, _EventTrackingId);
-                    Log.WriteLine(Response.ToString());
-
-                    switch (Response)
-                    {
-
-                        //case RemoteStopResult.EVSE_AlreadyInUse:
-                        //    HubjectCode         = "602";
-                        //    HubjectDescription  = "EVSE is already in use!";
-                        //    break;
-
-                        //case RemoteStopResult.SessionId_AlreadyInUse:
-                        //    HubjectCode         = "400";
-                        //    HubjectDescription  = "Session is invalid";
-                        //    break;
-
-                        //case RemoteStopResult.EVSE_NotReachable:
-                        //    HubjectCode         = "501";
-                        //    HubjectDescription  = "Communication to EVSE failed!";
-                        //    break;
-
-                        //case RemoteStopResult.Start_Timeout:
-                        //    HubjectCode         = "501";
-                        //    HubjectDescription  = "Communication to EVSE failed!";
-                        //    break;
-
-                        case RemoteStopResult.Success:
-                            HubjectCode         = "000";
-                            HubjectDescription  = "Ready to charge!";
-                            break;
-
-                        default:
-                            HubjectCode         = "000";
-                            break;
-
-                    }
-
-                    var SOAPContent = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-
-                                                             new XElement(OICPNS.CommonTypes + "Result", "true"),
-
-                                                             new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                 new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
-                                                                 new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
-                                                                 new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
-                                                             ),
-
-                                                             new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-                            //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
-
-                                                         )).ToString();
-
-                    return new HTTPResponseBuilder() {
-                        HTTPStatusCode  = HTTPStatusCode.OK,
-                        ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAPContent.ToUTF8Bytes()
-                    };
-
                 }
 
                 #endregion
 
-                #region Process an OICP PushEVSEStatus SOAP/XML/HTTP call
+                #region GetEVSEById
+
+                var GetEVSEByIdXML = GetEVSEByIdXMLs.FirstOrDefault();
+                if (GetEVSEByIdXML != null)
+                {
+                }
+
+                #endregion
+
+
+                #region PushEVSEStatus
 
                 var PushEVSEStatusXML = PushEVSEStatusXMLs.FirstOrDefault();
                 if (PushEVSEStatusXML != null)
@@ -618,39 +602,53 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                     #region Parse request parameters
 
-                    ChargingSession_Id  SessionId;
-                    EVSP_Id             ProviderId;
-                    EVSE_Id             EVSEId;
-                    XElement            IdentificationXML;
-                    XElement            QRCodeIdentificationXML;
-                    XElement            RemoteIdentificationXML;
-                    eMA_Id              eMAId;
-
                     try
                     {
 
-                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
-                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        String                  ActionType;
+                        IEnumerable<XElement>   OperatorEvseStatusXML;
 
-                        IdentificationXML        =               RemoteStartXML.    ElementOrFail     (OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
-                        RemoteIdentificationXML  =               IdentificationXML. Element           (OICPNS.CommonTypes   + "RemoteIdentification");
-                        QRCodeIdentificationXML  =               IdentificationXML. Element           (OICPNS.CommonTypes   + "QRCodeIdentification");
+                        ActionType             = PushEVSEDataXML.ElementValue  (OICPNS.EVSEStatus + "ActionType",         "No ActionType XML tag provided!");
+                        OperatorEvseStatusXML  = PushEVSEDataXML.ElementsOrFail(OICPNS.EVSEStatus + "OperatorEvseStatus", "No OperatorEvseStatus XML tags provided!");
 
-                        if (RemoteIdentificationXML == null &&
-                            QRCodeIdentificationXML == null)
-                            throw new Exception("Neither a RemoteIdentificationXML, nor a QRCodeIdentificationXML was provided!");
+                        foreach (var SingleOperatorEvseStatusXML in OperatorEvseStatusXML)
+                        {
 
-                        eMAId                    = eMA_Id. Parse((RemoteIdentificationXML != null)
-                                                                     ? RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
-                                                                     : QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
-                                                                );
+                            EVSEOperator_Id         OperatorId;
+                            String                  OperatorName;
+                            IEnumerable<XElement>   EVSEStatusRecordsXML;
 
-                    }
+                            if (!EVSEOperator_Id.TryParse(SingleOperatorEvseDataXML.ElementValue(OICPNS.EVSEStatus + "OperatorID", "No OperatorID XML tag provided!"), out OperatorId))
+                                throw new ApplicationException("Invalid OperatorID XML tag provided!");
+
+                            OperatorName          = SingleOperatorEvseDataXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName",     "");
+                            EVSEStatusRecordsXML  = SingleOperatorEvseDataXML.ElementsOrFail       (OICPNS.EVSEStatus + "EvseStatusRecord", "No EvseStatusRecord XML tags provided!");
+
+                            foreach (var EVSEStatusRecordXML in EVSEStatusRecordsXML)
+                            {
+							
+								EVSE_Id  EVSEId;
+                                String   EVSEStatus;
+								
+                                if (!EVSE_Id.TryParse(EVSEStatusRecordXML.ElementValue(OICPNS.EVSEStatus + "EvseId", "No EvseId XML tag provided!"), out EVSEId))
+                                    throw new ApplicationException("Invalid EvseId XML tag provided!");
+
+								EVSEStatus = EVSEStatusRecordXML.ElementValue(OICPNS.EVSEStatus + "EvseStatus", "No EvseStatus XML tag provided!");
+							
+							}
+							
+						}
+
+					}
+					
+					#endregion
+					
+					#region Catch exceptions...
+					
                     catch (Exception e)
                     {
 
-                        Log.Timestamp("Invalid RemoteStartXML: " + e.Message);
+                        Log.Timestamp("Invalid PushEVSEStatus XML: " + e.Message);
 
                         return new HTTPResponseBuilder() {
 
@@ -673,47 +671,6 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     }
 
                     #endregion
-
-                    var HubjectCode            = "";
-                    var HubjectDescription     = "";
-                    var HubjectAdditionalInfo  = "";
-
-                    var Response               = RequestRouter.RemoteStart(EVSEId, SessionId, ProviderId, eMAId, _EventTrackingId);
-                    Log.WriteLine(Response.ToString());
-
-                    switch (Response)
-                    {
-
-                        case RemoteStartResult.EVSE_AlreadyInUse:
-                            HubjectCode         = "602";
-                            HubjectDescription  = "EVSE is already in use!";
-                            break;
-
-                        case RemoteStartResult.SessionId_AlreadyInUse:
-                            HubjectCode         = "400";
-                            HubjectDescription  = "Session is invalid";
-                            break;
-
-                        case RemoteStartResult.EVSE_NotReachable:
-                            HubjectCode         = "501";
-                            HubjectDescription  = "Communication to EVSE failed!";
-                            break;
-
-                        case RemoteStartResult.Start_Timeout:
-                            HubjectCode         = "501";
-                            HubjectDescription  = "Communication to EVSE failed!";
-                            break;
-
-                        case RemoteStartResult.Success:
-                            HubjectCode         = "000";
-                            HubjectDescription  = "Ready to charge!";
-                            break;
-
-                        default:
-                            HubjectCode         = "000";
-                            break;
-
-                    }
 
                     #region HTTPResponse
 
@@ -738,6 +695,26 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     };
 
                     #endregion
+
+                }
+
+                #endregion
+
+                #region PullEVSEStatus
+
+                var PullEVSEStatusXML = PullEVSEStatusXMLs.FirstOrDefault();
+                if (PullEVSEStatusXML != null)
+                {
+
+                }
+
+                #endregion
+
+                #region PullEVSEStatusById
+
+                var PullEVSEStatusByIdXML = PullEVSEStatusByIdXMLs.FirstOrDefault();
+                if (PullEVSEStatusByIdXML != null)
+                {
 
                 }
 
