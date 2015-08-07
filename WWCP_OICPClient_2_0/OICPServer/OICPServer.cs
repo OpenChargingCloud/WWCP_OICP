@@ -139,7 +139,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 //var _EventTrackingId = EventTracking_Id.New;
                 //Log.WriteLine("Event tracking: " + _EventTrackingId);
 
-                #region ParseXMLRequestBody... or fail!
+                #region Parse XML request body... or fail!
 
                 var XMLRequest = HTTPRequest.ParseXMLRequestBody();
                 if (XMLRequest.HasErrors)
@@ -164,24 +164,21 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 #endregion
 
-                //Log.WriteLine("");
-                //Log.Timestamp("Incoming XML request:");
-                //Log.WriteLine("XML payload:");
-                //Log.WriteLine(XMLRequest.Data.ToString());
-                //Log.WriteLine("");
-
-                #region Get and verify XML/SOAP request...
-
-                IEnumerable<XElement> PushEVSEDataXMLs;
-                IEnumerable<XElement> PullEVSEDataXMLs;
-                IEnumerable<XElement> GetEVSEByIdXMLs;
-
-                IEnumerable<XElement> PushEVSEStatusXMLs;
-                IEnumerable<XElement> PullEVSEStatusXMLs;
-                IEnumerable<XElement> PullEVSEStatusByIdXMLs;
+                //ToDo: Check SOAP header/body XML tags!
 
                 try
                 {
+
+                    #region Get and verify XML/SOAP request...
+
+                    IEnumerable<XElement> PushEVSEDataXMLs;
+                    IEnumerable<XElement> PullEVSEDataXMLs;
+                    IEnumerable<XElement> GetEVSEByIdXMLs;
+
+                    IEnumerable<XElement> PushEVSEStatusXMLs;
+                    IEnumerable<XElement> PullEVSEStatusXMLs;
+                    IEnumerable<XElement> PullEVSEStatusByIdXMLs;
+
 
                     // EvseDataBinding
                     PushEVSEDataXMLs        = XMLRequest.Data.Root.Descendants(OICPNS.EVSEData   + "eRoamingPushEvseData");
@@ -222,55 +219,15 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     if (PullEVSEStatusByIdXMLs. Count() > 1)
                         throw new Exception("Multiple PullEVSEStatusBy XML tags within a single request are not supported!");
 
-                }
-                catch (Exception e)
-                {
+                    #endregion
 
-                    Log.WriteLine("Invalid XML request!");
+                    #region PushEVSEData
 
-                    GetEventSource(Semantics.DebugLog).
-                        SubmitSubEvent("InvalidXMLRequest",
-                                       new JObject(
-                                           new JProperty("@context",      "http://emi3group.org/contexts/InvalidXMLRequest.jsonld"),
-                                           new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
-                                           new JProperty("Exception",     e.Message),
-                                           new JProperty("XMLRequest",    XMLRequest.ToString())
-                                       ).ToString().
-                                         Replace(Environment.NewLine, ""));
-
-                    return new HTTPResponseBuilder() {
-
-                        HTTPStatusCode = HTTPStatusCode.OK,
-                        ContentType    = HTTPContentType.XMLTEXT_UTF8,
-                        Content        = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-
-                                                                new XElement(OICPNS.CommonTypes + "Result", "false"),
-
-                                                                new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                    new XElement(OICPNS.CommonTypes + "Code",           "022"),
-                                                                    new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
-                                                                    new XElement(OICPNS.CommonTypes + "AdditionalInfo", e.Message)
-                                                                )
-
-                                                            )).ToString().ToUTF8Bytes()
-
-                    };
-
-                }
-
-                #endregion
-
-                #region PushEVSEData
-
-                var PushEVSEDataXML = PushEVSEDataXMLs.FirstOrDefault();
-                if (PushEVSEDataXML != null)
-                {
-
-                    #region Parse request parameters
-
-                    try
+                    var PushEVSEDataXML = PushEVSEDataXMLs.FirstOrDefault();
+                    if (PushEVSEDataXML != null)
                     {
+
+                        #region Parse request parameters
 
                         String                  ActionType;
                         IEnumerable<XElement>   OperatorEvseDataXML;
@@ -294,8 +251,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                             foreach (var EVSEDataRecordXML in EVSEDataRecordsXML)
                             {
 
-								#region Data
-							
+                                #region Data
+
                                 String                  EVSEDataRecord_deltaType;
                                 String                  EVSEDataRecord_lastUpdate;
                                 EVSE_Id                 EVSEId;
@@ -353,8 +310,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                 String                  IsHubjectCompatible;
                                 String                  DynamicInfoAvailable;
 
-								#endregion
-								
+                                #endregion
+
                                 EVSEDataRecord_deltaType   = EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"),  "");
                                 EVSEDataRecord_lastUpdate  = EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), "");
 
@@ -517,99 +474,65 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                         }
 
-                    }
+                        #endregion
 
-					#endregion
-
-                    #region Catch exceptions...
-					
-                    catch (Exception e)
-                    {
-					
-                        Log.Timestamp("Invalid PushEVSEData XML: " + e.Message);
+                        #region HTTPResponse
 
                         return new HTTPResponseBuilder() {
+                            HTTPStatusCode  = HTTPStatusCode.OK,
+                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                            Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                HTTPStatusCode  = HTTPStatusCode.OK,
-                                ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                                Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                                                                     new XElement(OICPNS.CommonTypes + "Result", "true"),
 
-                                                                         new XElement(OICPNS.CommonTypes + "Result", "false"),
+                                                                     new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                         new XElement(OICPNS.CommonTypes + "Code",            "000"),
+                                                                         new XElement(OICPNS.CommonTypes + "Description",     "Success"),
+                                                                         new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
+                                                                     )
 
-                                                                         new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                             new XElement(OICPNS.CommonTypes + "Code",           "022"),
-                                                                             new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
-                                                                             new XElement(OICPNS.CommonTypes + "AdditionalInfo",  e.Message)
-                                                                         )
-
-                                                                     )).ToString().ToUTF8Bytes()
-
+                                                                )).ToString().
+                                                                   ToUTF8Bytes()
                         };
 
+                        #endregion
+
                     }
-
-					#endregion
-
-					#region HTTPResponse
-
-                    return new HTTPResponseBuilder() {
-                        HTTPStatusCode  = HTTPStatusCode.OK,
-                        ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-
-                                                                 new XElement(OICPNS.CommonTypes + "Result", "true"),
-
-                                                                 new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                     new XElement(OICPNS.CommonTypes + "Code",            "000"),
-                                                                     new XElement(OICPNS.CommonTypes + "Description",     "Success"),
-                                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
-                                                                 )
-
-                                                            )).ToString().
-                                                               ToUTF8Bytes()
-                    };
 
                     #endregion
 
-                }
+                    #region PullEVSEData
 
-                #endregion
-
-                #region PullEVSEData
-
-                var PullEVSEDataXML = PullEVSEDataXMLs.FirstOrDefault();
-                if (PullEVSEDataXML != null)
-                {
-                }
-
-                #endregion
-
-                #region GetEVSEById
-
-                var GetEVSEByIdXML = GetEVSEByIdXMLs.FirstOrDefault();
-                if (GetEVSEByIdXML != null)
-                {
-                }
-
-                #endregion
-
-
-                #region PushEVSEStatus
-
-                var PushEVSEStatusXML = PushEVSEStatusXMLs.FirstOrDefault();
-                if (PushEVSEStatusXML != null)
-                {
-
-                    #region Parse request parameters
-
-                    try
+                    var PullEVSEDataXML = PullEVSEDataXMLs.FirstOrDefault();
+                    if (PullEVSEDataXML != null)
                     {
+                    }
+
+                    #endregion
+
+                    #region GetEVSEById
+
+                    var GetEVSEByIdXML = GetEVSEByIdXMLs.FirstOrDefault();
+                    if (GetEVSEByIdXML != null)
+                    {
+                    }
+
+                    #endregion
+
+
+                    #region PushEVSEStatus
+
+                    var PushEVSEStatusXML = PushEVSEStatusXMLs.FirstOrDefault();
+                    if (PushEVSEStatusXML != null)
+                    {
+
+                        #region Parse request parameters
 
                         String                  ActionType;
                         IEnumerable<XElement>   OperatorEvseStatusXML;
 
-                        ActionType             = PushEVSEDataXML.ElementValue  (OICPNS.EVSEStatus + "ActionType",         "No ActionType XML tag provided!");
-                        OperatorEvseStatusXML  = PushEVSEDataXML.ElementsOrFail(OICPNS.EVSEStatus + "OperatorEvseStatus", "No OperatorEvseStatus XML tags provided!");
+                        ActionType             = PushEVSEStatusXML.ElementValue  (OICPNS.EVSEStatus + "ActionType",         "No ActionType XML tag provided!");
+                        OperatorEvseStatusXML  = PushEVSEStatusXML.ElementsOrFail(OICPNS.EVSEStatus + "OperatorEvseStatus", "No OperatorEvseStatus XML tags provided!");
 
                         foreach (var SingleOperatorEvseStatusXML in OperatorEvseStatusXML)
                         {
@@ -618,76 +541,91 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                             String                  OperatorName;
                             IEnumerable<XElement>   EVSEStatusRecordsXML;
 
-                            if (!EVSEOperator_Id.TryParse(SingleOperatorEvseDataXML.ElementValue(OICPNS.EVSEStatus + "OperatorID", "No OperatorID XML tag provided!"), out OperatorId))
+                            if (!EVSEOperator_Id.TryParse(SingleOperatorEvseStatusXML.ElementValue(OICPNS.EVSEStatus + "OperatorID", "No OperatorID XML tag provided!"), out OperatorId))
                                 throw new ApplicationException("Invalid OperatorID XML tag provided!");
 
-                            OperatorName          = SingleOperatorEvseDataXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName",     "");
-                            EVSEStatusRecordsXML  = SingleOperatorEvseDataXML.ElementsOrFail       (OICPNS.EVSEStatus + "EvseStatusRecord", "No EvseStatusRecord XML tags provided!");
+                            OperatorName          = SingleOperatorEvseStatusXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName",     "");
+                            EVSEStatusRecordsXML  = SingleOperatorEvseStatusXML.ElementsOrFail       (OICPNS.EVSEStatus + "EvseStatusRecord", "No EvseStatusRecord XML tags provided!");
 
                             foreach (var EVSEStatusRecordXML in EVSEStatusRecordsXML)
                             {
-							
-								EVSE_Id  EVSEId;
+
+                                EVSE_Id  EVSEId;
                                 String   EVSEStatus;
-								
+                                
                                 if (!EVSE_Id.TryParse(EVSEStatusRecordXML.ElementValue(OICPNS.EVSEStatus + "EvseId", "No EvseId XML tag provided!"), out EVSEId))
                                     throw new ApplicationException("Invalid EvseId XML tag provided!");
 
-								EVSEStatus = EVSEStatusRecordXML.ElementValue(OICPNS.EVSEStatus + "EvseStatus", "No EvseStatus XML tag provided!");
-							
-							}
-							
-						}
+                                EVSEStatus = EVSEStatusRecordXML.ElementValue(OICPNS.EVSEStatus + "EvseStatus", "No EvseStatus XML tag provided!");
 
-					}
-					
-					#endregion
-					
-					#region Catch exceptions...
-					
-                    catch (Exception e)
-                    {
+                            }
 
-                        Log.Timestamp("Invalid PushEVSEStatus XML: " + e.Message);
+                        }
+
+                        #endregion
+
+                        #region HTTPResponse
 
                         return new HTTPResponseBuilder() {
+                            HTTPStatusCode  = HTTPStatusCode.OK,
+                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                            Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                HTTPStatusCode  = HTTPStatusCode.OK,
-                                ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                                Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                                                                     new XElement(OICPNS.CommonTypes + "Result", "true"),
 
-                                                                         new XElement(OICPNS.CommonTypes + "Result", "false"),
+                                                                     new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                         new XElement(OICPNS.CommonTypes + "Code",            "000"),
+                                                                         new XElement(OICPNS.CommonTypes + "Description",     "Success"),
+                                                                         new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
+                                                                     )
 
-                                                                         new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                             new XElement(OICPNS.CommonTypes + "Code",           "022"),
-                                                                             new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
-                                                                             new XElement(OICPNS.CommonTypes + "AdditionalInfo",  e.Message)
-                                                                         )
-
-                                                                     )).ToString().ToUTF8Bytes()
-
+                                                                )).ToString().
+                                                                   ToUTF8Bytes()
                         };
+
+                        #endregion
 
                     }
 
                     #endregion
 
-                    #region HTTPResponse
+                    #region PullEVSEStatus
+
+                    var PullEVSEStatusXML = PullEVSEStatusXMLs.FirstOrDefault();
+                    if (PullEVSEStatusXML != null)
+                    {
+
+                    }
+
+                    #endregion
+
+                    #region PullEVSEStatusById
+
+                    var PullEVSEStatusByIdXML = PullEVSEStatusByIdXMLs.FirstOrDefault();
+                    if (PullEVSEStatusByIdXML != null)
+                    {
+
+                    }
+
+                    #endregion
+
+
+                    #region HTTPResponse: Unkown XML/SOAP message
 
                     return new HTTPResponseBuilder() {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                                                 new XElement(OICPNS.CommonTypes + "Result", "true"),
+                                                                 new XElement(OICPNS.CommonTypes + "Result", "false"),
 
                                                                  new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                     new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
-                                                                     new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
-                                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+                                                                     new XElement(OICPNS.CommonTypes + "Code",            ""),
+                                                                     new XElement(OICPNS.CommonTypes + "Description",     "Unkown XML/SOAP message"),
+                                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
                                                                  ),
 
-                                                                 new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
+                                                                 new XElement(OICPNS.CommonTypes + "SessionID", "")
                                                                  //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
 
                                                             )).ToString().
@@ -698,50 +636,43 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 }
 
-                #endregion
+                #region Catch exceptions...
 
-                #region PullEVSEStatus
-
-                var PullEVSEStatusXML = PullEVSEStatusXMLs.FirstOrDefault();
-                if (PullEVSEStatusXML != null)
+                catch (Exception e)
                 {
 
+                    Log.WriteLine("Invalid XML request!");
+
+                    GetEventSource(Semantics.DebugLog).
+                        SubmitSubEvent("InvalidXMLRequest",
+                                       new JObject(
+                                           new JProperty("@context",      "http://emi3group.org/contexts/InvalidXMLRequest.jsonld"),
+                                           new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
+                                           new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
+                                           new JProperty("Exception",     e.Message),
+                                           new JProperty("XMLRequest",    XMLRequest.ToString())
+                                       ).ToString().
+                                         Replace(Environment.NewLine, ""));
+
+                    return new HTTPResponseBuilder() {
+
+                        HTTPStatusCode = HTTPStatusCode.OK,
+                        ContentType    = HTTPContentType.XMLTEXT_UTF8,
+                        Content        = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+
+                                                                new XElement(OICPNS.CommonTypes + "Result", "false"),
+
+                                                                new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                    new XElement(OICPNS.CommonTypes + "Code",           "022"),
+                                                                    new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
+                                                                    new XElement(OICPNS.CommonTypes + "AdditionalInfo", e.Message)
+                                                                )
+
+                                                            )).ToString().ToUTF8Bytes()
+
+                    };
+
                 }
-
-                #endregion
-
-                #region PullEVSEStatusById
-
-                var PullEVSEStatusByIdXML = PullEVSEStatusByIdXMLs.FirstOrDefault();
-                if (PullEVSEStatusByIdXML != null)
-                {
-
-                }
-
-                #endregion
-
-
-                #region HTTPResponse: Unkown XML/SOAP message
-
-                return new HTTPResponseBuilder() {
-                    HTTPStatusCode  = HTTPStatusCode.OK,
-                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                    Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-
-                                                             new XElement(OICPNS.CommonTypes + "Result", "false"),
-
-                                                             new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                 new XElement(OICPNS.CommonTypes + "Code",            ""),
-                                                                 new XElement(OICPNS.CommonTypes + "Description",     "Unkown XML/SOAP message"),
-                                                                 new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
-                                                             ),
-
-                                                             new XElement(OICPNS.CommonTypes + "SessionID", "")
-                                                             //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
-
-                                                        )).ToString().
-                                                           ToUTF8Bytes()
-                };
 
                 #endregion
 
@@ -756,6 +687,11 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                    HTTPContentType.XMLTEXT_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 
+            this.AddMethodCallback(HTTPMethod.GET,
+                                   "/RNs/{RoamingNetworkId}",
+                                   HTTPContentType.XML_UTF8,
+                                   HTTPDelegate: OICPServerDelegate);
+
             #endregion
 
             #region Register SOAP-XML Request via POST
@@ -763,6 +699,11 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             this.AddMethodCallback(HTTPMethod.POST,
                                    "/RNs/{RoamingNetwork}",
                                    HTTPContentType.XMLTEXT_UTF8,
+                                   HTTPDelegate: OICPServerDelegate);
+
+            this.AddMethodCallback(HTTPMethod.POST,
+                                   "/RNs/{RoamingNetwork}",
+                                   HTTPContentType.XML_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 
             #endregion
