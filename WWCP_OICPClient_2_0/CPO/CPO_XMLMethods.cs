@@ -1278,12 +1278,12 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                            )
                                  ),
 
-                                 (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart)   : null,  // "2014-02-01T15:45:00+02:00"
-                                 (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd)     : null,
+                                 (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
+                                 (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
                                  new XElement(OICPNS.Authorization + "SessionStart", SessionStart),
                                  new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd),
-                                 (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  MeterValueStart) : null,
-                                 (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    MeterValueEnd)   : null,
+                                 (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  MeterValueStart.Value.ToString(CultureInfo.InvariantCulture.NumberFormat)) : null,
+                                 (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    MeterValueEnd.  Value.ToString(CultureInfo.InvariantCulture.NumberFormat)) : null,
 
                                  _MeterValuesInBetween.Length > 0 ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
                                                                         _MeterValuesInBetween.

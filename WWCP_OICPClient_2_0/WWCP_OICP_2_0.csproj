@@ -48,6 +48,7 @@
     <Compile Include="CPO\CPOUpstreamService.cs" />
     <Compile Include="EMP\EMP_XMLMethods.cs" />
     <Compile Include="EMP\EMPUpstreamService.cs" />
+    <Compile Include="Helpers\GeoCoordinatesResponseFormatTypes.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
     <Compile Include="Helpers\OICPMapper.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Helpers\OICPNS.cs" />
     <Compile Include="Helpers\SOAP.cs" />
     <Compile Include="OICPDownstreamServer.cs" />
+    <Compile Include="EVSEDataRecord.cs" />
     <Compile Include="OICPImporter.cs" />
     <Compile Include="OICPServer\OICPServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

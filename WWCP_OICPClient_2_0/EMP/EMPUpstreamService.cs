@@ -87,8 +87,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public Task<HTTPResponse<XElement>>
 
-            GetEVSEByIdRequest(EVSE_Id   EVSEId,
-                               TimeSpan? QueryTimeout = null)
+            GetEVSEByIdRequest(EVSE_Id    EVSEId,
+                               TimeSpan?  QueryTimeout  = null)
 
         {
 
@@ -107,10 +107,15 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                              "eRoamingEvseById",
                                              QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                             OnSuccess: XMLData =>
-                                                 new HTTPResponse<XElement>(
+                                             OnSuccess: XMLData => {
+
+
+
+                                                 return new HTTPResponse<XElement>(
                                                      XMLData.HttpResponse,
-                                                     XMLData.Content),
+                                                     XMLData.Content);
+
+                                             },
 
                                              OnSOAPFault: Fault =>
                                                  new HTTPResponse<XElement>(
@@ -142,24 +147,25 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PullEVSEDataRequest(ProviderId, LastCall = null, GeoCoordinate = null, DistanceKM = 0, QueryTimeout = null)
+        #region PullEVSEDataRequest(ProviderId, GeoCoordinate = null, DistanceKM = 0, LastCall = null, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task requesting all EVSE data.
         /// The request might either have none, a 'LastCall' or 'GeoCoordinate+DistanceKM' parameter.
         /// </summary>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
+        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
-        /// <param name="GeoCoordinate">An optional geo coordinate as search center.</param>
-        /// <param name="DistanceKM">An optional geo coordinate as search radius.</param>
+        /// <param name="GeoCoordinatesResponseFormat">An optional response format for the geo coordinates [default: DecimalDegree]</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public Task<HTTPResponse<IEnumerable<XElement>>>
 
             PullEVSEDataRequest(EVSP_Id        ProviderId,
-                                DateTime?      LastCall       = null,
-                                GeoCoordinate  GeoCoordinate  = null,
-                                UInt64         DistanceKM     = 0,
-                                TimeSpan?      QueryTimeout   = null)
+                                GeoCoordinate  SearchCenter  = null,
+                                UInt64         DistanceKM    = 0,
+                                DateTime?      LastCall      = null,
+                                TimeSpan?      QueryTimeout  = null)
 
         {
 
@@ -175,7 +181,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                 {
 
                     return _OICPClient.Query(EMP_XMLMethods.PullEVSEDataRequestXML(ProviderId,
-                                                                                   GeoCoordinate,
+                                                                                   SearchCenter,
                                                                                    DistanceKM,
                                                                                    LastCall),
                                              "eRoamingPullEVSEData",
