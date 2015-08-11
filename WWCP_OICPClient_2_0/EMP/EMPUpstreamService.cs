@@ -97,7 +97,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
-                                                        "service-qa.hubject.com",
+                                                        HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingEvseData_V2.0",
                                                         UserAgent,
                                                         DNSClient))
@@ -109,23 +109,23 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                                              OnSuccess: XMLData =>
 
-                                             #region Documentation
+                                                 #region Documentation
 
-                                             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                                             //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-                                             //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                                             //   <soapenv:Header/>
-                                             //   <soapenv:Body>
-                                             //      <v2:eRoamingEvseDataRecord deltaType="?" lastUpdate="?">
-                                             //          [...]
-                                             //      </v2:eRoamingEvseDataRecord>
-                                             //    </soapenv:Body>
-                                             // </soapenv:Envelope>
+                                                 // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                 //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+                                                 //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                 //   <soapenv:Header/>
+                                                 //   <soapenv:Body>
+                                                 //      <v2:eRoamingEvseDataRecord deltaType="?" lastUpdate="?">
+                                                 //          [...]
+                                                 //      </v2:eRoamingEvseDataRecord>
+                                                 //    </soapenv:Body>
+                                                 // </soapenv:Envelope>
 
-                                             #endregion
+                                                 #endregion
 
-                                             new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
-                                                                              EMP_XMLMethods.ParseEVSEDataRecord(XMLData.Content)),
+                                                 new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
+                                                                                  EMP_XMLMethods.ParseEVSEDataRecord(XMLData.Content)),
 
                                              OnSOAPFault: Fault =>
                                                  new HTTPResponse<EVSEDataRecord>(
@@ -183,7 +183,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
-                                                        "service-qa.hubject.com",
+                                                        HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingEvseData_V2.0",
                                                         UserAgent,
                                                         DNSClient))
@@ -305,7 +305,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
-                                                        "service-qa.hubject.com",
+                                                        HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                         UserAgent,
                                                         DNSClient))
