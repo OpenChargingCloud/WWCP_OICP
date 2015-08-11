@@ -37,9 +37,54 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
     public static class XMLMethods
     {
 
-        #region ParseEVSEDataRecord(EVSEDataRecordXML)
+        #region ParseGeoCoordinatesXML(GeoCoordinatesXML)
 
-        public static EVSEDataRecord ParseEVSEDataRecord(XElement  EVSEDataRecordXML)
+        public static GeoCoordinate ParseGeoCoordinatesXML(XElement GeoCoordinatesXML)
+        {
+
+            var EVSEGoogleXML              = GeoCoordinatesXML.Element(OICPNS.CommonTypes + "Google");
+            var EVSEDecimalDegreeXML       = GeoCoordinatesXML.Element(OICPNS.CommonTypes + "DecimalDegree");
+            var EVSEDegreeMinuteSecondsXML = GeoCoordinatesXML.Element(OICPNS.CommonTypes + "DegreeMinuteSeconds");
+
+            if ((EVSEGoogleXML        != null && EVSEDecimalDegreeXML       != null) ||
+                (EVSEGoogleXML        != null && EVSEDegreeMinuteSecondsXML != null) ||
+                (EVSEDecimalDegreeXML != null && EVSEDegreeMinuteSecondsXML != null))
+                throw new ApplicationException("Invalid GeoCoordinates XML tag: Should only include one of the following XML tags Google, DecimalDegree or DegreeMinuteSeconds!");
+
+            if (EVSEGoogleXML != null)
+            {
+                throw new NotImplementedException("GeoCoordinates Google XML parsing!");
+            }
+
+            if (EVSEDecimalDegreeXML != null)
+            {
+
+                Longitude LongitudeValue;
+                if (!Longitude.TryParse(EVSEDecimalDegreeXML.ElementValueOrFail(OICPNS.CommonTypes + "Longitude", "No GeoCoordinates DecimalDegree Longitude XML tag provided!"), out LongitudeValue))
+                    throw new ApplicationException("Invalid Longitude XML tag provided!");
+
+                Latitude LatitudeValue;
+                if (!Latitude. TryParse(EVSEDecimalDegreeXML.ElementValueOrFail(OICPNS.CommonTypes + "Latitude",  "No GeoCoordinates DecimalDegree Latitude XML tag provided!"),  out LatitudeValue))
+                    throw new ApplicationException("Invalid Latitude XML tag provided!");
+
+                return new GeoCoordinate(LatitudeValue, LongitudeValue);
+
+            }
+
+            if (EVSEDegreeMinuteSecondsXML != null)
+            {
+                throw new NotImplementedException("GeoCoordinates DegreeMinuteSeconds XML parsing!");
+            }
+
+            throw new ApplicationException("Invalid GeoCoordinates XML tag: Should at least include one of the following XML tags Google, DecimalDegree or DegreeMinuteSeconds!");
+
+        }
+
+        #endregion
+
+        #region ParseEVSEDataRecordXML(EVSEDataRecordXML)
+
+        public static EVSEDataRecord ParseEVSEDataRecordXML(XElement  EVSEDataRecordXML)
         {
 
             #region Documentation
@@ -163,35 +208,31 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
 
-            var EVSEDataRecord = new EVSEDataRecord(EVSE_Id.Parse(EVSEDataRecordXML.ElementValue(OICPNS.EVSEData + "EvseId", "Missing EvseId!")));
+            var EVSEDataRecord = new EVSEDataRecord(EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!")));
 
             #region XML Attribute: DeltaType
 
-            EVSEDataRecord.DeltaType  = EVSEDataRecordXML.Attribute("deltaType").Value;
+            EVSEDataRecord.DeltaType  = EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"),  "");
 
             #endregion
 
             #region XML Attribute: LastUpdate
 
             DateTime _LastUpdate;
-            if (DateTime.TryParse(EVSEDataRecordXML.Attribute("lastUpdate").Value, out _LastUpdate))
-                EVSEDataRecord.LastUpdate  = _LastUpdate;
+            if (DateTime.TryParse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), ""), out _LastUpdate))
+                EVSEDataRecord.LastUpdate = _LastUpdate;
 
             #endregion
 
 
-            #region ChargingStationId
+            #region ChargingStationId, ChargingStationName
 
-            EVSEDataRecord.ChargingStationId  = EVSEDataRecordXML.
-                                                    ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationId", "").
-                                                    Trim();
-
-            #endregion
-
-            #region ChargingStationName
+            EVSEDataRecord.ChargingStationId      = EVSEDataRecordXML.
+                                                        ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationId",     "").
+                                                        Trim();
 
             EVSEDataRecord.ChargingStationName    = EVSEDataRecordXML.
-                                                        ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationName", "").
+                                                        ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationName",   "").
                                                         Trim();
 
             EVSEDataRecord.EnChargingStationName  = EVSEDataRecordXML.
@@ -200,11 +241,11 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             #endregion
 
-            #region Get address of the EVSE...
+            #region Address
 
             var AddressXML   = EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "Address", "Missing 'Address'-XML tag!");
 
-            var _CountryTXT  = AddressXML.ElementValue(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
+            var _CountryTXT  = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
 
             Country _Country;
             if (!Country.TryParseAlpha3Code(_CountryTXT, out _Country))
@@ -218,12 +259,12 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             }
 
-            EVSEDataRecord.Address = new Address(AddressXML.ElementValue         (OICPNS.CommonTypes + "Street",     "Missing 'Street'-XML tag!").Trim(),
+            EVSEDataRecord.Address = new Address(AddressXML.ElementValueOrFail   (OICPNS.CommonTypes + "Street",     "Missing 'Street'-XML tag!").Trim(),
                                                  AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum",   "").Trim(),
                                                  AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor",      "").Trim(),
                                                  AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
                                                  "",
-                                                 AddressXML.ElementValue         (OICPNS.CommonTypes + "City",       "Missing 'City'-XML tag!").Trim(),
+                                                 AddressXML.ElementValueOrFail         (OICPNS.CommonTypes + "City",       "Missing 'City'-XML tag!").Trim(),
                                                  _Country);
 
             // Currently not used OICP address information!
@@ -234,20 +275,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             #region GeoCoordinate
 
-            var GeoCoordinatesXML = EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData    + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!");
-            var DecimalDegreeXML  = GeoCoordinatesXML.ElementOrFail(OICPNS.CommonTypes + "DecimalDegree",  "Missing 'DecimalDegree'-XML tag!");
-            var LatitudeString    = DecimalDegreeXML. ElementValue (OICPNS.CommonTypes + "Latitude",       "Missing 'Latitude'-XML tag!");
-            var LongitudeString   = DecimalDegreeXML. ElementValue (OICPNS.CommonTypes + "Longitude",      "Missing 'Longitude'-XML tag!");
-
-            Latitude LatitudeValue;
-            if (!Latitude.TryParse(LatitudeString,   out LatitudeValue))
-                throw new Exception("Invalid 'latitude'-XML tag value for 'GeoCoordinate'!");
-
-            Longitude LongitudeValue;
-            if (!Longitude.TryParse(LongitudeString, out LongitudeValue))
-                throw new Exception("Invalid 'longitude'-XML tag value for 'GeoCoordinate'!");
-
-            EVSEDataRecord.GeoCoordinate  = new GeoCoordinate(LatitudeValue, LongitudeValue);
+            EVSEDataRecord.GeoCoordinates = XMLMethods.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "No GeoCoordinates XML tag provided!"));
 
             #endregion
 
@@ -256,7 +284,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             EVSEDataRecord.Plugs = new ReactiveSet<PlugTypes>(EVSEDataRecordXML.
                                                                   ElementOrFail(OICPNS.EVSEData + "Plugs", "Missing 'Plugs'-XML tag!").
                                                                   Elements     (OICPNS.EVSEData + "Plug").
-                                                                  Select(xml => OICPMapper.AsPlugType(xml.Value.Trim())));
+                                                                  Select       (xml => OICPMapper.AsPlugType(xml.Value.Trim())));
 
             #endregion
 
@@ -315,7 +343,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #region Accessibility
 
             EVSEDataRecord.Accessibility = OICPMapper.AsAccessibilityType(EVSEDataRecordXML.
-                                                                              ElementValue(OICPNS.EVSEData + "Accessibility", "Missing 'Accessibility'-XML tag!").
+                                                                              ElementValueOrFail(OICPNS.EVSEData + "Accessibility", "Missing 'Accessibility'-XML tag!").
                                                                               Trim());
 
             #endregion
@@ -323,7 +351,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #region HotlinePhoneNum
 
             EVSEDataRecord.HotlinePhoneNum = EVSEDataRecordXML.
-                                                 ElementValue(OICPNS.EVSEData + "HotlinePhoneNum", "Missing 'HotlinePhoneNum '-XML tag!").
+                                                 ElementValueOrFail(OICPNS.EVSEData + "HotlinePhoneNum", "Missing 'HotlinePhoneNum '-XML tag!").
                                                  Trim();
 
             #endregion
@@ -345,29 +373,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             var GeoChargingPointEntranceXML = EVSEDataRecordXML.Element(OICPNS.CommonTypes + "GeoChargingPointEntrance");
             if (GeoChargingPointEntranceXML != null)
-            {
-
-                var Entr_DecimalDegreeXML  = GeoChargingPointEntranceXML.ElementOrFail     (OICPNS.CommonTypes + "DecimalDegree", "Missing 'DecimalDegree'-XML tag for 'GeoChargingPointEntrance'!");
-                var Entr_LatitudeString    = Entr_DecimalDegreeXML.      ElementValue(OICPNS.CommonTypes + "Latitude",      "Missing 'Latitude'-XML tag for 'GeoChargingPointEntrance'!");
-                var Entr_LongitudeString   = Entr_DecimalDegreeXML.      ElementValue(OICPNS.CommonTypes + "Longitude",     "Missing 'Longitude'-XML tag for 'GeoChargingPointEntrance'!");
-
-                Latitude Entr_LatitudeValue;
-                if (!Latitude.TryParse(Entr_LatitudeString, out Entr_LatitudeValue))
-                    throw new Exception("Invalid 'Latitude'-XML tag value for 'GeoChargingPointEntrance'!");
-
-                Longitude Entr_LongitudeValue;
-                if (!Longitude.TryParse(Entr_LongitudeString, out Entr_LongitudeValue))
-                    throw new Exception("Invalid 'Longitude'-XML tag value for 'GeoChargingPointEntrance'!");
-
-                EVSEDataRecord.GeoChargingPointEntrance = new GeoCoordinate(Entr_LatitudeValue, Entr_LongitudeValue);
-
-            }
+                EVSEDataRecord.GeoChargingPointEntrance = XMLMethods.ParseGeoCoordinatesXML(GeoChargingPointEntranceXML);
 
             #endregion
 
             #region IsOpen24Hours / OpeningTime
 
-            if (EVSEDataRecordXML.ElementValue(OICPNS.EVSEData + "IsOpen24Hours", "Missing 'IsOpen24Hours'-XML tag!") == "true")
+            if (EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsOpen24Hours", "Missing 'IsOpen24Hours'-XML tag!") == "true")
             {
                 EVSEDataRecord.OpeningTime = OpeningTime.Is24Hours;
             }
@@ -392,7 +404,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                              ElementValueOrDefault(OICPNS.EVSEData + "HubOperatorID", String.Empty).
                                              Trim(),
                                          out _HubOperatorId))
-                EVSEDataRecord.HubOperatorID = _HubOperatorId;
+                EVSEDataRecord.HubOperatorId = _HubOperatorId;
 
             #endregion
 
@@ -403,14 +415,14 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                 ElementValueOrDefault(OICPNS.EVSEData + "ClearinghouseID", String.Empty).
                                                 Trim(),
                                                 out _ClearinghouseID))
-                EVSEDataRecord.ClearinghouseID = _ClearinghouseID;
+                EVSEDataRecord.ClearinghouseId = _ClearinghouseID;
 
             #endregion
 
             #region IsHubjectCompatible
 
             EVSEDataRecord.IsHubjectCompatible  = EVSEDataRecordXML.
-                                                      ElementValue(OICPNS.EVSEData + "IsHubjectCompatible", "Missing 'IsHubjectCompatible '-XML tag!").
+                                                      ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible", "Missing 'IsHubjectCompatible '-XML tag!").
                                                       Trim() == "true";
 
             #endregion
@@ -418,7 +430,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #region DynamicInfoAvailable
 
             EVSEDataRecord.DynamicInfoAvailable  = EVSEDataRecordXML.
-                                                       ElementValue(OICPNS.EVSEData + "DynamicInfoAvailable", "Missing 'DynamicInfoAvailable '-XML tag!").
+                                                       ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable", "Missing 'DynamicInfoAvailable '-XML tag!").
                                                        Trim() != "false";
 
             #endregion
@@ -435,16 +447,49 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
+        #region ParseOperatorEVSEDataXML(OperatorEVSEDataXML)
 
-        public static OperatorEvseData ParseOperatorEVSEData(XElement OperatorEVSEDataXML)
+        public static OperatorEvseData ParseOperatorEVSEDataXML(XElement OperatorEVSEDataXML)
         {
 
-            return new OperatorEvseData(EVSEOperator_Id.Parse(OperatorEVSEDataXML.ElementValue         (OICPNS.EVSEData + "OperatorID",   "Missing OperatorID!")),
-                                        OperatorEVSEDataXML.ElementValueOrDefault(OICPNS.EVSEData + "OperatorName", ""),
-                                        OperatorEVSEDataXML.Elements             (OICPNS.EVSEData + "EvseDataRecord").
-                                            Select(XML => XMLMethods.ParseEVSEDataRecord(XML)));
+            #region Initial checks
+
+            if (OperatorEVSEDataXML == null)
+                return null;
+
+            #endregion
+
+            return new OperatorEvseData(EVSEOperator_Id.Parse(OperatorEVSEDataXML.ElementValueOrFail   (OICPNS.EVSEData + "OperatorID",   "Missing OperatorID!")),
+                                                              OperatorEVSEDataXML.ElementValueOrDefault(OICPNS.EVSEData + "OperatorName", ""),
+                                                              OperatorEVSEDataXML.Elements             (OICPNS.EVSEData + "EvseDataRecord").
+                                                                  SafeSelect(XML => XMLMethods.ParseEVSEDataRecordXML(XML)));
 
         }
+
+        #endregion
+
+        #region ParseOperatorEVSEDataXML(OperatorEVSEDataXMLs)
+
+        public static IEnumerable<OperatorEvseData> ParseOperatorEVSEDataXML(IEnumerable<XElement> OperatorEVSEDataXMLs)
+        {
+
+            #region Initial checks
+
+            if (OperatorEVSEDataXMLs == null)
+                return new OperatorEvseData[0];
+
+            var _OperatorEVSEDataXMLs = OperatorEVSEDataXMLs.ToArray();
+
+            if (_OperatorEVSEDataXMLs.Length == 0)
+                return new OperatorEvseData[0];
+
+            #endregion
+
+            return OperatorEVSEDataXMLs.Select(OperatorEVSEDataXML => ParseOperatorEVSEDataXML(OperatorEVSEDataXML));
+
+        }
+
+        #endregion
 
     }
 

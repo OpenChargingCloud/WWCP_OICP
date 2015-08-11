@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                  #endregion
 
                                                  new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
-                                                                                  XMLMethods.ParseEVSEDataRecord(XMLData.Content)),
+                                                                                  XMLMethods.ParseEVSEDataRecordXML(XMLData.Content)),
 
                                              OnSOAPFault: Fault =>
                                                  new HTTPResponse<EVSEDataRecord>(
@@ -274,7 +274,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                                                                         XMLData.Content.
                                                                                                             Element (OICPNS.EVSEData + "EvseData").
                                                                                                             Elements(OICPNS.EVSEData + "OperatorEvseData").
-                                                                                                            Select  (XML => XMLMethods.ParseOperatorEVSEData(XML)));
+                                                                                                            Select  (XML => XMLMethods.ParseOperatorEVSEDataXML(XML)));
 
                                              },
 
@@ -419,7 +419,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                                     Element (OICPNS.EVSEStatus + "EvseStatusRecords").
                                                                     Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
                                                                     Select(v => new KeyValuePair<EVSE_Id, OICPEVSEStatus>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
-                                                                                                                         (OICPEVSEStatus) Enum.Parse(typeof(OICPEVSEStatus), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value)));
+                                                                                                                         (OICPEVSEStatus) Enum.Parse(typeof(OICPEVSEStatus), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))));
 
                                              },
 

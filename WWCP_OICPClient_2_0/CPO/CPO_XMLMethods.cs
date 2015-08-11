@@ -91,7 +91,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                               new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId   != null ? OperatorId   : datagroup.Key.Id).ToFormat(IdFormatType.OLD)),
                                               new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName != null ? OperatorName : datagroup.Key.Name.First().Text)),
 
-                                              datagroup.SelectMany(v => v.ToEvseDataRecords()).ToArray()
+                                              datagroup.SelectMany(evses => evses.ToEvseDataRecordXML()).ToArray()
 
                                           )).ToArray()
                                       ));
@@ -312,6 +312,37 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
         {
 
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <v2:eRoamingPushEvseData>
+            //
+            //          <v2:ActionType>?</v2:ActionType>
+            //
+            //          <v2:OperatorEvseData>
+            //
+            //             <v2:OperatorID>?</v2:OperatorID>
+            //
+            //             <!--Optional:-->
+            //             <v2:OperatorName>?</v2:OperatorName>
+            //
+            //             <!--Zero or more repetitions:-->
+            //             <v2:EvseDataRecord deltaType="?" lastUpdate="?">
+            //                [...]
+            //             </v2:EvseDataRecord>
+            //
+            //          </v2:OperatorEvseData>
+            //       </v2:eRoamingPushEvseData>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
+
             #region Initial checks
 
             if (EVSEs == null)
@@ -332,7 +363,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                           new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName != null ? OperatorName : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.FirstOrDefault().Text)),
                                           _EVSEs.
                                               Where(evse => IncludeEVSEs(evse.Id)).
-                                              ToEvseDataRecords().
+                                              ToEvseDataRecordXML().
                                               ToArray()
 
                                       )
@@ -342,175 +373,587 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region (internal) ToEvseDataRecords(this EVSEs)
+        #region (internal) ToEvseDataRecords(this EVSE)
 
-        internal static IEnumerable<XElement> ToEvseDataRecords(this IEnumerable<EVSE> EVSEs)
+        internal static XElement ToEvseDataRecordXML(this EVSE EVSE)
         {
 
-            return EVSEs.Select(EVSE => {
+            #region Documentation
 
-                try
-                {
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
 
-                    return new XElement(OICPNS.EVSEData + "EvseDataRecord",
+            // <v2:EvseDataRecord deltaType="?" lastUpdate="?">
+            //
+            //    <v2:EvseId>?</v2:EvseId>
+            //
+            //    <!--Optional:-->
+            //    <v2:ChargingStationId>?</v2:ChargingStationId>
+            //    <!--Optional:-->
+            //    <v2:ChargingStationName>?</v2:ChargingStationName>
+            //    <!--Optional:-->
+            //    <v2:EnChargingStationName>?</v2:EnChargingStationName>
+            //
+            //    <v2:Address>
+            //       <v21:Country>?</v21:Country>
+            //       <v21:City>?</v21:City>
+            //       <v21:Street>?</v21:Street>
+            //       <!--Optional:-->
+            //       <v21:PostalCode>?</v21:PostalCode>
+            //       <!--Optional:-->
+            //       <v21:HouseNum>?</v21:HouseNum>
+            //       <!--Optional:-->
+            //       <v21:Floor>?</v21:Floor>
+            //       <!--Optional:-->
+            //       <v21:Region>?</v21:Region>
+            //       <!--Optional:-->
+            //       <v21:TimeZone>?</v21:TimeZone>
+            //    </v2:Address>
+            //
+            //    <v2:GeoCoordinates>
+            //       <!--You have a CHOICE of the next 3 items at this level-->
+            //       <v21:Google>
+            //          <v21:Coordinates>?</v21:Coordinates>
+            //       </v21:Google>
+            //       <v21:DecimalDegree>
+            //          <v21:Longitude>?</v21:Longitude>
+            //          <v21:Latitude>?</v21:Latitude>
+            //       </v21:DecimalDegree>
+            //       <v21:DegreeMinuteSeconds>
+            //          <v21:Longitude>?</v21:Longitude>
+            //          <v21:Latitude>?</v21:Latitude>
+            //       </v21:DegreeMinuteSeconds>
+            //    </v2:GeoCoordinates>
+            //
+            //    <v2:Plugs>
+            //       <!--1 or more repetitions:-->
+            //       <v2:Plug>?</v2:Plug>
+            //    </v2:Plugs>
+            //
+            //    <!--Optional:-->
+            //    <v2:ChargingFacilities>
+            //       <!--1 or more repetitions:-->
+            //       <v2:ChargingFacility>?</v2:ChargingFacility>
+            //    </v2:ChargingFacilities>
+            //
+            //    <!--Optional:-->
+            //    <v2:ChargingModes>
+            //       <!--1 or more repetitions:-->
+            //       <v2:ChargingMode>?</v2:ChargingMode>
+            //    </v2:ChargingModes>
+            //
+            //    <v2:AuthenticationModes>
+            //       <!--1 or more repetitions:-->
+            //       <v2:AuthenticationMode>?</v2:AuthenticationMode>
+            //    </v2:AuthenticationModes>
+            //
+            //    <!--Optional:-->
+            //    <v2:MaxCapacity>?</v2:MaxCapacity>
+            //
+            //    <!--Optional:-->
+            //    <v2:PaymentOptions>
+            //       <!--1 or more repetitions:-->
+            //       <v2:PaymentOption>?</v2:PaymentOption>
+            //    </v2:PaymentOptions>
+            //
+            //    <v2:Accessibility>?</v2:Accessibility>
+            //    <v2:HotlinePhoneNum>?</v2:HotlinePhoneNum>
 
-                        new XElement(OICPNS.EVSEData + "EvseId",                EVSE.Id.ToFormat(IdFormatType.OLD)),
-                        new XElement(OICPNS.EVSEData + "ChargingStationId",     EVSE.ChargingStation.Id.ToString()),
-                        new XElement(OICPNS.EVSEData + "ChargingStationName",   EVSE.ChargingStation.ChargingPool.Name[Languages.de].SubstringMax(50)),
-                        new XElement(OICPNS.EVSEData + "EnChargingStationName", EVSE.ChargingStation.ChargingPool.Name[Languages.en].SubstringMax(50)),
+            //    <!--Optional:-->
+            //    <v2:AdditionalInfo>?</v2:AdditionalInfo>
+            //
+            //    <!--Optional:-->
+            //    <v2:EnAdditionalInfo>?</v2:EnAdditionalInfo>
+            //
+            //    <!--Optional:-->
+            //    <v2:GeoChargingPointEntrance>
+            //       <!--You have a CHOICE of the next 3 items at this level-->
+            //       <v21:Google>
+            //          <v21:Coordinates>?</v21:Coordinates>
+            //       </v21:Google>
+            //       <v21:DecimalDegree>
+            //          <v21:Longitude>?</v21:Longitude>
+            //          <v21:Latitude>?</v21:Latitude>
+            //       </v21:DecimalDegree>
+            //       <v21:DegreeMinuteSeconds>
+            //          <v21:Longitude>?</v21:Longitude>
+            //          <v21:Latitude>?</v21:Latitude>
+            //       </v21:DegreeMinuteSeconds>
+            //    </v2:GeoChargingPointEntrance>
+            //
+            //    <v2:IsOpen24Hours>?</v2:IsOpen24Hours>
+            //    <!--Optional:-->
+            //    <v2:OpeningTime>?</v2:OpeningTime>
+            //
+            //    <!--Optional:-->
+            //    <v2:HubOperatorID>?</v2:HubOperatorID>
+            //
+            //    <!--Optional:-->
+            //    <v2:ClearinghouseID>?</v2:ClearinghouseID>
+            //
+            //    <v2:IsHubjectCompatible>?</v2:IsHubjectCompatible>
+            //    <v2:DynamicInfoAvailable>?</v2:DynamicInfoAvailable>
+            //
+            // </v2:EvseDataRecord>
 
-                        new XElement(OICPNS.EVSEData + "Address",
-                            new XElement(OICPNS.CommonTypes + "Country",        EVSE.ChargingStation.Address.Country.Alpha3Code),
-                            new XElement(OICPNS.CommonTypes + "City",           EVSE.ChargingStation.Address.City),
-                            new XElement(OICPNS.CommonTypes + "Street",         EVSE.ChargingStation.Address.Street), // OICPv2.0 requires at least 5 characters!
-                            new XElement(OICPNS.CommonTypes + "PostalCode",     EVSE.ChargingStation.Address.PostalCode),
-                            new XElement(OICPNS.CommonTypes + "HouseNum",       EVSE.ChargingStation.Address.HouseNumber),
-                            new XElement(OICPNS.CommonTypes + "Floor",          EVSE.ChargingStation.Address.FloorLevel)
-                        // <!--Optional:-->
-                        // <v11:Region>?</v11:Region>
-                        // <!--Optional:-->
-                        // <v11:TimeZone>?</v11:TimeZone>
-                        ),
+            #endregion
 
-                        new XElement(OICPNS.EVSEData + "GeoCoordinates",
-                            new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                                new XElement(OICPNS.CommonTypes + "Longitude",  EVSE.ChargingStation.GeoLocation.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-                                new XElement(OICPNS.CommonTypes + "Latitude",   EVSE.ChargingStation.GeoLocation.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
-                            )
-                        ),
+            #region Inital checks
 
-                        new XElement(OICPNS.EVSEData + "Plugs",
-                            EVSE.SocketOutlets.Select(Outlet =>
-                               new XElement(OICPNS.EVSEData + "Plug", OICPMapper.AsString(Outlet)))
-                        ),
+            if (EVSE == null)
+                throw new ArgumentNullException("EVSE", "The given parameter must not be null!");
 
-                        new XElement(OICPNS.EVSEData + "ChargingFacilities",
-                            EVSE.SocketOutlets.Select(Outlet =>
-                            {
+            #endregion
 
-                                var ChargingFacility = "Unspecified";
+            return new XElement(OICPNS.EVSEData + "EvseDataRecord",
 
-                                if (Outlet.Plug == PlugTypes.Type2Outlet ||
-                                    Outlet.Plug == PlugTypes.Type2Connector_CableAttached)// Mennekes_Type_2
-                                {
+                new XElement(OICPNS.EVSEData + "EvseId",                EVSE.Id.ToFormat(IdFormatType.OLD)),
+                new XElement(OICPNS.EVSEData + "ChargingStationId",     EVSE.ChargingStation.Id.ToString()),
+                new XElement(OICPNS.EVSEData + "ChargingStationName",   EVSE.ChargingStation.ChargingPool.Name[Languages.de].SubstringMax(50)),
+                new XElement(OICPNS.EVSEData + "EnChargingStationName", EVSE.ChargingStation.ChargingPool.Name[Languages.en].SubstringMax(50)),
 
-                                    if (EVSE.MaxPower <= 44.0)
-                                        ChargingFacility = "380 - 480V, 3-Phase ≤63A";
+                new XElement(OICPNS.EVSEData + "Address",
+                    new XElement(OICPNS.CommonTypes + "Country",        EVSE.ChargingStation.Address.Country.Alpha3Code),
+                    new XElement(OICPNS.CommonTypes + "City",           EVSE.ChargingStation.Address.City),
+                    new XElement(OICPNS.CommonTypes + "Street",         EVSE.ChargingStation.Address.Street), // OICPv2.0 requires at least 5 characters!
+                    new XElement(OICPNS.CommonTypes + "PostalCode",     EVSE.ChargingStation.Address.PostalCode),
+                    new XElement(OICPNS.CommonTypes + "HouseNum",       EVSE.ChargingStation.Address.HouseNumber),
+                    new XElement(OICPNS.CommonTypes + "Floor",          EVSE.ChargingStation.Address.FloorLevel)
+                // <!--Optional:-->
+                // <v11:Region>?</v11:Region>
+                // <!--Optional:-->
+                // <v11:TimeZone>?</v11:TimeZone>
+                ),
 
-                                    if (EVSE.MaxPower <= 22.0)
-                                        ChargingFacility = "380 - 480V, 3-Phase ≤32A";
+                new XElement(OICPNS.EVSEData + "GeoCoordinates",
+                    new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
+                        new XElement(OICPNS.CommonTypes + "Longitude",  EVSE.ChargingStation.GeoLocation.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                        new XElement(OICPNS.CommonTypes + "Latitude",   EVSE.ChargingStation.GeoLocation.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                    )
+                ),
 
-                                    if (EVSE.MaxPower <= 11.0)
-                                        ChargingFacility = "380 - 480V, 3-Phase ≤16A";
+                new XElement(OICPNS.EVSEData + "Plugs",
+                    EVSE.SocketOutlets.Select(Outlet =>
+                       new XElement(OICPNS.EVSEData + "Plug", OICPMapper.AsString(Outlet)))
+                ),
 
-                                }
+                new XElement(OICPNS.EVSEData + "ChargingFacilities",
+                    EVSE.SocketOutlets.Select(Outlet =>
+                    {
 
-                                else if (Outlet.Plug == PlugTypes.TypeFSchuko)
-                                {
+                        var ChargingFacility = "Unspecified";
 
-                                    if (EVSE.MaxPower > 7.2)
-                                        ChargingFacility = "200 - 240V, 1-Phase >32A";
+                        if (Outlet.Plug == PlugTypes.Type2Outlet ||
+                            Outlet.Plug == PlugTypes.Type2Connector_CableAttached)// Mennekes_Type_2
+                        {
 
-                                    if (EVSE.MaxPower <= 7.2)
-                                        ChargingFacility = "200 - 240V, 1-Phase ≤32A";
+                            if (EVSE.MaxPower <= 44.0)
+                                ChargingFacility = "380 - 480V, 3-Phase ≤63A";
 
-                                    if (EVSE.MaxPower <= 3.6)
-                                        ChargingFacility = "200 - 240V, 1-Phase ≤16A";
+                            if (EVSE.MaxPower <= 22.0)
+                                ChargingFacility = "380 - 480V, 3-Phase ≤32A";
 
-                                    if (EVSE.MaxPower <= 2.25)
-                                        ChargingFacility = "200 - 240V, 1-Phase ≤10A";
+                            if (EVSE.MaxPower <= 11.0)
+                                ChargingFacility = "380 - 480V, 3-Phase ≤16A";
 
-                                }
+                        }
 
-                                // 100 - 120V, 1-Phase ≤10A
-                                // 100 - 120V, 1-Phase ≤16A
-                                // 100 - 120V, 1-Phase ≤32A
+                        else if (Outlet.Plug == PlugTypes.TypeFSchuko)
+                        {
 
-                                // Battery exchange
-                                // Unspecified
-                                // DC Charging ≤20kW
-                                // DC Charging ≤50kW
-                                // DC Charging >50kW
+                            if (EVSE.MaxPower > 7.2)
+                                ChargingFacility = "200 - 240V, 1-Phase >32A";
 
-                                return new XElement(OICPNS.EVSEData + "ChargingFacility", ChargingFacility);
+                            if (EVSE.MaxPower <= 7.2)
+                                ChargingFacility = "200 - 240V, 1-Phase ≤32A";
 
-                            })
+                            if (EVSE.MaxPower <= 3.6)
+                                ChargingFacility = "200 - 240V, 1-Phase ≤16A";
 
-                        ),
+                            if (EVSE.MaxPower <= 2.25)
+                                ChargingFacility = "200 - 240V, 1-Phase ≤10A";
 
-                        // <!--Optional:-->
-                        // <v1:ChargingModes>
-                        //     <!--1 or more repetitions:-->
-                        // <v1:ChargingMode>?</v1:ChargingMode>
+                        }
 
-                        // Mode_1      IEC 61851-1
-                        // Mode_2      IEC 61851-1
-                        // Mode_3      IEC 61851-1
-                        // Mode_4      IEC 61851-1
-                        // CHAdeMO     CHAdeMo Specification
+                        // 100 - 120V, 1-Phase ≤10A
+                        // 100 - 120V, 1-Phase ≤16A
+                        // 100 - 120V, 1-Phase ≤32A
 
-                        // </v1:ChargingModes>
+                        // Battery exchange
+                        // Unspecified
+                        // DC Charging ≤20kW
+                        // DC Charging ≤50kW
+                        // DC Charging >50kW
 
-                        new XElement(OICPNS.EVSEData + "AuthenticationModes",
-                            new XElement(OICPNS.EVSEData + "AuthenticationMode", "NFC RFID Classic"),
-                            new XElement(OICPNS.EVSEData + "AuthenticationMode", "NFC RFID DESFire"),
-                            new XElement(OICPNS.EVSEData + "AuthenticationMode", "REMOTE"),
-                        //new XElement(NS.OICPv1_2EVSEData + "AuthenticationMode", "PnC"),
-                            new XElement(OICPNS.EVSEData + "AuthenticationMode", "Direct Payment")
-                        // EVSE.SocketOutlets.Select(Outlet =>
-                        //    new XElement(NS.OICPv1_2EVSEData + "AuthenticationMode", "Unspecified"))//Outlet.Plug.ToString()))
-                        ),
+                        return new XElement(OICPNS.EVSEData + "ChargingFacility", ChargingFacility);
 
-                        // <!--Optional:-->
-                        //               <v1:MaxCapacity>?</v1:MaxCapacity>
+                    })
 
-                        new XElement(OICPNS.EVSEData + "PaymentOptions",
-                            new XElement(OICPNS.EVSEData + "PaymentOption", "Contract")
-                        // ??????????????????????? SMS!
-                        ),
+                ),
 
-                        new XElement(OICPNS.EVSEData + "Accessibility", "Free publicly accessible"),
-                        new XElement(OICPNS.EVSEData + "HotlinePhoneNum", "+8000670000"),  // RegEx: \+[0-9]{5,15}
+                // <!--Optional:-->
+                // <v1:ChargingModes>
+                //     <!--1 or more repetitions:-->
+                // <v1:ChargingMode>?</v1:ChargingMode>
 
-                        // <!--Optional:-->
-                        // <v1:AdditionalInfo>?</v1:AdditionalInfo>
+                // Mode_1      IEC 61851-1
+                // Mode_2      IEC 61851-1
+                // Mode_3      IEC 61851-1
+                // Mode_4      IEC 61851-1
+                // CHAdeMO     CHAdeMo Specification
 
-                        // <!--Optional:-->
-                        // <v1:EnAdditionalInfo>?</v1:EnAdditionalInfo>
+                // </v1:ChargingModes>
 
-                        // <!--Optional:-->
-                        // <v1:GeoChargingPointEntrance>
-                        //    <v11:DecimalDegree>
-                        //       <v11:Longitude>?</v11:Longitude>
-                        //       <v11:Latitude>?</v11:Latitude>
-                        //    </v11:DecimalDegree>
-                        // </v1:GeoChargingPointEntrance>
+                new XElement(OICPNS.EVSEData + "AuthenticationModes",
+                    new XElement(OICPNS.EVSEData + "AuthenticationMode", "NFC RFID Classic"),
+                    new XElement(OICPNS.EVSEData + "AuthenticationMode", "NFC RFID DESFire"),
+                    new XElement(OICPNS.EVSEData + "AuthenticationMode", "REMOTE"),
+                //new XElement(NS.OICPv1_2EVSEData + "AuthenticationMode", "PnC"),
+                    new XElement(OICPNS.EVSEData + "AuthenticationMode", "Direct Payment")
+                // EVSE.SocketOutlets.Select(Outlet =>
+                //    new XElement(NS.OICPv1_2EVSEData + "AuthenticationMode", "Unspecified"))//Outlet.Plug.ToString()))
+                ),
 
-                        new XElement(OICPNS.EVSEData + "IsOpen24Hours",         EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours ? "true" : "false"),
+                // <!--Optional:-->
+                //               <v1:MaxCapacity>?</v1:MaxCapacity>
 
-                        EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours
-                            ? null
-                            : new XElement(OICPNS.EVSEData + "OpeningTime",     EVSE.ChargingStation.ChargingPool.OpeningTime.Text),
+                new XElement(OICPNS.EVSEData + "PaymentOptions",
+                    new XElement(OICPNS.EVSEData + "PaymentOption", "Contract")
+                // ??????????????????????? SMS!
+                ),
 
-                        // <!--Optional:-->
-                        // <v1:HubOperatorID>?</v1:HubOperatorID>
+                new XElement(OICPNS.EVSEData + "Accessibility", "Free publicly accessible"),
+                new XElement(OICPNS.EVSEData + "HotlinePhoneNum", "+8000670000"),  // RegEx: \+[0-9]{5,15}
 
-                        // <!--Optional:-->
-                        // <v1:ClearinghouseID>?</v1:ClearinghouseID>
+                // <!--Optional:-->
+                // <v1:AdditionalInfo>?</v1:AdditionalInfo>
 
-                        new XElement(OICPNS.EVSEData + "IsHubjectCompatible",   EVSE.ChargingStation.IsHubjectCompatible ? "true" : "false"),
-                        new XElement(OICPNS.EVSEData + "DynamicInfoAvailable",  EVSE.ChargingStation.DynamicInfoAvailable ? "true" : "false")
+                // <!--Optional:-->
+                // <v1:EnAdditionalInfo>?</v1:EnAdditionalInfo>
 
-                    );
+                // <!--Optional:-->
+                // <v1:GeoChargingPointEntrance>
+                //    <v11:DecimalDegree>
+                //       <v11:Longitude>?</v11:Longitude>
+                //       <v11:Latitude>?</v11:Latitude>
+                //    </v11:DecimalDegree>
+                // </v1:GeoChargingPointEntrance>
 
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("Exception in CPOMethods: " + e.Message);
-                    return null;
-                }
+                new XElement(OICPNS.EVSEData + "IsOpen24Hours",         EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours ? "true" : "false"),
 
-            });
+                EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours
+                    ? null
+                    : new XElement(OICPNS.EVSEData + "OpeningTime",     EVSE.ChargingStation.ChargingPool.OpeningTime.Text),
+
+                // <!--Optional:-->
+                // <v1:HubOperatorID>?</v1:HubOperatorID>
+
+                // <!--Optional:-->
+                // <v1:ClearinghouseID>?</v1:ClearinghouseID>
+
+                new XElement(OICPNS.EVSEData + "IsHubjectCompatible",   EVSE.ChargingStation.IsHubjectCompatible ? "true" : "false"),
+                new XElement(OICPNS.EVSEData + "DynamicInfoAvailable",  EVSE.ChargingStation.DynamicInfoAvailable ? "true" : "false")
+
+            );
+
+        }
+
+        #endregion
+
+        #region (internal) ToEvseDataRecords(this EVSEs)
+
+        internal static IEnumerable<XElement> ToEvseDataRecordXML(this IEnumerable<EVSE> EVSEs)
+        {
+
+            #region Inital checks
+
+            if (EVSEs == null)
+                return new XElement[0];
+
+            var _EVSEs = EVSEs.ToArray();
+
+            if (_EVSEs.Length == 0)
+                return new XElement[0];
+
+            #endregion
+
+            return _EVSEs.Select(EVSE => EVSE.ToEvseDataRecordXML());
+
+        }
+
+        #endregion
+
+        #region (internal) ToXML(this EVSEDataRecord)
+
+        internal static XElement ToXML(this EVSEDataRecord EVSEDataRecord)
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+
+            // <v2:EvseDataRecord deltaType="?" lastUpdate="?">
+            //
+            //    <v2:EvseId>?</v2:EvseId>
+            //
+            //    <!--Optional:-->
+            //    <v2:ChargingStationId>?</v2:ChargingStationId>
+            //    <!--Optional:-->
+            //    <v2:ChargingStationName>?</v2:ChargingStationName>
+            //    <!--Optional:-->
+            //    <v2:EnChargingStationName>?</v2:EnChargingStationName>
+            //
+            //    <v2:Address>
+            //       <v21:Country>?</v21:Country>
+            //       <v21:City>?</v21:City>
+            //       <v21:Street>?</v21:Street>
+            //       <!--Optional:-->
+            //       <v21:PostalCode>?</v21:PostalCode>
+            //       <!--Optional:-->
+            //       <v21:HouseNum>?</v21:HouseNum>
+            //       <!--Optional:-->
+            //       <v21:Floor>?</v21:Floor>
+            //       <!--Optional:-->
+            //       <v21:Region>?</v21:Region>
+            //       <!--Optional:-->
+            //       <v21:TimeZone>?</v21:TimeZone>
+            //    </v2:Address>
+            //
+            //    <v2:GeoCoordinates>
+            //       <!--You have a CHOICE of the next 3 items at this level-->
+            //       <v21:Google>
+            //          <v21:Coordinates>?</v21:Coordinates>
+            //       </v21:Google>
+            //       <v21:DecimalDegree>
+            //          <v21:Longitude>?</v21:Longitude>
+            //          <v21:Latitude>?</v21:Latitude>
+            //       </v21:DecimalDegree>
+            //       <v21:DegreeMinuteSeconds>
+            //          <v21:Longitude>?</v21:Longitude>
+            //          <v21:Latitude>?</v21:Latitude>
+            //       </v21:DegreeMinuteSeconds>
+            //    </v2:GeoCoordinates>
+            //
+            //    <v2:Plugs>
+            //       <!--1 or more repetitions:-->
+            //       <v2:Plug>?</v2:Plug>
+            //    </v2:Plugs>
+            //
+            //    <!--Optional:-->
+            //    <v2:ChargingFacilities>
+            //       <!--1 or more repetitions:-->
+            //       <v2:ChargingFacility>?</v2:ChargingFacility>
+            //    </v2:ChargingFacilities>
+            //
+            //    <!--Optional:-->
+            //    <v2:ChargingModes>
+            //       <!--1 or more repetitions:-->
+            //       <v2:ChargingMode>?</v2:ChargingMode>
+            //    </v2:ChargingModes>
+            //
+            //    <v2:AuthenticationModes>
+            //       <!--1 or more repetitions:-->
+            //       <v2:AuthenticationMode>?</v2:AuthenticationMode>
+            //    </v2:AuthenticationModes>
+            //
+            //    <!--Optional:-->
+            //    <v2:MaxCapacity>?</v2:MaxCapacity>
+            //
+            //    <!--Optional:-->
+            //    <v2:PaymentOptions>
+            //       <!--1 or more repetitions:-->
+            //       <v2:PaymentOption>?</v2:PaymentOption>
+            //    </v2:PaymentOptions>
+            //
+            //    <v2:Accessibility>?</v2:Accessibility>
+            //    <v2:HotlinePhoneNum>?</v2:HotlinePhoneNum>
+
+            //    <!--Optional:-->
+            //    <v2:AdditionalInfo>?</v2:AdditionalInfo>
+            //
+            //    <!--Optional:-->
+            //    <v2:EnAdditionalInfo>?</v2:EnAdditionalInfo>
+            //
+            //    <!--Optional:-->
+            //    <v2:GeoChargingPointEntrance>
+            //       <!--You have a CHOICE of the next 3 items at this level-->
+            //       <v21:Google>
+            //          <v21:Coordinates>?</v21:Coordinates>
+            //       </v21:Google>
+            //       <v21:DecimalDegree>
+            //          <v21:Longitude>?</v21:Longitude>
+            //          <v21:Latitude>?</v21:Latitude>
+            //       </v21:DecimalDegree>
+            //       <v21:DegreeMinuteSeconds>
+            //          <v21:Longitude>?</v21:Longitude>
+            //          <v21:Latitude>?</v21:Latitude>
+            //       </v21:DegreeMinuteSeconds>
+            //    </v2:GeoChargingPointEntrance>
+            //
+            //    <v2:IsOpen24Hours>?</v2:IsOpen24Hours>
+            //    <!--Optional:-->
+            //    <v2:OpeningTime>?</v2:OpeningTime>
+            //
+            //    <!--Optional:-->
+            //    <v2:HubOperatorID>?</v2:HubOperatorID>
+            //
+            //    <!--Optional:-->
+            //    <v2:ClearinghouseID>?</v2:ClearinghouseID>
+            //
+            //    <v2:IsHubjectCompatible>?</v2:IsHubjectCompatible>
+            //    <v2:DynamicInfoAvailable>?</v2:DynamicInfoAvailable>
+            //
+            // </v2:EvseDataRecord>
+
+            #endregion
+
+            #region Inital checks
+
+            if (EVSEDataRecord                     == null)
+                throw new ArgumentNullException("EVSEDataRecord",                       "The given parameter must not be null!");
+
+            if (EVSEDataRecord.EVSEId              == null)
+                throw new ArgumentNullException("EVSEDataRecord.EVSE",                  "The given EVSE Id must not be null!");
+
+            if (EVSEDataRecord.Address             == null)
+                throw new ArgumentNullException("EVSEDataRecord.Address",               "The given address must not be null!");
+
+            if (EVSEDataRecord.Address.Country     == null)
+                throw new ArgumentNullException("EVSEDataRecord.Address.Country",       "The given country must not be null!");
+
+            if (EVSEDataRecord.Address.City.  IsNullOrEmpty())
+                throw new ArgumentNullException("EVSEDataRecord.Address.City",          "The given city must not be null!");
+
+            if (EVSEDataRecord.Address.Street.IsNullOrEmpty())
+                throw new ArgumentNullException("EVSEDataRecord.Address.Street",        "The given street must not be null!");
+
+            if (EVSEDataRecord.GeoCoordinates       == null)
+                throw new ArgumentNullException("EVSEDataRecord.GeoCoordinate",         "The given geo coordinate must not be null!");
+
+            if (EVSEDataRecord.Plugs               == null || !EVSEDataRecord.Plugs.              Any())
+                throw new ArgumentNullException("Plugs",                                "There must be at least one plug defined!");
+
+            if (EVSEDataRecord.AuthenticationModes == null || !EVSEDataRecord.AuthenticationModes.Any())
+                throw new ArgumentNullException("EVSEDataRecord.AuthenticationModes",   "The given authentication modes must not be null!");
+
+            if (EVSEDataRecord.HotlinePhoneNum.IsNullOrEmpty())
+                throw new ArgumentNullException("EVSEDataRecord.HotlinePhoneNum",       "The given hotline phone number must not be null!");
+
+            #endregion
+
+            return new XElement(OICPNS.EVSEData + "EvseDataRecord",
+
+                new XElement(OICPNS.EVSEData + "EvseId",                EVSEDataRecord.EVSEId.OriginId),
+                new XElement(OICPNS.EVSEData + "ChargingStationId",     EVSEDataRecord.ChargingStationId),
+                new XElement(OICPNS.EVSEData + "ChargingStationName",   EVSEDataRecord.ChargingStationName.  SubstringMax(50)),
+                new XElement(OICPNS.EVSEData + "EnChargingStationName", EVSEDataRecord.EnChargingStationName.SubstringMax(50)),
+
+                new XElement(OICPNS.EVSEData + "Address",
+                    new XElement(OICPNS.CommonTypes + "Country",        EVSEDataRecord.Address.Country.Alpha3Code),
+                    new XElement(OICPNS.CommonTypes + "City",           EVSEDataRecord.Address.City),
+                    new XElement(OICPNS.CommonTypes + "Street",         EVSEDataRecord.Address.Street), // OICPv2.0 requires at least 5 characters!
+                    new XElement(OICPNS.CommonTypes + "PostalCode",     EVSEDataRecord.Address.PostalCode),
+                    new XElement(OICPNS.CommonTypes + "HouseNum",       EVSEDataRecord.Address.HouseNumber),
+                    new XElement(OICPNS.CommonTypes + "Floor",          EVSEDataRecord.Address.FloorLevel)
+                // <!--Optional:-->
+                // <v11:Region>?</v11:Region>
+                // <!--Optional:-->
+                // <v11:TimeZone>?</v11:TimeZone>
+                ),
+
+                new XElement(OICPNS.EVSEData + "GeoCoordinates",
+                    new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
+                        new XElement(OICPNS.CommonTypes + "Longitude",  EVSEDataRecord.GeoCoordinates.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                        new XElement(OICPNS.CommonTypes + "Latitude",   EVSEDataRecord.GeoCoordinates.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                    )
+                ),
+
+                new XElement(OICPNS.EVSEData + "Plugs",
+                    EVSEDataRecord.Plugs.                   Select(Plug               => new XElement(OICPNS.EVSEData + "Plug",               OICPMapper.AsString(Plug)))
+                ),
+
+                EVSEDataRecord.ChargingFacilities.Any()
+                    ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
+                          EVSEDataRecord.ChargingFacilities.Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   ChargingFacility)))
+                    : null,
+
+                EVSEDataRecord.ChargingModes.Any()
+                    ? new XElement(OICPNS.EVSEData + "ChargingModes",
+                          EVSEDataRecord.ChargingModes.     Select(ChargingMode       => new XElement(OICPNS.EVSEData + "ChargingMode",       ChargingMode)))
+                    : null,
+
+                new XElement(OICPNS.EVSEData + "AuthenticationModes",
+                    EVSEDataRecord.AuthenticationModes.     Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode))
+                ),
+
+                new XElement(OICPNS.EVSEData + "MaxCapacity", EVSEDataRecord.MaxCapacity),
+
+                new XElement(OICPNS.EVSEData + "PaymentOptions",
+                    EVSEDataRecord.PaymentOptions.          Select(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      PaymentOption))
+                ),
+
+                new XElement(OICPNS.EVSEData + "Accessibility",     EVSEDataRecord.Accessibility),
+                new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   EVSEDataRecord.HotlinePhoneNum),  // RegEx: \+[0-9]{5,15}
+
+                EVSEDataRecord.AdditionalInfo.IsNotNullOrEmpty()
+                    ? new XElement(OICPNS.EVSEData + "AdditionalInfo", EVSEDataRecord.AdditionalInfo)
+                    : null,
+
+                EVSEDataRecord.EnAdditionalInfo.Any()
+                    ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", EVSEDataRecord.EnAdditionalInfo[Languages.en])
+                    : null,
+
+                new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
+                    new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
+                        new XElement(OICPNS.CommonTypes + "Longitude", EVSEDataRecord.GeoChargingPointEntrance.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                        new XElement(OICPNS.CommonTypes + "Latitude",  EVSEDataRecord.GeoChargingPointEntrance.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                    )
+                ),
+
+                new XElement(OICPNS.EVSEData + "IsOpen24Hours",         EVSEDataRecord.IsOpen24Hours ? "true" : "false"),
+
+                EVSEDataRecord.OpeningTime.IsOpen24Hours
+                    ? null
+                    : new XElement(OICPNS.EVSEData + "OpeningTime",     EVSEDataRecord.OpeningTime.Text),
+
+                EVSEDataRecord.HubOperatorId != null
+                    ? new XElement(OICPNS.EVSEData + "HubOperatorID",   EVSEDataRecord.HubOperatorId.ToString())
+                    : null,
+
+                EVSEDataRecord.ClearinghouseId != null
+                    ? new XElement(OICPNS.EVSEData + "ClearinghouseID", EVSEDataRecord.ClearinghouseId.ToString())
+                    : null,
+
+                new XElement(OICPNS.EVSEData + "IsHubjectCompatible",   EVSEDataRecord.IsHubjectCompatible  ? "true" : "false"),
+                new XElement(OICPNS.EVSEData + "DynamicInfoAvailable",  EVSEDataRecord.DynamicInfoAvailable ? "true" : "false")
+
+            );
+
+        }
+
+        #endregion
+
+        #region (internal) ToXML(this EVSEDataRecords)
+
+        internal static IEnumerable<XElement> ToXML(this IEnumerable<EVSEDataRecord> EVSEDataRecords)
+        {
+
+            #region Inital checks
+
+            if (EVSEDataRecords == null)
+                return new XElement[0];
+
+            var _EVSEDataRecords = EVSEDataRecords.ToArray();
+
+            if (_EVSEDataRecords.Length == 0)
+                return new XElement[0];
+
+            #endregion
+
+            return _EVSEDataRecords.Select(EVSEDataRecord => EVSEDataRecord.ToXML());
 
         }
 
@@ -525,6 +968,38 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                  String                                       OperatorName  = null)
         {
 
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <v2:eRoamingPushEvseStatus>
+            //
+            //          <v2:ActionType>?</v2:ActionType>
+            //
+            //          <v2:OperatorEvseStatus>
+            //
+            //             <v2:OperatorID>?</v2:OperatorID>
+            //
+            //             <!--Optional:-->
+            //             <v2:OperatorName>?</v2:OperatorName>
+            //
+            //             <!--Zero or more repetitions:-->
+            //             <v2:EvseStatusRecord>
+            //                <v2:EvseId>?</v2:EvseId>
+            //                <v2:EvseStatus>?</v2:EvseStatus>
+            //             </v2:EvseStatusRecord>
+            //
+            //          </v2:OperatorEvseStatus>
+            //
+            //       </v2:eRoamingPushEvseStatus>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
+
             #region Initial checks
 
             if (GroupedData == null)
@@ -537,10 +1012,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                       GroupedData.Select(datagroup =>
                                           new XElement(OICPNS.EVSEData + "OperatorEvseStatus",
 
-                                              new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId   != null ? OperatorId   : datagroup.Key.Id).ToFormat(IdFormatType.OLD)),
+                                              new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId   != null ? OperatorId   : datagroup.Key.Id).OriginId),
                                               new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName != null ? OperatorName : datagroup.Key.Name.First().Text)),
 
-                                              datagroup.Value.ToEvseDataRecords().ToArray()
+                                              datagroup.Value.ToEvseDataRecordXML().ToArray()
 
                                           )).ToArray()
                                       ));
@@ -852,6 +1327,38 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         {
 
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <v2:eRoamingPushEvseStatus>
+            //
+            //          <v2:ActionType>?</v2:ActionType>
+            //
+            //          <v2:OperatorEvseStatus>
+            //
+            //             <v2:OperatorID>?</v2:OperatorID>
+            //
+            //             <!--Optional:-->
+            //             <v2:OperatorName>?</v2:OperatorName>
+            //
+            //             <!--Zero or more repetitions:-->
+            //             <v2:EvseStatusRecord>
+            //                <v2:EvseId>?</v2:EvseId>
+            //                <v2:EvseStatus>?</v2:EvseStatus>
+            //             </v2:EvseStatusRecord>
+            //
+            //          </v2:OperatorEvseStatus>
+            //
+            //       </v2:eRoamingPushEvseStatus>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
+
             #region Initial checks
 
             if (EVSEIds == null)
@@ -874,7 +1381,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                           new XElement(OICPNS.EVSEStatus + "ActionType", Action.ToString()),
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(OICPNS.EVSEStatus + "OperatorID",   OperatorId.ToFormat(IdFormatType.OLD)),
+                                              new XElement(OICPNS.EVSEStatus + "OperatorID",   OperatorId.OriginId),
                                               new XElement(OICPNS.EVSEStatus + "OperatorName", OperatorName),
 
                                               _EVSEIds.
@@ -889,29 +1396,57 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
+        #region (internal) ToEvseStatusRecords(this EVSE)
+
+        internal static XElement ToEvseStatusRecords(this EVSE EVSE)
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+
+            //             <v2:EvseStatusRecord>
+            //                <v2:EvseId>?</v2:EvseId>
+            //                <v2:EvseStatus>?</v2:EvseStatus>
+            //             </v2:EvseStatusRecord>
+
+            #endregion
+
+            #region Inital checks
+
+            if (EVSE == null)
+                throw new ArgumentNullException("EVSE", "The given parameter must not be null!");
+
+            #endregion
+
+            return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
+                       new XElement(OICPNS.EVSEStatus + "EvseId",     EVSE.Id.                             OriginId),
+                       new XElement(OICPNS.EVSEStatus + "EvseStatus", EVSE.Status.Value.AsOICPEVSEStatus().ToString())
+                   );
+
+        }
+
+        #endregion
+
         #region (internal) ToEvseStatusRecords(this EVSEs)
 
         internal static IEnumerable<XElement> ToEvseStatusRecords(this IEnumerable<EVSE> EVSEs)
         {
 
-            return EVSEs.Select(evse => {
+            #region Inital checks
 
-                try
-                {
+            if (EVSEs == null)
+                return new XElement[0];
 
-                    return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
-                        new XElement(OICPNS.EVSEStatus + "EvseId",     evse.Id.                               ToFormat(IdFormatType.OLD)),
-                        new XElement(OICPNS.EVSEStatus + "EvseStatus", evse.Status.Value.AsOICPEVSEStatus().ToString())
-                    );
+            var _EVSEs = EVSEs.ToArray();
 
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("Exception in CPOMethods: " + e.Message);
-                    return null;
-                }
+            if (_EVSEs.Length == 0)
+                return new XElement[0];
 
-            });
+            #endregion
+
+            return _EVSEs.Select(evse => evse.ToEvseStatusRecords());
 
         }
 
@@ -922,24 +1457,68 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         internal static IEnumerable<XElement> ToEvseStatusRecords(this IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>> EVSEIdAndStatus)
         {
 
-            return EVSEIdAndStatus.Select(kvp => {
+            #region Documentation
 
-                try
-                {
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
 
-                    return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
-                        new XElement(OICPNS.EVSEStatus + "EvseId",     kvp.Key.                       ToFormat(IdFormatType.OLD)),
-                        new XElement(OICPNS.EVSEStatus + "EvseStatus", kvp.Value.AsOICPEVSEStatus().ToString())
-                    );
+            //             <v2:EvseStatusRecord>
+            //                <v2:EvseId>?</v2:EvseId>
+            //                <v2:EvseStatus>?</v2:EvseStatus>
+            //             </v2:EvseStatusRecord>
 
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("Exception in CPOMethods: " + e.Message);
-                    return null;
-                }
+            #endregion
 
-            });
+            #region Inital checks
+
+            if (EVSEIdAndStatus == null)
+                return new XElement[0];
+
+            var _EVSEIdAndStatus = EVSEIdAndStatus.ToArray();
+
+            if (_EVSEIdAndStatus.Length == 0)
+                return new XElement[0];
+
+            #endregion
+
+            return _EVSEIdAndStatus.Select(kvp => new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
+                                                      new XElement(OICPNS.EVSEStatus + "EvseId",     kvp.Key.                     OriginId),
+                                                      new XElement(OICPNS.EVSEStatus + "EvseStatus", kvp.Value.AsOICPEVSEStatus().ToString())
+                                                  ));
+
+        }
+
+        internal static IEnumerable<XElement> ToEvseStatusRecords(this IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>> EVSEIdAndStatus)
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+
+            //             <v2:EvseStatusRecord>
+            //                <v2:EvseId>?</v2:EvseId>
+            //                <v2:EvseStatus>?</v2:EvseStatus>
+            //             </v2:EvseStatusRecord>
+
+            #endregion
+
+            #region Inital checks
+
+            if (EVSEIdAndStatus == null)
+                return new XElement[0];
+
+            var _EVSEIdAndStatus = EVSEIdAndStatus.ToArray();
+
+            if (_EVSEIdAndStatus.Length == 0)
+                return new XElement[0];
+
+            #endregion
+
+            return EVSEIdAndStatus.Select(kvp => new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
+                                                     new XElement(OICPNS.EVSEStatus + "EvseId",     kvp.Key.  OriginId),
+                                                     new XElement(OICPNS.EVSEStatus + "EvseStatus", kvp.Value.ToString())
+                                                 ));
 
         }
 
@@ -951,24 +1530,54 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                                   EVSEStatusType             CommonStatus)
         {
 
-            return EVSEIds.Select(evseid => {
+            #region Inital checks
 
-                try
-                {
+            if (EVSEIds == null)
+                return new XElement[0];
 
-                    return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
-                        new XElement(OICPNS.EVSEStatus + "EvseId",     evseid.                           ToFormat(IdFormatType.OLD)),
-                        new XElement(OICPNS.EVSEStatus + "EvseStatus", CommonStatus.AsOICPEVSEStatus().ToString())
-                    );
+            var _EVSEIds = EVSEIds.ToArray();
 
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("Exception in CPOMethods: " + e.Message);
-                    return null;
-                }
+            if (_EVSEIds.Length == 0)
+                return new XElement[0];
 
-            });
+            #endregion
+
+            return EVSEIds.ToEvseStatusRecords(CommonStatus.AsOICPEVSEStatus());
+
+        }
+
+        internal static IEnumerable<XElement> ToEvseStatusRecords(this IEnumerable<EVSE_Id>  EVSEIds,
+                                                                  OICPEVSEStatus             CommonStatus)
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+
+            //             <v2:EvseStatusRecord>
+            //                <v2:EvseId>?</v2:EvseId>
+            //                <v2:EvseStatus>?</v2:EvseStatus>
+            //             </v2:EvseStatusRecord>
+
+            #endregion
+
+            #region Inital checks
+
+            if (EVSEIds == null)
+                return new XElement[0];
+
+            var _EVSEIds = EVSEIds.ToArray();
+
+            if (_EVSEIds.Length == 0)
+                return new XElement[0];
+
+            #endregion
+
+            return _EVSEIds.Select(evseid => new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
+                                                 new XElement(OICPNS.EVSEStatus + "EvseId",     evseid.      OriginId),
+                                                 new XElement(OICPNS.EVSEStatus + "EvseStatus", CommonStatus.ToString())
+                                             ));
 
         }
 

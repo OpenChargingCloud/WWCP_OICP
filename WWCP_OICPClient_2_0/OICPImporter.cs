@@ -383,7 +383,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                         ToArray();
 
                             if (OperatorEvseData.Length > 0)
-                                OperatorEvseData.ForEach(OperatorEvseDataXML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, XMLMethods.ParseOperatorEVSEData(OperatorEvseDataXML)));
+                                OperatorEvseData.ForEach(OperatorEvseDataXML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, XMLMethods.ParseOperatorEVSEDataXML(OperatorEvseDataXML)));
 
                             else
                                 DebugX.Log("Could not fetch any 'OperatorEvseData' from XML stream!");

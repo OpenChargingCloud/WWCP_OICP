@@ -186,22 +186,22 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region GeoCoordinate
+        #region GeoCoordinates
 
-        private GeoCoordinate _GeoCoordinate;
+        private GeoCoordinate _GeoCoordinates;
 
-        public GeoCoordinate GeoCoordinate
+        public GeoCoordinate GeoCoordinates
         {
 
             get
             {
-                return _GeoCoordinate;
+                return _GeoCoordinates;
             }
 
             set
             {
                 if (value != null)
-                    _GeoCoordinate = value;
+                    _GeoCoordinates = value;
             }
 
         }
@@ -493,7 +493,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         private EVSEOperator_Id _HubOperatorID;
 
-        public EVSEOperator_Id HubOperatorID
+        public EVSEOperator_Id HubOperatorId
         {
 
             get
@@ -515,7 +515,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         private RoamingProvider_Id _ClearinghouseID;
 
-        public RoamingProvider_Id ClearinghouseID
+        public RoamingProvider_Id ClearinghouseId
         {
 
             get
