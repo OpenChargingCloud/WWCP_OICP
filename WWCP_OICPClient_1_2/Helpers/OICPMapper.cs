@@ -164,20 +164,20 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// Maps an OICP paymet option to a WWCP paymet option.
         /// </summary>
         /// <param name="PaymetOption">A paymet option.</param>
-        public static PaymetOptions AsPaymetOption(String PaymetOption)
+        public static PaymentOptions AsPaymetOption(String PaymetOption)
         {
 
             switch (PaymetOption)
             {
 
-                case "NoPayment":   return PaymetOptions.NoPayment;
-                case "Direct":      return PaymetOptions.Direct;
-                case "SMS":         return PaymetOptions.SMS;
-                case "Cash":        return PaymetOptions.Cash;
-                case "CreditCard":  return PaymetOptions.CreditCard;
-                case "Contract":    return PaymetOptions.Contract;
+                case "NoPayment":   return PaymentOptions.Free;
+                case "Direct":      return PaymentOptions.Direct;
+                case "SMS":         return PaymentOptions.SMS;
+                case "Cash":        return PaymentOptions.Cash;
+                case "CreditCard":  return PaymentOptions.CreditCard;
+                case "Contract":    return PaymentOptions.Contract;
 
-                default:            return PaymetOptions.Unspecified;
+                default:            return PaymentOptions.Unspecified;
 
             }
 

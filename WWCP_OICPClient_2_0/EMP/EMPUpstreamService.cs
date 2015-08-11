@@ -85,7 +85,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// </summary>
         /// <param name="EVSEId">The unique identification of the EVSE.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public Task<HTTPResponse<XElement>>
+        public Task<HTTPResponse<EVSEDataRecord>>
 
             GetEVSEByIdRequest(EVSE_Id    EVSEId,
                                TimeSpan?  QueryTimeout  = null)
@@ -107,21 +107,30 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                              "eRoamingEvseById",
                                              QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                             OnSuccess: XMLData => {
+                                             OnSuccess: XMLData =>
 
+                                             #region Documentation
 
+                                             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                                             //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+                                             //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                             //   <soapenv:Header/>
+                                             //   <soapenv:Body>
+                                             //      <v2:eRoamingEvseDataRecord deltaType="?" lastUpdate="?">
+                                             //          [...]
+                                             //      </v2:eRoamingEvseDataRecord>
+                                             //    </soapenv:Body>
+                                             // </soapenv:Envelope>
 
-                                                 return new HTTPResponse<XElement>(
-                                                     XMLData.HttpResponse,
-                                                     XMLData.Content);
+                                             #endregion
 
-                                             },
+                                             new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
+                                                                              EMP_XMLMethods.ParseEVSEDataRecord(XMLData.Content)),
 
                                              OnSOAPFault: Fault =>
-                                                 new HTTPResponse<XElement>(
+                                                 new HTTPResponse<EVSEDataRecord>(
                                                      Fault.HttpResponse,
-                                                     Fault.Content,
-                                                     IsFault: true),
+                                                     new Exception(Fault.Content.ToString())),
 
                                              OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
 
@@ -138,8 +147,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 SendOnException(DateTime.Now, this, e);
 
-                return new Task<HTTPResponse<XElement>>(
-                    () => new HTTPResponse<XElement>(e));
+                return new Task<HTTPResponse<EVSEDataRecord>>(
+                    () => new HTTPResponse<EVSEDataRecord>(e));
 
             }
 
@@ -188,63 +197,6 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                              QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                              OnSuccess: XMLData => {
-
-                                                 #region Documentation
-
-                                                 // <tns:eRoamingEvseData xmlns:tns="http://www.hubject.com/b2b/services/evsedata/v1.2">
-                                                 //   <tns:EvseData>
-                                                 //
-                                                 //     <tns:OperatorEvseData>
-                                                 //       <tns:OperatorID>+45*045</tns:OperatorID>
-                                                 //       <tns:OperatorName>CleanCharge</tns:OperatorName>
-                                                 //
-                                                 //       <tns:EvseDataRecord lastUpdate="2015-03-22T15:46:02.000Z">
-                                                 //
-                                                 //         <tns:EvseId>+45*045*010*096296</tns:EvseId>
-                                                 //         <tns:ChargingStationName>Ladestation Stadt Kopenhagen</tns:ChargingStationName>
-                                                 //         <tns:EnChargingStationName>Charging Station Copenhagen</tns:EnChargingStationName>
-                                                 //
-                                                 //         <tns:Address>
-                                                 //           <cmn:Country    xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">DNK</cmn:Country>
-                                                 //           <cmn:City       xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">København</cmn:City>
-                                                 //           <cmn:Street     xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">Islands Brygge</cmn:Street>
-                                                 //           <cmn:PostalCode xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">2300</cmn:PostalCode>
-                                                 //           <cmn:HouseNum   xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">37</cmn:HouseNum>
-                                                 //         </tns:Address>
-                                                 //
-                                                 //         <tns:GeoCoordinates>
-                                                 //           <cmn:DecimalDegree xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">
-                                                 //             <cmn:Longitude>12.574990</cmn:Longitude>
-                                                 //             <cmn:Latitude>55.664520</cmn:Latitude>
-                                                 //           </cmn:DecimalDegree>
-                                                 //         </tns:GeoCoordinates>
-                                                 //
-                                                 //         <tns:Plugs>
-                                                 //           <tns:Plug>Type 2 Outlet</tns:Plug>
-                                                 //         </tns:Plugs>
-                                                 //
-                                                 //         <tns:ChargingFacilities>
-                                                 //           <tns:ChargingFacility>Unspecified</tns:ChargingFacility>
-                                                 //         </tns:ChargingFacilities>
-                                                 //
-                                                 //         <tns:AuthenticationModes>
-                                                 //           <tns:AuthenticationMode>REMOTE</tns:AuthenticationMode>
-                                                 //         </tns:AuthenticationModes>
-                                                 //
-                                                 //         <tns:Accessibility>Restricted access</tns:Accessibility>
-                                                 //         <tns:HotlinePhoneNum>+00000</tns:HotlinePhoneNum>
-                                                 //         <tns:IsOpen24Hours>true</tns:IsOpen24Hours>
-                                                 //         <tns:IsHubjectCompatible>true</tns:IsHubjectCompatible>
-                                                 //         <tns:DynamicInfoAvailable>true</tns:DynamicInfoAvailable>
-                                                 //
-                                                 //       </tns:EvseDataRecord>
-                                                 //
-                                                 //     </tns:OperatorEvseData>
-                                                 //
-                                                 //   </tns:EvseData>
-                                                 // </tns:eRoamingEvseData>
-
-                                                 #endregion
 
                                                  #region Hubject error?
 
