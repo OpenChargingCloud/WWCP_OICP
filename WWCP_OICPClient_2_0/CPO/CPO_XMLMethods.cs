@@ -45,6 +45,37 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                String                                    OperatorName  = null)
         {
 
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <v2:eRoamingPushEvseData>
+            //
+            //          <v2:ActionType>?</v2:ActionType>
+            //
+            //          <v2:OperatorEvseData>
+            //
+            //             <v2:OperatorID>?</v2:OperatorID>
+            //
+            //             <!--Optional:-->
+            //             <v2:OperatorName>?</v2:OperatorName>
+            //
+            //             <!--Zero or more repetitions:-->
+            //             <v2:EvseDataRecord deltaType="?" lastUpdate="?">
+            //                [...]
+            //             </v2:EvseDataRecord>
+            //
+            //          </v2:OperatorEvseData>
+            //       </v2:eRoamingPushEvseData>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
+
             #region Initial checks
 
             if (GroupedData == null)
@@ -870,7 +901,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                     return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
                         new XElement(OICPNS.EVSEStatus + "EvseId",     evse.Id.                               ToFormat(IdFormatType.OLD)),
-                        new XElement(OICPNS.EVSEStatus + "EvseStatus", evse.Status.Value.AsHubjectEVSEState().ToString())
+                        new XElement(OICPNS.EVSEStatus + "EvseStatus", evse.Status.Value.AsOICPEVSEStatus().ToString())
                     );
 
                 }
@@ -898,7 +929,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                     return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
                         new XElement(OICPNS.EVSEStatus + "EvseId",     kvp.Key.                       ToFormat(IdFormatType.OLD)),
-                        new XElement(OICPNS.EVSEStatus + "EvseStatus", kvp.Value.AsHubjectEVSEState().ToString())
+                        new XElement(OICPNS.EVSEStatus + "EvseStatus", kvp.Value.AsOICPEVSEStatus().ToString())
                     );
 
                 }
@@ -927,7 +958,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                     return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
                         new XElement(OICPNS.EVSEStatus + "EvseId",     evseid.                           ToFormat(IdFormatType.OLD)),
-                        new XElement(OICPNS.EVSEStatus + "EvseStatus", CommonStatus.AsHubjectEVSEState().ToString())
+                        new XElement(OICPNS.EVSEStatus + "EvseStatus", CommonStatus.AsOICPEVSEStatus().ToString())
                     );
 
                 }

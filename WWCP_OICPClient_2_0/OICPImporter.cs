@@ -56,9 +56,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         private readonly Func<TContext>                                         _UpdateContextCreator;
         private readonly Action<TContext>                                       _UpdateContextDisposer;
         private readonly Action<TContext>                                       _StartBulkUpdate;
-        private readonly Action<TContext, DateTime, XElement>                   _EVSEOperatorDataHandler;
+        private readonly Action<TContext, DateTime, OperatorEvseData>           _EVSEOperatorDataHandler;
         private readonly Func<TContext, DateTime, IEnumerable<EVSE_Id>>         _GetEVSEIdsForStatusUpdate;
-        private readonly Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  _EVSEStatusHandler;
+        private readonly Action<TContext, DateTime, EVSE_Id, OICPEVSEStatus>  _EVSEStatusHandler;
         private readonly Action<TContext>                                       _StopBulkUpdate;
 
         private readonly Func<UInt64, StreamReader>                             _LoadStaticDataFromStream;
@@ -164,9 +164,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                             Func<UInt64, StreamReader>                             LoadStaticDataFromStream     = null,
                             Func<UInt64, StreamReader>                             LoadDynamicDataFromStream    = null,
 
-                            Action<TContext, DateTime, XElement>                   EVSEOperatorDataHandler      = null,
+                            Action<TContext, DateTime, OperatorEvseData>           EVSEOperatorDataHandler      = null,
                             Func<TContext, DateTime, IEnumerable<EVSE_Id>>         GetEVSEIdsForStatusUpdate    = null,
-                            Action<TContext, DateTime, EVSE_Id, HubjectEVSEState>  EVSEStatusHandler            = null)
+                            Action<TContext, DateTime, EVSE_Id, OICPEVSEStatus>  EVSEStatusHandler            = null)
 
         {
 
@@ -383,7 +383,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                         ToArray();
 
                             if (OperatorEvseData.Length > 0)
-                                OperatorEvseData.ForEach(OperatorXML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, OperatorXML));
+                                OperatorEvseData.ForEach(OperatorEvseDataXML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, XMLMethods.ParseOperatorEVSEData(OperatorEvseDataXML)));
 
                             else
                                 DebugX.Log("Could not fetch any 'OperatorEvseData' from XML stream!");
@@ -406,7 +406,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                             ContinueWith(PullEVSEDataTask => {
 
                                 if (PullEVSEDataTask.Result != null)
-                                    PullEVSEDataTask.Result.Content.ForEach(XML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, XML));
+                                    PullEVSEDataTask.Result.Content.ForEach(OperatorEVSEData => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, OperatorEVSEData));
 
                             }).
                             Wait();
@@ -559,8 +559,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                             var EvseStatus  = (SOAPXML != null ? SOAPXML : XML).
                                                         Element (OICPNS.EVSEStatus + "EvseStatusRecords").
                                                         Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
-                                                        Select(v => new KeyValuePair<EVSE_Id, HubjectEVSEState>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
-                                                                                                                (HubjectEVSEState) Enum.Parse(typeof(HubjectEVSEState), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))).
+                                                        Select(v => new KeyValuePair<EVSE_Id, OICPEVSEStatus>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
+                                                                                                                (OICPEVSEStatus) Enum.Parse(typeof(OICPEVSEStatus), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))).
                                                         ToArray();
 
                             if (EvseStatus.Length > 0)

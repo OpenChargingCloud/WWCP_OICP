@@ -383,10 +383,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatus">An optional EVSE status as filter criteria.</param>
-        public static XElement PullEVSEStatusRequestXML(EVSP_Id           ProviderId,
-                                                        GeoCoordinate     SearchCenter  = null,
-                                                        UInt64            DistanceKM    = 0,
-                                                        HubjectEVSEState? EVSEStatus    = null)
+        public static XElement PullEVSEStatusRequestXML(EVSP_Id          ProviderId,
+                                                        GeoCoordinate    SearchCenter  = null,
+                                                        UInt64           DistanceKM    = 0,
+                                                        OICPEVSEStatus?  EVSEStatus    = null)
         {
 
             #region Documentation

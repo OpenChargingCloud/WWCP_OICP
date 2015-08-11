@@ -435,6 +435,17 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
+
+        public static OperatorEvseData ParseOperatorEVSEData(XElement OperatorEVSEDataXML)
+        {
+
+            return new OperatorEvseData(EVSEOperator_Id.Parse(OperatorEVSEDataXML.ElementValue         (OICPNS.EVSEData + "OperatorID",   "Missing OperatorID!")),
+                                        OperatorEVSEDataXML.ElementValueOrDefault(OICPNS.EVSEData + "OperatorName", ""),
+                                        OperatorEVSEDataXML.Elements             (OICPNS.EVSEData + "EvseDataRecord").
+                                            Select(XML => XMLMethods.ParseEVSEDataRecord(XML)));
+
+        }
+
     }
 
 }

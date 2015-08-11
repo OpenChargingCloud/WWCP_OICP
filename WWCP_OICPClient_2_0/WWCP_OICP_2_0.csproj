@@ -48,6 +48,7 @@
     <Compile Include="CPO\CPOUpstreamService.cs" />
     <Compile Include="EMP\EMP_XMLMethods.cs" />
     <Compile Include="EMP\EMPUpstreamService.cs" />
+    <Compile Include="Entities\OperatorEvseData.cs" />
     <Compile Include="Helpers\GeoCoordinatesResponseFormatTypes.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
@@ -56,7 +57,7 @@
     <Compile Include="Helpers\HubjectAcknowledgement.cs" />
     <Compile Include="Helpers\HubjectAuthorization.cs" />
     <Compile Include="Helpers\HubjectEVSESearchReply.cs" />
-    <Compile Include="Helpers\HubjectEVSEState.cs" />
+    <Compile Include="Helpers\OICPEVSEStatus.cs" />
     <Compile Include="Helpers\HubjectMobileAuthorizationStart.cs" />
     <Compile Include="Helpers\Import\ChargeStationInfo.cs" />
     <Compile Include="Helpers\Import\ChargingPoolInfo.cs" />
@@ -67,7 +68,7 @@
     <Compile Include="Helpers\SOAP.cs" />
     <Compile Include="Helpers\XML\XMLMethods.cs" />
     <Compile Include="OICPDownstreamServer.cs" />
-    <Compile Include="EVSEDataRecord.cs" />
+    <Compile Include="Entities\EVSEDataRecord.cs" />
     <Compile Include="OICPImporter.cs" />
     <Compile Include="OICPServer\OICPServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

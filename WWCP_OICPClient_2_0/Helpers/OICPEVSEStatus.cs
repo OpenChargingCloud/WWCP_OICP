@@ -18,7 +18,7 @@
 namespace org.GraphDefined.WWCP.OICPClient_2_0
 {
 
-    public enum HubjectEVSEState
+    public enum OICPEVSEStatus
     {
         Available,
         Reserved,
@@ -31,25 +31,25 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
     public static partial class Ext
     {
 
-        public static EVSEStatusType AsEVSEStatusType(this HubjectEVSEState EVSEStatus)
+        public static EVSEStatusType AsEVSEStatusType(this OICPEVSEStatus EVSEStatus)
         {
 
             switch (EVSEStatus)
             {
 
-                case HubjectEVSEState.Available:
+                case OICPEVSEStatus.Available:
                     return EVSEStatusType.Available;
 
-                case HubjectEVSEState.Reserved:
+                case OICPEVSEStatus.Reserved:
                     return EVSEStatusType.Reserved;
 
-                case HubjectEVSEState.Occupied:
+                case OICPEVSEStatus.Occupied:
                     return EVSEStatusType.Occupied;
 
-                case HubjectEVSEState.OutOfService:
+                case OICPEVSEStatus.OutOfService:
                     return EVSEStatusType.OutOfService;
 
-                case HubjectEVSEState.EvseNotFound:
+                case OICPEVSEStatus.EvseNotFound:
                     return EVSEStatusType.EvseNotFound;
 
                 default:
@@ -59,29 +59,29 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         }
 
-        public static HubjectEVSEState AsHubjectEVSEState(this EVSEStatusType EVSEStatus)
+        public static OICPEVSEStatus AsOICPEVSEStatus(this EVSEStatusType EVSEStatus)
         {
 
             switch (EVSEStatus)
             {
 
                 case EVSEStatusType.Available:
-                    return HubjectEVSEState.Available;
+                    return OICPEVSEStatus.Available;
 
                 case EVSEStatusType.Reserved:
-                    return HubjectEVSEState.Reserved;
+                    return OICPEVSEStatus.Reserved;
 
                 case EVSEStatusType.Occupied:
-                    return HubjectEVSEState.Occupied;
+                    return OICPEVSEStatus.Occupied;
 
                 case EVSEStatusType.OutOfService:
-                    return HubjectEVSEState.OutOfService;
+                    return OICPEVSEStatus.OutOfService;
 
                 case EVSEStatusType.EvseNotFound:
-                    return HubjectEVSEState.EvseNotFound;
+                    return OICPEVSEStatus.EvseNotFound;
 
                 default:
-                    return HubjectEVSEState.Unknown;
+                    return OICPEVSEStatus.Unknown;
 
             }
 
