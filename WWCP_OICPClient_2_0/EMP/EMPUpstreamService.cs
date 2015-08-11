@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                  #endregion
 
                                                  new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
-                                                                                  EMP_XMLMethods.ParseEVSEDataRecord(XMLData.Content)),
+                                                                                  XMLMethods.ParseEVSEDataRecord(XMLData.Content)),
 
                                              OnSOAPFault: Fault =>
                                                  new HTTPResponse<EVSEDataRecord>(
