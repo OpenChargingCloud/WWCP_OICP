@@ -88,9 +88,17 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                       GroupedData.Select(datagroup =>
                                           new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
-                                              new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId   != null ? OperatorId   : datagroup.Key.Id).ToFormat(IdFormatType.OLD)),
-                                              new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName != null ? OperatorName : datagroup.Key.Name.First().Text)),
+                                              new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId != null
+                                                                                                  ? OperatorId
+                                                                                                  : datagroup.Key.Id).OriginId),
 
+                                              (OperatorName.IsNotNullOrEmpty() || datagroup.Key.Name.Any())
+                                                  ? new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName.IsNotNullOrEmpty()
+                                                                                                        ? OperatorName
+                                                                                                        : datagroup.Key.Name.First().Text))
+                                                  : null,
+
+                                              // <EvseDataRecord> ... </EvseDataRecord>
                                               datagroup.SelectMany(evses => evses.ToEvseDataRecordXML()).ToArray()
 
                                           )).ToArray()
@@ -359,8 +367,17 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                       new XElement(OICPNS.EVSEData + "ActionType", Action.ToString()),
                                       new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
-                                          new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId   != null ? OperatorId   : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Id).ToFormat(IdFormatType.OLD)),
-                                          new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName != null ? OperatorName : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.FirstOrDefault().Text)),
+                                          new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId != null
+                                                                                              ? OperatorId
+                                                                                              : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Id).OriginId),
+
+                                          (OperatorName.IsNotNullOrEmpty() || _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.Any())
+                                              ? new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName.IsNotNullOrEmpty()
+                                                                                                    ? OperatorName
+                                                                                                    : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.First().Text))
+                                              : null,
+
+                                          // <EvseDataRecord> ... </EvseDataRecord>
                                           _EVSEs.
                                               Where(evse => IncludeEVSEs(evse.Id)).
                                               ToEvseDataRecordXML().
@@ -538,72 +555,70 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                        new XElement(OICPNS.EVSEData + "Plug", OICPMapper.AsString(Outlet)))
                 ),
 
-                new XElement(OICPNS.EVSEData + "ChargingFacilities",
-                    EVSE.SocketOutlets.Select(Outlet =>
-                    {
+                EVSE.SocketOutlets.Any()
+                    ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
+                         EVSE.SocketOutlets.Select(Outlet => {
 
-                        var ChargingFacility = "Unspecified";
+                             var ChargingFacility = "Unspecified";
 
-                        if (Outlet.Plug == PlugTypes.Type2Outlet ||
-                            Outlet.Plug == PlugTypes.Type2Connector_CableAttached)// Mennekes_Type_2
-                        {
+                             if (Outlet.Plug == PlugTypes.Type2Outlet ||
+                                 Outlet.Plug == PlugTypes.Type2Connector_CableAttached)// Mennekes_Type_2
+                             {
 
-                            if (EVSE.MaxPower <= 44.0)
-                                ChargingFacility = "380 - 480V, 3-Phase ≤63A";
+                                 if (EVSE.MaxPower <= 44.0)
+                                     ChargingFacility = "380 - 480V, 3-Phase ≤63A";
 
-                            if (EVSE.MaxPower <= 22.0)
-                                ChargingFacility = "380 - 480V, 3-Phase ≤32A";
+                                 if (EVSE.MaxPower <= 22.0)
+                                     ChargingFacility = "380 - 480V, 3-Phase ≤32A";
 
-                            if (EVSE.MaxPower <= 11.0)
-                                ChargingFacility = "380 - 480V, 3-Phase ≤16A";
+                                 if (EVSE.MaxPower <= 11.0)
+                                     ChargingFacility = "380 - 480V, 3-Phase ≤16A";
 
-                        }
+                             }
 
-                        else if (Outlet.Plug == PlugTypes.TypeFSchuko)
-                        {
+                             else if (Outlet.Plug == PlugTypes.TypeFSchuko)
+                             {
 
-                            if (EVSE.MaxPower > 7.2)
-                                ChargingFacility = "200 - 240V, 1-Phase >32A";
+                                 if (EVSE.MaxPower > 7.2)
+                                     ChargingFacility = "200 - 240V, 1-Phase >32A";
 
-                            if (EVSE.MaxPower <= 7.2)
-                                ChargingFacility = "200 - 240V, 1-Phase ≤32A";
+                                 if (EVSE.MaxPower <= 7.2)
+                                     ChargingFacility = "200 - 240V, 1-Phase ≤32A";
 
-                            if (EVSE.MaxPower <= 3.6)
-                                ChargingFacility = "200 - 240V, 1-Phase ≤16A";
+                                 if (EVSE.MaxPower <= 3.6)
+                                     ChargingFacility = "200 - 240V, 1-Phase ≤16A";
 
-                            if (EVSE.MaxPower <= 2.25)
-                                ChargingFacility = "200 - 240V, 1-Phase ≤10A";
+                                 if (EVSE.MaxPower <= 2.25)
+                                     ChargingFacility = "200 - 240V, 1-Phase ≤10A";
 
-                        }
+                             }
 
-                        // 100 - 120V, 1-Phase ≤10A
-                        // 100 - 120V, 1-Phase ≤16A
-                        // 100 - 120V, 1-Phase ≤32A
+                             // 100 - 120V, 1-Phase ≤10A
+                             // 100 - 120V, 1-Phase ≤16A
+                             // 100 - 120V, 1-Phase ≤32A
 
-                        // Battery exchange
-                        // Unspecified
-                        // DC Charging ≤20kW
-                        // DC Charging ≤50kW
-                        // DC Charging >50kW
+                             // Battery exchange
+                             // Unspecified
+                             // DC Charging ≤20kW
+                             // DC Charging ≤50kW
+                             // DC Charging >50kW
 
-                        return new XElement(OICPNS.EVSEData + "ChargingFacility", ChargingFacility);
+                             return new XElement(OICPNS.EVSEData + "ChargingFacility", ChargingFacility);
 
-                    })
+                         })
 
-                ),
+                     )
+                    : null,
 
-                // <!--Optional:-->
-                // <v1:ChargingModes>
-                //     <!--1 or more repetitions:-->
-                // <v1:ChargingMode>?</v1:ChargingMode>
+                EVSE.ChargingModes.Any()
+                    ? new XElement(OICPNS.EVSEData + "ChargingModes",
+                          EVSE.ChargingModes.Select(ChargingMode => new XElement(OICPNS.EVSEData + "ChargingMode", ChargingMode.ToString())))
+                    : null,
 
-                // Mode_1      IEC 61851-1
-                // Mode_2      IEC 61851-1
-                // Mode_3      IEC 61851-1
-                // Mode_4      IEC 61851-1
-                // CHAdeMO     CHAdeMo Specification
-
-                // </v1:ChargingModes>
+                EVSE.ChargingStation.AuthenticationModes.Any()
+                    ? new XElement(OICPNS.EVSEData + "AuthenticationModes",
+                          EVSE.ChargingStation.AuthenticationModes.Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode.ToString())))
+                    : null,
 
                 new XElement(OICPNS.EVSEData + "AuthenticationModes",
                     new XElement(OICPNS.EVSEData + "AuthenticationMode", "NFC RFID Classic"),
