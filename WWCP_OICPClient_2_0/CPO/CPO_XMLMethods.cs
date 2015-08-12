@@ -20,10 +20,11 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using System.Globalization;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using System.Globalization;
 
 #endregion
 
@@ -35,6 +36,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
     /// </summary>
     public static class CPO_XMLMethods
     {
+
+        #region Data
+
+        private static Regex HotlinePhoneNumberRegExpr = new Regex("\\+[^0-9]");
+
+        #endregion
+
 
         #region PushEVSEDataXML(this GroupedData,      Action = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
@@ -524,22 +532,35 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             return new XElement(OICPNS.EVSEData + "EvseDataRecord",
 
-                new XElement(OICPNS.EVSEData + "EvseId",                EVSE.Id.ToFormat(IdFormatType.OLD)),
+                new XElement(OICPNS.EVSEData + "EvseId",                EVSE.Id.OriginId),
                 new XElement(OICPNS.EVSEData + "ChargingStationId",     EVSE.ChargingStation.Id.ToString()),
                 new XElement(OICPNS.EVSEData + "ChargingStationName",   EVSE.ChargingStation.ChargingPool.Name[Languages.de].SubstringMax(50)),
                 new XElement(OICPNS.EVSEData + "EnChargingStationName", EVSE.ChargingStation.ChargingPool.Name[Languages.en].SubstringMax(50)),
 
                 new XElement(OICPNS.EVSEData + "Address",
-                    new XElement(OICPNS.CommonTypes + "Country",        EVSE.ChargingStation.Address.Country.Alpha3Code),
-                    new XElement(OICPNS.CommonTypes + "City",           EVSE.ChargingStation.Address.City),
-                    new XElement(OICPNS.CommonTypes + "Street",         EVSE.ChargingStation.Address.Street), // OICPv2.0 requires at least 5 characters!
-                    new XElement(OICPNS.CommonTypes + "PostalCode",     EVSE.ChargingStation.Address.PostalCode),
-                    new XElement(OICPNS.CommonTypes + "HouseNum",       EVSE.ChargingStation.Address.HouseNumber),
-                    new XElement(OICPNS.CommonTypes + "Floor",          EVSE.ChargingStation.Address.FloorLevel)
-                // <!--Optional:-->
-                // <v11:Region>?</v11:Region>
-                // <!--Optional:-->
-                // <v11:TimeZone>?</v11:TimeZone>
+
+                    new XElement(OICPNS.CommonTypes + "Country",          EVSE.ChargingStation.Address.Country.Alpha3Code),
+                    new XElement(OICPNS.CommonTypes + "City",             EVSE.ChargingStation.Address.City),
+                    new XElement(OICPNS.CommonTypes + "Street",           EVSE.ChargingStation.Address.Street), // OICPv2.0 requires at least 5 characters!
+
+                    EVSE.ChargingStation.Address.PostalCode. IsNotNullOrEmpty()
+                        ? new XElement(OICPNS.CommonTypes + "PostalCode", EVSE.ChargingStation.Address.PostalCode)
+                        : null,
+
+                    EVSE.ChargingStation.Address.HouseNumber.IsNotNullOrEmpty()
+                        ? new XElement(OICPNS.CommonTypes + "HouseNum",   EVSE.ChargingStation.Address.HouseNumber)
+                        : null,
+
+                    EVSE.ChargingStation.Address.FloorLevel. IsNotNullOrEmpty()
+                        ? new XElement(OICPNS.CommonTypes + "Floor",      EVSE.ChargingStation.Address.FloorLevel)
+                        : null
+
+                    // <!--Optional:-->
+                    // <v11:Region>?</v11:Region>
+
+                    // <!--Optional:-->
+                    // <v11:TimeZone>?</v11:TimeZone>
+
                 ),
 
                 new XElement(OICPNS.EVSEData + "GeoCoordinates",
@@ -616,7 +637,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 EVSE.ChargingStation.AuthenticationModes.Any()
                     ? new XElement(OICPNS.EVSEData + "AuthenticationModes",
-                          EVSE.ChargingStation.AuthenticationModes.Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode.ToString())))
+                          EVSE.ChargingStation.AuthenticationModes.Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode.ToString().Replace("_", " "))))
                     : null,
 
                 EVSE.MaxCapacity_kWh > 0
@@ -625,11 +646,11 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 EVSE.ChargingStation.PaymentOptions.Any()
                     ? new XElement(OICPNS.EVSEData + "PaymentOptions",
-                          EVSE.ChargingStation.PaymentOptions.Select(PaymentOption => new XElement(OICPNS.EVSEData + "PaymentOption", PaymentOption.ToString())))
+                          EVSE.ChargingStation.PaymentOptions.Select(PaymentOption => new XElement(OICPNS.EVSEData + "PaymentOption", PaymentOption.ToString().Replace("_", " "))))
                     : null,
 
                 new XElement(OICPNS.EVSEData + "Accessibility",   EVSE.ChargingStation.Accessibility.ToString().Replace("_", " ")),
-                new XElement(OICPNS.EVSEData + "HotlinePhoneNum", EVSE.ChargingStation.HotlinePhoneNum),  // RegEx: \+[0-9]{5,15}
+                new XElement(OICPNS.EVSEData + "HotlinePhoneNum", HotlinePhoneNumberRegExpr.Replace(EVSE.ChargingStation.HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
 
                 EVSE.Description.Any()
                     ? new XElement(OICPNS.EVSEData + "AdditionalInfo", EVSE.Description.First().Text)
@@ -864,13 +885,25 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                     new XElement(OICPNS.CommonTypes + "Country",        EVSEDataRecord.Address.Country.Alpha3Code),
                     new XElement(OICPNS.CommonTypes + "City",           EVSEDataRecord.Address.City),
                     new XElement(OICPNS.CommonTypes + "Street",         EVSEDataRecord.Address.Street), // OICPv2.0 requires at least 5 characters!
-                    new XElement(OICPNS.CommonTypes + "PostalCode",     EVSEDataRecord.Address.PostalCode),
-                    new XElement(OICPNS.CommonTypes + "HouseNum",       EVSEDataRecord.Address.HouseNumber),
-                    new XElement(OICPNS.CommonTypes + "Floor",          EVSEDataRecord.Address.FloorLevel)
-                // <!--Optional:-->
-                // <v11:Region>?</v11:Region>
-                // <!--Optional:-->
-                // <v11:TimeZone>?</v11:TimeZone>
+
+                    EVSEDataRecord.Address.PostalCode. IsNotNullOrEmpty()
+                        ? new XElement(OICPNS.CommonTypes + "PostalCode", EVSEDataRecord.Address.PostalCode)
+                        : null,
+
+                    EVSEDataRecord.Address.HouseNumber.IsNotNullOrEmpty()
+                        ? new XElement(OICPNS.CommonTypes + "HouseNum",   EVSEDataRecord.Address.HouseNumber)
+                        : null,
+
+                    EVSEDataRecord.Address.FloorLevel. IsNotNullOrEmpty()
+                        ? new XElement(OICPNS.CommonTypes + "Floor",      EVSEDataRecord.Address.FloorLevel)
+                        : null
+
+                    // <!--Optional:-->
+                    // <v11:Region>?</v11:Region>
+
+                    // <!--Optional:-->
+                    // <v11:TimeZone>?</v11:TimeZone>
+
                 ),
 
                 new XElement(OICPNS.EVSEData + "GeoCoordinates",
@@ -886,26 +919,26 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                 EVSEDataRecord.ChargingFacilities.Any()
                     ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
-                          EVSEDataRecord.ChargingFacilities.Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   ChargingFacility)))
+                          EVSEDataRecord.ChargingFacilities.Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   ChargingFacility.  ToString().Replace("_", " "))))
                     : null,
 
                 EVSEDataRecord.ChargingModes.Any()
                     ? new XElement(OICPNS.EVSEData + "ChargingModes",
-                          EVSEDataRecord.ChargingModes.     Select(ChargingMode       => new XElement(OICPNS.EVSEData + "ChargingMode",       ChargingMode)))
+                          EVSEDataRecord.ChargingModes.     Select(ChargingMode       => new XElement(OICPNS.EVSEData + "ChargingMode",       ChargingMode.      ToString())))
                     : null,
 
                 new XElement(OICPNS.EVSEData + "AuthenticationModes",
-                    EVSEDataRecord.AuthenticationModes.     Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode))
+                    EVSEDataRecord.AuthenticationModes.     Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode.ToString().Replace("_", " ")))
                 ),
 
                 new XElement(OICPNS.EVSEData + "MaxCapacity", EVSEDataRecord.MaxCapacity),
 
                 new XElement(OICPNS.EVSEData + "PaymentOptions",
-                    EVSEDataRecord.PaymentOptions.          Select(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      PaymentOption))
+                    EVSEDataRecord.PaymentOptions.          Select(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      PaymentOption.     ToString().Replace("_", " ")))
                 ),
 
-                new XElement(OICPNS.EVSEData + "Accessibility",     EVSEDataRecord.Accessibility),
-                new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   EVSEDataRecord.HotlinePhoneNum),  // RegEx: \+[0-9]{5,15}
+                new XElement(OICPNS.EVSEData + "Accessibility",     EVSEDataRecord.Accessibility.ToString().Replace("_", " ")),
+                new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(EVSEDataRecord.HotlinePhoneNum, "")),  // RegEx: \+[0-9]{5,15}
 
                 EVSEDataRecord.AdditionalInfo.IsNotNullOrEmpty()
                     ? new XElement(OICPNS.EVSEData + "AdditionalInfo", EVSEDataRecord.AdditionalInfo)
@@ -1016,19 +1049,19 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             #endregion
 
-            return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPushEvseStatus",
-                                      new XElement(OICPNS.EVSEData + "ActionType", Action.ToString()),
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
+                                      new XElement(OICPNS.EVSEStatus + "ActionType", Action.ToString()),
                                       GroupedData.Select(datagroup =>
-                                          new XElement(OICPNS.EVSEData + "OperatorEvseStatus",
+                                          new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId != null
-                                                                                                ? OperatorId
-                                                                                                : datagroup.Key.Id).OriginId),
+                                              new XElement(OICPNS.EVSEStatus + "OperatorID", (OperatorId != null
+                                                                                                 ? OperatorId
+                                                                                                 : datagroup.Key.Id).OriginId),
 
                                               (OperatorName.IsNotNullOrEmpty() || datagroup.Key.Name.Any())
-                                                  ? new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName.IsNotNullOrEmpty()
-                                                                                                        ? OperatorName
-                                                                                                        : datagroup.Key.Name.First().Text))
+                                                  ? new XElement(OICPNS.EVSEStatus + "OperatorName", (OperatorName.IsNotNullOrEmpty()
+                                                                                                         ? OperatorName
+                                                                                                         : datagroup.Key.Name.First().Text))
                                                   : null,
 
                                               datagroup.Value.ToEvseDataRecordXML().ToArray()
@@ -1303,14 +1336,14 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                           new XElement(OICPNS.EVSEStatus + "ActionType", Action.ToString()),
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId != null
-                                                                                               ? OperatorId
-                                                                                               : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Id).OriginId),
+                                              new XElement(OICPNS.EVSEStatus + "OperatorID", (OperatorId != null
+                                                                                                 ? OperatorId
+                                                                                                 : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Id).OriginId),
 
                                               (OperatorName.IsNotNullOrEmpty() || _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.Any())
-                                                  ? new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName.IsNotNullOrEmpty()
-                                                                                                        ? OperatorName
-                                                                                                        : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.First().Text))
+                                                  ? new XElement(OICPNS.EVSEStatus + "OperatorName", (OperatorName.IsNotNullOrEmpty()
+                                                                                                         ? OperatorName
+                                                                                                         : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.First().Text))
                                                   : null,
 
                                               _EVSEs.
@@ -1391,7 +1424,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                               new XElement(OICPNS.EVSEStatus + "OperatorID", OperatorId.OriginId),
 
                                               OperatorName.IsNotNullOrEmpty()
-                                                  ? new XElement(OICPNS.EVSEData + "OperatorName", OperatorName)
+                                                  ? new XElement(OICPNS.EVSEStatus + "OperatorName", OperatorName)
                                                   : null,
 
                                               _EVSEIdAndStatus.
@@ -1474,7 +1507,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                               new XElement(OICPNS.EVSEStatus + "OperatorID", OperatorId.OriginId),
 
                                               OperatorName.IsNotNullOrEmpty()
-                                                  ? new XElement(OICPNS.EVSEData + "OperatorName", OperatorName)
+                                                  ? new XElement(OICPNS.EVSEStatus + "OperatorName", OperatorName)
                                                   : null,
 
                                               _EVSEIds.
@@ -1749,9 +1782,11 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                                           PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())                 : null,
 
-                                          new XElement(OICPNS.Authorization + "OperatorID",       OperatorId.ToFormat(IdFormatType.OLD)),
+                                          new XElement(OICPNS.Authorization + "OperatorID", OperatorId.OriginId),
 
-                                          EVSEId           != null ? new XElement(OICPNS.Authorization + "EVSEID",           EVSEId.          ToFormat(IdFormatType.OLD)) : null,
+                                          EVSEId != null
+                                              ? new XElement(OICPNS.Authorization + "EVSEID", EVSEId.OriginId)
+                                              : null,
 
                                           new XElement(OICPNS.Authorization + "Identification",
                                               new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
@@ -1836,13 +1871,15 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeStop",
 
-                                          new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
+                                          new XElement(OICPNS.Authorization + "SessionID", SessionId.ToString()),
 
-                                          PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())       : null,
+                                          PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
 
-                                          new XElement(OICPNS.Authorization + "OperatorID",       OperatorId.ToFormat(IdFormatType.OLD)),
+                                          new XElement(OICPNS.Authorization + "OperatorID", OperatorId.OriginId),
 
-                                          EVSEId           != null ? new XElement(OICPNS.Authorization + "EVSEID",           EVSEId.ToFormat(IdFormatType.OLD)) : null,
+                                          EVSEId != null
+                                              ? new XElement(OICPNS.Authorization + "EVSEID", EVSEId.OriginId)
+                                              : null,
 
                                           new XElement(OICPNS.Authorization + "Identification",
                                               new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
@@ -1999,7 +2036,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                  new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
                                  new XElement(OICPNS.Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
                                  new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId),
-                                 new XElement(OICPNS.Authorization + "EvseID",           EVSEId.ToFormat(IdFormatType.OLD)),
+                                 new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
 
                                  new XElement(OICPNS.Authorization + "Identification",
                                      (AuthToken != null)
