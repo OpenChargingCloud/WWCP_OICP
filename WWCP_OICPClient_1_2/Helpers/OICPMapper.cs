@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2015 GraphDefined GmbH
- * This file is part of WWCP OICPClient <https://github.com/WorldWideCharging/WWCP_OICPClient>
+ * This file is part of WWCP OICPClient <https://github.com/WorldWideCharging/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -197,9 +197,9 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
             switch (AccessibilityType)
             {
 
-                case "Free publicly accessible":    return AccessibilityTypes.FreePubliclyAccessible;
-                case "Restricted access":           return AccessibilityTypes.RestrictedAccess;
-                case "Paying publicly accessible":  return AccessibilityTypes.PayingPubliclyAccessible;
+                case "Free publicly accessible":    return AccessibilityTypes.Free_publicly_accessible;
+                case "Restricted access":           return AccessibilityTypes.Restricted_access;
+                case "Paying publicly accessible":  return AccessibilityTypes.Paying_publicly_accessible;
 
                 default:                            return AccessibilityTypes.Unspecified;
 

@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2015 GraphDefined GmbH
- * This file is part of WWCP OICPClient <https://github.com/WorldWideCharging/WWCP_OICPClient>
+ * This file is part of WWCP OICPClient <https://github.com/WorldWideCharging/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
-using System.Diagnostics;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -88,9 +87,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                       GroupedData.Select(datagroup =>
                                           new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
-                                              new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId != null
-                                                                                                  ? OperatorId
-                                                                                                  : datagroup.Key.Id).OriginId),
+                                              new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId != null
+                                                                                                ? OperatorId
+                                                                                                : datagroup.Key.Id).OriginId),
 
                                               (OperatorName.IsNotNullOrEmpty() || datagroup.Key.Name.Any())
                                                   ? new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName.IsNotNullOrEmpty()
@@ -367,9 +366,9 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                       new XElement(OICPNS.EVSEData + "ActionType", Action.ToString()),
                                       new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
-                                          new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId != null
-                                                                                              ? OperatorId
-                                                                                              : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Id).OriginId),
+                                          new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId != null
+                                                                                           ? OperatorId
+                                                                                           : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Id).OriginId),
 
                                           (OperatorName.IsNotNullOrEmpty() || _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.Any())
                                               ? new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName.IsNotNullOrEmpty()
@@ -620,40 +619,35 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                           EVSE.ChargingStation.AuthenticationModes.Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode.ToString())))
                     : null,
 
-                new XElement(OICPNS.EVSEData + "AuthenticationModes",
-                    new XElement(OICPNS.EVSEData + "AuthenticationMode", "NFC RFID Classic"),
-                    new XElement(OICPNS.EVSEData + "AuthenticationMode", "NFC RFID DESFire"),
-                    new XElement(OICPNS.EVSEData + "AuthenticationMode", "REMOTE"),
-                //new XElement(NS.OICPv1_2EVSEData + "AuthenticationMode", "PnC"),
-                    new XElement(OICPNS.EVSEData + "AuthenticationMode", "Direct Payment")
-                // EVSE.SocketOutlets.Select(Outlet =>
-                //    new XElement(NS.OICPv1_2EVSEData + "AuthenticationMode", "Unspecified"))//Outlet.Plug.ToString()))
-                ),
+                EVSE.MaxCapacity_kWh > 0
+                    ? new XElement(OICPNS.EVSEData + "MaxCapacity", EVSE.MaxCapacity_kWh)
+                    : null,
 
-                // <!--Optional:-->
-                //               <v1:MaxCapacity>?</v1:MaxCapacity>
+                EVSE.ChargingStation.PaymentOptions.Any()
+                    ? new XElement(OICPNS.EVSEData + "PaymentOptions",
+                          EVSE.ChargingStation.PaymentOptions.Select(PaymentOption => new XElement(OICPNS.EVSEData + "PaymentOption", PaymentOption.ToString())))
+                    : null,
 
-                new XElement(OICPNS.EVSEData + "PaymentOptions",
-                    new XElement(OICPNS.EVSEData + "PaymentOption", "Contract")
-                // ??????????????????????? SMS!
-                ),
+                new XElement(OICPNS.EVSEData + "Accessibility",   EVSE.ChargingStation.Accessibility.ToString().Replace("_", " ")),
+                new XElement(OICPNS.EVSEData + "HotlinePhoneNum", EVSE.ChargingStation.HotlinePhoneNum),  // RegEx: \+[0-9]{5,15}
 
-                new XElement(OICPNS.EVSEData + "Accessibility", "Free publicly accessible"),
-                new XElement(OICPNS.EVSEData + "HotlinePhoneNum", "+8000670000"),  // RegEx: \+[0-9]{5,15}
+                EVSE.Description.Any()
+                    ? new XElement(OICPNS.EVSEData + "AdditionalInfo", EVSE.Description.First().Text)
+                    : null,
 
-                // <!--Optional:-->
-                // <v1:AdditionalInfo>?</v1:AdditionalInfo>
+                EVSE.Description.has(Languages.en)
+                    ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", EVSE.Description[Languages.en])
+                    : null,
 
-                // <!--Optional:-->
-                // <v1:EnAdditionalInfo>?</v1:EnAdditionalInfo>
 
-                // <!--Optional:-->
-                // <v1:GeoChargingPointEntrance>
-                //    <v11:DecimalDegree>
-                //       <v11:Longitude>?</v11:Longitude>
-                //       <v11:Latitude>?</v11:Latitude>
-                //    </v11:DecimalDegree>
-                // </v1:GeoChargingPointEntrance>
+                EVSE.ChargingStation.EntranceLocation != null
+                    ? new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
+                          new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
+                              new XElement(OICPNS.CommonTypes + "Longitude",  EVSE.ChargingStation.GeoLocation.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                              new XElement(OICPNS.CommonTypes + "Latitude",   EVSE.ChargingStation.GeoLocation.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                          )
+                      )
+                    : null,
 
                 new XElement(OICPNS.EVSEData + "IsOpen24Hours",         EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours ? "true" : "false"),
 
@@ -1027,8 +1021,15 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                       GroupedData.Select(datagroup =>
                                           new XElement(OICPNS.EVSEData + "OperatorEvseStatus",
 
-                                              new XElement(OICPNS.EVSEData + "OperatorID",   (OperatorId   != null ? OperatorId   : datagroup.Key.Id).OriginId),
-                                              new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName != null ? OperatorName : datagroup.Key.Name.First().Text)),
+                                              new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId != null
+                                                                                                ? OperatorId
+                                                                                                : datagroup.Key.Id).OriginId),
+
+                                              (OperatorName.IsNotNullOrEmpty() || datagroup.Key.Name.Any())
+                                                  ? new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName.IsNotNullOrEmpty()
+                                                                                                        ? OperatorName
+                                                                                                        : datagroup.Key.Name.First().Text))
+                                                  : null,
 
                                               datagroup.Value.ToEvseDataRecordXML().ToArray()
 
@@ -1251,6 +1252,38 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                  Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
         {
 
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <v2:eRoamingPushEvseStatus>
+            //
+            //          <v2:ActionType>?</v2:ActionType>
+            //
+            //          <v2:OperatorEvseStatus>
+            //
+            //             <v2:OperatorID>?</v2:OperatorID>
+            //
+            //             <!--Optional:-->
+            //             <v2:OperatorName>?</v2:OperatorName>
+            //
+            //             <!--Zero or more repetitions:-->
+            //             <v2:EvseStatusRecord>
+            //                <v2:EvseId>?</v2:EvseId>
+            //                <v2:EvseStatus>?</v2:EvseStatus>
+            //             </v2:EvseStatusRecord>
+            //
+            //          </v2:OperatorEvseStatus>
+            //
+            //       </v2:eRoamingPushEvseStatus>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
+
             #region Initial checks
 
             if (EVSEs == null)
@@ -1270,8 +1303,15 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                           new XElement(OICPNS.EVSEStatus + "ActionType", Action.ToString()),
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(OICPNS.EVSEStatus + "OperatorID",   (OperatorId   != null ? OperatorId   : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Id).ToFormat(IdFormatType.OLD)),
-                                              new XElement(OICPNS.EVSEStatus + "OperatorName", (OperatorName != null ? OperatorName : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.FirstOrDefault().Text)),
+                                              new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId != null
+                                                                                               ? OperatorId
+                                                                                               : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Id).OriginId),
+
+                                              (OperatorName.IsNotNullOrEmpty() || _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.Any())
+                                                  ? new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName.IsNotNullOrEmpty()
+                                                                                                        ? OperatorName
+                                                                                                        : _EVSEs.First().ChargingStation.ChargingPool.EVSEOperator.Name.First().Text))
+                                                  : null,
 
                                               _EVSEs.
                                                   Where(evse => IncludeEVSEs(evse.Id)).
@@ -1285,14 +1325,46 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this EVSEIdAndStatus,       OperatorId, OperatorName, Action = update, IncludeEVSEIds = null)
+        #region PushEVSEStatusXML(this EVSEIdAndStatus,       OperatorId, OperatorName = null, Action = update, IncludeEVSEIds = null)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>>  EVSEIdAndStatus,
                                                  EVSEOperator_Id                                          OperatorId,
-                                                 String                                                   OperatorName,
+                                                 String                                                   OperatorName    = null,
                                                  ActionType                                               Action          = ActionType.update,
                                                  Func<EVSE_Id, Boolean>                                   IncludeEVSEIds  = null)
         {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <v2:eRoamingPushEvseStatus>
+            //
+            //          <v2:ActionType>?</v2:ActionType>
+            //
+            //          <v2:OperatorEvseStatus>
+            //
+            //             <v2:OperatorID>?</v2:OperatorID>
+            //
+            //             <!--Optional:-->
+            //             <v2:OperatorName>?</v2:OperatorName>
+            //
+            //             <!--Zero or more repetitions:-->
+            //             <v2:EvseStatusRecord>
+            //                <v2:EvseId>?</v2:EvseId>
+            //                <v2:EvseStatus>?</v2:EvseStatus>
+            //             </v2:EvseStatusRecord>
+            //
+            //          </v2:OperatorEvseStatus>
+            //
+            //       </v2:eRoamingPushEvseStatus>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
 
             #region Initial checks
 
@@ -1316,8 +1388,11 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                           new XElement(OICPNS.EVSEStatus + "ActionType", ActionType.delete.ToString()),
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(OICPNS.EVSEStatus + "OperatorID",   OperatorId.ToFormat(IdFormatType.OLD)),
-                                              new XElement(OICPNS.EVSEStatus + "OperatorName", OperatorName),
+                                              new XElement(OICPNS.EVSEStatus + "OperatorID", OperatorId.OriginId),
+
+                                              OperatorName.IsNotNullOrEmpty()
+                                                  ? new XElement(OICPNS.EVSEData + "OperatorName", OperatorName)
+                                                  : null,
 
                                               _EVSEIdAndStatus.
                                                   Where(kvp => IncludeEVSEIds(kvp.Key)).
@@ -1331,12 +1406,12 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this EVSEIds, CommonStatus, OperatorId, OperatorName, Action = update, IncludeEVSEIds = null)
+        #region PushEVSEStatusXML(this EVSEIds, CommonStatus, OperatorId, OperatorName = null, Action = update, IncludeEVSEIds = null)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<EVSE_Id>  EVSEIds,
                                                  EVSEStatusType             CommonStatus,
                                                  EVSEOperator_Id            OperatorId,
-                                                 String                     OperatorName,
+                                                 String                     OperatorName    = null,
                                                  ActionType                 Action          = ActionType.update,
                                                  Func<EVSE_Id, Boolean>     IncludeEVSEIds  = null)
 
@@ -1396,8 +1471,11 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                           new XElement(OICPNS.EVSEStatus + "ActionType", Action.ToString()),
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
-                                              new XElement(OICPNS.EVSEStatus + "OperatorID",   OperatorId.OriginId),
-                                              new XElement(OICPNS.EVSEStatus + "OperatorName", OperatorName),
+                                              new XElement(OICPNS.EVSEStatus + "OperatorID", OperatorId.OriginId),
+
+                                              OperatorName.IsNotNullOrEmpty()
+                                                  ? new XElement(OICPNS.EVSEData + "OperatorName", OperatorName)
+                                                  : null,
 
                                               _EVSEIds.
                                                   Where(evseid => IncludeEVSEIds(evseid)).
@@ -1421,10 +1499,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
             //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
 
-            //             <v2:EvseStatusRecord>
-            //                <v2:EvseId>?</v2:EvseId>
-            //                <v2:EvseStatus>?</v2:EvseStatus>
-            //             </v2:EvseStatusRecord>
+            // <v2:EvseStatusRecord>
+            //    <v2:EvseId>?</v2:EvseId>
+            //    <v2:EvseStatus>?</v2:EvseStatus>
+            // </v2:EvseStatusRecord>
 
             #endregion
 
@@ -1477,10 +1555,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
             //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
 
-            //             <v2:EvseStatusRecord>
-            //                <v2:EvseId>?</v2:EvseId>
-            //                <v2:EvseStatus>?</v2:EvseStatus>
-            //             </v2:EvseStatusRecord>
+            // <v2:EvseStatusRecord>
+            //    <v2:EvseId>?</v2:EvseId>
+            //    <v2:EvseStatus>?</v2:EvseStatus>
+            // </v2:EvseStatusRecord>
 
             #endregion
 
@@ -1570,10 +1648,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
             //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
 
-            //             <v2:EvseStatusRecord>
-            //                <v2:EvseId>?</v2:EvseId>
-            //                <v2:EvseStatus>?</v2:EvseStatus>
-            //             </v2:EvseStatusRecord>
+            // <v2:EvseStatusRecord>
+            //    <v2:EvseId>?</v2:EvseId>
+            //    <v2:EvseStatus>?</v2:EvseStatus>
+            // </v2:EvseStatusRecord>
 
             #endregion
 

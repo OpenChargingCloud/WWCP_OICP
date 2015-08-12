@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2015 GraphDefined GmbH
- * This file is part of WWCP OICPClient <https://github.com/WorldWideCharging/WWCP_OICPClient>
+ * This file is part of WWCP OICPClient <https://github.com/WorldWideCharging/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -365,8 +365,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                                           new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
 
-                                          EVSEIds.Select(EVSEId => new XElement(OICPNS.EVSEStatus + "EvseId", EVSEId.OriginId)).
-                                                  ToArray()
+                                          EVSEIds.Select(EVSEId => new XElement(OICPNS.EVSEStatus + "EvseId", EVSEId.OriginId))
 
                                      ));
 
