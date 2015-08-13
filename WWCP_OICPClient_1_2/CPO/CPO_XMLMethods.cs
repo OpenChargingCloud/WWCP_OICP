@@ -1144,7 +1144,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// <param name="MeterValuesInBetween">Optional meter values during the charging session.</param>
         public static XElement SendChargeDetailRecordXML(this EVSE            EVSE,
                                                          ChargingSession_Id   SessionId,
-                                                         String               PartnerProductId,
+                                                         ChargingProduct_Id   PartnerProductId,
                                                          DateTime             SessionStart,
                                                          DateTime             SessionEnd,
                                                          Auth_Token           AuthToken             = null,
@@ -1218,7 +1218,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
         public static XElement SendChargeDetailRecordXML(EVSE_Id              EVSEId,
                                                          ChargingSession_Id   SessionId,
-                                                         String               PartnerProductId,
+                                                         ChargingProduct_Id   PartnerProductId,
                                                          DateTime             SessionStart,
                                                          DateTime             SessionEnd,
                                                          Auth_Token           AuthToken             = null,
@@ -1265,7 +1265,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2
 
                                  new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
                                  new XElement(OICPNS.Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
-                                 new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId),
+                                 new XElement(OICPNS.Authorization + "PartnerProductID", (PartnerProductId != null) ? PartnerProductId.ToString() : ""),
                                  new XElement(OICPNS.Authorization + "EvseID",           EVSEId.ToFormat(IdFormatType.OLD)),
 
                                  new XElement(OICPNS.Authorization + "Identification",

@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2015 GraphDefined GmbH
- * This file is part of WWCP OICPClient <https://github.com/WorldWideCharging/WWCP_OICP>
+ * This file is part of WWCP OICP <https://github.com/WorldWideCharging/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,10 +44,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #endregion
 
 
-        #region PushEVSEDataXML(this GroupedData,      Action = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEDataXML(GroupedData,           OICPAction = fullLoad, OperatorId = null, OperatorName = null)
 
         public static XElement PushEVSEDataXML(ILookup<EVSEOperator, IEnumerable<EVSE>>  GroupedData,
-                                               ActionType                                Action        = ActionType.fullLoad,
+                                               ActionType                                OICPAction    = ActionType.fullLoad,
                                                EVSEOperator_Id                           OperatorId    = null,
                                                String                                    OperatorName  = null)
         {
@@ -91,7 +91,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
-                                      new XElement(OICPNS.EVSEData + "ActionType", Action.ToString()),
+                                      new XElement(OICPNS.EVSEData + "ActionType", OICPAction.ToString()),
                                       GroupedData.Select(datagroup =>
                                           new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
@@ -115,13 +115,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEDataXML(this EVSEOperator,     Action = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEDataXML(this EVSEOperator,     OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
-        public static XElement PushEVSEDataXML(this EVSEOperator       EVSEOperator,
-                                               ActionType              Action        = ActionType.fullLoad,
-                                               EVSEOperator_Id         OperatorId    = null,
-                                               String                  OperatorName  = null,
-                                               Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        public static XElement PushEVSEDataXML(this EVSEOperator    EVSEOperator,
+                                               ActionType           OICPAction    = ActionType.fullLoad,
+                                               EVSEOperator_Id      OperatorId    = null,
+                                               String               OperatorName  = null,
+                                               Func<EVSE, Boolean>  IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -132,7 +132,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return new EVSEOperator[] { EVSEOperator }.
-                       PushEVSEDataXML(Action,
+                       PushEVSEDataXML(OICPAction,
                                        OperatorId,
                                        OperatorName,
                                        IncludeEVSEs);
@@ -141,13 +141,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEDataXML(this EVSEOperators,    Action = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEDataXML(this EVSEOperators,    OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
         public static XElement PushEVSEDataXML(this IEnumerable<EVSEOperator>  EVSEOperators,
-                                               ActionType                      Action        = ActionType.fullLoad,
+                                               ActionType                      OICPAction    = ActionType.fullLoad,
                                                EVSEOperator_Id                 OperatorId    = null,
                                                String                          OperatorName  = null,
-                                               Func<EVSE_Id, Boolean>          IncludeEVSEs  = null)
+                                               Func<EVSE, Boolean>             IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -168,8 +168,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             return PushEVSEDataXML(_EVSEOperators.ToLookup(evseoperator => evseoperator,
                                                            evseoperator => evseoperator.SelectMany(pool    => pool.ChargingStations).
                                                                                         SelectMany(station => station.EVSEs).
-                                                                                        Where     (evse    => IncludeEVSEs(evse.Id))),
-                                   Action,
+                                                                                        Where     (evse    => IncludeEVSEs(evse))),
+                                   OICPAction,
                                    OperatorId,
                                    OperatorName);
 
@@ -177,13 +177,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEDataXML(this ChargingPool,     Action = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEDataXML(this ChargingPool,     OICPAction = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
-        public static XElement PushEVSEDataXML(this ChargingPool       ChargingPool,
-                                               ActionType              Action        = ActionType.insert,
-                                               EVSEOperator_Id         OperatorId    = null,
-                                               String                  OperatorName  = null,
-                                               Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        public static XElement PushEVSEDataXML(this ChargingPool    ChargingPool,
+                                               ActionType           OICPAction    = ActionType.insert,
+                                               EVSEOperator_Id      OperatorId    = null,
+                                               String               OperatorName  = null,
+                                               Func<EVSE, Boolean>  IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -194,7 +194,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return new ChargingPool[] { ChargingPool }.
-                       PushEVSEDataXML(Action,
+                       PushEVSEDataXML(OICPAction,
                                        OperatorId,
                                        OperatorName,
                                        IncludeEVSEs);
@@ -203,13 +203,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEDataXML(this ChargingPools,    Action = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEDataXML(this ChargingPools,    OICPAction = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
         public static XElement PushEVSEDataXML(this IEnumerable<ChargingPool>  ChargingPools,
-                                               ActionType                      Action        = ActionType.insert,
+                                               ActionType                      OICPAction    = ActionType.insert,
                                                EVSEOperator_Id                 OperatorId    = null,
                                                String                          OperatorName  = null,
-                                               Func<EVSE_Id, Boolean>          IncludeEVSEs  = null)
+                                               Func<EVSE, Boolean>             IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -229,8 +229,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             return PushEVSEDataXML(_ChargingPools.ToLookup(pool => pool.EVSEOperator,
                                                            pool => pool.SelectMany(station => station.EVSEs).
-                                                                        Where     (evse    => IncludeEVSEs(evse.Id))),
-                                   Action,
+                                                                        Where     (evse    => IncludeEVSEs(evse))),
+                                   OICPAction,
                                    OperatorId,
                                    OperatorName);
 
@@ -238,13 +238,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEDataXML(this ChargingStation,  Action = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEDataXML(this ChargingStation,  OICPAction = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
-        public static XElement PushEVSEDataXML(this ChargingStation    ChargingStation,
-                                               ActionType              Action        = ActionType.insert,
-                                               EVSEOperator_Id         OperatorId    = null,
-                                               String                  OperatorName  = null,
-                                               Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        public static XElement PushEVSEDataXML(this ChargingStation  ChargingStation,
+                                               ActionType            OICPAction    = ActionType.insert,
+                                               EVSEOperator_Id       OperatorId    = null,
+                                               String                OperatorName  = null,
+                                               Func<EVSE, Boolean>   IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -258,7 +258,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return new ChargingStation[] { ChargingStation }.
-                       PushEVSEDataXML(Action,
+                       PushEVSEDataXML(OICPAction,
                                        OperatorId,
                                        OperatorName,
                                        IncludeEVSEs);
@@ -267,13 +267,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEDataXML(this ChargingStations, Action = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEDataXML(this ChargingStations, OICPAction = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
         public static XElement PushEVSEDataXML(this IEnumerable<ChargingStation>  ChargingStations,
-                                               ActionType                         Action        = ActionType.insert,
+                                               ActionType                         OICPAction    = ActionType.insert,
                                                EVSEOperator_Id                    OperatorId    = null,
                                                String                             OperatorName  = null,
-                                               Func<EVSE_Id, Boolean>             IncludeEVSEs  = null)
+                                               Func<EVSE, Boolean>                IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -292,8 +292,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return PushEVSEDataXML(_ChargingStations.ToLookup(station => station.ChargingPool.EVSEOperator,
-                                                              station => station.Where(evse => IncludeEVSEs(evse.Id))),
-                                   Action,
+                                                              station => station.Where(evse => IncludeEVSEs(evse))),
+                                   OICPAction,
                                    OperatorId,
                                    OperatorName);
 
@@ -301,16 +301,16 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEDataXML(this EVSE,             Action = insert,   OperatorId = null, OperatorName = null)
+        #region PushEVSEDataXML(this EVSE,             OICPAction = insert,   OperatorId = null, OperatorName = null)
 
         public static XElement PushEVSEDataXML(this EVSE        EVSE,
                                                EVSEOperator_Id  OperatorId    = null,
                                                String           OperatorName  = null,
-                                               ActionType       Action        = ActionType.insert)
+                                               ActionType       OICPAction    = ActionType.insert)
         {
 
             return new EVSE[] { EVSE }.
-                       PushEVSEDataXML(Action,
+                       PushEVSEDataXML(OICPAction,
                                        OperatorId,
                                        OperatorName);
 
@@ -318,13 +318,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEDataXML(this EVSEs,            Action = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEDataXML(this EVSEs,            OICPAction = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
         public static XElement PushEVSEDataXML(this IEnumerable<EVSE>  EVSEs,
-                                               ActionType              Action        = ActionType.insert,
+                                               ActionType              OICPAction    = ActionType.insert,
                                                EVSEOperator_Id         OperatorId    = null,
                                                String                  OperatorName  = null,
-                                               Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+                                               Func<EVSE, Boolean>     IncludeEVSEs  = null)
         {
 
             #region Documentation
@@ -371,7 +371,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
-                                      new XElement(OICPNS.EVSEData + "ActionType", Action.ToString()),
+                                      new XElement(OICPNS.EVSEData + "ActionType", OICPAction.ToString()),
                                       new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
                                           new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId != null
@@ -386,9 +386,101 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                                           // <EvseDataRecord> ... </EvseDataRecord>
                                           _EVSEs.
-                                              Where(evse => IncludeEVSEs(evse.Id)).
-                                              ToEvseDataRecordXML().
-                                              ToArray()
+                                              Where(evse => IncludeEVSEs(evse)).
+                                              ToEvseDataRecordXML()
+
+                                      )
+                                  ));
+
+        }
+
+        #endregion
+
+        #region PushEVSEDataXML(this EVSEDataRecord,   OICPAction = insert,   OperatorId = null, OperatorName = null)
+
+        public static XElement PushEVSEDataXML(this EVSEDataRecord  EVSEDataRecord,
+                                               EVSEOperator_Id      OperatorId    = null,
+                                               String               OperatorName  = null,
+                                               ActionType           OICPAction    = ActionType.insert)
+        {
+
+            return new EVSEDataRecord[] { EVSEDataRecord }.
+                       PushEVSEDataXML(OICPAction,
+                                       OperatorId,
+                                       OperatorName);
+
+        }
+
+        #endregion
+
+        #region PushEVSEDataXML(this EVSEDataRecords,  OICPAction = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+
+        public static XElement PushEVSEDataXML(this IEnumerable<EVSEDataRecord>  EVSEDataRecords,
+                                               ActionType                        OICPAction    = ActionType.insert,
+                                               EVSEOperator_Id                   OperatorId    = null,
+                                               String                            OperatorName  = null,
+                                               Func<EVSEDataRecord, Boolean>     IncludeEVSEs  = null)
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <v2:eRoamingPushEvseData>
+            //
+            //          <v2:ActionType>?</v2:ActionType>
+            //
+            //          <v2:OperatorEvseData>
+            //
+            //             <v2:OperatorID>?</v2:OperatorID>
+            //
+            //             <!--Optional:-->
+            //             <v2:OperatorName>?</v2:OperatorName>
+            //
+            //             <!--Zero or more repetitions:-->
+            //             <v2:EvseDataRecord deltaType="?" lastUpdate="?">
+            //                [...]
+            //             </v2:EvseDataRecord>
+            //
+            //          </v2:OperatorEvseData>
+            //       </v2:eRoamingPushEvseData>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
+
+            #region Initial checks
+
+            if (EVSEDataRecords == null)
+                throw new ArgumentNullException("EVSEs", "The given parameter must not be null!");
+
+            var _EVSEDataRecords = EVSEDataRecords.ToArray();
+
+            if (_EVSEDataRecords.Length == 0)
+                throw new ArgumentNullException("EVSEs", "The given parameter must not be empty!");
+
+            #endregion
+
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
+                                      new XElement(OICPNS.EVSEData + "ActionType", OICPAction.ToString()),
+                                      new XElement(OICPNS.EVSEData + "OperatorEvseData",
+
+                                          new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId != null
+                                                                                           ? OperatorId
+                                                                                           : _EVSEDataRecords.First().EVSEId.OperatorId).OriginId),
+
+                                          OperatorName.IsNotNullOrEmpty()
+                                              ? new XElement(OICPNS.EVSEData + "OperatorName", OperatorName)
+                                              : null,
+
+                                          // <EvseDataRecord> ... </EvseDataRecord>
+                                          _EVSEDataRecords.
+                                              Where(evsedatarecord => IncludeEVSEs(evsedatarecord)).
+                                              ToXML()
 
                                       )
                                   ));
@@ -1002,10 +1094,10 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         #endregion
 
 
-        #region PushEVSEStatusXML(this GroupedData,      Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEStatusXML(GroupedData,           OICPAction = update, OperatorId = null, OperatorName = null)
 
         public static XElement PushEVSEStatusXML(Dictionary<EVSEOperator, IEnumerable<EVSE>>  GroupedData,
-                                                 ActionType                                   Action        = ActionType.update,
+                                                 ActionType                                   OICPAction    = ActionType.update,
                                                  EVSEOperator_Id                              OperatorId    = null,
                                                  String                                       OperatorName  = null)
         {
@@ -1050,7 +1142,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
-                                      new XElement(OICPNS.EVSEStatus + "ActionType", Action.ToString()),
+                                      new XElement(OICPNS.EVSEStatus + "ActionType", OICPAction.ToString()),
                                       GroupedData.Select(datagroup =>
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
@@ -1073,13 +1165,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this EVSEOperator,     Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEStatusXML(this EVSEOperator,     OICPAction = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
-        public static XElement PushEVSEStatusXML(this EVSEOperator       EVSEOperator,
-                                                 ActionType              Action        = ActionType.update,
-                                                 EVSEOperator_Id         OperatorId    = null,
-                                                 String                  OperatorName  = null,
-                                                 Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        public static XElement PushEVSEStatusXML(this EVSEOperator    EVSEOperator,
+                                                 ActionType           OICPAction    = ActionType.update,
+                                                 EVSEOperator_Id      OperatorId    = null,
+                                                 String               OperatorName  = null,
+                                                 Func<EVSE, Boolean>  IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -1090,7 +1182,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return new EVSEOperator[] { EVSEOperator }.
-                       PushEVSEStatusXML(Action,
+                       PushEVSEStatusXML(OICPAction,
                                          OperatorId,
                                          OperatorName,
                                          IncludeEVSEs);
@@ -1099,13 +1191,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this EVSEOperators,    Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEStatusXML(this EVSEOperators,    OICPAction = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<EVSEOperator>  EVSEOperators,
-                                                 ActionType                      Action        = ActionType.update,
+                                                 ActionType                      OICPAction    = ActionType.update,
                                                  EVSEOperator_Id                 OperatorId    = null,
                                                  String                          OperatorName  = null,
-                                                 Func<EVSE_Id, Boolean>          IncludeEVSEs  = null)
+                                                 Func<EVSE, Boolean>             IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -1126,8 +1218,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             return PushEVSEStatusXML(_EVSEOperators.ToDictionary(evseoperator => evseoperator,
                                                                  evseoperator => evseoperator.SelectMany(pool    => pool.ChargingStations).
                                                                                               SelectMany(station => station.EVSEs).
-                                                                                              Where     (evse    => IncludeEVSEs(evse.Id))),
-                                     Action,
+                                                                                              Where     (evse    => IncludeEVSEs(evse))),
+                                     OICPAction,
                                      OperatorId,
                                      OperatorName);
 
@@ -1135,13 +1227,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this ChargingPool,     Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEStatusXML(this ChargingPool,     OICPAction = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
-        public static XElement PushEVSEStatusXML(this ChargingPool       ChargingPool,
-                                                 ActionType              Action        = ActionType.update,
-                                                 EVSEOperator_Id         OperatorId    = null,
-                                                 String                  OperatorName  = null,
-                                                 Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        public static XElement PushEVSEStatusXML(this ChargingPool    ChargingPool,
+                                                 ActionType           OICPAction    = ActionType.update,
+                                                 EVSEOperator_Id      OperatorId    = null,
+                                                 String               OperatorName  = null,
+                                                 Func<EVSE, Boolean>  IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -1152,7 +1244,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return new ChargingPool[] { ChargingPool }.
-                       PushEVSEStatusXML(Action,
+                       PushEVSEStatusXML(OICPAction,
                                          OperatorId,
                                          OperatorName,
                                          IncludeEVSEs);
@@ -1161,13 +1253,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this ChargingPools,    Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEStatusXML(this ChargingPools,    OICPAction = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<ChargingPool>  ChargingPools,
-                                                 ActionType                      Action        = ActionType.update,
+                                                 ActionType                      OICPAction    = ActionType.update,
                                                  EVSEOperator_Id                 OperatorId    = null,
                                                  String                          OperatorName  = null,
-                                                 Func<EVSE_Id, Boolean>          IncludeEVSEs  = null)
+                                                 Func<EVSE, Boolean>             IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -1187,8 +1279,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
             return PushEVSEStatusXML(_ChargingPools.ToDictionary(pool => pool.EVSEOperator,
                                                                  pool => pool.SelectMany(station => station.EVSEs).
-                                                                              Where     (evse    => IncludeEVSEs(evse.Id))),
-                                     Action,
+                                                                              Where     (evse    => IncludeEVSEs(evse))),
+                                     OICPAction,
                                      OperatorId,
                                      OperatorName);
 
@@ -1196,13 +1288,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this ChargingStation,  Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEStatusXML(this ChargingStation,  OICPAction = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
-        public static XElement PushEVSEStatusXML(this ChargingStation    ChargingStation,
-                                                 ActionType              Action        = ActionType.update,
-                                                 EVSEOperator_Id         OperatorId    = null,
-                                                 String                  OperatorName  = null,
-                                                 Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+        public static XElement PushEVSEStatusXML(this ChargingStation  ChargingStation,
+                                                 ActionType            OICPAction    = ActionType.update,
+                                                 EVSEOperator_Id       OperatorId    = null,
+                                                 String                OperatorName  = null,
+                                                 Func<EVSE, Boolean>   IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -1216,7 +1308,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return new ChargingStation[] { ChargingStation }.
-                       PushEVSEStatusXML(Action,
+                       PushEVSEStatusXML(OICPAction,
                                          OperatorId,
                                          OperatorName,
                                          IncludeEVSEs);
@@ -1225,13 +1317,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this ChargingStations, Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEStatusXML(this ChargingStations, OICPAction = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<ChargingStation>  ChargingStations,
-                                                 ActionType                         Action        = ActionType.update,
+                                                 ActionType                         OICPAction    = ActionType.update,
                                                  EVSEOperator_Id                    OperatorId    = null,
                                                  String                             OperatorName  = null,
-                                                 Func<EVSE_Id, Boolean>             IncludeEVSEs  = null)
+                                                 Func<EVSE, Boolean>             IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -1250,8 +1342,8 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return PushEVSEStatusXML(_ChargingStations.ToDictionary(station => station.ChargingPool.EVSEOperator,
-                                                                    station => station.Where(evse => IncludeEVSEs(evse.Id))),
-                                     Action,
+                                                                    station => station.Where(evse => IncludeEVSEs(evse))),
+                                     OICPAction,
                                      OperatorId,
                                      OperatorName);
 
@@ -1259,16 +1351,16 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this EVSE,             Action = update, OperatorId = null, OperatorName = null)
+        #region PushEVSEStatusXML(this EVSE,             OICPAction = update, OperatorId = null, OperatorName = null)
 
         public static XElement PushEVSEStatusXML(this EVSE        EVSE,
                                                  EVSEOperator_Id  OperatorId    = null,
                                                  String           OperatorName  = null,
-                                                 ActionType       Action        = ActionType.update)
+                                                 ActionType       OICPAction    = ActionType.update)
         {
 
             return new EVSE[] { EVSE }.
-                       PushEVSEStatusXML(Action,
+                       PushEVSEStatusXML(OICPAction,
                                          OperatorId,
                                          OperatorName);
 
@@ -1276,13 +1368,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this EVSEs,            Action = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
+        #region PushEVSEStatusXML(this EVSEs,            OICPAction = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<EVSE>  EVSEs,
-                                                 ActionType              Action        = ActionType.update,
+                                                 ActionType              OICPAction    = ActionType.update,
                                                  EVSEOperator_Id         OperatorId    = null,
                                                  String                  OperatorName  = null,
-                                                 Func<EVSE_Id, Boolean>  IncludeEVSEs  = null)
+                                                 Func<EVSE, Boolean>     IncludeEVSEs  = null)
         {
 
             #region Documentation
@@ -1333,7 +1425,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
-                                          new XElement(OICPNS.EVSEStatus + "ActionType", Action.ToString()),
+                                          new XElement(OICPNS.EVSEStatus + "ActionType", OICPAction.ToString()),
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
                                               new XElement(OICPNS.EVSEStatus + "OperatorID", (OperatorId != null
@@ -1347,7 +1439,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
                                                   : null,
 
                                               _EVSEs.
-                                                  Where(evse => IncludeEVSEs(evse.Id)).
+                                                  Where(evse => IncludeEVSEs(evse)).
                                                   ToEvseStatusRecords().
                                                   ToArray()
 
@@ -1358,7 +1450,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this EVSEIdAndStatus,       OperatorId, OperatorName = null, Action = update, IncludeEVSEIds = null)
+        #region PushEVSEStatusXML(this EVSEIdAndStatus,       OperatorId, OperatorName = null, OICPAction = update, IncludeEVSEIds = null)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>>  EVSEIdAndStatus,
                                                  EVSEOperator_Id                                          OperatorId,
@@ -1439,13 +1531,13 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
         #endregion
 
-        #region PushEVSEStatusXML(this EVSEIds, CommonStatus, OperatorId, OperatorName = null, Action = update, IncludeEVSEIds = null)
+        #region PushEVSEStatusXML(this EVSEIds, CommonStatus, OperatorId, OperatorName = null, OICPAction = update, IncludeEVSEIds = null)
 
         public static XElement PushEVSEStatusXML(this IEnumerable<EVSE_Id>  EVSEIds,
                                                  EVSEStatusType             CommonStatus,
                                                  EVSEOperator_Id            OperatorId,
                                                  String                     OperatorName    = null,
-                                                 ActionType                 Action          = ActionType.update,
+                                                 ActionType                 OICPAction      = ActionType.update,
                                                  Func<EVSE_Id, Boolean>     IncludeEVSEIds  = null)
 
         {
@@ -1501,7 +1593,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
             #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
-                                          new XElement(OICPNS.EVSEStatus + "ActionType", Action.ToString()),
+                                          new XElement(OICPNS.EVSEStatus + "ActionType", OICPAction.ToString()),
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
                                               new XElement(OICPNS.EVSEStatus + "OperatorID", OperatorId.OriginId),
@@ -1914,7 +2006,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// <param name="MeterValuesInBetween">Optional meter values during the charging session.</param>
         public static XElement SendChargeDetailRecordXML(this EVSE            EVSE,
                                                          ChargingSession_Id   SessionId,
-                                                         String               PartnerProductId,
+                                                         ChargingProduct_Id   PartnerProductId,
                                                          DateTime             SessionStart,
                                                          DateTime             SessionEnd,
                                                          Auth_Token           AuthToken             = null,
@@ -1988,7 +2080,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
         public static XElement SendChargeDetailRecordXML(EVSE_Id              EVSEId,
                                                          ChargingSession_Id   SessionId,
-                                                         String               PartnerProductId,
+                                                         ChargingProduct_Id   PartnerProductId,
                                                          DateTime             SessionStart,
                                                          DateTime             SessionEnd,
                                                          Auth_Token           AuthToken             = null,
@@ -2035,7 +2127,7 @@ namespace org.GraphDefined.WWCP.OICPClient_2_0
 
                                  new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
                                  new XElement(OICPNS.Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
-                                 new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId),
+                                 new XElement(OICPNS.Authorization + "PartnerProductID", (PartnerProductId != null) ? PartnerProductId.ToString() : ""),
                                  new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
 
                                  new XElement(OICPNS.Authorization + "Identification",
