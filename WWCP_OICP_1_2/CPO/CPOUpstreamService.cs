@@ -1345,7 +1345,8 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                                                                                                         SessionId            = AuthStartResult.SessionID,
                                                                                                         PartnerSessionId     = PartnerSessionId,
                                                                                                         ProviderId           = EVSP_Id.Parse(AuthStartResult.ProviderID),
-                                                                                                        Description          = AuthStartResult.Description
+                                                                                                        Description          = AuthStartResult.Description,
+                                                                                                        AdditionalInfo       = AuthStartResult.AdditionalInfo
                                                                                                     });
 
                                                        #endregion
@@ -1377,7 +1378,8 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                                                                                                     new AUTHSTARTResult(AuthorizatorId) {
                                                                                                         AuthorizationResult  = AuthorizationResult.NotAuthorized,
                                                                                                         PartnerSessionId     = PartnerSessionId,
-                                                                                                        Description          = AuthStartResult.Description + " - " + AuthStartResult.AdditionalInfo
+                                                                                                        Description          = AuthStartResult.Description,
+                                                                                                        AdditionalInfo       = AuthStartResult.AdditionalInfo
                                                                                                     });
 
 
@@ -1417,7 +1419,8 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                                                                                                 new AUTHSTARTResult(AuthorizatorId) {
                                                                                                     AuthorizationResult  = AuthorizationResult.NotAuthorized,
                                                                                                     PartnerSessionId     = PartnerSessionId,
-                                                                                                    Description          = AuthStartResult.Description
+                                                                                                    Description          = AuthStartResult.Description,
+                                                                                                    AdditionalInfo       = AuthStartResult.AdditionalInfo
                                                                                                 });
 
                                                        #endregion
