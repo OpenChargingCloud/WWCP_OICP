@@ -7,8 +7,8 @@
     <ProjectGuid>{CB25F973-FED9-497B-A3A6-A6249ACDF910}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>org.GraphDefined.WWCP.OICPClient_1_2.UnitTests</RootNamespace>
-    <AssemblyName>WWCP_IO_OICP_UnitTests</AssemblyName>
+    <RootNamespace>org.GraphDefined.WWCP.OICPClient_2_0.UnitTests</RootNamespace>
+    <AssemblyName>WWCP_IO_OICP_2_0_UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

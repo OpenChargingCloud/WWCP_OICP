@@ -7,7 +7,7 @@
     <ProjectGuid>{4BB02C38-48C3-41CB-99F6-A1888881B942}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WWCP_OICP_2_0</RootNamespace>
+    <RootNamespace>org.GraphDefined.WWCP.OICP_2_0</RootNamespace>
     <AssemblyName>org.graphdefined.WWCP.OICP_2_0</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
