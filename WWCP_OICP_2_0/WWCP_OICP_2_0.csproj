@@ -74,6 +74,7 @@
     <Compile Include="Entities\EVSEDataRecord.cs" />
     <Compile Include="OICPImporter.cs" />
     <Compile Include="OICPServer\OICPServer.cs" />
+    <Compile Include="OICPServiceCheck\OICPServiceCheck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

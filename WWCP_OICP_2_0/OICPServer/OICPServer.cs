@@ -52,15 +52,29 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Properties
 
-        #region RequestRouter
+        #region RoamingNetwork
 
-        private readonly RequestRouter _RequestRouter;
+        private readonly RoamingNetwork _RoamingNetwork;
 
-        public RequestRouter RequestRouter
+        public RoamingNetwork RoamingNetwork
         {
             get
             {
-                return _RequestRouter;
+                return _RoamingNetwork;
+            }
+        }
+
+        #endregion
+
+        #region URIPrefix
+
+        protected readonly String _URIPrefix;
+
+        public String URIPrefix
+        {
+            get
+            {
+                return _URIPrefix;
             }
         }
 
@@ -73,22 +87,24 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Initialize the OICP v2.0 HTTP/SOAP server using IPAddress.Any.
         /// </summary>
-        /// <param name="RequestRouter">The request router.</param>
-        /// <param name="IPPort">The TCP listing port.</param>
-        /// <param name="HTTPRoot">The document root for the HTTP service.</param>
+        /// <param name="RoamingNetwork">The roaming network to use.</param>
+        /// <param name="IPPort">The TCP listing port of the HTTP/SOAP server.</param>
+        /// <param name="URIPrefix">The URI prefix for the  HTTP/SOAP server.</param>
         /// <param name="RegisterHTTPRootService">Whether to register a simple webpage for '/', or not.</param>
-        /// 
-        public OICPServer(RequestRouter  RequestRouter,
-                          IPPort         IPPort,
-                          Boolean        RegisterHTTPRootService  = true,
-                          DNSClient      DNSClient                = null)
+        /// <param name="DNSClient">An optional DNS client to use.</param>
+        public OICPServer(RoamingNetwork  RoamingNetwork,
+                          IPPort          IPPort,
+                          String          URIPrefix                = "",
+                          Boolean         RegisterHTTPRootService  = true,
+                          DNSClient       DNSClient                = null)
 
             : base(//IPPort, //Note: Use AttachTCPPort(...) instead!
                    DNSClient: DNSClient)
 
         {
 
-            this._RequestRouter    = RequestRouter;
+            this._RoamingNetwork   = RoamingNetwork;
+            this._URIPrefix        = URIPrefix;
             this._EVSEDataRecords  = new Dictionary<EVSE_Id, EVSEDataRecord>();
 
             this.AttachTCPPort(IPPort);
@@ -448,12 +464,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Register SOAP-XML Request via GET
 
             this.AddMethodCallback(HTTPMethod.GET,
-                                   "/RNs/{RoamingNetworkId}",
+                                   _URIPrefix + "/RNs/{RoamingNetworkId}",
                                    HTTPContentType.XMLTEXT_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 
             this.AddMethodCallback(HTTPMethod.GET,
-                                   "/RNs/{RoamingNetworkId}",
+                                   _URIPrefix + "/RNs/{RoamingNetworkId}",
                                    HTTPContentType.XML_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 
@@ -462,12 +478,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Register SOAP-XML Request via POST
 
             this.AddMethodCallback(HTTPMethod.POST,
-                                   "/RNs/{RoamingNetwork}",
+                                   _URIPrefix + "/RNs/{RoamingNetwork}",
                                    HTTPContentType.XMLTEXT_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 
             this.AddMethodCallback(HTTPMethod.POST,
-                                   "/RNs/{RoamingNetwork}",
+                                   _URIPrefix + "/RNs/{RoamingNetwork}",
                                    HTTPContentType.XML_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 
