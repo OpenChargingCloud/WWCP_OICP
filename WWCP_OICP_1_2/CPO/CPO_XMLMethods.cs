@@ -1302,9 +1302,6 @@ namespace org.GraphDefined.WWCP.OICP_1_2
             if (ChargingStation == null)
                 throw new ArgumentNullException("ChargingStation", "The given parameter must not be null!");
 
-            if (IncludeEVSEs == null)
-                IncludeEVSEs = EVSEId => true;
-
             #endregion
 
             return new ChargingStation[] { ChargingStation }.
@@ -1323,7 +1320,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                                                  ActionType                         OICPAction    = ActionType.update,
                                                  EVSEOperator_Id                    OperatorId    = null,
                                                  String                             OperatorName  = null,
-                                                 Func<EVSE, Boolean>             IncludeEVSEs  = null)
+                                                 Func<EVSE, Boolean>                IncludeEVSEs  = null)
         {
 
             #region Initial checks
@@ -1499,13 +1496,13 @@ namespace org.GraphDefined.WWCP.OICP_1_2
             if (OperatorId == null)
                 throw new ArgumentNullException("OperatorId",      "The given parameter must not be null!");
 
-            if (OperatorName.IsNullOrEmpty())
-                throw new ArgumentNullException("OperatorName",    "The given parameter must not be null!");
-
             var _EVSEIdAndStatus = EVSEIdAndStatus.ToArray();
 
             if (_EVSEIdAndStatus.Length == 0)
                 throw new ArgumentNullException("EVSEIdAndStatus", "The given parameter must not be empty!");
+
+            if (IncludeEVSEIds == null)
+                IncludeEVSEIds = EVSEId => true;
 
             #endregion
 
@@ -1582,13 +1579,13 @@ namespace org.GraphDefined.WWCP.OICP_1_2
             if (OperatorId == null)
                 throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
 
-            if (OperatorName.IsNullOrEmpty())
-                throw new ArgumentNullException("OperatorName", "The given parameter must not be null!");
-
             var _EVSEIds = EVSEIds.ToArray();
 
             if (_EVSEIds.Length == 0)
                 throw new ArgumentNullException("EVSEIds", "The given parameter must not be empty!");
+
+            if (IncludeEVSEIds == null)
+                IncludeEVSEIds = EVSEId => true;
 
             #endregion
 
