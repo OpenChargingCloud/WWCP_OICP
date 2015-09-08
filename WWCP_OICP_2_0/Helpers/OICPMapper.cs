@@ -83,7 +83,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 case "DC Charging ≤ 20kW":          return ChargingFacilities.DCCharging_less20kW;
                 case "DC Charging ≤ 50kW":          return ChargingFacilities.DCCharging_less50kW;
                 case "DC Charging > 50kW":          return ChargingFacilities.DCCharging_over50kW;
-                case "Unspecified":                 return ChargingFacilities.Unspecified;
 
                 default: return ChargingFacilities.Unspecified;
 
