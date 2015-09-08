@@ -1452,7 +1452,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static XElement PushEVSEStatusXML(this IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>>  EVSEIdAndStatus,
                                                  EVSEOperator_Id                                          OperatorId,
                                                  String                                                   OperatorName    = null,
-                                                 ActionType                                               Action          = ActionType.update,
+                                                 ActionType                                               OICPAction      = ActionType.update,
                                                  Func<EVSE_Id, Boolean>                                   IncludeEVSEIds  = null)
         {
 
@@ -1507,7 +1507,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
-                                          new XElement(OICPNS.EVSEStatus + "ActionType", ActionType.delete.ToString()),
+                                          new XElement(OICPNS.EVSEStatus + "ActionType", OICPAction.ToString()),
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
                                               new XElement(OICPNS.EVSEStatus + "OperatorID", OperatorId.OriginId),
