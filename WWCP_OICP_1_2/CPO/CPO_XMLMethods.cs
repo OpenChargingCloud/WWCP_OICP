@@ -2121,7 +2121,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
 
             #endregion
 
-            var _MeterValuesInBetween = MeterValuesInBetween.ToArray();
+            var _MeterValuesInBetween = MeterValuesInBetween != null ? MeterValuesInBetween.ToArray() : new Double[0];
 
             return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
 
