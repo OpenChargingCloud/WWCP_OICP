@@ -226,7 +226,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 if (GroupedData.Any())
                 {
 
-                    DebugX.Log(OICPAction + " of " + GroupedData.Count() + " EVSE static data sets at " + _HTTPVirtualHost + "...");
+                    DebugX.Log(OICPAction + " of " + GroupedData.Select(v => v.Select(w => w.Count())).SelectMany(x => x).Sum() + " EVSE static data sets at " + _HTTPVirtualHost + "...");
 
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,
@@ -902,7 +902,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        OnSuccess: XMLData =>
                                                        {
 
-                                                           // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">
+                                                           #region Documentation
+
+                                                           // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.0">
                                                            //   <cmn:Result>true</cmn:Result>
                                                            //   <cmn:StatusCode>
                                                            //     <cmn:Code>000</cmn:Code>
@@ -910,6 +912,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                            //     <cmn:AdditionalInfo />
                                                            //   </cmn:StatusCode>
                                                            // </cmn:eRoamingAcknowledgement>
+
+                                                           // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                           //   <cmn:Result>false</cmn:Result>
+                                                           //   <cmn:StatusCode>
+                                                           //     <cmn:Code>009</cmn:Code>
+                                                           //     <cmn:Description>Data transaction error</cmn:Description>
+                                                           //     <cmn:AdditionalInfo>The Push of data is already in progress.</cmn:AdditionalInfo>
+                                                           //   </cmn:StatusCode>
+                                                           // </cmn:eRoamingAcknowledgement>
+
+                                                           #endregion
 
                                                            var ack = HubjectAcknowledgement.Parse(XMLData.Content);
                                                            DebugX.Log(OICPAction + " of EVSE states: " + ack.Result + " / " + ack.Description + Environment.NewLine);

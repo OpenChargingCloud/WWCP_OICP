@@ -166,7 +166,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
-        /// <param name="GeoCoordinatesResponseFormat">An optional response format for the geo coordinates [default: DecimalDegree]</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public Task<HTTPResponse<IEnumerable<OperatorEvseData>>>
 
@@ -200,41 +199,45 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                  #region Documentation
 
-                                                 // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                 //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-                                                 //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                 // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                 //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+                                                 //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
                                                  //
                                                  //    <soapenv:Header/>
                                                  //    <soapenv:Body>
-                                                 //       <v2:eRoamingEvseData>
+                                                 //       <EVSEData:eRoamingEvseData>
                                                  //
-                                                 //          <v2:EvseData>
+                                                 //          <EVSEData:EvseData>
                                                  //             <!--Zero or more repetitions:-->
-                                                 //             <v2:OperatorEvseData>
+                                                 //             <EVSEData:OperatorEvseData>
                                                  //
-                                                 //                <v2:OperatorID>?</v2:OperatorID>
+                                                 //                <EVSEData:OperatorID>?</EVSEData:OperatorID>
                                                  //
                                                  //                <!--Optional:-->
-                                                 //                <v2:OperatorName>?</v2:OperatorName>
+                                                 //                <EVSEData:OperatorName>?</EVSEData:OperatorName>
                                                  //
                                                  //                <!--Zero or more repetitions:-->
-                                                 //                <v2:EvseDataRecord deltaType="?" lastUpdate="?">
+                                                 //                <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
                                                  //                   [...]
-                                                 //                </v2:EvseDataRecord>
+                                                 //                </EVSEData:EvseDataRecord>
                                                  //
-                                                 //             </v2:OperatorEvseData>
-                                                 //          </v2:EvseData>
+                                                 //             </EVSEData:OperatorEvseData>
+                                                 //          </EVSEData:EvseData>
                                                  //
                                                  //          <!--Optional:-->
-                                                 //          <v2:StatusCode>
-                                                 //             <v21:Code>?</v21:Code>
-                                                 //             <!--Optional:-->
-                                                 //             <v21:Description>?</v21:Description>
-                                                 //             <!--Optional:-->
-                                                 //             <v21:AdditionalInfo>?</v21:AdditionalInfo>
-                                                 //          </v2:StatusCode>
+                                                 //          <EVSEData:StatusCode>
                                                  //
-                                                 //       </v2:eRoamingEvseData>
+                                                 //             <CommonTypes:Code>?</CommonTypes:Code>
+                                                 //
+                                                 //             <!--Optional:-->
+                                                 //             <CommonTypes:Description>?</CommonTypes:Description>
+                                                 //
+                                                 //             <!--Optional:-->
+                                                 //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                                                 //
+                                                 //          </EVSEData:StatusCode>
+                                                 //
+                                                 //       </EVSEData:eRoamingEvseData>
                                                  //    </soapenv:Body>
                                                  // </soapenv:Envelope>
 

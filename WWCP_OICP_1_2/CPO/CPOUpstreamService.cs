@@ -226,7 +226,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                 if (GroupedData.Any())
                 {
 
-                    DebugX.Log(OICPAction + " of " + GroupedData.Count() + " EVSE static data sets at " + _HTTPVirtualHost + "...");
+                    DebugX.Log(OICPAction + " of " + GroupedData.Select(v => v.Select(w => w.Count())).SelectMany(x => x).Sum() + " EVSE static data sets at " + _HTTPVirtualHost + "...");
 
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,

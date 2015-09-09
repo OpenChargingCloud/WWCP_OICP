@@ -242,41 +242,50 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingPullEvseData>
+            //       <EVSEData:eRoamingPullEvseData>
             //
-            //          <v2:ProviderID>?</v2:ProviderID>
+            //          <EVSEData:ProviderID>?</EVSEData:ProviderID>
             //
             //          <!--You have a CHOICE of the next 2 items at this level-->
             //          <!--Optional:-->
-            //          <v2:SearchCenter>
-            //             <v21:GeoCoordinates>
+            //          <EVSEData:SearchCenter>
+            //
+            //             <CommonTypes:GeoCoordinates>
             //                <!--You have a CHOICE of the next 3 items at this level-->
-            //                <v21:Google>
-            //                   <v21:Coordinates>?</v21:Coordinates>
-            //                </v21:Google>
-            //                <v21:DecimalDegree>
-            //                   <v21:Longitude>?</v21:Longitude>
-            //                   <v21:Latitude>?</v21:Latitude>
-            //                </v21:DecimalDegree>
-            //                <v21:DegreeMinuteSeconds>
-            //                   <v21:Longitude>?</v21:Longitude>
-            //                   <v21:Latitude>?</v21:Latitude>
-            //                </v21:DegreeMinuteSeconds>
-            //             </v21:GeoCoordinates>
-            //             <v21:Radius>?</v21:Radius>
-            //          </v2:SearchCenter>
+            //
+            //                <CommonTypes:Google>
+            //                   <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+            //                </CommonTypes:Google>
+            //
+            //                <CommonTypes:DecimalDegree>
+            //                   <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //                   <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //                </CommonTypes:DecimalDegree>
+            //
+            //                <CommonTypes:DegreeMinuteSeconds>
+            //                   <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //                   <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //                </CommonTypes:DegreeMinuteSeconds>
+            //
+            //             </CommonTypes:GeoCoordinates>
+            //
+            //             <!-- km ####.# -->
+            //             <CommonTypes:Radius>23.5</CommonTypes:Radius>
+            //
+            //          </EVSEData:SearchCenter>
             //
             //          <!--Optional:-->
-            //          <v2:LastCall>?</v2:LastCall>
-            //          <v2:GeoCoordinatesResponseFormat>?</v2:GeoCoordinatesResponseFormat>
+            //          <EVSEData:LastCall>?</EVSEData:LastCall>
             //
-            //       </v2:eRoamingPullEvseData>
+            //          <EVSEData:GeoCoordinatesResponseFormat>?</EVSEData:GeoCoordinatesResponseFormat>
+            //
+            //       </EVSEData:eRoamingPullEvseData>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 
