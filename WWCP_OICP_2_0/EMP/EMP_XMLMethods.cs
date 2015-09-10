@@ -186,6 +186,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         /// <summary>
         /// Create a new Get-EVSE-By-Id request.
+        /// In case that CPOs do not upload EVSE data to Hubject, Hubject requests specific EVSE data on demand.
         /// </summary>
         /// <param name="EVSEId">An unique EVSE identification.</param>
         public static XElement GetEVSEByIdRequestXML(EVSE_Id  EVSEId)
@@ -193,16 +194,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0">
+            // <soapenv:Envelope xmlns:soapenv  = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEData = "http://www.hubject.com/b2b/services/evsedata/v2.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingGetEvseById>
+            //       <EVSEData:eRoamingGetEvseById>
             //
-            //          <v2:EvseId>?</v2:EvseId>
+            //          <EVSEData:EvseId>+49*123*1234567*1</EVSEData:EvseId>
             //
-            //       </v2:eRoamingGetEvseById>
+            //       </EVSEData:eRoamingGetEvseById>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 

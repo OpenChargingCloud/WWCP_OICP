@@ -201,7 +201,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region PushEVSEData(GroupedData,           OICPAction = fullLoad, OperatorId = null, OperatorName = null, QueryTimeout = null)
+        #region PushEVSEData(GroupedData,      OICPAction = fullLoad, OperatorId = null, OperatorName = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
@@ -323,7 +323,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEData(this EVSEOperator,     OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(EVSEOperator,     OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
@@ -354,7 +354,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEData(this EVSEOperators,    OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(EVSEOperators,    OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
@@ -395,7 +395,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEData(this ChargingPool,     OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(ChargingPool,     OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
@@ -426,7 +426,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEData(this ChargingPools,    OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(ChargingPools,    OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
@@ -466,7 +466,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEData(this ChargingStation,  OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(ChargingStation,  OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
@@ -497,7 +497,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEData(this ChargingStations, OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(ChargingStations, OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
@@ -536,7 +536,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEData(this EVSE,             OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(EVSE,             OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
@@ -567,7 +567,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEData(this EVSEs,            OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(EVSEs,            OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
@@ -697,7 +697,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEData(this EVSEDataRecord,   OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(EVSEDataRecord,   OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
@@ -728,7 +728,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEData(this EVSEDataRecords,  OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(EVSEDataRecords,  OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
@@ -859,30 +859,40 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region PushEVSEStatus(EVSEOperator, IncludeEVSE, OICPAction, QueryTimeout = null)
+        #region PushEVSEStatus(EVSEOperator, OICPAction = update, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
             PushEVSEStatus(EVSEOperator         EVSEOperator,
-                           Func<EVSE, Boolean>  IncludeEVSE,
-                           ActionType           OICPAction,
+                           ActionType           OICPAction    = ActionType.update,
+                           Func<EVSE, Boolean>  IncludeEVSEs  = null,
                            TimeSpan?            QueryTimeout  = null)
 
         {
 
+            #region Initial checks
+
+            if (EVSEOperator == null)
+                throw new ArgumentNullException("EVSEOperator", "The given parameter must not be null!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
+            #endregion
+
             try
             {
 
-                var XML_EVSEs = EVSEOperator.
-                                         AllEVSEs.
-                                         Where(evse => IncludeEVSE != null ? IncludeEVSE(evse) : true).
-                                         Where(evse => !EVSEOperator.InvalidEVSEIds.Contains(evse.Id)).
-                                         ToArray();
+                var AllEVSEs = EVSEOperator.
+                                   AllEVSEs.
+                                   Where(IncludeEVSEs).
+                                   //Where(evse => !EVSEOperator.InvalidEVSEIds.Contains(evse.Id)).
+                                   ToArray();
 
-                if (XML_EVSEs.Any())
+                if (AllEVSEs.Any())
                 {
 
-                    DebugX.Log(OICPAction + " of " + XML_EVSEs.Length + " EVSE states at " + _HTTPVirtualHost + "...");
+                    DebugX.Log(OICPAction + " of " + AllEVSEs.Length + " EVSE states at " + _HTTPVirtualHost + "...");
 
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,
@@ -892,10 +902,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _DNSClient))
                     {
 
-                        return await _OICPClient.Query(XML_EVSEs.
-                                                       PushEVSEStatusXML(OICPAction,
-                                                                         EVSEOperator.Id,
-                                                                         EVSEOperator.Name[Languages.de]),
+                        return await _OICPClient.Query(AllEVSEs.
+                                                           PushEVSEStatusXML(OICPAction,
+                                                                             EVSEOperator.Id,
+                                                                             EVSEOperator.Name[Languages.de]),
                                                        "eRoamingPushEvseStatus",
                                                        QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
