@@ -26,9 +26,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 Operator EVSE data set.
+    /// A OICP v2.0 EVSE data set.
     /// </summary>
-    public class OperatorEvseData
+    public class eRoamingEVSEData
     {
 
         #region Properties
@@ -79,7 +79,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Constructor(s)
 
-        public OperatorEvseData(EVSEOperator_Id              OperatorId,
+        public eRoamingEVSEData(EVSEOperator_Id              OperatorId,
                                 String                       OperatorName,
                                 IEnumerable<EVSEDataRecord>  EVSEDataRecords)
 

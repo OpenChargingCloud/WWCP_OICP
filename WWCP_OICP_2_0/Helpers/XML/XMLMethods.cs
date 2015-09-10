@@ -449,7 +449,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region ParseOperatorEVSEDataXML(OperatorEVSEDataXML)
 
-        public static OperatorEvseData ParseOperatorEVSEDataXML(XElement OperatorEVSEDataXML)
+        public static eRoamingEVSEData ParseOperatorEVSEDataXML(XElement OperatorEVSEDataXML)
         {
 
             #region Initial checks
@@ -459,7 +459,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            return new OperatorEvseData(EVSEOperator_Id.Parse(OperatorEVSEDataXML.ElementValueOrFail   (OICPNS.EVSEData + "OperatorID",   "Missing OperatorID!")),
+            return new eRoamingEVSEData(EVSEOperator_Id.Parse(OperatorEVSEDataXML.ElementValueOrFail   (OICPNS.EVSEData + "OperatorID",   "Missing OperatorID!")),
                                                               OperatorEVSEDataXML.ElementValueOrDefault(OICPNS.EVSEData + "OperatorName", ""),
                                                               OperatorEVSEDataXML.Elements             (OICPNS.EVSEData + "EvseDataRecord").
                                                                   SafeSelect(XML => XMLMethods.ParseEVSEDataRecordXML(XML)));
@@ -470,18 +470,18 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region ParseOperatorEVSEDataXML(OperatorEVSEDataXMLs)
 
-        public static IEnumerable<OperatorEvseData> ParseOperatorEVSEDataXML(IEnumerable<XElement> OperatorEVSEDataXMLs)
+        public static IEnumerable<eRoamingEVSEData> ParseOperatorEVSEDataXML(IEnumerable<XElement> OperatorEVSEDataXMLs)
         {
 
             #region Initial checks
 
             if (OperatorEVSEDataXMLs == null)
-                return new OperatorEvseData[0];
+                return new eRoamingEVSEData[0];
 
             var _OperatorEVSEDataXMLs = OperatorEVSEDataXMLs.ToArray();
 
             if (_OperatorEVSEDataXMLs.Length == 0)
-                return new OperatorEvseData[0];
+                return new eRoamingEVSEData[0];
 
             #endregion
 

@@ -78,24 +78,25 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
 
 
-        #region PullEVSEDataRequest(ProviderId, GeoCoordinate = null, DistanceKM = 0, LastCall = null, QueryTimeout = null)
+        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0, LastCall = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create a new task requesting all EVSE data.
-        /// The request might either have none, a 'LastCall' or 'GeoCoordinate+DistanceKM' parameter.
+        /// Create a new task querying EVSE data from the OICP server.
+        /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
+        /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public Task<HTTPResponse<IEnumerable<OperatorEvseData>>>
+        public Task<HTTPResponse<IEnumerable<eRoamingEVSEData>>>
 
-            PullEVSEDataRequest(EVSP_Id        ProviderId,
-                                GeoCoordinate  SearchCenter  = null,
-                                UInt64         DistanceKM    = 0,
-                                DateTime?      LastCall      = null,
-                                TimeSpan?      QueryTimeout  = null)
+            PullEVSEData(EVSP_Id        ProviderId,
+                         GeoCoordinate  SearchCenter  = null,
+                         UInt64         DistanceKM    = 0,
+                         DateTime?      LastCall      = null,
+                         TimeSpan?      QueryTimeout  = null)
 
         {
 
@@ -189,13 +190,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                      SendOnException(DateTime.Now, this, Exception);
 
-                                                     return new HTTPResponse<IEnumerable<OperatorEvseData>>(Exception);
+                                                     return new HTTPResponse<IEnumerable<eRoamingEVSEData>>(Exception);
 
                                                  }
 
                                                  #endregion
 
-                                                 return new HTTPResponse<IEnumerable<OperatorEvseData>>(XMLData.HttpResponse,
+                                                 return new HTTPResponse<IEnumerable<eRoamingEVSEData>>(XMLData.HttpResponse,
                                                                                                         XMLData.Content.
                                                                                                             Element (OICPNS.EVSEData + "EvseData").
                                                                                                             Elements(OICPNS.EVSEData + "OperatorEvseData").
@@ -207,7 +208,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                  DebugX.Log("'PullEVSEDataRequest' lead to a SOAP fault!");
 
-                                                 return new HTTPResponse<IEnumerable<OperatorEvseData>>(
+                                                 return new HTTPResponse<IEnumerable<eRoamingEVSEData>>(
                                                      Fault.HttpResponse,
                                                      new Exception(Fault.Content.ToString()));
 
@@ -230,8 +231,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 SendOnException(DateTime.Now, this, e);
 
-                return new Task<HTTPResponse<IEnumerable<OperatorEvseData>>>(
-                    () => new HTTPResponse<IEnumerable<OperatorEvseData>>(e));
+                return new Task<HTTPResponse<IEnumerable<eRoamingEVSEData>>>(
+                    () => new HTTPResponse<IEnumerable<eRoamingEVSEData>>(e));
 
             }
 
@@ -240,7 +241,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region PullEVSEStatusByIdRequest(ProviderId, EVSEIds, QueryTimeout = null)
+        #region PullEVSEStatusById(ProviderId, EVSEIds, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
@@ -250,9 +251,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>>
 
-            PullEVSEStatusByIdRequest(EVSP_Id               ProviderId,
-                                      IEnumerable<EVSE_Id>  EVSEIds,
-                                      TimeSpan?             QueryTimeout = null)
+            PullEVSEStatusById(EVSP_Id               ProviderId,
+                               IEnumerable<EVSE_Id>  EVSEIds,
+                               TimeSpan?             QueryTimeout = null)
 
         {
 
@@ -383,7 +384,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PullEVSEStatusRequest(ProviderId, SearchCenter = null, DistanceKM = 0, EVSEStatus = null, QueryTimeout = null)
+        #region PullEVSEStatus(ProviderId, SearchCenter = null, DistanceKM = 0, EVSEStatus = null, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task requesting the current status of all EVSEs (within an optional search radius and status).
@@ -395,11 +396,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>>
 
-            PullEVSEStatusRequest(EVSP_Id          ProviderId,
-                                  GeoCoordinate    SearchCenter  = null,
-                                  UInt64           DistanceKM    = 0,
-                                  OICPEVSEStatus?  EVSEStatus    = null,
-                                  TimeSpan?        QueryTimeout  = null)
+            PullEVSEStatus(EVSP_Id          ProviderId,
+                           GeoCoordinate    SearchCenter  = null,
+                           UInt64           DistanceKM    = 0,
+                           OICPEVSEStatus?  EVSEStatus    = null,
+                           TimeSpan?        QueryTimeout  = null)
 
         {
 
