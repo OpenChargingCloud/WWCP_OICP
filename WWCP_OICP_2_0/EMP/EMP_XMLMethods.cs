@@ -341,19 +341,19 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            // <soapenv:Envelope xmlns:soapenv    = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingPullEvseStatusById>
+            //       <EVSEStatus:eRoamingPullEvseStatusById>
             //
-            //          <v2:ProviderID>?</v2:ProviderID>
+            //          <EVSEStatus:ProviderID>?</EVSEStatus:ProviderID>
             //
             //          <!--1 to 100 repetitions:-->
-            //          <v2:EvseId>?</v2:EvseId>
+            //          <EVSEStatus:EvseId>?</EVSEStatus:EvseId>
             //
-            //       </v2:eRoamingPullEvseStatusById>
+            //       </EVSEStatus:eRoamingPullEvseStatusById>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 

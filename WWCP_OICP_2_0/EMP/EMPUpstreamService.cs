@@ -278,35 +278,39 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        #region Documentation
 
-                                                       // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                       //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
-                                                       //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                       //                   xmlns:EVSEStatus  = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
+                                                       //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
                                                        //
                                                        //    <soapenv:Header/>
                                                        //    <soapenv:Body>
-                                                       //       <v2:eRoamingEvseStatusById>
+                                                       //       <EVSEStatus:eRoamingEvseStatusById>
                                                        //
                                                        //          <!--Optional:-->
-                                                       //          <v2:EvseStatusRecords>
+                                                       //          <EVSEStatus:EvseStatusRecords>
                                                        //
                                                        //             <!--Zero or more repetitions:-->
-                                                       //             <v2:EvseStatusRecord>
-                                                       //                <v2:EvseId>?</v2:EvseId>
-                                                       //                <v2:EvseStatus>?</v2:EvseStatus>
-                                                       //             </v2:EvseStatusRecord>
+                                                       //             <EVSEStatus:EvseStatusRecord>
+                                                       //                <EVSEStatus:EvseId>?</EVSEStatus:EvseId>
+                                                       //                <EVSEStatus:EvseStatus>?</EVSEStatus:EvseStatus>
+                                                       //             </EVSEStatus:EvseStatusRecord>
                                                        //
-                                                       //          </v2:EvseStatusRecords>
+                                                       //          </EVSEStatus:EvseStatusRecords>
                                                        //
                                                        //          <!--Optional:-->
-                                                       //          <v2:StatusCode>
-                                                       //             <v21:Code>?</v21:Code>
-                                                       //             <!--Optional:-->
-                                                       //             <v21:Description>?</v21:Description>
-                                                       //             <!--Optional:-->
-                                                       //             <v21:AdditionalInfo>?</v21:AdditionalInfo>
-                                                       //          </v2:StatusCode>
+                                                       //          <EVSEStatus:StatusCode>
                                                        //
-                                                       //       </v2:eRoamingEvseStatusById>
+                                                       //             <CommonTypes:Code>?</CommonTypes:Code>
+                                                       //
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:Description>?</CommonTypes:Description>
+                                                       //
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                                                       //
+                                                       //          </EVSEStatus:StatusCode>
+                                                       //
+                                                       //       </EVSEStatus:eRoamingEvseStatusById>
                                                        //    </soapenv:Body>
                                                        // </soapenv:Envelope>
 
