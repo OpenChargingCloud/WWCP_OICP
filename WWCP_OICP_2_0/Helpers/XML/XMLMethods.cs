@@ -447,9 +447,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region ParseOperatorEVSEDataXML(OperatorEVSEDataXML)
+        #region ParseOperatorEVSEDataXML(OperatorEVSEDataXML,  ExceptionHandler = null)
 
-        public static eRoamingEVSEData ParseOperatorEVSEDataXML(XElement OperatorEVSEDataXML)
+        public static eRoamingEVSEData ParseOperatorEVSEDataXML(XElement           OperatorEVSEDataXML,
+                                                                Action<Exception>  ExceptionHandler  = null)
         {
 
             #region Initial checks
@@ -459,18 +460,48 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            return new eRoamingEVSEData(EVSEOperator_Id.Parse(OperatorEVSEDataXML.ElementValueOrFail   (OICPNS.EVSEData + "OperatorID",   "Missing OperatorID!")),
-                                                              OperatorEVSEDataXML.ElementValueOrDefault(OICPNS.EVSEData + "OperatorName", ""),
-                                                              OperatorEVSEDataXML.Elements             (OICPNS.EVSEData + "EvseDataRecord").
-                                                                  SafeSelect(XML => XMLMethods.ParseEVSEDataRecordXML(XML)));
+
+            try
+            {
+
+                return new eRoamingEVSEData(EVSEOperator_Id.Parse(OperatorEVSEDataXML.ElementValueOrFail   (OICPNS.EVSEData + "OperatorID",   "Missing OperatorID!")),
+                                            OperatorEVSEDataXML.ElementValueOrDefault(OICPNS.EVSEData + "OperatorName", ""),
+                                            OperatorEVSEDataXML.Elements             (OICPNS.EVSEData + "EvseDataRecord").
+                                                SafeSelect(XML => {
+
+                                                    try
+                                                    {
+                                                        return XMLMethods.ParseEVSEDataRecordXML(XML);
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+                                                        var ExceptionHandlerLocal = ExceptionHandler;
+                                                        if (ExceptionHandlerLocal != null)
+                                                            ExceptionHandlerLocal(e);
+                                                    }
+
+                                                    return null;
+
+                                                }));
+
+            }
+            catch (Exception e)
+            {
+                var ExceptionHandlerLocal = ExceptionHandler;
+                if (ExceptionHandlerLocal != null)
+                    ExceptionHandlerLocal(e);
+            }
+
+            return null;
 
         }
 
         #endregion
 
-        #region ParseOperatorEVSEDataXML(OperatorEVSEDataXMLs)
+        #region ParseOperatorEVSEDataXML(OperatorEVSEDataXMLs, ExceptionHandler = null)
 
-        public static IEnumerable<eRoamingEVSEData> ParseOperatorEVSEDataXML(IEnumerable<XElement> OperatorEVSEDataXMLs)
+        public static IEnumerable<eRoamingEVSEData> ParseOperatorEVSEDataXML(IEnumerable<XElement>  OperatorEVSEDataXMLs,
+                                                                             Action<Exception>      ExceptionHandler  = null)
         {
 
             #region Initial checks
@@ -485,7 +516,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            return OperatorEVSEDataXMLs.Select(OperatorEVSEDataXML => ParseOperatorEVSEDataXML(OperatorEVSEDataXML));
+            try
+            {
+
+                return OperatorEVSEDataXMLs.Select(OperatorEVSEDataXML => ParseOperatorEVSEDataXML(OperatorEVSEDataXML, ExceptionHandler));
+
+            }
+            catch (Exception e)
+            {
+                var ExceptionHandlerLocal = ExceptionHandler;
+                if (ExceptionHandlerLocal != null)
+                    ExceptionHandlerLocal(e);
+            }
+
+            return null;
 
         }
 

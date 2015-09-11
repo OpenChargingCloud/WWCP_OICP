@@ -177,7 +177,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                          GeoCoordinate  SearchCenter  = null,
                          UInt64         DistanceKM    = 0,
                          DateTime?      LastCall      = null,
-                         TimeSpan?      QueryTimeout  = null)
+                         TimeSpan?      QueryTimeout  = null,
+                         Action<Exception> ExceptionHandler = null)
 
         {
 
@@ -281,7 +282,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                                                                         XMLData.Content.
                                                                                                             Element (OICPNS.EVSEData + "EvseData").
                                                                                                             Elements(OICPNS.EVSEData + "OperatorEvseData").
-                                                                                                            Select  (XML => XMLMethods.ParseOperatorEVSEDataXML(XML)));
+                                                                                                            Select  (XML      => XMLMethods.ParseOperatorEVSEDataXML(XML, ExceptionHandler)).
+                                                                                                            Where   (EVSEData => EVSEData != null));
 
                                              },
 
