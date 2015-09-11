@@ -51,7 +51,7 @@
     <Compile Include="EMP\EMP_XMLMethods.cs" />
     <Compile Include="EMP\EMPUpstreamService.cs" />
     <Compile Include="Entities\OICPChargeDetailRecord.cs" />
-    <Compile Include="Entities\OperatorEvseData.cs" />
+    <Compile Include="Entities\eRoamingEVSEData.cs" />
     <Compile Include="Helpers\GeoCoordinatesResponseFormatTypes.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />

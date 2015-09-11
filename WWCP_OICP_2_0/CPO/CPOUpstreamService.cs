@@ -697,12 +697,21 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEData(EVSEDataRecord,   OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(EVSEDataRecord,   OICPAction = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
+        /// <summary>
+        /// Create a new task pushing a single EVSE data record onto the OICP server.
+        /// </summary>
+        /// <param name="EVSEDataRecord">A EVSE data record.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="OperatorId">An optional EVSE operator Id to use. Otherwise it will be taken from the EVSE data record.</param>
+        /// <param name="OperatorName">An optional EVSE operator name.</param>
+        /// <param name="IncludeEVSEs">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
             PushEVSEData(EVSEDataRecord                 EVSEDataRecord,
-                         ActionType                     OICPAction    = ActionType.fullLoad,
+                         ActionType                     OICPAction    = ActionType.insert,
                          EVSEOperator_Id                OperatorId    = null,
                          String                         OperatorName  = null,
                          Func<EVSEDataRecord, Boolean>  IncludeEVSEs  = null,
@@ -719,7 +728,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             return await PushEVSEData(new EVSEDataRecord[] { EVSEDataRecord },
                                       OICPAction,
-                                      OperatorId,
+                                      OperatorId   != null ? OperatorId : EVSEDataRecord.EVSEId.OperatorId,
                                       OperatorName,
                                       IncludeEVSEs,
                                       QueryTimeout);
@@ -730,6 +739,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region PushEVSEData(EVSEDataRecords,  OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
+        /// <summary>
+        /// Create a new task pushing EVSE data records onto the OICP server.
+        /// </summary>
+        /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="OperatorId">An optional EVSE operator Id to use. Otherwise it will be taken from the EVSE data records.</param>
+        /// <param name="OperatorName">An optional EVSE operator name.</param>
+        /// <param name="IncludeEVSEs">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
             PushEVSEData(IEnumerable<EVSEDataRecord>    EVSEDataRecords,

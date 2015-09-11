@@ -159,6 +159,26 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static Boolean TryParse(XElement XML, out HubjectAcknowledgement Acknowledgement)
         {
 
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            // 
+            //     <soapenv:Body>
+            //         <CommonTypes:eRoamingAcknowledgement>
+            //             <CommonTypes:Result>true</CommonTypes:Result>
+            //             <CommonTypes:StatusCode>
+            //                 <CommonTypes:Code>000</CommonTypes:Code>
+            //                 <CommonTypes:Description>Success</CommonTypes:Description>
+            //                 <CommonTypes:AdditionalInfo />
+            //             </CommonTypes:StatusCode>
+            //         </CommonTypes:eRoamingAcknowledgement>
+            //     </soapenv:Body>
+            // 
+            // </soapenv:Envelope>
+
+            #endregion
+
             Acknowledgement = null;
 
             try

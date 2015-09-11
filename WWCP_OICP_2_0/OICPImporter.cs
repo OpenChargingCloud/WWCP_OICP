@@ -56,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         private readonly Func<TContext>                                         _UpdateContextCreator;
         private readonly Action<TContext>                                       _UpdateContextDisposer;
         private readonly Action<TContext>                                       _StartBulkUpdate;
-        private readonly Action<TContext, DateTime, OperatorEvseData>           _EVSEOperatorDataHandler;
+        private readonly Action<TContext, DateTime, eRoamingEVSEData>           _EVSEOperatorDataHandler;
         private readonly Func<TContext, DateTime, IEnumerable<EVSE_Id>>         _GetEVSEIdsForStatusUpdate;
         private readonly Action<TContext, DateTime, EVSE_Id, OICPEVSEStatus>  _EVSEStatusHandler;
         private readonly Action<TContext>                                       _StopBulkUpdate;
@@ -164,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                             Func<UInt64, StreamReader>                             LoadStaticDataFromStream     = null,
                             Func<UInt64, StreamReader>                             LoadDynamicDataFromStream    = null,
 
-                            Action<TContext, DateTime, OperatorEvseData>           EVSEOperatorDataHandler      = null,
+                            Action<TContext, DateTime, eRoamingEVSEData>           EVSEOperatorDataHandler      = null,
                             Func<TContext, DateTime, IEnumerable<EVSE_Id>>         GetEVSEIdsForStatusUpdate    = null,
                             Action<TContext, DateTime, EVSE_Id, OICPEVSEStatus>  EVSEStatusHandler            = null)
 
@@ -402,7 +402,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     else
                         OICPUpstreamService.
-                            PullEVSEDataRequest(_ProviderId).
+                            PullEVSEData(_ProviderId).
                             ContinueWith(PullEVSEDataTask => {
 
                                 if (PullEVSEDataTask.Result != null)
@@ -618,7 +618,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         ToPartitions(100).
 
                                                         Select(EVSEPartition => OICPUpstreamService.
-                                                                                    PullEVSEStatusByIdRequest(_ProviderId, EVSEPartition).
+                                                                                    PullEVSEStatusById(_ProviderId, EVSEPartition).
                                                                                     ContinueWith(NewEVSEStatusTask => {
 
                                                                                         if (NewEVSEStatusTask.Result != null)
