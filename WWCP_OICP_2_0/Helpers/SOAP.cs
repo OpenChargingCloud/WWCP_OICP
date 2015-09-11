@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         {
 
             return new XElement(SOAPNS.NS.SOAPEnvelope + "Envelope",
-                       new XAttribute(XNamespace.Xmlns + "OICP",                SOAPNS.NS.SOAPEnvelope.    NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "SOAP",                SOAPNS.NS.SOAPEnvelope.    NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.        NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.           NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.         NamespaceName),

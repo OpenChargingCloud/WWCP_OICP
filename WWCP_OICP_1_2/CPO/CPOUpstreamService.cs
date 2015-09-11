@@ -859,50 +859,62 @@ namespace org.GraphDefined.WWCP.OICP_1_2
         #endregion
 
 
-        #region PushEVSEStatus(EVSEOperator, IncludeEVSE, OICPAction, QueryTimeout = null)
+        #region PushEVSEStatus(EVSEOperator, OICPAction = update, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
             PushEVSEStatus(EVSEOperator         EVSEOperator,
-                           Func<EVSE, Boolean>  IncludeEVSE,
-                           ActionType           OICPAction,
+                           ActionType           OICPAction    = ActionType.update,
+                           Func<EVSE, Boolean>  IncludeEVSEs  = null,
                            TimeSpan?            QueryTimeout  = null)
 
         {
 
+            #region Initial checks
+
+            if (EVSEOperator == null)
+                throw new ArgumentNullException("EVSEOperator", "The given parameter must not be null!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
+            #endregion
+
             try
             {
 
-                var XML_EVSEs = EVSEOperator.
-                                         AllEVSEs.
-                                         Where(evse => IncludeEVSE != null ? IncludeEVSE(evse) : true).
-                                         Where(evse => !EVSEOperator.InvalidEVSEIds.Contains(evse.Id)).
-                                         ToArray();
+                var AllEVSEs = EVSEOperator.
+                                   AllEVSEs.
+                                   Where(IncludeEVSEs).
+                                   //Where(evse => !EVSEOperator.InvalidEVSEIds.Contains(evse.Id)).
+                                   ToArray();
 
-                if (XML_EVSEs.Any())
+                if (AllEVSEs.Any())
                 {
 
-                    DebugX.Log(OICPAction + " of " + XML_EVSEs.Length + " EVSE states at " + _HTTPVirtualHost + "...");
+                    DebugX.Log(OICPAction + " of " + AllEVSEs.Length + " EVSE states at " + _HTTPVirtualHost + "...");
 
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,
                                                             _HTTPVirtualHost,
-                                                            "/ibis/ws/eRoamingEvseStatus_V1.2",
+                                                            "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                             _UserAgent,
                                                             _DNSClient))
                     {
 
-                        return await _OICPClient.Query(XML_EVSEs.
-                                                       PushEVSEStatusXML(OICPAction,
-                                                                         EVSEOperator.Id,
-                                                                         EVSEOperator.Name[Languages.de]),
+                        return await _OICPClient.Query(AllEVSEs.
+                                                           PushEVSEStatusXML(OICPAction,
+                                                                             EVSEOperator.Id,
+                                                                             EVSEOperator.Name[Languages.de]),
                                                        "eRoamingPushEvseStatus",
                                                        QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                        OnSuccess: XMLData =>
                                                        {
 
-                                                           // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">
+                                                           #region Documentation
+
+                                                           // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.0">
                                                            //   <cmn:Result>true</cmn:Result>
                                                            //   <cmn:StatusCode>
                                                            //     <cmn:Code>000</cmn:Code>
@@ -910,6 +922,17 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                                                            //     <cmn:AdditionalInfo />
                                                            //   </cmn:StatusCode>
                                                            // </cmn:eRoamingAcknowledgement>
+
+                                                           // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                           //   <cmn:Result>false</cmn:Result>
+                                                           //   <cmn:StatusCode>
+                                                           //     <cmn:Code>009</cmn:Code>
+                                                           //     <cmn:Description>Data transaction error</cmn:Description>
+                                                           //     <cmn:AdditionalInfo>The Push of data is already in progress.</cmn:AdditionalInfo>
+                                                           //   </cmn:StatusCode>
+                                                           // </cmn:eRoamingAcknowledgement>
+
+                                                           #endregion
 
                                                            var ack = HubjectAcknowledgement.Parse(XMLData.Content);
                                                            DebugX.Log(OICPAction + " of EVSE states: " + ack.Result + " / " + ack.Description + Environment.NewLine);

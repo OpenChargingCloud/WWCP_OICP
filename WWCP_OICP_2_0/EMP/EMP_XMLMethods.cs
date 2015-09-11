@@ -182,45 +182,48 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region GetEVSEByIdRequestXML(EVSEId)
+        #region GetEVSEByIdRequestXML(EVSEId) // <- Note!
 
-        /// <summary>
-        /// Create a new Get-EVSE-By-Id request.
-        /// In case that CPOs do not upload EVSE data to Hubject, Hubject requests specific EVSE data on demand.
-        /// </summary>
-        /// <param name="EVSEId">An unique EVSE identification.</param>
-        public static XElement GetEVSEByIdRequestXML(EVSE_Id  EVSEId)
-        {
+        // Note: It's confusing, but this request does not belong here!
+        //       It must be omplemented on the CPO client side!
 
-            #region Documentation
+        ///// <summary>
+        ///// Create a new Get-EVSE-By-Id request.
+        ///// In case that CPOs do not upload EVSE data to Hubject, Hubject requests specific EVSE data on demand.
+        ///// </summary>
+        ///// <param name="EVSEId">An unique EVSE identification.</param>
+        //public static XElement GetEVSEByIdRequestXML(EVSE_Id  EVSEId)
+        //{
 
-            // <soapenv:Envelope xmlns:soapenv  = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:EVSEData = "http://www.hubject.com/b2b/services/evsedata/v2.0">
-            //
-            //    <soapenv:Header/>
-            //    <soapenv:Body>
-            //       <EVSEData:eRoamingGetEvseById>
-            //
-            //          <EVSEData:EvseId>+49*123*1234567*1</EVSEData:EvseId>
-            //
-            //       </EVSEData:eRoamingGetEvseById>
-            //    </soapenv:Body>
-            // </soapenv:Envelope>
+        //    #region Documentation
 
-            #endregion
+        //    // <soapenv:Envelope xmlns:soapenv  = "http://schemas.xmlsoap.org/soap/envelope/"
+        //    //                   xmlns:EVSEData = "http://www.hubject.com/b2b/services/evsedata/v2.0">
+        //    //
+        //    //    <soapenv:Header/>
+        //    //    <soapenv:Body>
+        //    //       <EVSEData:eRoamingGetEvseById>
+        //    //
+        //    //          <EVSEData:EvseId>+49*123*1234567*1</EVSEData:EvseId>
+        //    //
+        //    //       </EVSEData:eRoamingGetEvseById>
+        //    //    </soapenv:Body>
+        //    // </soapenv:Envelope>
 
-            #region Initial checks
+        //    #endregion
 
-            if (EVSEId == null)
-                throw new ArgumentNullException("EVSEId", "The given parameter must not be null!");
+        //    #region Initial checks
 
-            #endregion
+        //    if (EVSEId == null)
+        //        throw new ArgumentNullException("EVSEId", "The given parameter must not be null!");
 
-            return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingGetEvseById",
-                                          new XElement(OICPNS.EVSEData + "EvseId", EVSEId.OriginId)
-                                     ));
+        //    #endregion
 
-        }
+        //    return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingGetEvseById",
+        //                                  new XElement(OICPNS.EVSEData + "EvseId", EVSEId.OriginId)
+        //                             ));
+
+        //}
 
         #endregion
 
@@ -299,7 +302,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPullEVSEData",
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPullEvseData",
 
                                           new XElement(OICPNS.EVSEData + "ProviderID", ProviderId.ToString()),
 
