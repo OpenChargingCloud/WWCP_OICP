@@ -60,7 +60,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                   IPPort           TCPPort,
                                   String           HTTPVirtualHost  = null,
                                   Authorizator_Id  AuthorizatorId   = null,
-                                  String           UserAgent        = "GraphDefined OICP Gateway",
+                                  String           UserAgent        = "GraphDefined OICP v2.0 Gateway EMP Upstream Services",
                                   TimeSpan?        QueryTimeout     = null,
                                   DNSClient        DNSClient        = null)
 
@@ -77,89 +77,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region GetEVSEByIdRequest(EVSEId, QueryTimeout = null) // <- Note!
-
-        // Note: It's confusing, but this request does not belong here!
-        //       It must be omplemented on the CPO client side!
-
-        ///// <summary>
-        ///// Create a new task requesting the static EVSE data
-        ///// for the given EVSE identification.
-        ///// </summary>
-        ///// <param name="EVSEId">The unique identification of the EVSE.</param>
-        ///// <param name="QueryTimeout">An optional timeout for this query.</param>
-        //public Task<HTTPResponse<EVSEDataRecord>>
-
-        //    GetEVSEByIdRequest(EVSE_Id    EVSEId,
-        //                       TimeSpan?  QueryTimeout  = null)
-
-        //{
-
-        //    try
-        //    {
-
-        //        using (var _OICPClient = new SOAPClient(Hostname,
-        //                                                TCPPort,
-        //                                                HTTPVirtualHost,
-        //                                                "/ibis/ws/eRoamingEvseData_V2.0",
-        //                                                UserAgent,
-        //                                                DNSClient))
-        //        {
-
-        //            return _OICPClient.Query(EMP_XMLMethods.GetEVSEByIdRequestXML(EVSEId),
-        //                                     "eRoamingEvseById",
-        //                                     QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
-
-        //                                     OnSuccess: XMLData =>
-
-        //                                         #region Documentation
-
-        //                                         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                                         //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-        //                                         //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //                                         //   <soapenv:Header/>
-        //                                         //   <soapenv:Body>
-        //                                         //      <EVSEData:eRoamingEvseDataRecord deltaType="?" lastUpdate="?">
-        //                                         //          [...]
-        //                                         //      </EVSEData:eRoamingEvseDataRecord>
-        //                                         //    </soapenv:Body>
-        //                                         // </soapenv:Envelope>
-
-        //                                         #endregion
-
-        //                                         new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
-        //                                                                          XMLMethods.ParseEVSEDataRecordXML(XMLData.Content)),
-
-        //                                     OnSOAPFault: Fault =>
-        //                                         new HTTPResponse<EVSEDataRecord>(
-        //                                             Fault.HttpResponse,
-        //                                             new Exception(Fault.Content.ToString())),
-
-        //                                     OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
-
-        //                                     OnException: (t, s, e) => SendOnException(t, s, e)
-
-        //                                    );
-
-        //        }
-
-        //    }
-
-        //    catch (Exception e)
-        //    {
-
-        //        SendOnException(DateTime.Now, this, e);
-
-        //        return new Task<HTTPResponse<EVSEDataRecord>>(
-        //            () => new HTTPResponse<EVSEDataRecord>(e));
-
-        //    }
-
-        //}
-
-        #endregion
-
-        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0, LastCall = null, QueryTimeout = null)
+        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0, LastCall = null, QueryTimeout = null, ExceptionHandler = null)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
@@ -171,14 +89,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public Task<HTTPResponse<IEnumerable<eRoamingEVSEData>>>
+        /// <param name="ExceptionHandler">An optional delegate called whenever an exception occured.</param>
+        public async Task<HTTPResponse<IEnumerable<eRoamingEVSEData>>>
 
-            PullEVSEData(EVSP_Id        ProviderId,
-                         GeoCoordinate  SearchCenter  = null,
-                         UInt64         DistanceKM    = 0,
-                         DateTime?      LastCall      = null,
-                         TimeSpan?      QueryTimeout  = null,
-                         Action<Exception> ExceptionHandler = null)
+            PullEVSEData(EVSP_Id           ProviderId,
+                         GeoCoordinate     SearchCenter      = null,
+                         UInt64            DistanceKM        = 0,
+                         DateTime?         LastCall          = null,
+                         TimeSpan?         QueryTimeout      = null,
+                         Action<Exception> ExceptionHandler  = null)
 
         {
 
@@ -193,115 +112,115 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         DNSClient))
                 {
 
-                    return _OICPClient.Query(EMP_XMLMethods.PullEVSEDataRequestXML(ProviderId,
-                                                                                   SearchCenter,
-                                                                                   DistanceKM,
-                                                                                   LastCall),
-                                             "eRoamingPullEVSEData",
-                                             QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                    return await _OICPClient.Query(EMP_XMLMethods.PullEVSEDataRequestXML(ProviderId,
+                                                                                         SearchCenter,
+                                                                                         DistanceKM,
+                                                                                         LastCall),
+                                                   "eRoamingPullEVSEData",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                             OnSuccess: XMLData => {
+                                                   OnSuccess: XMLData => {
 
-                                                 #region Documentation
+                                                       #region Documentation
 
-                                                 // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                 //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-                                                 //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                                                 //
-                                                 //    <soapenv:Header/>
-                                                 //    <soapenv:Body>
-                                                 //       <EVSEData:eRoamingEvseData>
-                                                 //
-                                                 //          <EVSEData:EvseData>
-                                                 //             <!--Zero or more repetitions:-->
-                                                 //             <EVSEData:OperatorEvseData>
-                                                 //
-                                                 //                <EVSEData:OperatorID>?</EVSEData:OperatorID>
-                                                 //
-                                                 //                <!--Optional:-->
-                                                 //                <EVSEData:OperatorName>?</EVSEData:OperatorName>
-                                                 //
-                                                 //                <!--Zero or more repetitions:-->
-                                                 //                <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
-                                                 //                   [...]
-                                                 //                </EVSEData:EvseDataRecord>
-                                                 //
-                                                 //             </EVSEData:OperatorEvseData>
-                                                 //          </EVSEData:EvseData>
-                                                 //
-                                                 //          <!--Optional:-->
-                                                 //          <EVSEData:StatusCode>
-                                                 //
-                                                 //             <CommonTypes:Code>?</CommonTypes:Code>
-                                                 //
-                                                 //             <!--Optional:-->
-                                                 //             <CommonTypes:Description>?</CommonTypes:Description>
-                                                 //
-                                                 //             <!--Optional:-->
-                                                 //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-                                                 //
-                                                 //          </EVSEData:StatusCode>
-                                                 //
-                                                 //       </EVSEData:eRoamingEvseData>
-                                                 //    </soapenv:Body>
-                                                 // </soapenv:Envelope>
+                                                       // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                       //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+                                                       //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       //
+                                                       //    <soapenv:Header/>
+                                                       //    <soapenv:Body>
+                                                       //       <EVSEData:eRoamingEvseData>
+                                                       //
+                                                       //          <EVSEData:EvseData>
+                                                       //             <!--Zero or more repetitions:-->
+                                                       //             <EVSEData:OperatorEvseData>
+                                                       //
+                                                       //                <EVSEData:OperatorID>?</EVSEData:OperatorID>
+                                                       //
+                                                       //                <!--Optional:-->
+                                                       //                <EVSEData:OperatorName>?</EVSEData:OperatorName>
+                                                       //
+                                                       //                <!--Zero or more repetitions:-->
+                                                       //                <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
+                                                       //                   [...]
+                                                       //                </EVSEData:EvseDataRecord>
+                                                       //
+                                                       //             </EVSEData:OperatorEvseData>
+                                                       //          </EVSEData:EvseData>
+                                                       //
+                                                       //          <!--Optional:-->
+                                                       //          <EVSEData:StatusCode>
+                                                       //
+                                                       //             <CommonTypes:Code>?</CommonTypes:Code>
+                                                       //
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:Description>?</CommonTypes:Description>
+                                                       //
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                                                       //
+                                                       //          </EVSEData:StatusCode>
+                                                       //
+                                                       //       </EVSEData:eRoamingEvseData>
+                                                       //    </soapenv:Body>
+                                                       // </soapenv:Envelope>
 
-                                                 #endregion
+                                                       #endregion
 
-                                                 #region Hubject StatusCode / Error?
+                                                       #region Hubject StatusCode / Error?
 
-                                                 var HubjectError = XMLData.
-                                                                        Content.
-                                                                        Element(OICPNS.EVSEStatus + "StatusCode");
+                                                       var HubjectError = XMLData.
+                                                                              Content.
+                                                                              Element(OICPNS.EVSEStatus + "StatusCode");
 
-                                                 if (HubjectError != null)
-                                                 {
+                                                       if (HubjectError != null)
+                                                       {
 
-                                                     // <tns:eRoamingEvseStatusById xmlns:tns="http://www.hubject.com/b2b/services/evsestatus/v1.2">
-                                                     //   <tns:StatusCode>
-                                                     //     <cmn:Code        xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">002</cmn:Code>
-                                                     //     <cmn:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">Hubject database error</cmn:Description>
-                                                     //   </tns:StatusCode>
-                                                     // </tns:eRoamingEvseStatusById>
+                                                           // <tns:eRoamingEvseStatusById xmlns:tns="http://www.hubject.com/b2b/services/evsestatus/v1.2">
+                                                           //   <tns:StatusCode>
+                                                           //     <cmn:Code        xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">002</cmn:Code>
+                                                           //     <cmn:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">Hubject database error</cmn:Description>
+                                                           //   </tns:StatusCode>
+                                                           // </tns:eRoamingEvseStatusById>
 
-                                                     var Code         = HubjectError.Element(OICPNS.CommonTypes + "Code").       Value;
-                                                     var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
-                                                     var Exception    = new ApplicationException(Code + " - " + Description);
+                                                           var Code         = HubjectError.Element(OICPNS.CommonTypes + "Code").       Value;
+                                                           var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
+                                                           var Exception    = new ApplicationException(Code + " - " + Description);
 
-                                                     DebugX.Log("'PullEVSEDataRequest' led to an exception: " + Exception.Message);
+                                                           DebugX.Log("'PullEVSEDataRequest' led to an exception: " + Exception.Message);
 
-                                                     SendOnException(DateTime.Now, this, Exception);
+                                                           SendOnException(DateTime.Now, this, Exception);
 
-                                                     return new HTTPResponse<IEnumerable<eRoamingEVSEData>>(Exception);
+                                                           return new HTTPResponse<IEnumerable<eRoamingEVSEData>>(Exception);
 
-                                                 }
+                                                       }
 
-                                                 #endregion
+                                                       #endregion
 
-                                                 return new HTTPResponse<IEnumerable<eRoamingEVSEData>>(XMLData.HttpResponse,
-                                                                                                        XMLData.Content.
-                                                                                                            Element (OICPNS.EVSEData + "EvseData").
-                                                                                                            Elements(OICPNS.EVSEData + "OperatorEvseData").
-                                                                                                            Select  (XML      => XMLMethods.ParseOperatorEVSEDataXML(XML, ExceptionHandler)).
-                                                                                                            Where   (EVSEData => EVSEData != null));
+                                                       return new HTTPResponse<IEnumerable<eRoamingEVSEData>>(XMLData.HttpResponse,
+                                                                                                              XMLData.Content.
+                                                                                                                  Element (OICPNS.EVSEData + "EvseData").
+                                                                                                                  Elements(OICPNS.EVSEData + "OperatorEvseData").
+                                                                                                                  Select  (XML      => XMLMethods.ParseOperatorEVSEDataXML(XML, ExceptionHandler)).
+                                                                                                                  Where   (EVSEData => EVSEData != null));
 
-                                             },
+                                                   },
 
-                                             OnSOAPFault: Fault => {
+                                                   OnSOAPFault: Fault => {
 
-                                                 DebugX.Log("'PullEVSEDataRequest' lead to a SOAP fault!");
+                                                       DebugX.Log("'PullEVSEDataRequest' lead to a SOAP fault!");
 
-                                                 return new HTTPResponse<IEnumerable<eRoamingEVSEData>>(
-                                                     Fault.HttpResponse,
-                                                     new Exception(Fault.Content.ToString()));
+                                                       return new HTTPResponse<IEnumerable<eRoamingEVSEData>>(
+                                                           Fault.HttpResponse,
+                                                           new Exception(Fault.Content.ToString()));
 
-                                             },
+                                                   },
 
-                                             OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+                                                   OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
 
-                                             OnException: (t, s, e) => SendOnException(t, s, e)
+                                                   OnException: (t, s, e) => SendOnException(t, s, e)
 
-                                            );
+                                                  );
 
                 }
 
@@ -314,8 +233,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 SendOnException(DateTime.Now, this, e);
 
-                return new Task<HTTPResponse<IEnumerable<eRoamingEVSEData>>>(
-                    () => new HTTPResponse<IEnumerable<eRoamingEVSEData>>(e));
+                return new HTTPResponse<IEnumerable<eRoamingEVSEData>>(new HTTPResponse(), e);
 
             }
 
@@ -332,7 +250,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>>
+        public async Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>>
 
             PullEVSEStatusById(EVSP_Id               ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
@@ -352,100 +270,100 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds),
-                                             "eRoamingPullEvseStatusById",
-                                             QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                    return await _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds),
+                                                   "eRoamingPullEvseStatusById",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                             OnSuccess: XMLData => {
+                                                   OnSuccess: XMLData => {
 
-                                                 #region Documentation
+                                                       #region Documentation
 
-                                                 // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                 //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
-                                                 //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                                                 //
-                                                 //    <soapenv:Header/>
-                                                 //    <soapenv:Body>
-                                                 //       <v2:eRoamingEvseStatusById>
-                                                 //
-                                                 //          <!--Optional:-->
-                                                 //          <v2:EvseStatusRecords>
-                                                 //
-                                                 //             <!--Zero or more repetitions:-->
-                                                 //             <v2:EvseStatusRecord>
-                                                 //                <v2:EvseId>?</v2:EvseId>
-                                                 //                <v2:EvseStatus>?</v2:EvseStatus>
-                                                 //             </v2:EvseStatusRecord>
-                                                 //
-                                                 //          </v2:EvseStatusRecords>
-                                                 //
-                                                 //          <!--Optional:-->
-                                                 //          <v2:StatusCode>
-                                                 //             <v21:Code>?</v21:Code>
-                                                 //             <!--Optional:-->
-                                                 //             <v21:Description>?</v21:Description>
-                                                 //             <!--Optional:-->
-                                                 //             <v21:AdditionalInfo>?</v21:AdditionalInfo>
-                                                 //          </v2:StatusCode>
-                                                 //
-                                                 //       </v2:eRoamingEvseStatusById>
-                                                 //    </soapenv:Body>
-                                                 // </soapenv:Envelope>
+                                                       // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                       //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
+                                                       //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       //
+                                                       //    <soapenv:Header/>
+                                                       //    <soapenv:Body>
+                                                       //       <v2:eRoamingEvseStatusById>
+                                                       //
+                                                       //          <!--Optional:-->
+                                                       //          <v2:EvseStatusRecords>
+                                                       //
+                                                       //             <!--Zero or more repetitions:-->
+                                                       //             <v2:EvseStatusRecord>
+                                                       //                <v2:EvseId>?</v2:EvseId>
+                                                       //                <v2:EvseStatus>?</v2:EvseStatus>
+                                                       //             </v2:EvseStatusRecord>
+                                                       //
+                                                       //          </v2:EvseStatusRecords>
+                                                       //
+                                                       //          <!--Optional:-->
+                                                       //          <v2:StatusCode>
+                                                       //             <v21:Code>?</v21:Code>
+                                                       //             <!--Optional:-->
+                                                       //             <v21:Description>?</v21:Description>
+                                                       //             <!--Optional:-->
+                                                       //             <v21:AdditionalInfo>?</v21:AdditionalInfo>
+                                                       //          </v2:StatusCode>
+                                                       //
+                                                       //       </v2:eRoamingEvseStatusById>
+                                                       //    </soapenv:Body>
+                                                       // </soapenv:Envelope>
 
-                                                 #endregion
+                                                       #endregion
 
-                                                 #region Hubject error?
+                                                       #region Hubject error?
 
-                                                 var HubjectError = XMLData.
-                                                                        Content.
-                                                                        Element(OICPNS.EVSEStatus + "StatusCode");
+                                                       var HubjectError = XMLData.
+                                                                              Content.
+                                                                              Element(OICPNS.EVSEStatus + "StatusCode");
 
-                                                 if (HubjectError != null)
-                                                 {
+                                                       if (HubjectError != null)
+                                                       {
 
-                                                     // <tns:eRoamingEvseStatusById xmlns:tns="http://www.hubject.com/b2b/services/evsestatus/v1.2">
-                                                     //   <tns:StatusCode>
-                                                     //     <cmn:Code        xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">002</cmn:Code>
-                                                     //     <cmn:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">Hubject database error</cmn:Description>
-                                                     //   </tns:StatusCode>
-                                                     // </tns:eRoamingEvseStatusById>
+                                                           // <tns:eRoamingEvseStatusById xmlns:tns="http://www.hubject.com/b2b/services/evsestatus/v1.2">
+                                                           //   <tns:StatusCode>
+                                                           //     <cmn:Code        xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">002</cmn:Code>
+                                                           //     <cmn:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">Hubject database error</cmn:Description>
+                                                           //   </tns:StatusCode>
+                                                           // </tns:eRoamingEvseStatusById>
 
-                                                     var Code         = HubjectError.Element(OICPNS.CommonTypes + "Code").       Value;
-                                                     var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
-                                                     var Exception    = new ApplicationException(Code + " - " + Description);
+                                                           var Code         = HubjectError.Element(OICPNS.CommonTypes + "Code").       Value;
+                                                           var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
+                                                           var Exception    = new ApplicationException(Code + " - " + Description);
 
-                                                     SendOnException(DateTime.Now, this, Exception);
+                                                           SendOnException(DateTime.Now, this, Exception);
 
-                                                     return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(Exception);
+                                                           return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(Exception);
 
-                                                 }
+                                                       }
 
-                                                 #endregion
+                                                       #endregion
 
-                                                 return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(
-                                                            XMLData.HttpResponse,
-                                                            XMLData.Content.
-                                                                    Element (OICPNS.EVSEStatus + "EvseStatusRecords").
-                                                                    Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
-                                                                    Select(v => new KeyValuePair<EVSE_Id, OICPEVSEStatus>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
-                                                                                                                         (OICPEVSEStatus) Enum.Parse(typeof(OICPEVSEStatus), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))));
+                                                       return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(
+                                                                  XMLData.HttpResponse,
+                                                                  XMLData.Content.
+                                                                          Element (OICPNS.EVSEStatus + "EvseStatusRecords").
+                                                                          Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
+                                                                          Select(v => new KeyValuePair<EVSE_Id, OICPEVSEStatus>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
+                                                                                                                               (OICPEVSEStatus) Enum.Parse(typeof(OICPEVSEStatus), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))));
 
-                                             },
+                                                   },
 
-                                             OnSOAPFault: Fault => {
+                                                   OnSOAPFault: Fault => {
 
-                                                 DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
+                                                       DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
-                                                 return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(
-                                                     Fault.HttpResponse,
-                                                     new KeyValuePair<EVSE_Id, OICPEVSEStatus>[0],
-                                                     IsFault: true);
+                                                       return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(
+                                                           Fault.HttpResponse,
+                                                           new KeyValuePair<EVSE_Id, OICPEVSEStatus>[0],
+                                                           IsFault: true);
 
-                                             },
+                                                   },
 
-                                             OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+                                                   OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
 
-                                             OnException: (t, s, e) => SendOnException(t, s, e)
+                                                   OnException: (t, s, e) => SendOnException(t, s, e)
 
                                             );
 
@@ -458,8 +376,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 SendOnException(DateTime.Now, this, e);
 
-                return new Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>>(
-                    () => new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(e));
+                return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(e);
 
             }
 
@@ -477,7 +394,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatus">An optional EVSE status as filter criteria.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>>
+        public async Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>>
 
             PullEVSEStatus(EVSP_Id          ProviderId,
                            GeoCoordinate    SearchCenter  = null,
@@ -499,121 +416,121 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusRequestXML(ProviderId, SearchCenter, DistanceKM, EVSEStatus),
-                                             "eRoamingPullEVSEStatusRequest",
-                                             QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                    return await _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusRequestXML(ProviderId, SearchCenter, DistanceKM, EVSEStatus),
+                                                   "eRoamingPullEVSEStatusRequest",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                             OnSuccess: XMLData => {
+                                                   OnSuccess: XMLData => {
 
-                                                 #region Documentation
+                                                       #region Documentation
 
-                                                 // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                 //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
-                                                 //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                                                 //
-                                                 //    <soapenv:Header/>
-                                                 //    <soapenv:Body>
-                                                 //       <v2:eRoamingEvseStatus>
-                                                 //
-                                                 //          <v2:EvseStatuses>
-                                                 //             <!--Zero or more repetitions:-->
-                                                 //             <v2:OperatorEvseStatus>
-                                                 //
-                                                 //                <v2:OperatorID>?</v2:OperatorID>
-                                                 //
-                                                 //                <!--Optional:-->
-                                                 //                <v2:OperatorName>?</v2:OperatorName>
-                                                 //
-                                                 //                <!--Zero or more repetitions:-->
-                                                 //                <v2:EvseStatusRecord>
-                                                 //                   <v2:EvseId>?</v2:EvseId>
-                                                 //                   <v2:EvseStatus>?</v2:EvseStatus>
-                                                 //                </v2:EvseStatusRecord>
-                                                 //
-                                                 //             </v2:OperatorEvseStatus>
-                                                 //          </v2:EvseStatuses>
-                                                 //
-                                                 //          <!--Optional:-->
-                                                 //          <v2:StatusCode>
-                                                 //             <v21:Code>?</v21:Code>
-                                                 //             <!--Optional:-->
-                                                 //             <v21:Description>?</v21:Description>
-                                                 //             <!--Optional:-->
-                                                 //             <v21:AdditionalInfo>?</v21:AdditionalInfo>
-                                                 //          </v2:StatusCode>
-                                                 //
-                                                 //       </v2:eRoamingEvseStatus>
-                                                 //    </soapenv:Body>
-                                                 // </soapenv:Envelope>
+                                                       // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                       //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
+                                                       //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       //
+                                                       //    <soapenv:Header/>
+                                                       //    <soapenv:Body>
+                                                       //       <v2:eRoamingEvseStatus>
+                                                       //
+                                                       //          <v2:EvseStatuses>
+                                                       //             <!--Zero or more repetitions:-->
+                                                       //             <v2:OperatorEvseStatus>
+                                                       //
+                                                       //                <v2:OperatorID>?</v2:OperatorID>
+                                                       //
+                                                       //                <!--Optional:-->
+                                                       //                <v2:OperatorName>?</v2:OperatorName>
+                                                       //
+                                                       //                <!--Zero or more repetitions:-->
+                                                       //                <v2:EvseStatusRecord>
+                                                       //                   <v2:EvseId>?</v2:EvseId>
+                                                       //                   <v2:EvseStatus>?</v2:EvseStatus>
+                                                       //                </v2:EvseStatusRecord>
+                                                       //
+                                                       //             </v2:OperatorEvseStatus>
+                                                       //          </v2:EvseStatuses>
+                                                       //
+                                                       //          <!--Optional:-->
+                                                       //          <v2:StatusCode>
+                                                       //             <v21:Code>?</v21:Code>
+                                                       //             <!--Optional:-->
+                                                       //             <v21:Description>?</v21:Description>
+                                                       //             <!--Optional:-->
+                                                       //             <v21:AdditionalInfo>?</v21:AdditionalInfo>
+                                                       //          </v2:StatusCode>
+                                                       //
+                                                       //       </v2:eRoamingEvseStatus>
+                                                       //    </soapenv:Body>
+                                                       // </soapenv:Envelope>
 
-                                                 #endregion
+                                                       #endregion
 
-                                                 #region Hubject error?
+                                                       #region Hubject error?
 
-                                                 var HubjectError = XMLData.
-                                                                        Content.
-                                                                        Element(OICPNS.EVSEStatus + "StatusCode");
+                                                       var HubjectError = XMLData.
+                                                                              Content.
+                                                                              Element(OICPNS.EVSEStatus + "StatusCode");
 
-                                                 if (HubjectError != null)
-                                                 {
+                                                       if (HubjectError != null)
+                                                       {
 
-                                                     // <tns:eRoamingEvseStatusById xmlns:tns="http://www.hubject.com/b2b/services/evsestatus/v1.2">
-                                                     //   <tns:StatusCode>
-                                                     //     <cmn:Code        xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">002</cmn:Code>
-                                                     //     <cmn:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">Hubject database error</cmn:Description>
-                                                     //   </tns:StatusCode>
-                                                     // </tns:eRoamingEvseStatusById>
+                                                           // <tns:eRoamingEvseStatusById xmlns:tns="http://www.hubject.com/b2b/services/evsestatus/v1.2">
+                                                           //   <tns:StatusCode>
+                                                           //     <cmn:Code        xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">002</cmn:Code>
+                                                           //     <cmn:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">Hubject database error</cmn:Description>
+                                                           //   </tns:StatusCode>
+                                                           // </tns:eRoamingEvseStatusById>
 
-                                                     var Code         = HubjectError.Element(OICPNS.CommonTypes + "Code").       Value;
-                                                     var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
-                                                     var Exception    = new ApplicationException(Code + " - " + Description);
+                                                           var Code         = HubjectError.Element(OICPNS.CommonTypes + "Code").       Value;
+                                                           var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
+                                                           var Exception    = new ApplicationException(Code + " - " + Description);
 
-                                                     SendOnException(DateTime.Now, this, Exception);
+                                                           SendOnException(DateTime.Now, this, Exception);
 
-                                                     return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(Exception);
+                                                           return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(Exception);
 
-                                                 }
+                                                       }
 
-                                                 #endregion
+                                                       #endregion
 
-                                                 try
-                                                 {
+                                                       try
+                                                       {
 
-                                                     return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(
-                                                                XMLData.HttpResponse,
-                                                                XMLData.Content.
-                                                                        Element (OICPNS.EVSEStatus + "EvseStatusRecords").
-                                                                        Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
-                                                                        Select(v => new KeyValuePair<EVSE_Id, OICPEVSEStatus>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
-                                                                                                                                (OICPEVSEStatus)Enum.Parse(typeof(OICPEVSEStatus), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))).
-                                                                        ToArray() as IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>);
+                                                           return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(
+                                                                      XMLData.HttpResponse,
+                                                                      XMLData.Content.
+                                                                              Element (OICPNS.EVSEStatus + "EvseStatusRecords").
+                                                                              Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
+                                                                              Select(v => new KeyValuePair<EVSE_Id, OICPEVSEStatus>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
+                                                                                                                                      (OICPEVSEStatus)Enum.Parse(typeof(OICPEVSEStatus), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))).
+                                                                              ToArray() as IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>);
 
-                                                 }
-                                                 catch (Exception e)
-                                                 {
-                                                     DebugX.Log("'PullEVSEStatusByIdRequest' led to an exception: " + e.Message);
-                                                     SendOnException(DateTime.Now, this, e);
-                                                     return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(e);
-                                                 }
+                                                       }
+                                                       catch (Exception e)
+                                                       {
+                                                           DebugX.Log("'PullEVSEStatusByIdRequest' led to an exception: " + e.Message);
+                                                           SendOnException(DateTime.Now, this, e);
+                                                           return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(e);
+                                                       }
 
-                                             },
+                                                   },
 
-                                             OnSOAPFault: Fault => {
+                                                   OnSOAPFault: Fault => {
 
-                                                 DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
+                                                       DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
-                                                 return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(
-                                                     Fault.HttpResponse,
-                                                     new KeyValuePair<EVSE_Id, OICPEVSEStatus>[0],
-                                                     IsFault: true);
+                                                       return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(
+                                                           Fault.HttpResponse,
+                                                           new KeyValuePair<EVSE_Id, OICPEVSEStatus>[0],
+                                                           IsFault: true);
 
-                                             },
+                                                   },
 
-                                             OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+                                                   OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
 
-                                             OnException: (t, s, e) => SendOnException(t, s, e)
+                                                   OnException: (t, s, e) => SendOnException(t, s, e)
 
-                                            );
+                                                  );
 
                 }
 
@@ -624,8 +541,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 SendOnException(DateTime.Now, this, e);
 
-                return new Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>>(
-                    () => new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(e));
+                return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>(e);
 
             }
 

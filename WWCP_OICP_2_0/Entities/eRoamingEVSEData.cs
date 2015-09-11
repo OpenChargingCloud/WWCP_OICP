@@ -26,7 +26,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 EVSE data set.
+    /// A group of OICP v2.0 EVSE data records.
     /// </summary>
     public class eRoamingEVSEData
     {
@@ -37,6 +37,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         private readonly EVSEOperator_Id _OperatorId;
 
+        /// <summary>
+        /// The unique identification of an Electric Vehicle Supply Equipment Operator.
+        /// </summary>
         public EVSEOperator_Id OperatorId
         {
             get
@@ -51,6 +54,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         private readonly String _OperatorName;
 
+        /// <summary>
+        /// The name of an Electric Vehicle Supply Equipment Operator.
+        /// </summary>
         public String OperatorName
         {
             get
@@ -65,6 +71,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         private readonly IEnumerable<EVSEDataRecord> _EVSEDataRecords;
 
+        /// <summary>
+        /// An enumeration of EVSE data records.
+        /// </summary>
         public IEnumerable<EVSEDataRecord> EVSEDataRecords
         {
             get
@@ -79,15 +88,27 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Constructor(s)
 
+        /// <summary>
+        /// Create a new group of OICP v2.0 EVSE data records.
+        /// </summary>
+        /// <param name="OperatorId">The unique identification of an Electric Vehicle Supply Equipment Operator.</param>
+        /// <param name="OperatorName">The name of an Electric Vehicle Supply Equipment Operator.</param>
+        /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
         public eRoamingEVSEData(EVSEOperator_Id              OperatorId,
                                 String                       OperatorName,
                                 IEnumerable<EVSEDataRecord>  EVSEDataRecords)
-
         {
 
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+
+            #endregion
+
             this._OperatorId       = OperatorId;
-            this._OperatorName     = OperatorName;
-            this._EVSEDataRecords  = EVSEDataRecords;
+            this._OperatorName     = OperatorName    != null ? OperatorName    : "";
+            this._EVSEDataRecords  = EVSEDataRecords != null ? EVSEDataRecords : new EVSEDataRecord[0];
 
         }
 

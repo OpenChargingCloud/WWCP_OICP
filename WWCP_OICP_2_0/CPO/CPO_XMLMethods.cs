@@ -1526,6 +1526,83 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         }
 
+        public static XElement PushEVSEStatusXML(this IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>  EVSEIdAndStatus,
+                                                 EVSEOperator_Id                                          OperatorId,
+                                                 String                                                   OperatorName    = null,
+                                                 ActionType                                               OICPAction      = ActionType.update,
+                                                 Func<EVSE_Id, Boolean>                                   IncludeEVSEIds  = null)
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <v2:eRoamingPushEvseStatus>
+            //
+            //          <v2:ActionType>?</v2:ActionType>
+            //
+            //          <v2:OperatorEvseStatus>
+            //
+            //             <v2:OperatorID>?</v2:OperatorID>
+            //
+            //             <!--Optional:-->
+            //             <v2:OperatorName>?</v2:OperatorName>
+            //
+            //             <!--Zero or more repetitions:-->
+            //             <v2:EvseStatusRecord>
+            //                <v2:EvseId>?</v2:EvseId>
+            //                <v2:EvseStatus>?</v2:EvseStatus>
+            //             </v2:EvseStatusRecord>
+            //
+            //          </v2:OperatorEvseStatus>
+            //
+            //       </v2:eRoamingPushEvseStatus>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
+
+            #region Initial checks
+
+            if (EVSEIdAndStatus == null)
+                throw new ArgumentNullException("EVSEIdAndStatus", "The given parameter must not be null!");
+
+            if (OperatorId == null)
+                throw new ArgumentNullException("OperatorId",      "The given parameter must not be null!");
+
+            var _EVSEIdAndStatus = EVSEIdAndStatus.ToArray();
+
+            if (_EVSEIdAndStatus.Length == 0)
+                throw new ArgumentNullException("EVSEIdAndStatus", "The given parameter must not be empty!");
+
+            if (IncludeEVSEIds == null)
+                IncludeEVSEIds = EVSEId => true;
+
+            #endregion
+
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
+                                          new XElement(OICPNS.EVSEStatus + "ActionType", OICPAction.ToString()),
+                                          new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
+
+                                              new XElement(OICPNS.EVSEStatus + "OperatorID", OperatorId.OriginId),
+
+                                              OperatorName.IsNotNullOrEmpty()
+                                                  ? new XElement(OICPNS.EVSEStatus + "OperatorName", OperatorName)
+                                                  : null,
+
+                                              _EVSEIdAndStatus.
+                                                  Where(kvp => IncludeEVSEIds(kvp.Key)).
+                                                  ToEvseStatusRecords().
+                                                  ToArray()
+
+                                          )
+                                      ));
+
+        }
+
         #endregion
 
         #region PushEVSEStatusXML(this EVSEIds, CommonStatus, OperatorId, OperatorName = null, OICPAction = update, IncludeEVSEIds = null)
