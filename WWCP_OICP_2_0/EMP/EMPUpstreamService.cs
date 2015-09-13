@@ -606,39 +606,110 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        #region Documentation
 
-                                                       // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                       //                   xmlns:EVSEStatus  = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
-                                                       //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                                                       //
+                                                       // <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://www.hubject.com/b2b/services/evsesearch/v2.0" xmlns:v21="http://www.hubject.com/b2b/services/evsedata/v2.0" xmlns:v22="http://www.hubject.com/b2b/services/commontypes/v2.0">
                                                        //    <soapenv:Header/>
                                                        //    <soapenv:Body>
-                                                       //       <EVSEStatus:eRoamingEvseStatusById>
-                                                       //
-                                                       //          <!--Optional:-->
-                                                       //          <EVSEStatus:EvseStatusRecords>
-                                                       //
+                                                       //       <v2:eRoamingEvseSearchResult>
+                                                       //          <v2:EvseMatches>
                                                        //             <!--Zero or more repetitions:-->
-                                                       //             <EVSEStatus:EvseStatusRecord>
-                                                       //                <EVSEStatus:EvseId>?</EVSEStatus:EvseId>
-                                                       //                <EVSEStatus:EvseStatus>?</EVSEStatus:EvseStatus>
-                                                       //             </EVSEStatus:EvseStatusRecord>
-                                                       //
-                                                       //          </EVSEStatus:EvseStatusRecords>
-                                                       //
-                                                       //          <!--Optional:-->
-                                                       //          <EVSEStatus:StatusCode>
-                                                       //
-                                                       //             <CommonTypes:Code>?</CommonTypes:Code>
-                                                       //
-                                                       //             <!--Optional:-->
-                                                       //             <CommonTypes:Description>?</CommonTypes:Description>
-                                                       //
-                                                       //             <!--Optional:-->
-                                                       //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-                                                       //
-                                                       //          </EVSEStatus:StatusCode>
-                                                       //
-                                                       //       </EVSEStatus:eRoamingEvseStatusById>
+                                                       //             <v2:EvseMatch>
+                                                       //                <v2:Distance>?</v2:Distance>
+                                                       //                <v2:EVSE deltaType="?" lastUpdate="?">
+                                                       //                   <v21:EvseId>?</v21:EvseId>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:ChargingStationId>?</v21:ChargingStationId>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:ChargingStationName>?</v21:ChargingStationName>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:EnChargingStationName>?</v21:EnChargingStationName>
+                                                       //                   <v21:Address>
+                                                       //                      <v22:Country>?</v22:Country>
+                                                       //                      <v22:City>?</v22:City>
+                                                       //                      <v22:Street>?</v22:Street>
+                                                       //                      <!--Optional:-->
+                                                       //                      <v22:PostalCode>?</v22:PostalCode>
+                                                       //                      <!--Optional:-->
+                                                       //                      <v22:HouseNum>?</v22:HouseNum>
+                                                       //                      <!--Optional:-->
+                                                       //                      <v22:Floor>?</v22:Floor>
+                                                       //                      <!--Optional:-->
+                                                       //                      <v22:Region>?</v22:Region>
+                                                       //                      <!--Optional:-->
+                                                       //                      <v22:TimeZone>?</v22:TimeZone>
+                                                       //                   </v21:Address>
+                                                       //                   <v21:GeoCoordinates>
+                                                       //                      <!--You have a CHOICE of the next 3 items at this level-->
+                                                       //                      <v22:Google>
+                                                       //                         <v22:Coordinates>?</v22:Coordinates>
+                                                       //                      </v22:Google>
+                                                       //                      <v22:DecimalDegree>
+                                                       //                         <v22:Longitude>?</v22:Longitude>
+                                                       //                         <v22:Latitude>?</v22:Latitude>
+                                                       //                      </v22:DecimalDegree>
+                                                       //                      <v22:DegreeMinuteSeconds>
+                                                       //                         <v22:Longitude>?</v22:Longitude>
+                                                       //                         <v22:Latitude>?</v22:Latitude>
+                                                       //                      </v22:DegreeMinuteSeconds>
+                                                       //                   </v21:GeoCoordinates>
+                                                       //                   <v21:Plugs>
+                                                       //                      <!--1 or more repetitions:-->
+                                                       //                      <v21:Plug>?</v21:Plug>
+                                                       //                   </v21:Plugs>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:ChargingFacilities>
+                                                       //                      <!--1 or more repetitions:-->
+                                                       //                      <v21:ChargingFacility>?</v21:ChargingFacility>
+                                                       //                   </v21:ChargingFacilities>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:ChargingModes>
+                                                       //                      <!--1 or more repetitions:-->
+                                                       //                      <v21:ChargingMode>?</v21:ChargingMode>
+                                                       //                   </v21:ChargingModes>
+                                                       //                   <v21:AuthenticationModes>
+                                                       //                      <!--1 or more repetitions:-->
+                                                       //                      <v21:AuthenticationMode>?</v21:AuthenticationMode>
+                                                       //                   </v21:AuthenticationModes>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:MaxCapacity>?</v21:MaxCapacity>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:PaymentOptions>
+                                                       //                      <!--1 or more repetitions:-->
+                                                       //                      <v21:PaymentOption>?</v21:PaymentOption>
+                                                       //                   </v21:PaymentOptions>
+                                                       //                   <v21:Accessibility>?</v21:Accessibility>
+                                                       //                   <v21:HotlinePhoneNum>?</v21:HotlinePhoneNum>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:AdditionalInfo>?</v21:AdditionalInfo>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:EnAdditionalInfo>?</v21:EnAdditionalInfo>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:GeoChargingPointEntrance>
+                                                       //                      <!--You have a CHOICE of the next 3 items at this level-->
+                                                       //                      <v22:Google>
+                                                       //                         <v22:Coordinates>?</v22:Coordinates>
+                                                       //                      </v22:Google>
+                                                       //                      <v22:DecimalDegree>
+                                                       //                         <v22:Longitude>?</v22:Longitude>
+                                                       //                         <v22:Latitude>?</v22:Latitude>
+                                                       //                      </v22:DecimalDegree>
+                                                       //                      <v22:DegreeMinuteSeconds>
+                                                       //                         <v22:Longitude>?</v22:Longitude>
+                                                       //                         <v22:Latitude>?</v22:Latitude>
+                                                       //                      </v22:DegreeMinuteSeconds>
+                                                       //                   </v21:GeoChargingPointEntrance>
+                                                       //                   <v21:IsOpen24Hours>?</v21:IsOpen24Hours>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:OpeningTime>?</v21:OpeningTime>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:HubOperatorID>?</v21:HubOperatorID>
+                                                       //                   <!--Optional:-->
+                                                       //                   <v21:ClearinghouseID>?</v21:ClearinghouseID>
+                                                       //                   <v21:IsHubjectCompatible>?</v21:IsHubjectCompatible>
+                                                       //                   <v21:DynamicInfoAvailable>?</v21:DynamicInfoAvailable>
+                                                       //                </v2:EVSE>
+                                                       //             </v2:EvseMatch>
+                                                       //          </v2:EvseMatches>
+                                                       //       </v2:eRoamingEvseSearchResult>
                                                        //    </soapenv:Body>
                                                        // </soapenv:Envelope>
 
