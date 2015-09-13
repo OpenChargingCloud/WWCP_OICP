@@ -37,151 +37,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     public static class EMP_XMLMethods
     {
 
-        #region SearchRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0, Address = null, Plug = null, ChargingFacility = null)
-
-        /// <summary>
-        /// Create a new EVSE Search request.
-        /// </summary>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
-        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
-        /// <param name="Address">An optional address of the charging stations.</param>
-        /// <param name="Plug">Optional plugs of the charging station.</param>
-        /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
-        public static XElement SearchRequestXML(EVSP_Id              ProviderId,
-                                                GeoCoordinate        SearchCenter      = null,
-                                                UInt64               DistanceKM        = 0,
-                                                Address              Address           = null,
-                                                PlugTypes?           Plug              = null,
-                                                ChargingFacilities?  ChargingFacility  = null)
-        {
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsesearch/v2.0"
-            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            //
-            //    <soapenv:Header/>
-            //    <soapenv:Body>
-            //       <v2:eRoamingSearchEvse>
-            //
-            //          <!--Optional:-->
-            //          <v2:GeoCoordinates>
-            //             <!--You have a CHOICE of the next 3 items at this level-->
-            //             <v21:Google>
-            //                <v21:Coordinates>?</v21:Coordinates>
-            //             </v21:Google>
-            //             <v21:DecimalDegree>
-            //                <v21:Longitude>?</v21:Longitude>
-            //                <v21:Latitude>?</v21:Latitude>
-            //             </v21:DecimalDegree>
-            //             <v21:DegreeMinuteSeconds>
-            //                <v21:Longitude>?</v21:Longitude>
-            //                <v21:Latitude>?</v21:Latitude>
-            //             </v21:DegreeMinuteSeconds>
-            //          </v2:GeoCoordinates>
-            //
-            //          <!--Optional:-->
-            //          <v2:Address>
-            //             <v21:Country>?</v21:Country>
-            //             <v21:City>?</v21:City>
-            //             <v21:Street>?</v21:Street>
-            //             <!--Optional:-->
-            //             <v21:PostalCode>?</v21:PostalCode>
-            //             <!--Optional:-->
-            //             <v21:HouseNum>?</v21:HouseNum>
-            //             <!--Optional:-->
-            //             <v21:Floor>?</v21:Floor>
-            //             <!--Optional:-->
-            //             <v21:Region>?</v21:Region>
-            //             <!--Optional:-->
-            //             <v21:TimeZone>?</v21:TimeZone>
-            //          </v2:Address>
-            //
-            //          <v2:ProviderID>?</v2:ProviderID>
-            //          <v2:Range>?</v2:Range>
-            //          <!--Optional:-->
-            //          <v2:Plug>?</v2:Plug>
-            //          <!--Optional:-->
-            //          <v2:ChargingFacility>?</v2:ChargingFacility>
-            //
-            //       </v2:eRoamingSearchEvse>
-            //    </soapenv:Body>
-            // </soapenv:Envelope>
-
-            #endregion
-
-            #region Initial checks
-
-            if (ProviderId == null)
-                throw new ArgumentNullException("ProviderId", "The given parameter must not be null!");
-
-            #endregion
-
-            return SOAP.Encapsulation(new XElement(OICPNS.EVSESearch + "eRoamingSearchEvse",
-
-                                          (SearchCenter != null && DistanceKM > 0)
-                                              ? new XElement(OICPNS.EVSEData + "SearchCenter",
-                                                  new XElement(OICPNS.CommonTypes + "GeoCoordinates",
-                                                      new XElement(OICPNS.CommonTypes + "DecimalDegree",
-                                                          new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
-                                                          new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat)))
-                                                  ))
-                                              : null,
-
-                                          (Address         != null            &&
-                                           Address.Country != Country.unknown &&
-                                           Address.City.  IsNotNullOrEmpty()  &&
-                                           Address.Street.IsNotNullOrEmpty())
-                                              ? new XElement(OICPNS.EVSEData + "Address",
-
-                                                    new XElement(OICPNS.CommonTypes + "Country" + Address.Country.ToString()),
-                                                    new XElement(OICPNS.CommonTypes + "City"    + Address.City),
-                                                    new XElement(OICPNS.CommonTypes + "Street"  + Address.Street),
-
-                                                    Address.PostalCode.IsNotNullOrEmpty()
-                                                        ? new XElement(OICPNS.CommonTypes + "PostalCode" + Address.PostalCode)
-                                                        : null,
-
-                                                    Address.HouseNumber.IsNotNullOrEmpty()
-                                                        ? new XElement(OICPNS.CommonTypes + "HouseNum"   + Address.HouseNumber)
-                                                        : null,
-
-                                                    Address.FloorLevel.IsNotNullOrEmpty()
-                                                        ? new XElement(OICPNS.CommonTypes + "Floor"      + Address.FloorLevel)
-                                                        : null
-
-                                                    // <!--Optional:-->
-                                                    // <v21:Region>?</v21:Region>
-
-                                                    // <!--Optional:-->
-                                                    // <v21:TimeZone>?</v21:TimeZone>
-
-                                                    )
-                                              : null,
-
-                                          new XElement(OICPNS.EVSESearch + "ProviderID", ProviderId),
-
-                                          (SearchCenter     != null && DistanceKM > 0)
-                                              ? new XElement(OICPNS.EVSESearch + "Range", DistanceKM)
-                                              : null,
-
-                                          (Plug             != null && Plug.HasValue)
-                                              ? new XElement(OICPNS.EVSESearch + "Plug", Plug.ToString())
-                                              : null,
-
-                                          (ChargingFacility != null && ChargingFacility.HasValue)
-                                              ? new XElement(OICPNS.EVSESearch + "ChargingFacility", ChargingFacility.ToString())
-                                              : null
-
-                                     ));
-
-        }
-
-        #endregion
-
-
         #region GetEVSEByIdRequestXML(EVSEId) // <- Note!
 
         // Note: It's confusing, but this request does not belong here!
@@ -312,7 +167,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                       new XElement(OICPNS.CommonTypes + "DecimalDegree",
                                                           new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
                                                           new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat)))
-                                                  ))
+                                                  ),
+                                                  new XElement(OICPNS.CommonTypes + "Radius", DistanceKM)
+                                                )
                                               : null,
 
                                           (LastCall != null && LastCall.HasValue)
@@ -403,42 +260,46 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
-            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEStatus  = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
+            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingPullEvseStatus>
+            //       <EVSEStatus:eRoamingPullEvseStatus>
             //
-            //          <v2:ProviderID>?</v2:ProviderID>
+            //          <EVSEStatus:ProviderID>?</EVSEStatus:ProviderID>
             //
             //          <!--Optional:-->
-            //          <v2:SearchCenter>
+            //          <EVSEStatus:SearchCenter>
             //
-            //             <v21:GeoCoordinates>
+            //             <CommonTypes:GeoCoordinates>
+            //
             //                <!--You have a CHOICE of the next 3 items at this level-->
-            //                <v21:Google>
-            //                   <v21:Coordinates>?</v21:Coordinates>
-            //                </v21:Google>
-            //                <v21:DecimalDegree>
-            //                   <v21:Longitude>?</v21:Longitude>
-            //                   <v21:Latitude>?</v21:Latitude>
-            //                </v21:DecimalDegree>
-            //                <v21:DegreeMinuteSeconds>
-            //                   <v21:Longitude>?</v21:Longitude>
-            //                   <v21:Latitude>?</v21:Latitude>
-            //                </v21:DegreeMinuteSeconds>
-            //             </v21:GeoCoordinates>
+            //                <CommonTypes:Google>
+            //                   <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+            //                </CommonTypes:Google>
             //
-            //             <v21:Radius>?</v21:Radius>
+            //                <CommonTypes:DecimalDegree>
+            //                   <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //                   <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //                </CommonTypes:DecimalDegree>
             //
-            //          </v2:SearchCenter>
+            //                <CommonTypes:DegreeMinuteSeconds>
+            //                   <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //                   <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //                </CommonTypes:DegreeMinuteSeconds>
+            //
+            //             </CommonTypes:GeoCoordinates>
+            //
+            //             <CommonTypes:Radius>?</CommonTypes:Radius>
+            //
+            //          </EVSEStatus:SearchCenter>
             //
             //          <!--Optional:-->
-            //          <v2:EvseStatus>?</v2:EvseStatus>
+            //          <EVSEStatus:EvseStatus>?</EVSEStatus:EvseStatus>
             //
-            //       </v2:eRoamingPullEvseStatus>
+            //       </EVSEStatus:eRoamingPullEvseStatus>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 
@@ -479,6 +340,159 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
+
+
+        #region SearchEvseRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0, Address = null, Plug = null, ChargingFacility = null)
+
+        /// <summary>
+        /// Create a new Search EVSE request.
+        /// </summary>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
+        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
+        /// <param name="Address">An optional address of the charging stations.</param>
+        /// <param name="Plug">Optional plugs of the charging station.</param>
+        /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
+        public static XElement SearchEvseRequestXML(EVSP_Id              ProviderId,
+                                                    GeoCoordinate        SearchCenter      = null,
+                                                    UInt64               DistanceKM        = 0,
+                                                    Address              Address           = null,
+                                                    PlugTypes?           Plug              = null,
+                                                    ChargingFacilities?  ChargingFacility  = null)
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSESearch  = "http://www.hubject.com/b2b/services/evsesearch/v2.0"
+            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <EVSESearch:eRoamingSearchEvse>
+            //
+            //          <!--Optional:-->
+            //          <EVSESearch:GeoCoordinates>
+            //             <!--You have a CHOICE of the next 3 items at this level-->
+            //
+            //             <CommonTypes:Google>
+            //                <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+            //             </CommonTypes:Google>
+            //
+            //             <CommonTypes:DecimalDegree>
+            //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //             </CommonTypes:DecimalDegree>
+            //
+            //             <CommonTypes:DegreeMinuteSeconds>
+            //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //             </CommonTypes:DegreeMinuteSeconds>
+            //
+            //          </EVSESearch:GeoCoordinates>
+            //
+            //          <!--Optional:-->
+            //          <EVSESearch:Address>
+            //             <CommonTypes:Country>?</CommonTypes:Country>
+            //             <CommonTypes:City>?</CommonTypes:City>
+            //             <CommonTypes:Street>?</CommonTypes:Street>
+            //             <!--Optional:-->
+            //             <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
+            //             <!--Optional:-->
+            //             <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
+            //             <!--Optional:-->
+            //             <CommonTypes:Floor>?</CommonTypes:Floor>
+            //             <!--Optional:-->
+            //             <CommonTypes:Region>?</CommonTypes:Region>
+            //             <!--Optional:-->
+            //             <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
+            //          </EVSESearch:Address>
+            //
+            //          <EVSESearch:ProviderID>?</EVSESearch:ProviderID>
+            //
+            //          <EVSESearch:Range>?</EVSESearch:Range>
+            //
+            //          <!--Optional:-->
+            //          <EVSESearch:Plug>?</EVSESearch:Plug>
+            //
+            //          <!--Optional:-->
+            //          <EVSESearch:ChargingFacility>?</EVSESearch:ChargingFacility>
+            //
+            //       </EVSESearch:eRoamingSearchEvse>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
+
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException("ProviderId", "The given parameter must not be null!");
+
+            #endregion
+
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSESearch + "eRoamingSearchEvse",
+
+                                          (SearchCenter != null && DistanceKM > 0)
+                                              ? new XElement(OICPNS.EVSEData + "SearchCenter",
+                                                  new XElement(OICPNS.CommonTypes + "GeoCoordinates",
+                                                      new XElement(OICPNS.CommonTypes + "DecimalDegree",
+                                                          new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
+                                                          new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat)))
+                                                  ))
+                                              : null,
+
+                                          (Address         != null            &&
+                                           Address.Country != Country.unknown &&
+                                           Address.City.  IsNotNullOrEmpty()  &&
+                                           Address.Street.IsNotNullOrEmpty())
+                                              ? new XElement(OICPNS.EVSEData + "Address",
+
+                                                    new XElement(OICPNS.CommonTypes + "Country" + Address.Country.ToString()),
+                                                    new XElement(OICPNS.CommonTypes + "City"    + Address.City),
+                                                    new XElement(OICPNS.CommonTypes + "Street"  + Address.Street),
+
+                                                    Address.PostalCode.IsNotNullOrEmpty()
+                                                        ? new XElement(OICPNS.CommonTypes + "PostalCode" + Address.PostalCode)
+                                                        : null,
+
+                                                    Address.HouseNumber.IsNotNullOrEmpty()
+                                                        ? new XElement(OICPNS.CommonTypes + "HouseNum"   + Address.HouseNumber)
+                                                        : null,
+
+                                                    Address.FloorLevel.IsNotNullOrEmpty()
+                                                        ? new XElement(OICPNS.CommonTypes + "Floor"      + Address.FloorLevel)
+                                                        : null
+
+                                                    // <!--Optional:-->
+                                                    // <v21:Region>?</v21:Region>
+
+                                                    // <!--Optional:-->
+                                                    // <v21:TimeZone>?</v21:TimeZone>
+
+                                                    )
+                                              : null,
+
+                                          new XElement(OICPNS.EVSESearch + "ProviderID", ProviderId),
+
+                                          (SearchCenter     != null && DistanceKM > 0)
+                                              ? new XElement(OICPNS.EVSESearch + "Range", DistanceKM)
+                                              : null,
+
+                                          (Plug             != null && Plug.HasValue)
+                                              ? new XElement(OICPNS.EVSESearch + "Plug", Plug.ToString())
+                                              : null,
+
+                                          (ChargingFacility != null && ChargingFacility.HasValue)
+                                              ? new XElement(OICPNS.EVSESearch + "ChargingFacility", ChargingFacility.ToString())
+                                              : null
+
+                                     ));
+
+        }
+
+        #endregion
+
 
 
         #region MobileAuthorizeStartXML(EVSEId, EVCOId, PIN, PartnerProductId = null)

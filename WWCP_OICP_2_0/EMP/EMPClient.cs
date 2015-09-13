@@ -249,6 +249,41 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region SearchEVSE(ProviderId, EVSEIds, QueryTimeout = null)
+
+        /// <summary>
+        /// Create a new Search EVSE request.
+        /// </summary>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
+        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
+        /// <param name="Address">An optional address of the charging stations.</param>
+        /// <param name="Plug">Optional plugs of the charging station.</param>
+        /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>>
+
+            SearchEVSE(EVSP_Id              ProviderId,
+                       GeoCoordinate        SearchCenter      = null,
+                       UInt64               DistanceKM        = 0,
+                       Address              Address           = null,
+                       PlugTypes?           Plug              = null,
+                       ChargingFacilities?  ChargingFacility  = null,
+                       TimeSpan?            QueryTimeout      = null)
+
+        {
+
+            return await _EMPUpstreamService.SearchEVSE(ProviderId,
+                                                        SearchCenter,
+                                                        DistanceKM,
+                                                        Address,
+                                                        Plug,
+                                                        ChargingFacility);
+
+        }
+
+        #endregion
+
     }
 
 }
