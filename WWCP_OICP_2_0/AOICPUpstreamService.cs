@@ -23,6 +23,8 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
 
 #endregion
 
@@ -146,6 +148,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
+
+        public X509Certificate ClientCert { get; set; }
+
+        public X509Certificate2 ServerCert { get; set; }
+
+        public RemoteCertificateValidationCallback RemoteCertificateValidator { get; set; }
+        public LocalCertificateSelectionCallback ClientCertificateSelector { get; set; }
+
+        public Boolean UseTLS { get; set; }
 
         #endregion
 

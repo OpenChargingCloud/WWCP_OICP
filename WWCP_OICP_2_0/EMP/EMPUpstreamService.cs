@@ -420,6 +420,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
+
+                    _OICPClient.ClientCert                 = this.ClientCert;
+                    _OICPClient.RemoteCertificateValidator = this.RemoteCertificateValidator;
+                    _OICPClient.ClientCertificateSelector  = this.ClientCertificateSelector;
+                    _OICPClient.UseTLS                     = this.UseTLS;
+
                     return await _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusRequestXML(ProviderId, SearchCenter, DistanceKM, EVSEStatus),
                                                    "eRoamingPullEVSEStatusRequest",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
