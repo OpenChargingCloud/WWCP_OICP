@@ -19,7 +19,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// The type of action when updating remote data.
+    /// The type of data management action when updating remote data.
     /// </summary>
     public enum ActionType
     {

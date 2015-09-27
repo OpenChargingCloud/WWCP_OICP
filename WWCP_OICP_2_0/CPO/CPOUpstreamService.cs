@@ -203,6 +203,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region PushEVSEData(GroupedData,      OICPAction = fullLoad, OperatorId = null, OperatorName = null, QueryTimeout = null)
 
+        /// <summary>
+        /// Push EVSE data onto the remote OICP server.
+        /// </summary>
+        /// <param name="GroupedData">A list of EVSEs grouped by their EVSE operator.</param>
+        /// <param name="OICPAction">The optional OICP data management action on the remote server.</param>
+        /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
+        /// <param name="OperatorName">The optional name of the EVSE operator.</param>
+        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public async Task<HTTPResponse<HubjectAcknowledgement>>
 
             PushEVSEData(ILookup<EVSEOperator, IEnumerable<EVSE>>  GroupedData,
@@ -223,10 +231,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             try
             {
 
-                if (GroupedData.Any())
+                var NumberOfEVSEs = GroupedData.Select(v => v.Select(w => w.Count())).SelectMany(x => x).Sum();
+
+                if (NumberOfEVSEs > 0)
                 {
 
-                    DebugX.Log(OICPAction + " of " + GroupedData.Select(v => v.Select(w => w.Count())).SelectMany(x => x).Sum() + " EVSE static data sets at " + _HTTPVirtualHost + "...");
+                    DebugX.Log(OICPAction + " of " + NumberOfEVSEs + " EVSE static data sets at " + _HTTPVirtualHost + "...");
 
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,
