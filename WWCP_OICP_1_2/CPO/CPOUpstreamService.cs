@@ -1007,11 +1007,11 @@ namespace org.GraphDefined.WWCP.OICP_1_2
 
             #region Insert new EVSEs...
 
-            if (EVSEStatusDiff.NewEVSEStatus.Any())
+            if (EVSEStatusDiff.NewStatus.Any())
             {
 
                 var NewEVSEStatus  = EVSEStatusDiff.
-                                         NewEVSEStatus.
+                                         NewStatus.
                                          Select(v => new KeyValuePair<EVSE_Id, EVSEStatusType>(v.Key, v.Value));
 
                 var OnNewEVSEStatusSendingLocal = OnNewEVSEStatusSending;
@@ -1093,12 +1093,12 @@ namespace org.GraphDefined.WWCP.OICP_1_2
 
             #region Upload EVSE changes...
 
-            if (EVSEStatusDiff.ChangedEVSEStatus.Any())
+            if (EVSEStatusDiff.ChangedStatus.Any())
             {
 
 
                 var ChangedEVSEStatus = EVSEStatusDiff.
-                                            ChangedEVSEStatus.
+                                            ChangedStatus.
                                             ToArray();
 
                 var OnChangedEVSEStatusSendingLocal = OnChangedEVSEStatusSending;
@@ -1183,11 +1183,11 @@ namespace org.GraphDefined.WWCP.OICP_1_2
 
             #region Remove outdated EVSEs...
 
-            if (EVSEStatusDiff.RemovedEVSEIds.Any())
+            if (EVSEStatusDiff.RemovedIds.Any())
             {
 
                 var RemovedEVSEStatus = EVSEStatusDiff.
-                                            RemovedEVSEIds.
+                                            RemovedIds.
                                             ToArray();
 
                 var OnRemovedEVSEStatusSendingLocal = OnRemovedEVSEStatusSending;

@@ -1153,9 +1153,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (EVSEStatusDiff == null)
                 return;
 
-            if (EVSEStatusDiff.NewEVSEStatus.Count()     == 0 &&
-                EVSEStatusDiff.ChangedEVSEStatus.Count() == 0 &&
-                EVSEStatusDiff.RemovedEVSEIds.Count()    == 0)
+            if (EVSEStatusDiff.NewStatus.Count()     == 0 &&
+                EVSEStatusDiff.ChangedStatus.Count() == 0 &&
+                EVSEStatusDiff.RemovedIds.Count()    == 0)
                 return;
 
             var TrackingId = Guid.NewGuid().ToString();
@@ -1163,7 +1163,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Insert new EVSEs...
 
             var NewEVSEStatus  = EVSEStatusDiff.
-                                     NewEVSEStatus.
+                                     NewStatus.
                                      Select(v => new KeyValuePair<EVSE_Id, EVSEStatusType>(v.Key, v.Value));
 
             var OnNewEVSEStatusSendingLocal = OnNewEVSEStatusSending;
@@ -1245,7 +1245,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Upload EVSE changes...
 
             var ChangedEVSEStatus = EVSEStatusDiff.
-                                        ChangedEVSEStatus.
+                                        ChangedStatus.
                                         ToArray();
 
             var OnChangedEVSEStatusSendingLocal = OnChangedEVSEStatusSending;
@@ -1330,7 +1330,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Remove outdated EVSEs...
 
             var RemovedEVSEStatus = EVSEStatusDiff.
-                                        RemovedEVSEIds.
+                                        RemovedIds.
                                         ToArray();
 
             var OnRemovedEVSEStatusSendingLocal = OnRemovedEVSEStatusSending;
