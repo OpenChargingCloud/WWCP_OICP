@@ -151,7 +151,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                     GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
                                        new JObject(
-                                           new JProperty("@context",      "http://emi3group.org/contexts/InvalidXMLRequest.jsonld"),
+                                           new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
                                            new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
                                            new JProperty("XMLRequest",    HTTPRequest.Content.ToUTF8String()) //ToDo: Handle errors!
@@ -199,7 +199,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                     GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
                                        new JObject(
-                                           new JProperty("@context",      "http://emi3group.org/contexts/InvalidXMLRequest.jsonld"),
+                                           new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
                                            new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
                                            new JProperty("Exception",     e.Message),
