@@ -1471,6 +1471,68 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                    OnSuccess: XMLData =>
                                                    {
 
+                                                       #region Documentation
+
+                                                       // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                       //                   xmlns:v2          = "http://www.hubject.com/b2b/services/authorization/v2.0"
+                                                       //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       //    <soapenv:Header/>
+                                                       //    <soapenv:Body>
+                                                       //       <Authorization:eRoamingAuthorizationStart>
+                                                       //
+                                                       //          <!--Optional:-->
+                                                       //          <Authorization:SessionID>?</Authorization:SessionID>
+                                                       //          <!--Optional:-->
+                                                       //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+                                                       //          <!--Optional:-->
+                                                       //          <Authorization:ProviderID>?</Authorization:ProviderID>
+                                                       //          <Authorization:AuthorizationStatus>?</Authorization:AuthorizationStatus>
+                                                       //
+                                                       //          <Authorization:StatusCode>
+                                                       //             <CommonTypes:Code>?</CommonTypes:Code>
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:Description>?</CommonTypes:Description>
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                                                       //          </Authorization:StatusCode>
+                                                       //
+                                                       //          <!--Optional:-->
+                                                       //          <Authorization:AuthorizationStopIdentifications>
+                                                       //             <!--Zero or more repetitions:-->
+                                                       //             <Authorization:Identification>
+                                                       //
+                                                       //                <!--You have a CHOICE of the next 4 items at this level-->
+                                                       //                <CommonTypes:RFIDmifarefamilyIdentification>
+                                                       //                   <CommonTypes:UID>?</CommonTypes:UID>
+                                                       //                </CommonTypes:RFIDmifarefamilyIdentification>
+                                                       //
+                                                       //                <CommonTypes:QRCodeIdentification>
+                                                       //                   <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                                                       //                   <!--You have a CHOICE of the next 2 items at this level-->
+                                                       //                   <CommonTypes:PIN>?</CommonTypes:PIN>
+                                                       //                   <CommonTypes:HashedPIN>
+                                                       //                      <CommonTypes:Value>?</CommonTypes:Value>
+                                                       //                      <CommonTypes:Function>?</CommonTypes:Function>
+                                                       //                      <CommonTypes:Salt>?</CommonTypes:Salt>
+                                                       //                   </CommonTypes:HashedPIN>
+                                                       //                </CommonTypes:QRCodeIdentification>
+                                                       //
+                                                       //                <CommonTypes:PlugAndChargeIdentification>
+                                                       //                   <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                                                       //                </CommonTypes:PlugAndChargeIdentification>
+                                                       //
+                                                       //                <CommonTypes:RemoteIdentification>
+                                                       //                   <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                                                       //                </CommonTypes:RemoteIdentification>
+                                                       //
+                                                       //             </Authorization:Identification>
+                                                       //          </Authorization:AuthorizationStopIdentifications>
+                                                       //       </Authorization:eRoamingAuthorizationStart>
+                                                       //    </soapenv:Body>
+                                                       // </soapenv:Envelope>
+
+                                                       #endregion
+
                                                        var AuthStartResult = HubjectAuthorizationStart.Parse(XMLData.Content);
 
                                                        #region Authorized
@@ -1682,6 +1744,34 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    OnSuccess: XMLData =>
                                                    {
+
+                                                       #region Documentation
+
+                                                       // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                       //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+                                                       //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       //    <soapenv:Header/>
+                                                       //    <soapenv:Body>
+                                                       //       <Authorization:eRoamingAuthorizationStop>
+                                                       //          <!--Optional:-->
+                                                       //          <Authorization:SessionID>?</Authorization:SessionID>
+                                                       //          <!--Optional:-->
+                                                       //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+                                                       //          <!--Optional:-->
+                                                       //          <Authorization:ProviderID>?</Authorization:ProviderID>
+                                                       //          <Authorization:AuthorizationStatus>?</Authorization:AuthorizationStatus>
+                                                       //          <Authorization:StatusCode>
+                                                       //             <CommonTypes:Code>?</CommonTypes:Code>
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:Description>?</CommonTypes:Description>
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                                                       //          </Authorization:StatusCode>
+                                                       //       </Authorization:eRoamingAuthorizationStop>
+                                                       //    </soapenv:Body>
+                                                       // </soapenv:Envelope>
+
+                                                       #endregion
 
                                                        var AuthStopResult = HubjectAuthorizationStop.Parse(XMLData.Content);
 

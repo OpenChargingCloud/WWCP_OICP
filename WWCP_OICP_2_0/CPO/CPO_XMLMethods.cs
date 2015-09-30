@@ -1934,6 +1934,61 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                  ChargingSession_Id  PartnerSessionId  = null)   // OICP v2.0: Optional [50]
         {
 
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <Authorization:eRoamingAuthorizeStart>
+            //
+            //          <!--Optional:-->
+            //          <Authorization:SessionID>?</Authorization:SessionID>
+            //          <!--Optional:-->
+            //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+            //          <Authorization:OperatorID>?</Authorization:OperatorID>
+            //          <!--Optional:-->
+            //          <Authorization:EVSEID>?</Authorization:EVSEID>
+            //
+            //          <Authorization:Identification>
+            //
+            //             <!--You have a CHOICE of the next 4 items at this level-->
+            //             <CommonTypes:RFIDmifarefamilyIdentification>
+            //                <CommonTypes:UID>?</CommonTypes:UID>
+            //             </CommonTypes:RFIDmifarefamilyIdentification>
+            //
+            //             <CommonTypes:QRCodeIdentification>
+            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            //                <!--You have a CHOICE of the next 2 items at this level-->
+            //                <CommonTypes:PIN>?</CommonTypes:PIN>
+            //                <CommonTypes:HashedPIN>
+            //                   <CommonTypes:Value>?</CommonTypes:Value>
+            //                   <CommonTypes:Function>?</CommonTypes:Function>
+            //                   <CommonTypes:Salt>?</CommonTypes:Salt>
+            //                </CommonTypes:HashedPIN>
+            //             </CommonTypes:QRCodeIdentification>
+            //
+            //             <CommonTypes:PlugAndChargeIdentification>
+            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            //             </CommonTypes:PlugAndChargeIdentification>
+            //
+            //             <CommonTypes:RemoteIdentification>
+            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            //             </CommonTypes:RemoteIdentification>
+            //
+            //          </Authorization:Identification>
+            //
+            //          <!--Optional:-->
+            //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
+            //
+            //       </Authorization:eRoamingAuthorizeStart>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
+
             #region Initial checks
 
             if (OperatorId == null)
@@ -1981,6 +2036,48 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                 Auth_Token          AuthToken,
                                                 ChargingSession_Id  PartnerSessionId = null)
         {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <Authorization:eRoamingAuthorizeStop>
+            //          <Authorization:SessionID>?</Authorization:SessionID>
+            //          <!--Optional:-->
+            //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+            //          <Authorization:OperatorID>?</Authorization:OperatorID>
+            //          <!--Optional:-->
+            //          <Authorization:EVSEID>?</Authorization:EVSEID>
+            //          <Authorization:Identification>
+            //             <!--You have a CHOICE of the next 4 items at this level-->
+            //             <CommonTypes:RFIDmifarefamilyIdentification>
+            //                <CommonTypes:UID>?</CommonTypes:UID>
+            //             </CommonTypes:RFIDmifarefamilyIdentification>
+            //             <CommonTypes:QRCodeIdentification>
+            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            //                <!--You have a CHOICE of the next 2 items at this level-->
+            //                <CommonTypes:PIN>?</CommonTypes:PIN>
+            //                <CommonTypes:HashedPIN>
+            //                   <CommonTypes:Value>?</CommonTypes:Value>
+            //                   <CommonTypes:Function>?</CommonTypes:Function>
+            //                   <CommonTypes:Salt>?</CommonTypes:Salt>
+            //                </CommonTypes:HashedPIN>
+            //             </CommonTypes:QRCodeIdentification>
+            //             <CommonTypes:PlugAndChargeIdentification>
+            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            //             </CommonTypes:PlugAndChargeIdentification>
+            //             <CommonTypes:RemoteIdentification>
+            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            //             </CommonTypes:RemoteIdentification>
+            //          </Authorization:Identification>
+            //       </Authorization:eRoamingAuthorizeStop>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
 
             #region Initial checks
 
