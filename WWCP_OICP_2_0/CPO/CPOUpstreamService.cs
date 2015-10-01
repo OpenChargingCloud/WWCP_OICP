@@ -1939,6 +1939,86 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+
+
+        #region PullAuthenticationData
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
+        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //    <soapenv:Header/>
+        //    <soapenv:Body>
+        //       <AuthenticationData:eRoamingAuthenticationData>
+        // 
+        //          <AuthenticationData:AuthenticationData>
+        // 
+        //             <!--Zero or more repetitions:-->
+        //             <AuthenticationData:ProviderAuthenticationData>
+        // 
+        //                <AuthenticationData:ProviderID>?</AuthenticationData:ProviderID>
+        // 
+        //                <!--Zero or more repetitions:-->
+        //                <AuthenticationData:AuthenticationDataRecord>
+        //                   <AuthenticationData:Identification>
+        // 
+        //                      <!--You have a CHOICE of the next 4 items at this level-->
+        //                      <CommonTypes:RFIDmifarefamilyIdentification>
+        //                         <CommonTypes:UID>?</CommonTypes:UID>
+        //                      </CommonTypes:RFIDmifarefamilyIdentification>
+        // 
+        //                      <CommonTypes:QRCodeIdentification>
+        // 
+        //                         <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        // 
+        //                         <!--You have a CHOICE of the next 2 items at this level-->
+        //                         <CommonTypes:PIN>?</CommonTypes:PIN>
+        // 
+        //                         <CommonTypes:HashedPIN>
+        //                            <CommonTypes:Value>?</CommonTypes:Value>
+        //                            <CommonTypes:Function>?</CommonTypes:Function>
+        //                            <CommonTypes:Salt>?</CommonTypes:Salt>
+        //                         </CommonTypes:HashedPIN>
+        // 
+        //                      </CommonTypes:QRCodeIdentification>
+        // 
+        //                      <CommonTypes:PlugAndChargeIdentification>
+        //                         <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                      </CommonTypes:PlugAndChargeIdentification>
+        // 
+        //                      <CommonTypes:RemoteIdentification>
+        //                         <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                      </CommonTypes:RemoteIdentification>
+        // 
+        //                   </AuthenticationData:Identification>
+        //                </AuthenticationData:AuthenticationDataRecord>
+        // 
+        //             </AuthenticationData:ProviderAuthenticationData>
+        //          </AuthenticationData:AuthenticationData>
+        // 
+        //          <!--Optional:-->
+        //          <AuthenticationData:StatusCode>
+        // 
+        //             <CommonTypes:Code>?</CommonTypes:Code>
+        // 
+        //             <!--Optional:-->
+        //             <CommonTypes:Description>?</CommonTypes:Description>
+        // 
+        //             <!--Optional:-->
+        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+        // 
+        //          </AuthenticationData:StatusCode>
+        // 
+        //       </AuthenticationData:eRoamingAuthenticationData>
+        //    </soapenv:Body>
+        // </soapenv:Envelope>
+
+        #endregion
+
+        #endregion
+
+
         #region SendCDR(ChargeDetailRecord, QueryTimeout = null)
 
         /// <summary>
@@ -2126,6 +2206,40 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                           OnSuccess: XMLData =>
                                                           {
+
+                                                              #region Documentation
+
+                                                              // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                              //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                              //    <soapenv:Header/>
+                                                              //    <soapenv:Body>
+                                                              //       <CommonTypes:eRoamingAcknowledgement>
+                                                              // 
+                                                              //          <CommonTypes:Result>?</CommonTypes:Result>
+                                                              // 
+                                                              //          <CommonTypes:StatusCode>
+                                                              // 
+                                                              //             <CommonTypes:Code>?</CommonTypes:Code>
+                                                              // 
+                                                              //             <!--Optional:-->
+                                                              //             <CommonTypes:Description>?</CommonTypes:Description>
+                                                              // 
+                                                              //             <!--Optional:-->
+                                                              //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                                                              // 
+                                                              //          </CommonTypes:StatusCode>
+                                                              // 
+                                                              //          <!--Optional:-->
+                                                              //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
+                                                              // 
+                                                              //          <!--Optional:-->
+                                                              //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
+                                                              // 
+                                                              //       </CommonTypes:eRoamingAcknowledgement>
+                                                              //    </soapenv:Body>
+                                                              // </soapenv:Envelope>
+
+                                                              #endregion
 
                                                               var ack = HubjectAcknowledgement.Parse(XMLData.Content);
 

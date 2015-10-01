@@ -494,6 +494,95 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region PushAuthenticationData
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
+        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
+        //    <soapenv:Header/>
+        //
+        //    <soapenv:Body>
+        //       <AuthenticationData:eRoamingPushAuthenticationData>
+        // 
+        //          <AuthenticationData:ActionType>?</AuthenticationData:ActionType>
+        // 
+        //          <AuthenticationData:ProviderAuthenticationData>
+        // 
+        //             <AuthenticationData:ProviderID>?</AuthenticationData:ProviderID>
+        // 
+        //             <!--Zero or more repetitions:-->
+        //             <AuthenticationData:AuthenticationDataRecord>
+        //                <AuthenticationData:Identification>
+        // 
+        //                   <!--You have a CHOICE of the next 4 items at this level-->
+        //                   <CommonTypes:RFIDmifarefamilyIdentification>
+        //                      <CommonTypes:UID>?</CommonTypes:UID>
+        //                   </CommonTypes:RFIDmifarefamilyIdentification>
+        // 
+        //                   <CommonTypes:QRCodeIdentification>
+        // 
+        //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        // 
+        //                      <!--You have a CHOICE of the next 2 items at this level-->
+        //                      <CommonTypes:PIN>?</CommonTypes:PIN>
+        // 
+        //                      <CommonTypes:HashedPIN>
+        //                         <CommonTypes:Value>?</CommonTypes:Value>
+        //                         <CommonTypes:Function>?</CommonTypes:Function>
+        //                         <CommonTypes:Salt>?</CommonTypes:Salt>
+        //                      </CommonTypes:HashedPIN>
+        // 
+        //                   </CommonTypes:QRCodeIdentification>
+        // 
+        //                   <CommonTypes:PlugAndChargeIdentification>
+        //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                   </CommonTypes:PlugAndChargeIdentification>
+        // 
+        //                   <CommonTypes:RemoteIdentification>
+        //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                   </CommonTypes:RemoteIdentification>
+        // 
+        //                </AuthenticationData:Identification>
+        //             </AuthenticationData:AuthenticationDataRecord>
+        // 
+        //          </AuthenticationData:ProviderAuthenticationData>
+        // 
+        //       </AuthenticationData:eRoamingPushAuthenticationData>
+        //    </soapenv:Body>
+        //
+        // </soapenv:Envelope>
+
+        #endregion
+
+        #endregion
+
+
+        #region GetChargeDetailRecords
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0">
+        //
+        //    <soapenv:Header/>
+        //
+        //    <soapenv:Body>
+        //       <Authorization:eRoamingGetChargeDetailRecords>
+        //          <Authorization:ProviderID>?</Authorization:ProviderID>
+        //          <Authorization:From>?</Authorization:From>
+        //          <Authorization:To>?</Authorization:To>
+        //       </Authorization:eRoamingGetChargeDetailRecords>
+        //    </soapenv:Body>
+        //
+        // </soapenv:Envelope>
+
+        #endregion
+
+        #endregion
+
 
         #region MobileAuthorizeStartXML(EVSEId, EVCOId, PIN, PartnerProductId = null)
 
@@ -509,6 +598,47 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        String   PIN,
                                                        String   PartnerProductId = null)
         {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:MobileAuthorization = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0"
+            //                   xmlns:CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //
+            //    <soapenv:Header/>
+            //
+            //    <soapenv:Body>
+            //       <MobileAuthorization:eRoamingMobileAuthorizeStart>
+            // 
+            //          <MobileAuthorization:EvseID>?</MobileAuthorization:EvseID>
+            // 
+            //          <MobileAuthorization:QRCodeIdentification>
+            // 
+            //             <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            // 
+            //             <!--You have a CHOICE of the next 2 items at this level-->
+            //             <CommonTypes:PIN>?</CommonTypes:PIN>
+            // 
+            //             <CommonTypes:HashedPIN>
+            //                <CommonTypes:Value>?</CommonTypes:Value>
+            //                <CommonTypes:Function>?</CommonTypes:Function>
+            //                <CommonTypes:Salt>?</CommonTypes:Salt>
+            //             </CommonTypes:HashedPIN>
+            // 
+            //          </MobileAuthorization:QRCodeIdentification>
+            // 
+            //          <!--Optional:-->
+            //          <MobileAuthorization:PartnerProductID>?</MobileAuthorization:PartnerProductID>
+            // 
+            //          <!--Optional:-->
+            //          <MobileAuthorization:GetNewSession>?</MobileAuthorization:GetNewSession>
+            // 
+            //       </MobileAuthorization:eRoamingMobileAuthorizeStart>
+            //    </soapenv:Body>
+            //
+            // </soapenv:Envelope>
+
+            #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileAuthorizeStart",
 
@@ -538,6 +668,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static XElement MobileRemoteStartXML(ChargingSession_Id  SessionId = null)
         {
 
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:MobileAuthorization = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0">
+            //
+            //    <soapenv:Header/>
+            //
+            //    <soapenv:Body>
+            //       <MobileAuthorization:eRoamingMobileRemoteStart>
+            //          <MobileAuthorization:SessionID>?</MobileAuthorization:SessionID>
+            //       </MobileAuthorization:eRoamingMobileRemoteStart>
+            //    </soapenv:Body>
+            //
+            // </soapenv:Envelope>
+
+            #endregion
+
             return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileRemoteStart",
                                           new XElement(OICPNS.EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSession_Id.New)
                                      ));
@@ -554,6 +701,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="SessionId">The OICP session identification from the MobileAuthorizationStart response.</param>
         public static XElement MobileRemoteStopXML(ChargingSession_Id SessionId = null)
         {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:MobileAuthorization = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0">
+            //
+            //    <soapenv:Header/>
+            //
+            //    <soapenv:Body>
+            //       <MobileAuthorization:eRoamingMobileRemoteStop>
+            //          <MobileAuthorization:SessionID>?</MobileAuthorization:SessionID>
+            //       </MobileAuthorization:eRoamingMobileRemoteStop>
+            //    </soapenv:Body>
+            //
+            // </soapenv:Envelope>
+
+            #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileRemoteStop",
                                           new XElement(OICPNS.EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSession_Id.New)

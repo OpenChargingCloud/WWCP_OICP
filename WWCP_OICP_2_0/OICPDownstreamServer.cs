@@ -237,6 +237,68 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 if (RemoteStartXML != null)
                 {
 
+                    #region Documentation
+
+                    // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+                    //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                    //
+                    //    <soapenv:Header/>
+                    //
+                    //    <soapenv:Body>
+                    //       <Authorization:eRoamingAuthorizeRemoteStart>
+                    // 
+                    //          <!--Optional:-->
+                    //          <Authorization:SessionID>?</Authorization:SessionID>
+                    // 
+                    //          <!--Optional:-->
+                    //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+                    // 
+                    //          <Authorization:ProviderID>?</Authorization:ProviderID>
+                    //          <Authorization:EVSEID>?</Authorization:EVSEID>
+                    // 
+                    //          <Authorization:Identification>
+                    // 
+                    //             <!--You have a CHOICE of the next 4 items at this level-->
+                    //             <CommonTypes:RFIDmifarefamilyIdentification>
+                    //                <CommonTypes:UID>?</CommonTypes:UID>
+                    //             </CommonTypes:RFIDmifarefamilyIdentification>
+                    // 
+                    //             <CommonTypes:QRCodeIdentification>
+                    // 
+                    //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                    // 
+                    //                <!--You have a CHOICE of the next 2 items at this level-->
+                    //                <CommonTypes:PIN>?</CommonTypes:PIN>
+                    // 
+                    //                <CommonTypes:HashedPIN>
+                    //                   <CommonTypes:Value>?</CommonTypes:Value>
+                    //                   <CommonTypes:Function>?</CommonTypes:Function>
+                    //                   <CommonTypes:Salt>?</CommonTypes:Salt>
+                    //                </CommonTypes:HashedPIN>
+                    // 
+                    //             </CommonTypes:QRCodeIdentification>
+                    // 
+                    //             <CommonTypes:PlugAndChargeIdentification>
+                    //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                    //             </CommonTypes:PlugAndChargeIdentification>
+                    // 
+                    //             <CommonTypes:RemoteIdentification>
+                    //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                    //             </CommonTypes:RemoteIdentification>
+                    // 
+                    //          </Authorization:Identification>
+                    // 
+                    //          <!--Optional:-->
+                    //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
+                    // 
+                    //       </Authorization:eRoamingAuthorizeRemoteStart>
+                    //    </soapenv:Body>
+                    //
+                    // </soapenv:Envelope>
+
+                    #endregion
+
                     #region Parse request parameters
 
                     // ------------------------
@@ -382,6 +444,43 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     var HubjectDescription     = "";
                     var HubjectAdditionalInfo  = "";
 
+                    #region Documentation
+
+                    // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                    //
+                    //    <soapenv:Header/>
+                    //
+                    //    <soapenv:Body>
+                    //       <CommonTypes:eRoamingAcknowledgement>
+                    // 
+                    //          <CommonTypes:Result>?</CommonTypes:Result>
+                    // 
+                    //          <CommonTypes:StatusCode>
+                    // 
+                    //             <CommonTypes:Code>?</CommonTypes:Code>
+                    // 
+                    //             <!--Optional:-->
+                    //             <CommonTypes:Description>?</CommonTypes:Description>
+                    // 
+                    //             <!--Optional:-->
+                    //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                    // 
+                    //          </CommonTypes:StatusCode>
+                    // 
+                    //          <!--Optional:-->
+                    //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
+                    // 
+                    //          <!--Optional:-->
+                    //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
+                    // 
+                    //       </CommonTypes:eRoamingAcknowledgement>
+                    //    </soapenv:Body>
+                    //
+                    // </soapenv:Envelope>
+
+                    #endregion
+
                     var Response               = RequestRouter.RemoteStart(EVSEId, SessionId, ProviderId, eMAId, _EventTrackingId);
                     Log.WriteLine(Response.ToString());
 
@@ -451,6 +550,32 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 else
                 {
+
+                    #region Documentation
+
+                    // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0">
+                    //
+                    //    <soapenv:Header/>
+                    //
+                    //    <soapenv:Body>
+                    //       <Authorization:eRoamingAuthorizeRemoteStop>
+                    // 
+                    //          <Authorization:SessionID>?</Authorization:SessionID>
+                    // 
+                    //          <!--Optional:-->
+                    //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+                    // 
+                    //          <Authorization:ProviderID>?</Authorization:ProviderID>
+                    // 
+                    //          <Authorization:EVSEID>?</Authorization:EVSEID>
+                    // 
+                    //       </Authorization:eRoamingAuthorizeRemoteStop>
+                    //    </soapenv:Body>
+                    //
+                    // </soapenv:Envelope>
+
+                    #endregion
 
                     #region Parse request parameters
 
@@ -529,6 +654,43 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     var HubjectCode            = "";
                     var HubjectDescription     = "";
                     var HubjectAdditionalInfo  = "";
+
+                    #region Documentation
+
+                    // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                    //
+                    //    <soapenv:Header/>
+                    //
+                    //    <soapenv:Body>
+                    //       <CommonTypes:eRoamingAcknowledgement>
+                    // 
+                    //          <CommonTypes:Result>?</CommonTypes:Result>
+                    // 
+                    //          <CommonTypes:StatusCode>
+                    // 
+                    //             <CommonTypes:Code>?</CommonTypes:Code>
+                    // 
+                    //             <!--Optional:-->
+                    //             <CommonTypes:Description>?</CommonTypes:Description>
+                    // 
+                    //             <!--Optional:-->
+                    //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                    // 
+                    //          </CommonTypes:StatusCode>
+                    // 
+                    //          <!--Optional:-->
+                    //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
+                    // 
+                    //          <!--Optional:-->
+                    //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
+                    // 
+                    //       </CommonTypes:eRoamingAcknowledgement>
+                    //    </soapenv:Body>
+                    //
+                    // </soapenv:Envelope>
+
+                    #endregion
 
                     var Response               = RequestRouter.RemoteStop(EVSEId, SessionId, ProviderId, _EventTrackingId);
                     Log.WriteLine(Response.ToString());

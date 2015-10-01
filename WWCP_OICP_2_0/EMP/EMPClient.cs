@@ -249,6 +249,182 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region PushAuthenticationData
+
+        #endregion
+
+        #region GetChargeDetailRecords
+
+        #endregion
+
+
+        #region MobileAuthorizeStart
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:MobileAuthorization = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0"
+        //                   xmlns:CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
+        //    <soapenv:Header/>
+        //
+        //    <soapenv:Body>
+        //       <MobileAuthorization:eRoamingMobileAuthorizationStart>
+        // 
+        //          <!--Optional:-->
+        //          <MobileAuthorization:SessionID>?</MobileAuthorization:SessionID>
+        // 
+        //          <MobileAuthorization:AuthorizationStatus>?</MobileAuthorization:AuthorizationStatus>
+        // 
+        //          <!--Optional:-->
+        //          <MobileAuthorization:StatusCode>
+        //             <CommonTypes:Code>?</CommonTypes:Code>
+        //             <!--Optional:-->
+        //             <CommonTypes:Description>?</CommonTypes:Description>
+        //             <!--Optional:-->
+        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+        //          </MobileAuthorization:StatusCode>
+        // 
+        //          <!--Optional:-->
+        //          <MobileAuthorization:TermsOfUse>?</MobileAuthorization:TermsOfUse>
+        // 
+        //          <MobileAuthorization:GeoCoordinates>
+        // 
+        //             <!--You have a CHOICE of the next 3 items at this level-->
+        //             <CommonTypes:Google>
+        //                <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+        //             </CommonTypes:Google>
+        // 
+        //             <CommonTypes:DecimalDegree>
+        //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
+        //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
+        //             </CommonTypes:DecimalDegree>
+        // 
+        //             <CommonTypes:DegreeMinuteSeconds>
+        //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
+        //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
+        //             </CommonTypes:DegreeMinuteSeconds>
+        // 
+        //          </MobileAuthorization:GeoCoordinates>
+        // 
+        //          <!--Optional:-->
+        //          <MobileAuthorization:Address>
+        //             <CommonTypes:Country>?</CommonTypes:Country>
+        //             <CommonTypes:City>?</CommonTypes:City>
+        //             <CommonTypes:Street>?</CommonTypes:Street>
+        //             <!--Optional:-->
+        //             <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
+        //             <!--Optional:-->
+        //             <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
+        //             <!--Optional:-->
+        //             <CommonTypes:Floor>?</CommonTypes:Floor>
+        //             <!--Optional:-->
+        //             <CommonTypes:Region>?</CommonTypes:Region>
+        //             <!--Optional:-->
+        //             <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
+        //          </MobileAuthorization:Address>
+        // 
+        //          <!--Optional:-->
+        //          <MobileAuthorization:AdditionalInfo>?</MobileAuthorization:AdditionalInfo>
+        //          <!--Optional:-->
+        //          <MobileAuthorization:EnAdditionalInfo>?</MobileAuthorization:EnAdditionalInfo>
+        //          <!--Optional:-->
+        //          <MobileAuthorization:ChargingStationName>?</MobileAuthorization:ChargingStationName>
+        //          <!--Optional:-->
+        //          <MobileAuthorization:EnChargingStationName>?</MobileAuthorization:EnChargingStationName>
+        // 
+        //       </MobileAuthorization:eRoamingMobileAuthorizationStart>
+        //    </soapenv:Body>
+        //
+        // </soapenv:Envelope>
+
+        #endregion
+
+        #endregion
+
+        #region MobileRemoteStart
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
+        //    <soapenv:Header/>
+        //
+        //    <soapenv:Body>
+        //       <CommonTypes:eRoamingAcknowledgement>
+        // 
+        //          <CommonTypes:Result>?</CommonTypes:Result>
+        // 
+        //          <CommonTypes:StatusCode>
+        // 
+        //             <CommonTypes:Code>?</CommonTypes:Code>
+        // 
+        //             <!--Optional:-->
+        //             <CommonTypes:Description>?</CommonTypes:Description>
+        // 
+        //             <!--Optional:-->
+        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+        // 
+        //          </CommonTypes:StatusCode>
+        // 
+        //          <!--Optional:-->
+        //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
+        // 
+        //          <!--Optional:-->
+        //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
+        // 
+        //       </CommonTypes:eRoamingAcknowledgement>
+        //    </soapenv:Body>
+        //
+        // </soapenv:Envelope>
+
+        #endregion
+
+        #endregion
+
+        #region MobileRemoteStop
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
+        //    <soapenv:Header/>
+        //
+        //    <soapenv:Body>
+        //       <CommonTypes:eRoamingAcknowledgement>
+        // 
+        //          <CommonTypes:Result>?</CommonTypes:Result>
+        // 
+        //          <CommonTypes:StatusCode>
+        // 
+        //             <CommonTypes:Code>?</CommonTypes:Code>
+        // 
+        //             <!--Optional:-->
+        //             <CommonTypes:Description>?</CommonTypes:Description>
+        // 
+        //             <!--Optional:-->
+        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+        // 
+        //          </CommonTypes:StatusCode>
+        // 
+        //          <!--Optional:-->
+        //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
+        // 
+        //          <!--Optional:-->
+        //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
+        // 
+        //       </CommonTypes:eRoamingAcknowledgement>
+        //    </soapenv:Body>
+        //
+        // </soapenv:Envelope>
+
+        #endregion
+
+        #endregion
+
+
         #region SearchEVSE(ProviderId, EVSEIds, QueryTimeout = null)
 
         /// <summary>

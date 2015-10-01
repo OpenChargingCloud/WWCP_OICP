@@ -2157,6 +2157,28 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region PullAuthenticationData
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0">
+        //
+        //    <soapenv:Header/>
+        //
+        //    <soapenv:Body>
+        //       <AuthenticationData:eRoamingPullAuthenticationData>
+        //          <AuthenticationData:OperatorID>?</AuthenticationData:OperatorID>
+        //       </AuthenticationData:eRoamingPullAuthenticationData>
+        //    </soapenv:Body>
+        //
+        // </soapenv:Envelope>
+
+        #endregion
+
+        #endregion
+
+
         #region SendChargeDetailRecordXML(this EVSE, SessionId, PartnerSessionId, AuthToken, EVCOId, ...)
 
         /// <summary>
@@ -2266,8 +2288,88 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                          String               MeteringSignature     = null,
                                                          EVSEOperator_Id      HubOperatorId         = null,
                                                          EVSP_Id              HubProviderId         = null)
-
         {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <Authorization:eRoamingChargeDetailRecord>
+            // 
+            //          <Authorization:SessionID>?</Authorization:SessionID>
+            // 
+            //          <!--Optional:-->
+            //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+            // 
+            //          <!--Optional:-->
+            //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
+            // 
+            //          <Authorization:EvseID>?</Authorization:EvseID>
+            // 
+            //          <Authorization:Identification>
+            // 
+            //             <!--You have a CHOICE of the next 4 items at this level-->
+            //             <CommonTypes:RFIDmifarefamilyIdentification>
+            //                <CommonTypes:UID>?</CommonTypes:UID>
+            //             </CommonTypes:RFIDmifarefamilyIdentification>
+            // 
+            //             <CommonTypes:QRCodeIdentification>
+            // 
+            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            // 
+            //                <!--You have a CHOICE of the next 2 items at this level-->
+            //                <CommonTypes:PIN>?</CommonTypes:PIN>
+            // 
+            //                <CommonTypes:HashedPIN>
+            //                   <CommonTypes:Value>?</CommonTypes:Value>
+            //                   <CommonTypes:Function>?</CommonTypes:Function>
+            //                   <CommonTypes:Salt>?</CommonTypes:Salt>
+            //                </CommonTypes:HashedPIN>
+            // 
+            //             </CommonTypes:QRCodeIdentification>
+            // 
+            //             <CommonTypes:PlugAndChargeIdentification>
+            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            //             </CommonTypes:PlugAndChargeIdentification>
+            // 
+            //             <CommonTypes:RemoteIdentification>
+            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            //             </CommonTypes:RemoteIdentification>
+            // 
+            //          </Authorization:Identification>
+            // 
+            //          <!--Optional:-->
+            //          <Authorization:ChargingStart>?</Authorization:ChargingStart>
+            //          <!--Optional:-->
+            //          <Authorization:ChargingEnd>?</Authorization:ChargingEnd>
+            //          <Authorization:SessionStart>?</Authorization:SessionStart>
+            //          <Authorization:SessionEnd>?</Authorization:SessionEnd>
+            //          <!--Optional:-->
+            //          <Authorization:MeterValueStart>?</Authorization:MeterValueStart>
+            //          <!--Optional:-->
+            //          <Authorization:MeterValueEnd>?</Authorization:MeterValueEnd>
+            //          <!--Optional:-->
+            //          <Authorization:MeterValueInBetween>
+            //             <!--1 or more repetitions:-->
+            //             <Authorization:MeterValue>?</Authorization:MeterValue>
+            //          </Authorization:MeterValueInBetween>
+            //          <!--Optional:-->
+            //          <Authorization:ConsumedEnergy>?</Authorization:ConsumedEnergy>
+            //          <!--Optional:-->
+            //          <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
+            //          <!--Optional:-->
+            //          <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
+            //          <!--Optional:-->
+            //          <Authorization:HubProviderID>?</Authorization:HubProviderID>
+            // 
+            //       </Authorization:eRoamingChargeDetailRecord>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
 
             #region Initial checks
 

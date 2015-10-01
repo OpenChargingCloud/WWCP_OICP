@@ -823,7 +823,142 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region HubjectMobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductId = null)
+        #region PushAuthenticationData
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
+        //    <soapenv:Header/>
+        //
+        //    <soapenv:Body>
+        //       <CommonTypes:eRoamingAcknowledgement>
+        // 
+        //          <CommonTypes:Result>?</CommonTypes:Result>
+        // 
+        //          <CommonTypes:StatusCode>
+        // 
+        //             <CommonTypes:Code>?</CommonTypes:Code>
+        // 
+        //             <!--Optional:-->
+        //             <CommonTypes:Description>?</CommonTypes:Description>
+        // 
+        //             <!--Optional:-->
+        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+        // 
+        //          </CommonTypes:StatusCode>
+        // 
+        //          <!--Optional:-->
+        //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
+        // 
+        //          <!--Optional:-->
+        //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
+        // 
+        //       </CommonTypes:eRoamingAcknowledgement>
+        //    </soapenv:Body>
+        //
+        // </soapenv:Envelope>
+
+        #endregion
+
+        #endregion
+
+        #region GetChargeDetailRecords
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+        //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
+        //    <soapenv:Header/>
+        //
+        //    <soapenv:Body>
+        //       <Authorization:eRoamingChargeDetailRecords>
+        // 
+        //          <!--Zero or more repetitions:-->
+        //          <Authorization:eRoamingChargeDetailRecord>
+        // 
+        //             <Authorization:SessionID>?</Authorization:SessionID>
+        // 
+        //             <!--Optional:-->
+        //             <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+        // 
+        //             <!--Optional:-->
+        //             <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
+        // 
+        //             <Authorization:EvseID>?</Authorization:EvseID>
+        // 
+        //             <Authorization:Identification>
+        // 
+        //                <!--You have a CHOICE of the next 4 items at this level-->
+        //                <CommonTypes:RFIDmifarefamilyIdentification>
+        //                   <CommonTypes:UID>?</CommonTypes:UID>
+        //                </CommonTypes:RFIDmifarefamilyIdentification>
+        // 
+        //                <CommonTypes:QRCodeIdentification>
+        // 
+        //                   <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        // 
+        //                   <!--You have a CHOICE of the next 2 items at this level-->
+        //                   <CommonTypes:PIN>?</CommonTypes:PIN>
+        // 
+        //                   <CommonTypes:HashedPIN>
+        //                      <CommonTypes:Value>?</CommonTypes:Value>
+        //                      <CommonTypes:Function>?</CommonTypes:Function>
+        //                      <CommonTypes:Salt>?</CommonTypes:Salt>
+        //                   </CommonTypes:HashedPIN>
+        // 
+        //                </CommonTypes:QRCodeIdentification>
+        // 
+        //                <CommonTypes:PlugAndChargeIdentification>
+        //                   <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                </CommonTypes:PlugAndChargeIdentification>
+        // 
+        //                <CommonTypes:RemoteIdentification>
+        //                   <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                </CommonTypes:RemoteIdentification>
+        // 
+        //             </Authorization:Identification>
+        // 
+        //             <!--Optional:-->
+        //             <Authorization:ChargingStart>?</Authorization:ChargingStart>
+        //             <!--Optional:-->
+        //             <Authorization:ChargingEnd>?</Authorization:ChargingEnd>
+        //             <Authorization:SessionStart>?</Authorization:SessionStart>
+        //             <Authorization:SessionEnd>?</Authorization:SessionEnd>
+        //             <!--Optional:-->
+        //             <Authorization:MeterValueStart>?</Authorization:MeterValueStart>
+        //             <!--Optional:-->
+        //             <Authorization:MeterValueEnd>?</Authorization:MeterValueEnd>
+        //             <!--Optional:-->
+        //             <Authorization:MeterValueInBetween>
+        //                <!--1 or more repetitions:-->
+        //                <Authorization:MeterValue>?</Authorization:MeterValue>
+        //             </Authorization:MeterValueInBetween>
+        //             <!--Optional:-->
+        //             <Authorization:ConsumedEnergy>?</Authorization:ConsumedEnergy>
+        //             <!--Optional:-->
+        //             <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
+        //             <!--Optional:-->
+        //             <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
+        //             <!--Optional:-->
+        //             <Authorization:HubProviderID>?</Authorization:HubProviderID>
+        // 
+        //          </Authorization:eRoamingChargeDetailRecord>
+        // 
+        //       </Authorization:eRoamingChargeDetailRecords>
+        //    </soapenv:Body>
+        //
+        // </soapenv:Envelope>
+
+        #endregion
+
+        #endregion
+
+
+        #region MobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductId = null)
 
         /// <summary>
         /// Create a new mobile AuthorizeStart request.
@@ -832,10 +967,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="EVCOId"></param>
         /// <param name="PIN"></param>
         /// <param name="PartnerProductId">Your charging product identification (optional).</param>
-        public HubjectMobileAuthorizationStart HubjectMobileAuthorizeStart(EVSE_Id  EVSEId,
-                                                                           eMA_Id   EVCOId,
-                                                                           String   PIN,
-                                                                           String   PartnerProductId = null)
+        public HubjectMobileAuthorizationStart MobileAuthorizeStart(EVSE_Id  EVSEId,
+                                                                    eMA_Id   EVCOId,
+                                                                    String   PIN,
+                                                                    String   PartnerProductId = null)
         {
 
             try
@@ -998,9 +1133,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region MobileRemoteStartXML(SessionId = null)
+        #region MobileRemoteStart(SessionId = null)
 
-        public MobileRemoteStartResult MobileRemoteStartXML(ChargingSession_Id SessionId = null)
+        public MobileRemoteStartResult MobileRemoteStart(ChargingSession_Id SessionId = null)
         {
 
             try
@@ -1057,9 +1192,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region MobileRemoteStopXML(SessionId = null)
+        #region MobileRemoteStop(SessionId = null)
 
-        public MobileRemoteStopResult MobileRemoteStopXML(ChargingSession_Id SessionId = null)
+        public MobileRemoteStopResult MobileRemoteStop(ChargingSession_Id SessionId = null)
         {
 
             try
@@ -1115,6 +1250,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
+
 
     }
 
