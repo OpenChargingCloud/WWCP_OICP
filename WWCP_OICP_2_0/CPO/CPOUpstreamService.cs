@@ -1418,7 +1418,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP authorize start request.
+        /// Create an OICP v2.0 AuthorizeStart request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
@@ -1476,7 +1476,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
                                                        //                   xmlns:v2          = "http://www.hubject.com/b2b/services/authorization/v2.0"
                                                        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       //
                                                        //    <soapenv:Header/>
+                                                       //
                                                        //    <soapenv:Body>
                                                        //       <Authorization:eRoamingAuthorizationStart>
                                                        //
@@ -1486,14 +1488,19 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
                                                        //          <!--Optional:-->
                                                        //          <Authorization:ProviderID>?</Authorization:ProviderID>
+                                                       //
                                                        //          <Authorization:AuthorizationStatus>?</Authorization:AuthorizationStatus>
                                                        //
                                                        //          <Authorization:StatusCode>
+                                                       //
                                                        //             <CommonTypes:Code>?</CommonTypes:Code>
+                                                       //
                                                        //             <!--Optional:-->
                                                        //             <CommonTypes:Description>?</CommonTypes:Description>
+                                                       //
                                                        //             <!--Optional:-->
                                                        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                                                       //
                                                        //          </Authorization:StatusCode>
                                                        //
                                                        //          <!--Optional:-->
@@ -1507,14 +1514,18 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        //                </CommonTypes:RFIDmifarefamilyIdentification>
                                                        //
                                                        //                <CommonTypes:QRCodeIdentification>
+                                                       //
                                                        //                   <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                                                       //
                                                        //                   <!--You have a CHOICE of the next 2 items at this level-->
                                                        //                   <CommonTypes:PIN>?</CommonTypes:PIN>
+                                                       //
                                                        //                   <CommonTypes:HashedPIN>
                                                        //                      <CommonTypes:Value>?</CommonTypes:Value>
                                                        //                      <CommonTypes:Function>?</CommonTypes:Function>
                                                        //                      <CommonTypes:Salt>?</CommonTypes:Salt>
                                                        //                   </CommonTypes:HashedPIN>
+                                                       //
                                                        //                </CommonTypes:QRCodeIdentification>
                                                        //
                                                        //                <CommonTypes:PlugAndChargeIdentification>
@@ -1695,7 +1706,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         //        (e.g. car sharing)
 
         /// <summary>
-        /// Create an OICP authorize stop request.
+        /// Create an OICP v2.0 AuthorizeStop request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
@@ -1940,86 +1951,165 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region PullAuthenticationData(OperatorId, QueryTimeout = null)
 
-        #region PullAuthenticationData
+        /// <summary>
+        /// Create an OICP v2.0 PullAuthenticationData request.
+        /// </summary>
+        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<AuthenticationData>>
 
-        #region Documentation
+            PullAuthenticationData(EVSEOperator_Id  OperatorId,
+                                   TimeSpan?        QueryTimeout = null)
 
-        // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
-        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //    <soapenv:Header/>
-        //    <soapenv:Body>
-        //       <AuthenticationData:eRoamingAuthenticationData>
-        // 
-        //          <AuthenticationData:AuthenticationData>
-        // 
-        //             <!--Zero or more repetitions:-->
-        //             <AuthenticationData:ProviderAuthenticationData>
-        // 
-        //                <AuthenticationData:ProviderID>?</AuthenticationData:ProviderID>
-        // 
-        //                <!--Zero or more repetitions:-->
-        //                <AuthenticationData:AuthenticationDataRecord>
-        //                   <AuthenticationData:Identification>
-        // 
-        //                      <!--You have a CHOICE of the next 4 items at this level-->
-        //                      <CommonTypes:RFIDmifarefamilyIdentification>
-        //                         <CommonTypes:UID>?</CommonTypes:UID>
-        //                      </CommonTypes:RFIDmifarefamilyIdentification>
-        // 
-        //                      <CommonTypes:QRCodeIdentification>
-        // 
-        //                         <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        // 
-        //                         <!--You have a CHOICE of the next 2 items at this level-->
-        //                         <CommonTypes:PIN>?</CommonTypes:PIN>
-        // 
-        //                         <CommonTypes:HashedPIN>
-        //                            <CommonTypes:Value>?</CommonTypes:Value>
-        //                            <CommonTypes:Function>?</CommonTypes:Function>
-        //                            <CommonTypes:Salt>?</CommonTypes:Salt>
-        //                         </CommonTypes:HashedPIN>
-        // 
-        //                      </CommonTypes:QRCodeIdentification>
-        // 
-        //                      <CommonTypes:PlugAndChargeIdentification>
-        //                         <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //                      </CommonTypes:PlugAndChargeIdentification>
-        // 
-        //                      <CommonTypes:RemoteIdentification>
-        //                         <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //                      </CommonTypes:RemoteIdentification>
-        // 
-        //                   </AuthenticationData:Identification>
-        //                </AuthenticationData:AuthenticationDataRecord>
-        // 
-        //             </AuthenticationData:ProviderAuthenticationData>
-        //          </AuthenticationData:AuthenticationData>
-        // 
-        //          <!--Optional:-->
-        //          <AuthenticationData:StatusCode>
-        // 
-        //             <CommonTypes:Code>?</CommonTypes:Code>
-        // 
-        //             <!--Optional:-->
-        //             <CommonTypes:Description>?</CommonTypes:Description>
-        // 
-        //             <!--Optional:-->
-        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-        // 
-        //          </AuthenticationData:StatusCode>
-        // 
-        //       </AuthenticationData:eRoamingAuthenticationData>
-        //    </soapenv:Body>
-        // </soapenv:Envelope>
+        {
+
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+
+            #endregion
+
+            try
+            {
+
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingAuthenticationData_V2.0",
+                                                        DNSClient: _DNSClient))
+                {
+
+                    return await _OICPClient.Query(CPO_XMLMethods.PullAuthenticationDataXML(OperatorId),
+                                                   "eRoamingPullAuthenticationData",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                                                   OnSuccess: XMLData =>
+                                                   {
+
+                                                       #region Documentation
+
+                                                       // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                       //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
+                                                       //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       //
+                                                       //    <soapenv:Header/>
+                                                       //
+                                                       //    <soapenv:Body>
+                                                       //       <AuthenticationData:eRoamingAuthenticationData>
+                                                       // 
+                                                       //          <AuthenticationData:AuthenticationData>
+                                                       // 
+                                                       //             <!--Zero or more repetitions:-->
+                                                       //             <AuthenticationData:ProviderAuthenticationData>
+                                                       // 
+                                                       //                <AuthenticationData:ProviderID>?</AuthenticationData:ProviderID>
+                                                       // 
+                                                       //                <!--Zero or more repetitions:-->
+                                                       //                <AuthenticationData:AuthenticationDataRecord>
+                                                       //                   <AuthenticationData:Identification>
+                                                       // 
+                                                       //                      <!--You have a CHOICE of the next 4 items at this level-->
+                                                       //                      <CommonTypes:RFIDmifarefamilyIdentification>
+                                                       //                         <CommonTypes:UID>?</CommonTypes:UID>
+                                                       //                      </CommonTypes:RFIDmifarefamilyIdentification>
+                                                       // 
+                                                       //                      <CommonTypes:QRCodeIdentification>
+                                                       // 
+                                                       //                         <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                                                       // 
+                                                       //                         <!--You have a CHOICE of the next 2 items at this level-->
+                                                       //                         <CommonTypes:PIN>?</CommonTypes:PIN>
+                                                       // 
+                                                       //                         <CommonTypes:HashedPIN>
+                                                       //                            <CommonTypes:Value>?</CommonTypes:Value>
+                                                       //                            <CommonTypes:Function>?</CommonTypes:Function>
+                                                       //                            <CommonTypes:Salt>?</CommonTypes:Salt>
+                                                       //                         </CommonTypes:HashedPIN>
+                                                       // 
+                                                       //                      </CommonTypes:QRCodeIdentification>
+                                                       // 
+                                                       //                      <CommonTypes:PlugAndChargeIdentification>
+                                                       //                         <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                                                       //                      </CommonTypes:PlugAndChargeIdentification>
+                                                       // 
+                                                       //                      <CommonTypes:RemoteIdentification>
+                                                       //                         <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                                                       //                      </CommonTypes:RemoteIdentification>
+                                                       // 
+                                                       //                   </AuthenticationData:Identification>
+                                                       //                </AuthenticationData:AuthenticationDataRecord>
+                                                       // 
+                                                       //             </AuthenticationData:ProviderAuthenticationData>
+                                                       //          </AuthenticationData:AuthenticationData>
+                                                       // 
+                                                       //          <!--Optional:-->
+                                                       //          <AuthenticationData:StatusCode>
+                                                       // 
+                                                       //             <CommonTypes:Code>?</CommonTypes:Code>
+                                                       // 
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:Description>?</CommonTypes:Description>
+                                                       // 
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                                                       // 
+                                                       //          </AuthenticationData:StatusCode>
+                                                       // 
+                                                       //       </AuthenticationData:eRoamingAuthenticationData>
+                                                       //    </soapenv:Body>
+                                                       //
+                                                       // </soapenv:Envelope>
+
+                                                       #endregion
+
+                                                       var _AuthenticationData = AuthenticationData.Parse(XMLData.Content);
+
+                                                       return new HTTPResponse<AuthenticationData>(XMLData.HttpResponse,
+                                                                                                   _AuthenticationData);
+
+                                                   },
+
+                                                   OnSOAPFault: Fault =>
+                                                   {
+
+                                                       DebugX.Log("PullAuthenticationData led to a fault!" + Environment.NewLine);
+
+                                                       return new HTTPResponse<AuthenticationData>(Fault.HttpResponse,
+                                                                                                   new AuthenticationData(),
+                                                                                                   IsFault: true);
+
+                                                   },
+
+                                                   OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+
+                                                   OnException: (t, s, e) => SendOnException(t, s, e)
+
+                                                  );
+
+                }
+
+            }
+
+            // Note: Will only catch SOAPClient init and query init exceptions!
+            catch (Exception e)
+            {
+
+                SendOnException(DateTime.Now, this, e);
+
+                return new HTTPResponse<AuthenticationData>(new HTTPResponse(),
+                                                            new AuthenticationData());
+
+            }
+
+        }
 
         #endregion
 
-        #endregion
 
-
-        #region SendCDR(ChargeDetailRecord, QueryTimeout = null)
+        #region SendChargeDetailRecord(ChargeDetailRecord, QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP SendChargeDetailRecord request.
@@ -2028,8 +2118,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<SENDCDRResult>>
 
-            SendCDR(ChargeDetailRecord  ChargeDetailRecord,
-                    TimeSpan?           QueryTimeout  = null)
+            SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
+                                   TimeSpan?           QueryTimeout  = null)
 
         {
 
@@ -2043,23 +2133,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            return await SendCDR(EVSEId:                ChargeDetailRecord.EVSEId,
-                                 SessionId:             ChargeDetailRecord.SessionId,
-                                 PartnerProductId:      ChargeDetailRecord.PartnerProductId,
-                                 SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
-                                 SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime,
-                                 AuthToken:             ChargeDetailRecord.AuthToken,
-                                 eMAId:                 ChargeDetailRecord.eMAId,
-                                 PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
-                                 ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.StartTimeOpt : null,
-                                 ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.EndTimeOpt   : null,
-                                 MeterValueStart:       ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.First().Value) : null,
-                                 MeterValueEnd:         ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.Last(). Value) : null,
-                                 MeterValuesInBetween:  ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? ChargeDetailRecord.MeterValues.Select(v => v.Value)       : null,
-                                 ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
-                                 MeteringSignature:     ChargeDetailRecord.MeteringSignature,
+            return await SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
+                                                SessionId:             ChargeDetailRecord.SessionId,
+                                                PartnerProductId:      ChargeDetailRecord.PartnerProductId,
+                                                SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
+                                                SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime,
+                                                AuthToken:             ChargeDetailRecord.AuthToken,
+                                                eMAId:                 ChargeDetailRecord.eMAId,
+                                                PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
+                                                ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.StartTimeOpt : null,
+                                                ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.EndTimeOpt   : null,
+                                                MeterValueStart:       ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.First().Value) : null,
+                                                MeterValueEnd:         ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.Last(). Value) : null,
+                                                MeterValuesInBetween:  ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? ChargeDetailRecord.MeterValues.Select(v => v.Value)       : null,
+                                                ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
+                                                MeteringSignature:     ChargeDetailRecord.MeteringSignature,
 
-                                 QueryTimeout:          QueryTimeout);
+                                                QueryTimeout:          QueryTimeout);
 
         }
 
@@ -2082,7 +2172,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            return await SendCDR(EVSEId:                ChargeDetailRecord.EVSEId,
+            return await SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
                                  SessionId:             ChargeDetailRecord.SessionId,
                                  PartnerProductId:      ChargeDetailRecord.PartnerProductId,
                                  SessionStart:          ChargeDetailRecord.SessionStart,
@@ -2106,7 +2196,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region SendCDR(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, AuthToken = null, eMAId = null, PartnerSessionId = null, ..., QueryTimeout = null)
+        #region SendChargeDetailRecord(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, AuthToken = null, eMAId = null, PartnerSessionId = null, ..., QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP SendChargeDetailRecord request.
@@ -2119,7 +2209,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="AuthToken">An optional (RFID) user identification.</param>
         /// <param name="eMAId">An optional e-Mobility account identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="ChargingTime">Optional timestamps of the charging start/stop.</param>
+        /// <param name="ChargingStart">Optional timestamp of the charging start.</param>
+        /// <param name="ChargingEnd">Optional timestamp of the charging stop.</param>
         /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
         /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
@@ -2130,24 +2221,24 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<SENDCDRResult>>
 
-            SendCDR(EVSE_Id              EVSEId,
-                    ChargingSession_Id   SessionId,
-                    ChargingProduct_Id   PartnerProductId,
-                    DateTime             SessionStart,
-                    DateTime             SessionEnd,
-                    Auth_Token           AuthToken             = null,
-                    eMA_Id               eMAId                 = null,
-                    ChargingSession_Id   PartnerSessionId      = null,
-                    DateTime?            ChargingStart         = null,
-                    DateTime?            ChargingEnd           = null,
-                    Double?              MeterValueStart       = null,
-                    Double?              MeterValueEnd         = null,
-                    IEnumerable<Double>  MeterValuesInBetween  = null,
-                    Double?              ConsumedEnergy        = null,
-                    String               MeteringSignature     = null,
-                    EVSEOperator_Id      HubOperatorId         = null,
-                    EVSP_Id              HubProviderId         = null,
-                    TimeSpan?            QueryTimeout          = null)
+            SendChargeDetailRecord(EVSE_Id              EVSEId,
+                                   ChargingSession_Id   SessionId,
+                                   ChargingProduct_Id   PartnerProductId,
+                                   DateTime             SessionStart,
+                                   DateTime             SessionEnd,
+                                   Auth_Token           AuthToken             = null,
+                                   eMA_Id               eMAId                 = null,
+                                   ChargingSession_Id   PartnerSessionId      = null,
+                                   DateTime?            ChargingStart         = null,
+                                   DateTime?            ChargingEnd           = null,
+                                   Double?              MeterValueStart       = null,
+                                   Double?              MeterValueEnd         = null,
+                                   IEnumerable<Double>  MeterValuesInBetween  = null,
+                                   Double?              ConsumedEnergy        = null,
+                                   String               MeteringSignature     = null,
+                                   EVSEOperator_Id      HubOperatorId         = null,
+                                   EVSP_Id              HubProviderId         = null,
+                                   TimeSpan?            QueryTimeout          = null)
 
         {
 
@@ -2211,7 +2302,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                               // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
                                                               //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                              //
                                                               //    <soapenv:Header/>
+                                                              //
                                                               //    <soapenv:Body>
                                                               //       <CommonTypes:eRoamingAcknowledgement>
                                                               // 
@@ -2237,6 +2330,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                               // 
                                                               //       </CommonTypes:eRoamingAcknowledgement>
                                                               //    </soapenv:Body>
+                                                              //
                                                               // </soapenv:Envelope>
 
                                                               #endregion

@@ -1741,7 +1741,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
 
             #endregion
 
-            return await SendCDR(EVSEId:                ChargeDetailRecord.EVSEId,
+            return await SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
                                  SessionId:             ChargeDetailRecord.SessionId,
                                  PartnerProductId:      ChargeDetailRecord.PartnerProductId,
                                  SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
@@ -1780,7 +1780,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
 
             #endregion
 
-            return await SendCDR(EVSEId:                ChargeDetailRecord.EVSEId,
+            return await SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
                                  SessionId:             ChargeDetailRecord.SessionId,
                                  PartnerProductId:      ChargeDetailRecord.PartnerProductId,
                                  SessionStart:          ChargeDetailRecord.SessionStart,
@@ -1828,7 +1828,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<SENDCDRResult>>
 
-            SendCDR(EVSE_Id              EVSEId,
+            SendChargeDetailRecord(EVSE_Id              EVSEId,
                     ChargingSession_Id   SessionId,
                     ChargingProduct_Id   PartnerProductId,
                     DateTime             SessionStart,

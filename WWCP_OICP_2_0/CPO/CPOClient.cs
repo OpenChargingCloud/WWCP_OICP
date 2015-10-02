@@ -349,7 +349,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region SendCDR(ChargeDetailRecord, QueryTimeout = null)
+
+        #region PullAuthenticationData
+
+
+
+        #endregion
+
+
+        #region SendChargeDetailRecord(ChargeDetailRecord, QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP SendChargeDetailRecord request.
@@ -358,8 +366,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<SENDCDRResult>>
 
-            SendCDR(OICPChargeDetailRecord  ChargeDetailRecord,
-                    TimeSpan?               QueryTimeout  = null)
+            SendChargeDetailRecord(OICPChargeDetailRecord  ChargeDetailRecord,
+                                   TimeSpan?               QueryTimeout  = null)
 
         {
 
@@ -370,7 +378,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region SendCDR(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, AuthToken = null, eMAId = null, PartnerSessionId = null, ..., QueryTimeout = null)
+        #region SendChargeDetailRecord(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, AuthToken = null, eMAId = null, PartnerSessionId = null, ..., QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP SendChargeDetailRecord request.
@@ -383,7 +391,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="AuthToken">An optional (RFID) user identification.</param>
         /// <param name="eMAId">An optional e-Mobility account identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="ChargingTime">Optional timestamps of the charging start/stop.</param>
+        /// <param name="ChargingStart">Optional timestamp of the charging start.</param>
+        /// <param name="ChargingEnd">Optional timestamp of the charging stop.</param>
         /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
         /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
@@ -394,28 +403,28 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<SENDCDRResult>>
 
-            SendCDR(EVSE_Id              EVSEId,
-                    ChargingSession_Id   SessionId,
-                    ChargingProduct_Id   PartnerProductId,
-                    DateTime             SessionStart,
-                    DateTime             SessionEnd,
-                    Auth_Token           AuthToken             = null,
-                    eMA_Id               eMAId                 = null,
-                    ChargingSession_Id   PartnerSessionId      = null,
-                    DateTime?            ChargingStart         = null,
-                    DateTime?            ChargingEnd           = null,
-                    Double?              MeterValueStart       = null,
-                    Double?              MeterValueEnd         = null,
-                    IEnumerable<Double>  MeterValuesInBetween  = null,
-                    Double?              ConsumedEnergy        = null,
-                    String               MeteringSignature     = null,
-                    EVSEOperator_Id      HubOperatorId         = null,
-                    EVSP_Id              HubProviderId         = null,
-                    TimeSpan?            QueryTimeout          = null)
+            SendChargeDetailRecord(EVSE_Id              EVSEId,
+                                   ChargingSession_Id   SessionId,
+                                   ChargingProduct_Id   PartnerProductId,
+                                   DateTime             SessionStart,
+                                   DateTime             SessionEnd,
+                                   Auth_Token           AuthToken             = null,
+                                   eMA_Id               eMAId                 = null,
+                                   ChargingSession_Id   PartnerSessionId      = null,
+                                   DateTime?            ChargingStart         = null,
+                                   DateTime?            ChargingEnd           = null,
+                                   Double?              MeterValueStart       = null,
+                                   Double?              MeterValueEnd         = null,
+                                   IEnumerable<Double>  MeterValuesInBetween  = null,
+                                   Double?              ConsumedEnergy        = null,
+                                   String               MeteringSignature     = null,
+                                   EVSEOperator_Id      HubOperatorId         = null,
+                                   EVSP_Id              HubProviderId         = null,
+                                   TimeSpan?            QueryTimeout          = null)
 
         {
 
-            return await _CPOUpstreamService.SendCDR(EVSEId,
+            return await _CPOUpstreamService.SendChargeDetailRecord(EVSEId,
                                                      SessionId,
                                                      PartnerProductId,
                                                      SessionStart,

@@ -57,6 +57,7 @@
     <Compile Include="Helpers\GeoCoordinatesResponseFormatTypes.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
+    <Compile Include="Helpers\AuthenticationData.cs" />
     <Compile Include="Helpers\OICPMapper.cs" />
     <Compile Include="Helpers\ExtentionMethods.cs" />
     <Compile Include="Helpers\HubjectAcknowledgement.cs" />
