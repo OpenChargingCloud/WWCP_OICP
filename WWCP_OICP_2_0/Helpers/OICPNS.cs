@@ -51,6 +51,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static readonly XNamespace Authorization        = "http://www.hubject.com/b2b/services/authorization/v2.0";
 
         /// <summary>
+        /// The namespace for the Authentication Data within the Open Intercharge Protocol (OICP) Version 2.0.
+        /// </summary>
+        public static readonly XNamespace AuthenticationData   = "http://www.hubject.com/b2b/services/AuthenticationData/v2.0";
+
+        /// <summary>
         /// The namespace for the Mobile Authorization within the Open Intercharge Protocol (OICP) Version 2.0.
         /// </summary>
         public static readonly XNamespace MobileAuthorization  = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0";

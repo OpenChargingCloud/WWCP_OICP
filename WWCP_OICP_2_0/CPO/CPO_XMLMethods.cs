@@ -32,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// OICP v2.0 CPO management operations.
+    /// OICP EVSEData.0 CPO management operations.
     /// </summary>
     public static class CPO_XMLMethods
     {
@@ -55,29 +55,29 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsedata/EVSEData.0"
+            //                   xmlns:CommonTypes     = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingPushEvseData>
+            //       <EVSEData:eRoamingPushEvseData>
             //
-            //          <v2:ActionType>?</v2:ActionType>
+            //          <EVSEData:ActionType>?</EVSEData:ActionType>
             //
-            //          <v2:OperatorEvseData>
+            //          <EVSEData:OperatorEvseData>
             //
-            //             <v2:OperatorID>?</v2:OperatorID>
+            //             <EVSEData:OperatorID>?</EVSEData:OperatorID>
             //
             //             <!--Optional:-->
-            //             <v2:OperatorName>?</v2:OperatorName>
+            //             <EVSEData:OperatorName>?</EVSEData:OperatorName>
             //
             //             <!--Zero or more repetitions:-->
-            //             <v2:EvseDataRecord deltaType="?" lastUpdate="?">
+            //             <EVSEData:EvseDataRecord deltaType="?" lastUpdate="?">
             //                [...]
-            //             </v2:EvseDataRecord>
+            //             </EVSEData:EvseDataRecord>
             //
-            //          </v2:OperatorEvseData>
-            //       </v2:eRoamingPushEvseData>
+            //          </EVSEData:OperatorEvseData>
+            //       </EVSEData:eRoamingPushEvseData>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 
@@ -330,29 +330,29 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsedata/EVSEData.0"
+            //                   xmlns:CommonTypes     = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingPushEvseData>
+            //       <EVSEData:eRoamingPushEvseData>
             //
-            //          <v2:ActionType>?</v2:ActionType>
+            //          <EVSEData:ActionType>?</EVSEData:ActionType>
             //
-            //          <v2:OperatorEvseData>
+            //          <EVSEData:OperatorEvseData>
             //
-            //             <v2:OperatorID>?</v2:OperatorID>
+            //             <EVSEData:OperatorID>?</EVSEData:OperatorID>
             //
             //             <!--Optional:-->
-            //             <v2:OperatorName>?</v2:OperatorName>
+            //             <EVSEData:OperatorName>?</EVSEData:OperatorName>
             //
             //             <!--Zero or more repetitions:-->
-            //             <v2:EvseDataRecord deltaType="?" lastUpdate="?">
+            //             <EVSEData:EvseDataRecord deltaType="?" lastUpdate="?">
             //                [...]
-            //             </v2:EvseDataRecord>
+            //             </EVSEData:EvseDataRecord>
             //
-            //          </v2:OperatorEvseData>
-            //       </v2:eRoamingPushEvseData>
+            //          </EVSEData:OperatorEvseData>
+            //       </EVSEData:eRoamingPushEvseData>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 
@@ -424,30 +424,30 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/EVSEData.0"
+            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingPushEvseData>
+            //       <EVSEData:eRoamingPushEvseData>
             //
-            //          <v2:ActionType>?</v2:ActionType>
+            //          <EVSEData:ActionType>?</EVSEData:ActionType>
             //
-            //          <v2:OperatorEvseData>
+            //          <EVSEData:OperatorEvseData>
             //
-            //             <v2:OperatorID>?</v2:OperatorID>
+            //             <EVSEData:OperatorID>?</EVSEData:OperatorID>
             //
             //             <!--Optional:-->
-            //             <v2:OperatorName>?</v2:OperatorName>
+            //             <EVSEData:OperatorName>?</EVSEData:OperatorName>
             //
             //             <!--Zero or more repetitions:-->
-            //             <v2:EvseDataRecord deltaType="?" lastUpdate="?">
+            //             <EVSEData:EvseDataRecord>
             //                [...]
-            //             </v2:EvseDataRecord>
+            //             </EVSEData:EvseDataRecord>
             //
-            //          </v2:OperatorEvseData>
-            //       </v2:eRoamingPushEvseData>
+            //          </EVSEData:OperatorEvseData>
+            //       </EVSEData:eRoamingPushEvseData>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 
@@ -496,122 +496,130 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
 
-            // <v2:EvseDataRecord deltaType="?" lastUpdate="?">
+            // <EVSEData:EvseDataRecord>
             //
-            //    <v2:EvseId>?</v2:EvseId>
+            //    <EVSEData:EvseId>?</EVSEData:EvseId>
             //
             //    <!--Optional:-->
-            //    <v2:ChargingStationId>?</v2:ChargingStationId>
+            //    <EVSEData:ChargingStationId>?</EVSEData:ChargingStationId>
             //    <!--Optional:-->
-            //    <v2:ChargingStationName>?</v2:ChargingStationName>
+            //    <EVSEData:ChargingStationName>?</EVSEData:ChargingStationName>
             //    <!--Optional:-->
-            //    <v2:EnChargingStationName>?</v2:EnChargingStationName>
+            //    <EVSEData:EnChargingStationName>?</EVSEData:EnChargingStationName>
             //
-            //    <v2:Address>
-            //       <v21:Country>?</v21:Country>
-            //       <v21:City>?</v21:City>
-            //       <v21:Street>?</v21:Street>
+            //    <EVSEData:Address>
+            //       <CommonTypes:Country>?</CommonTypes:Country>
+            //       <CommonTypes:City>?</CommonTypes:City>
+            //       <CommonTypes:Street>?</CommonTypes:Street>
             //       <!--Optional:-->
-            //       <v21:PostalCode>?</v21:PostalCode>
+            //       <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
             //       <!--Optional:-->
-            //       <v21:HouseNum>?</v21:HouseNum>
+            //       <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
             //       <!--Optional:-->
-            //       <v21:Floor>?</v21:Floor>
+            //       <CommonTypes:Floor>?</CommonTypes:Floor>
             //       <!--Optional:-->
-            //       <v21:Region>?</v21:Region>
+            //       <CommonTypes:Region>?</CommonTypes:Region>
             //       <!--Optional:-->
-            //       <v21:TimeZone>?</v21:TimeZone>
-            //    </v2:Address>
+            //       <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
+            //    </EVSEData:Address>
             //
-            //    <v2:GeoCoordinates>
+            //    <EVSEData:GeoCoordinates>
             //       <!--You have a CHOICE of the next 3 items at this level-->
-            //       <v21:Google>
-            //          <v21:Coordinates>?</v21:Coordinates>
-            //       </v21:Google>
-            //       <v21:DecimalDegree>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DecimalDegree>
-            //       <v21:DegreeMinuteSeconds>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DegreeMinuteSeconds>
-            //    </v2:GeoCoordinates>
             //
-            //    <v2:Plugs>
+            //       <CommonTypes:Google>
+            //          <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+            //       </CommonTypes:Google>
+            //
+            //       <CommonTypes:DecimalDegree>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DecimalDegree>
+            //
+            //       <CommonTypes:DegreeMinuteSeconds>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DegreeMinuteSeconds>
+            //
+            //    </EVSEData:GeoCoordinates>
+            //
+            //    <EVSEData:Plugs>
             //       <!--1 or more repetitions:-->
-            //       <v2:Plug>?</v2:Plug>
-            //    </v2:Plugs>
+            //       <EVSEData:Plug>?</EVSEData:Plug>
+            //    </EVSEData:Plugs>
             //
             //    <!--Optional:-->
-            //    <v2:ChargingFacilities>
+            //    <EVSEData:ChargingFacilities>
             //       <!--1 or more repetitions:-->
-            //       <v2:ChargingFacility>?</v2:ChargingFacility>
-            //    </v2:ChargingFacilities>
+            //       <EVSEData:ChargingFacility>?</EVSEData:ChargingFacility>
+            //    </EVSEData:ChargingFacilities>
             //
             //    <!--Optional:-->
-            //    <v2:ChargingModes>
+            //    <EVSEData:ChargingModes>
             //       <!--1 or more repetitions:-->
-            //       <v2:ChargingMode>?</v2:ChargingMode>
-            //    </v2:ChargingModes>
+            //       <EVSEData:ChargingMode>?</EVSEData:ChargingMode>
+            //    </EVSEData:ChargingModes>
             //
-            //    <v2:AuthenticationModes>
+            //    <EVSEData:AuthenticationModes>
             //       <!--1 or more repetitions:-->
-            //       <v2:AuthenticationMode>?</v2:AuthenticationMode>
-            //    </v2:AuthenticationModes>
+            //       <EVSEData:AuthenticationMode>?</EVSEData:AuthenticationMode>
+            //    </EVSEData:AuthenticationModes>
             //
             //    <!--Optional:-->
-            //    <v2:MaxCapacity>?</v2:MaxCapacity>
+            //    <EVSEData:MaxCapacity>?</EVSEData:MaxCapacity>
             //
             //    <!--Optional:-->
-            //    <v2:PaymentOptions>
+            //    <EVSEData:PaymentOptions>
             //       <!--1 or more repetitions:-->
-            //       <v2:PaymentOption>?</v2:PaymentOption>
-            //    </v2:PaymentOptions>
+            //       <EVSEData:PaymentOption>?</EVSEData:PaymentOption>
+            //    </EVSEData:PaymentOptions>
             //
-            //    <v2:Accessibility>?</v2:Accessibility>
-            //    <v2:HotlinePhoneNum>?</v2:HotlinePhoneNum>
-
-            //    <!--Optional:-->
-            //    <v2:AdditionalInfo>?</v2:AdditionalInfo>
+            //    <EVSEData:Accessibility>?</EVSEData:Accessibility>
+            //    <EVSEData:HotlinePhoneNum>?</EVSEData:HotlinePhoneNum>
             //
             //    <!--Optional:-->
-            //    <v2:EnAdditionalInfo>?</v2:EnAdditionalInfo>
+            //    <EVSEData:AdditionalInfo>?</EVSEData:AdditionalInfo>
             //
             //    <!--Optional:-->
-            //    <v2:GeoChargingPointEntrance>
+            //    <EVSEData:EnAdditionalInfo>?</EVSEData:EnAdditionalInfo>
+            //
+            //    <!--Optional:-->
+            //    <EVSEData:GeoChargingPointEntrance>
             //       <!--You have a CHOICE of the next 3 items at this level-->
-            //       <v21:Google>
-            //          <v21:Coordinates>?</v21:Coordinates>
-            //       </v21:Google>
-            //       <v21:DecimalDegree>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DecimalDegree>
-            //       <v21:DegreeMinuteSeconds>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DegreeMinuteSeconds>
-            //    </v2:GeoChargingPointEntrance>
             //
-            //    <v2:IsOpen24Hours>?</v2:IsOpen24Hours>
+            //       <CommonTypes:Google>
+            //          <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+            //       </CommonTypes:Google>
+            //
+            //       <CommonTypes:DecimalDegree>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DecimalDegree>
+            //
+            //       <CommonTypes:DegreeMinuteSeconds>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DegreeMinuteSeconds>
+            //
+            //    </EVSEData:GeoChargingPointEntrance>
+            //
+            //    <EVSEData:IsOpen24Hours>?</EVSEData:IsOpen24Hours>
             //    <!--Optional:-->
-            //    <v2:OpeningTime>?</v2:OpeningTime>
+            //    <EVSEData:OpeningTime>?</EVSEData:OpeningTime>
             //
             //    <!--Optional:-->
-            //    <v2:HubOperatorID>?</v2:HubOperatorID>
+            //    <EVSEData:HubOperatorID>?</EVSEData:HubOperatorID>
             //
             //    <!--Optional:-->
-            //    <v2:ClearinghouseID>?</v2:ClearinghouseID>
+            //    <EVSEData:ClearinghouseID>?</EVSEData:ClearinghouseID>
             //
-            //    <v2:IsHubjectCompatible>?</v2:IsHubjectCompatible>
-            //    <v2:DynamicInfoAvailable>?</v2:DynamicInfoAvailable>
+            //    <EVSEData:IsHubjectCompatible>?</EVSEData:IsHubjectCompatible>
+            //    <EVSEData:DynamicInfoAvailable>?</EVSEData:DynamicInfoAvailable>
             //
-            // </v2:EvseDataRecord>
+            // </EVSEData:EvseDataRecord>
 
             #endregion
 
@@ -633,7 +641,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     new XElement(OICPNS.CommonTypes + "Country",          EVSE.ChargingStation.Address.Country.Alpha3Code),
                     new XElement(OICPNS.CommonTypes + "City",             EVSE.ChargingStation.Address.City),
-                    new XElement(OICPNS.CommonTypes + "Street",           EVSE.ChargingStation.Address.Street), // OICPv2.0 requires at least 5 characters!
+                    new XElement(OICPNS.CommonTypes + "Street",           EVSE.ChargingStation.Address.Street), // OICPEVSEData.0 requires at least 5 characters!
 
                     EVSE.ChargingStation.Address.PostalCode. IsNotNullOrEmpty()
                         ? new XElement(OICPNS.CommonTypes + "PostalCode", EVSE.ChargingStation.Address.PostalCode)
@@ -814,121 +822,121 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsedata/EVSEData.0"
+            //                   xmlns:CommonTypes     = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
 
-            // <v2:EvseDataRecord deltaType="?" lastUpdate="?">
+            // <EVSEData:EvseDataRecord>
             //
-            //    <v2:EvseId>?</v2:EvseId>
+            //    <EVSEData:EvseId>?</EVSEData:EvseId>
             //
             //    <!--Optional:-->
-            //    <v2:ChargingStationId>?</v2:ChargingStationId>
+            //    <EVSEData:ChargingStationId>?</EVSEData:ChargingStationId>
             //    <!--Optional:-->
-            //    <v2:ChargingStationName>?</v2:ChargingStationName>
+            //    <EVSEData:ChargingStationName>?</EVSEData:ChargingStationName>
             //    <!--Optional:-->
-            //    <v2:EnChargingStationName>?</v2:EnChargingStationName>
+            //    <EVSEData:EnChargingStationName>?</EVSEData:EnChargingStationName>
             //
-            //    <v2:Address>
-            //       <v21:Country>?</v21:Country>
-            //       <v21:City>?</v21:City>
-            //       <v21:Street>?</v21:Street>
+            //    <EVSEData:Address>
+            //       <CommonTypes:Country>?</CommonTypes:Country>
+            //       <CommonTypes:City>?</CommonTypes:City>
+            //       <CommonTypes:Street>?</CommonTypes:Street>
             //       <!--Optional:-->
-            //       <v21:PostalCode>?</v21:PostalCode>
+            //       <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
             //       <!--Optional:-->
-            //       <v21:HouseNum>?</v21:HouseNum>
+            //       <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
             //       <!--Optional:-->
-            //       <v21:Floor>?</v21:Floor>
+            //       <CommonTypes:Floor>?</CommonTypes:Floor>
             //       <!--Optional:-->
-            //       <v21:Region>?</v21:Region>
+            //       <CommonTypes:Region>?</CommonTypes:Region>
             //       <!--Optional:-->
-            //       <v21:TimeZone>?</v21:TimeZone>
-            //    </v2:Address>
+            //       <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
+            //    </EVSEData:Address>
             //
-            //    <v2:GeoCoordinates>
+            //    <EVSEData:GeoCoordinates>
             //       <!--You have a CHOICE of the next 3 items at this level-->
-            //       <v21:Google>
-            //          <v21:Coordinates>?</v21:Coordinates>
-            //       </v21:Google>
-            //       <v21:DecimalDegree>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DecimalDegree>
-            //       <v21:DegreeMinuteSeconds>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DegreeMinuteSeconds>
-            //    </v2:GeoCoordinates>
+            //       <CommonTypes:Google>
+            //          <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+            //       </CommonTypes:Google>
+            //       <CommonTypes:DecimalDegree>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DecimalDegree>
+            //       <CommonTypes:DegreeMinuteSeconds>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DegreeMinuteSeconds>
+            //    </EVSEData:GeoCoordinates>
             //
-            //    <v2:Plugs>
+            //    <EVSEData:Plugs>
             //       <!--1 or more repetitions:-->
-            //       <v2:Plug>?</v2:Plug>
-            //    </v2:Plugs>
+            //       <EVSEData:Plug>?</EVSEData:Plug>
+            //    </EVSEData:Plugs>
             //
             //    <!--Optional:-->
-            //    <v2:ChargingFacilities>
+            //    <EVSEData:ChargingFacilities>
             //       <!--1 or more repetitions:-->
-            //       <v2:ChargingFacility>?</v2:ChargingFacility>
-            //    </v2:ChargingFacilities>
+            //       <EVSEData:ChargingFacility>?</EVSEData:ChargingFacility>
+            //    </EVSEData:ChargingFacilities>
             //
             //    <!--Optional:-->
-            //    <v2:ChargingModes>
+            //    <EVSEData:ChargingModes>
             //       <!--1 or more repetitions:-->
-            //       <v2:ChargingMode>?</v2:ChargingMode>
-            //    </v2:ChargingModes>
+            //       <EVSEData:ChargingMode>?</EVSEData:ChargingMode>
+            //    </EVSEData:ChargingModes>
             //
-            //    <v2:AuthenticationModes>
+            //    <EVSEData:AuthenticationModes>
             //       <!--1 or more repetitions:-->
-            //       <v2:AuthenticationMode>?</v2:AuthenticationMode>
-            //    </v2:AuthenticationModes>
+            //       <EVSEData:AuthenticationMode>?</EVSEData:AuthenticationMode>
+            //    </EVSEData:AuthenticationModes>
             //
             //    <!--Optional:-->
-            //    <v2:MaxCapacity>?</v2:MaxCapacity>
+            //    <EVSEData:MaxCapacity>?</EVSEData:MaxCapacity>
             //
             //    <!--Optional:-->
-            //    <v2:PaymentOptions>
+            //    <EVSEData:PaymentOptions>
             //       <!--1 or more repetitions:-->
-            //       <v2:PaymentOption>?</v2:PaymentOption>
-            //    </v2:PaymentOptions>
+            //       <EVSEData:PaymentOption>?</EVSEData:PaymentOption>
+            //    </EVSEData:PaymentOptions>
             //
-            //    <v2:Accessibility>?</v2:Accessibility>
-            //    <v2:HotlinePhoneNum>?</v2:HotlinePhoneNum>
+            //    <EVSEData:Accessibility>?</EVSEData:Accessibility>
+            //    <EVSEData:HotlinePhoneNum>?</EVSEData:HotlinePhoneNum>
 
             //    <!--Optional:-->
-            //    <v2:AdditionalInfo>?</v2:AdditionalInfo>
+            //    <EVSEData:AdditionalInfo>?</EVSEData:AdditionalInfo>
             //
             //    <!--Optional:-->
-            //    <v2:EnAdditionalInfo>?</v2:EnAdditionalInfo>
+            //    <EVSEData:EnAdditionalInfo>?</EVSEData:EnAdditionalInfo>
             //
             //    <!--Optional:-->
-            //    <v2:GeoChargingPointEntrance>
+            //    <EVSEData:GeoChargingPointEntrance>
             //       <!--You have a CHOICE of the next 3 items at this level-->
-            //       <v21:Google>
-            //          <v21:Coordinates>?</v21:Coordinates>
-            //       </v21:Google>
-            //       <v21:DecimalDegree>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DecimalDegree>
-            //       <v21:DegreeMinuteSeconds>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DegreeMinuteSeconds>
-            //    </v2:GeoChargingPointEntrance>
+            //       <CommonTypes:Google>
+            //          <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+            //       </CommonTypes:Google>
+            //       <CommonTypes:DecimalDegree>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DecimalDegree>
+            //       <CommonTypes:DegreeMinuteSeconds>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DegreeMinuteSeconds>
+            //    </EVSEData:GeoChargingPointEntrance>
             //
-            //    <v2:IsOpen24Hours>?</v2:IsOpen24Hours>
+            //    <EVSEData:IsOpen24Hours>?</EVSEData:IsOpen24Hours>
             //    <!--Optional:-->
-            //    <v2:OpeningTime>?</v2:OpeningTime>
-            //
-            //    <!--Optional:-->
-            //    <v2:HubOperatorID>?</v2:HubOperatorID>
+            //    <EVSEData:OpeningTime>?</EVSEData:OpeningTime>
             //
             //    <!--Optional:-->
-            //    <v2:ClearinghouseID>?</v2:ClearinghouseID>
+            //    <EVSEData:HubOperatorID>?</EVSEData:HubOperatorID>
             //
-            //    <v2:IsHubjectCompatible>?</v2:IsHubjectCompatible>
-            //    <v2:DynamicInfoAvailable>?</v2:DynamicInfoAvailable>
+            //    <!--Optional:-->
+            //    <EVSEData:ClearinghouseID>?</EVSEData:ClearinghouseID>
             //
-            // </v2:EvseDataRecord>
+            //    <EVSEData:IsHubjectCompatible>?</EVSEData:IsHubjectCompatible>
+            //    <EVSEData:DynamicInfoAvailable>?</EVSEData:DynamicInfoAvailable>
+            //
+            // </EVSEData:EvseDataRecord>
 
             #endregion
 
@@ -976,7 +984,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 new XElement(OICPNS.EVSEData + "Address",
                     new XElement(OICPNS.CommonTypes + "Country",        EVSEDataRecord.Address.Country.Alpha3Code),
                     new XElement(OICPNS.CommonTypes + "City",           EVSEDataRecord.Address.City),
-                    new XElement(OICPNS.CommonTypes + "Street",         EVSEDataRecord.Address.Street), // OICPv2.0 requires at least 5 characters!
+                    new XElement(OICPNS.CommonTypes + "Street",         EVSEDataRecord.Address.Street), // OICPEVSEData.0 requires at least 5 characters!
 
                     EVSEDataRecord.Address.PostalCode. IsNotNullOrEmpty()
                         ? new XElement(OICPNS.CommonTypes + "PostalCode", EVSEDataRecord.Address.PostalCode)
@@ -1105,30 +1113,30 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingPushEvseStatus>
+            //       <EVSEData:eRoamingPushEvseStatus>
             //
-            //          <v2:ActionType>?</v2:ActionType>
+            //          <EVSEData:ActionType>?</EVSEData:ActionType>
             //
-            //          <v2:OperatorEvseStatus>
+            //          <EVSEData:OperatorEvseStatus>
             //
-            //             <v2:OperatorID>?</v2:OperatorID>
+            //             <EVSEData:OperatorID>?</EVSEData:OperatorID>
             //
             //             <!--Optional:-->
-            //             <v2:OperatorName>?</v2:OperatorName>
+            //             <EVSEData:OperatorName>?</EVSEData:OperatorName>
             //
             //             <!--Zero or more repetitions:-->
-            //             <v2:EvseStatusRecord>
-            //                <v2:EvseId>?</v2:EvseId>
-            //                <v2:EvseStatus>?</v2:EvseStatus>
-            //             </v2:EvseStatusRecord>
+            //             <EVSEData:EvseStatusRecord>
+            //                <EVSEData:EvseId>?</EVSEData:EvseId>
+            //                <EVSEData:EvseStatus>?</EVSEData:EvseStatus>
+            //             </EVSEData:EvseStatusRecord>
             //
-            //          </v2:OperatorEvseStatus>
+            //          </EVSEData:OperatorEvseStatus>
             //
-            //       </v2:eRoamingPushEvseStatus>
+            //       </EVSEData:eRoamingPushEvseStatus>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 
@@ -1377,30 +1385,30 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingPushEvseStatus>
+            //       <EVSEData:eRoamingPushEvseStatus>
             //
-            //          <v2:ActionType>?</v2:ActionType>
+            //          <EVSEData:ActionType>?</EVSEData:ActionType>
             //
-            //          <v2:OperatorEvseStatus>
+            //          <EVSEData:OperatorEvseStatus>
             //
-            //             <v2:OperatorID>?</v2:OperatorID>
+            //             <EVSEData:OperatorID>?</EVSEData:OperatorID>
             //
             //             <!--Optional:-->
-            //             <v2:OperatorName>?</v2:OperatorName>
+            //             <EVSEData:OperatorName>?</EVSEData:OperatorName>
             //
             //             <!--Zero or more repetitions:-->
-            //             <v2:EvseStatusRecord>
-            //                <v2:EvseId>?</v2:EvseId>
-            //                <v2:EvseStatus>?</v2:EvseStatus>
-            //             </v2:EvseStatusRecord>
+            //             <EVSEData:EvseStatusRecord>
+            //                <EVSEData:EvseId>?</EVSEData:EvseId>
+            //                <EVSEData:EvseStatus>?</EVSEData:EvseStatus>
+            //             </EVSEData:EvseStatusRecord>
             //
-            //          </v2:OperatorEvseStatus>
+            //          </EVSEData:OperatorEvseStatus>
             //
-            //       </v2:eRoamingPushEvseStatus>
+            //       </EVSEData:eRoamingPushEvseStatus>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 
@@ -1459,30 +1467,30 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingPushEvseStatus>
+            //       <EVSEData:eRoamingPushEvseStatus>
             //
-            //          <v2:ActionType>?</v2:ActionType>
+            //          <EVSEData:ActionType>?</EVSEData:ActionType>
             //
-            //          <v2:OperatorEvseStatus>
+            //          <EVSEData:OperatorEvseStatus>
             //
-            //             <v2:OperatorID>?</v2:OperatorID>
+            //             <EVSEData:OperatorID>?</EVSEData:OperatorID>
             //
             //             <!--Optional:-->
-            //             <v2:OperatorName>?</v2:OperatorName>
+            //             <EVSEData:OperatorName>?</EVSEData:OperatorName>
             //
             //             <!--Zero or more repetitions:-->
-            //             <v2:EvseStatusRecord>
-            //                <v2:EvseId>?</v2:EvseId>
-            //                <v2:EvseStatus>?</v2:EvseStatus>
-            //             </v2:EvseStatusRecord>
+            //             <EVSEData:EvseStatusRecord>
+            //                <EVSEData:EvseId>?</EVSEData:EvseId>
+            //                <EVSEData:EvseStatus>?</EVSEData:EvseStatus>
+            //             </EVSEData:EvseStatusRecord>
             //
-            //          </v2:OperatorEvseStatus>
+            //          </EVSEData:OperatorEvseStatus>
             //
-            //       </v2:eRoamingPushEvseStatus>
+            //       </EVSEData:eRoamingPushEvseStatus>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 
@@ -1536,30 +1544,30 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingPushEvseStatus>
+            //       <EVSEData:eRoamingPushEvseStatus>
             //
-            //          <v2:ActionType>?</v2:ActionType>
+            //          <EVSEData:ActionType>?</EVSEData:ActionType>
             //
-            //          <v2:OperatorEvseStatus>
+            //          <EVSEData:OperatorEvseStatus>
             //
-            //             <v2:OperatorID>?</v2:OperatorID>
+            //             <EVSEData:OperatorID>?</EVSEData:OperatorID>
             //
             //             <!--Optional:-->
-            //             <v2:OperatorName>?</v2:OperatorName>
+            //             <EVSEData:OperatorName>?</EVSEData:OperatorName>
             //
             //             <!--Zero or more repetitions:-->
-            //             <v2:EvseStatusRecord>
-            //                <v2:EvseId>?</v2:EvseId>
-            //                <v2:EvseStatus>?</v2:EvseStatus>
-            //             </v2:EvseStatusRecord>
+            //             <EVSEData:EvseStatusRecord>
+            //                <EVSEData:EvseId>?</EVSEData:EvseId>
+            //                <EVSEData:EvseStatus>?</EVSEData:EvseStatus>
+            //             </EVSEData:EvseStatusRecord>
             //
-            //          </v2:OperatorEvseStatus>
+            //          </EVSEData:OperatorEvseStatus>
             //
-            //       </v2:eRoamingPushEvseStatus>
+            //       </EVSEData:eRoamingPushEvseStatus>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 
@@ -1618,31 +1626,31 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            // <soapenv:Envelope xmlns:soapenv    = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
-            //       <v2:eRoamingPushEvseStatus>
+            //       <EVSEStatus:eRoamingPushEvseStatus>
             //
-            //          <v2:ActionType>?</v2:ActionType>
+            //          <EVSEStatus:ActionType>?</EVSEStatus:ActionType>
             //
-            //          <v2:OperatorEvseStatus>
+            //          <EVSEStatus:OperatorEvseStatus>
             //
-            //             <v2:OperatorID>?</v2:OperatorID>
+            //             <EVSEStatus:OperatorID>?</EVSEStatus:OperatorID>
             //
             //             <!--Optional:-->
-            //             <v2:OperatorName>?</v2:OperatorName>
+            //             <EVSEStatus:OperatorName>?</EVSEStatus:OperatorName>
             //
             //             <!--Zero or more repetitions:-->
-            //             <v2:EvseStatusRecord>
-            //                <v2:EvseId>?</v2:EvseId>
-            //                <v2:EvseStatus>?</v2:EvseStatus>
-            //             </v2:EvseStatusRecord>
+            //             <EVSEStatus:EvseStatusRecord>
+            //                <EVSEStatus:EvseId>?</EVSEStatus:EvseId>
+            //                <EVSEStatus:EvseStatus>?</EVSEStatus:EvseStatus>
+            //             </EVSEStatus:EvseStatusRecord>
             //
-            //          </v2:OperatorEvseStatus>
+            //          </EVSEStatus:OperatorEvseStatus>
             //
-            //       </v2:eRoamingPushEvseStatus>
+            //       </EVSEStatus:eRoamingPushEvseStatus>
             //    </soapenv:Body>
             // </soapenv:Envelope>
 
@@ -1696,12 +1704,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
 
-            // <v2:EvseStatusRecord>
-            //    <v2:EvseId>?</v2:EvseId>
-            //    <v2:EvseStatus>?</v2:EvseStatus>
-            // </v2:EvseStatusRecord>
+            // <EVSEData:EvseStatusRecord>
+            //    <EVSEData:EvseId>?</EVSEData:EvseId>
+            //    <EVSEData:EvseStatus>?</EVSEData:EvseStatus>
+            // </EVSEData:EvseStatusRecord>
 
             #endregion
 
@@ -1752,12 +1760,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
 
-            // <v2:EvseStatusRecord>
-            //    <v2:EvseId>?</v2:EvseId>
-            //    <v2:EvseStatus>?</v2:EvseStatus>
-            // </v2:EvseStatusRecord>
+            // <EVSEData:EvseStatusRecord>
+            //    <EVSEData:EvseId>?</EVSEData:EvseId>
+            //    <EVSEData:EvseStatus>?</EVSEData:EvseStatus>
+            // </EVSEData:EvseStatusRecord>
 
             #endregion
 
@@ -1786,12 +1794,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
 
-            //             <v2:EvseStatusRecord>
-            //                <v2:EvseId>?</v2:EvseId>
-            //                <v2:EvseStatus>?</v2:EvseStatus>
-            //             </v2:EvseStatusRecord>
+            //             <EVSEData:EvseStatusRecord>
+            //                <EVSEData:EvseId>?</EVSEData:EvseId>
+            //                <EVSEData:EvseStatus>?</EVSEData:EvseStatus>
+            //             </EVSEData:EvseStatusRecord>
 
             #endregion
 
@@ -1845,12 +1853,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
 
-            // <v2:EvseStatusRecord>
-            //    <v2:EvseId>?</v2:EvseId>
-            //    <v2:EvseStatus>?</v2:EvseStatus>
-            // </v2:EvseStatusRecord>
+            // <EVSEData:EvseStatusRecord>
+            //    <EVSEData:EvseId>?</EVSEData:EvseId>
+            //    <EVSEData:EvseStatus>?</EVSEData:EvseStatus>
+            // </EVSEData:EvseStatusRecord>
 
             #endregion
 
@@ -1880,7 +1888,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region AuthorizeStartXML(this EVSE, AuthToken, PartnerProductId = null, SessionId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP v2.0 Authorize Start XML request.
+        /// Create an OICP EVSEData.0 Authorize Start XML request.
         /// </summary>
         /// <param name="EVSE">An EVSE.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
@@ -1889,9 +1897,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         public static XElement AuthorizeStartXML(this EVSE           EVSE,
                                                  Auth_Token          AuthToken,
-                                                 String              PartnerProductId  = null,   // OICP v2.0: Optional [100]
-                                                 ChargingSession_Id  SessionId         = null,   // OICP v2.0: Optional
-                                                 ChargingSession_Id  PartnerSessionId  = null)   // OICP v2.0: Optional [50]
+                                                 String              PartnerProductId  = null,   // OICP EVSEData.0: Optional [100]
+                                                 ChargingSession_Id  SessionId         = null,   // OICP EVSEData.0: Optional
+                                                 ChargingSession_Id  PartnerSessionId  = null)   // OICP EVSEData.0: Optional [50]
         {
 
             #region Initial checks
@@ -1918,7 +1926,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region AuthorizeStartXML(OperatorId, AuthToken, EVSEId = null, PartnerProductId = null, SessionId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP v2.0 Authorize Start XML request.
+        /// Create an OICP EVSEData.0 Authorize Start XML request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
@@ -1928,17 +1936,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         public static XElement AuthorizeStartXML(EVSEOperator_Id     OperatorId,
                                                  Auth_Token          AuthToken,
-                                                 EVSE_Id             EVSEId            = null,   // OICP v2.0: Optional
-                                                 String              PartnerProductId  = null,   // OICP v2.0: Optional [100]
-                                                 ChargingSession_Id  SessionId         = null,   // OICP v2.0: Optional
-                                                 ChargingSession_Id  PartnerSessionId  = null)   // OICP v2.0: Optional [50]
+                                                 EVSE_Id             EVSEId            = null,   // OICP EVSEData.0: Optional
+                                                 String              PartnerProductId  = null,   // OICP EVSEData.0: Optional [100]
+                                                 ChargingSession_Id  SessionId         = null,   // OICP EVSEData.0: Optional
+                                                 ChargingSession_Id  PartnerSessionId  = null)   // OICP EVSEData.0: Optional [50]
         {
 
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/EVSEData.0"
+            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
             //
             //    <soapenv:Header/>
             //
@@ -2033,7 +2041,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region AuthorizeStopXML(this EVSE, SessionId, AuthToken, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP v2.0 Authorize Stop XML request.
+        /// Create an OICP EVSEData.0 Authorize Stop XML request.
         /// </summary>
         /// <param name="EVSE">An EVSE.</param>
         /// <param name="SessionId">The session identification.</param>
@@ -2071,7 +2079,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region AuthorizeStopXML(OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP v2.0 AuthorizeStop XML request.
+        /// Create an OICP EVSEData.0 AuthorizeStop XML request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="SessionId">The session identification.</param>
@@ -2088,8 +2096,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/EVSEData.0"
+            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
             //
             //    <soapenv:Header/>
             //
@@ -2186,7 +2194,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region PullAuthenticationDataXML(OperatorId)
 
         /// <summary>
-        /// Create an OICP v2.0 PullAuthenticationData XML request.
+        /// Create an OICP EVSEData.0 PullAuthenticationData XML request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         public static XElement PullAuthenticationDataXML(EVSEOperator_Id OperatorId)
@@ -2195,7 +2203,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0">
+            //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/EVSEData.0">
             //
             //    <soapenv:Header/>
             //
@@ -2339,8 +2347,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/EVSEData.0"
+            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
             //
             //    <soapenv:Header/>
             //
