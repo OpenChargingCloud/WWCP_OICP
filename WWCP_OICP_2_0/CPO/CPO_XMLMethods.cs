@@ -756,6 +756,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     ? new XElement(OICPNS.EVSEData + "AdditionalInfo", EVSE.Description.First().Text)
                     : null,
 
+                // ToDo: OICP v2.0 Multi-Language support
                 EVSE.Description.has(Languages.en)
                     ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", EVSE.Description[Languages.en])
                     : null,
@@ -782,7 +783,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 // <!--Optional:-->
                 // <v1:ClearinghouseID>?</v1:ClearinghouseID>
 
-                new XElement(OICPNS.EVSEData + "IsHubjectCompatible",   EVSE.ChargingStation.IsHubjectCompatible ? "true" : "false"),
+                new XElement(OICPNS.EVSEData + "IsHubjectCompatible",   EVSE.ChargingStation.IsHubjectCompatible  ? "true" : "false"),
                 new XElement(OICPNS.EVSEData + "DynamicInfoAvailable",  EVSE.ChargingStation.DynamicInfoAvailable ? "true" : "false")
 
             );
@@ -1897,7 +1898,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         public static XElement AuthorizeStartXML(this EVSE           EVSE,
                                                  Auth_Token          AuthToken,
-                                                 String              PartnerProductId  = null,   // OICP EVSEData.0: Optional [100]
+                                                 ChargingProduct_Id  PartnerProductId  = null,   // OICP EVSEData.0: Optional [100]
                                                  ChargingSession_Id  SessionId         = null,   // OICP EVSEData.0: Optional
                                                  ChargingSession_Id  PartnerSessionId  = null)   // OICP EVSEData.0: Optional [50]
         {
@@ -1937,7 +1938,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static XElement AuthorizeStartXML(EVSEOperator_Id     OperatorId,
                                                  Auth_Token          AuthToken,
                                                  EVSE_Id             EVSEId            = null,   // OICP EVSEData.0: Optional
-                                                 String              PartnerProductId  = null,   // OICP EVSEData.0: Optional [100]
+                                                 ChargingProduct_Id  PartnerProductId  = null,   // OICP EVSEData.0: Optional [100]
                                                  ChargingSession_Id  SessionId         = null,   // OICP EVSEData.0: Optional
                                                  ChargingSession_Id  PartnerSessionId  = null)   // OICP EVSEData.0: Optional [50]
         {
@@ -2029,7 +2030,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                               new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
                                                  new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString())
                                               )
-                                          )
+                                          ),
+
+                                          PartnerProductId != null
+                                              ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString())
+                                              : null
 
                                      ));
 
@@ -2238,16 +2243,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Create an OICP SendChargeDetailRecord XML request.
         /// </summary>
-        /// <param name="EVSE">An EVSE.</param>
+        /// <param name="EVSE">The EVSE.</param>
         /// <param name="SessionId">The OICP session identification from the Authorize Start request.</param>
-        /// <param name="PartnerProductId">Your charging product identification.</param>
-        /// <param name="SessionStart">The timestamp of the session start.</param>
-        /// <param name="SessionEnd">The timestamp of the session end.</param>
+        /// <param name="PartnerProductId">The ev charging product identification.</param>
+        /// <param name="SessionStart">The session start timestamp.</param>
+        /// <param name="SessionEnd">The session end timestamp.</param>
         /// <param name="AuthToken">An optional (RFID) user identification.</param>
         /// <param name="eMAId">An optional e-Mobility account identification.</param>
         /// <param name="PartnerSessionId">The partner session identification.</param>
-        /// <param name="ChargingStart">The timestamp of the charging start.</param>
-        /// <param name="ChargingEnd">The timestamp of the charging end.</param>
+        /// <param name="ChargingStart">An optional charging start timestamp.</param>
+        /// <param name="ChargingEnd">An optional charging end timestamp.</param>
         /// <param name="MeterValueStart">The initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">The final value of the energy meter.</param>
         /// <param name="MeterValuesInBetween">Optional meter values during the charging session.</param>
@@ -2308,16 +2313,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Create an OICP SendChargeDetailRecord XML request.
         /// </summary>
-        /// <param name="EVSEId">An EVSE identification.</param>
+        /// <param name="EVSEId">The EVSE identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="PartnerProductId"></param>
-        /// <param name="SessionStart">The timestamp of the session start.</param>
-        /// <param name="SessionEnd">The timestamp of the session end.</param>
+        /// <param name="PartnerProductId">The ev charging product identification.</param>
+        /// <param name="SessionStart">The session start timestamp.</param>
+        /// <param name="SessionEnd">The session end timestamp.</param>
         /// <param name="AuthToken">An optional (RFID) user identification.</param>
         /// <param name="eMAId">An optional e-Mobility account identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="ChargingStart">An optional timestamp of the charging start.</param>
-        /// <param name="ChargingEnd">An optional timestamp of the charging end.</param>
+        /// <param name="ChargingStart">An optional charging start timestamp.</param>
+        /// <param name="ChargingEnd">An optional charging end timestamp.</param>
         /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
         /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
@@ -2403,19 +2408,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //          <Authorization:ChargingEnd>?</Authorization:ChargingEnd>
             //          <Authorization:SessionStart>?</Authorization:SessionStart>
             //          <Authorization:SessionEnd>?</Authorization:SessionEnd>
+            //
             //          <!--Optional:-->
             //          <Authorization:MeterValueStart>?</Authorization:MeterValueStart>
             //          <!--Optional:-->
             //          <Authorization:MeterValueEnd>?</Authorization:MeterValueEnd>
+            //
             //          <!--Optional:-->
             //          <Authorization:MeterValueInBetween>
             //             <!--1 or more repetitions:-->
             //             <Authorization:MeterValue>?</Authorization:MeterValue>
             //          </Authorization:MeterValueInBetween>
+            //
             //          <!--Optional:-->
             //          <Authorization:ConsumedEnergy>?</Authorization:ConsumedEnergy>
             //          <!--Optional:-->
             //          <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
+            //
             //          <!--Optional:-->
             //          <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
             //          <!--Optional:-->

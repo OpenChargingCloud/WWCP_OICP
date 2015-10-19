@@ -1812,7 +1812,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         public static XElement AuthorizeStartXML(this EVSE           EVSE,
                                                  Auth_Token          AuthToken,
-                                                 String              PartnerProductId  = null,   // OICP v1.2: Optional [100]
+                                                 ChargingProduct_Id  PartnerProductId  = null,   // OICP v1.2: Optional [100]
                                                  ChargingSession_Id  SessionId         = null,   // OICP v1.2: Optional
                                                  ChargingSession_Id  PartnerSessionId  = null)   // OICP v1.2: Optional [50]
         {
@@ -1852,7 +1852,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
         public static XElement AuthorizeStartXML(EVSEOperator_Id     OperatorId,
                                                  Auth_Token          AuthToken,
                                                  EVSE_Id             EVSEId            = null,   // OICP v1.2: Optional
-                                                 String              PartnerProductId  = null,   // OICP v1.2: Optional [100]
+                                                 ChargingProduct_Id  PartnerProductId  = null,   // OICP v1.2: Optional [100]
                                                  ChargingSession_Id  SessionId         = null,   // OICP v1.2: Optional
                                                  ChargingSession_Id  PartnerSessionId  = null)   // OICP v1.2: Optional [50]
         {

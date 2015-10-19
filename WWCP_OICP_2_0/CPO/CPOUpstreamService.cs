@@ -1431,10 +1431,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
-                           EVSE_Id             EVSEId            = null,   // OICP v2.0: Optional
-                           ChargingSession_Id  SessionId         = null,   // OICP v2.0: Optional
-                           String              PartnerProductId  = null,   // OICP v2.0: Optional [100]
-                           ChargingSession_Id  PartnerSessionId  = null,   // OICP v2.0: Optional [50]
+                           EVSE_Id             EVSEId            = null,
+                           ChargingSession_Id  SessionId         = null,
+                           ChargingProduct_Id  PartnerProductId  = null,   // [maxlength: 100]
+                           ChargingSession_Id  PartnerSessionId  = null,   // [maxlength: 50]
                            TimeSpan?           QueryTimeout      = null)
 
         {
@@ -1717,8 +1717,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public async Task<HTTPResponse<AUTHSTOPResult>> AuthorizeStop(EVSEOperator_Id      OperatorId,
                                                                       ChargingSession_Id   SessionId,
                                                                       Auth_Token           AuthToken,
-                                                                      EVSE_Id              EVSEId            = null,   // OICP v2.0: Optional
-                                                                      ChargingSession_Id   PartnerSessionId  = null,   // OICP v2.0: Optional [50]
+                                                                      EVSE_Id              EVSEId            = null,
+                                                                      ChargingSession_Id   PartnerSessionId  = null,   // [maxlength: 50]
                                                                       TimeSpan?            QueryTimeout      = null)
         {
 
@@ -2201,16 +2201,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Create an OICP SendChargeDetailRecord request.
         /// </summary>
-        /// <param name="EVSEId">An EVSE identification.</param>
+        /// <param name="EVSEId">The EVSE identification.</param>
         /// <param name="SessionId">The OICP session identification from the Authorize Start request.</param>
-        /// <param name="PartnerProductId"></param>
-        /// <param name="SessionStart">The timestamp of the session start.</param>
-        /// <param name="SessionEnd">The timestamp of the session end.</param>
+        /// <param name="PartnerProductId">The ev charging product identification.</param>
+        /// <param name="SessionStart">The session start timestamp.</param>
+        /// <param name="SessionEnd">The session end timestamp.</param>
         /// <param name="AuthToken">An optional (RFID) user identification.</param>
         /// <param name="eMAId">An optional e-Mobility account identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="ChargingStart">Optional timestamp of the charging start.</param>
-        /// <param name="ChargingEnd">Optional timestamp of the charging stop.</param>
+        /// <param name="ChargingStart">An optional charging start timestamp.</param>
+        /// <param name="ChargingEnd">An optional charging end timestamp.</param>
         /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
         /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>

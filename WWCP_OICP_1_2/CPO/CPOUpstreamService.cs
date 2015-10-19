@@ -1301,7 +1301,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                            Auth_Token          AuthToken,
                            EVSE_Id             EVSEId            = null,   // OICP v1.2: Optional
                            ChargingSession_Id  SessionId         = null,   // OICP v1.2: Optional
-                           String              PartnerProductId  = null,   // OICP v1.2: Optional [100]
+                           ChargingProduct_Id  PartnerProductId  = null,   // OICP v1.2: Optional [100]
                            ChargingSession_Id  PartnerSessionId  = null,   // OICP v1.2: Optional [50]
                            TimeSpan?           QueryTimeout      = null)
 

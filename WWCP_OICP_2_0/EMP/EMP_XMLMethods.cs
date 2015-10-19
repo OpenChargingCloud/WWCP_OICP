@@ -142,7 +142,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //          <!--Optional:-->
             //          <EVSEData:LastCall>?</EVSEData:LastCall>
             //
-            //          <EVSEData:GeoCoordinatesResponseFormat>?</EVSEData:GeoCoordinatesResponseFormat>
+            //          <EVSEData:GeoCoordinatesResponseFormat>DecimalDegree</EVSEData:GeoCoordinatesResponseFormat>
             //
             //       </EVSEData:eRoamingPullEvseData>
             //    </soapenv:Body>
@@ -268,36 +268,40 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //    <soapenv:Body>
             //       <EVSEStatus:eRoamingPullEvseStatus>
             //
-            //          <EVSEStatus:ProviderID>?</EVSEStatus:ProviderID>
+            //          <EVSEStatus:ProviderID>DE*GDF</EVSEStatus:ProviderID>
             //
             //          <!--Optional:-->
             //          <EVSEStatus:SearchCenter>
             //
             //             <CommonTypes:GeoCoordinates>
-            //
             //                <!--You have a CHOICE of the next 3 items at this level-->
+            //
             //                <CommonTypes:Google>
-            //                   <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+            //                   <!-- latitude longitude: -?1?\d{1,2}\.\d{1,6}\s*\,?\s*-?1?\d{1,2}\.\d{1,6} -->
+            //                   <CommonTypes:Coordinates>50.931844 11.625214</CommonTypes:Coordinates>
             //                </CommonTypes:Google>
             //
             //                <CommonTypes:DecimalDegree>
-            //                   <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //                   <!-- -?1?\d{1,2}\.\d{1,6} -->
+            //                   <CommonTypes:Longitude>11.625214</CommonTypes:Longitude>
             //                   <CommonTypes:Latitude>?</CommonTypes:Latitude>
             //                </CommonTypes:DecimalDegree>
             //
             //                <CommonTypes:DegreeMinuteSeconds>
+            //                   <!-- -?1?\d{1,2}°[ ]?\d{1,2}'[ ]?\d{1,2}\.\d+'' -->
             //                   <CommonTypes:Longitude>?</CommonTypes:Longitude>
             //                   <CommonTypes:Latitude>?</CommonTypes:Latitude>
             //                </CommonTypes:DegreeMinuteSeconds>
             //
             //             </CommonTypes:GeoCoordinates>
             //
-            //             <CommonTypes:Radius>?</CommonTypes:Radius>
+            //             <!-- km ####.# -->
+            //             <CommonTypes:Radius>23.5</CommonTypes:Radius>
             //
             //          </EVSEStatus:SearchCenter>
             //
             //          <!--Optional:-->
-            //          <EVSEStatus:EvseStatus>?</EVSEStatus:EvseStatus>
+            //          <EVSEStatus:EvseStatus>Available</EVSEStatus:EvseStatus>
             //
             //       </EVSEStatus:eRoamingPullEvseStatus>
             //    </soapenv:Body>

@@ -282,7 +282,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP authorize start request.
+        /// Create an OICP v2.0 authorize start request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
@@ -295,10 +295,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
-                           EVSE_Id             EVSEId            = null,   // OICP v2.0: Optional
-                           ChargingSession_Id  SessionId         = null,   // OICP v2.0: Optional
-                           String              PartnerProductId  = null,   // OICP v2.0: Optional [100]
-                           ChargingSession_Id  PartnerSessionId  = null,   // OICP v2.0: Optional [50]
+                           EVSE_Id             EVSEId            = null,
+                           ChargingSession_Id  SessionId         = null,
+                           ChargingProduct_Id  PartnerProductId  = null,   // [maxlength: 100]
+                           ChargingSession_Id  PartnerSessionId  = null,   // [maxlength: 50]
                            TimeSpan?           QueryTimeout      = null)
 
         {
@@ -322,7 +322,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         //        (e.g. car sharing)
 
         /// <summary>
-        /// Create an OICP authorize stop request.
+        /// Create an OICP v2.0 authorize stop request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
@@ -333,8 +333,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public async Task<HTTPResponse<AUTHSTOPResult>> AuthorizeStop(EVSEOperator_Id      OperatorId,
                                                                       ChargingSession_Id   SessionId,
                                                                       Auth_Token           AuthToken,
-                                                                      EVSE_Id              EVSEId            = null,   // OICP v2.0: Optional
-                                                                      ChargingSession_Id   PartnerSessionId  = null,   // OICP v2.0: Optional [50]
+                                                                      EVSE_Id              EVSEId            = null,
+                                                                      ChargingSession_Id   PartnerSessionId  = null,   // [maxlength: 50]
                                                                       TimeSpan?            QueryTimeout      = null)
         {
 
@@ -425,22 +425,22 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         {
 
             return await _CPOUpstreamService.SendChargeDetailRecord(EVSEId,
-                                                     SessionId,
-                                                     PartnerProductId,
-                                                     SessionStart,
-                                                     SessionEnd,
-                                                     AuthToken,
-                                                     eMAId,
-                                                     PartnerSessionId,
-                                                     ChargingStart,
-                                                     ChargingEnd,
-                                                     MeterValueStart,
-                                                     MeterValueEnd,
-                                                     MeterValuesInBetween,
-                                                     ConsumedEnergy,
-                                                     MeteringSignature,
-                                                     HubOperatorId,
-                                                     HubProviderId);
+                                                                    SessionId,
+                                                                    PartnerProductId,
+                                                                    SessionStart,
+                                                                    SessionEnd,
+                                                                    AuthToken,
+                                                                    eMAId,
+                                                                    PartnerSessionId,
+                                                                    ChargingStart,
+                                                                    ChargingEnd,
+                                                                    MeterValueStart,
+                                                                    MeterValueEnd,
+                                                                    MeterValuesInBetween,
+                                                                    ConsumedEnergy,
+                                                                    MeteringSignature,
+                                                                    HubOperatorId,
+                                                                    HubProviderId);
 
         }
 

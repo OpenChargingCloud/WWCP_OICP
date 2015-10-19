@@ -143,11 +143,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             switch (AuthenticationMode)
             {
 
-                case "NFC_RFID_Classic":   return AuthenticationModes.NFC_RFID_Classic;
-                case "NFC_RFID_DESFire":   return AuthenticationModes.NFC_RFID_DESFire;
+                case "NFC RFID Classic":   return AuthenticationModes.NFC_RFID_Classic;
+                case "NFC RFID DESFire":   return AuthenticationModes.NFC_RFID_DESFire;
                 case "PnC":                return AuthenticationModes.PnC;
                 case "REMOTE":             return AuthenticationModes.REMOTE;
-                case "DirectPayment":      return AuthenticationModes.DirectPayment;
+                case "Direct Payment":     return AuthenticationModes.DirectPayment;
 
                 default:                   return AuthenticationModes.Unkown;
 
@@ -171,9 +171,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 case "NoPayment":   return PaymentOptions.Free;
                 case "Direct":      return PaymentOptions.Direct;
-                case "SMS":         return PaymentOptions.SMS;
-                case "Cash":        return PaymentOptions.Cash;
-                case "CreditCard":  return PaymentOptions.CreditCard;
                 case "Contract":    return PaymentOptions.Contract;
 
                 default:            return PaymentOptions.Unspecified;
@@ -208,6 +205,99 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+
+        #region AsString(ChargingMode)
+
+        public static String AsString(this ChargingModes ChargingMode)
+        {
+
+            switch (ChargingMode)
+            {
+
+                case ChargingModes.Mode_1:
+                    return "Mode_1";
+
+                case ChargingModes.Mode_2:
+                    return "Mode_2";
+
+                case ChargingModes.Mode_3:
+                    return "Mode_3";
+
+                case ChargingModes.Mode_4:
+                    return "Mode_4";
+
+                case ChargingModes.CHAdeMO:
+                    return "CHAdeMO";
+
+
+                default:
+                    return "Unspecified";
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsString(ChargingFacility)
+
+        public static String AsString(this ChargingFacilities ChargingFacility)
+        {
+
+            switch (ChargingFacility)
+            {
+
+                case ChargingFacilities.CF_100_120V_1Phase_less10A:
+                    return "100 - 120V, 1-Phase ≤ 10A";
+
+                case ChargingFacilities.CF_100_120V_1Phase_less16A:
+                    return "100 - 120V, 1-Phase ≤ 16A";
+
+                case ChargingFacilities.CF_100_120V_1Phase_less32A:
+                    return "100 - 120V, 1-Phase ≤ 32A";
+
+                case ChargingFacilities.CF_200_240V_1Phase_less10A:
+                    return "200 - 240V, 1-Phase ≤ 10A";
+
+                case ChargingFacilities.CF_200_240V_1Phase_less16A:
+                    return "200 - 240V, 1-Phase ≤ 16A";
+
+                case ChargingFacilities.CF_200_240V_1Phase_less32A:
+                    return "200 - 240V, 1-Phase ≤ 32A";
+
+                case ChargingFacilities.CF_200_240V_1Phase_over32A:
+                    return "200 - 240V, 1-Phase > 32A";
+
+                case ChargingFacilities.CF_380_480V_3Phase_less16A:
+                    return "380 - 480V, 3-Phase ≤ 16A";
+
+                case ChargingFacilities.CF_380_480V_3Phase_less32A:
+                    return "380 - 480V, 3-Phase ≤ 32A";
+
+                case ChargingFacilities.CF_380_480V_3Phase_less63A:
+                    return "380 - 480V, 3-Phase ≤ 63A";
+
+                case ChargingFacilities.Battery_exchange:
+                    return "Battery exchange";
+
+                case ChargingFacilities.DCCharging_less20kW:
+                    return "DC Charging ≤ 20kW";
+
+                case ChargingFacilities.DCCharging_less50kW:
+                    return "DC Charging ≤ 50kW";
+
+                case ChargingFacilities.DCCharging_over50kW:
+                    return "DC Charging > 50kW";
+
+
+                default:
+                    return "Unspecified";
+
+            }
+
+        }
+
+        #endregion
 
         #region AsString(PlugType)
 
@@ -281,6 +371,39 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+        #region AsString(AuthenticationMode)
+
+        public static String AsString(this AuthenticationModes AuthenticationMode)
+        {
+
+            switch (AuthenticationMode)
+            {
+
+                case AuthenticationModes.NFC_RFID_Classic:
+                    return "NFC RFID Classic";
+
+                case AuthenticationModes.NFC_RFID_DESFire:
+                    return "NFC RFID DESFire";
+
+                case AuthenticationModes.PnC:
+                    return "PnC";
+
+                case AuthenticationModes.REMOTE:
+                    return "REMOTE";
+
+                case AuthenticationModes.DirectPayment:
+                    return "Direct Payment";
+
+
+                default:
+                    return "Unkown";
+
+            }
+
+        }
+
+        #endregion
+
         #region AsString(SocketOutlet)
 
         public static String AsString(SocketOutlet SocketOutlet)
@@ -319,6 +442,60 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 // CCS Combo 1 Plug (Cable Attached)       IEC 62196-3 CDV DC Combined Charging Connector with IEC 62196-1 type 2 SAE J1772 connector
 
                 default: return "Unspecified";
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsString(PaymentOption)
+
+        public static String AsString(this PaymentOptions PaymentOption)
+        {
+
+            switch (PaymentOption)
+            {
+
+                case PaymentOptions.Free:
+                    return "NoPayment";
+
+                case PaymentOptions.Direct:
+                    return "Direct";
+
+                case PaymentOptions.Contract:
+                    return "Contract";
+
+
+                default:
+                    return "Unkown";
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsString(AccessibilityType)
+
+        public static String AsString(this AccessibilityTypes AccessibilityType)
+        {
+
+            switch (AccessibilityType)
+            {
+
+                case AccessibilityTypes.Free_publicly_accessible:
+                    return "Free publicly accessible";
+
+                case AccessibilityTypes.Restricted_access:
+                    return "Restricted access";
+
+                case AccessibilityTypes.Paying_publicly_accessible:
+                    return "Paying publicly accessible";
+
+
+                default:
+                    return "Unspecified";
 
             }
 

@@ -427,7 +427,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     _OICPClient.UseTLS                     = this.UseTLS;
 
                     return await _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusRequestXML(ProviderId, SearchCenter, DistanceKM, EVSEStatus),
-                                                   "eRoamingPullEVSEStatusRequest",
+                                                   "eRoamingPullEVSEStatus",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                    OnSuccess: XMLData => {
