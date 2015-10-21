@@ -37,9 +37,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// OICP v2.0 downstream HTTP/SOAP server.
+    /// OICP v2.0 CPO HTTP/SOAP/XML server.
     /// </summary>
-    public class OICPDownstreamServer : HTTPServer
+    public class CPOServer : HTTPServer
     {
 
         #region Properties
@@ -58,17 +58,25 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region RequestRouter
+        #endregion
 
-        private readonly RequestRouter _RequestRouter;
+        #region Events
 
-        public RequestRouter RequestRouter
-        {
-            get
-            {
-                return _RequestRouter;
-            }
-        }
+        #region OnRemoteStart
+
+        /// <summary>
+        /// An event fired whenever a remote start command was received.
+        /// </summary>
+        public event OnRemoteStartDelegate OnRemoteStart;
+
+        #endregion
+
+        #region OnRemoteStop
+
+        /// <summary>
+        /// An event fired whenever a remote stop command was received.
+        /// </summary>
+        public event OnRemoteStopDelegate OnRemoteStop;
 
         #endregion
 
@@ -77,16 +85,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region Constructor(s)
 
         /// <summary>
-        /// Initialize the OICP HTTP/SOAP server using IPAddress.Any.
+        /// Initialize the OICP HTTP/SOAP/XML server using IPAddress.Any.
         /// </summary>
-        /// <param name="RequestRouter">The request router.</param>
         /// <param name="IPPort">The TCP listing port.</param>
-        public OICPDownstreamServer(RequestRouter  RequestRouter,
-                                    IPPort         IPPort,
-                                    String         HTTPRoot)
+        public CPOServer(IPPort  IPPort,
+                         String  HTTPRoot)
         {
 
-            this._RequestRouter  = RequestRouter;
             this._HTTPRoot       = HTTPRoot;
 
             this.AttachTCPPort(IPPort);
@@ -229,7 +234,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 #endregion
 
-                #region Process an OICP RemoteStart SOAP/XML/HTTP call
+                #region Process an OICP RemoteStart HTTP/SOAP/XML call
 
                 var RemoteStartXML = RemoteStartXMLs.FirstOrDefault();
                 var RemoteStopXML  = RemoteStopXMLs. FirstOrDefault();
@@ -481,7 +486,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #endregion
 
-                    var Response               = RequestRouter.RemoteStart(EVSEId, SessionId, ProviderId, eMAId, _EventTrackingId);
+
+                    var Response = RemoteStartResult.Error;
+
+                    var OnRemoteStartLocal = OnRemoteStart;
+                    if (OnRemoteStartLocal != null)
+                        Response = OnRemoteStartLocal(DateTime.Now, SessionId, ProviderId, eMAId, EVSEId, _EventTrackingId);
+
                     Log.WriteLine(Response.ToString());
 
                     switch (Response)
@@ -546,7 +557,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 #endregion
 
-                #region Process an OICP RemoteStop SOAP/XML/HTTP call
+                #region Process an OICP RemoteStop HTTP/SOAP/XML call
 
                 else
                 {
@@ -692,7 +703,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #endregion
 
-                    var Response               = RequestRouter.RemoteStop(EVSEId, SessionId, ProviderId, _EventTrackingId);
+
+                    var Response = RemoteStopResult.Error;
+
+                    var OnRemoteStopLocal = OnRemoteStop;
+                    if (OnRemoteStopLocal != null)
+                        Response = OnRemoteStopLocal(DateTime.Now, SessionId, ProviderId, EVSEId, _EventTrackingId);
+
                     Log.WriteLine(Response.ToString());
 
                     switch (Response)

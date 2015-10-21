@@ -46,12 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AOICPUpstreamService.cs" />
-    <Compile Include="CPO\CPOClient.cs" />
-    <Compile Include="CPO\CPO_XMLMethods.cs" />
-    <Compile Include="CPO\CPOUpstreamService.cs" />
-    <Compile Include="EMP\EMPClient.cs" />
-    <Compile Include="EMP\EMP_XMLMethods.cs" />
-    <Compile Include="EMP\EMPUpstreamService.cs" />
+    <Compile Include="CPOClient\CPOClient.cs" />
+    <Compile Include="CPOClient\CPO_XMLMethods.cs" />
+    <Compile Include="CPOClient\CPOUpstreamService.cs" />
+    <Compile Include="EMPClient\EMPClient.cs" />
+    <Compile Include="EMPClient\EMP_XMLMethods.cs" />
+    <Compile Include="EMPClient\EMPUpstreamService.cs" />
     <Compile Include="Entities\OICPChargeDetailRecord.cs" />
     <Compile Include="Entities\eRoamingEVSEData.cs" />
     <Compile Include="Helpers\GeoCoordinatesResponseFormatTypes.cs" />
@@ -73,7 +73,7 @@
     <Compile Include="Helpers\OICPNS.cs" />
     <Compile Include="Helpers\SOAP.cs" />
     <Compile Include="Helpers\XML\XMLMethods.cs" />
-    <Compile Include="OICPDownstreamServer.cs" />
+    <Compile Include="CPOServer\CPOServer.cs" />
     <Compile Include="Entities\EVSEDataRecord.cs" />
     <Compile Include="OICPImporter.cs" />
     <Compile Include="OICPServer\OICPServer.cs" />
