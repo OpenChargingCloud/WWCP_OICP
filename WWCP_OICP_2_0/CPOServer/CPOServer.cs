@@ -42,24 +42,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     public class CPOServer : HTTPServer
     {
 
-        #region Properties
-
-        #region HTTPRoot
-
-        private readonly String _HTTPRoot;
-
-        public String HTTPRoot
-        {
-            get
-            {
-                return _HTTPRoot;
-            }
-        }
-
-        #endregion
-
-        #endregion
-
         #region Events
 
         #region OnRemoteStart
@@ -88,14 +70,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// Initialize the OICP HTTP/SOAP/XML server using IPAddress.Any.
         /// </summary>
         /// <param name="IPPort">The TCP listing port.</param>
-        public CPOServer(IPPort  IPPort,
-                         String  HTTPRoot)
+        public CPOServer(IPPort  IPPort)
         {
 
-            this._HTTPRoot       = HTTPRoot;
-
             this.AttachTCPPort(IPPort);
-            this.Start();
 
             #region / (HTTPRoot)
 
@@ -143,6 +121,30 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 var _EventTrackingId = EventTracking_Id.New;
                 Log.WriteLine("Event tracking: " + _EventTrackingId);
+
+                #region Try to parse the RoamingNetworkId
+
+                RoamingNetwork_Id RoamingNetworkId;
+
+                if (!RoamingNetwork_Id.TryParse(HTTPRequest.ParsedURIParameters[0], out RoamingNetworkId))
+                    return new HTTPResponseBuilder() {
+                        HTTPStatusCode  = HTTPStatusCode.BadRequest,
+                        Server          = this.DefaultServerName,
+                    };
+
+                #endregion
+
+                //#region Try to get the RoamingNetwork
+
+                //RoamingNetwork RoamingNetwork;
+
+                //if (!RoamingNetworks.TryGetRoamingNetwork(RoamingNetworkId, out RoamingNetwork))
+                //    return new HTTPResponseBuilder() {
+                //        HTTPStatusCode  = HTTPStatusCode.NotFound,
+                //        Server          = this.DefaultServerName,
+                //    };
+
+                //#endregion
 
                 #region ParseXMLRequestBody... or fail!
 
@@ -491,7 +493,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     var OnRemoteStartLocal = OnRemoteStart;
                     if (OnRemoteStartLocal != null)
-                        Response = OnRemoteStartLocal(DateTime.Now, SessionId, ProviderId, eMAId, EVSEId, _EventTrackingId);
+                        Response = OnRemoteStartLocal(DateTime.Now,
+                                                      RoamingNetworkId,
+                                                      SessionId,
+                                                      ProviderId,
+                                                      eMAId,
+                                                      EVSEId,
+                                                      _EventTrackingId);
 
                     Log.WriteLine(Response.ToString());
 
@@ -708,7 +716,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     var OnRemoteStopLocal = OnRemoteStop;
                     if (OnRemoteStopLocal != null)
-                        Response = OnRemoteStopLocal(DateTime.Now, SessionId, ProviderId, EVSEId, _EventTrackingId);
+                        Response = OnRemoteStopLocal(DateTime.Now,
+                                                     RoamingNetworkId,
+                                                     SessionId,
+                                                     ProviderId,
+                                                     EVSEId,
+                                                     _EventTrackingId);
 
                     Log.WriteLine(Response.ToString());
 
@@ -913,6 +926,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #endregion
 
             #endregion
+
+            this.Start();
 
         }
 
