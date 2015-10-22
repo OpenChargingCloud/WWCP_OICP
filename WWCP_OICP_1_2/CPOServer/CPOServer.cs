@@ -37,9 +37,9 @@ namespace org.GraphDefined.WWCP.OICP_1_2
 {
 
     /// <summary>
-    /// OICP v1.2 downstream HTTP/SOAP server.
+    /// OICP v1.2 CPO HTTP/SOAP/XML server.
     /// </summary>
-    public class OICPDownstreamServer : HTTPServer
+    public class CPOServer : HTTPServer
     {
 
         #region Properties
@@ -58,17 +58,25 @@ namespace org.GraphDefined.WWCP.OICP_1_2
 
         #endregion
 
-        #region RequestRouter
+        #endregion
 
-        private readonly RequestRouter _RequestRouter;
+        #region Events
 
-        public RequestRouter RequestRouter
-        {
-            get
-            {
-                return _RequestRouter;
-            }
-        }
+        #region OnRemoteStart
+
+        /// <summary>
+        /// An event fired whenever a remote start command was received.
+        /// </summary>
+        public event OnRemoteStartDelegate OnRemoteStart;
+
+        #endregion
+
+        #region OnRemoteStop
+
+        /// <summary>
+        /// An event fired whenever a remote stop command was received.
+        /// </summary>
+        public event OnRemoteStopDelegate OnRemoteStop;
 
         #endregion
 
@@ -77,16 +85,13 @@ namespace org.GraphDefined.WWCP.OICP_1_2
         #region Constructor(s)
 
         /// <summary>
-        /// Initialize the OICP HTTP/SOAP server using IPAddress.Any.
+        /// Initialize the OICP HTTP/SOAP/XML server using IPAddress.Any.
         /// </summary>
-        /// <param name="RequestRouter">The request router.</param>
         /// <param name="IPPort">The TCP listing port.</param>
-        public OICPDownstreamServer(RequestRouter  RequestRouter,
-                                    IPPort         IPPort,
-                                    String         HTTPRoot)
+        public CPOServer(IPPort  IPPort,
+                         String  HTTPRoot)
         {
 
-            this._RequestRouter  = RequestRouter;
             this._HTTPRoot       = HTTPRoot;
 
             this.AttachTCPPort(IPPort);
@@ -229,13 +234,75 @@ namespace org.GraphDefined.WWCP.OICP_1_2
 
                 #endregion
 
-                #region Process an OICP RemoteStart SOAP/XML/HTTP call
+                #region Process an OICP RemoteStart HTTP/SOAP/XML call
 
                 var RemoteStartXML = RemoteStartXMLs.FirstOrDefault();
                 var RemoteStopXML  = RemoteStopXMLs. FirstOrDefault();
 
                 if (RemoteStartXML != null)
                 {
+
+                    #region Documentation
+
+                    // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+                    //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                    //
+                    //    <soapenv:Header/>
+                    //
+                    //    <soapenv:Body>
+                    //       <Authorization:eRoamingAuthorizeRemoteStart>
+                    // 
+                    //          <!--Optional:-->
+                    //          <Authorization:SessionID>?</Authorization:SessionID>
+                    // 
+                    //          <!--Optional:-->
+                    //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+                    // 
+                    //          <Authorization:ProviderID>?</Authorization:ProviderID>
+                    //          <Authorization:EVSEID>?</Authorization:EVSEID>
+                    // 
+                    //          <Authorization:Identification>
+                    // 
+                    //             <!--You have a CHOICE of the next 4 items at this level-->
+                    //             <CommonTypes:RFIDmifarefamilyIdentification>
+                    //                <CommonTypes:UID>?</CommonTypes:UID>
+                    //             </CommonTypes:RFIDmifarefamilyIdentification>
+                    // 
+                    //             <CommonTypes:QRCodeIdentification>
+                    // 
+                    //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                    // 
+                    //                <!--You have a CHOICE of the next 2 items at this level-->
+                    //                <CommonTypes:PIN>?</CommonTypes:PIN>
+                    // 
+                    //                <CommonTypes:HashedPIN>
+                    //                   <CommonTypes:Value>?</CommonTypes:Value>
+                    //                   <CommonTypes:Function>?</CommonTypes:Function>
+                    //                   <CommonTypes:Salt>?</CommonTypes:Salt>
+                    //                </CommonTypes:HashedPIN>
+                    // 
+                    //             </CommonTypes:QRCodeIdentification>
+                    // 
+                    //             <CommonTypes:PlugAndChargeIdentification>
+                    //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                    //             </CommonTypes:PlugAndChargeIdentification>
+                    // 
+                    //             <CommonTypes:RemoteIdentification>
+                    //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                    //             </CommonTypes:RemoteIdentification>
+                    // 
+                    //          </Authorization:Identification>
+                    // 
+                    //          <!--Optional:-->
+                    //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
+                    // 
+                    //       </Authorization:eRoamingAuthorizeRemoteStart>
+                    //    </soapenv:Body>
+                    //
+                    // </soapenv:Envelope>
+
+                    #endregion
 
                     #region Parse request parameters
 
@@ -382,7 +449,50 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                     var HubjectDescription     = "";
                     var HubjectAdditionalInfo  = "";
 
-                    var Response               = RequestRouter.RemoteStart(EVSEId, SessionId, ProviderId, eMAId, _EventTrackingId);
+                    #region Documentation
+
+                    // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                    //
+                    //    <soapenv:Header/>
+                    //
+                    //    <soapenv:Body>
+                    //       <CommonTypes:eRoamingAcknowledgement>
+                    // 
+                    //          <CommonTypes:Result>?</CommonTypes:Result>
+                    // 
+                    //          <CommonTypes:StatusCode>
+                    // 
+                    //             <CommonTypes:Code>?</CommonTypes:Code>
+                    // 
+                    //             <!--Optional:-->
+                    //             <CommonTypes:Description>?</CommonTypes:Description>
+                    // 
+                    //             <!--Optional:-->
+                    //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                    // 
+                    //          </CommonTypes:StatusCode>
+                    // 
+                    //          <!--Optional:-->
+                    //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
+                    // 
+                    //          <!--Optional:-->
+                    //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
+                    // 
+                    //       </CommonTypes:eRoamingAcknowledgement>
+                    //    </soapenv:Body>
+                    //
+                    // </soapenv:Envelope>
+
+                    #endregion
+
+
+                    var Response = RemoteStartResult.Error;
+
+                    var OnRemoteStartLocal = OnRemoteStart;
+                    if (OnRemoteStartLocal != null)
+                        Response = OnRemoteStartLocal(DateTime.Now, SessionId, ProviderId, eMAId, EVSEId, _EventTrackingId);
+
                     Log.WriteLine(Response.ToString());
 
                     switch (Response)
@@ -447,10 +557,36 @@ namespace org.GraphDefined.WWCP.OICP_1_2
 
                 #endregion
 
-                #region Process an OICP RemoteStop SOAP/XML/HTTP call
+                #region Process an OICP RemoteStop HTTP/SOAP/XML call
 
                 else
                 {
+
+                    #region Documentation
+
+                    // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0">
+                    //
+                    //    <soapenv:Header/>
+                    //
+                    //    <soapenv:Body>
+                    //       <Authorization:eRoamingAuthorizeRemoteStop>
+                    // 
+                    //          <Authorization:SessionID>?</Authorization:SessionID>
+                    // 
+                    //          <!--Optional:-->
+                    //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+                    // 
+                    //          <Authorization:ProviderID>?</Authorization:ProviderID>
+                    // 
+                    //          <Authorization:EVSEID>?</Authorization:EVSEID>
+                    // 
+                    //       </Authorization:eRoamingAuthorizeRemoteStop>
+                    //    </soapenv:Body>
+                    //
+                    // </soapenv:Envelope>
+
+                    #endregion
 
                     #region Parse request parameters
 
@@ -530,7 +666,50 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                     var HubjectDescription     = "";
                     var HubjectAdditionalInfo  = "";
 
-                    var Response               = RequestRouter.RemoteStop(EVSEId, SessionId, ProviderId, _EventTrackingId);
+                    #region Documentation
+
+                    // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                    //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                    //
+                    //    <soapenv:Header/>
+                    //
+                    //    <soapenv:Body>
+                    //       <CommonTypes:eRoamingAcknowledgement>
+                    // 
+                    //          <CommonTypes:Result>?</CommonTypes:Result>
+                    // 
+                    //          <CommonTypes:StatusCode>
+                    // 
+                    //             <CommonTypes:Code>?</CommonTypes:Code>
+                    // 
+                    //             <!--Optional:-->
+                    //             <CommonTypes:Description>?</CommonTypes:Description>
+                    // 
+                    //             <!--Optional:-->
+                    //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                    // 
+                    //          </CommonTypes:StatusCode>
+                    // 
+                    //          <!--Optional:-->
+                    //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
+                    // 
+                    //          <!--Optional:-->
+                    //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
+                    // 
+                    //       </CommonTypes:eRoamingAcknowledgement>
+                    //    </soapenv:Body>
+                    //
+                    // </soapenv:Envelope>
+
+                    #endregion
+
+
+                    var Response = RemoteStopResult.Error;
+
+                    var OnRemoteStopLocal = OnRemoteStop;
+                    if (OnRemoteStopLocal != null)
+                        Response = OnRemoteStopLocal(DateTime.Now, SessionId, ProviderId, EVSEId, _EventTrackingId);
+
                     Log.WriteLine(Response.ToString());
 
                     switch (Response)
@@ -591,6 +770,87 @@ namespace org.GraphDefined.WWCP.OICP_1_2
                 }
 
                 #endregion
+
+
+                #region GetEVSEByIdRequest(EVSEId, QueryTimeout = null)
+
+                /// <summary>
+                /// Create a new task requesting the static EVSE data
+                /// for the given EVSE identification.
+                /// </summary>
+                /// <param name="EVSEId">The unique identification of the EVSE.</param>
+                /// <param name="QueryTimeout">An optional timeout for this query.</param>
+                //public Task<HTTPResponse<EVSEDataRecord>>
+
+                //    GetEVSEByIdRequest(EVSE_Id    EVSEId,
+                //                       TimeSpan?  QueryTimeout  = null)
+
+                //{
+
+                //    try
+                //    {
+
+                //        using (var _OICPClient = new SOAPClient(Hostname,
+                //                                                TCPPort,
+                //                                                HTTPVirtualHost,
+                //                                                "/ibis/ws/eRoamingEvseData_V2.0",
+                //                                                UserAgent,
+                //                                                DNSClient))
+                //        {
+
+                //            return _OICPClient.Query(EMP_XMLMethods.GetEVSEByIdRequestXML(EVSEId),
+                //                                     "eRoamingEvseById",
+                //                                     QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                //                                     OnSuccess: XMLData =>
+
+                //                                         #region Documentation
+
+                //                                         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                //                                         //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+                //                                         //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                //                                         //   <soapenv:Header/>
+                //                                         //   <soapenv:Body>
+                //                                         //      <EVSEData:eRoamingEvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
+                //                                         //          [...]
+                //                                         //      </EVSEData:eRoamingEvseDataRecord>
+                //                                         //    </soapenv:Body>
+                //                                         // </soapenv:Envelope>
+
+                //                                         #endregion
+
+                //                                         new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
+                //                                                                          XMLMethods.ParseEVSEDataRecordXML(XMLData.Content)),
+
+                //                                     OnSOAPFault: Fault =>
+                //                                         new HTTPResponse<EVSEDataRecord>(
+                //                                             Fault.HttpResponse,
+                //                                             new Exception(Fault.Content.ToString())),
+
+                //                                     OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+
+                //                                     OnException: (t, s, e) => SendOnException(t, s, e)
+
+                //                                    );
+
+                //        }
+
+                //    }
+
+                //    catch (Exception e)
+                //    {
+
+                //        SendOnException(DateTime.Now, this, e);
+
+                //        return new Task<HTTPResponse<EVSEDataRecord>>(
+                //            () => new HTTPResponse<EVSEDataRecord>(e));
+
+                //    }
+
+                //}
+
+                #endregion
+
 
             };
 
