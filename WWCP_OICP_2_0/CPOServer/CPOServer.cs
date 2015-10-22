@@ -119,8 +119,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             HTTPDelegate RemoteStartStopDelegate = HTTPRequest => {
 
-                var _EventTrackingId = EventTracking_Id.New;
-                Log.WriteLine("Event tracking: " + _EventTrackingId);
+                //var _EventTrackingId = EventTracking_Id.New;
+                //Log.WriteLine("Event tracking: " + _EventTrackingId);
 
                 #region Try to parse the RoamingNetworkId
 
@@ -194,7 +194,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     if (RemoteStartXMLs.Count() > 1)
                         throw new Exception("Multiple RemoteStart XML tags within a single request are not supported!");
 
-                    if (RemoteStopXMLs.Count() > 1)
+                    if (RemoteStopXMLs. Count() > 1)
                         throw new Exception("Multiple RemoteStop XML tags within a single request are not supported!");
 
                 }
@@ -422,6 +422,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                         Response = OnRemoteStartLocal(DateTime.Now,
                                                       RoamingNetworkId,
                                                       SessionId,
+                                                      PartnerSessionId,
                                                       ProviderId,
                                                       eMAId,
                                                       EVSEId,
