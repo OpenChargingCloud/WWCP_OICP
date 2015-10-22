@@ -239,8 +239,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 #region Process an OICP RemoteStart HTTP/SOAP/XML call
 
                 var RemoteStartXML = RemoteStartXMLs.FirstOrDefault();
-                var RemoteStopXML  = RemoteStopXMLs. FirstOrDefault();
-
                 if (RemoteStartXML != null)
                 {
 
@@ -265,8 +263,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     //          <Authorization:EVSEID>?</Authorization:EVSEID>
                     // 
                     //          <Authorization:Identification>
-                    // 
                     //             <!--You have a CHOICE of the next 4 items at this level-->
+                    //
                     //             <CommonTypes:RFIDmifarefamilyIdentification>
                     //                <CommonTypes:UID>?</CommonTypes:UID>
                     //             </CommonTypes:RFIDmifarefamilyIdentification>
@@ -308,116 +306,44 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Parse request parameters
 
-                    // ------------------------
-                    // Hubject/Intercharge App
-                    // ------------------------
-                    //
-                    // POST /RemoteStartStop HTTP/1.1
-                    // Content-type: text/xml;charset=utf-8
-                    // Soapaction: ""
-                    // Accept: text/xml, multipart/related
-                    // User-Agent: JAX-WS RI 2.2-hudson-752-
-                    // Cache-Control: no-cache
-                    // Pragma: no-cache
-                    // Host: 80.148.29.35:3001
-                    // Connection: keep-alive
-                    // Content-Length: 794
-                    // 
-                    // <?xml version='1.0' encoding='UTF-8'?>
-                    // <isns:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                    //                xmlns:isns    = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                xmlns:sbp     = "http://www.inubit.com/eMobility/SBP"
-                    //                xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                xmlns:v1      = "http://www.hubject.com/b2b/services/mobileauthorization/v1"
-                    //                xmlns:wsc     = "http://www.hubject.com/b2b/services/authorization/v1">
-                    // 
-                    //   <isns:Body>
-                    //     <wsc:HubjectAuthorizeRemoteStart>
-                    //       <wsc:SessionID>5c24515b-0a88-1296-32ea-1226ce8a3cd0</wsc:SessionID>
-                    //       <wsc:ProviderID>ICE</wsc:ProviderID>
-                    //       <wsc:EVSEID>+49*822*4201*1</wsc:EVSEID>
-                    //       <wsc:Identification>
-                    //         <cmn:QRCodeIdentification>
-                    //           <cmn:EVCOID>DE*ICE*I00811*1</cmn:EVCOID>
-                    //         </cmn:QRCodeIdentification>
-                    //       </wsc:Identification>
-                    //     </wsc:HubjectAuthorizeRemoteStart>
-                    //   </isns:Body>
-                    // 
-                    // </isns:Envelope>
-
-                    // ----------------
-                    // PlugSurfing App
-                    // ----------------
-                    //
-                    // <soapenv:Envelope xmlns:auth    = "http://www.hubject.com/b2b/services/authorization/v1"
-                    //                   xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                    //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/">
-                    // 
-                    //   <soapenv:Body>
-                    //     <auth:HubjectAuthorizeRemoteStart>
-                    //       <auth:SessionID>5f1230a1-0a88-1293-4fe7-c117fc5178cf</auth:SessionID>
-                    //       <auth:ProviderID>8PS</auth:ProviderID>
-                    //       <auth:EVSEID>+49*822*083431571*1</auth:EVSEID>
-                    //       <auth:Identification>
-                    //         <cmn:RemoteIdentification>
-                    //           <cmn:EVCOID>DE*8PS*9DC4AB*X</cmn:EVCOID>
-                    //         </cmn:RemoteIdentification>
-                    //       </auth:Identification>
-                    //     </auth:HubjectAuthorizeRemoteStart>
-                    //   </soapenv:Body>
-                    // 
-                    // </soapenv:Envelope>
-
-                    // ----------------------------------
-                    // Hubject/Intercharge App OICPv1.2
-                    // ----------------------------------
-                    // <soapenv:Envelope xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2"
-                    //                   xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-                    //                   xmlns:tns="http://www.hubject.com/b2b/services/authorization/v1.2">
-                    //   <soapenv:Body>
-                    //     <tns:eRoamingAuthorizeRemoteStart>
-                    //       <tns:SessionID>cb7e6492-0a88-1294-3f1b-9edc7be427e2</tns:SessionID>
-                    //       <tns:ProviderID>DE*BMW</tns:ProviderID>
-                    //       <tns:EVSEID>+49*822*028630241*1</tns:EVSEID>
-                    //       <tns:Identification>
-                    //         <cmn:QRCodeIdentification>
-                    //           <cmn:EVCOID>DE*BMW*0010LT*7</cmn:EVCOID>
-                    //         </cmn:QRCodeIdentification>
-                    //       </tns:Identification>
-                    //     </tns:eRoamingAuthorizeRemoteStart>
-                    //   </soapenv:Body>
-                    //   
-                    // </soapenv:Envelope>
-
-
                     ChargingSession_Id  SessionId;
+                    ChargingSession_Id  PartnerSessionId;
                     EVSP_Id             ProviderId;
                     EVSE_Id             EVSEId;
                     XElement            IdentificationXML;
                     XElement            QRCodeIdentificationXML;
+                    XElement            PnCIdentificationXML;
                     XElement            RemoteIdentificationXML;
-                    eMA_Id              eMAId;
+                    eMA_Id              eMAId = null;
+                    ChargingProduct_Id  ChargingProductId;
 
                     try
                     {
 
-                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
-                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",        null));
+                        PartnerSessionId         = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Authorization + "PartnerSessionID", null));
+                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        ChargingProductId        = ChargingProduct_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Authorization + "PartnerProductID", null));
 
-                        IdentificationXML        =               RemoteStartXML.    ElementOrFail     (OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
-                        RemoteIdentificationXML  =               IdentificationXML. Element           (OICPNS.CommonTypes   + "RemoteIdentification");
-                        QRCodeIdentificationXML  =               IdentificationXML. Element           (OICPNS.CommonTypes   + "QRCodeIdentification");
+                        IdentificationXML        = RemoteStartXML.   ElementOrFail(OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
+                        QRCodeIdentificationXML  = IdentificationXML.Element      (OICPNS.CommonTypes   + "QRCodeIdentification");
+                        PnCIdentificationXML     = IdentificationXML.Element      (OICPNS.CommonTypes   + "PlugAndChargeIdentification");
+                        RemoteIdentificationXML  = IdentificationXML.Element      (OICPNS.CommonTypes   + "RemoteIdentification");
 
-                        if (RemoteIdentificationXML == null &&
-                            QRCodeIdentificationXML == null)
-                            throw new Exception("Neither a RemoteIdentificationXML, nor a QRCodeIdentificationXML was provided!");
+                        if (QRCodeIdentificationXML == null &&
+                            PnCIdentificationXML    == null &&
+                            RemoteIdentificationXML == null)
+                            throw new Exception("Neither a QRCodeIdentification, PlugAndChargeIdentification, nor a RemoteIdentification was provided!");
 
-                        eMAId                    = eMA_Id. Parse((RemoteIdentificationXML != null)
-                                                                     ? RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
-                                                                     : QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!")
-                                                                );
+                        if      (QRCodeIdentificationXML != null)
+                            eMAId = eMA_Id.Parse(QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+
+                        else if (PnCIdentificationXML != null)
+                            eMAId = eMA_Id.Parse(PnCIdentificationXML.   ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+
+                        else if (RemoteIdentificationXML != null)
+                            eMAId = eMA_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                     }
                     catch (Exception e)
@@ -499,7 +425,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                       ProviderId,
                                                       eMAId,
                                                       EVSEId,
-                                                      _EventTrackingId);
+                                                      ChargingProductId);
 
                     Log.WriteLine(Response.ToString());
 
@@ -567,7 +493,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 #region Process an OICP RemoteStop HTTP/SOAP/XML call
 
-                else
+                var RemoteStopXML  = RemoteStopXMLs.FirstOrDefault();
+                if (RemoteStopXML != null)
                 {
 
                     #region Documentation
@@ -598,49 +525,18 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Parse request parameters
 
-                    // ------------------------
-                    // Hubject/Intercharge App
-                    // ------------------------
-                    //
-                    // POST /RemoteStartStop HTTP/1.1
-                    // Content-type: text/xml;charset=utf-8
-                    // Soapaction: ""
-                    // Accept: text/xml, multipart/related
-                    // User-Agent: JAX-WS RI 2.2-hudson-752-
-                    // Cache-Control: no-cache
-                    // Pragma: no-cache
-                    // Host: 80.148.29.35:3001
-                    // Connection: keep-alive
-                    // Content-Length: 794
-                    //
-                    // <?xml version='1.0' encoding='UTF-8'?>
-                    // <isns:Envelope xmlns:isns    = "http://schemas.xmlsoap.org/soap/envelope/" 
-                    //                xmlns:sbp     = "http://www.inubit.com/eMobility/SBP"
-                    //                xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                xmlns:v1      = "http://www.hubject.com/b2b/services/mobileauthorization/v1"
-                    //                xmlns:wsc     = "http://www.hubject.com/b2b/services/authorization/v1">
-                    // 
-                    //   <isns:Body>
-                    //     <wsc:HubjectAuthorizeRemoteStop>
-                    //       <wsc:SessionID>94407ee4-0a88-1295-13fe-d5e439c3381c</wsc:SessionID>
-                    //       <wsc:ProviderID>ICE</wsc:ProviderID>
-                    //       <wsc:EVSEID>+49*822*4201*1</wsc:EVSEID>
-                    //     </wsc:HubjectAuthorizeRemoteStop>
-                    //   </isns:Body>
-                    //
-                    // </isns:Envelope>
-
-
                     ChargingSession_Id  SessionId;
+                    ChargingSession_Id  PartnerSessionId;
                     EVSP_Id             ProviderId;
                     EVSE_Id             EVSEId;
 
                     try
                     {
 
-                        SessionId   = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
-                        ProviderId  = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId      = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        SessionId         = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "SessionID",        "No SessionID XML tag provided!"));
+                        PartnerSessionId  = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrDefault(OICPNS.Authorization + "ParnterSessionID", null));
+                        ProviderId        = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID",       "No ProviderID XML tag provided!"));
+                        EVSEId            = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",           "No EVSEID XML tag provided!"));
 
                     }
                     catch (Exception e)
@@ -719,9 +615,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                         Response = OnRemoteStopLocal(DateTime.Now,
                                                      RoamingNetworkId,
                                                      SessionId,
+                                                     PartnerSessionId,
                                                      ProviderId,
-                                                     EVSEId,
-                                                     _EventTrackingId);
+                                                     EVSEId);
 
                     Log.WriteLine(Response.ToString());
 
@@ -864,6 +760,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 #endregion
 
+
+                return new HTTPResponseBuilder() {
+                    HTTPStatusCode  = HTTPStatusCode.OK,
+                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                    Content         = "Error!".ToUTF8Bytes()
+                };
 
             };
 
