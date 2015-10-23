@@ -352,7 +352,19 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region PullAuthenticationData
 
+        /// <summary>
+        /// Create an OICP v2.0 PullAuthenticationData request.
+        /// </summary>
+        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<AuthenticationData>> PullAuthenticationData(EVSEOperator_Id  OperatorId,
+                                                                                   TimeSpan?        QueryTimeout = null)
+        {
 
+            return await _CPOUpstreamService.PullAuthenticationData(OperatorId,
+                                                                    QueryTimeout);
+
+        }
 
         #endregion
 
