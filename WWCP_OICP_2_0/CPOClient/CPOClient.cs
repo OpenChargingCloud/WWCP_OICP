@@ -198,6 +198,29 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+        #region PushEVSEData(OperatorId, OperatorName, OICPAction, params EVSEDataRecords)
+
+        /// <summary>
+        /// Create a new task pushing EVSE data records onto the OICP server.
+        /// </summary>
+        /// <param name="OperatorId">The EVSE operator Id to use.</param>
+        /// <param name="OperatorName">The EVSE operator name.</param>
+        /// <param name="OICPAction">The OICP action.</param>
+        /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
+        public async Task<HTTPResponse<HubjectAcknowledgement>>
+
+            PushEVSEData(EVSEOperator_Id          OperatorId,
+                         String                   OperatorName,
+                         ActionType               OICPAction,
+                         params EVSEDataRecord[]  EVSEDataRecords)
+        {
+
+            return await _CPOUpstreamService.PushEVSEData(OperatorId, OperatorName, OICPAction, EVSEDataRecords);
+
+        }
+
+        #endregion
+
         #region PushEVSEData(EVSEDataRecords, OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         /// <summary>

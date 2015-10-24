@@ -368,6 +368,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (_EVSEs.Length == 0)
                 throw new ArgumentNullException("EVSEs", "The given parameter must not be empty!");
 
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
             #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
@@ -462,6 +465,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             if (_EVSEDataRecords.Length == 0)
                 throw new ArgumentNullException("EVSEs", "The given parameter must not be empty!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
 
             #endregion
 
@@ -961,7 +967,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (EVSEDataRecord.Address.Street.IsNullOrEmpty())
                 throw new ArgumentNullException("EVSEDataRecord.Address.Street",        "The given street must not be null!");
 
-            if (EVSEDataRecord.GeoCoordinates       == null)
+            if (EVSEDataRecord.GeoCoordinate       == null)
                 throw new ArgumentNullException("EVSEDataRecord.GeoCoordinate",         "The given geo coordinate must not be null!");
 
             if (EVSEDataRecord.Plugs               == null || !EVSEDataRecord.Plugs.              Any())
@@ -970,7 +976,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (EVSEDataRecord.AuthenticationModes == null || !EVSEDataRecord.AuthenticationModes.Any())
                 throw new ArgumentNullException("EVSEDataRecord.AuthenticationModes",   "The given authentication modes must not be null!");
 
-            if (EVSEDataRecord.HotlinePhoneNum.IsNullOrEmpty())
+            if (EVSEDataRecord.HotlinePhoneNumber.IsNullOrEmpty())
                 throw new ArgumentNullException("EVSEDataRecord.HotlinePhoneNum",       "The given hotline phone number must not be null!");
 
             #endregion
@@ -979,8 +985,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 new XElement(OICPNS.EVSEData + "EvseId",                EVSEDataRecord.EVSEId.OriginId),
                 new XElement(OICPNS.EVSEData + "ChargingStationId",     EVSEDataRecord.ChargingStationId),
-                new XElement(OICPNS.EVSEData + "ChargingStationName",   EVSEDataRecord.ChargingStationName.  SubstringMax(50)),
-                new XElement(OICPNS.EVSEData + "EnChargingStationName", EVSEDataRecord.EnChargingStationName.SubstringMax(50)),
+                new XElement(OICPNS.EVSEData + "ChargingStationName",   EVSEDataRecord.ChargingStationName[Languages.de].SubstringMax(50)),
+                new XElement(OICPNS.EVSEData + "EnChargingStationName", EVSEDataRecord.ChargingStationName[Languages.en].SubstringMax(50)),
 
                 new XElement(OICPNS.EVSEData + "Address",
                     new XElement(OICPNS.CommonTypes + "Country",        EVSEDataRecord.Address.Country.Alpha3Code),
@@ -1009,8 +1015,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 new XElement(OICPNS.EVSEData + "GeoCoordinates",
                     new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                        new XElement(OICPNS.CommonTypes + "Longitude",  EVSEDataRecord.GeoCoordinates.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-                        new XElement(OICPNS.CommonTypes + "Latitude",   EVSEDataRecord.GeoCoordinates.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                        new XElement(OICPNS.CommonTypes + "Longitude",  EVSEDataRecord.GeoCoordinate.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                        new XElement(OICPNS.CommonTypes + "Latitude",   EVSEDataRecord.GeoCoordinate.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
                     )
                 ),
 
@@ -1018,12 +1024,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     EVSEDataRecord.Plugs.                   Select(Plug               => new XElement(OICPNS.EVSEData + "Plug",               OICPMapper.AsString(Plug)))
                 ),
 
-                EVSEDataRecord.ChargingFacilities.Any()
+                EVSEDataRecord.ChargingFacilities.NotNullAny()
                     ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
                           EVSEDataRecord.ChargingFacilities.Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   ChargingFacility.  ToString().Replace("_", " "))))
                     : null,
 
-                EVSEDataRecord.ChargingModes.Any()
+                EVSEDataRecord.ChargingModes.NotNullAny()
                     ? new XElement(OICPNS.EVSEData + "ChargingModes",
                           EVSEDataRecord.ChargingModes.     Select(ChargingMode       => new XElement(OICPNS.EVSEData + "ChargingMode",       ChargingMode.      ToString())))
                     : null,
@@ -1032,29 +1038,33 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     EVSEDataRecord.AuthenticationModes.     Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode.ToString().Replace("_", " ")))
                 ),
 
-                new XElement(OICPNS.EVSEData + "MaxCapacity", EVSEDataRecord.MaxCapacity),
+                EVSEDataRecord.MaxCapacity.HasValue
+                    ? new XElement(OICPNS.EVSEData + "MaxCapacity", EVSEDataRecord.MaxCapacity)
+                    : null,
 
                 new XElement(OICPNS.EVSEData + "PaymentOptions",
                     EVSEDataRecord.PaymentOptions.          Select(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      PaymentOption.     ToString().Replace("_", " ")))
                 ),
 
                 new XElement(OICPNS.EVSEData + "Accessibility",     EVSEDataRecord.Accessibility.ToString().Replace("_", " ")),
-                new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(EVSEDataRecord.HotlinePhoneNum, "")),  // RegEx: \+[0-9]{5,15}
+                new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(EVSEDataRecord.HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
 
-                EVSEDataRecord.AdditionalInfo.IsNotNullOrEmpty()
+                EVSEDataRecord.AdditionalInfo.has(Languages.de)
                     ? new XElement(OICPNS.EVSEData + "AdditionalInfo", EVSEDataRecord.AdditionalInfo)
                     : null,
 
-                EVSEDataRecord.EnAdditionalInfo.Any()
-                    ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", EVSEDataRecord.EnAdditionalInfo[Languages.en])
+                EVSEDataRecord.AdditionalInfo.has(Languages.en)
+                    ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", EVSEDataRecord.AdditionalInfo[Languages.en])
                     : null,
 
-                new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
-                    new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                        new XElement(OICPNS.CommonTypes + "Longitude", EVSEDataRecord.GeoChargingPointEntrance.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-                        new XElement(OICPNS.CommonTypes + "Latitude",  EVSEDataRecord.GeoChargingPointEntrance.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                EVSEDataRecord.GeoChargingPointEntrance != null
+                    ? new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
+                        new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
+                            new XElement(OICPNS.CommonTypes + "Longitude", EVSEDataRecord.GeoChargingPointEntrance.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                            new XElement(OICPNS.CommonTypes + "Latitude",  EVSEDataRecord.GeoChargingPointEntrance.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                        )
                     )
-                ),
+                    : null,
 
                 new XElement(OICPNS.EVSEData + "IsOpen24Hours",         EVSEDataRecord.IsOpen24Hours ? "true" : "false"),
 
@@ -1066,8 +1076,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     ? new XElement(OICPNS.EVSEData + "HubOperatorID",   EVSEDataRecord.HubOperatorId.ToString())
                     : null,
 
-                EVSEDataRecord.ClearinghouseId != null
-                    ? new XElement(OICPNS.EVSEData + "ClearinghouseID", EVSEDataRecord.ClearinghouseId.ToString())
+                EVSEDataRecord.ClearingHouseId != null
+                    ? new XElement(OICPNS.EVSEData + "ClearinghouseID", EVSEDataRecord.ClearingHouseId.ToString())
                     : null,
 
                 new XElement(OICPNS.EVSEData + "IsHubjectCompatible",   EVSEDataRecord.IsHubjectCompatible  ? "true" : "false"),

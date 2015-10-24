@@ -227,17 +227,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region ChargingStationId, ChargingStationName
 
-            EVSEDataRecord.ChargingStationId      = EVSEDataRecordXML.
-                                                        ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationId",     "").
-                                                        Trim();
+            EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "ChargingStationId",
+                                                 v => EVSEDataRecord.ChargingStationId = ChargingStation_Id.Parse(v));
 
-            EVSEDataRecord.ChargingStationName    = EVSEDataRecordXML.
-                                                        ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationName",   "").
-                                                        Trim();
+            EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "ChargingStationName",
+                                                 v => EVSEDataRecord.ChargingStationName.Add(Languages.de, v));
 
-            EVSEDataRecord.EnChargingStationName  = EVSEDataRecordXML.
-                                                        ElementValueOrDefault(OICPNS.EVSEData + "EnChargingStationName", "").
-                                                        Trim();
+            EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "EnChargingStationName",
+                                                 v => EVSEDataRecord.ChargingStationName.Add(Languages.en, v));
 
             #endregion
 
@@ -275,7 +272,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region GeoCoordinate
 
-            EVSEDataRecord.GeoCoordinates = XMLMethods.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "No GeoCoordinates XML tag provided!"));
+            EVSEDataRecord.GeoCoordinate = XMLMethods.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "No GeoCoordinates XML tag provided!"));
 
             #endregion
 
@@ -350,7 +347,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region HotlinePhoneNum
 
-            EVSEDataRecord.HotlinePhoneNum = EVSEDataRecordXML.
+            EVSEDataRecord.HotlinePhoneNumber = EVSEDataRecordXML.
                                                  ElementValueOrFail(OICPNS.EVSEData + "HotlinePhoneNum", "Missing 'HotlinePhoneNum '-XML tag!").
                                                  Trim();
 
@@ -358,14 +355,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region AdditionalInfo
 
-            EVSEDataRecord.AdditionalInfo  = EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "AdditionalInfo",   String.Empty).Trim();
-
-            #endregion
-
-            #region EnAdditionalInfo
+            EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "AdditionalInfo",
+                                                 v => EVSEDataRecord.AdditionalInfo.Add(Languages.de, v));
 
             // EnAdditionalInfo not parsed as OICP v2.0 multi-language string!
-            EVSEDataRecord.EnAdditionalInfo  = new I18NString(Languages.en, EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "EnAdditionalInfo", String.Empty).Trim());
+            EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "EnAdditionalInfo",
+                                                 v => EVSEDataRecord.AdditionalInfo.Add(Languages.en, v));
 
             #endregion
 
@@ -381,7 +376,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             if (EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsOpen24Hours", "Missing 'IsOpen24Hours'-XML tag!") == "true")
             {
-                EVSEDataRecord.OpeningTime = OpeningTime.Is24Hours;
+                EVSEDataRecord.OpeningTime = OpeningTime.Open24Hours;
             }
 
             else
@@ -399,11 +394,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region HubOperatorID
 
-            EVSEOperator_Id _HubOperatorId;
-            if (EVSEOperator_Id.TryParse(EVSEDataRecordXML.
-                                             ElementValueOrDefault(OICPNS.EVSEData + "HubOperatorID", String.Empty).
-                                             Trim(),
-                                         out _HubOperatorId))
+            HubOperator_Id _HubOperatorId;
+            if (HubOperator_Id.TryParse(EVSEDataRecordXML.
+                                            ElementValueOrDefault(OICPNS.EVSEData + "HubOperatorID", String.Empty).
+                                            Trim(),
+                                        out _HubOperatorId))
                 EVSEDataRecord.HubOperatorId = _HubOperatorId;
 
             #endregion
@@ -415,7 +410,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                 ElementValueOrDefault(OICPNS.EVSEData + "ClearinghouseID", String.Empty).
                                                 Trim(),
                                                 out _ClearinghouseID))
-                EVSEDataRecord.ClearinghouseId = _ClearinghouseID;
+                EVSEDataRecord.ClearingHouseId = _ClearinghouseID;
 
             #endregion
 

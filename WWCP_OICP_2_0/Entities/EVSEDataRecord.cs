@@ -100,9 +100,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region ChargingStationId
 
-        private String _ChargingStationId;
+        private ChargingStation_Id _ChargingStationId;
 
-        public String ChargingStationId
+        public ChargingStation_Id ChargingStationId
         {
 
             get
@@ -122,9 +122,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region ChargingStationName
 
-        private String _ChargingStationName;
+        private I18NString _ChargingStationName;
 
-        public String ChargingStationName
+        public I18NString ChargingStationName
         {
 
             get
@@ -136,28 +136,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             {
                 if (value != null)
                     _ChargingStationName = value;
-            }
-
-        }
-
-        #endregion
-
-        #region EnChargingStationName
-
-        private String _EnChargingStationName;
-
-        public String EnChargingStationName
-        {
-
-            get
-            {
-                return _EnChargingStationName;
-            }
-
-            set
-            {
-                if (value != null)
-                    _EnChargingStationName = value;
             }
 
         }
@@ -186,22 +164,22 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region GeoCoordinates
+        #region GeoCoordinate
 
-        private GeoCoordinate _GeoCoordinates;
+        private GeoCoordinate _GeoCoordinate;
 
-        public GeoCoordinate GeoCoordinates
+        public GeoCoordinate GeoCoordinate
         {
 
             get
             {
-                return _GeoCoordinates;
+                return _GeoCoordinate;
             }
 
             set
             {
                 if (value != null)
-                    _GeoCoordinates = value;
+                    _GeoCoordinate = value;
             }
 
         }
@@ -298,20 +276,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region MaxCapacity
 
-        private Double? _MaxCapacity;
+        private Double? _MaxCapacity_kWh;
 
         public Double? MaxCapacity
         {
 
             get
             {
-                return _MaxCapacity;
+                return _MaxCapacity_kWh;
             }
 
             set
             {
                 if (value != null)
-                    _MaxCapacity = value;
+                    _MaxCapacity_kWh = value;
             }
 
         }
@@ -362,22 +340,22 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region HotlinePhoneNum
+        #region HotlinePhoneNumber
 
-        private String _HotlinePhoneNum;
+        private String _HotlinePhoneNumber;
 
-        public String HotlinePhoneNum
+        public String HotlinePhoneNumber
         {
 
             get
             {
-                return _HotlinePhoneNum;
+                return _HotlinePhoneNumber;
             }
 
             set
             {
                 if (value != null)
-                    _HotlinePhoneNum = value;
+                    _HotlinePhoneNumber = value;
             }
 
         }
@@ -386,9 +364,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region AdditionalInfo
 
-        private String _AdditionalInfo;
+        private I18NString _AdditionalInfo;
 
-        public String AdditionalInfo
+        public I18NString AdditionalInfo
         {
 
             get
@@ -400,28 +378,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             {
                 if (value != null)
                     _AdditionalInfo = value;
-            }
-
-        }
-
-        #endregion
-
-        #region EnAdditionalInfo
-
-        private I18NString _EnAdditionalInfo;
-
-        public I18NString EnAdditionalInfo
-        {
-
-            get
-            {
-                return _EnAdditionalInfo;
-            }
-
-            set
-            {
-                if (value != null)
-                    _EnAdditionalInfo = value;
             }
 
         }
@@ -489,44 +445,44 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region HubOperatorID
+        #region HubOperatorId
 
-        private EVSEOperator_Id _HubOperatorID;
+        private HubOperator_Id _HubOperatorId;
 
-        public EVSEOperator_Id HubOperatorId
+        public HubOperator_Id HubOperatorId
         {
 
             get
             {
-                return _HubOperatorID;
+                return _HubOperatorId;
             }
 
             set
             {
                 if (value != null)
-                    _HubOperatorID = value;
+                    _HubOperatorId = value;
             }
 
         }
 
         #endregion
 
-        #region ClearinghouseID
+        #region ClearingHouseId
 
-        private RoamingProvider_Id _ClearinghouseID;
+        private RoamingProvider_Id _ClearingHouseId;
 
-        public RoamingProvider_Id ClearinghouseId
+        public RoamingProvider_Id ClearingHouseId
         {
 
             get
             {
-                return _ClearinghouseID;
+                return _ClearingHouseId;
             }
 
             set
             {
                 if (value != null)
-                    _ClearinghouseID = value;
+                    _ClearingHouseId = value;
             }
 
         }
@@ -579,20 +535,109 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Constructor(s)
 
+        #region EVSEDataRecord(EVSEId)
+
         public EVSEDataRecord(EVSE_Id  EVSEId)
 
         {
 
             #region Initial checks
 
-            if (EVSEId != null)
+            if (EVSEId == null)
                 throw new ArgumentNullException("EVSEId", "The given parameter must not be null!");
 
             #endregion
 
-            this._EVSEId  = EVSEId;
+            this._EVSEId               = EVSEId;
+            this._ChargingStationName  = new I18NString();
+            this._AdditionalInfo       = new I18NString();
 
         }
+
+        #endregion
+
+        #region EVSEDataRecord(EVSEId, ...)
+
+        public EVSEDataRecord(EVSE_Id                           EVSEId,
+                              ChargingStation_Id                ChargingStationId           = null,
+                              I18NString                        ChargingStationName         = null,
+                              Address                           Address                     = null,
+                              GeoCoordinate                     GeoCoordinate               = null,
+                              IEnumerable<PlugTypes>            Plugs                       = null,
+                              IEnumerable<ChargingFacilities>   ChargingFacilities          = null,
+                              IEnumerable<ChargingModes>        ChargingModes               = null,
+                              IEnumerable<AuthenticationModes>  AuthenticationModes         = null,
+                              Int32?                            MaxCapacity                 = null,
+                              IEnumerable<PaymentOptions>       PaymentOptions              = null,
+                              AccessibilityTypes                Accessibility               = AccessibilityTypes.Free_publicly_accessible,
+                              String                            HotlinePhoneNumber          = null,
+                              I18NString                        AdditionalInfo              = null,
+                              GeoCoordinate                     GeoChargingPointEntrance    = null,
+                              Boolean?                          IsOpen24Hours               = null,
+                              OpeningTime                       OpeningTime                 = null,
+                              HubOperator_Id                    HubOperatorId               = null,
+                              RoamingProvider_Id                ClearingHouseId             = null,
+                              Boolean                           IsHubjectCompatible         = true,
+                              Boolean                           DynamicInfoAvailable        = true)
+
+            : this(EVSEId)
+
+        {
+
+            if (Address == null)
+                throw new ArgumentNullException("The given parameter for 'Address' must not be null!");
+
+            if (GeoCoordinate == null)
+                throw new ArgumentNullException("The given parameter for 'GeoCoordinates' must not be null!");
+
+            if (Plugs == null)
+                throw new ArgumentNullException("The given parameter for 'Plugs' must not be null!");
+
+            if (Plugs.Count() < 1)
+                throw new ArgumentNullException("The given parameter for 'Plugs' must not be empty!");
+
+            if (AuthenticationModes == null)
+                throw new ArgumentNullException("The given parameter for 'AuthenticationModes' must not be null!");
+
+            if (AuthenticationModes.Count() < 1)
+                throw new ArgumentNullException("The given parameter for 'AuthenticationModes' must not be empty!");
+
+            if (HotlinePhoneNumber == null || HotlinePhoneNumber.IsNullOrEmpty())
+                throw new ArgumentNullException("The given parameter for 'HotlinePhoneNumber' must not be null or empty!");
+
+
+            this._ChargingStationId         = ChargingStationId;
+            this._ChargingStationName       = ChargingStationName != null ? ChargingStationName : new I18NString();
+            this._Address                   = Address;
+            this._GeoCoordinate             = GeoCoordinate;
+            this._Plugs                     = Plugs;
+            this._ChargingModes             = ChargingModes;
+            this._ChargingFacilities        = ChargingFacilities;
+            this._AuthenticationModes       = AuthenticationModes;
+            this._MaxCapacity_kWh           = MaxCapacity;
+            this._PaymentOptions            = PaymentOptions;
+            this._Accessibility             = Accessibility;
+            this._HotlinePhoneNumber        = HotlinePhoneNumber;
+            this._AdditionalInfo            = AdditionalInfo      != null ? AdditionalInfo      : new I18NString();
+            this._GeoChargingPointEntrance  = GeoChargingPointEntrance;
+            this._HubOperatorId             = HubOperatorId;
+            this._ClearingHouseId           = ClearingHouseId;
+            this._IsHubjectCompatible       = IsHubjectCompatible;
+            this._DynamicInfoAvailable      = DynamicInfoAvailable;
+
+
+            if (IsOpen24Hours != null && IsOpen24Hours.HasValue && IsOpen24Hours.Value)
+                this._OpeningTime  = OpeningTime.Open24Hours;
+
+            if (OpeningTime != null)
+                this._OpeningTime  = OpeningTime;
+
+            if (OpeningTime == null && (IsOpen24Hours == null || !IsOpen24Hours.HasValue))
+                this._OpeningTime = OpeningTime.Open24Hours;
+
+        }
+
+        #endregion
 
         #endregion
 

@@ -262,7 +262,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                        HTTPResponse  HttpResponse)
         {
 
-            DebugX.Log("AOICPUpstreamService => HTTP Status Code: " + HttpResponse.HTTPStatusCode);
+            DebugX.Log("AOICPUpstreamService => HTTP Status Code: " + HttpResponse != null ? HttpResponse.HTTPStatusCode.ToString() : "<null>");
 
             var OnHTTPErrorLocal = OnHTTPError;
             if (OnHTTPErrorLocal != null)

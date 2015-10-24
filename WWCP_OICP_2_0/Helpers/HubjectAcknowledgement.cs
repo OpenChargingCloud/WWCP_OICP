@@ -115,14 +115,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="AdditionalInfo">Additional information.</param>
         public HubjectAcknowledgement(Boolean  Result,
                                       UInt16   Code,
-                                      String   Description,
-                                      String   AdditionalInfo)
+                                      String   Description     = null,
+                                      String   AdditionalInfo  = null)
         {
 
             this._Result          = Result;
             this._Code            = Code;
-            this._Description     = Description;
-            this._AdditionalInfo  = AdditionalInfo;
+            this._Description     = Description    != null ? Description    : String.Empty;
+            this._AdditionalInfo  = AdditionalInfo != null ? AdditionalInfo : String.Empty;
 
         }
 
