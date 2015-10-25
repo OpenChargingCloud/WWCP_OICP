@@ -243,7 +243,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PullEVSEStatusRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0, EVSEStatus = null)
+        #region PullEVSEStatusRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0.0, EVSEStatus = null)
 
         /// <summary>
         /// Create a new Pull EVSE Status request.
@@ -254,7 +254,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="EVSEStatus">An optional EVSE status as filter criteria.</param>
         public static XElement PullEVSEStatusRequestXML(EVSP_Id          ProviderId,
                                                         GeoCoordinate    SearchCenter  = null,
-                                                        UInt64           DistanceKM    = 0,
+                                                        Double           DistanceKM    = 0.0,
                                                         OICPEVSEStatus?  EVSEStatus    = null)
         {
 
@@ -284,7 +284,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //                <CommonTypes:DecimalDegree>
             //                   <!-- -?1?\d{1,2}\.\d{1,6} -->
             //                   <CommonTypes:Longitude>11.625214</CommonTypes:Longitude>
-            //                   <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //                   <CommonTypes:Latitude>50.931844</CommonTypes:Latitude>
             //                </CommonTypes:DecimalDegree>
             //
             //                <CommonTypes:DegreeMinuteSeconds>
@@ -295,8 +295,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //
             //             </CommonTypes:GeoCoordinates>
             //
-            //             <!-- km ####.# -->
-            //             <CommonTypes:Radius>23.5</CommonTypes:Radius>
+            //             <!-- km ####.# is defined, but only #### seems to be accepted -->
+            //             <CommonTypes:Radius>100</CommonTypes:Radius>
             //
             //          </EVSEStatus:SearchCenter>
             //
@@ -325,12 +325,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                     new XElement(OICPNS.CommonTypes + "GeoCoordinates",
                                                         new XElement(OICPNS.CommonTypes + "DecimalDegree",
-                                                           new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
-                                                           new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat))
+                                                           new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}")),
+                                                           new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}"))
                                                         )
                                                     ),
 
-                                                    new XElement(OICPNS.CommonTypes + "Radius", DistanceKM)
+                                                    new XElement(OICPNS.CommonTypes + "Radius", DistanceKM.ToString("{0:0.#}"))
 
                                                 )
                                               : null,

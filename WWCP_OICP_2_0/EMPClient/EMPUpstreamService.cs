@@ -128,10 +128,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
                                                        //
                                                        //    <soapenv:Header/>
+                                                       //
                                                        //    <soapenv:Body>
                                                        //       <EVSEData:eRoamingEvseData>
                                                        //
                                                        //          <EVSEData:EvseData>
+                                                       //
                                                        //             <!--Zero or more repetitions:-->
                                                        //             <EVSEData:OperatorEvseData>
                                                        //
@@ -146,6 +148,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        //                </EVSEData:EvseDataRecord>
                                                        //
                                                        //             </EVSEData:OperatorEvseData>
+                                                       //
                                                        //          </EVSEData:EvseData>
                                                        //
                                                        //          <!--Optional:-->
@@ -163,6 +166,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        //
                                                        //       </EVSEData:eRoamingEvseData>
                                                        //    </soapenv:Body>
+                                                       //
                                                        // </soapenv:Envelope>
 
                                                        #endregion
