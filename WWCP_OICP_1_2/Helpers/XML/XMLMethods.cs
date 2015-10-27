@@ -381,7 +381,7 @@ namespace org.GraphDefined.WWCP.OICP_1_2
 
             if (EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsOpen24Hours", "Missing 'IsOpen24Hours'-XML tag!") == "true")
             {
-                EVSEDataRecord.OpeningTime = OpeningTime.Is24Hours;
+                EVSEDataRecord.OpeningTime = OpeningTime.Open24Hours;
             }
 
             else

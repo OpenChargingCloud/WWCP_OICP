@@ -306,25 +306,36 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Parse request parameters
 
-                    ChargingSession_Id  SessionId;
-                    ChargingSession_Id  PartnerSessionId;
-                    EVSP_Id             ProviderId;
-                    EVSE_Id             EVSEId;
+
                     XElement            IdentificationXML;
                     XElement            QRCodeIdentificationXML;
                     XElement            PnCIdentificationXML;
                     XElement            RemoteIdentificationXML;
-                    eMA_Id              eMAId = null;
-                    ChargingProduct_Id  ChargingProductId;
+                    XElement            PartnerSessionIdXML;
+                    XElement            ChargingProductIdXML;
+
+                    ChargingSession_Id  SessionId           = null;
+                    ChargingSession_Id  PartnerSessionId    = null;
+                    EVSP_Id             ProviderId          = null;
+                    EVSE_Id             EVSEId              = null;
+                    eMA_Id              eMAId               = null;
+                    ChargingProduct_Id  ChargingProductId   = null;
 
                     try
                     {
 
                         SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",        null));
-                        PartnerSessionId         = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Authorization + "PartnerSessionID", null));
+
+                        PartnerSessionIdXML      = RemoteStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
+                        if (PartnerSessionIdXML != null)
+                            PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
+
                         ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
                         EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
-                        ChargingProductId        = ChargingProduct_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Authorization + "PartnerProductID", null));
+
+                        ChargingProductIdXML = RemoteStartXML.Element(OICPNS.Authorization + "PartnerProductID");
+                        if (ChargingProductIdXML != null)
+                            ChargingProductId = ChargingProduct_Id.Parse(ChargingProductIdXML.Value);
 
                         IdentificationXML        = RemoteStartXML.   ElementOrFail(OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
                         QRCodeIdentificationXML  = IdentificationXML.Element      (OICPNS.CommonTypes   + "QRCodeIdentification");
@@ -526,8 +537,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Parse request parameters
 
+                    XElement            PartnerSessionIdXML;
+
                     ChargingSession_Id  SessionId;
-                    ChargingSession_Id  PartnerSessionId;
+                    ChargingSession_Id  PartnerSessionId        = null;
                     EVSP_Id             ProviderId;
                     EVSE_Id             EVSEId;
 
@@ -535,7 +548,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     {
 
                         SessionId         = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "SessionID",        "No SessionID XML tag provided!"));
-                        PartnerSessionId  = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrDefault(OICPNS.Authorization + "ParnterSessionID", null));
+
+                        PartnerSessionIdXML = RemoteStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
+                        if (PartnerSessionIdXML != null)
+                            PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
+
                         ProviderId        = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID",       "No ProviderID XML tag provided!"));
                         EVSEId            = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",           "No EVSEID XML tag provided!"));
 
