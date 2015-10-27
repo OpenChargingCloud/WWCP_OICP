@@ -52,12 +52,14 @@
     <Compile Include="EMPClient\EMPClient.cs" />
     <Compile Include="EMPClient\EMP_XMLMethods.cs" />
     <Compile Include="EMPClient\EMPUpstreamService.cs" />
+    <Compile Include="Entities\OperatorEVSEData.cs" />
     <Compile Include="Entities\OICPChargeDetailRecord.cs" />
     <Compile Include="Entities\eRoamingEVSEData.cs" />
     <Compile Include="Helpers\GeoCoordinatesResponseFormatTypes.cs" />
     <Compile Include="Helpers\ActionType.cs" />
     <Compile Include="Helpers\AuthorizationStatusType.cs" />
     <Compile Include="Helpers\AuthenticationData.cs" />
+    <Compile Include="Helpers\StatusCode.cs" />
     <Compile Include="Helpers\OICPMapper.cs" />
     <Compile Include="Helpers\ExtentionMethods.cs" />
     <Compile Include="Helpers\HubjectAcknowledgement.cs" />

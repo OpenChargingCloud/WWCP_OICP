@@ -82,7 +82,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PullEVSEDataRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0, LastCall = null, GeoCoordinatesResponseFormat = DecimalDegree)
+        #region PullEVSEDataRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, GeoCoordinatesResponseFormat = DecimalDegree)
 
         /// <summary>
         /// Create a new Pull EVSE Data request.
@@ -94,7 +94,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="GeoCoordinatesResponseFormat">An optional response format for the geo coordinates [default: DecimalDegree]</param>
         public static XElement PullEVSEDataRequestXML(EVSP_Id                            ProviderId,
                                                       GeoCoordinate                      SearchCenter                  = null,
-                                                      UInt64                             DistanceKM                    = 0,
+                                                      Double                             DistanceKM                    = 0.0,
                                                       DateTime?                          LastCall                      = null,
                                                       GeoCoordinatesResponseFormatTypes  GeoCoordinatesResponseFormat  = GeoCoordinatesResponseFormatTypes.DecimalDegree)
         {
@@ -109,33 +109,36 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //    <soapenv:Body>
             //       <EVSEData:eRoamingPullEvseData>
             //
-            //          <EVSEData:ProviderID>?</EVSEData:ProviderID>
+            //       <EVSEData:ProviderID>DE*GDF</EVSEData:ProviderID>
+            // 
+            //       <!--You have a CHOICE of the next 2 items at this level-->
+            //       <!--Optional:-->
+            //       <EVSEData:SearchCenter>
+            // 
+            //          <CommonTypes:GeoCoordinates>
+            //             <!--You have a CHOICE of the next 3 items at this level-->
+            // 
+            //             <CommonTypes:Google>
+            //                <!-- latitude longitude: -?1?\d{1,2}\.\d{1,6}\s*\,?\s*-?1?\d{1,2}\.\d{1,6} -->
+            //                <CommonTypes:Coordinates>50.931844 11.625214</CommonTypes:Coordinates>
+            //             </CommonTypes:Google>
+            // 
+            //             <CommonTypes:DecimalDegree>
+            //                <!-- -?1?\d{1,2}\.\d{1,6} -->
+            //                <CommonTypes:Longitude>11.625214</CommonTypes:Longitude>
+            //                <CommonTypes:Latitude>50.931844</CommonTypes:Latitude>
+            //             </CommonTypes:DecimalDegree>
+            // 
+            //             <CommonTypes:DegreeMinuteSeconds>
+            //                <!-- -?1?\d{1,2}°[ ]?\d{1,2}'[ ]?\d{1,2}\.\d+'' -->
+            //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //             </CommonTypes:DegreeMinuteSeconds>
+            // 
+            //          </CommonTypes:GeoCoordinates>
             //
-            //          <!--You have a CHOICE of the next 2 items at this level-->
-            //          <!--Optional:-->
-            //          <EVSEData:SearchCenter>
-            //
-            //             <CommonTypes:GeoCoordinates>
-            //                <!--You have a CHOICE of the next 3 items at this level-->
-            //
-            //                <CommonTypes:Google>
-            //                   <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
-            //                </CommonTypes:Google>
-            //
-            //                <CommonTypes:DecimalDegree>
-            //                   <CommonTypes:Longitude>?</CommonTypes:Longitude>
-            //                   <CommonTypes:Latitude>?</CommonTypes:Latitude>
-            //                </CommonTypes:DecimalDegree>
-            //
-            //                <CommonTypes:DegreeMinuteSeconds>
-            //                   <CommonTypes:Longitude>?</CommonTypes:Longitude>
-            //                   <CommonTypes:Latitude>?</CommonTypes:Latitude>
-            //                </CommonTypes:DegreeMinuteSeconds>
-            //
-            //             </CommonTypes:GeoCoordinates>
-            //
-            //             <!-- km ####.# -->
-            //             <CommonTypes:Radius>23.5</CommonTypes:Radius>
+            //             <!-- km ####.# is defined, but only #### seems to be accepted -->
+            //             <CommonTypes:Radius>100</CommonTypes:Radius>
             //
             //          </EVSEData:SearchCenter>
             //
@@ -165,10 +168,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                               ? new XElement(OICPNS.EVSEData + "SearchCenter",
                                                   new XElement(OICPNS.CommonTypes + "GeoCoordinates",
                                                       new XElement(OICPNS.CommonTypes + "DecimalDegree",
-                                                          new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
-                                                          new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat)))
+                                                          new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}").Replace(",", ".")),//.ToString(CultureInfo.InvariantCulture.NumberFormat)),
+                                                          new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}").Replace(",", "."))//.ToString(CultureInfo.InvariantCulture.NumberFormat)))
+                                                      )
                                                   ),
-                                                  new XElement(OICPNS.CommonTypes + "Radius", DistanceKM)
+                                                  new XElement(OICPNS.CommonTypes + "Radius", String.Format("{0:0.}", DistanceKM).Replace(",", "."))//.ToString(CultureInfo.InvariantCulture.NumberFormat))
                                                 )
                                               : null,
 

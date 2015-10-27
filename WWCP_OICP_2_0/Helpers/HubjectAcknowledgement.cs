@@ -161,20 +161,38 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Documentation
 
+            // <?xml version='1.0' encoding='UTF-8'?>
             // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
             //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            // 
-            //     <soapenv:Body>
-            //         <CommonTypes:eRoamingAcknowledgement>
-            //             <CommonTypes:Result>true</CommonTypes:Result>
-            //             <CommonTypes:StatusCode>
-            //                 <CommonTypes:Code>000</CommonTypes:Code>
-            //                 <CommonTypes:Description>Success</CommonTypes:Description>
-            //                 <CommonTypes:AdditionalInfo />
-            //             </CommonTypes:StatusCode>
-            //         </CommonTypes:eRoamingAcknowledgement>
-            //     </soapenv:Body>
-            // 
+            //
+            //   <soapenv:Body>
+            //     <CommonTypes:eRoamingAcknowledgement>
+            //       <CommonTypes:Result>true</CommonTypes:Result>
+            //       <CommonTypes:StatusCode>
+            //         <CommonTypes:Code>000</CommonTypes:Code>
+            //         <CommonTypes:Description>Success</CommonTypes:Description>
+            //         <CommonTypes:AdditionalInfo />
+            //       </CommonTypes:StatusCode>
+            //     </CommonTypes:eRoamingAcknowledgement>
+            //   </soapenv:Body>
+            //
+            // </soapenv:Envelope>
+
+            // <?xml version='1.0' encoding='UTF-8'?>
+            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //
+            //   <soapenv:Body>
+            //     <CommonTypes:eRoamingAcknowledgement>
+            //       <CommonTypes:Result>true</CommonTypes:Result>
+            //       <CommonTypes:StatusCode>
+            //         <CommonTypes:Code>009</CommonTypes:Code>
+            //         <CommonTypes:Description>Data transaction error</CommonTypes:Description>
+            //         <CommonTypes:AdditionalInfo>The Push of data is already in progress.</CommonTypes:AdditionalInfo>
+            //       </CommonTypes:StatusCode>
+            //     </CommonTypes:eRoamingAcknowledgement>
+            //   </soapenv:Body>
+            //
             // </soapenv:Envelope>
 
             #endregion

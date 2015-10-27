@@ -833,41 +833,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        "eRoamingPushEvseData",
                                                        QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                                       OnSuccess: XMLData =>
-                                                       {
+                                                       OnSuccess: XMLData => {
 
-                                                           #region Documentation
-
-                                                           // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">
-                                                           //   <cmn:Result>true</cmn:Result>
-                                                           //   <cmn:StatusCode>
-                                                           //     <cmn:Code>000</cmn:Code>
-                                                           //     <cmn:Description>Success</cmn:Description>
-                                                           //     <cmn:AdditionalInfo />
-                                                           //   </cmn:StatusCode>
-                                                           // </cmn:eRoamingAcknowledgement>
-
-                                                           // <cmn:eRoamingAcknowledgement xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">
-                                                           //   <cmn:Result>false</cmn:Result>
-                                                           //   <cmn:StatusCode>
-                                                           //     <cmn:Code>009</cmn:Code>
-                                                           //     <cmn:Description>Data transaction error</cmn:Description>
-                                                           //     <cmn:AdditionalInfo>The Push of data is already in progress.</cmn:AdditionalInfo>
-                                                           //   </cmn:StatusCode>
-                                                           // </cmn:eRoamingAcknowledgement>
-
-                                                           #endregion
-
-                                                           var ack = HubjectAcknowledgement.Parse(XMLData.Content);
-                                                           DebugX.Log(OICPAction + " of EVSE data: " + ack.Result + " / " + ack.Description + Environment.NewLine);
-
-                                                           return new HTTPResponse<HubjectAcknowledgement>(XMLData.HttpResponse, ack, false);
+                                                           return new HTTPResponse<HubjectAcknowledgement>(XMLData.HttpResponse,
+                                                                                                           HubjectAcknowledgement.Parse(XMLData.Content),
+                                                                                                           false);
 
                                                        },
 
 
-                                                       OnSOAPFault: Fault =>
-                                                       {
+                                                       OnSOAPFault: Fault => {
 
                                                            DebugX.Log(OICPAction + " of EVSE data led to a fault!" + Environment.NewLine);
 

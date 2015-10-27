@@ -48,22 +48,22 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static readonly TimeSpan      DefaultUpdateEVSEStatusEvery    = TimeSpan.FromSeconds( 20);
         public static readonly TimeSpan      DefaultUpdateEVSEStatusTimeout  = TimeSpan.FromMinutes( 30);   // First import might be big and slow!
 
-        private readonly EMPUpstreamService                                     OICPUpstreamService;
-        private readonly Object                                                 UpdateEVSEsLock  = new Object();
-        private readonly Timer                                                  UpdateEVSEDataTimer;
-        private readonly Timer                                                  UpdateEVSEStatusTimer;
+        private readonly EMPUpstreamService                                       OICPUpstreamService;
+        private readonly Object                                                   UpdateEVSEsLock  = new Object();
+        private readonly Timer                                                    UpdateEVSEDataTimer;
+        private readonly Timer                                                    UpdateEVSEStatusTimer;
 
-        private readonly Func<TContext>                                         _UpdateContextCreator;
-        private readonly Action<TContext>                                       _UpdateContextDisposer;
-        private readonly Action<TContext>                                       _StartBulkUpdate;
-        private readonly Action<TContext, DateTime, eRoamingEVSEData>           _EVSEOperatorDataHandler;
-        private readonly Func<TContext, DateTime, IEnumerable<EVSE_Id>>         _GetEVSEIdsForStatusUpdate;
-        private readonly Action<TContext, DateTime, EVSE_Id, OICPEVSEStatus>  _EVSEStatusHandler;
-        private readonly Action<TContext>                                       _StopBulkUpdate;
+        private readonly Func  <TContext>                                         _UpdateContextCreator;
+        private readonly Action<TContext>                                         _UpdateContextDisposer;
+        private readonly Action<TContext>                                         _StartBulkUpdate;
+        private readonly Action<TContext, DateTime, IEnumerable<EVSEDataRecord>>  _EVSEDataHandler;
+        private readonly Func  <TContext, DateTime, IEnumerable<EVSE_Id>>         _GetEVSEIdsForStatusUpdate;
+        private readonly Action<TContext, DateTime, EVSE_Id, OICPEVSEStatus>      _EVSEStatusHandler;
+        private readonly Action<TContext>                                         _StopBulkUpdate;
 
-        private readonly Func<UInt64, StreamReader>                             _LoadStaticDataFromStream;
-        private readonly Func<UInt64, StreamReader>                             _LoadDynamicDataFromStream;
-        private          Boolean                                                Paused = false;
+        private readonly Func<UInt64, StreamReader>                               _LoadStaticDataFromStream;
+        private readonly Func<UInt64, StreamReader>                               _LoadDynamicDataFromStream;
+        private          Boolean                                                  Paused = false;
 
         #endregion
 
@@ -143,30 +143,30 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="StopBulkUpdate"></param>
         /// <param name="LoadStaticDataFromStream"></param>
         /// <param name="LoadDynamicDataFromStream"></param>
-        /// <param name="EVSEOperatorDataHandler"></param>
+        /// <param name="EVSEDataHandler"></param>
         /// <param name="GetEVSEIdsForStatusUpdate"></param>
         /// <param name="EVSEStatusHandler"></param>
-        public OICPImporter(String                                                 Identification,
-                            String                                                 Hostname,
-                            IPPort                                                 TCPPort,
-                            EVSP_Id                                                ProviderId,
-                            DNSClient                                              DNSClient                    = null,
+        public OICPImporter(String                                                   Identification,
+                            String                                                   Hostname,
+                            IPPort                                                   TCPPort,
+                            EVSP_Id                                                  ProviderId,
+                            DNSClient                                                DNSClient                    = null,
 
-                            TimeSpan?                                              UpdateEVSEDataEvery          = null,
-                            TimeSpan?                                              UpdateEVSEDataTimeout        = null,
-                            TimeSpan?                                              UpdateEVSEStatusEvery        = null,
-                            TimeSpan?                                              UpdateEVSEStatusTimeout      = null,
-                            Func<TContext>                                         UpdateContextCreator         = null,
-                            Action<TContext>                                       UpdateContextDisposer        = null,
-                            Action<TContext>                                       StartBulkUpdate              = null,
-                            Action<TContext>                                       StopBulkUpdate               = null,
+                            TimeSpan?                                                UpdateEVSEDataEvery          = null,
+                            TimeSpan?                                                UpdateEVSEDataTimeout        = null,
+                            TimeSpan?                                                UpdateEVSEStatusEvery        = null,
+                            TimeSpan?                                                UpdateEVSEStatusTimeout      = null,
+                            Func<TContext>                                           UpdateContextCreator         = null,
+                            Action<TContext>                                         UpdateContextDisposer        = null,
+                            Action<TContext>                                         StartBulkUpdate              = null,
+                            Action<TContext>                                         StopBulkUpdate               = null,
 
-                            Func<UInt64, StreamReader>                             LoadStaticDataFromStream     = null,
-                            Func<UInt64, StreamReader>                             LoadDynamicDataFromStream    = null,
+                            Func<UInt64, StreamReader>                               LoadStaticDataFromStream     = null,
+                            Func<UInt64, StreamReader>                               LoadDynamicDataFromStream    = null,
 
-                            Action<TContext, DateTime, eRoamingEVSEData>           EVSEOperatorDataHandler      = null,
-                            Func<TContext, DateTime, IEnumerable<EVSE_Id>>         GetEVSEIdsForStatusUpdate    = null,
-                            Action<TContext, DateTime, EVSE_Id, OICPEVSEStatus>  EVSEStatusHandler            = null)
+                            Action<TContext, DateTime, IEnumerable<EVSEDataRecord>>  EVSEDataHandler              = null,
+                            Func<TContext, DateTime, IEnumerable<EVSE_Id>>           GetEVSEIdsForStatusUpdate    = null,
+                            Action<TContext, DateTime, EVSE_Id, OICPEVSEStatus>      EVSEStatusHandler            = null)
 
         {
 
@@ -184,7 +184,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (ProviderId == null)
                 throw new ArgumentNullException("The given EV Service Provider identification (EVSP Id) must not be null!");
 
-            if (EVSEOperatorDataHandler == null)
+            if (EVSEDataHandler == null)
                 throw new ArgumentNullException("The given EVSEOperatorDataHandler must not be null!");
 
             if (GetEVSEIdsForStatusUpdate == null)
@@ -224,7 +224,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             this._UpdateContextCreator         = UpdateContextCreator;
             this._UpdateContextDisposer        = UpdateContextDisposer;
             this._StartBulkUpdate              = StartBulkUpdate;
-            this._EVSEOperatorDataHandler      = EVSEOperatorDataHandler;
+            this._EVSEDataHandler              = EVSEDataHandler;
             this._GetEVSEIdsForStatusUpdate    = GetEVSEIdsForStatusUpdate;
             this._EVSEStatusHandler            = EVSEStatusHandler;
             this._StopBulkUpdate               = StopBulkUpdate;
@@ -377,13 +377,25 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         FirstOrDefault();
 
                             // Either with SOAP-XML tags or without...
-                            var OperatorEvseData  = (SOAPXML != null ? SOAPXML : XML).
-                                                        Element (OICPNS.EVSEData + "EvseData").
-                                                        Elements(OICPNS.EVSEData + "OperatorEvseData").
-                                                        ToArray();
+                            var OperatorEvseDataXMLs  = (SOAPXML != null ? SOAPXML : XML).
+                                                            Element (OICPNS.EVSEData + "EvseData").
+                                                            Elements(OICPNS.EVSEData + "OperatorEvseData");
 
-                            if (OperatorEvseData.Length > 0)
-                                OperatorEvseData.ForEach(OperatorEvseDataXML => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, XMLMethods.ParseOperatorEVSEDataXML(OperatorEvseDataXML)));
+                            if (OperatorEvseDataXMLs != null)
+                            {
+
+                                var EVSEDataRecords = OperatorEvseDataXMLs.
+                                                          Select    (OperatorEvseDataXML => OperatorEVSEData.Parse(OperatorEvseDataXML)).
+                                                          Where     (_OperatorEvseData   => _OperatorEvseData != null).
+                                                          SelectMany(_OperatorEvseData   => _OperatorEvseData.EVSEDataRecords).
+                                                          ToArray();
+
+                                if (EVSEDataRecords.Length > 0)
+                                    _EVSEDataHandler(UpdateContext,
+                                                             DateTime.Now,
+                                                             EVSEDataRecords);
+
+                            }
 
                             else
                                 DebugX.Log("Could not fetch any 'OperatorEvseData' from XML stream!");
@@ -405,8 +417,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                             PullEVSEData(_ProviderId).
                             ContinueWith(PullEVSEDataTask => {
 
-                                if (PullEVSEDataTask.Result != null)
-                                    PullEVSEDataTask.Result.Content.ForEach(OperatorEVSEData => _EVSEOperatorDataHandler(UpdateContext, DateTime.Now, OperatorEVSEData));
+                                if (PullEVSEDataTask.Result.Content.StatusCode.Code == 0)
+                                    PullEVSEDataTask.Result.Content.OperatorEVSEData.ForEach(OperatorEVSEData => _EVSEDataHandler(UpdateContext, DateTime.Now, OperatorEVSEData.EVSEDataRecords));
 
                             }).
                             Wait();

@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 #endregion
 
@@ -26,59 +27,42 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// A group of OICP v2.0 EVSE data records.
+    /// A group of OICP v2.0 operator EVSE data records or a status code.
     /// </summary>
     public class eRoamingEVSEData
     {
 
         #region Properties
 
-        #region OperatorId
+        #region OperatorEVSEData
 
-        private readonly EVSEOperator_Id _OperatorId;
+        private readonly IEnumerable<OperatorEVSEData> _OperatorEVSEData;
 
         /// <summary>
-        /// The unique identification of an Electric Vehicle Supply Equipment Operator.
+        /// An enumeration of EVSE data records grouped by their operators.
         /// </summary>
-        public EVSEOperator_Id OperatorId
+        public IEnumerable<OperatorEVSEData> OperatorEVSEData
         {
             get
             {
-                return _OperatorId;
+                return _OperatorEVSEData;
             }
         }
 
         #endregion
 
-        #region OperatorName
+        #region StatusCode
 
-        private readonly String _OperatorName;
+        private readonly StatusCode _StatusCode;
 
         /// <summary>
-        /// The name of an Electric Vehicle Supply Equipment Operator.
+        /// The status code for this request.
         /// </summary>
-        public String OperatorName
+        public StatusCode StatusCode
         {
             get
             {
-                return _OperatorName;
-            }
-        }
-
-        #endregion
-
-        #region EVSEDataRecords
-
-        private readonly IEnumerable<EVSEDataRecord> _EVSEDataRecords;
-
-        /// <summary>
-        /// An enumeration of EVSE data records.
-        /// </summary>
-        public IEnumerable<EVSEDataRecord> EVSEDataRecords
-        {
-            get
-            {
-                return _EVSEDataRecords;
+                return _StatusCode;
             }
         }
 
@@ -88,31 +72,126 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Constructor(s)
 
+        #region (private) eRoamingEVSEData(OperatorEVSEData, StatusCode  = null)
+
         /// <summary>
-        /// Create a new group of OICP v2.0 EVSE data records.
+        /// Create a new group of OICP v2.0 operator EVSE data records or a status code.
         /// </summary>
-        /// <param name="OperatorId">The unique identification of an Electric Vehicle Supply Equipment Operator.</param>
-        /// <param name="OperatorName">The name of an Electric Vehicle Supply Equipment Operator.</param>
-        /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
-        public eRoamingEVSEData(EVSEOperator_Id              OperatorId,
-                                String                       OperatorName,
-                                IEnumerable<EVSEDataRecord>  EVSEDataRecords)
+        /// <param name="OperatorEVSEData">An enumeration of EVSE data records grouped by their operators.</param>
+        /// <param name="StatusCode">An optional status code for this request.</param>
+        private eRoamingEVSEData(IEnumerable<OperatorEVSEData>  OperatorEVSEData,
+                                 StatusCode                     StatusCode  = null)
         {
 
             #region Initial checks
 
-            if (OperatorId == null)
-                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+            if (OperatorEVSEData == null)
+                throw new ArgumentNullException("OperatorEVSEData", "The given parameter must not be null!");
 
             #endregion
 
-            this._OperatorId       = OperatorId;
-            this._OperatorName     = OperatorName    != null ? OperatorName    : "";
-            this._EVSEDataRecords  = EVSEDataRecords != null ? EVSEDataRecords : new EVSEDataRecord[0];
+            this._OperatorEVSEData  = OperatorEVSEData;
+            this._StatusCode        = StatusCode != null ? StatusCode : new StatusCode(0);
 
         }
 
         #endregion
+
+        #region (private) eRoamingEVSEData(StatusCode)
+
+        /// <summary>
+        /// Create a new group of OICP v2.0 operator EVSE data records or a status code.
+        /// </summary>
+        /// <pparam name="StatusCode">The status code for this request.</pparam>
+        private eRoamingEVSEData(StatusCode  StatusCode)
+        {
+
+            this._OperatorEVSEData  = null;
+            this._StatusCode        = StatusCode == null ? StatusCode : new StatusCode(-1);
+
+        }
+
+        #endregion
+
+        #endregion
+
+
+        #region (static) Parse(eRoamingEVSEDataXML)
+
+        public static eRoamingEVSEData Parse(XElement eRoamingEVSEDataXML)
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //
+            // [...]
+            //
+            //  <EVSEData:eRoamingEvseData>
+            //
+            //     <EVSEData:EvseData>
+            //
+            //        <!--Zero or more repetitions:-->
+            //        <EVSEData:OperatorEvseData>
+            //
+            //           <EVSEData:OperatorID>?</EVSEData:OperatorID>
+            //
+            //           <!--Optional:-->
+            //           <EVSEData:OperatorName>?</EVSEData:OperatorName>
+            //
+            //           <!--Zero or more repetitions:-->
+            //           <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
+            //              [...]
+            //           </EVSEData:EvseDataRecord>
+            //
+            //        </EVSEData:OperatorEvseData>
+            //
+            //     </EVSEData:EvseData>
+            //
+            //     <!--Optional:-->
+            //     <EVSEData:StatusCode>
+            //
+            //        <CommonTypes:Code>?</CommonTypes:Code>
+            //
+            //        <!--Optional:-->
+            //        <CommonTypes:Description>?</CommonTypes:Description>
+            //
+            //        <!--Optional:-->
+            //        <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+            //
+            //     </EVSEData:StatusCode>
+            //
+            //  </EVSEData:eRoamingEvseData>
+            //
+            // [...]
+
+            #endregion
+
+            if (eRoamingEVSEDataXML.Name != OICPNS.EVSEData + "eRoamingEvseData")
+                throw new Exception("Invalid eRoamingEvseData XML!");
+
+            var EVSEDataXML    = eRoamingEVSEDataXML.Element(OICPNS.EVSEData + "EvseData");
+            var StatusCodeXML  = eRoamingEVSEDataXML.Element(OICPNS.EVSEData + "StatusCode");
+
+            if (EVSEDataXML != null)
+            {
+
+                var OperatorEvseDataXMLs = EVSEDataXML.Elements(OICPNS.EVSEData + "OperatorEvseData");
+
+                if (OperatorEvseDataXMLs != null)
+                    return new eRoamingEVSEData(OICP_2_0.OperatorEVSEData.Parse(OperatorEvseDataXMLs),
+                                                StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+
+            }
+
+            return new eRoamingEVSEData(StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+
+        }
+
+        #endregion
+
 
     }
 
