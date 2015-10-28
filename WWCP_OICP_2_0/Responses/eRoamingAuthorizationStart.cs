@@ -146,12 +146,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Create a new authorization start result.
         /// </summary>
-        private eRoamingAuthorizationStart(AuthorizationStatusType                   AuthorizationStatus,
-                                           ChargingSession_Id                        SessionId                     = null,
-                                           ChargingSession_Id                        PartnerSessionId              = null,
-                                           EVSP_Id                                   ProviderId                    = null,
-                                           StatusCode                                StatusCode                    = null,
-                                           IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications  = null)
+        public eRoamingAuthorizationStart(AuthorizationStatusType                   AuthorizationStatus,
+                                          ChargingSession_Id                        SessionId                     = null,
+                                          ChargingSession_Id                        PartnerSessionId              = null,
+                                          EVSP_Id                                   ProviderId                    = null,
+                                          StatusCode                                StatusCode                    = null,
+                                          IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications  = null)
         {
 
             this._AuthorizationStatus           = AuthorizationStatus;

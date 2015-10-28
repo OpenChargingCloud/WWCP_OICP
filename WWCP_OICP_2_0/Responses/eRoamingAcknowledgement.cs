@@ -27,9 +27,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// A Hubject Acknowledgement result.
+    /// An acknowledgement result.
     /// </summary>
-    public class HubjectAcknowledgement
+    public class eRoamingAcknowledgement
     {
 
         #region Properties
@@ -51,52 +51,18 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region Code
+        #region StatusCode
 
-        private readonly UInt16 _Code;
+        private readonly StatusCode _StatusCode;
 
         /// <summary>
-        /// The result code of the operation.
+        /// The status code of the operation.
         /// </summary>
-        public UInt16 Code
+        public StatusCode StatusCode
         {
             get
             {
-                return _Code;
-            }
-        }
-
-        #endregion
-
-        #region Description
-
-        private readonly String _Description;
-
-        /// <summary>
-        /// The description of the result code.
-        /// </summary>
-        public String Description
-        {
-            get
-            {
-                return _Description;
-            }
-        }
-
-        #endregion
-
-        #region AdditionalInfo
-
-        private readonly String _AdditionalInfo;
-
-        /// <summary>
-        /// Additional information.
-        /// </summary>
-        public String AdditionalInfo
-        {
-            get
-            {
-                return _AdditionalInfo;
+                return _StatusCode;
             }
         }
 
@@ -113,16 +79,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="Code">The result code of the operation.</param>
         /// <param name="Description">The description of the result code.</param>
         /// <param name="AdditionalInfo">Additional information.</param>
-        public HubjectAcknowledgement(Boolean  Result,
-                                      UInt16   Code,
-                                      String   Description     = null,
-                                      String   AdditionalInfo  = null)
+        public eRoamingAcknowledgement(Boolean  Result,
+                                       Int16    Code,
+                                       String   Description     = null,
+                                       String   AdditionalInfo  = null)
         {
 
-            this._Result          = Result;
-            this._Code            = Code;
-            this._Description     = Description    != null ? Description    : String.Empty;
-            this._AdditionalInfo  = AdditionalInfo != null ? AdditionalInfo : String.Empty;
+            this._Result      = Result;
+            this._StatusCode  = new StatusCode(Code,
+                                               Description    != null ? Description    : String.Empty,
+                                               AdditionalInfo != null ? AdditionalInfo : String.Empty);
 
         }
 
@@ -135,10 +101,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// Create a new Hubject Acknowledgement result.
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
-        public static HubjectAcknowledgement Parse(XElement XML)
+        public static eRoamingAcknowledgement Parse(XElement XML)
         {
 
-            HubjectAcknowledgement _Acknowledgement;
+            eRoamingAcknowledgement _Acknowledgement;
 
             if (TryParse(XML, out _Acknowledgement))
                 return _Acknowledgement;
@@ -156,7 +122,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement</param>
-        public static Boolean TryParse(XElement XML, out HubjectAcknowledgement Acknowledgement)
+        public static Boolean TryParse(XElement XML, out eRoamingAcknowledgement Acknowledgement)
         {
 
             #region Documentation
@@ -217,8 +183,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 var StatusCode       = ack.Element(OICPNS.CommonTypes + "StatusCode");
 
-                UInt16 _Code;
-                if (!UInt16.TryParse(StatusCode.Element(OICPNS.CommonTypes + "Code").Value, out _Code))
+                Int16 _Code;
+                if (!Int16.TryParse(StatusCode.Element(OICPNS.CommonTypes + "Code").Value, out _Code))
                     return false;
 
                 var _Description     = StatusCode.Element(OICPNS.CommonTypes + "Description").Value;
@@ -227,7 +193,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                            ? StatusCode.Element(OICPNS.CommonTypes + "AdditionalInfo").Value
                                            : String.Empty;
 
-                Acknowledgement = new HubjectAcknowledgement(_Result, _Code, _Description, _AdditionalInfo);
+                Acknowledgement = new eRoamingAcknowledgement(_Result, _Code, _Description, _AdditionalInfo);
 
                 return true;
 
@@ -249,7 +215,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// </summary>
         public override String ToString()
         {
-            return Description;
+            return String.Concat("Result: " + _Result + "; " + _StatusCode.Code, " / ", _StatusCode.Description, " / ", _StatusCode.AdditionalInfo);
         }
 
         #endregion

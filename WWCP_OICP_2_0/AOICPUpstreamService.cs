@@ -25,6 +25,7 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
+using System.Xml.Linq;
 
 #endregion
 
@@ -85,20 +86,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             get
             {
                 return _HTTPVirtualHost;
-            }
-        }
-
-        #endregion
-
-        #region AuthorizatorId
-
-        protected readonly Authorizator_Id _AuthorizatorId;
-
-        public Authorizator_Id AuthorizatorId
-        {
-            get
-            {
-                return _AuthorizatorId;
             }
         }
 
@@ -190,6 +177,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+        #region OnSOAPError
+
+        /// <summary>
+        /// A delegate called whenever a SOAP error occured.
+        /// </summary>
+        public delegate void OnSOAPErrorDelegate(DateTime Timestamp, Object Sender, XElement SOAPXML);
+
+        /// <summary>
+        /// An event fired whenever a SOAP error occured.
+        /// </summary>
+        public event OnSOAPErrorDelegate OnSOAPError;
+
+        #endregion
+
         #endregion
 
         #region Constructor(s)
@@ -200,14 +201,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="Hostname">The OICP hostname to connect to.</param>
         /// <param name="TCPPort">The OICP TCP port to connect to.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
-        /// <param name="AuthorizatorId">An optional authorizator identification to use.</param>
         /// <param name="UserAgent">An optional HTTP user agent to use.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         internal AOICPUpstreamService(String           Hostname,
                                       IPPort           TCPPort,
                                       String           HTTPVirtualHost  = null,
-                                      Authorizator_Id  AuthorizatorId   = null,
                                       String           UserAgent        = "GraphDefined OICP Gateway",
                                       TimeSpan?        QueryTimeout     = null,
                                       DNSClient        DNSClient        = null)
@@ -230,10 +229,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                          ? HTTPVirtualHost
                                          : Hostname;
 
-            this._AuthorizatorId   = (AuthorizatorId == null)
-                                         ? Authorizator_Id.Parse("OICP Gateway")
-                                         : AuthorizatorId;
-
             this._UserAgent        = UserAgent;
 
             this._QueryTimeout     = QueryTimeout != null
@@ -248,6 +243,29 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+
+        #region (protected) SendOnSOAPError(Timestamp, Sender, SOAPXML)
+
+        /// <summary>
+        /// Notify that an HTTP error occured.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the error received.</param>
+        /// <param name="Sender">The sender of this error message.</param>
+        /// <param name="SOAPXML">The SOAP fault/error.</param>
+        protected void SendOnSOAPError(DateTime  Timestamp,
+                                       Object    Sender,
+                                       XElement  SOAPXML)
+        {
+
+            DebugX.Log("AOICPUpstreamService => SOAP Fault: " + SOAPXML != null ? SOAPXML.ToString() : "<null>");
+
+            var OnSOAPErrorLocal = OnSOAPError;
+            if (OnSOAPErrorLocal != null)
+                OnSOAPErrorLocal(Timestamp, Sender, SOAPXML);
+
+        }
+
+        #endregion
 
         #region (protected) SendOnHTTPError(Timestamp, Sender, HttpResponse)
 

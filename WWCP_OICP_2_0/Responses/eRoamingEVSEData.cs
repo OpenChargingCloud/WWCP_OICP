@@ -72,15 +72,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Constructor(s)
 
-        #region (private) eRoamingEVSEData(OperatorEVSEData, StatusCode  = null)
+        #region eRoamingEVSEData(OperatorEVSEData, StatusCode  = null)
 
         /// <summary>
         /// Create a new group of OICP v2.0 operator EVSE data records or a status code.
         /// </summary>
         /// <param name="OperatorEVSEData">An enumeration of EVSE data records grouped by their operators.</param>
         /// <param name="StatusCode">An optional status code for this request.</param>
-        private eRoamingEVSEData(IEnumerable<OperatorEVSEData>  OperatorEVSEData,
-                                 StatusCode                     StatusCode  = null)
+        public eRoamingEVSEData(IEnumerable<OperatorEVSEData>  OperatorEVSEData,
+                                StatusCode                     StatusCode  = null)
         {
 
             #region Initial checks
@@ -97,17 +97,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region (private) eRoamingEVSEData(StatusCode)
+        #region eRoamingEVSEData(StatusCode)
 
         /// <summary>
         /// Create a new group of OICP v2.0 operator EVSE data records or a status code.
         /// </summary>
         /// <pparam name="StatusCode">The status code for this request.</pparam>
-        private eRoamingEVSEData(StatusCode  StatusCode)
+        public eRoamingEVSEData(StatusCode  StatusCode)
         {
 
             this._OperatorEVSEData  = new OperatorEVSEData[0];
-            this._StatusCode        = StatusCode == null ? StatusCode : new StatusCode(-1);
+            this._StatusCode        = StatusCode != null ? StatusCode : new StatusCode(-1);
 
         }
 

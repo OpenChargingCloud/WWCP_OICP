@@ -144,7 +144,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                     try
                                                     {
-                                                        return XMLMethods.ParseEVSEDataRecordXML(XML);
+                                                        return EVSEDataRecord.Parse(XML);
                                                     }
                                                     catch (Exception e)
                                                     {
@@ -192,7 +192,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
-
 
     }
 

@@ -18,8 +18,11 @@
 #region Usings
 
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
+using System.Collections.Generic;
+
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -29,23 +32,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// A group of OICP v2.0 operator EVSE status records or a status code.
     /// </summary>
-    public class eRoamingEVSEStatus
+    public class eRoamingEVSEStatusById
     {
 
         #region Properties
 
-        #region OperatorEVSEStatus
+        #region EVSEStatusRecords
 
-        private readonly IEnumerable<OperatorEVSEStatus> _OperatorEVSEStatus;
+        private readonly IEnumerable<EVSEStatusRecord> _EVSEStatusRecords;
 
         /// <summary>
-        /// An enumeration of EVSE status records grouped by their operators.
+        /// An enumeration of EVSE status records.
         /// </summary>
-        public IEnumerable<OperatorEVSEStatus> OperatorEVSEStatus
+        public IEnumerable<EVSEStatusRecord> EVSEStatusRecords
         {
             get
             {
-                return _OperatorEVSEStatus;
+                return _EVSEStatusRecords;
             }
         }
 
@@ -72,42 +75,42 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Constructor(s)
 
-        #region (private) eRoamingEVSEStatus(OperatorEVSEStatus, StatusCode  = null)
+        #region eRoamingEVSEStatusById(OperatorEVSEStatus, StatusCode  = null)
 
         /// <summary>
         /// Create a new group of OICP v2.0 operator EVSE status records or a status code.
         /// </summary>
-        /// <param name="OperatorEVSEStatus">An enumeration of EVSE status records grouped by their operators.</param>
+        /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
         /// <param name="StatusCode">An optional status code for this request.</param>
-        private eRoamingEVSEStatus(IEnumerable<OperatorEVSEStatus>  OperatorEVSEStatus,
-                                   StatusCode                       StatusCode  = null)
+        public eRoamingEVSEStatusById(IEnumerable<EVSEStatusRecord>  EVSEStatusRecords,
+                                      StatusCode                     StatusCode  = null)
         {
 
             #region Initial checks
 
-            if (OperatorEVSEStatus == null)
-                throw new ArgumentNullException("OperatorEVSEStatus", "The given parameter must not be null!");
+            if (EVSEStatusRecords == null)
+                throw new ArgumentNullException("EVSEStatusRecords", "The given parameter must not be null!");
 
             #endregion
 
-            this._OperatorEVSEStatus  = OperatorEVSEStatus;
+            this._EVSEStatusRecords  = EVSEStatusRecords;
             this._StatusCode          = StatusCode != null ? StatusCode : new StatusCode(0);
 
         }
 
         #endregion
 
-        #region (private) eRoamingEVSEStatus(StatusCode)
+        #region eRoamingEVSEStatus(StatusCode)
 
         /// <summary>
         /// Create a new group of OICP v2.0 operator EVSE status records or a status code.
         /// </summary>
         /// <pparam name="StatusCode">The status code for this request.</pparam>
-        private eRoamingEVSEStatus(StatusCode  StatusCode)
+        public eRoamingEVSEStatusById(StatusCode StatusCode)
         {
 
-            this._OperatorEVSEStatus  = new OperatorEVSEStatus[0];
-            this._StatusCode          = StatusCode == null ? StatusCode : new StatusCode(-1);
+            this._EVSEStatusRecords  = new EVSEStatusRecord[0];
+            this._StatusCode         = StatusCode != null ? StatusCode : new StatusCode(-1);
 
         }
 
@@ -116,9 +119,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region (static) Parse(eRoamingEVSEStatusXML)
+        #region (static) Parse(eRoamingEvseStatusByIdXML)
 
-        public static eRoamingEVSEStatus Parse(XElement eRoamingEVSEStatusXML)
+        public static eRoamingEVSEStatusById Parse(XElement eRoamingEvseStatusByIdXML)
         {
 
             #region Documentation
@@ -129,25 +132,18 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //
             // [...]
             //
-            //  <EVSEStatus:eRoamingEvseStatus>
+            //  <EVSEStatus:eRoamingEvseStatusById>
             //
-            //     <EVSEStatus:EvseStatuses>
+            //     <!--Optional:-->
+            //     <EVSEStatus:EvseStatusRecords>
+            //
             //        <!--Zero or more repetitions:-->
-            //        <EVSEStatus:OperatorEvseStatus>
+            //        <EVSEStatus:EvseStatusRecord>
+            //           <EVSEStatus:EvseId>?</EVSEStatus:EvseId>
+            //           <EVSEStatus:EvseStatus>?</EVSEStatus:EvseStatus>
+            //        </EVSEStatus:EvseStatusRecord>
             //
-            //           <EVSEStatus:OperatorID>?</EVSEStatus:OperatorID>
-            //
-            //           <!--Optional:-->
-            //           <EVSEStatus:OperatorName>?</EVSEStatus:OperatorName>
-            //
-            //           <!--Zero or more repetitions:-->
-            //           <EVSEStatus:EvseStatusRecord>
-            //              <EVSEStatus:EvseId>?</EVSEStatus:EvseId>
-            //              <EVSEStatus:EvseStatus>?</EVSEStatus:EvseStatus>
-            //           </EVSEStatus:EvseStatusRecord>
-            //
-            //        </EVSEStatus:OperatorEvseStatus>
-            //     </EVSEStatus:EvseStatuses>
+            //     </EVSEStatus:EvseStatusRecords>
             //
             //     <!--Optional:-->
             //     <EVSEStatus:StatusCode>
@@ -169,24 +165,21 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            if (eRoamingEVSEStatusXML.Name != OICPNS.EVSEStatus + "eRoamingEvseStatus")
-                throw new Exception("Invalid eRoamingEvseStatus XML!");
+            if (eRoamingEvseStatusByIdXML.Name != OICPNS.EVSEStatus + "eRoamingEvseStatusById")
+                throw new Exception("Invalid eRoamingEvseStatusById XML!");
 
-            var EVSEStatusXML  = eRoamingEVSEStatusXML.Element(OICPNS.EVSEStatus + "EvseStatuses");
-            var StatusCodeXML  = eRoamingEVSEStatusXML.Element(OICPNS.EVSEStatus + "StatusCode");
+            var EvseStatusRecordsXML  = eRoamingEvseStatusByIdXML.Element(OICPNS.EVSEStatus + "EvseStatusRecords");
+            var StatusCodeXML         = eRoamingEvseStatusByIdXML.Element(OICPNS.EVSEStatus + "StatusCode");
 
-            if (EVSEStatusXML != null)
-            {
-
-                var OperatorEvseStatusXMLs = EVSEStatusXML.Elements(OICPNS.EVSEStatus + "OperatorEvseStatus");
-
-                if (OperatorEvseStatusXMLs != null)
-                    return new eRoamingEVSEStatus(OICP_2_0.OperatorEVSEStatus.Parse(OperatorEvseStatusXMLs),
+            if (EvseStatusRecordsXML != null)
+                return new eRoamingEVSEStatusById(EvseStatusRecordsXML.
+                                                      Elements  (OICPNS.EVSEStatus + "EvseStatusRecord").
+                                                      SafeSelect(EvseStatusRecordXML => EVSEStatusRecord.Parse(EvseStatusRecordXML)).
+                                                      Where     (statusrecord        => statusrecord != null),
                                                   StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
 
-            }
 
-            return new eRoamingEVSEStatus(StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+            return new eRoamingEVSEStatusById(StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
 
         }
 

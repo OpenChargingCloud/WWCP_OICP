@@ -503,6 +503,64 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+
+
+        public static EVSEStatusType AsEVSEStatusType(this OICPEVSEStatusType EVSEStatus)
+        {
+
+            switch (EVSEStatus)
+            {
+
+                case OICPEVSEStatusType.Available:
+                    return EVSEStatusType.Available;
+
+                case OICPEVSEStatusType.Reserved:
+                    return EVSEStatusType.Reserved;
+
+                case OICPEVSEStatusType.Occupied:
+                    return EVSEStatusType.Occupied;
+
+                case OICPEVSEStatusType.OutOfService:
+                    return EVSEStatusType.OutOfService;
+
+                case OICPEVSEStatusType.EvseNotFound:
+                    return EVSEStatusType.EvseNotFound;
+
+                default:
+                    return EVSEStatusType.Unknown;
+
+            }
+
+        }
+
+        public static OICPEVSEStatusType AsOICPEVSEStatus(this EVSEStatusType EVSEStatus)
+        {
+
+            switch (EVSEStatus)
+            {
+
+                case EVSEStatusType.Available:
+                    return OICPEVSEStatusType.Available;
+
+                case EVSEStatusType.Reserved:
+                    return OICPEVSEStatusType.Reserved;
+
+                case EVSEStatusType.Occupied:
+                    return OICPEVSEStatusType.Occupied;
+
+                case EVSEStatusType.OutOfService:
+                    return OICPEVSEStatusType.OutOfService;
+
+                case EVSEStatusType.EvseNotFound:
+                    return OICPEVSEStatusType.EvseNotFound;
+
+                default:
+                    return OICPEVSEStatusType.Unknown;
+
+            }
+
+        }
+
     }
 
 }

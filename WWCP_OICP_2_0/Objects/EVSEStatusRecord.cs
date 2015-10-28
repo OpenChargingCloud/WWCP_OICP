@@ -21,6 +21,7 @@ using System;
 using System.Xml.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Collections.Generic;
 
 #endregion
 
@@ -51,9 +52,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Status
 
-        private readonly OICPEVSEStatus _Status;
+        private readonly OICPEVSEStatusType _Status;
 
-        public OICPEVSEStatus Status
+        public OICPEVSEStatusType Status
         {
             get
             {
@@ -68,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region Constructor(s)
 
         public EVSEStatusRecord(EVSE_Id         Id,
-                                OICPEVSEStatus  Status)
+                                OICPEVSEStatusType  Status)
 
         {
 
@@ -87,9 +88,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region Parse(EVSEStatusRecordXML)
 
         public static EVSEStatusRecord Parse(XElement EVSEStatusRecordXML)
         {
+
+            #region Documentation
 
             // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
             //                   xmlns:EVSEStatus  = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
@@ -103,6 +107,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //
             // [...]
 
+            #endregion
+
             try
             {
 
@@ -111,7 +117,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 return new EVSEStatusRecord(
                     EVSE_Id.Parse(EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseId")),
-                    (OICPEVSEStatus) Enum.Parse(typeof(OICPEVSEStatus), EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus"))
+                    (OICPEVSEStatusType) Enum.Parse(typeof(OICPEVSEStatusType), EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus"))
                 );
 
             }
@@ -121,6 +127,63 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             }
 
         }
+
+        #endregion
+
+        #region ToXML()
+
+        public XElement ToXML()
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv    = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
+            //
+            // [...]
+            //
+            //   <EVSEStatus:EvseStatusRecord>
+            //      <EVSEStatus:EvseId>?</EVSEData:EvseId>
+            //      <EVSEStatus:EvseStatus>?</EVSEData:EvseStatus>
+            //   </EVSEStatus:EvseStatusRecord>
+            //
+            // [...]
+
+            #endregion
+
+            return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
+                       new XElement(OICPNS.EVSEStatus + "EvseId",     _Id.    OriginId),
+                       new XElement(OICPNS.EVSEStatus + "EvseStatus", _Status.ToString())
+                   );
+
+        }
+
+        #endregion
+
+
+        #region (implicit) ToEVSEStatusRecord(KeyValuePair)
+
+        /// <summary>
+        /// Implicit conversion from KeyValuePair to EVSEStatusRecord.
+        /// </summary>
+        public EVSEStatusRecord ToEVSEStatusRecord(KeyValuePair<EVSE_Id, OICPEVSEStatusType> KeyValuePair)
+        {
+            return new EVSEStatusRecord(KeyValuePair.Key, KeyValuePair.Value);
+        }
+
+        #endregion
+
+        #region (implicit) ToKeyValuePair(EVSEStatusRecord EVSEStatusRecord)
+
+        /// <summary>
+        /// Implicit conversion from EVSEStatusRecord to KeyValuePair.
+        /// </summary>
+        public KeyValuePair<EVSE_Id, OICPEVSEStatusType> ToKeyValuePair(EVSEStatusRecord EVSEStatusRecord)
+        {
+            return new KeyValuePair<EVSE_Id, OICPEVSEStatusType>(EVSEStatusRecord.Id, EVSEStatusRecord.Status);
+        }
+
+        #endregion
 
     }
 

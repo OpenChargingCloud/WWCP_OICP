@@ -189,64 +189,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds)
-
-        /// <summary>
-        /// Create a new Pull EVSE Status-By-Id request.
-        /// </summary>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
-        public static XElement PullEVSEStatusByIdRequestXML(EVSP_Id               ProviderId,
-                                                            IEnumerable<EVSE_Id>  EVSEIds)
-        {
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv    = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
-            //
-            //    <soapenv:Header/>
-            //    <soapenv:Body>
-            //       <EVSEStatus:eRoamingPullEvseStatusById>
-            //
-            //          <EVSEStatus:ProviderID>?</EVSEStatus:ProviderID>
-            //
-            //          <!--1 to 100 repetitions:-->
-            //          <EVSEStatus:EvseId>?</EVSEStatus:EvseId>
-            //
-            //       </EVSEStatus:eRoamingPullEvseStatusById>
-            //    </soapenv:Body>
-            // </soapenv:Envelope>
-
-            #endregion
-
-            #region Initial checks
-
-            if (ProviderId == null)
-                throw new ArgumentNullException("ProviderId", "The given parameter must not be null!");
-
-            if (EVSEIds == null)
-                throw new ArgumentNullException("EVSEIds", "The given parameter must not be null!");
-
-            var _EVSEIds = EVSEIds.ToArray();
-
-            if (_EVSEIds.Length == 0)
-                throw new ArgumentNullException("EVSEIds", "The given enumeration must not be empty!");
-
-            #endregion
-
-            return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById",
-
-                                          new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
-
-                                          EVSEIds.Select(EVSEId => new XElement(OICPNS.EVSEStatus + "EvseId", EVSEId.OriginId))
-
-                                     ));
-
-        }
-
-        #endregion
-
         #region PullEVSEStatusRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0.0, EVSEStatus = null)
 
         /// <summary>
@@ -259,7 +201,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static XElement PullEVSEStatusRequestXML(EVSP_Id          ProviderId,
                                                         GeoCoordinate    SearchCenter  = null,
                                                         Double           DistanceKM    = 0.0,
-                                                        OICPEVSEStatus?  EVSEStatus    = null)
+                                                        OICPEVSEStatusType?  EVSEStatus    = null)
         {
 
             #region Documentation
@@ -342,6 +284,64 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                           (EVSEStatus != null && EVSEStatus.HasValue)
                                               ? new XElement(OICPNS.EVSEStatus + "EvseStatus",  EVSEStatus.Value)
                                               : null
+
+                                     ));
+
+        }
+
+        #endregion
+
+        #region PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds)
+
+        /// <summary>
+        /// Create a new Pull EVSE Status-By-Id request.
+        /// </summary>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
+        public static XElement PullEVSEStatusByIdRequestXML(EVSP_Id               ProviderId,
+                                                            IEnumerable<EVSE_Id>  EVSEIds)
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv    = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+            //
+            //    <soapenv:Header/>
+            //    <soapenv:Body>
+            //       <EVSEStatus:eRoamingPullEvseStatusById>
+            //
+            //          <EVSEStatus:ProviderID>?</EVSEStatus:ProviderID>
+            //
+            //          <!--1 to 100 repetitions:-->
+            //          <EVSEStatus:EvseId>?</EVSEStatus:EvseId>
+            //
+            //       </EVSEStatus:eRoamingPullEvseStatusById>
+            //    </soapenv:Body>
+            // </soapenv:Envelope>
+
+            #endregion
+
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException("ProviderId", "The given parameter must not be null!");
+
+            if (EVSEIds == null)
+                throw new ArgumentNullException("EVSEIds", "The given parameter must not be null!");
+
+            var _EVSEIds = EVSEIds.ToArray();
+
+            if (_EVSEIds.Length == 0)
+                throw new ArgumentNullException("EVSEIds", "The given enumeration must not be empty!");
+
+            #endregion
+
+            return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById",
+
+                                          new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
+
+                                          EVSEIds.Select(EVSEId => new XElement(OICPNS.EVSEStatus + "EvseId", EVSEId.OriginId))
 
                                      ));
 
