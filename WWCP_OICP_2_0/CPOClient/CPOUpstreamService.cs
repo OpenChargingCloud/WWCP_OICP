@@ -1090,8 +1090,36 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         {
 
+            var AuthorizationStartResult = await _CPOClient.AuthorizeStart(OperatorId,
+                                                                           AuthToken,
+                                                                           EVSEId,
+                                                                           SessionId,
+                                                                           PartnerProductId,
+                                                                           PartnerSessionId,
+                                                                           QueryTimeout);
 
-            return null;
+            // Authorized
+            if (AuthorizationStartResult.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                return new HTTPResponse<AUTHSTARTResult>(AuthorizationStartResult.HttpResponse,
+                                                         new AUTHSTARTResult(AuthorizatorId) {
+                                                             AuthorizationResult  = AuthorizationResult.Authorized,
+                                                             SessionId            = AuthorizationStartResult.Content.SessionId,
+                                                             PartnerSessionId     = AuthorizationStartResult.Content.PartnerSessionId,
+                                                             ProviderId           = AuthorizationStartResult.Content.ProviderId,
+                                                             Description          = AuthorizationStartResult.Content.StatusCode.Description,
+                                                             AdditionalInfo       = AuthorizationStartResult.Content.StatusCode.AdditionalInfo
+                                                         });
+
+            // NotAuthorized
+            return new HTTPResponse<AUTHSTARTResult>(AuthorizationStartResult.HttpResponse,
+                                                     new AUTHSTARTResult(AuthorizatorId) {
+                                                         AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                                                         SessionId            = AuthorizationStartResult.Content.SessionId,
+                                                         PartnerSessionId     = AuthorizationStartResult.Content.PartnerSessionId,
+                                                         ProviderId           = AuthorizationStartResult.Content.ProviderId,
+                                                         Description          = AuthorizationStartResult.Content.StatusCode.Description,
+                                                         AdditionalInfo       = AuthorizationStartResult.Content.StatusCode.AdditionalInfo
+                                                     });
 
         }
 
@@ -1120,7 +1148,36 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                                       TimeSpan?            QueryTimeout      = null)
         {
 
-            return null;
+            var AuthorizationStopResult = await _CPOClient.AuthorizeStop(OperatorId,
+                                                                         SessionId,
+                                                                         AuthToken,
+                                                                         EVSEId,
+                                                                         PartnerSessionId,
+                                                                         QueryTimeout);
+
+            // Authorized
+            if (AuthorizationStopResult.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                return new HTTPResponse<AUTHSTOPResult>(AuthorizationStopResult.HttpResponse,
+                                                        new AUTHSTOPResult(AuthorizatorId) {
+                                                            AuthorizationResult  = AuthorizationResult.Authorized,
+                                                            SessionId            = AuthorizationStopResult.Content.SessionId,
+                                                            PartnerSessionId     = AuthorizationStopResult.Content.PartnerSessionId,
+                                                            ProviderId           = AuthorizationStopResult.Content.ProviderId,
+                                                            Description          = AuthorizationStopResult.Content.StatusCode.Description,
+                                                            AdditionalInfo       = AuthorizationStopResult.Content.StatusCode.AdditionalInfo
+                                                        });
+
+            // NotAuthorized
+            else
+                return new HTTPResponse<AUTHSTOPResult>(AuthorizationStopResult.HttpResponse,
+                                                        new AUTHSTOPResult(AuthorizatorId) {
+                                                            AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                                                            SessionId            = AuthorizationStopResult.Content.SessionId,
+                                                            PartnerSessionId     = AuthorizationStopResult.Content.PartnerSessionId,
+                                                            ProviderId           = AuthorizationStopResult.Content.ProviderId,
+                                                            Description          = AuthorizationStopResult.Content.StatusCode.Description,
+                                                            AdditionalInfo       = AuthorizationStopResult.Content.StatusCode.AdditionalInfo
+                                                        });
 
         }
 

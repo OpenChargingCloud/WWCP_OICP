@@ -243,13 +243,68 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             // </soapenv:Envelope>
 
 
-            // <Authorization:eRoamingAuthorizationStart xmlns:tns="http://www.hubject.com/b2b/services/authorization/v2.0">
+            // <Authorization:eRoamingAuthorizationStart>
             //
             //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
             //
             //   <Authorization:StatusCode>
-            //     <CommonTypes:Code xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.0">102</CommonTypes:Code>
-            //     <CommonTypes:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.0">RFID Authentication failed – invalid UID</CommonTypes:Description>
+            //     <CommonTypes:Code>102</CommonTypes:Code>
+            //     <CommonTypes:Description>RFID Authentication failed – invalid UID</CommonTypes:Description>
+            //   </Authorization:StatusCode>
+            //
+            // </Authorization:eRoamingAuthorizationStart>
+
+
+            // <Authorization:eRoamingAuthorizationStart>
+            //
+            //   <Authorization:SessionID>8fade8bd-0a88-1296-0f2f-41ae8a80af1b</Authorization:SessionID>
+            //   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+            //   <Authorization:ProviderID>BMW</Authorization:ProviderID>
+            //   <Authorization:AuthorizationStatus>Authorized</Authorization:AuthorizationStatus>
+            //
+            //   <Authorization:StatusCode>
+            //     <CommonTypes:Code>000</CommonTypes:Code>
+            //     <CommonTypes:Description>Success</CommonTypes:Description>
+            //   </Authorization:StatusCode>
+            //
+            // </Authorization:eRoamingAuthorizationStart>
+
+
+            // <Authorization:eRoamingAuthorizationStart>
+            //
+            //   <Authorization:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</Authorization:SessionID>
+            //   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+            //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
+            //
+            //   <Authorization:StatusCode>
+            //     <CommonTypes:Code>017</CommonTypes:Code>
+            //     <CommonTypes:Description>Unauthorized Access</CommonTypes:Description>
+            //     <CommonTypes:AdditionalInfo>The identification criterion for the provider/operator with the ID "812" doesn't match the given identification information "/C=DE/ST=Thueringen/L=Jena/O=Hubject/OU=GraphDefined GmbH/CN=GraphDefined Software Development/emailAddress=achim.friedland@graphdefined.com" from the certificate.</CommonTypes:AdditionalInfo>
+            //   </Authorization:StatusCode>
+            //
+            // </Authorization:eRoamingAuthorizationStart>
+
+
+            // <Authorization:eRoamingAuthorizationStart>
+            //
+            //   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+            //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
+            //
+            //   <Authorization:StatusCode>
+            //     <CommonTypes:Code>320</CommonTypes:Code>
+            //     <CommonTypes:Description>Service not available</CommonTypes:Description>
+            //   </Authorization:StatusCode>
+            //
+            // </Authorization:eRoamingAuthorizationStart>
+
+            // <Authorization:eRoamingAuthorizationStart>
+            //
+            //   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+            //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
+            //
+            //   <Authorization:StatusCode>
+            //     <CommonTypes:Code>102</CommonTypes:Code>
+            //     <CommonTypes:Description>RFID Authentication failed – invalid UID</CommonTypes:Description>
             //   </Authorization:StatusCode>
             //
             // </Authorization:eRoamingAuthorizationStart>

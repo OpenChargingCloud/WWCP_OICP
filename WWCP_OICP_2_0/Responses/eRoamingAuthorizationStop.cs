@@ -191,16 +191,32 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             // </soapenv:Envelope>
 
 
-            // <Authorization:eRoamingAuthorizationStart xmlns:tns="http://www.hubject.com/b2b/services/authorization/v2.0">
+
+            // <Authorization:eRoamingAuthorizationStop>
             //
             //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
             //
             //   <Authorization:StatusCode>
-            //     <CommonTypes:Code xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.0">102</CommonTypes:Code>
-            //     <CommonTypes:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.0">RFID Authentication failed – invalid UID</CommonTypes:Description>
+            //     <CommonTypes:Code>102</CommonTypes:Code>
+            //     <CommonTypes:Description>RFID Authentication failed – invalid UID</CommonTypes:Description>
             //   </Authorization:StatusCode>
             //
-            // </Authorization:eRoamingAuthorizationStart>
+            // </Authorization:eRoamingAuthorizationStop>
+
+
+
+            // <Authorization:eRoamingAuthorizationStop>
+            //
+            //   <Authorization:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</Authorization:SessionID>
+            //   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+            //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
+            //
+            //   <Authorization:StatusCode>
+            //     <CommonTypes:Code>400</CommonTypes:Code>
+            //     <CommonTypes:Description>Session is invalid</CommonTypes:Description>
+            //   </Authorization:StatusCode>
+            //
+            // </Authorization:eRoamingAuthorizationStop>
 
             #endregion
 
