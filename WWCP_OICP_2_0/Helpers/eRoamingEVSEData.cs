@@ -106,7 +106,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         private eRoamingEVSEData(StatusCode  StatusCode)
         {
 
-            this._OperatorEVSEData  = null;
+            this._OperatorEVSEData  = new OperatorEVSEData[0];
             this._StatusCode        = StatusCode == null ? StatusCode : new StatusCode(-1);
 
         }

@@ -122,7 +122,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region (static) ParseOperatorEVSEDataXML(OperatorEVSEDataXML)
+        #region (static) Parse(OperatorEVSEDataXML)
 
         public static OperatorEVSEData Parse(XElement  OperatorEVSEDataXML)
         {
@@ -163,7 +163,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region (static) ParseOperatorEVSEDataXML(OperatorEVSEDataXMLs)
+        #region (static) Parse(OperatorEVSEDataXMLs)
 
         public static IEnumerable<OperatorEVSEData> Parse(IEnumerable<XElement>  OperatorEVSEDataXMLs)
         {
@@ -186,7 +186,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             }
             catch (Exception e)
             {
-                return null;
+                return new OperatorEVSEData[0];
             }
 
         }

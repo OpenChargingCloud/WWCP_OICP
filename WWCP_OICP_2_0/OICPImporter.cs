@@ -635,11 +635,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                                                         if (NewEVSEStatusTask.Result != null)
                                                                                             if (NewEVSEStatusTask.Result.Content != null)
-                                                                                                NewEVSEStatusTask.Result.Content.ForEach(NewEVSEStatus =>
+                                                                                                NewEVSEStatusTask.Result.Content.EVSEStatusRecords.ForEach(NewEVSEStatusRecord =>
                                                                                                     _EVSEStatusHandler(UpdateContext,
                                                                                                                        DateTime.Now,
-                                                                                                                       NewEVSEStatus.Key,
-                                                                                                                       NewEVSEStatus.Value));
+                                                                                                                       NewEVSEStatusRecord.Id,
+                                                                                                                       NewEVSEStatusRecord.Status));
 
                                                                                     }, cancellationTokenS.Token)
                                                                                     )

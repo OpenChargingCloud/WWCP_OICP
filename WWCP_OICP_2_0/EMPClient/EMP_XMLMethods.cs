@@ -168,11 +168,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                               ? new XElement(OICPNS.EVSEData + "SearchCenter",
                                                   new XElement(OICPNS.CommonTypes + "GeoCoordinates",
                                                       new XElement(OICPNS.CommonTypes + "DecimalDegree",
-                                                          new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}").Replace(",", ".")),//.ToString(CultureInfo.InvariantCulture.NumberFormat)),
-                                                          new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}").Replace(",", "."))//.ToString(CultureInfo.InvariantCulture.NumberFormat)))
+                                                          new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}").Replace(",", ".")),
+                                                          new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}").Replace(",", "."))
                                                       )
                                                   ),
-                                                  new XElement(OICPNS.CommonTypes + "Radius", String.Format("{0:0.}", DistanceKM).Replace(",", "."))//.ToString(CultureInfo.InvariantCulture.NumberFormat))
+                                                  new XElement(OICPNS.CommonTypes + "Radius", String.Format("{0:0.}", DistanceKM).Replace(",", "."))
                                                 )
                                               : null,
 
@@ -329,12 +329,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                     new XElement(OICPNS.CommonTypes + "GeoCoordinates",
                                                         new XElement(OICPNS.CommonTypes + "DecimalDegree",
-                                                           new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}")),
-                                                           new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}"))
+                                                           new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}").Replace(",", ".")),
+                                                           new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}").Replace(",", "."))
                                                         )
                                                     ),
 
-                                                    new XElement(OICPNS.CommonTypes + "Radius", DistanceKM.ToString("{0:0.#}"))
+                                                    new XElement(OICPNS.CommonTypes + "Radius", String.Format("{0:0.}", DistanceKM).Replace(",", "."))
 
                                                 )
                                               : null,
@@ -350,7 +350,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region SearchEvseRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0, Address = null, Plug = null, ChargingFacility = null)
+        #region SearchEvseRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null)
 
         /// <summary>
         /// Create a new Search EVSE request.
@@ -363,7 +363,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
         public static XElement SearchEvseRequestXML(EVSP_Id              ProviderId,
                                                     GeoCoordinate        SearchCenter      = null,
-                                                    UInt64               DistanceKM        = 0,
+                                                    Double               DistanceKM        = 0.0,
                                                     Address              Address           = null,
                                                     PlugTypes?           Plug              = null,
                                                     ChargingFacilities?  ChargingFacility  = null)
@@ -445,9 +445,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                               ? new XElement(OICPNS.EVSEData + "SearchCenter",
                                                   new XElement(OICPNS.CommonTypes + "GeoCoordinates",
                                                       new XElement(OICPNS.CommonTypes + "DecimalDegree",
-                                                          new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat)),
-                                                          new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString(CultureInfo.InvariantCulture.NumberFormat)))
-                                                  ))
+                                                          new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}").Replace(",", ".")),
+                                                          new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}").Replace(",", "."))
+                                                      )
+                                                  )
+                                                )
                                               : null,
 
                                           (Address         != null            &&
@@ -484,7 +486,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                           new XElement(OICPNS.EVSESearch + "ProviderID", ProviderId),
 
                                           (SearchCenter     != null && DistanceKM > 0)
-                                              ? new XElement(OICPNS.EVSESearch + "Range", DistanceKM)
+                                              ? new XElement(OICPNS.EVSESearch + "Range", String.Format("{0:0.}", DistanceKM).Replace(",", "."))
                                               : null,
 
                                           (Plug             != null && Plug.HasValue)

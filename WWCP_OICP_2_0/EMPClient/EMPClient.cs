@@ -194,6 +194,36 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region PullEVSEStatus(ProviderId, SearchCenter = null, DistanceKM = 0.0, EVSEStatusFilter = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Create a new task requesting the current status of all EVSEs (within an optional search radius and status).
+        /// </summary>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
+        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
+        /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingEVSEStatus>>
+
+            PullEVSEStatus(EVSP_Id          ProviderId,
+                           GeoCoordinate    SearchCenter      = null,
+                           Double           DistanceKM        = 0.0,
+                           OICPEVSEStatus?  EVSEStatusFilter  = null,
+                           TimeSpan?        QueryTimeout      = null)
+
+        {
+
+            return await _EMPUpstreamService.PullEVSEStatus(ProviderId,
+                                                            SearchCenter,
+                                                            DistanceKM,
+                                                            EVSEStatusFilter,
+                                                            QueryTimeout);
+
+        }
+
+        #endregion
+
         #region PullEVSEStatusById(ProviderId, EVSEIds, QueryTimeout = null)
 
         /// <summary>
@@ -202,7 +232,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>>
+        public async Task<HTTPResponse<eRoamingEVSEStatusById>>
 
             PullEVSEStatusById(EVSP_Id               ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
@@ -213,36 +243,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             return await _EMPUpstreamService.PullEVSEStatusById(ProviderId,
                                                                 EVSEIds,
                                                                 QueryTimeout);
-
-        }
-
-        #endregion
-
-        #region PullEVSEStatus(ProviderId, SearchCenter = null, DistanceKM = 0, EVSEStatus = null, QueryTimeout = null)
-
-        /// <summary>
-        /// Create a new task requesting the current status of all EVSEs (within an optional search radius and status).
-        /// </summary>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
-        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
-        /// <param name="EVSEStatus">An optional EVSE status as filter criteria.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatus>>>>
-
-            PullEVSEStatus(EVSP_Id          ProviderId,
-                           GeoCoordinate    SearchCenter  = null,
-                           UInt64           DistanceKM    = 0,
-                           OICPEVSEStatus?  EVSEStatus    = null,
-                           TimeSpan?        QueryTimeout  = null)
-
-        {
-
-            return await _EMPUpstreamService.PullEVSEStatus(ProviderId,
-                                                            SearchCenter,
-                                                            DistanceKM,
-                                                            EVSEStatus,
-                                                            QueryTimeout);
 
         }
 
@@ -425,13 +425,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region SearchEVSE(ProviderId, EVSEIds, QueryTimeout = null)
+        #region SearchEVSE(ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null, QueryTimeout = null)
 
         /// <summary>
         /// Create a new Search EVSE request.
         /// </summary>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
+        /// <param name="SearchCenter">An optional geocoordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="Address">An optional address of the charging stations.</param>
         /// <param name="Plug">Optional plugs of the charging station.</param>
@@ -441,7 +441,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             SearchEVSE(EVSP_Id              ProviderId,
                        GeoCoordinate        SearchCenter      = null,
-                       UInt64               DistanceKM        = 0,
+                       Double               DistanceKM        = 0.0,
                        Address              Address           = null,
                        PlugTypes?           Plug              = null,
                        ChargingFacilities?  ChargingFacility  = null,
