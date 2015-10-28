@@ -50,7 +50,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region Code
+        #region HasResult
 
         /// <summary>
         /// Whether the operation was successful and returned a valid result.
@@ -64,7 +64,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
-
 
         #region Description
 
@@ -124,18 +123,18 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region (static) Parse(XML)
+        #region (static) Parse(StatusCodeXML)
 
         /// <summary>
         /// Create a new Hubject status code.
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
-        public static StatusCode Parse(XElement XML)
+        public static StatusCode Parse(XElement StatusCodeXML)
         {
 
             StatusCode _StatusCode;
 
-            if (TryParse(XML, out _StatusCode))
+            if (TryParse(StatusCodeXML, out _StatusCode))
                 return _StatusCode;
 
             return null;
@@ -144,14 +143,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region (static) TryParse(XML, out StatusCode)
+        #region (static) TryParse(StatusCodeXML, out StatusCode)
 
         /// <summary>
         /// Create a new Hubject status code.
         /// </summary>
-        /// <param name="XML">The XML to parse.</param>
+        /// <param name="StatusCodeXML">The XML to parse.</param>
         /// <param name="Acknowledgement">The parsed status code</param>
-        public static Boolean TryParse(XElement XML, out StatusCode StatusCode)
+        public static Boolean TryParse(XElement StatusCodeXML, out StatusCode StatusCode)
         {
 
             #region Documentation
@@ -177,12 +176,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             try
             {
 
-                if (XML.Name != OICPNS.CommonTypes + "StatusCode")
+                // Sometimes CommonTypes:StatusCode, sometimes Authorization:StatusCode!
+                if (StatusCodeXML.Name.LocalName != "StatusCode")
                     return false;
 
-                var _Code            = XML.Element(OICPNS.CommonTypes + "Code");
-                var _Description     = XML.Element(OICPNS.CommonTypes + "Description");
-                var _AdditionalInfo  = XML.Element(OICPNS.CommonTypes + "AdditionalInfo");
+                var _Code            = StatusCodeXML.Element(OICPNS.CommonTypes + "Code");
+                var _Description     = StatusCodeXML.Element(OICPNS.CommonTypes + "Description");
+                var _AdditionalInfo  = StatusCodeXML.Element(OICPNS.CommonTypes + "AdditionalInfo");
 
                 if (_Code == null)
                     return false;

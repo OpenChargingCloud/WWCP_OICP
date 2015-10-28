@@ -279,50 +279,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
     #endregion
 
-    #region HubjectAuthorizationStart
-
-    /// <summary>
-    /// A Hubject Authorization Start result.
-    /// </summary>
-    public class HubjectAuthorizationStart : HubjectAuthorization
-    {
-
-        #region Constructor
-
-        /// <summary>
-        /// Create a new Hubject Authorization Start result.
-        /// </summary>
-        /// <param name="XML">The XML to parse.</param>
-        private HubjectAuthorizationStart(XElement XML)
-            : base(AuthorizationType.Start, XML)
-        { }
-
-        #endregion
-
-        #region (static) Parse(XML)
-
-        /// <summary>
-        /// Create a new Hubject Authorization Start result.
-        /// </summary>
-        /// <param name="XML">The XML to parse.</param>
-        public static HubjectAuthorizationStart Parse(XElement XML)
-        {
-            try
-            {
-                return new HubjectAuthorizationStart(XML);
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-        }
-
-        #endregion
-
-    }
-
-    #endregion
-
     #region HubjectAuthorizationStop
 
     /// <summary>

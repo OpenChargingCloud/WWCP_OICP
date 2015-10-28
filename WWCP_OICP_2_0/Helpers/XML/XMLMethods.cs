@@ -288,7 +288,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region ChargingFacilities
 
             EVSEDataRecord.ChargingFacilities = new ReactiveSet<ChargingFacilities>(EVSEDataRecordXML.
-                                                                                        IfElementExists(OICPNS.EVSEData + "ChargingFacilities",
+                                                                                        MapElement(OICPNS.EVSEData + "ChargingFacilities",
                                                                                                         XML => XML.Elements(OICPNS.EVSEData + "ChargingFacility").
                                                                                                                    Select(xml => OICPMapper.AsChargingFacility(xml.Value.Trim())),
                                                                                                         org.GraphDefined.WWCP.ChargingFacilities.Unspecified));
@@ -298,7 +298,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region ChargingModes
 
             EVSEDataRecord.ChargingModes = new ReactiveSet<ChargingModes>(EVSEDataRecordXML.
-                                                                              IfElementExists(OICPNS.EVSEData + "ChargingModes",
+                                                                              MapElement(OICPNS.EVSEData + "ChargingModes",
                                                                                               XML => XML.Elements(OICPNS.EVSEData + "ChargingMode").
                                                                                                          Select(xml => OICPMapper.AsChargingMode(xml.Value.Trim())),
                                                                                               org.GraphDefined.WWCP.ChargingModes.Unspecified));
@@ -330,7 +330,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region PaymentOptions
 
             EVSEDataRecord.PaymentOptions = new ReactiveSet<PaymentOptions>(EVSEDataRecordXML.
-                                                                                IfElementExists(OICPNS.EVSEData + "PaymentOptions",
+                                                                                MapElement(OICPNS.EVSEData + "PaymentOptions",
                                                                                                 XML => XML.Elements(OICPNS.EVSEData + "PaymentOption").
                                                                                                            Select(xml => OICPMapper.AsPaymetOption(xml.Value.Trim())),
                                                                                                 PaymentOptions.Unspecified));

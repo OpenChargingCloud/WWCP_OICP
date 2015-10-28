@@ -53,7 +53,9 @@
     <Compile Include="EMPClient\EMP_XMLMethods.cs" />
     <Compile Include="EMPClient\EMPUpstreamService.cs" />
     <Compile Include="Entities\EVSEStatusRecord.cs" />
+    <Compile Include="Helpers\AuthorizationIdentification.cs" />
     <Compile Include="Helpers\eRoamingEVSEStatusById.cs" />
+    <Compile Include="Helpers\eRoamingAuthorizationStart.cs" />
     <Compile Include="Helpers\OperatorEVSEStatus.cs" />
     <Compile Include="Helpers\OperatorEVSEData.cs" />
     <Compile Include="Entities\OICPChargeDetailRecord.cs" />
@@ -122,6 +124,9 @@
       <Project>{33836742-af1d-4aa4-963f-b0a8e60e6480}</Project>
       <Name>WWCP_Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="EMPServer\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
