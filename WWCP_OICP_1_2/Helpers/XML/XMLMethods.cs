@@ -291,20 +291,20 @@ namespace org.GraphDefined.WWCP.OICP_1_2
             #region ChargingFacilities
 
             EVSEDataRecord.ChargingFacilities = new ReactiveSet<ChargingFacilities>(EVSEDataRecordXML.
-                                                                                        IfElementExists(OICPNS.EVSEData + "ChargingFacilities",
-                                                                                                        XML => XML.Elements(OICPNS.EVSEData + "ChargingFacility").
-                                                                                                                   Select(xml => OICPMapper.AsChargingFacility(xml.Value.Trim())),
-                                                                                                        org.GraphDefined.WWCP.ChargingFacilities.Unspecified));
+                                                                                        MapElement(OICPNS.EVSEData + "ChargingFacilities",
+                                                                                                   XML => XML.Elements(OICPNS.EVSEData + "ChargingFacility").
+                                                                                                              Select(xml => OICPMapper.AsChargingFacility(xml.Value.Trim())),
+                                                                                                   org.GraphDefined.WWCP.ChargingFacilities.Unspecified));
 
             #endregion
 
             #region ChargingModes
 
             EVSEDataRecord.ChargingModes = new ReactiveSet<ChargingModes>(EVSEDataRecordXML.
-                                                                              IfElementExists(OICPNS.EVSEData + "ChargingModes",
-                                                                                              XML => XML.Elements(OICPNS.EVSEData + "ChargingMode").
-                                                                                                         Select(xml => OICPMapper.AsChargingMode(xml.Value.Trim())),
-                                                                                              org.GraphDefined.WWCP.ChargingModes.Unspecified));
+                                                                              MapElement(OICPNS.EVSEData + "ChargingModes",
+                                                                                         XML => XML.Elements(OICPNS.EVSEData + "ChargingMode").
+                                                                                                    Select(xml => OICPMapper.AsChargingMode(xml.Value.Trim())),
+                                                                                         org.GraphDefined.WWCP.ChargingModes.Unspecified));
 
             #endregion
 
@@ -333,10 +333,10 @@ namespace org.GraphDefined.WWCP.OICP_1_2
             #region PaymentOptions
 
             EVSEDataRecord.PaymentOptions = new ReactiveSet<PaymentOptions>(EVSEDataRecordXML.
-                                                                                IfElementExists(OICPNS.EVSEData + "PaymentOptions",
-                                                                                                XML => XML.Elements(OICPNS.EVSEData + "PaymentOption").
-                                                                                                           Select(xml => OICPMapper.AsPaymetOption(xml.Value.Trim())),
-                                                                                                PaymentOptions.Unspecified));
+                                                                                MapElement(OICPNS.EVSEData + "PaymentOptions",
+                                                                                           XML => XML.Elements(OICPNS.EVSEData + "PaymentOption").
+                                                                                                      Select(xml => OICPMapper.AsPaymetOption(xml.Value.Trim())),
+                                                                                           PaymentOptions.Unspecified));
 
             #endregion
 
