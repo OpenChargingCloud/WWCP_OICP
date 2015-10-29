@@ -204,12 +204,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                   DNSClient        DNSClient        = null)
         {
 
-            this._CPOClient = new CPOClient(Hostname,
-                                            TCPPort != null ? TCPPort : IPPort.Parse(443),
-                                            HTTPVirtualHost,
-                                            HTTPUserAgent,
-                                            QueryTimeout,
-                                            DNSClient);
+            this._CPOClient       = new CPOClient(Hostname,
+                                                  TCPPort != null ? TCPPort : IPPort.Parse(443),
+                                                  HTTPVirtualHost,
+                                                  HTTPUserAgent,
+                                                  QueryTimeout,
+                                                  DNSClient);
+
+            this._AuthorizatorId  = AuthorizatorId;
 
         }
 

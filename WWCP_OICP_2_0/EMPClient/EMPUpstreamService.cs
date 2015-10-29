@@ -121,12 +121,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         {
 
-            this._EMPClient = new EMPClient(Hostname,
-                                            TCPPort != null ? TCPPort : IPPort.Parse(443),
-                                            HTTPVirtualHost,
-                                            HTTPUserAgent,
-                                            QueryTimeout,
-                                            DNSClient);
+            this._EMPClient       = new EMPClient(Hostname,
+                                                  TCPPort != null ? TCPPort : IPPort.Parse(443),
+                                                  HTTPVirtualHost,
+                                                  HTTPUserAgent,
+                                                  QueryTimeout,
+                                                  DNSClient);
+
+            this._AuthorizatorId  = AuthorizatorId;
 
         }
 
