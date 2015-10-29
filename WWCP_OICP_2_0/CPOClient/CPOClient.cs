@@ -407,6 +407,36 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
+            PushEVSEStatus(IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>>  EVSEStatus,
+                           ActionType                                              OICPAction    = ActionType.update,
+                           EVSEOperator_Id                                         OperatorId    = null,
+                           String                                                  OperatorName  = null,
+                           TimeSpan?                                               QueryTimeout  = null)
+
+        {
+
+            return await PushEVSEStatus(EVSEStatus.Select(kvp => new EVSEStatusRecord(kvp.Key, kvp.Value)),
+                                        OICPAction,
+                                        OperatorId,
+                                        OperatorName,
+                                        QueryTimeout);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatus(EVSEStatus, OICPAction = update, OperatorId, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Create a new task pushing EVSE status records onto the OICP server.
+        /// </summary>
+        /// <param name="EVSEStatus">An enumeration of EVSE Id and status records.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="OperatorId">An optional EVSE operator Id to use. Otherwise it will be taken from the EVSE data records.</param>
+        /// <param name="OperatorName">An optional EVSE operator name.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+
             PushEVSEStatus(IEnumerable<EVSEStatusRecord>  EVSEStatus,
                            ActionType                     OICPAction    = ActionType.update,
                            EVSEOperator_Id                OperatorId    = null,
@@ -492,13 +522,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        },
 
-                                                       OnHTTPError: (t, s, e) => {
+                                                       OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                           //var OnHTTPErrorLocal = OnHTTPError;
-                                                           //if (OnHTTPErrorLocal != null)
-                                                           //    OnHTTPErrorLocal(t, s, e);
+                                                           SendOnHTTPError(timestamp, soapclient, httpresponse);
 
-                                                           return null;
+                                                           return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                            new eRoamingAcknowledgement(false,
+                                                                                                                                        -1,
+                                                                                                                                        httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                        httpresponse.Content.ToUTF8String()),
+                                                                                                            IsFault: true);
 
                                                        },
 
