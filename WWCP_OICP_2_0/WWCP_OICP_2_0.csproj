@@ -84,7 +84,7 @@
     <Compile Include="Helpers\XML\XMLMethods.cs" />
     <Compile Include="CPOServer\CPOServer.cs" />
     <Compile Include="Objects\EVSEDataRecord.cs" />
-    <Compile Include="OICPImporter.cs" />
+    <Compile Include="EMPClient\OICPImporter.cs" />
     <Compile Include="OICPServer\OICPServer.cs" />
     <Compile Include="OICPServiceCheck\OICPServiceCheck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -98,10 +98,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                    #region EVSEOperatorDataHandler
 
-                   EVSEDataXMLHandler:        (UpdateContext, Timestamp, XML) => {
-
-                                              },
-
                    EVSEDataHandler:           (UpdateContext, Timestamp, OperatorEvseData) => {
 
                                                   #region Data
@@ -575,6 +571,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Constructor(s)
 
+        #region XML...
+
         /// <summary>
         /// Create a new service for importing EVSE data via OICP/Hubject.
         /// </summary>
@@ -599,11 +597,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                             Func<UInt64, StreamReader>                                  LoadDynamicDataFromStream   = null,
 
                             Action<TContext, DateTime, IEnumerable<XElement>>           EVSEDataXMLHandler          = null,
-                            Action<TContext, DateTime, IEnumerable<OperatorEVSEData>>   EVSEDataHandler             = null,
-
                             Func  <TContext, DateTime, IEnumerable<EVSE_Id>>            GetEVSEIdsForStatusUpdate   = null,
-                            Action<TContext, DateTime, XElement>                        EVSEStatusXMLHandler        = null,
-                            Action<TContext, DateTime, EVSE_Id, OICPEVSEStatusType>     EVSEStatusHandler           = null)
+                            Action<TContext, DateTime, XElement>                        EVSEStatusXMLHandler        = null)
 
         {
 
@@ -654,9 +649,117 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             this._UpdateContextDisposer        = UpdateContextDisposer;
             this._StartBulkUpdate              = StartBulkUpdate;
             this._EVSEDataXMLHandler           = EVSEDataXMLHandler;
-            this._EVSEDataHandler              = EVSEDataHandler;
+            this._EVSEDataHandler              = null;
             this._GetEVSEIdsForStatusUpdate    = GetEVSEIdsForStatusUpdate;
             this._EVSEStatusXMLHandler         = EVSEStatusXMLHandler;
+            this._EVSEStatusHandler            = null;
+            this._StopBulkUpdate               = StopBulkUpdate;
+
+            #endregion
+
+            #region Init OICP EMP UpstreamService
+
+            _EMPClient  = new EMPClient(Hostname:         _Hostname,
+                                        TCPPort:          _TCPPort,
+                                        HTTPVirtualHost:  _HTTPVirtualHost,
+                                        QueryTimeout:     QueryTimeout,
+                                        DNSClient:        _DNSClient);
+
+            _EMPClient.OnException += SendException;
+            _EMPClient.OnHTTPError += SendHTTPError;
+            _EMPClient.OnSOAPError += SendSOAPError;
+
+            #endregion
+
+            #region Init Timers
+
+            UpdateEVSEDataTimer    = new Timer(UpdateEVSEData,   null, TimeSpan.FromSeconds(1),  this._UpdateEVSEDataEvery);
+            UpdateEVSEStatusTimer  = new Timer(UpdateEVSEStatus, null, TimeSpan.FromSeconds(10), this._UpdateEVSEStatusEvery);
+
+            #endregion
+
+        }
+
+        #endregion
+
+        #region Objects...
+
+        /// <summary>
+        /// Create a new service for importing EVSE data via OICP/Hubject.
+        /// </summary>
+        public OICPImporter(String                                                      Identification,
+                            String                                                      Hostname,
+                            IPPort                                                      TCPPort,
+                            String                                                      HTTPVirtualHost,
+                            EVSP_Id                                                     ProviderId,
+                            DNSClient                                                   DNSClient                   = null,
+                            TimeSpan?                                                   QueryTimeout                = null,
+
+                            TimeSpan?                                                   UpdateEVSEDataEvery         = null,
+                            TimeSpan?                                                   UpdateEVSEDataTimeout       = null,
+                            TimeSpan?                                                   UpdateEVSEStatusEvery       = null,
+                            TimeSpan?                                                   UpdateEVSEStatusTimeout     = null,
+                            Func<TContext>                                              UpdateContextCreator        = null,
+                            Action<TContext>                                            UpdateContextDisposer       = null,
+                            Action<TContext>                                            StartBulkUpdate             = null,
+                            Action<TContext>                                            StopBulkUpdate              = null,
+
+                            Action<TContext, DateTime, IEnumerable<OperatorEVSEData>>   EVSEDataHandler             = null,
+                            Func  <TContext, DateTime, IEnumerable<EVSE_Id>>            GetEVSEIdsForStatusUpdate   = null,
+                            Action<TContext, DateTime, EVSE_Id, OICPEVSEStatusType>     EVSEStatusHandler           = null)
+
+        {
+
+            #region Initial checks
+
+            if (Identification.IsNullOrEmpty())
+                throw new ArgumentNullException("The given service identification must not be null or empty!");
+
+            if (Hostname.IsNullOrEmpty())
+                throw new ArgumentNullException("The given upstream service hostname must not be null or empty!");
+
+            if (TCPPort == null)
+                throw new ArgumentNullException("The given upstream service TCP port must not be null!");
+
+            if (ProviderId == null)
+                throw new ArgumentNullException("The given EV Service Provider identification (EVSP Id) must not be null!");
+
+            #endregion
+
+            #region Init parameters
+
+            this._Identification               = Identification;
+            this._Hostname                     = Hostname;
+            this._TCPPort                      = TCPPort;
+            this._HTTPVirtualHost              = HTTPVirtualHost;
+            this._ProviderId                   = ProviderId;
+
+            if (!UpdateEVSEDataEvery.HasValue)
+                this._UpdateEVSEDataEvery      = DefaultUpdateEVSEDataEvery;
+
+            if (!UpdateEVSEDataTimeout.HasValue)
+                this._UpdateEVSEDataTimeout    = DefaultUpdateEVSEDataTimeout;
+
+            if (!UpdateEVSEStatusEvery.HasValue)
+                this._UpdateEVSEStatusEvery    = DefaultUpdateEVSEStatusEvery;
+
+            if (!UpdateEVSEStatusTimeout.HasValue)
+                this._UpdateEVSEStatusTimeout  = DefaultUpdateEVSEStatusTimeout;
+
+            this._DNSClient                    = DNSClient != null
+                                                     ? DNSClient
+                                                     : new DNSClient();
+
+            this._LoadStaticDataFromStream     = null;
+            this._LoadDynamicDataFromStream    = null;
+
+            this._UpdateContextCreator         = UpdateContextCreator;
+            this._UpdateContextDisposer        = UpdateContextDisposer;
+            this._StartBulkUpdate              = StartBulkUpdate;
+            this._EVSEDataXMLHandler           = null;
+            this._EVSEDataHandler              = EVSEDataHandler;
+            this._GetEVSEIdsForStatusUpdate    = GetEVSEIdsForStatusUpdate;
+            this._EVSEStatusXMLHandler         = null;
             this._EVSEStatusHandler            = EVSEStatusHandler;
             this._StopBulkUpdate               = StopBulkUpdate;
 
@@ -684,6 +787,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #endregion
 
         }
+
+        #endregion
 
         #endregion
 
