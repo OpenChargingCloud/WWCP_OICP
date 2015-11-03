@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AOICPUpstreamService.cs" />
+    <Compile Include="Helpers\AOICPUpstreamService.cs" />
     <Compile Include="CPOClient\CPOClient.cs" />
     <Compile Include="CPOClient\CPOClient_XMLMethods.cs" />
     <Compile Include="CPOClient\CPO_XMLMethods.cs" />
