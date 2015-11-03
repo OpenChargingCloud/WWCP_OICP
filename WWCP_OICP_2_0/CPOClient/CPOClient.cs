@@ -340,7 +340,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                           SendOnHTTPError(timestamp, soapclient, httpresponse);
+                                                           SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                            return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
                                                                                                             new eRoamingAcknowledgement(false,
@@ -351,11 +351,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        },
 
-                                                       OnException: (t, s, e) => {
+                                                       OnException: (timestamp, sender, exception) => {
 
-                                                           //var OnExceptionLocal = OnException;
-                                                           //if (OnExceptionLocal != null)
-                                                           //    OnExceptionLocal(t, s, e);
+                                                           SendException(timestamp, sender, exception);
 
                                                            return null;
 
@@ -381,7 +379,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             catch (Exception e)
             {
 
-                SendOnException(DateTime.Now, this, e);
+                SendException(DateTime.Now, this, e);
 
                 if (e.InnerException != null)
                     e = e.InnerException;
@@ -524,7 +522,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                           SendOnHTTPError(timestamp, soapclient, httpresponse);
+                                                           SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                            return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
                                                                                                             new eRoamingAcknowledgement(false,
@@ -535,11 +533,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        },
 
-                                                       OnException: (t, s, e) => {
+                                                       OnException: (timestamp, sender, exception) => {
 
-                                                           //var OnExceptionLocal = OnException;
-                                                           //if (OnExceptionLocal != null)
-                                                           //    OnExceptionLocal(t, s, e);
+                                                           SendException(timestamp, sender, exception);
 
                                                            return null;
 
@@ -565,7 +561,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             catch (Exception e)
             {
 
-                SendOnException(DateTime.Now, this, e);
+                SendException(DateTime.Now, this, e);
 
                 if (e.InnerException != null)
                     e = e.InnerException;
@@ -932,7 +928,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    OnSOAPFault: (timestamp, soapclient, soapfault) => {
 
-                                                       SendOnSOAPError(timestamp, soapclient, soapfault.Content);
+                                                       SendSOAPError(timestamp, soapclient, soapfault.Content);
 
                                                        return new HTTPResponse<eRoamingAuthorizationStart>(soapfault.HttpResponse,
                                                                                                            new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
@@ -944,7 +940,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                       SendOnHTTPError(timestamp, soapclient, httpresponse);
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                        return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
                                                                                                            new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
@@ -955,9 +951,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    },
 
-                                                   OnException: (t, s, e) => {
+                                                   OnException: (timestamp, sender, exception) => {
 
-                                                       SendOnException(t, s, e);
+                                                       SendException(timestamp, sender, exception);
 
                                                        return null;
 
@@ -973,7 +969,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             catch (Exception e)
             {
 
-                SendOnException(DateTime.Now, this, e);
+                SendException(DateTime.Now, this, e);
 
                 return new HTTPResponse<eRoamingAuthorizationStart>(new HTTPResponse(),
                                                                     new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
@@ -1051,7 +1047,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    OnSOAPFault: (timestamp, soapclient, soapfault) => {
 
-                                                       SendOnSOAPError(timestamp, soapclient, soapfault.Content);
+                                                       SendSOAPError(timestamp, soapclient, soapfault.Content);
 
                                                        return new HTTPResponse<eRoamingAuthorizationStop>(soapfault.HttpResponse,
                                                                                                           new eRoamingAuthorizationStop(AuthorizationStatusType.NotAuthorized,
@@ -1063,7 +1059,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                       SendOnHTTPError(timestamp, soapclient, httpresponse);
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                        return new HTTPResponse<eRoamingAuthorizationStop>(httpresponse,
                                                                                                           new eRoamingAuthorizationStop(AuthorizationStatusType.NotAuthorized,
@@ -1074,11 +1070,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    },
 
-                                                   OnException: (t, s, e) => {
+                                                   OnException: (timestamp, sender, exception) => {
 
-                                                       //var OnExceptionLocal = OnException;
-                                                       //if (OnExceptionLocal != null)
-                                                       //    OnExceptionLocal(t, s, e);
+                                                       SendException(timestamp, sender, exception);
 
                                                        return null;
 
@@ -1094,7 +1088,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             catch (Exception e)
             {
 
-                SendOnException(DateTime.Now, this, e);
+                SendException(DateTime.Now, this, e);
 
                 return new HTTPResponse<eRoamingAuthorizationStop>(new HTTPResponse(),
                                                                     new eRoamingAuthorizationStop(AuthorizationStatusType.NotAuthorized,
@@ -1265,7 +1259,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             catch (Exception e)
             {
 
-                SendOnException(DateTime.Now, this, e);
+                SendException(DateTime.Now, this, e);
 
                 return new HTTPResponse<AuthenticationData>(new HTTPResponse(),
                                                             new AuthenticationData());
@@ -1532,7 +1526,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             catch (Exception e)
             {
 
-                SendOnException(DateTime.Now, this, e);
+                SendException(DateTime.Now, this, e);
 
                 return new HTTPResponse<SENDCDRResult>(new HTTPResponse(),
                                                        new SENDCDRResult(AuthorizatorId) {

@@ -108,9 +108,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region ChargingStationId
 
-        private ChargingStation_Id _ChargingStationId;
+        private String _ChargingStationId;
 
-        public ChargingStation_Id ChargingStationId
+        public String ChargingStationId
         {
 
             get
@@ -567,7 +567,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region EVSEDataRecord(EVSEId, ...)
 
         public EVSEDataRecord(EVSE_Id                           EVSEId,
-                              ChargingStation_Id                ChargingStationId           = null,
+                              String                            ChargingStationId           = null,
                               I18NString                        ChargingStationName         = null,
                               Address                           Address                     = null,
                               GeoCoordinate                     GeoCoordinate               = null,
@@ -650,10 +650,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region Parse(EVSEDataRecordXML, OnException = null)
 
-        #region Parse(EVSEDataRecordXML)
-
-        public static EVSEDataRecord Parse(XElement  EVSEDataRecordXML)
+        public static EVSEDataRecord Parse(XElement             EVSEDataRecordXML,
+                                           OnExceptionDelegate  OnException = null)
         {
 
             #region Documentation
@@ -797,7 +797,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region ChargingStationId, ChargingStationName
 
             EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "ChargingStationId",
-                                                 v => EVSEDataRecord.ChargingStationId = ChargingStation_Id.Parse(v));
+                                                 v => EVSEDataRecord.ChargingStationId = v);
 
             EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "ChargingStationName",
                                                  v => EVSEDataRecord.ChargingStationName.Add(Languages.de, v));
@@ -814,7 +814,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             var _CountryTXT  = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
 
             Country _Country;
-            if (!Country.TryParseAlpha3Code(_CountryTXT, out _Country))
+            if (!Country.TryParse(_CountryTXT, out _Country))
             {
 
                 if (_CountryTXT.ToUpper() == "UNKNOWN")
@@ -848,38 +848,38 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Plugs
 
             EVSEDataRecord.Plugs = new ReactiveSet<PlugTypes>(EVSEDataRecordXML.
-                                                                  ElementOrFail(OICPNS.EVSEData + "Plugs", "Missing 'Plugs'-XML tag!").
-                                                                  Elements     (OICPNS.EVSEData + "Plug").
-                                                                  Select       (xml => OICPMapper.AsPlugType(xml.Value.Trim())));
+                                                                  MapValuesOrFail(OICPNS.EVSEData + "Plugs", "Missing 'Plugs'-XML tag!",
+                                                                                  OICPNS.EVSEData + "Plug",
+                                                                                  OICPMapper.AsPlugType));
 
             #endregion
 
             #region ChargingFacilities
 
             EVSEDataRecord.ChargingFacilities = new ReactiveSet<ChargingFacilities>(EVSEDataRecordXML.
-                                                                                        MapElement(OICPNS.EVSEData + "ChargingFacilities",
-                                                                                                        XML => XML.Elements(OICPNS.EVSEData + "ChargingFacility").
-                                                                                                                   Select(xml => OICPMapper.AsChargingFacility(xml.Value.Trim())),
-                                                                                                        org.GraphDefined.WWCP.ChargingFacilities.Unspecified));
+                                                                                        MapValuesOrDefault(OICPNS.EVSEData + "ChargingFacilities",
+                                                                                                           OICPNS.EVSEData + "ChargingFacility",
+                                                                                                           OICPMapper.AsChargingFacility,
+                                                                                                           org.GraphDefined.WWCP.ChargingFacilities.Unspecified));
 
             #endregion
 
             #region ChargingModes
 
             EVSEDataRecord.ChargingModes = new ReactiveSet<ChargingModes>(EVSEDataRecordXML.
-                                                                              MapElement(OICPNS.EVSEData + "ChargingModes",
-                                                                                              XML => XML.Elements(OICPNS.EVSEData + "ChargingMode").
-                                                                                                         Select(xml => OICPMapper.AsChargingMode(xml.Value.Trim())),
-                                                                                              org.GraphDefined.WWCP.ChargingModes.Unspecified));
+                                                                              MapValuesOrDefault(OICPNS.EVSEData + "ChargingModes",
+                                                                                                 OICPNS.EVSEData + "ChargingMode",
+                                                                                                 OICPMapper.AsChargingMode,
+                                                                                                 org.GraphDefined.WWCP.ChargingModes.Unspecified));
 
             #endregion
 
             #region AuthenticationModes
 
             EVSEDataRecord.AuthenticationModes = new ReactiveSet<AuthenticationModes>(EVSEDataRecordXML.
-                                                                                          ElementOrFail(OICPNS.EVSEData + "AuthenticationModes", "Missing 'AuthenticationModes'-XML tag!").
-                                                                                          Elements(OICPNS.EVSEData + "AuthenticationMode").
-                                                                                          Select(xml => OICPMapper.AsAuthenticationMode(xml.Value.Trim())));
+                                                                                          MapValuesOrFail(OICPNS.EVSEData + "AuthenticationModes", "Missing 'AuthenticationModes'-XML tag!",
+                                                                                                          OICPNS.EVSEData + "AuthenticationMode",
+                                                                                                          OICPMapper.AsAuthenticationMode));
 
             #endregion
 
@@ -899,10 +899,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region PaymentOptions
 
             EVSEDataRecord.PaymentOptions = new ReactiveSet<PaymentOptions>(EVSEDataRecordXML.
-                                                                                MapElement(OICPNS.EVSEData + "PaymentOptions",
-                                                                                                XML => XML.Elements(OICPNS.EVSEData + "PaymentOption").
-                                                                                                           Select(xml => OICPMapper.AsPaymetOption(xml.Value.Trim())),
-                                                                                                WWCP.PaymentOptions.Unspecified));
+                                                                                MapValuesOrDefault(OICPNS.EVSEData + "PaymentOptions",
+                                                                                                   OICPNS.EVSEData + "PaymentOption",
+                                                                                                   OICPMapper.AsPaymetOption,
+                                                                                                   WWCP.PaymentOptions.Unspecified));
 
             #endregion
 
@@ -929,7 +929,38 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             // EnAdditionalInfo not parsed as OICP v2.0 multi-language string!
             EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "EnAdditionalInfo",
-                                                 v => EVSEDataRecord.AdditionalInfo.Add(Languages.en, v));
+                                                 EnAdditionalInfo => {
+
+                                                     // The section must end with the separator string "|||"
+                                                     // Example: "DEU:Inhalt|||GBR:Content|||FRA:Objet|||"
+                                                     if (EnAdditionalInfo.Contains("|||"))
+                                                     {
+
+                                                         foreach (var Token1 in EnAdditionalInfo.Split(new String[] { "|||" }, StringSplitOptions.RemoveEmptyEntries))
+                                                         {
+
+                                                             var I18NTokens = Token1.Split(':');
+
+                                                             try
+                                                             {
+                                                                 if (I18NTokens.Length == 2)
+                                                                     EVSEDataRecord.AdditionalInfo.Add((Languages) Enum.Parse(typeof(Languages),
+                                                                                                                              Country.ParseAlpha3Code(I18NTokens[0]).Alpha2Code.ToLower()),
+                                                                                                       I18NTokens[1]);
+                                                             }
+                                                             catch (Exception e)
+                                                             {
+                                                                 DebugX.Log("Could not parse 'EnAdditionalInfo': " + I18NTokens + Environment.NewLine + e.Message);
+                                                             }
+
+                                                         }
+
+                                                     }
+
+                                                     else
+                                                         EVSEDataRecord.AdditionalInfo.Add(Languages.en, EnAdditionalInfo);
+
+                                                 });
 
             #endregion
 

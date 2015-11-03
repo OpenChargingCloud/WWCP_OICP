@@ -17,6 +17,7 @@
 
 #region Usings
 
+using org.GraphDefined.Vanaheimr.Illias;
 using System;
 using System.Xml.Linq;
 
@@ -128,8 +129,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Create a new Hubject status code.
         /// </summary>
-        /// <param name="XML">The XML to parse.</param>
-        public static StatusCode Parse(XElement StatusCodeXML)
+        /// <param name="StatusCodeXML">The XML to parse.</param>
+        public static StatusCode Parse(XElement  StatusCodeXML)
         {
 
             StatusCode _StatusCode;
@@ -143,14 +144,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region (static) TryParse(StatusCodeXML, out StatusCode)
+        #region (static) TryParse(StatusCodeXML, out StatusCode, OnException = null)
 
         /// <summary>
         /// Create a new Hubject status code.
         /// </summary>
         /// <param name="StatusCodeXML">The XML to parse.</param>
-        /// <param name="Acknowledgement">The parsed status code</param>
-        public static Boolean TryParse(XElement StatusCodeXML, out StatusCode StatusCode)
+        /// <param name="StatusCode">The parsed status code</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(XElement             StatusCodeXML,
+                                       out StatusCode       StatusCode,
+                                       OnExceptionDelegate  OnException  = null)
         {
 
             #region Documentation
@@ -200,7 +204,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             }
             catch (Exception e)
             {
+
+                if (OnException != null)
+                    OnException(DateTime.Now, StatusCodeXML, e);
+
                 return false;
+
             }
 
         }

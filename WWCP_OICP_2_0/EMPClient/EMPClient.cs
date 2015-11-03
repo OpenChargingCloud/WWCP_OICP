@@ -44,13 +44,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         private Authorizator_Id AuthorizatorId = Authorizator_Id.Parse("");
 
-
-        #region Data
-
-        private readonly EMPUpstreamService _EMPUpstreamService;
-
-        #endregion
-
         #region Constructor(s)
 
         /// <summary>
@@ -62,12 +55,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
-        public EMPClient(String     Hostname,
-                         IPPort     TCPPort          = null,
-                         String     HTTPVirtualHost  = null,
-                         String     HTTPUserAgent    = "GraphDefined OICP v2.0 EMPClient",
-                         TimeSpan?  QueryTimeout     = null,
-                         DNSClient  DNSClient        = null)
+        public EMPClient(String              Hostname,
+                         IPPort              TCPPort          = null,
+                         String              HTTPVirtualHost  = null,
+                         String              HTTPUserAgent    = "GraphDefined OICP v2.0 EMPClient",
+                         TimeSpan?           QueryTimeout     = null,
+                         DNSClient           DNSClient        = null)
 
             : base(Hostname,
                    TCPPort,
@@ -163,7 +156,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, QueryTimeout = null, ExceptionHandler = null)
+        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, QueryTimeout = null, OnException = null)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
@@ -175,15 +168,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        /// <param name="ExceptionHandler">An optional delegate called whenever an exception occured.</param>
+        
         public async Task<HTTPResponse<eRoamingEVSEData>>
 
             PullEVSEData(EVSP_Id           ProviderId,
-                         GeoCoordinate     SearchCenter      = null,
-                         Double            DistanceKM        = 0.0,
-                         DateTime?         LastCall          = null,
-                         TimeSpan?         QueryTimeout      = null,
-                         Action<Exception> ExceptionHandler  = null)
+                         GeoCoordinate     SearchCenter  = null,
+                         Double            DistanceKM    = 0.0,
+                         DateTime?         LastCall      = null,
+                         TimeSpan?         QueryTimeout  = null)
 
         {
 
@@ -208,7 +200,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                    OnSuccess: XMLData => {
 
                                                        return new HTTPResponse<eRoamingEVSEData>(XMLData.HttpResponse,
-                                                                                                 eRoamingEVSEData.Parse(XMLData.Content));
+                                                                                                 eRoamingEVSEData.Parse(XMLData.Content, base.SendException));
 
                                                    },
 
@@ -224,7 +216,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                       SendOnHTTPError(timestamp, soapclient, httpresponse);
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                        return new HTTPResponse<eRoamingEVSEData>(httpresponse,
                                                                                                  new eRoamingEVSEData(StatusCode: new StatusCode(-1,
@@ -234,11 +226,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    },
 
-                                                   OnException: (t, s, e) => {
+                                                   OnException: (timestamp, sender, exception) => {
 
-                                                       //var OnExceptionLocal = OnException;
-                                                       //if (OnExceptionLocal != null)
-                                                       //    OnExceptionLocal(t, s, e);
+                                                       SendException(timestamp, sender, exception);
 
                                                        return null;
 
@@ -255,7 +245,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 DebugX.Log("'PullEVSEDataRequest' led to an exception: " + e.Message);
 
-                SendOnException(DateTime.Now, this, e);
+                SendException(DateTime.Now, this, e);
 
                 return new HTTPResponse<eRoamingEVSEData>(new HTTPResponse(), e);
 
@@ -278,11 +268,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingEVSEStatus>>
 
-            PullEVSEStatus(EVSP_Id          ProviderId,
-                           GeoCoordinate    SearchCenter      = null,
-                           Double           DistanceKM        = 0.0,
+            PullEVSEStatus(EVSP_Id              ProviderId,
+                           GeoCoordinate        SearchCenter      = null,
+                           Double               DistanceKM        = 0.0,
                            OICPEVSEStatusType?  EVSEStatusFilter  = null,
-                           TimeSpan?        QueryTimeout      = null)
+                           TimeSpan?            QueryTimeout      = null)
 
         {
 
@@ -327,7 +317,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                       SendOnHTTPError(timestamp, soapclient, httpresponse);
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                        return new HTTPResponse<eRoamingEVSEStatus>(httpresponse,
                                                                                                    new eRoamingEVSEStatus(new StatusCode(-1,
@@ -337,11 +327,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    },
 
-                                                   OnException: (t, s, e) => {
+                                                   OnException: (timestamp, sender, exception) => {
 
-                                                       //var OnExceptionLocal = OnException;
-                                                       //if (OnExceptionLocal != null)
-                                                       //    OnExceptionLocal(t, s, e);
+                                                       SendException(timestamp, sender, exception);
 
                                                        return null;
 
@@ -356,7 +344,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             catch (Exception e)
             {
 
-                SendOnException(DateTime.Now, this, e);
+                SendException(DateTime.Now, this, e);
 
                 return new HTTPResponse<eRoamingEVSEStatus>(e);
 
@@ -418,7 +406,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                       SendOnHTTPError(timestamp, soapclient, httpresponse);
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                        return new HTTPResponse<eRoamingEVSEStatusById>(httpresponse,
                                                                                                        new eRoamingEVSEStatusById(new StatusCode(-1,
@@ -428,11 +416,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    },
 
-                                                   OnException: (t, s, e) => {
+                                                   OnException: (timestamp, sender, exception) => {
 
-                                                       //var OnExceptionLocal = OnException;
-                                                       //if (OnExceptionLocal != null)
-                                                       //    OnExceptionLocal(t, s, e);
+                                                       SendException(timestamp, sender, exception);
 
                                                        return null;
 
@@ -447,7 +433,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             catch (Exception e)
             {
 
-                SendOnException(DateTime.Now, this, e);
+                SendException(DateTime.Now, this, e);
 
                 return new HTTPResponse<eRoamingEVSEStatusById>(e);
 
@@ -665,7 +651,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                            var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
                                                            var Exception    = new ApplicationException(Code + " - " + Description);
 
-                                                           SendOnException(DateTime.Now, this, Exception);
+                                                           SendException(DateTime.Now, this, Exception);
 
                                                            return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>>>(Exception);
 
@@ -723,7 +709,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             catch (Exception e)
             {
 
-                SendOnException(DateTime.Now, this, e);
+                SendException(DateTime.Now, this, e);
 
                 return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>>>(e);
 
@@ -1204,7 +1190,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
         #endregion
-
 
 
     }

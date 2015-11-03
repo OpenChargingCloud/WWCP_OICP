@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static ChargingModes AsChargingMode(String ChargingMode)
         {
 
-            switch (ChargingMode)
+            switch (ChargingMode.Trim())
             {
 
                 case "Mode_1":   return ChargingModes.Mode_1;
@@ -66,7 +66,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static ChargingFacilities AsChargingFacility(String ChargingFacility)
         {
 
-            switch (ChargingFacility)
+            switch (ChargingFacility.Trim())
             {
 
                 case "100 - 120V, 1-Phase ≤ 10A":   return ChargingFacilities.CF_100_120V_1Phase_less10A;
@@ -101,7 +101,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static PlugTypes AsPlugType(String PlugType)
         {
 
-            switch (PlugType)
+            switch (PlugType.Trim())
             {
 
                 case "Small Paddle Inductive":              return PlugTypes.SmallPaddleInductive;
@@ -140,7 +140,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static AuthenticationModes AsAuthenticationMode(String AuthenticationMode)
         {
 
-            switch (AuthenticationMode)
+            switch (AuthenticationMode.Trim())
             {
 
                 case "NFC RFID Classic":   return AuthenticationModes.NFC_RFID_Classic;
@@ -166,7 +166,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static PaymentOptions AsPaymetOption(String PaymetOption)
         {
 
-            switch (PaymetOption)
+            switch (PaymetOption.Trim())
             {
 
                 case "NoPayment":   return PaymentOptions.Free;
@@ -190,7 +190,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static AccessibilityTypes AsAccessibilityType(String AccessibilityType)
         {
 
-            switch (AccessibilityType)
+            switch (AccessibilityType.Trim())
             {
 
                 case "Free publicly accessible":    return AccessibilityTypes.Free_publicly_accessible;

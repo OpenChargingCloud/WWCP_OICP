@@ -135,7 +135,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, QueryTimeout = null, ExceptionHandler = null)
+        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
@@ -147,15 +147,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        /// <param name="ExceptionHandler">An optional delegate called whenever an exception occured.</param>
         public async Task<HTTPResponse<eRoamingEVSEData>>
 
             PullEVSEData(EVSP_Id           ProviderId,
                          GeoCoordinate     SearchCenter      = null,
                          Double            DistanceKM        = 0.0,
                          DateTime?         LastCall          = null,
-                         TimeSpan?         QueryTimeout      = null,
-                         Action<Exception> ExceptionHandler  = null)
+                         TimeSpan?         QueryTimeout      = null)
 
         {
 
@@ -163,8 +161,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                  SearchCenter,
                                                  DistanceKM,
                                                  LastCall,
-                                                 QueryTimeout,
-                                                 ExceptionHandler);
+                                                 QueryTimeout);
 
         }
 

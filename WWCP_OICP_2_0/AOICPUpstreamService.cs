@@ -152,11 +152,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region OnException
 
         /// <summary>
-        /// A delegate called whenever an exception occured.
-        /// </summary>
-        public delegate void OnExceptionDelegate(DateTime Timestamp, Object Sender, Exception Exception);
-
-        /// <summary>
         /// An event fired whenever an exception occured.
         /// </summary>
         public event OnExceptionDelegate OnException;
@@ -204,12 +199,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="UserAgent">An optional HTTP user agent to use.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
-        internal AOICPUpstreamService(String           Hostname,
-                                      IPPort           TCPPort,
-                                      String           HTTPVirtualHost  = null,
-                                      String           UserAgent        = "GraphDefined OICP Gateway",
-                                      TimeSpan?        QueryTimeout     = null,
-                                      DNSClient        DNSClient        = null)
+        internal AOICPUpstreamService(String     Hostname,
+                                      IPPort     TCPPort,
+                                      String     HTTPVirtualHost  = null,
+                                      String     UserAgent        = "GraphDefined OICP Gateway",
+                                      TimeSpan?  QueryTimeout     = null,
+                                      DNSClient  DNSClient        = null)
         {
 
             #region Initial checks
@@ -244,7 +239,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region (protected) SendOnSOAPError(Timestamp, Sender, SOAPXML)
+        #region (protected) SendSOAPError(Timestamp, Sender, SOAPXML)
 
         /// <summary>
         /// Notify that an HTTP error occured.
@@ -252,9 +247,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="Timestamp">The timestamp of the error received.</param>
         /// <param name="Sender">The sender of this error message.</param>
         /// <param name="SOAPXML">The SOAP fault/error.</param>
-        protected void SendOnSOAPError(DateTime  Timestamp,
-                                       Object    Sender,
-                                       XElement  SOAPXML)
+        protected void SendSOAPError(DateTime  Timestamp,
+                                     Object    Sender,
+                                     XElement  SOAPXML)
         {
 
             DebugX.Log("AOICPUpstreamService => SOAP Fault: " + SOAPXML != null ? SOAPXML.ToString() : "<null>");
@@ -267,7 +262,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region (protected) SendOnHTTPError(Timestamp, Sender, HttpResponse)
+        #region (protected) SendHTTPError(Timestamp, Sender, HttpResponse)
 
         /// <summary>
         /// Notify that an HTTP error occured.
@@ -275,9 +270,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="Timestamp">The timestamp of the error received.</param>
         /// <param name="Sender">The sender of this error message.</param>
         /// <param name="HttpResponse">The HTTP response related to this error message.</param>
-        protected void SendOnHTTPError(DateTime      Timestamp,
-                                       Object        Sender,
-                                       HTTPResponse  HttpResponse)
+        protected void SendHTTPError(DateTime      Timestamp,
+                                     Object        Sender,
+                                     HTTPResponse  HttpResponse)
         {
 
             DebugX.Log("AOICPUpstreamService => HTTP Status Code: " + HttpResponse != null ? HttpResponse.HTTPStatusCode.ToString() : "<null>");
@@ -290,7 +285,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region (protected) SendOnException(Timestamp, Sender, Exception)
+        #region (protected) SendException(Timestamp, Sender, Exception)
 
         /// <summary>
         /// Notify that an exception occured.
@@ -298,9 +293,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="Timestamp">The timestamp of the exception.</param>
         /// <param name="Sender">The sender of this exception.</param>
         /// <param name="Exception">The exception itself.</param>
-        protected void SendOnException(DateTime   Timestamp,
-                                       Object     Sender,
-                                       Exception  Exception)
+        protected void SendException(DateTime   Timestamp,
+                                     Object     Sender,
+                                     Exception  Exception)
         {
 
             DebugX.Log("AOICPUpstreamService => Exception: " + Exception.Message);

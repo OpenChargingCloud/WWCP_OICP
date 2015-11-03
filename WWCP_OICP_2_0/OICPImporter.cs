@@ -29,11 +29,386 @@ using System.Collections.Generic;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
 namespace org.GraphDefined.WWCP.OICP_2_0
 {
+
+    /// <summary>
+    /// A service to import EVSE data (from Hubject) via OICP v2.0 into WWCP data structures.
+    /// </summary>
+    public class OICPImporter : OICPImporter<String>
+    {
+
+        #region Data
+
+        private readonly RoamingNetwork _RoamingNetwork;
+
+        #endregion
+
+        #region Constructor(s)
+
+        public OICPImporter(String                                                    Identification,
+                            RoamingNetwork                                            RoamingNetwork,
+                            String                                                    Hostname,
+                            IPPort                                                    TCPPort,
+                            String                                                    HTTPVirtualHost,
+                            EVSP_Id                                                   ProviderId,
+                            DNSClient                                                 DNSClient                      = null,
+
+                            TimeSpan?                                                 UpdateEVSEDataEvery            = null,
+                            TimeSpan?                                                 UpdateEVSEDataTimeout          = null,
+                            TimeSpan?                                                 UpdateEVSEStatusEvery          = null,
+                            TimeSpan?                                                 UpdateEVSEStatusTimeout        = null,
+
+                            Func<UInt64, StreamReader>                                LoadStaticDataFromStream       = null,
+                            Func<UInt64, StreamReader>                                LoadDynamicDataFromStream      = null,
+
+                            Action<String, DateTime, IEnumerable<XElement>>           EVSEDataXMLHandler             = null,
+                            Action<String, DateTime, IEnumerable<OperatorEVSEData>>   EVSEDataHandler                = null,
+
+                            Func  <String, DateTime, IEnumerable<EVSE_Id>>            GetEVSEIdsForStatusUpdate      = null,
+                            Action<String, DateTime, XElement>                        EVSEStatusXMLHandler           = null,
+                            Action<String, DateTime, EVSE_Id, OICPEVSEStatusType>     EVSEStatusHandler              = null,
+
+                            Func<EVSEStatusReport, ChargingStationStatusType>         EVSEStatusAggregationDelegate  = null
+
+            )
+
+            : base(Identification:            Identification,
+                   Hostname:                  Hostname,
+                   TCPPort:                   TCPPort,
+                   HTTPVirtualHost:           HTTPVirtualHost,
+                   ProviderId:                ProviderId,
+                   DNSClient:                 DNSClient,
+
+                   // Remove both lines for normal behaviour!
+                   //LoadStaticDataFromStream:  Counter => File.OpenText("HubjectQATestdata-Static"  + Counter + ".xml"),
+                   //LoadDynamicDataFromStream: Counter => File.OpenText("HubjectQATestdata-Dynamic" + Counter + ".xml"),
+
+                   UpdateEVSEDataEvery:       UpdateEVSEDataEvery,
+                   UpdateEVSEStatusEvery:     UpdateEVSEStatusEvery,
+
+                   //UpdateContextCreator:      ()               => "", //MySQLExtentions.CreateAndOpenConnection (DatabaseAccessString),
+                   //StartBulkUpdate:           (UpdateContext)  => {}, //EVSEDatabase.   StartBulkUpdate         (UpdateContext),
+                   //StopBulkUpdate:            (UpdateContext)  => {}, //EVSEDatabase.   StopBulkUpdate          (UpdateContext),
+                   //UpdateContextDisposer:     (UpdateContext)  => {}, //MySQLExtentions.CommitAndCloseConnection(UpdateContext),
+
+                   #region EVSEOperatorDataHandler
+
+                   EVSEDataXMLHandler:        (UpdateContext, Timestamp, XML) => {
+
+                                              },
+
+                   EVSEDataHandler:           (UpdateContext, Timestamp, OperatorEvseData) => {
+
+                                                  #region Data
+
+                                                  EVSEOperator     _EVSEOperator         = null;
+                                                  ChargingPool     _ChargingPool         = null;
+                                                  ChargingStation  _ChargingStation      = null;
+                                                  EVSE             _EVSE                 = null;
+
+                                                  EVSEInfo         EVSEInfo              = null;
+                                                  CPInfoList       _CPInfoList           = null;
+                                                  ChargingPool_Id  PoolId                = null;
+                                                  EVSEIdLookup     EVSEIdLookup          = null;
+
+                                                  #endregion
+
+                                                  OperatorEvseData.ForEach(_OperatorEvseData => {
+
+                                                  try
+                                                  {
+
+                                                      #region Find a matching EVSE Operator and maybe update its properties... or create a new one!
+
+                                                      if (!RoamingNetwork.TryGetEVSEOperatorbyId(_OperatorEvseData.OperatorId, out _EVSEOperator))
+                                                          _EVSEOperator = RoamingNetwork.CreateNewEVSEOperator(_OperatorEvseData.OperatorId, _OperatorEvseData.OperatorName);
+
+                                                      else
+                                                      {
+
+                                                          // Update via events!
+                                                          _EVSEOperator.Name = _OperatorEvseData.OperatorName;
+
+                                                      }
+
+                                                      #endregion
+
+                                                      #region Generate a list of all charging pools/stations/EVSEs
+
+                                                      _CPInfoList = new CPInfoList(_OperatorEvseData.OperatorId);
+
+                                                      foreach (var EvseDataRecord in _OperatorEvseData.EVSEDataRecords)
+                                                      {
+
+                                                          PoolId  = ChargingPool_Id.Generate(EvseDataRecord.EVSEId.OperatorId,
+                                                                                             EvseDataRecord.Address,
+                                                                                             EvseDataRecord.GeoCoordinate);
+
+                                                          _CPInfoList.AddOrUpdateCPInfo(PoolId,
+                                                                                        EvseDataRecord.Address,
+                                                                                        EvseDataRecord.GeoCoordinate,
+                                                                                        EvseDataRecord.ChargingStationId, // Is a string in OICP v2.0!
+                                                                                        EvseDataRecord.EVSEId);
+
+                                                      }
+
+                                                      #endregion
+
+                                                      EVSEIdLookup = _CPInfoList.AnalyseAndGenerateLookUp();
+
+                                                      #region Data
+
+                                                      Languages                         LocationLanguage               = Languages.unknown;
+                                                      Languages                         LocalChargingStationLanguage   = Languages.unknown;
+
+                                                      #endregion
+
+                                                      foreach (var EvseDataRecord in _OperatorEvseData.EVSEDataRecords)
+                                                      {
+
+                                                          try
+                                                          {
+
+                                                              EVSEInfo = EVSEIdLookup[EvseDataRecord.EVSEId];
+
+                                                              #region Set derived WWCP properties
+
+                                                              #region Set LocationLanguage
+
+                                                              switch (EVSEInfo.PoolAddress.Country.Alpha2Code.ToLower())
+                                                              {
+
+                                                                  case "de": LocationLanguage = Languages.de; break;
+                                                                  case "fr": LocationLanguage = Languages.fr; break;
+                                                                  case "dk": LocationLanguage = Languages.dk; break;
+                                                                  case "no": LocationLanguage = Languages.no; break;
+                                                                  case "fi": LocationLanguage = Languages.fi; break;
+                                                                  case "se": LocationLanguage = Languages.se; break;
+
+                                                                  case "sk": LocationLanguage = Languages.sk; break;
+                                                                  //case "be": LocationLanguage = Languages.; break;
+                                                                  case "us": LocationLanguage = Languages.en; break;
+                                                                  case "nl": LocationLanguage = Languages.nl; break;
+                                                                  //case "fo": LocationLanguage = Languages.; break;
+                                                                  case "at": LocationLanguage = Languages.de; break;
+                                                                  case "ru": LocationLanguage = Languages.ru; break;
+                                                                  //case "ch": LocationLanguage = Languages.; break;
+
+                                                                  default:   LocationLanguage = Languages.unknown; break;
+
+                                                              }
+
+                                                              if (EVSEInfo.PoolAddress.Country == Country.Germany)
+                                                                  LocalChargingStationLanguage = Languages.de;
+
+                                                              else if (EVSEInfo.PoolAddress.Country == Country.Denmark)
+                                                                  LocalChargingStationLanguage = Languages.dk;
+
+                                                              else if (EVSEInfo.PoolAddress.Country == Country.France)
+                                                                  LocalChargingStationLanguage = Languages.fr;
+
+                                                              else
+                                                                  LocalChargingStationLanguage = Languages.unknown;
+
+                                                              #endregion
+
+                                                              #region Guess the language of the 'ChargingStationName' by '_Address.Country'
+
+                                                              //_ChargingStationName = new I18NString();
+
+                                                              //if (LocalChargingStationName.IsNotNullOrEmpty())
+                                                              //    _ChargingStationName.Add(LocalChargingStationLanguage,
+                                                              //                             LocalChargingStationName);
+
+                                                              //if (EnChargingStationName.IsNotNullOrEmpty())
+                                                              //    _ChargingStationName.Add(Languages.en,
+                                                              //                             EnChargingStationName);
+
+                                                              #endregion
+
+                                                              #endregion
+
+                                                              #region Update matching charging pool... or create a new one!
+
+                                                                                      if (_EVSEOperator.TryGetChargingPoolbyId(EVSEInfo.PoolId, out _ChargingPool))
+                                                                                      {
+
+                                                                                          // External update via events!
+                                                                                          _ChargingPool.Description           = EvseDataRecord.AdditionalInfo;
+                                                                                          _ChargingPool.LocationLanguage      = LocationLanguage;
+                                                                                          _ChargingPool.EntranceLocation      = EvseDataRecord.GeoChargingPointEntrance;
+                                                                                          _ChargingPool.OpeningTime           = EvseDataRecord.OpeningTime;
+                                                                                          _ChargingPool.AuthenticationModes   = new ReactiveSet<AuthenticationModes>(EvseDataRecord.AuthenticationModes);
+                                                                                          _ChargingPool.PaymentOptions        = new ReactiveSet<PaymentOptions>     (EvseDataRecord.PaymentOptions);
+                                                                                          _ChargingPool.Accessibility         = EvseDataRecord.Accessibility;
+                                                                                          _ChargingPool.HotlinePhoneNumber    = EvseDataRecord.HotlinePhoneNumber;
+
+                                                                                      }
+
+                                                                                      else
+                                                                                          _ChargingPool = _EVSEOperator.CreateNewChargingPool(
+
+                                                                                                                            EVSEInfo.PoolId,
+
+                                                                                                                            Configurator: pool => {
+
+                                                                                                                                pool.Description                 = EvseDataRecord.AdditionalInfo;
+                                                                                                                                pool.Address                     = EvseDataRecord.Address;
+                                                                                                                                pool.GeoLocation                 = EvseDataRecord.GeoCoordinate;
+                                                                                                                                pool.LocationLanguage            = LocationLanguage;
+                                                                                                                                pool.EntranceLocation            = EvseDataRecord.GeoChargingPointEntrance;
+                                                                                                                                pool.OpeningTime                 = EvseDataRecord.OpeningTime;
+                                                                                                                                pool.AuthenticationModes         = new ReactiveSet<AuthenticationModes>(EvseDataRecord.AuthenticationModes);
+                                                                                                                                pool.PaymentOptions              = new ReactiveSet<PaymentOptions>     (EvseDataRecord.PaymentOptions);
+                                                                                                                                pool.Accessibility               = EvseDataRecord.Accessibility;
+                                                                                                                                pool.HotlinePhoneNumber          = EvseDataRecord.HotlinePhoneNumber;
+                                                                                                                                //pool.StatusAggregationDelegate   = ChargingStationStatusAggregationDelegate;
+
+                                                                                                                            }
+
+                                                                                          );
+
+                                                                                      #endregion
+
+                                                              #region Update matching charging station... or create a new one!
+
+                                                              if (_ChargingPool.TryGetChargingStationbyId(EVSEInfo.StationId, out _ChargingStation))
+                                                              {
+
+                                                                  // Update via events!
+                                                                  _ChargingStation.Name                       = EvseDataRecord.ChargingStationName;
+                                                                  _ChargingStation.HubjectStationId           = EvseDataRecord.ChargingStationId;
+                                                                  _ChargingStation.Description                = EvseDataRecord.AdditionalInfo;
+                                                                  _ChargingStation.AuthenticationModes        = new ReactiveSet<AuthenticationModes>(EvseDataRecord.AuthenticationModes);
+                                                                  _ChargingStation.PaymentOptions             = new ReactiveSet<PaymentOptions>     (EvseDataRecord.PaymentOptions);
+                                                                  _ChargingStation.Accessibility              = EvseDataRecord.Accessibility;
+                                                                  _ChargingStation.HotlinePhoneNumber         = EvseDataRecord.HotlinePhoneNumber;
+                                                                  _ChargingStation.IsHubjectCompatible        = EvseDataRecord.IsHubjectCompatible;
+                                                                  _ChargingStation.DynamicInfoAvailable       = EvseDataRecord.DynamicInfoAvailable;
+                                                                  _ChargingStation.StatusAggregationDelegate  = EVSEStatusAggregationDelegate;
+
+                                                              }
+
+                                                              else
+                                                                  _ChargingStation = _ChargingPool.CreateNewStation(
+
+                                                                                                       EVSEInfo.StationId,
+
+                                                                                                       Configurator: station => {
+
+                                                                                                           station.Name                       = EvseDataRecord.ChargingStationName;
+                                                                                                           station.HubjectStationId           = EvseDataRecord.ChargingStationId;
+                                                                                                           station.Description                = EvseDataRecord.AdditionalInfo;
+                                                                                                           station.AuthenticationModes        = new ReactiveSet<AuthenticationModes>(EvseDataRecord.AuthenticationModes);
+                                                                                                           station.PaymentOptions             = new ReactiveSet<PaymentOptions>     (EvseDataRecord.PaymentOptions);
+                                                                                                           station.Accessibility              = EvseDataRecord.Accessibility;
+                                                                                                           station.HotlinePhoneNumber         = EvseDataRecord.HotlinePhoneNumber;
+                                                                                                           station.IsHubjectCompatible        = EvseDataRecord.IsHubjectCompatible;
+                                                                                                           station.DynamicInfoAvailable       = EvseDataRecord.DynamicInfoAvailable;
+                                                                                                           station.StatusAggregationDelegate  = EVSEStatusAggregationDelegate;
+
+                                                                                                           // photo_uri => "place_photo"
+
+                                                                                                       }
+
+                                                                         );
+
+                                                              #endregion
+
+                                                              #region Update matching EVSE... or create a new one!
+
+                                                              if (_ChargingStation.TryGetEVSEbyId(EvseDataRecord.EVSEId, out _EVSE))
+                                                              {
+
+                                                                  // Update via events!
+                                                                  _EVSE.Description         = EvseDataRecord.AdditionalInfo;
+                                                                  _EVSE.ChargingModes       = new ReactiveSet<ChargingModes>     (EvseDataRecord.ChargingModes);
+                                                                  _EVSE.ChargingFacilities  = new ReactiveSet<ChargingFacilities>(EvseDataRecord.ChargingFacilities);
+                                                                  //_EVSE.MaxPower            = 
+                                                                  //_EVSE.AverageVoltage      = 
+                                                                  _EVSE.MaxCapacity_kWh     = EvseDataRecord.MaxCapacity;
+                                                                  _EVSE.SocketOutlets       = new ReactiveSet<SocketOutlet>(EvseDataRecord.Plugs.Select(Plug => new SocketOutlet(Plug)));
+
+                                                              }
+
+                                                              else
+                                                                  _ChargingStation.CreateNewEVSE(EvseDataRecord.EVSEId,
+
+                                                                                                 Configurator: evse => {
+
+                                                                                                     evse.Description         = EvseDataRecord.AdditionalInfo;
+                                                                                                     evse.ChargingModes       = new ReactiveSet<ChargingModes>     (EvseDataRecord.ChargingModes);
+                                                                                                     evse.ChargingFacilities  = new ReactiveSet<ChargingFacilities>(EvseDataRecord.ChargingFacilities);
+                                                                                                     //evse.AverageVoltage      = 
+                                                                                                     evse.MaxCapacity_kWh     = EvseDataRecord.MaxCapacity;
+                                                                                                     evse.SocketOutlets       = new ReactiveSet<SocketOutlet>(EvseDataRecord.Plugs.Select(Plug => new SocketOutlet(Plug)));
+
+                                                                                                 }
+                                                                                                );
+
+                                                              #endregion
+
+                                                          }
+                                                          catch (Exception e)
+                                                          {
+                                                              DebugX.Log(e.Message);
+                                                          }
+
+                                                      }
+
+                                                  }
+                                                  catch (Exception e)
+                                                  {
+                                                      DebugX.Log("'UpdateEVSEData' led to an exception: " + e.Message);
+                                                  }
+
+                                              });
+
+               }
+
+               #endregion
+
+                   #region Get EVSEIds for status update
+
+                   //GetEVSEIdsForStatusUpdate: (UpdateContext, Timestamp) =>
+                   //                               EVSEDatabase.
+                   //                                   Where (entry => entry.EVSE.ChargingStation.DynamicInfoAvailable).
+                   //                                   Select(entry => entry.EVSE.Id),
+
+                   #endregion
+
+                   #region EVSEStatusHandler
+
+                   //EVSEStatusHandler:         (UpdateContext, Timestamp, EVSEId, Status) =>
+                   //                               EVSEDatabase.
+                   //                                   UpdateEVSEStatus(Timestamp, EVSEId, Status.AsEVSEStatusType())
+
+                   #endregion
+
+              )
+
+        {
+
+            #region Initial checks
+
+            if (RoamingNetwork == null)
+                throw new ArgumentNullException("The given roaming network must not be null or empty!");
+
+            #endregion
+
+            this._RoamingNetwork =  RoamingNetwork;
+
+        }
+
+        #endregion
+
+    }
+
 
     /// <summary>
     /// A service to import EVSE data (from Hubject) via OICP v2.0.
@@ -48,30 +423,49 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static readonly TimeSpan      DefaultUpdateEVSEStatusEvery    = TimeSpan.FromSeconds( 20);
         public static readonly TimeSpan      DefaultUpdateEVSEStatusTimeout  = TimeSpan.FromMinutes( 30);   // First import might be big and slow!
 
-        private readonly EMPUpstreamService                                       OICPUpstreamService;
-        private readonly Object                                                   UpdateEVSEsLock  = new Object();
-        private readonly Timer                                                    UpdateEVSEDataTimer;
-        private readonly Timer                                                    UpdateEVSEStatusTimer;
+        private readonly EMPClient                                                  _EMPClient;
+        private readonly Object                                                     UpdateEVSEsLock  = new Object();
+        private readonly Timer                                                      UpdateEVSEDataTimer;
+        private readonly Timer                                                      UpdateEVSEStatusTimer;
 
-        private readonly Func  <TContext>                                         _UpdateContextCreator;
-        private readonly Action<TContext>                                         _UpdateContextDisposer;
-        private readonly Action<TContext>                                         _StartBulkUpdate;
-        private readonly Action<TContext, DateTime, IEnumerable<EVSEDataRecord>>  _EVSEDataHandler;
-        private readonly Func  <TContext, DateTime, IEnumerable<EVSE_Id>>         _GetEVSEIdsForStatusUpdate;
-        private readonly Action<TContext, DateTime, EVSE_Id, OICPEVSEStatusType>      _EVSEStatusHandler;
-        private readonly Action<TContext>                                         _StopBulkUpdate;
+        private readonly Func  <TContext>                                           _UpdateContextCreator;
+        private readonly Action<TContext>                                           _UpdateContextDisposer;
+        private readonly Action<TContext>                                           _StartBulkUpdate;
 
-        private readonly Func<UInt64, StreamReader>                               _LoadStaticDataFromStream;
-        private readonly Func<UInt64, StreamReader>                               _LoadDynamicDataFromStream;
-        private          Boolean                                                  Paused = false;
+        private readonly Action<TContext, DateTime, IEnumerable<XElement>>          _EVSEDataXMLHandler;
+        private readonly Action<TContext, DateTime, IEnumerable<OperatorEVSEData>>  _EVSEDataHandler;
+
+        private readonly Func  <TContext, DateTime, IEnumerable<EVSE_Id>>           _GetEVSEIdsForStatusUpdate;
+        private readonly Action<TContext, DateTime, XElement>                       _EVSEStatusXMLHandler;
+        private readonly Action<TContext, DateTime, EVSE_Id, OICPEVSEStatusType>    _EVSEStatusHandler;
+
+        private readonly Action<TContext>                                           _StopBulkUpdate;
+
+        private readonly Func<UInt64, StreamReader>                                 _LoadStaticDataFromStream;
+        private readonly Func<UInt64, StreamReader>                                 _LoadDynamicDataFromStream;
+        private volatile Boolean                                                    Paused = false;
 
         #endregion
 
         #region Properties
 
-        private readonly String         _Identification;
+        #region Identification
+
+        private readonly String _Identification;
+
+        public String Identification
+        {
+            get
+            {
+                return _Identification;
+            }
+        }
+
+        #endregion
+
         private readonly String         _Hostname;
         private readonly IPPort         _TCPPort;
+        private readonly String         _HTTPVirtualHost;
         private readonly EVSP_Id        _ProviderId;
 
         private readonly TimeSpan       _UpdateEVSEDataEvery;
@@ -121,6 +515,62 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+        #region QueryTimeout
+
+        /// <summary>
+        /// The timeout for upstream queries.
+        /// </summary>
+        public TimeSpan QueryTimeout
+        {
+            get
+            {
+                return _EMPClient.QueryTimeout;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Events
+
+        #region OnException
+
+        /// <summary>
+        /// An event fired whenever an exception occured.
+        /// </summary>
+        public event OnExceptionDelegate OnException;
+
+        #endregion
+
+        #region OnHTTPError
+
+        /// <summary>
+        /// A delegate called whenever a HTTP error occured.
+        /// </summary>
+        public delegate void OnHTTPErrorDelegate(DateTime Timestamp, Object Sender, HTTPResponse HttpResponse);
+
+        /// <summary>
+        /// An event fired whenever a HTTP error occured.
+        /// </summary>
+        public event OnHTTPErrorDelegate OnHTTPError;
+
+        #endregion
+
+        #region OnSOAPError
+
+        /// <summary>
+        /// A delegate called whenever a SOAP error occured.
+        /// </summary>
+        public delegate void OnSOAPErrorDelegate(DateTime Timestamp, Object Sender, XElement SOAPXML);
+
+        /// <summary>
+        /// An event fired whenever a SOAP error occured.
+        /// </summary>
+        public event OnSOAPErrorDelegate OnSOAPError;
+
+        #endregion
+
         #endregion
 
         #region Constructor(s)
@@ -128,45 +578,32 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Create a new service for importing EVSE data via OICP/Hubject.
         /// </summary>
-        /// <param name="Identification"></param>
-        /// <param name="Hostname"></param>
-        /// <param name="TCPPort"></param>
-        /// <param name="ProviderId"></param>
-        /// <param name="DNSClient"></param>
-        /// <param name="UpdateEVSEDataEvery"></param>
-        /// <param name="UpdateEVSEDataTimeout"></param>
-        /// <param name="UpdateEVSEStatusEvery"></param>
-        /// <param name="UpdateEVSEStatusTimeout"></param>
-        /// <param name="UpdateContextCreator"></param>
-        /// <param name="UpdateContextDisposer"></param>
-        /// <param name="StartBulkUpdate"></param>
-        /// <param name="StopBulkUpdate"></param>
-        /// <param name="LoadStaticDataFromStream"></param>
-        /// <param name="LoadDynamicDataFromStream"></param>
-        /// <param name="EVSEDataHandler"></param>
-        /// <param name="GetEVSEIdsForStatusUpdate"></param>
-        /// <param name="EVSEStatusHandler"></param>
-        public OICPImporter(String                                                   Identification,
-                            String                                                   Hostname,
-                            IPPort                                                   TCPPort,
-                            EVSP_Id                                                  ProviderId,
-                            DNSClient                                                DNSClient                    = null,
+        public OICPImporter(String                                                      Identification,
+                            String                                                      Hostname,
+                            IPPort                                                      TCPPort,
+                            String                                                      HTTPVirtualHost,
+                            EVSP_Id                                                     ProviderId,
+                            DNSClient                                                   DNSClient                   = null,
+                            TimeSpan?                                                   QueryTimeout                = null,
 
-                            TimeSpan?                                                UpdateEVSEDataEvery          = null,
-                            TimeSpan?                                                UpdateEVSEDataTimeout        = null,
-                            TimeSpan?                                                UpdateEVSEStatusEvery        = null,
-                            TimeSpan?                                                UpdateEVSEStatusTimeout      = null,
-                            Func<TContext>                                           UpdateContextCreator         = null,
-                            Action<TContext>                                         UpdateContextDisposer        = null,
-                            Action<TContext>                                         StartBulkUpdate              = null,
-                            Action<TContext>                                         StopBulkUpdate               = null,
+                            TimeSpan?                                                   UpdateEVSEDataEvery         = null,
+                            TimeSpan?                                                   UpdateEVSEDataTimeout       = null,
+                            TimeSpan?                                                   UpdateEVSEStatusEvery       = null,
+                            TimeSpan?                                                   UpdateEVSEStatusTimeout     = null,
+                            Func<TContext>                                              UpdateContextCreator        = null,
+                            Action<TContext>                                            UpdateContextDisposer       = null,
+                            Action<TContext>                                            StartBulkUpdate             = null,
+                            Action<TContext>                                            StopBulkUpdate              = null,
 
-                            Func<UInt64, StreamReader>                               LoadStaticDataFromStream     = null,
-                            Func<UInt64, StreamReader>                               LoadDynamicDataFromStream    = null,
+                            Func<UInt64, StreamReader>                                  LoadStaticDataFromStream    = null,
+                            Func<UInt64, StreamReader>                                  LoadDynamicDataFromStream   = null,
 
-                            Action<TContext, DateTime, IEnumerable<EVSEDataRecord>>  EVSEDataHandler              = null,
-                            Func<TContext, DateTime, IEnumerable<EVSE_Id>>           GetEVSEIdsForStatusUpdate    = null,
-                            Action<TContext, DateTime, EVSE_Id, OICPEVSEStatusType>      EVSEStatusHandler            = null)
+                            Action<TContext, DateTime, IEnumerable<XElement>>           EVSEDataXMLHandler          = null,
+                            Action<TContext, DateTime, IEnumerable<OperatorEVSEData>>   EVSEDataHandler             = null,
+
+                            Func  <TContext, DateTime, IEnumerable<EVSE_Id>>            GetEVSEIdsForStatusUpdate   = null,
+                            Action<TContext, DateTime, XElement>                        EVSEStatusXMLHandler        = null,
+                            Action<TContext, DateTime, EVSE_Id, OICPEVSEStatusType>     EVSEStatusHandler           = null)
 
         {
 
@@ -184,15 +621,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (ProviderId == null)
                 throw new ArgumentNullException("The given EV Service Provider identification (EVSP Id) must not be null!");
 
-            if (EVSEDataHandler == null)
-                throw new ArgumentNullException("The given EVSEOperatorDataHandler must not be null!");
-
-            if (GetEVSEIdsForStatusUpdate == null)
-                throw new ArgumentNullException("The given GetEVSEIdsForStatusUpdate must not be null!");
-
-            if (EVSEStatusHandler == null)
-                throw new ArgumentNullException("The given EVSEStatusHandler must not be null!");
-
             #endregion
 
             #region Init parameters
@@ -200,6 +628,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             this._Identification               = Identification;
             this._Hostname                     = Hostname;
             this._TCPPort                      = TCPPort;
+            this._HTTPVirtualHost              = HTTPVirtualHost;
             this._ProviderId                   = ProviderId;
 
             if (!UpdateEVSEDataEvery.HasValue)
@@ -224,8 +653,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             this._UpdateContextCreator         = UpdateContextCreator;
             this._UpdateContextDisposer        = UpdateContextDisposer;
             this._StartBulkUpdate              = StartBulkUpdate;
+            this._EVSEDataXMLHandler           = EVSEDataXMLHandler;
             this._EVSEDataHandler              = EVSEDataHandler;
             this._GetEVSEIdsForStatusUpdate    = GetEVSEIdsForStatusUpdate;
+            this._EVSEStatusXMLHandler         = EVSEStatusXMLHandler;
             this._EVSEStatusHandler            = EVSEStatusHandler;
             this._StopBulkUpdate               = StopBulkUpdate;
 
@@ -233,30 +664,22 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Init OICP EMP UpstreamService
 
-            OICPUpstreamService  = new EMPUpstreamService(_Hostname,
-                                                          _TCPPort,
-                                                          DNSClient: _DNSClient);
+            _EMPClient  = new EMPClient(Hostname:         _Hostname,
+                                        TCPPort:          _TCPPort,
+                                        HTTPVirtualHost:  _HTTPVirtualHost,
+                                        QueryTimeout:     QueryTimeout,
+                                        DNSClient:        _DNSClient);
 
-            OICPUpstreamService.OnException += (Timestamp, Sender, Exception) => {
-
-                if (Exception.Message.StartsWith("Unexpected end of file while parsing") ||
-                    Exception.Message.StartsWith("Unexpected end of file has occurred. The following elements are not closed:"))
-                    return;
-
-                DebugX.Log("'" + Sender.ToString() + "' " + Exception.Message);
-
-            };
-
-            OICPUpstreamService.OnHTTPError += (Timestamp, Sender, HttpResponse) => {
-                DebugX.Log("'" + Sender.ToString() + "' " + (HttpResponse != null ? HttpResponse.ToString() : "<null>"));
-            };
+            _EMPClient.OnException += SendException;
+            _EMPClient.OnHTTPError += SendHTTPError;
+            _EMPClient.OnSOAPError += SendSOAPError;
 
             #endregion
 
             #region Init Timers
 
-            UpdateEVSEDataTimer    = new Timer(UpdateEVSEData,   null, TimeSpan.FromSeconds(1),  UpdateEVSEDataEvery.  Value);
-            UpdateEVSEStatusTimer  = new Timer(UpdateEVSEStatus, null, TimeSpan.FromSeconds(10), UpdateEVSEStatusEvery.Value);
+            UpdateEVSEDataTimer    = new Timer(UpdateEVSEData,   null, TimeSpan.FromSeconds(1),  this._UpdateEVSEDataEvery);
+            UpdateEVSEStatusTimer  = new Timer(UpdateEVSEStatus, null, TimeSpan.FromSeconds(10), this._UpdateEVSEStatusEvery);
 
             #endregion
 
@@ -384,16 +807,21 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                             if (OperatorEvseDataXMLs != null)
                             {
 
-                                var EVSEDataRecords = OperatorEvseDataXMLs.
-                                                          Select    (OperatorEvseDataXML => OperatorEVSEData.Parse(OperatorEvseDataXML)).
-                                                          Where     (_OperatorEvseData   => _OperatorEvseData != null).
-                                                          SelectMany(_OperatorEvseData   => _OperatorEvseData.EVSEDataRecords).
-                                                          ToArray();
+                                if (_EVSEDataXMLHandler != null)
+                                    _EVSEDataXMLHandler(UpdateContext,
+                                                        DateTime.Now,
+                                                        OperatorEvseDataXMLs);
 
-                                if (EVSEDataRecords.Length > 0)
+                                var _OperatorEVSEData = OperatorEvseDataXMLs.
+                                                            Select    (OperatorEvseDataXML => OperatorEVSEData.Parse(OperatorEvseDataXML)).
+                                                            Where     (_OperatorEvseData   => _OperatorEvseData != null).
+                                                            ToArray();
+
+                                if (_OperatorEVSEData.Length  > 0 &&
+                                    _EVSEDataXMLHandler      != null)
                                     _EVSEDataHandler(UpdateContext,
-                                                             DateTime.Now,
-                                                             EVSEDataRecords);
+                                                     DateTime.Now,
+                                                     _OperatorEVSEData);
 
                             }
 
@@ -413,12 +841,21 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     #region ...or load it (from Hubject) via OICP v2.0
 
                     else
-                        OICPUpstreamService.
+                        _EMPClient.
                             PullEVSEData(_ProviderId).
                             ContinueWith(PullEVSEDataTask => {
 
                                 if (PullEVSEDataTask.Result.Content.StatusCode.Code == 0)
-                                    PullEVSEDataTask.Result.Content.OperatorEVSEData.ForEach(OperatorEVSEData => _EVSEDataHandler(UpdateContext, DateTime.Now, OperatorEVSEData.EVSEDataRecords));
+                                {
+
+                                    //if (_EVSEDataXMLHandler != null)
+                                    //    _EVSEDataXMLHandler(UpdateContext,
+                                    //                        DateTime.Now,
+                                    //                        PullEVSEDataTask.Result.Content.OperatorEVSEData);
+
+                                    _EVSEDataHandler(UpdateContext, DateTime.Now, PullEVSEDataTask.Result.Content.OperatorEVSEData);
+
+                                }
 
                             }).
                             Wait();
@@ -629,7 +1066,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         // Hubject has a limit of 100 EVSEIds per request!
                                                         ToPartitions(100).
 
-                                                        Select(EVSEPartition => OICPUpstreamService.
+                                                        Select(EVSEPartition => _EMPClient.
                                                                                     PullEVSEStatusById(_ProviderId, EVSEPartition).
                                                                                     ContinueWith(NewEVSEStatusTask => {
 
@@ -723,6 +1160,70 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             else
                 DebugX.LogT("'UpdateEVSEStatus' skipped!");
+
+        }
+
+        #endregion
+
+
+        #region (protected) SendException(Timestamp, Sender, Exception)
+
+        /// <summary>
+        /// Notify that an exception occured.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the exception.</param>
+        /// <param name="Sender">The sender of this exception.</param>
+        /// <param name="Exception">The exception itself.</param>
+        protected void SendException(DateTime   Timestamp,
+                                     Object     Sender,
+                                     Exception  Exception)
+        {
+
+            var OnExceptionLocal = OnException;
+            if (OnExceptionLocal != null)
+                OnExceptionLocal(Timestamp, Sender, Exception);
+
+        }
+
+        #endregion
+
+        #region (protected) SendHTTPError(Timestamp, Sender, HttpResponse)
+
+        /// <summary>
+        /// Notify that an HTTP error occured.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the error received.</param>
+        /// <param name="Sender">The sender of this error message.</param>
+        /// <param name="HttpResponse">The HTTP response related to this error message.</param>
+        protected void SendHTTPError(DateTime      Timestamp,
+                                     Object        Sender,
+                                     HTTPResponse  HttpResponse)
+        {
+
+            var OnHTTPErrorLocal = OnHTTPError;
+            if (OnHTTPErrorLocal != null)
+                OnHTTPErrorLocal(Timestamp, Sender, HttpResponse);
+
+        }
+
+        #endregion
+
+        #region (protected) SendSOAPError(Timestamp, Sender, SOAPXML)
+
+        /// <summary>
+        /// Notify that an HTTP error occured.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the error received.</param>
+        /// <param name="Sender">The sender of this error message.</param>
+        /// <param name="SOAPXML">The SOAP fault/error.</param>
+        protected void SendSOAPError(DateTime  Timestamp,
+                                     Object    Sender,
+                                     XElement  SOAPXML)
+        {
+
+            var OnSOAPErrorLocal = OnSOAPError;
+            if (OnSOAPErrorLocal != null)
+                OnSOAPErrorLocal(Timestamp, Sender, SOAPXML);
 
         }
 

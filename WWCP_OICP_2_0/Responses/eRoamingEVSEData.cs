@@ -17,6 +17,7 @@
 
 #region Usings
 
+using org.GraphDefined.Vanaheimr.Illias;
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -116,9 +117,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region (static) Parse(eRoamingEVSEDataXML)
+        #region (static) Parse(eRoamingEVSEDataXML, OnException = null)
 
-        public static eRoamingEVSEData Parse(XElement eRoamingEVSEDataXML)
+        public static eRoamingEVSEData Parse(XElement             eRoamingEVSEDataXML,
+                                             OnExceptionDelegate  OnException = null)
         {
 
             #region Documentation
@@ -181,7 +183,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 var OperatorEvseDataXMLs = EVSEDataXML.Elements(OICPNS.EVSEData + "OperatorEvseData");
 
                 if (OperatorEvseDataXMLs != null)
-                    return new eRoamingEVSEData(OICP_2_0.OperatorEVSEData.Parse(OperatorEvseDataXMLs),
+                    return new eRoamingEVSEData(OICP_2_0.OperatorEVSEData.Parse(OperatorEvseDataXMLs, OnException),
                                                 StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
 
             }

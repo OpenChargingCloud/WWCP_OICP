@@ -17,6 +17,7 @@
 
 #region Usings
 
+using org.GraphDefined.Vanaheimr.Illias;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     {
 
 
-        public static AuthorizationIdentification Parse(XElement AuthorizationIdentificationXML)
+        public static AuthorizationIdentification Parse(XElement             AuthorizationIdentificationXML,
+                                                        OnExceptionDelegate  OnException  = null)
         {
 
             return null;
