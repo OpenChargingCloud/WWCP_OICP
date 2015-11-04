@@ -374,32 +374,36 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
             //                   xmlns:EVSESearch  = "http://www.hubject.com/b2b/services/evsesearch/v2.0"
             //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            //
+            // 
             //    <soapenv:Header/>
-            //
+            // 
             //    <soapenv:Body>
             //       <EVSESearch:eRoamingSearchEvse>
-            //
+            //          <!--You have a CHOICE of the next 2 items at this level-->
+            // 
             //          <!--Optional:-->
             //          <EVSESearch:GeoCoordinates>
             //             <!--You have a CHOICE of the next 3 items at this level-->
-            //
+            // 
             //             <CommonTypes:Google>
-            //                <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+            //                <!-- latitude longitude: -?1?\d{1,2}\.\d{1,6}\s*\,?\s*-?1?\d{1,2}\.\d{1,6} -->
+            //                <CommonTypes:Coordinates>50.931844 11.625214</CommonTypes:Coordinates>
             //             </CommonTypes:Google>
-            //
+            // 
             //             <CommonTypes:DecimalDegree>
-            //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
-            //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //                <!-- -?1?\d{1,2}\.\d{1,6} -->
+            //                <CommonTypes:Longitude>11.625214</CommonTypes:Longitude>
+            //                <CommonTypes:Latitude >50.931844</CommonTypes:Latitude>
             //             </CommonTypes:DecimalDegree>
-            //
+            // 
             //             <CommonTypes:DegreeMinuteSeconds>
-            //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
-            //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //                <!-- -?1?\d{1,2}°[ ]?\d{1,2}'[ ]?\d{1,2}\.\d+'' -->
+            //                <CommonTypes:Longitude>11° 37' 30.7704''</CommonTypes:Longitude>
+            //                <CommonTypes:Latitude >50° 55' 54.6384''</CommonTypes:Latitude>
             //             </CommonTypes:DegreeMinuteSeconds>
-            //
+            // 
             //          </EVSESearch:GeoCoordinates>
-            //
+            // 
             //          <!--Optional:-->
             //          <EVSESearch:Address>
             //             <CommonTypes:Country>?</CommonTypes:Country>
@@ -416,17 +420,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //             <!--Optional:-->
             //             <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
             //          </EVSESearch:Address>
-            //
-            //          <EVSESearch:ProviderID>?</EVSESearch:ProviderID>
-            //
-            //          <EVSESearch:Range>?</EVSESearch:Range>
-            //
+            // 
+            //          <EVSESearch:ProviderID>DE*GDF</EVSESearch:ProviderID>
+            // 
+            //          <EVSESearch:Range>100</EVSESearch:Range>
+            // 
             //          <!--Optional:-->
-            //          <EVSESearch:Plug>?</EVSESearch:Plug>
-            //
+            //          <EVSESearch:Plug>Type 2 Outlet</EVSESearch:Plug>
+            // 
             //          <!--Optional:-->
             //          <EVSESearch:ChargingFacility>?</EVSESearch:ChargingFacility>
-            //
+            // 
             //       </EVSESearch:eRoamingSearchEvse>
             //    </soapenv:Body>
             // </soapenv:Envelope>
