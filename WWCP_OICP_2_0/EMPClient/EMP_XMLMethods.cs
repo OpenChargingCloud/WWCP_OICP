@@ -507,68 +507,127 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region PushAuthenticationData
+        #region PushAuthenticationData(ProviderAuthenticationDataRecords, OICPAction = fullLoad)
 
-        #region Documentation
+        /// <summary>
+        /// Create a new push provider authentication data records request.
+        /// </summary>
+        /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        public static XElement PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
+                                                      ActionType                               OICPAction  = ActionType.fullLoad)
+        {
 
-        // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
-        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //
-        //    <soapenv:Header/>
-        //
-        //    <soapenv:Body>
-        //       <AuthenticationData:eRoamingPushAuthenticationData>
-        // 
-        //          <AuthenticationData:ActionType>?</AuthenticationData:ActionType>
-        // 
-        //          <AuthenticationData:ProviderAuthenticationData>
-        // 
-        //             <AuthenticationData:ProviderID>?</AuthenticationData:ProviderID>
-        // 
-        //             <!--Zero or more repetitions:-->
-        //             <AuthenticationData:AuthenticationDataRecord>
-        //                <AuthenticationData:Identification>
-        // 
-        //                   <!--You have a CHOICE of the next 4 items at this level-->
-        //                   <CommonTypes:RFIDmifarefamilyIdentification>
-        //                      <CommonTypes:UID>?</CommonTypes:UID>
-        //                   </CommonTypes:RFIDmifarefamilyIdentification>
-        // 
-        //                   <CommonTypes:QRCodeIdentification>
-        // 
-        //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        // 
-        //                      <!--You have a CHOICE of the next 2 items at this level-->
-        //                      <CommonTypes:PIN>?</CommonTypes:PIN>
-        // 
-        //                      <CommonTypes:HashedPIN>
-        //                         <CommonTypes:Value>?</CommonTypes:Value>
-        //                         <CommonTypes:Function>?</CommonTypes:Function>
-        //                         <CommonTypes:Salt>?</CommonTypes:Salt>
-        //                      </CommonTypes:HashedPIN>
-        // 
-        //                   </CommonTypes:QRCodeIdentification>
-        // 
-        //                   <CommonTypes:PlugAndChargeIdentification>
-        //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //                   </CommonTypes:PlugAndChargeIdentification>
-        // 
-        //                   <CommonTypes:RemoteIdentification>
-        //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //                   </CommonTypes:RemoteIdentification>
-        // 
-        //                </AuthenticationData:Identification>
-        //             </AuthenticationData:AuthenticationDataRecord>
-        // 
-        //          </AuthenticationData:ProviderAuthenticationData>
-        // 
-        //       </AuthenticationData:eRoamingPushAuthenticationData>
-        //    </soapenv:Body>
-        //
-        // </soapenv:Envelope>
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
+            //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //
+            //    <soapenv:Header/>
+            //
+            //    <soapenv:Body>
+            //       <AuthenticationData:eRoamingPushAuthenticationData>
+            // 
+            //          <AuthenticationData:ActionType>?</AuthenticationData:ActionType>
+            // 
+            //          <AuthenticationData:ProviderAuthenticationData>
+            // 
+            //             <AuthenticationData:ProviderID>?</AuthenticationData:ProviderID>
+            // 
+            //             <!--Zero or more repetitions:-->
+            //             <AuthenticationData:AuthenticationDataRecord>
+            //                <AuthenticationData:Identification>
+            // 
+            //                   <!--You have a CHOICE of the next 4 items at this level-->
+            //                   <CommonTypes:RFIDmifarefamilyIdentification>
+            //                      <CommonTypes:UID>?</CommonTypes:UID>
+            //                   </CommonTypes:RFIDmifarefamilyIdentification>
+            // 
+            //                   <CommonTypes:QRCodeIdentification>
+            // 
+            //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            // 
+            //                      <!--You have a CHOICE of the next 2 items at this level-->
+            //                      <CommonTypes:PIN>?</CommonTypes:PIN>
+            // 
+            //                      <CommonTypes:HashedPIN>
+            //                         <CommonTypes:Value>?</CommonTypes:Value>
+            //                         <CommonTypes:Function>?</CommonTypes:Function>
+            //                         <CommonTypes:Salt>?</CommonTypes:Salt>
+            //                      </CommonTypes:HashedPIN>
+            // 
+            //                   </CommonTypes:QRCodeIdentification>
+            // 
+            //                   <CommonTypes:PlugAndChargeIdentification>
+            //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            //                   </CommonTypes:PlugAndChargeIdentification>
+            // 
+            //                   <CommonTypes:RemoteIdentification>
+            //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            //                   </CommonTypes:RemoteIdentification>
+            // 
+            //                </AuthenticationData:Identification>
+            //             </AuthenticationData:AuthenticationDataRecord>
+            // 
+            //          </AuthenticationData:ProviderAuthenticationData>
+            // 
+            //       </AuthenticationData:eRoamingPushAuthenticationData>
+            //    </soapenv:Body>
+            //
+            // </soapenv:Envelope>
+
+            #endregion
+
+            #region Initial checks
+
+            if (ProviderAuthenticationDataRecords == null)
+                throw new ArgumentNullException("ProviderAuthenticationDataRecords", "The given parameter must not be null!");
+
+            #endregion
+
+            return SOAP.Encapsulation(new XElement(OICPNS.AuthenticationData + "eRoamingPushAuthenticationData",
+
+                                      new XElement(OICPNS.AuthenticationData + "ActionType", OICPAction.ToString()),
+
+                                      ProviderAuthenticationDataRecords.Select(ProviderAuthenticationData =>
+
+                                          new XElement(OICPNS.AuthenticationData + "ProviderAuthenticationData",
+
+                                              new XElement(OICPNS.AuthenticationData + "ProviderID", ProviderAuthenticationData.ProviderId.ToString()),
+
+                                              ProviderAuthenticationData.
+                                                  AuthorizationIdentifications.
+                                                  Select(v => new XElement(OICPNS.AuthenticationData + "AuthenticationDataRecord",
+                                                                  v.ToXML(OICPNS.AuthenticationData))).
+                                                  ToArray()
+
+                                          )).ToArray()
+                                      ));
+
+        }
 
         #endregion
+
+        #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad)
+
+        /// <summary>
+        /// Create a new push authorization identifications request.
+        /// </summary>
+        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        public static XElement PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
+                                                      EVSP_Id                                   ProviderId,
+                                                      ActionType                                OICPAction  = ActionType.fullLoad)
+        {
+
+            return PushAuthenticationData(new ProviderAuthenticationData[] {
+                                              new ProviderAuthenticationData(ProviderId, AuthorizationIdentifications)
+                                          },
+                                          OICPAction);
+
+        }
 
         #endregion
 

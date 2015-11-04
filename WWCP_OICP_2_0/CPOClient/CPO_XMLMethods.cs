@@ -769,7 +769,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
+
                                       new XElement(OICPNS.EVSEStatus + "ActionType", OICPAction.ToString()),
+
                                       GroupedData.Select(datagroup =>
                                           new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 

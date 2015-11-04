@@ -504,10 +504,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
-                                                       return new HTTPResponse<eRoamingEvseSearchResult>(
-                                                           soapfault.HttpResponse,
-                                                           null,
-                                                           IsFault: true);
+                                                       return new HTTPResponse<eRoamingEvseSearchResult>(soapfault.HttpResponse,
+                                                                                                         null,
+                                                                                                         IsFault: true);
 
                                                    },
 
@@ -549,11 +548,210 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        // ToDo's:
+        #region PushAuthenticationData(ProviderAuthenticationDataRecords, OICPAction = fullLoad, QueryTimeout = null)
 
-        #region PushAuthenticationData
+        /// <summary>
+        /// Create a new task pushing provider authentication data records onto the OICP server.
+        /// </summary>
+        /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+
+            PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
+                                   ActionType                               OICPAction    = ActionType.fullLoad,
+                                   TimeSpan?                                QueryTimeout  = null)
+
+        {
+
+            #region Initial checks
+
+            if (ProviderAuthenticationDataRecords == null)
+                throw new ArgumentNullException("ProviderAuthenticationDataRecords", "The given parameter must not be null!");
+
+            #endregion
+
+            try
+            {
+
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingAuthenticationData_V2.0",
+                                                        UserAgent,
+                                                        DNSClient))
+
+                {
+
+                    return await _OICPClient.Query(EMP_XMLMethods.PushAuthenticationData(ProviderAuthenticationDataRecords,
+                                                                                         OICPAction),
+                                                   "eRoamingPushAuthenticationData",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                                                   OnSuccess: XMLData => {
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
+                                                                                                        eRoamingAcknowledgement.Parse(XMLData.Content));
+
+                                                   },
+
+                                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
+
+                                                       SendSOAPError(timestamp, soapclient, soapfault.Content);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    Description: soapfault.Content.ToString()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                    AdditionalInfo: httpresponse.Content.ToUTF8String()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnException: (timestamp, sender, exception) => {
+
+                                                       SendException(timestamp, sender, exception);
+
+                                                       return null;
+
+                                                   }
+
+                                            );
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                SendException(DateTime.Now, this, e);
+
+                return new HTTPResponse<eRoamingAcknowledgement>(e);
+
+            }
+
+        }
 
         #endregion
+
+        #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad)
+
+        /// <summary>
+        /// Create a new task pushing authorization identifications onto the OICP server.
+        /// </summary>
+        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+
+            PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
+                                   EVSP_Id                                   ProviderId,
+                                   ActionType                                OICPAction    = ActionType.fullLoad,
+                                   TimeSpan?                                 QueryTimeout  = null)
+
+        {
+
+            #region Initial checks
+
+            if (AuthorizationIdentifications == null)
+                throw new ArgumentNullException("AuthorizationIdentifications", "The given parameter must not be null!");
+
+            if (ProviderId == null)
+                throw new ArgumentNullException("ProviderId", "The given parameter must not be null!");
+
+            #endregion
+
+            try
+            {
+
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingAuthenticationData_V2.0",
+                                                        UserAgent,
+                                                        DNSClient))
+
+                {
+
+                    return await _OICPClient.Query(EMP_XMLMethods.PushAuthenticationData(AuthorizationIdentifications,
+                                                                                         ProviderId,
+                                                                                         OICPAction),
+                                                   "eRoamingPushAuthenticationData",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                                                   OnSuccess: XMLData => {
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
+                                                                                                        eRoamingAcknowledgement.Parse(XMLData.Content));
+
+                                                   },
+
+                                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
+
+                                                       SendSOAPError(timestamp, soapclient, soapfault.Content);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    Description: soapfault.Content.ToString()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                    AdditionalInfo: httpresponse.Content.ToUTF8String()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnException: (timestamp, sender, exception) => {
+
+                                                       SendException(timestamp, sender, exception);
+
+                                                       return null;
+
+                                                   }
+
+                                            );
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                SendException(DateTime.Now, this, e);
+
+                return new HTTPResponse<eRoamingAcknowledgement>(e);
+
+            }
+
+        }
+
+        #endregion
+
 
         #region GetChargeDetailRecords
 
