@@ -46,6 +46,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                        new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.         NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "MobileAuthorization", OICPNS.MobileAuthorization.NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "Authorization",       OICPNS.Authorization.      NamespaceName),
+                       new XAttribute(XNamespace.Xmlns + "AuthenticationData",  OICPNS.AuthenticationData. NamespaceName),
                        new XAttribute(XNamespace.Xmlns + "EVSESearch",          OICPNS.EVSESearch.         NamespaceName),
 
                        new XElement(SOAPNS.NS.SOAPEnvelope + "Header"),

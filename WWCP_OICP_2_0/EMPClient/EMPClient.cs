@@ -456,7 +456,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="Plug">Optional plugs of the charging station.</param>
         /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>>>>
+        public async Task<HTTPResponse<eRoamingEvseSearchResult>>
 
             SearchEVSE(EVSP_Id              ProviderId,
                        GeoCoordinate        SearchCenter      = null,
@@ -474,7 +474,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingSearchEvse_V2.0",
+                                                        "/ibis/ws/eRoamingEvseSearch_V2.0",
                                                         UserAgent,
                                                         DNSClient))
 
@@ -491,181 +491,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                    OnSuccess: XMLData => {
 
-                                                       #region Documentation
+                                                       OICPException _OICPException = null;
+                                                       if (IsHubjectError(XMLData.Content, out _OICPException, SendException))
+                                                           return new HTTPResponse<eRoamingEvseSearchResult>(_OICPException);
 
-                                                       // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                       //                   xmlns:EVSESearch  = "http://www.hubject.com/b2b/services/evsesearch/v2.0"
-                                                       //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-                                                       //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                                                       //
-                                                       //    <soapenv:Header/>
-                                                       //    <soapenv:Body>
-                                                       //       <EVSESearch:eRoamingEvseSearchResult>
-                                                       //          <EVSESearch:EvseMatches>
-                                                       //
-                                                       //             <!--Zero or more repetitions:-->
-                                                       //             <EVSESearch:EvseMatch>
-                                                       //
-                                                       //                <EVSESearch:Distance>?</EVSESearch:Distance>
-                                                       //
-                                                       //                <EVSESearch:EVSE deltaType="?" lastUpdate="?">
-                                                       //
-                                                       //                   <EVSEData:EvseId>?</EVSEData:EvseId>
-                                                       //
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:ChargingStationId>?</EVSEData:ChargingStationId>
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:ChargingStationName>?</EVSEData:ChargingStationName>
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:EnChargingStationName>?</EVSEData:EnChargingStationName>
-                                                       //
-                                                       //                   <EVSEData:Address>
-                                                       //                      <CommonTypes:Country>?</CommonTypes:Country>
-                                                       //                      <CommonTypes:City>?</CommonTypes:City>
-                                                       //                      <CommonTypes:Street>?</CommonTypes:Street>
-                                                       //                      <!--Optional:-->
-                                                       //                      <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
-                                                       //                      <!--Optional:-->
-                                                       //                      <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
-                                                       //                      <!--Optional:-->
-                                                       //                      <CommonTypes:Floor>?</CommonTypes:Floor>
-                                                       //                      <!--Optional:-->
-                                                       //                      <CommonTypes:Region>?</CommonTypes:Region>
-                                                       //                      <!--Optional:-->
-                                                       //                      <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
-                                                       //                   </EVSEData:Address>
-                                                       //
-                                                       //                   <EVSEData:GeoCoordinates>
-                                                       //                      <!--You have a CHOICE of the next 3 items at this level-->
-                                                       //
-                                                       //                      <CommonTypes:Google>
-                                                       //                         <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
-                                                       //                      </CommonTypes:Google>
-                                                       //
-                                                       //                      <CommonTypes:DecimalDegree>
-                                                       //                         <CommonTypes:Longitude>?</CommonTypes:Longitude>
-                                                       //                         <CommonTypes:Latitude>?</CommonTypes:Latitude>
-                                                       //                      </CommonTypes:DecimalDegree>
-                                                       //
-                                                       //                      <CommonTypes:DegreeMinuteSeconds>
-                                                       //                         <CommonTypes:Longitude>?</CommonTypes:Longitude>
-                                                       //                         <CommonTypes:Latitude>?</CommonTypes:Latitude>
-                                                       //                      </CommonTypes:DegreeMinuteSeconds>
-                                                       //
-                                                       //                   </EVSEData:GeoCoordinates>
-                                                       //
-                                                       //                   <EVSEData:Plugs>
-                                                       //                      <!--1 or more repetitions:-->
-                                                       //                      <EVSEData:Plug>?</EVSEData:Plug>
-                                                       //                   </EVSEData:Plugs>
-                                                       //
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:ChargingFacilities>
-                                                       //                      <!--1 or more repetitions:-->
-                                                       //                      <EVSEData:ChargingFacility>?</EVSEData:ChargingFacility>
-                                                       //                   </EVSEData:ChargingFacilities>
-                                                       //
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:ChargingModes>
-                                                       //                      <!--1 or more repetitions:-->
-                                                       //                      <EVSEData:ChargingMode>?</EVSEData:ChargingMode>
-                                                       //                   </EVSEData:ChargingModes>
-                                                       //
-                                                       //                   <EVSEData:AuthenticationModes>
-                                                       //                      <!--1 or more repetitions:-->
-                                                       //                      <EVSEData:AuthenticationMode>?</EVSEData:AuthenticationMode>
-                                                       //                   </EVSEData:AuthenticationModes>
-                                                       //
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:MaxCapacity>?</EVSEData:MaxCapacity>
-                                                       //
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:PaymentOptions>
-                                                       //                      <!--1 or more repetitions:-->
-                                                       //                      <EVSEData:PaymentOption>?</EVSEData:PaymentOption>
-                                                       //                   </EVSEData:PaymentOptions>
-                                                       //
-                                                       //                   <EVSEData:Accessibility>?</EVSEData:Accessibility>
-                                                       //                   <EVSEData:HotlinePhoneNum>?</EVSEData:HotlinePhoneNum>
-                                                       //
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:AdditionalInfo>?</EVSEData:AdditionalInfo>
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:EnAdditionalInfo>?</EVSEData:EnAdditionalInfo>
-                                                       //
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:GeoChargingPointEntrance>
-                                                       //                      <!--You have a CHOICE of the next 3 items at this level-->
-                                                       //                      <CommonTypes:Google>
-                                                       //                         <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
-                                                       //                      </CommonTypes:Google>
-                                                       //                      <CommonTypes:DecimalDegree>
-                                                       //                         <CommonTypes:Longitude>?</CommonTypes:Longitude>
-                                                       //                         <CommonTypes:Latitude>?</CommonTypes:Latitude>
-                                                       //                      </CommonTypes:DecimalDegree>
-                                                       //                      <CommonTypes:DegreeMinuteSeconds>
-                                                       //                         <CommonTypes:Longitude>?</CommonTypes:Longitude>
-                                                       //                         <CommonTypes:Latitude>?</CommonTypes:Latitude>
-                                                       //                      </CommonTypes:DegreeMinuteSeconds>
-                                                       //                   </EVSEData:GeoChargingPointEntrance>
-                                                       //
-                                                       //                   <EVSEData:IsOpen24Hours>?</EVSEData:IsOpen24Hours>
-                                                       //
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:OpeningTime>?</EVSEData:OpeningTime>
-                                                       //
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:HubOperatorID>?</EVSEData:HubOperatorID>
-                                                       //                   <!--Optional:-->
-                                                       //                   <EVSEData:ClearinghouseID>?</EVSEData:ClearinghouseID>
-                                                       //
-                                                       //                   <EVSEData:IsHubjectCompatible>?</EVSEData:IsHubjectCompatible>
-                                                       //                   <EVSEData:DynamicInfoAvailable>?</EVSEData:DynamicInfoAvailable>
-                                                       //
-                                                       //                </EVSESearch:EVSE>
-                                                       //             </EVSESearch:EvseMatch>
-                                                       //          </EVSESearch:EvseMatches>
-                                                       //       </EVSESearch:eRoamingEvseSearchResult>
-                                                       //    </soapenv:Body>
-                                                       // </soapenv:Envelope>
-
-                                                       #endregion
-
-                                                       #region Hubject error?
-
-                                                       var HubjectError = XMLData.
-                                                                              Content.
-                                                                              Element(OICPNS.EVSEStatus + "StatusCode");
-
-                                                       if (HubjectError != null)
-                                                       {
-
-                                                           // <tns:eRoamingEvseStatusById xmlns:tns="http://www.hubject.com/b2b/services/evsestatus/v1.2">
-                                                           //   <tns:StatusCode>
-                                                           //     <cmn:Code        xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">002</cmn:Code>
-                                                           //     <cmn:Description xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v1.2">Hubject database error</cmn:Description>
-                                                           //   </tns:StatusCode>
-                                                           // </tns:eRoamingEvseStatusById>
-
-                                                           var Code         = HubjectError.Element(OICPNS.CommonTypes + "Code").       Value;
-                                                           var Description  = HubjectError.Element(OICPNS.CommonTypes + "Description").Value;
-                                                           var Exception    = new ApplicationException(Code + " - " + Description);
-
-                                                           SendException(DateTime.Now, this, Exception);
-
-                                                           return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>>>(Exception);
-
-                                                       }
-
-                                                       #endregion
-
-                                                       return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>>>(
-                                                                  XMLData.HttpResponse,
-                                                                  XMLData.Content.
-                                                                          Element (OICPNS.EVSEStatus + "EvseStatusRecords").
-                                                                          Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
-                                                                          Select(v => new KeyValuePair<EVSE_Id, OICPEVSEStatusType>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
-                                                                                                                               (OICPEVSEStatusType) Enum.Parse(typeof(OICPEVSEStatusType), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))));
+                                                       return new HTTPResponse<eRoamingEvseSearchResult>(XMLData.HttpResponse,
+                                                                                                         eRoamingEvseSearchResult.Parse(XMLData.Content));
 
                                                    },
 
@@ -673,28 +504,26 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
-                                                       return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>>>(
+                                                       return new HTTPResponse<eRoamingEvseSearchResult>(
                                                            soapfault.HttpResponse,
-                                                           new KeyValuePair<EVSE_Id, OICPEVSEStatusType>[0],
+                                                           null,
                                                            IsFault: true);
 
                                                    },
 
-                                                   OnHTTPError: (t, s, e) => {
+                                                   OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                       //var OnHTTPErrorLocal = OnHTTPError;
-                                                       //if (OnHTTPErrorLocal != null)
-                                                       //    OnHTTPErrorLocal(t, s, e);
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                       return null;
+                                                       return new HTTPResponse<eRoamingEvseSearchResult>(httpresponse,
+                                                                                                         null,
+                                                                                                         IsFault: true);
 
                                                    },
 
-                                                   OnException: (t, s, e) => {
+                                                   OnException: (timestamp, sender, exception) => {
 
-                                                       //var OnExceptionLocal = OnException;
-                                                       //if (OnExceptionLocal != null)
-                                                       //    OnExceptionLocal(t, s, e);
+                                                       SendException(timestamp, sender, exception);
 
                                                        return null;
 
@@ -711,7 +540,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 SendException(DateTime.Now, this, e);
 
-                return new HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>>>(e);
+                return new HTTPResponse<eRoamingEvseSearchResult>(e);
 
             }
 

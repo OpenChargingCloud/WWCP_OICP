@@ -31,12 +31,51 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     public class AuthorizationIdentification
     {
 
+        #region Properties
+
+        #region AuthToken
+
+        private readonly Auth_Token _AuthToken;
+
+        public Auth_Token AuthToken
+        {
+            get
+            {
+                return _AuthToken;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+
+        public AuthorizationIdentification(Auth_Token  AuthToken = null)
+        {
+
+            this._AuthToken     = AuthToken;
+
+        }
+
 
         public static AuthorizationIdentification Parse(XElement             AuthorizationIdentificationXML,
                                                         OnExceptionDelegate  OnException  = null)
         {
 
-            return null;
+            Auth_Token _AuthToken = null;
+
+            var RFIDmifarefamilyIdentificationXML = AuthorizationIdentificationXML.Element(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification");
+            if (RFIDmifarefamilyIdentificationXML != null)
+            {
+
+                var UIDXML = RFIDmifarefamilyIdentificationXML.Element(OICPNS.CommonTypes + "UID");
+
+                if (RFIDmifarefamilyIdentificationXML != null)
+                    _AuthToken = Auth_Token.Parse(RFIDmifarefamilyIdentificationXML.Value);
+
+            }
+
+            return new AuthorizationIdentification(_AuthToken);
 
         }
 

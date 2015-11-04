@@ -376,6 +376,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
             //
             //    <soapenv:Header/>
+            //
             //    <soapenv:Body>
             //       <EVSESearch:eRoamingSearchEvse>
             //
@@ -442,13 +443,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             return SOAP.Encapsulation(new XElement(OICPNS.EVSESearch + "eRoamingSearchEvse",
 
                                           (SearchCenter != null && DistanceKM > 0)
-                                              ? new XElement(OICPNS.EVSEData + "SearchCenter",
-                                                  new XElement(OICPNS.CommonTypes + "GeoCoordinates",
-                                                      new XElement(OICPNS.CommonTypes + "DecimalDegree",
-                                                          new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}").Replace(",", ".")),
-                                                          new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}").Replace(",", "."))
-                                                      )
-                                                  )
+                                              ? new XElement(OICPNS.EVSESearch + "GeoCoordinates",
+                                                    new XElement(OICPNS.CommonTypes + "DecimalDegree",
+                                                        new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}").Replace(",", ".")),
+                                                        new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}").Replace(",", "."))
+                                                    )
                                                 )
                                               : null,
 
@@ -456,7 +455,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                            Address.Country != Country.unknown &&
                                            Address.City.  IsNotNullOrEmpty()  &&
                                            Address.Street.IsNotNullOrEmpty())
-                                              ? new XElement(OICPNS.EVSEData + "Address",
+                                              ? new XElement(OICPNS.EVSESearch + "Address",
 
                                                     new XElement(OICPNS.CommonTypes + "Country" + Address.Country.ToString()),
                                                     new XElement(OICPNS.CommonTypes + "City"    + Address.City),
@@ -490,11 +489,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                               : null,
 
                                           (Plug             != null && Plug.HasValue)
-                                              ? new XElement(OICPNS.EVSESearch + "Plug", Plug.ToString())
+                                              ? new XElement(OICPNS.EVSESearch + "Plug", OICPMapper.AsString(Plug.Value))
                                               : null,
 
                                           (ChargingFacility != null && ChargingFacility.HasValue)
-                                              ? new XElement(OICPNS.EVSESearch + "ChargingFacility", ChargingFacility.ToString())
+                                              ? new XElement(OICPNS.EVSESearch + "ChargingFacility", OICPMapper.AsString(ChargingFacility.Value))
                                               : null
 
                                      ));

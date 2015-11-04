@@ -1110,8 +1110,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<AuthenticationData>> PullAuthenticationData(EVSEOperator_Id  OperatorId,
-                                                                                   TimeSpan?        QueryTimeout = null)
+        public async Task<HTTPResponse<eRoamingAuthenticationData>> PullAuthenticationData(EVSEOperator_Id  OperatorId,
+                                                                                           TimeSpan?        QueryTimeout = null)
         {
 
             #region Initial checks
@@ -1212,10 +1212,41 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        //
                                                        // </soapenv:Envelope>
 
+                                                       // <tns:eRoamingAuthenticationData xmlns:tns="http://www.hubject.com/b2b/services/authenticationdata/v2.0">
+                                                       //  <tns:AuthenticationData>
+                                                       //    <tns:ProviderAuthenticationData>
+                                                       //
+                                                       //      <tns:ProviderID>DE*ICE</tns:ProviderID>
+                                                       //
+                                                       //      <tns:AuthenticationDataRecord>
+                                                       //        <tns:Identification>
+                                                       //          <cmn:QRCodeIdentification xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       //            <cmn:EVCOID>DE*ICE*I00800*4</cmn:EVCOID>
+                                                       //            <cmn:HashedPIN>
+                                                       //              <cmn:Value>e43357c592ff9525b0670c697b733534596fed57</cmn:Value>
+                                                       //              <cmn:Function>SHA-1</cmn:Function>
+                                                       //              <cmn:Salt>735400AC87A31</cmn:Salt>
+                                                       //            </cmn:HashedPIN>
+                                                       //          </cmn:QRCodeIdentification>
+                                                       //        </tns:Identification>
+                                                       //      </tns:AuthenticationDataRecord>
+                                                       //
+                                                       //      <tns:AuthenticationDataRecord>
+                                                       //        <tns:Identification>
+                                                       //          <cmn:RFIDmifarefamilyIdentification xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       //            <cmn:UID>049314143A2AC0</cmn:UID>
+                                                       //          </cmn:RFIDmifarefamilyIdentification>
+                                                       //        </tns:Identification>
+                                                       //      </tns:AuthenticationDataRecord>
+                                                       //
+                                                       //    </tns:ProviderAuthenticationData>
+                                                       //  </tns:AuthenticationData>
+                                                       //</tns:eRoamingAuthenticationData>
+
                                                        #endregion
 
-                                                       return new HTTPResponse<AuthenticationData>(XMLData.HttpResponse,
-                                                                                                   AuthenticationData.Parse(XMLData.Content));
+                                                       return new HTTPResponse<eRoamingAuthenticationData>(XMLData.HttpResponse,
+                                                                                                           eRoamingAuthenticationData.Parse(XMLData.Content));
 
                                                    },
 
@@ -1223,27 +1254,25 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        DebugX.Log("PullAuthenticationData led to a fault!" + Environment.NewLine);
 
-                                                       return new HTTPResponse<AuthenticationData>(soapfault.HttpResponse,
-                                                                                                   new AuthenticationData(),
-                                                                                                   IsFault: true);
+                                                       return new HTTPResponse<eRoamingAuthenticationData>(soapfault.HttpResponse,
+                                                                                                           null,
+                                                                                                           IsFault: true);
 
                                                    },
 
-                                                   OnHTTPError: (t, s, e) => {
+                                                   OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                       //var OnHTTPErrorLocal = OnHTTPError;
-                                                       //if (OnHTTPErrorLocal != null)
-                                                       //    OnHTTPErrorLocal(t, s, e);
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                       return null;
+                                                       return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
+                                                                                                           null,
+                                                                                                           IsFault: true);
 
                                                    },
 
-                                                   OnException: (t, s, e) => {
+                                                   OnException: (timestamp, sender, exception) => {
 
-                                                       //var OnExceptionLocal = OnException;
-                                                       //if (OnExceptionLocal != null)
-                                                       //    OnExceptionLocal(t, s, e);
+                                                       SendException(timestamp, sender, exception);
 
                                                        return null;
 
@@ -1261,8 +1290,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 SendException(DateTime.Now, this, e);
 
-                return new HTTPResponse<AuthenticationData>(new HTTPResponse(),
-                                                            new AuthenticationData());
+                return new HTTPResponse<eRoamingAuthenticationData>(new HTTPResponse(),
+                                                                    null);
 
             }
 

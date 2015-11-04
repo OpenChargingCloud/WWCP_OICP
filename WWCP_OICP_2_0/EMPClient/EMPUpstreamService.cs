@@ -235,7 +235,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="Plug">Optional plugs of the charging station.</param>
         /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>>>>
+        public async Task<HTTPResponse<eRoamingEvseSearchResult>>
 
             SearchEVSE(EVSP_Id              ProviderId,
                        GeoCoordinate        SearchCenter      = null,

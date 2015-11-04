@@ -308,6 +308,39 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+
+
+        #region IsHubjectError(XML)
+
+        protected Boolean IsHubjectError(XElement                             XML,
+                                         out OICPException                    OICPException,
+                                         Action<DateTime, Object, Exception>  OnError)
+        {
+
+            #region Initial checks
+
+            if (OnError == null)
+                throw new ArgumentNullException("The given OnError-delegate must not be null!");
+
+            #endregion
+
+            StatusCode _StatusCode = null;
+
+            if (StatusCode.TryParse(XML, out _StatusCode))
+            {
+                OICPException = new OICPException(_StatusCode);
+                OnError(DateTime.Now, XML, OICPException);
+                return true;
+            }
+
+            OICPException = null;
+
+            return false;
+
+        }
+
+        #endregion
+
     }
 
 }
