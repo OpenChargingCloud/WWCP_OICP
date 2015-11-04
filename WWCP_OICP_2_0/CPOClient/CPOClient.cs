@@ -1291,7 +1291,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 SendException(DateTime.Now, this, e);
 
                 return new HTTPResponse<eRoamingAuthenticationData>(new HTTPResponse(),
-                                                                    null);
+                                                                    null,
+                                                                    e);
 
             }
 
