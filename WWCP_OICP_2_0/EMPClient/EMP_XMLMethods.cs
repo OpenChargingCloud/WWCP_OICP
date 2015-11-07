@@ -598,8 +598,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                               ProviderAuthenticationData.
                                                   AuthorizationIdentifications.
-                                                  Select(v => new XElement(OICPNS.AuthenticationData + "AuthenticationDataRecord",
-                                                                  v.ToXML(OICPNS.AuthenticationData))).
+                                                  Select(AuthorizationIdentification => new XElement(OICPNS.AuthenticationData + "AuthenticationDataRecord",
+                                                                                                     AuthorizationIdentification.ToXML(OICPNS.AuthenticationData))).
                                                   ToArray()
 
                                           )).ToArray()

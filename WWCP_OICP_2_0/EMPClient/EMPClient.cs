@@ -758,463 +758,464 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region MobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductId = null)
-
-        /// <summary>
-        /// Create a new mobile AuthorizeStart request.
-        /// </summary>
-        /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="EVCOId"></param>
-        /// <param name="PIN"></param>
-        /// <param name="PartnerProductId">Your charging product identification (optional).</param>
-        public HubjectMobileAuthorizationStart MobileAuthorizeStart(EVSE_Id  EVSEId,
-                                                                    eMA_Id   EVCOId,
-                                                                    String   PIN,
-                                                                    String   PartnerProductId = null)
-        {
-
-            try
-            {
-
-                using (var OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
-                {
-
-                    var HttpResponse = OICPClient.Query(EMP_XMLMethods.MobileAuthorizeStartXML(EVSEId,
-                                                                                           EVCOId,
-                                                                                           PIN,
-                                                                                           PartnerProductId),
-                                                        "eRoamingMobileAuthorizeStart");
-
-                    var XML = XDocument.Parse(HttpResponse.Content.ToUTF8String());
-
-                    //ToDo: In case of errors this will not parse!
-                    var MobileAuthorizationStartResult = HubjectMobileAuthorizationStart.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
-
-                    #region Authorized
-
-                    if (MobileAuthorizationStartResult.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                    {
-
-                    //    // <?xml version='1.0' encoding='UTF-8'?>
-                    //    // <isns:Envelope xmlns:cmn  = "http://www.inubit.com/eMobility/SBP/CommonTypes"
-                    //    //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //    //                xmlns:ns   = "http://www.hubject.com/b2b/services/commontypes/v1"
-                    //    //                xmlns:sbp  = "http://www.inubit.com/eMobility/SBP"
-                    //    //                xmlns:tns  = "http://www.hubject.com/b2b/services/evsedata/v1"
-                    //    //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
-                    //    //                xmlns:wsc  = "http://www.hubject.com/b2b/services/mobileauthorization/v1">
-                    //    //
-                    //    //   <isns:Body>
-                    //    //     <wsc:HubjectMobileAuthorizationStart>
-                    //    //
-                    //    //       <wsc:SessionID>2cfc3548-0a88-1296-7141-df2c5e1864d3</wsc:SessionID>
-                    //    //       <wsc:AuthorizationStatus>Authorized</wsc:AuthorizationStatus>
-                    //    //
-                    //    //       <wsc:StatusCode>
-                    //    //         <v1:Code>000</v1:Code>
-                    //    //         <v1:Description>Success</v1:Description>
-                    //    //       </wsc:StatusCode>
-                    //    //
-                    //    //       <wsc:GeoCoordinates>
-                    //    //         <v1:DecimalDegree>
-                    //    //           <v1:Longitude>10.144537</v1:Longitude>
-                    //    //           <v1:Latitude>49.729122</v1:Latitude>
-                    //    //         </v1:DecimalDegree>
-                    //    //       </wsc:GeoCoordinates>
-                    //    //
-                    //    //       <wsc:Address>
-                    //    //         <v1:Country>DEU</v1:Country>
-                    //    //         <v1:City>Kitzingen</v1:City>
-                    //    //         <v1:Street>Steigweg</v1:Street>
-                    //    //         <v1:PostalCode>97318</v1:PostalCode>
-                    //    //         <v1:HouseNum>24</v1:HouseNum>
-                    //    //       </wsc:Address>
-                    //    //
-                    //    //       <wsc:ChargingStationName>Innopark Kitzingen</wsc:ChargingStationName>
-                    //    //       <wsc:EnChargingStationName>Innopark Kitzingen</wsc:EnChargingStationName>
-                    //    //
-                    //    //     </wsc:HubjectMobileAuthorizationStart>
-                    //    //   </isns:Body>
-                    //    // </isns:Envelope>
-
-                    //    return new AUTHSTARTResult(AuthorizatorId) {
-                    //                   AuthorizationResult  = AuthorizationResult.Authorized,
-                    //                   SessionId            = AuthStartResult.SessionID,
-                    //                   PartnerSessionId     = PartnerSessionId,
-                    //                   ProviderId           = EVServiceProvider_Id.Parse(AuthStartResult.ProviderID),
-                    //                   Description          = AuthStartResult.Description
-                    //               };
-
-                    }
-
-                    #endregion
-
-                    #region NotAuthorized
-
-                    else // AuthorizationStatus == AuthorizationStatusType.NotAuthorized
-                    {
-
-                    //    //- Invalid OperatorId ----------------------------------------------------------------------
-
-                    //    // <isns:Envelope xmlns:fn   = "http://www.w3.org/2005/xpath-functions"
-                    //    //                xmlns:isns = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //    //                xmlns:v1   = "http://www.hubject.com/b2b/services/commontypes/v1"
-                    //    //                xmlns:wsc  = "http://www.hubject.com/b2b/services/authorization/v1">
-                    //    //   <isns:Body>
-                    //    //     <wsc:HubjectAuthorizationStop>
-                    //    //       <wsc:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</wsc:SessionID>
-                    //    //       <wsc:PartnerSessionID>0815</wsc:PartnerSessionID>
-                    //    //       <wsc:AuthorizationStatus>NotAuthorized</wsc:AuthorizationStatus>
-                    //    //       <wsc:StatusCode>
-                    //    //         <v1:Code>017</v1:Code>
-                    //    //         <v1:Description>Unauthorized Access</v1:Description>
-                    //    //         <v1:AdditionalInfo>The identification criterion for the provider/operator with the ID "812" doesn't match the given identification information "/C=DE/ST=Thueringen/L=Jena/O=Hubject/OU=GraphDefined GmbH/CN=GraphDefined Software Development/emailAddress=achim.friedland@graphdefined.com" from the certificate.</v1:AdditionalInfo>
-                    //    //       </wsc:StatusCode>
-                    //    //     </wsc:HubjectAuthorizationStop>
-                    //    //   </isns:Body>
-                    //    // </isns:Envelope>
-
-                    //    if (AuthStartResult.Code == 017)
-                    //        return new AUTHSTARTResult(AuthorizatorId) {
-                    //                   AuthorizationResult  = AuthorizationResult.NotAuthorized,
-                    //                   PartnerSessionId     = PartnerSessionId,
-                    //                   Description          = AuthStartResult.Description + " - " + AuthStartResult.AdditionalInfo
-                    //               };
-
-
-                    //    //- Invalid UID -----------------------------------------------------------------------------
-
-                    //    // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v1"
-                    //    //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //    //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v1">
-                    //    //   <soapenv:Body>
-                    //    //     <tns:HubjectAuthorizationStart>
-                    //    //       <tns:PartnerSessionID>0815</tns:PartnerSessionID>
-                    //    //       <tns:AuthorizationStatus>NotAuthorized</tns:AuthorizationStatus>
-                    //    //       <tns:StatusCode>
-                    //    //         <cmn:Code>320</cmn:Code>
-                    //    //         <cmn:Description>Service not available</cmn:Description>
-                    //    //       </tns:StatusCode>
-                    //    //     </tns:HubjectAuthorizationStart>
-                    //    //   </soapenv:Body>
-                    //    // </soapenv:Envelope>
-
-                    //    else
-                    //        return new AUTHSTARTResult(AuthorizatorId) {
-                    //                       AuthorizationResult  = AuthorizationResult.NotAuthorized,
-                    //                       PartnerSessionId     = PartnerSessionId,
-                    //                       Description          = AuthStartResult.Description
-                    //                   };
-
-                    }
-
-                    #endregion
-
-                    return MobileAuthorizationStartResult;
-
-                }
-
-            }
-
-            catch (Exception e)
-            {
-
-                //return new AUTHSTARTResult(AuthorizatorId) {
-                //               AuthorizationResult  = AuthorizationResult.NotAuthorized,
-                //               PartnerSessionId     = PartnerSessionId,
-                //               Description          = "An exception occured: " + e.Message
-                //           };
-
-            }
-
-            return null;
-
-        }
-
-        #endregion
-
-        #region MobileRemoteStart(SessionId = null)
-
-        public MobileRemoteStartResult MobileRemoteStart(ChargingSession_Id SessionId = null)
-        {
-
-            try
-            {
-
-                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
-                {
-
-                    var HttpResponse = _OICPClient.Query(EMP_XMLMethods.MobileRemoteStartXML(SessionId),
-                                                         "eRoamingMobileRemoteStart");
-
-                    //ToDo: In case of errors this will not parse!
-                    var ack = eRoamingAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
-
-                    #region Ok
-
-                    if (ack.Result)
-                        return new MobileRemoteStartResult(AuthorizatorId) {
-                            State             = true,
-                            //PartnerSessionId  = PartnerSessionId,
-                            Description       = ack.StatusCode.Description
-                        };
-
-                    #endregion
-
-                    #region Error
-
-                    else
-                        return new MobileRemoteStartResult(AuthorizatorId) {
-                            State             = false,
-                            //PartnerSessionId  = PartnerSessionId,
-                            Description       = ack.StatusCode.Description
-                        };
-
-                    #endregion
-
-                }
-
-            }
-
-            catch (Exception e)
-            {
-
-                return
-                    new MobileRemoteStartResult(AuthorizatorId) {
-                        State             = false,
-                        //PartnerSessionId  = PartnerSessionId,
-                        Description       = "An exception occured: " + e.Message
-                    };
-
-            }
-
-        }
-
-        #endregion
-
-        #region MobileRemoteStop(SessionId = null)
-
-        public MobileRemoteStopResult MobileRemoteStop(ChargingSession_Id SessionId = null)
-        {
-
-            try
-            {
-
-                using (var _OICPClient = new SOAPClient(Hostname, TCPPort, HTTPVirtualHost, "/ibis/ws/HubjectMobileAuthorization_V1"))
-                {
-
-                    var HttpResponse = _OICPClient.Query(EMP_XMLMethods.MobileRemoteStopXML(SessionId),
-                                                         "eRoamingMobileRemoteStop");
-
-                    //ToDo: In case of errors this will not parse!
-                    var ack = eRoamingAcknowledgement.Parse(XDocument.Parse(HttpResponse.Content.ToUTF8String()).Root);
-
-                    #region Ok
-
-                    if (ack.Result)
-                        return new MobileRemoteStopResult(AuthorizatorId) {
-                            State             = true,
-                            //PartnerSessionId  = PartnerSessionId,
-                            Description       = ack.StatusCode.Description
-                        };
-
-                    #endregion
-
-                    #region Error
-
-                    else
-                        return new MobileRemoteStopResult(AuthorizatorId) {
-                            State             = false,
-                            //PartnerSessionId  = PartnerSessionId,
-                            Description       = ack.StatusCode.Description
-                        };
-
-                    #endregion
-
-                }
-
-            }
-
-            catch (Exception e)
-            {
-
-                return
-                    new MobileRemoteStopResult(AuthorizatorId) {
-                        State             = false,
-                        //PartnerSessionId  = PartnerSessionId,
-                        Description       = "An exception occured: " + e.Message
-                    };
-
-            }
-
-        }
-
-        #endregion
-
 
         #region MobileAuthorizeStart
 
-        #region Documentation
+        /// <summary>
+        /// Create a new task pushing authorization identifications onto the OICP server.
+        /// </summary>
+        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-        // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:MobileAuthorization = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0"
-        //                   xmlns:CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //
-        //    <soapenv:Header/>
-        //
-        //    <soapenv:Body>
-        //       <MobileAuthorization:eRoamingMobileAuthorizationStart>
-        // 
-        //          <!--Optional:-->
-        //          <MobileAuthorization:SessionID>?</MobileAuthorization:SessionID>
-        // 
-        //          <MobileAuthorization:AuthorizationStatus>?</MobileAuthorization:AuthorizationStatus>
-        // 
-        //          <!--Optional:-->
-        //          <MobileAuthorization:StatusCode>
-        //             <CommonTypes:Code>?</CommonTypes:Code>
-        //             <!--Optional:-->
-        //             <CommonTypes:Description>?</CommonTypes:Description>
-        //             <!--Optional:-->
-        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-        //          </MobileAuthorization:StatusCode>
-        // 
-        //          <!--Optional:-->
-        //          <MobileAuthorization:TermsOfUse>?</MobileAuthorization:TermsOfUse>
-        // 
-        //          <MobileAuthorization:GeoCoordinates>
-        // 
-        //             <!--You have a CHOICE of the next 3 items at this level-->
-        //             <CommonTypes:Google>
-        //                <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
-        //             </CommonTypes:Google>
-        // 
-        //             <CommonTypes:DecimalDegree>
-        //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
-        //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
-        //             </CommonTypes:DecimalDegree>
-        // 
-        //             <CommonTypes:DegreeMinuteSeconds>
-        //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
-        //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
-        //             </CommonTypes:DegreeMinuteSeconds>
-        // 
-        //          </MobileAuthorization:GeoCoordinates>
-        // 
-        //          <!--Optional:-->
-        //          <MobileAuthorization:Address>
-        //             <CommonTypes:Country>?</CommonTypes:Country>
-        //             <CommonTypes:City>?</CommonTypes:City>
-        //             <CommonTypes:Street>?</CommonTypes:Street>
-        //             <!--Optional:-->
-        //             <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
-        //             <!--Optional:-->
-        //             <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
-        //             <!--Optional:-->
-        //             <CommonTypes:Floor>?</CommonTypes:Floor>
-        //             <!--Optional:-->
-        //             <CommonTypes:Region>?</CommonTypes:Region>
-        //             <!--Optional:-->
-        //             <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
-        //          </MobileAuthorization:Address>
-        // 
-        //          <!--Optional:-->
-        //          <MobileAuthorization:AdditionalInfo>?</MobileAuthorization:AdditionalInfo>
-        //          <!--Optional:-->
-        //          <MobileAuthorization:EnAdditionalInfo>?</MobileAuthorization:EnAdditionalInfo>
-        //          <!--Optional:-->
-        //          <MobileAuthorization:ChargingStationName>?</MobileAuthorization:ChargingStationName>
-        //          <!--Optional:-->
-        //          <MobileAuthorization:EnChargingStationName>?</MobileAuthorization:EnChargingStationName>
-        // 
-        //       </MobileAuthorization:eRoamingMobileAuthorizationStart>
-        //    </soapenv:Body>
-        //
-        // </soapenv:Envelope>
+            MobileAuthorizeStart(EVSE_Id    EVSEId,
+                                 eMA_Id     EVCOId,
+                                 String     PIN,
+                                 String     PartnerProductId  = null,
+                                 TimeSpan?  QueryTimeout      = null)
 
-        #endregion
+        {
+
+            #region Initial checks
+
+            if (EVSEId == null)
+                throw new ArgumentNullException("EVSEId", "The given parameter must not be null!");
+
+            if (EVCOId == null)
+                throw new ArgumentNullException("EVCOId", "The given parameter must not be null!");
+
+            if (PIN == null)
+                throw new ArgumentNullException("PIN", "The given parameter must not be null!");
+
+            #endregion
+
+            try
+            {
+
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
+                                                        "/ibis/ws/HubjectMobileAuthorization_V2.0",
+                                                        UserAgent,
+                                                        DNSClient))
+
+                {
+
+                    return await _OICPClient.Query(EMP_XMLMethods.MobileAuthorizeStartXML(EVSEId,
+                                                                                          EVCOId,
+                                                                                          PIN,
+                                                                                          PartnerProductId),
+                                                   "eRoamingMobileAuthorizeStart",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                                                   OnSuccess: XMLData => {
+
+                                                       #region Documentation
+
+                                                       // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                       //                   xmlns:MobileAuthorization = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0"
+                                                       //                   xmlns:CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       //
+                                                       //    <soapenv:Header/>
+                                                       //
+                                                       //    <soapenv:Body>
+                                                       //       <MobileAuthorization:eRoamingMobileAuthorizationStart>
+                                                       // 
+                                                       //          <!--Optional:-->
+                                                       //          <MobileAuthorization:SessionID>?</MobileAuthorization:SessionID>
+                                                       // 
+                                                       //          <MobileAuthorization:AuthorizationStatus>?</MobileAuthorization:AuthorizationStatus>
+                                                       // 
+                                                       //          <!--Optional:-->
+                                                       //          <MobileAuthorization:StatusCode>
+                                                       //             <CommonTypes:Code>?</CommonTypes:Code>
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:Description>?</CommonTypes:Description>
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                                                       //          </MobileAuthorization:StatusCode>
+                                                       // 
+                                                       //          <!--Optional:-->
+                                                       //          <MobileAuthorization:TermsOfUse>?</MobileAuthorization:TermsOfUse>
+                                                       // 
+                                                       //          <MobileAuthorization:GeoCoordinates>
+                                                       // 
+                                                       //             <!--You have a CHOICE of the next 3 items at this level-->
+                                                       //             <CommonTypes:Google>
+                                                       //                <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+                                                       //             </CommonTypes:Google>
+                                                       // 
+                                                       //             <CommonTypes:DecimalDegree>
+                                                       //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
+                                                       //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
+                                                       //             </CommonTypes:DecimalDegree>
+                                                       // 
+                                                       //             <CommonTypes:DegreeMinuteSeconds>
+                                                       //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
+                                                       //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
+                                                       //             </CommonTypes:DegreeMinuteSeconds>
+                                                       // 
+                                                       //          </MobileAuthorization:GeoCoordinates>
+                                                       // 
+                                                       //          <!--Optional:-->
+                                                       //          <MobileAuthorization:Address>
+                                                       //             <CommonTypes:Country>?</CommonTypes:Country>
+                                                       //             <CommonTypes:City>?</CommonTypes:City>
+                                                       //             <CommonTypes:Street>?</CommonTypes:Street>
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:Floor>?</CommonTypes:Floor>
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:Region>?</CommonTypes:Region>
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
+                                                       //          </MobileAuthorization:Address>
+                                                       // 
+                                                       //          <!--Optional:-->
+                                                       //          <MobileAuthorization:AdditionalInfo>?</MobileAuthorization:AdditionalInfo>
+                                                       //          <!--Optional:-->
+                                                       //          <MobileAuthorization:EnAdditionalInfo>?</MobileAuthorization:EnAdditionalInfo>
+                                                       //          <!--Optional:-->
+                                                       //          <MobileAuthorization:ChargingStationName>?</MobileAuthorization:ChargingStationName>
+                                                       //          <!--Optional:-->
+                                                       //          <MobileAuthorization:EnChargingStationName>?</MobileAuthorization:EnChargingStationName>
+                                                       // 
+                                                       //       </MobileAuthorization:eRoamingMobileAuthorizationStart>
+                                                       //    </soapenv:Body>
+                                                       //
+                                                       // </soapenv:Envelope>
+
+                                                       #endregion
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
+                                                                                                        eRoamingAcknowledgement.Parse(XMLData.Content));
+
+                                                   },
+
+                                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
+
+                                                       SendSOAPError(timestamp, soapclient, soapfault.Content);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    Description: soapfault.Content.ToString()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                    AdditionalInfo: httpresponse.Content.ToUTF8String()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnException: (timestamp, sender, exception) => {
+
+                                                       SendException(timestamp, sender, exception);
+
+                                                       return null;
+
+                                                   }
+
+                                            );
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                SendException(DateTime.Now, this, e);
+
+                return new HTTPResponse<eRoamingAcknowledgement>(e);
+
+            }
+
+        }
 
         #endregion
 
         #region MobileRemoteStart
 
-        #region Documentation
+        /// <summary>
+        /// Create a new task pushing authorization identifications onto the OICP server.
+        /// </summary>
+        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //
-        //    <soapenv:Header/>
-        //
-        //    <soapenv:Body>
-        //       <CommonTypes:eRoamingAcknowledgement>
-        // 
-        //          <CommonTypes:Result>?</CommonTypes:Result>
-        // 
-        //          <CommonTypes:StatusCode>
-        // 
-        //             <CommonTypes:Code>?</CommonTypes:Code>
-        // 
-        //             <!--Optional:-->
-        //             <CommonTypes:Description>?</CommonTypes:Description>
-        // 
-        //             <!--Optional:-->
-        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-        // 
-        //          </CommonTypes:StatusCode>
-        // 
-        //          <!--Optional:-->
-        //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
-        // 
-        //          <!--Optional:-->
-        //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
-        // 
-        //       </CommonTypes:eRoamingAcknowledgement>
-        //    </soapenv:Body>
-        //
-        // </soapenv:Envelope>
+            MobileRemoteStart(ChargingSession_Id  SessionId     = null,
+                              TimeSpan?           QueryTimeout  = null)
 
-        #endregion
+        {
+
+            #region Initial checks
+
+            if (SessionId == null)
+                throw new ArgumentNullException("SessionId", "The given parameter must not be null!");
+
+            #endregion
+
+            try
+            {
+
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
+                                                        "/ibis/ws/HubjectMobileAuthorization_V2.0",
+                                                        UserAgent,
+                                                        DNSClient))
+
+                {
+
+                    return await _OICPClient.Query(EMP_XMLMethods.MobileRemoteStartXML(SessionId),
+                                                   "eRoamingMobileRemoteStart",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                                                   OnSuccess: XMLData => {
+
+                                                       #region Documentation
+
+                                                       // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                       //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                       //
+                                                       //    <soapenv:Header/>
+                                                       //
+                                                       //    <soapenv:Body>
+                                                       //       <CommonTypes:eRoamingAcknowledgement>
+                                                       // 
+                                                       //          <CommonTypes:Result>?</CommonTypes:Result>
+                                                       // 
+                                                       //          <CommonTypes:StatusCode>
+                                                       // 
+                                                       //             <CommonTypes:Code>?</CommonTypes:Code>
+                                                       // 
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:Description>?</CommonTypes:Description>
+                                                       // 
+                                                       //             <!--Optional:-->
+                                                       //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                                                       // 
+                                                       //          </CommonTypes:StatusCode>
+                                                       // 
+                                                       //          <!--Optional:-->
+                                                       //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
+                                                       // 
+                                                       //          <!--Optional:-->
+                                                       //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
+                                                       // 
+                                                       //       </CommonTypes:eRoamingAcknowledgement>
+                                                       //    </soapenv:Body>
+                                                       //
+                                                       // </soapenv:Envelope>
+
+                                                       #endregion
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
+                                                                                                        eRoamingAcknowledgement.Parse(XMLData.Content));
+
+                                                   },
+
+                                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
+
+                                                       SendSOAPError(timestamp, soapclient, soapfault.Content);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    Description: soapfault.Content.ToString()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                    AdditionalInfo: httpresponse.Content.ToUTF8String()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnException: (timestamp, sender, exception) => {
+
+                                                       SendException(timestamp, sender, exception);
+
+                                                       return null;
+
+                                                   }
+
+                                            );
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                SendException(DateTime.Now, this, e);
+
+                return new HTTPResponse<eRoamingAcknowledgement>(e);
+
+            }
+
+        }
 
         #endregion
 
         #region MobileRemoteStop
 
-        #region Documentation
+        /// <summary>
+        /// Create a new task pushing authorization identifications onto the OICP server.
+        /// </summary>
+        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //
-        //    <soapenv:Header/>
-        //
-        //    <soapenv:Body>
-        //       <CommonTypes:eRoamingAcknowledgement>
-        // 
-        //          <CommonTypes:Result>?</CommonTypes:Result>
-        // 
-        //          <CommonTypes:StatusCode>
-        // 
-        //             <CommonTypes:Code>?</CommonTypes:Code>
-        // 
-        //             <!--Optional:-->
-        //             <CommonTypes:Description>?</CommonTypes:Description>
-        // 
-        //             <!--Optional:-->
-        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-        // 
-        //          </CommonTypes:StatusCode>
-        // 
-        //          <!--Optional:-->
-        //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
-        // 
-        //          <!--Optional:-->
-        //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
-        // 
-        //       </CommonTypes:eRoamingAcknowledgement>
-        //    </soapenv:Body>
-        //
-        // </soapenv:Envelope>
+            MobileRemoteStop(ChargingSession_Id  SessionId     = null,
+                             TimeSpan?           QueryTimeout  = null)
 
-        #endregion
+        {
+
+            #region Initial checks
+
+            if (SessionId == null)
+                throw new ArgumentNullException("SessionId", "The given parameter must not be null!");
+
+            #endregion
+
+            try
+            {
+
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
+                                                        "/ibis/ws/HubjectMobileAuthorization_V2.0",
+                                                        UserAgent,
+                                                        DNSClient))
+
+                {
+
+                    return await _OICPClient.Query(EMP_XMLMethods.MobileRemoteStopXML(SessionId),
+                                                   "eRoamingMobileRemoteStop",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                                                   OnSuccess: XMLData => {
+
+                                                               #region Documentation
+
+                                                               // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+                                                               //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                                                               //
+                                                               //    <soapenv:Header/>
+                                                               //
+                                                               //    <soapenv:Body>
+                                                               //       <CommonTypes:eRoamingAcknowledgement>
+                                                               // 
+                                                               //          <CommonTypes:Result>?</CommonTypes:Result>
+                                                               // 
+                                                               //          <CommonTypes:StatusCode>
+                                                               // 
+                                                               //             <CommonTypes:Code>?</CommonTypes:Code>
+                                                               // 
+                                                               //             <!--Optional:-->
+                                                               //             <CommonTypes:Description>?</CommonTypes:Description>
+                                                               // 
+                                                               //             <!--Optional:-->
+                                                               //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+                                                               // 
+                                                               //          </CommonTypes:StatusCode>
+                                                               // 
+                                                               //          <!--Optional:-->
+                                                               //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
+                                                               // 
+                                                               //          <!--Optional:-->
+                                                               //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
+                                                               // 
+                                                               //       </CommonTypes:eRoamingAcknowledgement>
+                                                               //    </soapenv:Body>
+                                                               //
+                                                               // </soapenv:Envelope>
+
+                                                               #endregion
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
+                                                                                                        eRoamingAcknowledgement.Parse(XMLData.Content));
+
+                                                   },
+
+                                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
+
+                                                       SendSOAPError(timestamp, soapclient, soapfault.Content);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    Description: soapfault.Content.ToString()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                    AdditionalInfo: httpresponse.Content.ToUTF8String()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnException: (timestamp, sender, exception) => {
+
+                                                       SendException(timestamp, sender, exception);
+
+                                                       return null;
+
+                                                   }
+
+                                            );
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                SendException(DateTime.Now, this, e);
+
+                return new HTTPResponse<eRoamingAcknowledgement>(e);
+
+            }
+
+        }
 
         #endregion
 
