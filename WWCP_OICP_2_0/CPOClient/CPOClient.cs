@@ -307,6 +307,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _HTTPVirtualHost,
                                                             "/ibis/ws/eRoamingEvseData_V2.0",
                                                             _UserAgent,
+                                                            false,
                                                             _DNSClient))
                     {
 
@@ -466,6 +467,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _HTTPVirtualHost,
                                                             "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                             _UserAgent,
+                                                            false,
                                                             _DNSClient))
                     {
 
@@ -616,6 +618,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                     _HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                     _UserAgent,
+                                                    false,
                                                     _DNSClient))
 
             {
@@ -704,6 +707,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                     _HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                     _UserAgent,
+                                                    false,
                                                     _DNSClient))
 
             {
@@ -793,6 +797,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                     _HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                     _UserAgent,
+                                                    false,
                                                     _DNSClient))
 
             {

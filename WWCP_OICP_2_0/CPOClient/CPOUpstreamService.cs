@@ -297,6 +297,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _CPOClient.HTTPVirtualHost,
                                                             "/ibis/ws/eRoamingEvseData_V2.0",
                                                             _CPOClient.UserAgent,
+                                                            false,
                                                             _CPOClient.DNSClient))
                     {
 
@@ -689,6 +690,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _CPOClient.HTTPVirtualHost,
                                                             "/ibis/ws/eRoamingEvseData_V2.0",
                                                             _CPOClient.UserAgent,
+                                                            false,
                                                             _CPOClient.DNSClient))
                     {
 
@@ -926,6 +928,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _CPOClient.HTTPVirtualHost,
                                                             "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                             _CPOClient.UserAgent,
+                                                            false,
                                                             _CPOClient.DNSClient))
                     {
 

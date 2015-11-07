@@ -187,6 +187,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingEvseData_V2.0",
                                                         UserAgent,
+                                                        false,
                                                         DNSClient))
                 {
 
@@ -284,14 +285,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                         UserAgent,
+                                                        false,
                                                         DNSClient))
 
                 {
 
-                    _OICPClient.ClientCert                 = this.ClientCert;
-                    _OICPClient.RemoteCertificateValidator = this.RemoteCertificateValidator;
-                    _OICPClient.ClientCertificateSelector  = this.ClientCertificateSelector;
-                    _OICPClient.UseTLS                     = this.UseTLS;
+                   // _OICPClient.ClientCert                 = this.ClientCert;
+                   // _OICPClient.RemoteCertificateValidator = this.RemoteCertificateValidator;
+                   // _OICPClient.ClientCertificateSelector  = this.ClientCertificateSelector;
 
                     return await _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusRequestXML(ProviderId, SearchCenter, DistanceKM, EVSEStatusFilter),
                                                    "eRoamingPullEVSEStatus",
@@ -378,6 +379,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                         UserAgent,
+                                                        false,
                                                         DNSClient))
 
                 {
@@ -476,6 +478,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingEvseSearch_V2.0",
                                                         UserAgent,
+                                                        false,
                                                         DNSClient))
 
                 {
@@ -579,6 +582,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingAuthenticationData_V2.0",
                                                         UserAgent,
+                                                        false,
                                                         DNSClient))
 
                 {
@@ -683,6 +687,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingAuthenticationData_V2.0",
                                                         UserAgent,
+                                                        false,
                                                         DNSClient))
 
                 {
@@ -799,6 +804,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/HubjectMobileAuthorization_V2.0",
                                                         UserAgent,
+                                                        false,
                                                         DNSClient))
 
                 {
@@ -980,6 +986,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/HubjectMobileAuthorization_V2.0",
                                                         UserAgent,
+                                                        false,
                                                         DNSClient))
 
                 {
@@ -1115,6 +1122,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/HubjectMobileAuthorization_V2.0",
                                                         UserAgent,
+                                                        false,
                                                         DNSClient))
 
                 {
