@@ -29,7 +29,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// An MobileAuthorizationStart result.
+    /// An abstract Hubject Authorization result.
     /// </summary>
     public class eRoamingMobileAuthorizationStart
     {
