@@ -443,9 +443,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     switch (Response)
                     {
 
-                        case RemoteStartResult.EVSE_AlreadyInUse:
-                            HubjectCode         = "602";
-                            HubjectDescription  = "EVSE is already in use!";
+                        case RemoteStartResult.Success:
+                            HubjectCode         = "000";
+                            HubjectDescription  = "Ready to charge!";
                             break;
 
                         case RemoteStartResult.SessionId_AlreadyInUse:
@@ -459,17 +459,34 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                             break;
 
                         case RemoteStartResult.Start_Timeout:
-                            HubjectCode         = "501";
-                            HubjectDescription  = "Communication to EVSE failed!";
+                            HubjectCode         = "510";
+                            HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case RemoteStartResult.Success:
-                            HubjectCode         = "000";
-                            HubjectDescription  = "Ready to charge!";
+                        case RemoteStartResult.EVSEReserved:
+                            HubjectCode         = "601";
+                            HubjectDescription  = "EVSE reserved!";
                             break;
+
+                        case RemoteStartResult.EVSE_AlreadyInUse:
+                            HubjectCode         = "602";
+                            HubjectDescription  = "EVSE is already in use!";
+                            break;
+
+                        case RemoteStartResult.UnknownEVSE:
+                            HubjectCode         = "603";
+                            HubjectDescription  = "Unknown EVSE ID!";
+                            break;
+
+                        case RemoteStartResult.EVSEOutOfService:
+                            HubjectCode         = "700";
+                            HubjectDescription  = "EVSE out of service!";
+                            break;
+
 
                         default:
-                            HubjectCode         = "000";
+                            HubjectCode         = "320";
+                            HubjectDescription  = "Service not available!";
                             break;
 
                     }
