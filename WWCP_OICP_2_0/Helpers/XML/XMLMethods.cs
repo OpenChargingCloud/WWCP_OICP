@@ -82,6 +82,42 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+        #region ParseAddressXML(AddressXML)
+
+        public static Address ParseAddressXML(XElement AddressXML)
+        {
+
+            var _CountryTXT = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
+
+            Country _Country;
+            if (!Country.TryParse(_CountryTXT, out _Country))
+            {
+
+                if (_CountryTXT.ToUpper() == "UNKNOWN")
+                    _Country = Country.unknown;
+
+                else
+                    throw new Exception("'" + _CountryTXT + "' is an unknown country name!");
+
+            }
+
+            return new Address(AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Street", "Missing 'Street'-XML tag!").Trim(),
+                               AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum", "").Trim(),
+                               AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor", "").Trim(),
+                               AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
+                               "",
+                               AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City", "Missing 'City'-XML tag!").Trim(),
+                               _Country);
+
+            // Currently not used OICP address information!
+            //var _Region       = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Region",     "").Trim();
+            //var _Timezone     = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Timezone",   "").Trim();
+
+
+        }
+
+        #endregion
+
     }
 
 }

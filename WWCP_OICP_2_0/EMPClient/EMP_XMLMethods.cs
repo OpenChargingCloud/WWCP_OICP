@@ -85,7 +85,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region PullEVSEDataRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, GeoCoordinatesResponseFormat = DecimalDegree)
 
         /// <summary>
-        /// Create a new Pull EVSE Data request.
+        /// Create a new PullEVSEData request.
         /// </summary>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
@@ -192,7 +192,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region PullEVSEStatusRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0.0, EVSEStatus = null)
 
         /// <summary>
-        /// Create a new Pull EVSE Status request.
+        /// Create a new PullEVSEStatus request.
         /// </summary>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
@@ -294,7 +294,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds)
 
         /// <summary>
-        /// Create a new Pull EVSE Status-By-Id request.
+        /// Create a new PullEVSEStatusById request.
         /// </summary>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
@@ -353,7 +353,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region SearchEvseRequestXML(ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null)
 
         /// <summary>
-        /// Create a new Search EVSE request.
+        /// Create a new SearchEVSE request.
         /// </summary>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
@@ -510,7 +510,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region PushAuthenticationData(ProviderAuthenticationDataRecords, OICPAction = fullLoad)
 
         /// <summary>
-        /// Create a new push provider authentication data records request.
+        /// Create a new PushAuthenticationData records request.
         /// </summary>
         /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
@@ -612,7 +612,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad)
 
         /// <summary>
-        /// Create a new push authorization identifications request.
+        /// Create a new PushAuthenticationData request.
         /// </summary>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
@@ -656,19 +656,21 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region MobileAuthorizeStartXML(EVSEId, EVCOId, PIN, PartnerProductId = null)
+        #region MobileAuthorizeStartXML(EVSEId, EVCOId, PIN, PartnerProductId = null, GetNewSession = null)
 
         /// <summary>
-        /// Create a new mobile AuthorizeStart request.
+        /// Create a new MobileAuthorizeStart request.
         /// </summary>
-        /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="EVCOId"></param>
-        /// <param name="PIN"></param>
-        /// <param name="PartnerProductId">Your charging product identification (optional).</param>
-        public static XElement MobileAuthorizeStartXML(EVSE_Id  EVSEId,
-                                                       eMA_Id   EVCOId,
-                                                       String   PIN,
-                                                       String   PartnerProductId = null)
+        /// <param name="EVSEId">The EVSE identification.</param>
+        /// <param name="EVCOId">The eMA identification.</param>
+        /// <param name="PIN">The PIN for the eMA identification.</param>
+        /// <param name="PartnerProductId">The optional charging product identification.</param>
+        /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
+        public static XElement MobileAuthorizeStartXML(EVSE_Id   EVSEId,
+                                                       eMA_Id    EVCOId,
+                                                       String    PIN,
+                                                       String    PartnerProductId  = null,
+                                                       Boolean?  GetNewSession     = null)
         {
 
             #region Documentation
@@ -682,25 +684,25 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //    <soapenv:Body>
             //       <MobileAuthorization:eRoamingMobileAuthorizeStart>
             // 
-            //          <MobileAuthorization:EvseID>?</MobileAuthorization:EvseID>
+            //          <MobileAuthorization:EvseID>DE*GEF*E123456789*1</MobileAuthorization:EvseID>
             // 
             //          <MobileAuthorization:QRCodeIdentification>
             // 
-            //             <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+            //             <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
             // 
             //             <!--You have a CHOICE of the next 2 items at this level-->
-            //             <CommonTypes:PIN>?</CommonTypes:PIN>
+            //             <CommonTypes:PIN>1234</CommonTypes:PIN>
             // 
             //             <CommonTypes:HashedPIN>
-            //                <CommonTypes:Value>?</CommonTypes:Value>
-            //                <CommonTypes:Function>?</CommonTypes:Function>
-            //                <CommonTypes:Salt>?</CommonTypes:Salt>
+            //                <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
+            //                <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
+            //                <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
             //             </CommonTypes:HashedPIN>
             // 
             //          </MobileAuthorization:QRCodeIdentification>
             // 
             //          <!--Optional:-->
-            //          <MobileAuthorization:PartnerProductID>?</MobileAuthorization:PartnerProductID>
+            //          <MobileAuthorization:PartnerProductID>AC1</MobileAuthorization:PartnerProductID>
             // 
             //          <!--Optional:-->
             //          <MobileAuthorization:GetNewSession>?</MobileAuthorization:GetNewSession>
@@ -712,9 +714,22 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
+            #region Initial checks
+
+            if (EVSEId == null)
+                throw new ArgumentNullException("EVSEId", "The given parameter must not be null!");
+
+            if (EVCOId == null)
+                throw new ArgumentNullException("EVCOId", "The given parameter must not be null!");
+
+            if (PIN.IsNullOrEmpty())
+                throw new ArgumentNullException("PIN", "The given parameter must not be null or empty!");
+
+            #endregion
+
             return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileAuthorizeStart",
 
-                                          new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.ToString()),
+                                          new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.OriginId.ToString()),
 
                                           new XElement(OICPNS.MobileAuthorization + "QRCodeIdentification",
                                               new XElement(OICPNS.CommonTypes + "EVCOID", EVCOId.ToString()),
@@ -722,7 +737,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                           ),
 
                                           (PartnerProductId != null)
-                                              ? new XElement(OICPNS.MobileAuthorization + "PartnerProductID", PartnerProductId)
+                                              ? new XElement(OICPNS.MobileAuthorization + "PartnerProductID", PartnerProductId.ToString())
+                                              : null,
+
+                                          (GetNewSession != null && GetNewSession.HasValue)
+                                              ? new XElement(OICPNS.MobileAuthorization + "GetNewSession", GetNewSession.Value.ToString())
                                               : null
 
                                      ));
@@ -731,13 +750,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region MobileRemoteStartXML(SessionId = null)
+        #region MobileRemoteStartXML(SessionId)
 
         /// <summary>
-        /// Create a new mobile AuthorizeStart request.
+        /// Create a new MobileRemoteStart request.
         /// </summary>
-        /// <param name="SessionId">An OICP session identification from the MobileAuthorizationStart response.</param>
-        public static XElement MobileRemoteStartXML(ChargingSession_Id  SessionId = null)
+        /// <param name="SessionId">A charging session identification.</param>
+        public static XElement MobileRemoteStartXML(ChargingSession_Id  SessionId)
         {
 
             #region Documentation
@@ -749,7 +768,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //
             //    <soapenv:Body>
             //       <MobileAuthorization:eRoamingMobileRemoteStart>
-            //          <MobileAuthorization:SessionID>?</MobileAuthorization:SessionID>
+            //          <MobileAuthorization:SessionID>de164e08-1c88-1293-537b-be355041070e</MobileAuthorization:SessionID>
             //       </MobileAuthorization:eRoamingMobileRemoteStart>
             //    </soapenv:Body>
             //
@@ -757,21 +776,28 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
+            #region Initial checks
+
+            if (SessionId == null)
+                throw new ArgumentNullException("SessionId", "The given parameter must not be null!");
+
+            #endregion
+
             return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileRemoteStart",
-                                          new XElement(OICPNS.EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSession_Id.New)
+                                          new XElement(OICPNS.MobileAuthorization + "SessionID", SessionId.ToString())
                                      ));
 
         }
 
         #endregion
 
-        #region MobileRemoteStopXML(SessionId = null)
+        #region MobileRemoteStopXML(SessionId)
 
         /// <summary>
-        /// Create a new mobile AuthorizeStop request.
+        /// Create a new MobileRemoteStop request.
         /// </summary>
-        /// <param name="SessionId">The OICP session identification from the MobileAuthorizationStart response.</param>
-        public static XElement MobileRemoteStopXML(ChargingSession_Id SessionId = null)
+        /// <param name="SessionId">A charging session identification.</param>
+        public static XElement MobileRemoteStopXML(ChargingSession_Id  SessionId)
         {
 
             #region Documentation
@@ -783,7 +809,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //
             //    <soapenv:Body>
             //       <MobileAuthorization:eRoamingMobileRemoteStop>
-            //          <MobileAuthorization:SessionID>?</MobileAuthorization:SessionID>
+            //          <MobileAuthorization:SessionID>de164e08-1c88-1293-537b-be355041070e</MobileAuthorization:SessionID>
             //       </MobileAuthorization:eRoamingMobileRemoteStop>
             //    </soapenv:Body>
             //
@@ -791,8 +817,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
+            #region Initial checks
+
+            if (SessionId == null)
+                throw new ArgumentNullException("SessionId", "The given parameter must not be null!");
+
+            #endregion
+
             return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileRemoteStop",
-                                          new XElement(OICPNS.EVSESearch + "SessionID", (SessionId != null) ? SessionId : ChargingSession_Id.New)
+                                          new XElement(OICPNS.MobileAuthorization + "SessionID", SessionId.ToString())
                                      ));
 
         }

@@ -79,7 +79,7 @@
     <Compile Include="Responses\eRoamingAcknowledgement.cs" />
     <Compile Include="Responses\HubjectEVSESearchReply.cs" />
     <Compile Include="Objects\OICPEVSEStatusType.cs" />
-    <Compile Include="Responses\HubjectMobileAuthorizationStart.cs" />
+    <Compile Include="Responses\eRoamingMobileAuthorizationStart.cs" />
     <Compile Include="Helpers\Import\ChargeStationInfo.cs" />
     <Compile Include="Helpers\Import\ChargingPoolInfo.cs" />
     <Compile Include="Helpers\Import\CPInfoList.cs" />

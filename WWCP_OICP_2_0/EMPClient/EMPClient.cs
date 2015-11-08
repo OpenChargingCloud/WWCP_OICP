@@ -651,7 +651,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad)
+        #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task pushing authorization identifications onto the OICP server.
@@ -764,21 +764,24 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
 
 
-        #region MobileAuthorizeStart
+        #region MobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductId = null, GetNewSession = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create a new task pushing authorization identifications onto the OICP server.
+        /// Create a new task sending a mobile AuthorizeStart request.
         /// </summary>
-        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="EVSEId">The EVSE identification.</param>
+        /// <param name="EVCOId">The eMA identification.</param>
+        /// <param name="PIN">The PIN for the eMA identification.</param>
+        /// <param name="PartnerProductId">The optional charging product identification.</param>
+        /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<eRoamingMobileAuthorizationStart>>
 
             MobileAuthorizeStart(EVSE_Id    EVSEId,
                                  eMA_Id     EVCOId,
                                  String     PIN,
                                  String     PartnerProductId  = null,
+                                 Boolean?   GetNewSession     = null,
                                  TimeSpan?  QueryTimeout      = null)
 
         {
@@ -802,7 +805,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         HTTPVirtualHost,
-                                                        "/ibis/ws/HubjectMobileAuthorization_V2.0",
+                                                        "/ibis/ws/eRoamingMobileAuthorization_V2.0",
                                                         UserAgent,
                                                         false,
                                                         DNSClient))
@@ -898,8 +901,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        #endregion
 
-                                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
-                                                                                                        eRoamingAcknowledgement.Parse(XMLData.Content));
+                                                       return new HTTPResponse<eRoamingMobileAuthorizationStart>(XMLData.HttpResponse,
+                                                                                                                eRoamingMobileAuthorizationStart.Parse(XMLData.Content));
 
                                                    },
 
@@ -907,11 +910,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        SendSOAPError(timestamp, soapclient, soapfault.Content);
 
-                                                       return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
-                                                                                                        new eRoamingAcknowledgement(false,
-                                                                                                                                    -1,
-                                                                                                                                    Description: soapfault.Content.ToString()),
-                                                                                                        IsFault: true);
+                                                       return new HTTPResponse<eRoamingMobileAuthorizationStart>(soapfault.HttpResponse,
+                                                                                                                new eRoamingMobileAuthorizationStart(-1,
+                                                                                                                                                     Description: soapfault.Content.ToString()),
+                                                                                                                IsFault: true);
 
                                                    },
 
@@ -919,12 +921,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                        SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                       return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                        new eRoamingAcknowledgement(false,
-                                                                                                                                    -1,
-                                                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                    AdditionalInfo: httpresponse.Content.ToUTF8String()),
-                                                                                                        IsFault: true);
+                                                       return new HTTPResponse<eRoamingMobileAuthorizationStart>(httpresponse,
+                                                                                                                 new eRoamingMobileAuthorizationStart(-1,
+                                                                                                                                                      Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                                      AdditionalInfo: httpresponse.Content.ToUTF8String()),
+                                                                                                                 IsFault: true);
 
                                                    },
 
@@ -947,7 +948,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 SendException(DateTime.Now, this, e);
 
-                return new HTTPResponse<eRoamingAcknowledgement>(e);
+                return new HTTPResponse<eRoamingMobileAuthorizationStart>(e);
 
             }
 
@@ -955,18 +956,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region MobileRemoteStart
+        #region MobileRemoteStart(SessionId, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task pushing authorization identifications onto the OICP server.
         /// </summary>
-        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="SessionId">A charging session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            MobileRemoteStart(ChargingSession_Id  SessionId     = null,
+            MobileRemoteStart(ChargingSession_Id  SessionId,
                               TimeSpan?           QueryTimeout  = null)
 
         {
@@ -984,7 +983,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         HTTPVirtualHost,
-                                                        "/ibis/ws/HubjectMobileAuthorization_V2.0",
+                                                        "/ibis/ws/eRoamingMobileAuthorization_V2.0",
                                                         UserAgent,
                                                         false,
                                                         DNSClient))
@@ -996,43 +995,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                    OnSuccess: XMLData => {
-
-                                                       #region Documentation
-
-                                                       // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                       //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                                                       //
-                                                       //    <soapenv:Header/>
-                                                       //
-                                                       //    <soapenv:Body>
-                                                       //       <CommonTypes:eRoamingAcknowledgement>
-                                                       // 
-                                                       //          <CommonTypes:Result>?</CommonTypes:Result>
-                                                       // 
-                                                       //          <CommonTypes:StatusCode>
-                                                       // 
-                                                       //             <CommonTypes:Code>?</CommonTypes:Code>
-                                                       // 
-                                                       //             <!--Optional:-->
-                                                       //             <CommonTypes:Description>?</CommonTypes:Description>
-                                                       // 
-                                                       //             <!--Optional:-->
-                                                       //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-                                                       // 
-                                                       //          </CommonTypes:StatusCode>
-                                                       // 
-                                                       //          <!--Optional:-->
-                                                       //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
-                                                       // 
-                                                       //          <!--Optional:-->
-                                                       //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
-                                                       // 
-                                                       //       </CommonTypes:eRoamingAcknowledgement>
-                                                       //    </soapenv:Body>
-                                                       //
-                                                       // </soapenv:Envelope>
-
-                                                       #endregion
 
                                                        return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
                                                                                                         eRoamingAcknowledgement.Parse(XMLData.Content));
@@ -1091,18 +1053,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region MobileRemoteStop
+        #region MobileRemoteStop(SessionId, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task pushing authorization identifications onto the OICP server.
         /// </summary>
-        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="SessionId">A charging session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            MobileRemoteStop(ChargingSession_Id  SessionId     = null,
+            MobileRemoteStop(ChargingSession_Id  SessionId,
                              TimeSpan?           QueryTimeout  = null)
 
         {
@@ -1132,43 +1092,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                    OnSuccess: XMLData => {
-
-                                                               #region Documentation
-
-                                                               // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                               //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                                                               //
-                                                               //    <soapenv:Header/>
-                                                               //
-                                                               //    <soapenv:Body>
-                                                               //       <CommonTypes:eRoamingAcknowledgement>
-                                                               // 
-                                                               //          <CommonTypes:Result>?</CommonTypes:Result>
-                                                               // 
-                                                               //          <CommonTypes:StatusCode>
-                                                               // 
-                                                               //             <CommonTypes:Code>?</CommonTypes:Code>
-                                                               // 
-                                                               //             <!--Optional:-->
-                                                               //             <CommonTypes:Description>?</CommonTypes:Description>
-                                                               // 
-                                                               //             <!--Optional:-->
-                                                               //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-                                                               // 
-                                                               //          </CommonTypes:StatusCode>
-                                                               // 
-                                                               //          <!--Optional:-->
-                                                               //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
-                                                               // 
-                                                               //          <!--Optional:-->
-                                                               //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
-                                                               // 
-                                                               //       </CommonTypes:eRoamingAcknowledgement>
-                                                               //    </soapenv:Body>
-                                                               //
-                                                               // </soapenv:Envelope>
-
-                                                               #endregion
 
                                                        return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
                                                                                                         eRoamingAcknowledgement.Parse(XMLData.Content));

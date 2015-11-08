@@ -306,7 +306,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Parse request parameters
 
-
                     XElement            IdentificationXML;
                     XElement            QRCodeIdentificationXML;
                     XElement            PnCIdentificationXML;

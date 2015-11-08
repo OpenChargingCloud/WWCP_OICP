@@ -406,13 +406,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="EVCOId"></param>
         /// <param name="PIN"></param>
         /// <param name="PartnerProductId">Your charging product identification (optional).</param>
-        public async Task<HTTPResponse<HubjectMobileAuthorizationStart>> MobileAuthorizeStart(EVSE_Id  EVSEId,
+        public async Task<HTTPResponse<eRoamingMobileAuthorizationStart>> MobileAuthorizeStart(EVSE_Id  EVSEId,
                                                                                               eMA_Id   EVCOId,
                                                                                               String   PIN,
                                                                                               String   PartnerProductId = null)
         {
 
-            return Task.FromResult<HTTPResponse<HubjectMobileAuthorizationStart>>(null).Result;
+            return Task.FromResult<HTTPResponse<eRoamingMobileAuthorizationStart>>(null).Result;
 
         }
 

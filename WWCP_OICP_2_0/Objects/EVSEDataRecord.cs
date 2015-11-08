@@ -841,7 +841,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region GeoCoordinate
 
-            EVSEDataRecord.GeoCoordinate = XMLMethods.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "No GeoCoordinates XML tag provided!"));
+            EVSEDataRecord.GeoCoordinate = XMLMethods.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!"));
 
             #endregion
 
