@@ -501,7 +501,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     }
 
-                    #region HTTPResponse
+                    #region SOAPResponse
 
                     return new HTTPResponseBuilder() {
                         HTTPStatusCode  = HTTPStatusCode.OK,
@@ -575,7 +575,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                         SessionId         = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "SessionID",        "No SessionID XML tag provided!"));
 
-                        PartnerSessionIdXML = RemoteStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
+                        PartnerSessionIdXML = RemoteStopXML.Element(OICPNS.Authorization + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
                             PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
@@ -651,17 +651,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #endregion
 
-
                     var Response = RemoteStopResult.Error;
-
-                    //var OnRemoteStopLocal = OnRemoteStop;
-                    //if (OnRemoteStopLocal != null)
-                    //    Response = OnRemoteStopLocal(DateTime.Now,
-                    //                                 RoamingNetworkId,
-                    //                                 SessionId,
-                    //                                 PartnerSessionId,
-                    //                                 ProviderId,
-                    //                                 EVSEId);
 
                     var OnRSt = _OnRemoteStopDelegateList.FirstOrDefault();
                     if (OnRSt != null)
@@ -687,36 +677,40 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     switch (Response)
                     {
 
-                        //case RemoteStopResult.EVSE_AlreadyInUse:
-                        //    HubjectCode         = "602";
-                        //    HubjectDescription  = "EVSE is already in use!";
-                        //    break;
-
-                        //case RemoteStopResult.SessionId_AlreadyInUse:
-                        //    HubjectCode         = "400";
-                        //    HubjectDescription  = "Session is invalid";
-                        //    break;
-
-                        //case RemoteStopResult.EVSE_NotReachable:
-                        //    HubjectCode         = "501";
-                        //    HubjectDescription  = "Communication to EVSE failed!";
-                        //    break;
-
-                        //case RemoteStopResult.Start_Timeout:
-                        //    HubjectCode         = "501";
-                        //    HubjectDescription  = "Communication to EVSE failed!";
-                        //    break;
-
                         case RemoteStopResult.Success:
                             HubjectCode         = "000";
-                            HubjectDescription  = "Ready to charge!";
+                            HubjectDescription  = "Ready to stop charging!";
                             break;
 
+                        case RemoteStopResult.EVSE_NotReachable:
+                            HubjectCode         = "501";
+                            HubjectDescription  = "Communication to EVSE failed!";
+                            break;
+
+                        case RemoteStopResult.Stop_Timeout:
+                            HubjectCode         = "510";
+                            HubjectDescription  = "No EV connected to EVSE!";
+                            break;
+
+                        case RemoteStopResult.UnknownEVSE:
+                            HubjectCode         = "603";
+                            HubjectDescription  = "Unknown EVSE ID!";
+                            break;
+
+                        case RemoteStopResult.EVSEOutOfService:
+                            HubjectCode         = "700";
+                            HubjectDescription  = "EVSE out of service!";
+                            break;
+
+
                         default:
-                            HubjectCode         = "000";
+                            HubjectCode         = "320";
+                            HubjectDescription  = "Service not available!";
                             break;
 
                     }
+
+                    #region SOAPResponse
 
                     var SOAPContent = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
@@ -729,7 +723,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                              ),
 
                                                              new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-                            //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
 
                                                          )).ToString();
 
@@ -738,6 +731,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAPContent.ToUTF8Bytes()
                     };
+
+                    #endregion
 
                 }
 
