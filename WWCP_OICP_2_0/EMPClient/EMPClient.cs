@@ -168,7 +168,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        
         public async Task<HTTPResponse<eRoamingEVSEData>>
 
             PullEVSEData(EVSP_Id           ProviderId,
