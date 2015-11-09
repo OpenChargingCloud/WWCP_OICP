@@ -18,9 +18,7 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Xml.Linq;
-using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -146,6 +144,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+
         #region (static) Parse(eRoamingAuthorizationStopXML)
 
         public static eRoamingAuthorizationStop Parse(XElement eRoamingAuthorizationStopXML)
@@ -234,6 +233,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
+
 
     }
 

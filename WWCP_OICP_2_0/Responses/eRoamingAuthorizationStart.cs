@@ -18,7 +18,6 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
@@ -164,6 +163,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
+
 
         #region (static) Parse(eRoamingAuthorizationStartXML)
 
@@ -326,6 +326,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
+
 
     }
 

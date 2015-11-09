@@ -38,34 +38,34 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// OICP v2.0 CPO HTTP/SOAP/XML server.
+    /// OICP v2.0 EMP HTTP/SOAP/XML server.
     /// </summary>
-    public class CPOServer : HTTPServer
+    public class EMPServer : HTTPServer
     {
 
         #region Data
 
-        private readonly List<OnRemoteStartDelegate> _OnRemoteStartDelegateList;
-        private readonly List<OnRemoteStopDelegate>  _OnRemoteStopDelegateList;
+        private readonly List<OnAuthorizeStartDelegate> _OnAuthorizeStartDelegateList;
+        private readonly List<OnAuthorizeStopDelegate>  _OnAuthorizeStopDelegateList;
 
         #endregion
 
-        public event OnRemoteStartDelegate OnRemoteStartEvent;
-        public event OnRemoteStopDelegate  OnRemoteStopEvent;
+        public event OnAuthorizeStartDelegate OnAuthorizeStartEvent;
+        public event OnAuthorizeStopDelegate  OnAuthorizeStopEvent;
 
         #region Constructor(s)
 
         /// <summary>
-        /// Initialize the OICP HTTP/SOAP/XML CPO server using IPAddress.Any.
+        /// Initialize the OICP HTTP/SOAP/XML EMP server using IPAddress.Any.
         /// </summary>
         /// <param name="TCPPort">The TCP listing port.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
-        public CPOServer(IPPort  TCPPort,
+        public EMPServer(IPPort  TCPPort,
                          String  URIPrefix = "")
         {
 
-            this._OnRemoteStartDelegateList = new List<OnRemoteStartDelegate>();
-            this._OnRemoteStopDelegateList  = new List<OnRemoteStopDelegate>();
+            this._OnAuthorizeStartDelegateList = new List<OnAuthorizeStartDelegate>();
+            this._OnAuthorizeStopDelegateList  = new List<OnAuthorizeStopDelegate>();
 
             this.AttachTCPPort(TCPPort);
 
@@ -82,7 +82,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                            ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Content         = ("/RNs/{RoamingNetworkId}/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
                                            Connection      = "close"
                                        };
 
@@ -99,7 +99,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                            ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Content         = ("/RNs/{RoamingNetworkId}/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
                                            Connection      = "close"
                                        };
 
@@ -107,11 +107,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            #region /RNs/{RoamingNetworkId}/RemoteStartStop
+            #region /RNs/{RoamingNetworkId}/AuthorizeStartStop
 
-            #region Generic RemoteStartStopDelegate
+            #region Generic AuthorizeStartStopDelegate
 
-            HTTPDelegate RemoteStartStopDelegate = HTTPRequest => {
+            HTTPDelegate AuthorizeStartStopDelegate = HTTPRequest => {
 
                 //var _EventTrackingId = EventTracking_Id.New;
                 //Log.WriteLine("Event tracking: " + _EventTrackingId);
@@ -167,23 +167,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 #region Get SOAP request...
 
-                IEnumerable<XElement> RemoteStartXMLs;
-                IEnumerable<XElement> RemoteStopXMLs;
+                IEnumerable<XElement> AuthorizeStartXMLs;
+                IEnumerable<XElement> AuthorizeStopXMLs;
 
                 try
                 {
 
-                    RemoteStartXMLs = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart");
-                    RemoteStopXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop");
+                    AuthorizeStartXMLs = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeAuthorizeStart");
+                    AuthorizeStopXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeAuthorizeStop");
 
-                    if (!RemoteStartXMLs.Any() && !RemoteStopXMLs.Any())
-                        throw new Exception("Must be either RemoteStart or RemoteStop XML request!");
+                    if (!AuthorizeStartXMLs.Any() && !AuthorizeStopXMLs.Any())
+                        throw new Exception("Must be either AuthorizeStart or AuthorizeStop XML request!");
 
-                    if (RemoteStartXMLs.Count() > 1)
-                        throw new Exception("Multiple RemoteStart XML tags within a single request are not supported!");
+                    if (AuthorizeStartXMLs.Count() > 1)
+                        throw new Exception("Multiple AuthorizeStart XML tags within a single request are not supported!");
 
-                    if (RemoteStopXMLs. Count() > 1)
-                        throw new Exception("Multiple RemoteStop XML tags within a single request are not supported!");
+                    if (AuthorizeStopXMLs. Count() > 1)
+                        throw new Exception("Multiple AuthorizeStop XML tags within a single request are not supported!");
 
                 }
                 catch (Exception e)
@@ -224,10 +224,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 #endregion
 
-                #region Process an OICP RemoteStart HTTP/SOAP/XML call
+                #region Process an OICP AuthorizeStart HTTP/SOAP/XML call
 
-                var RemoteStartXML = RemoteStartXMLs.FirstOrDefault();
-                if (RemoteStartXML != null)
+                var AuthorizeStartXML = AuthorizeStartXMLs.FirstOrDefault();
+                if (AuthorizeStartXML != null)
                 {
 
                     #region Documentation
@@ -239,7 +239,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     //    <soapenv:Header/>
                     //
                     //    <soapenv:Body>
-                    //       <Authorization:eRoamingAuthorizeRemoteStart>
+                    //       <Authorization:eRoamingAuthorizeAuthorizeStart>
                     // 
                     //          <!--Optional:-->
                     //          <Authorization:SessionID>?</Authorization:SessionID>
@@ -285,7 +285,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     //          <!--Optional:-->
                     //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
                     // 
-                    //       </Authorization:eRoamingAuthorizeRemoteStart>
+                    //       </Authorization:eRoamingAuthorizeAuthorizeStart>
                     //    </soapenv:Body>
                     //
                     // </soapenv:Envelope>
@@ -311,20 +311,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     try
                     {
 
-                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",        null));
+                        SessionId                = ChargingSession_Id.Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",        null));
 
-                        PartnerSessionIdXML      = RemoteStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
+                        PartnerSessionIdXML      = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
                             PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        ProviderId               = EVSP_Id.           Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId                   = EVSE_Id.           Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
-                        ChargingProductIdXML = RemoteStartXML.Element(OICPNS.Authorization + "PartnerProductID");
+                        ChargingProductIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerProductID");
                         if (ChargingProductIdXML != null)
                             ChargingProductId = ChargingProduct_Id.Parse(ChargingProductIdXML.Value);
 
-                        IdentificationXML        = RemoteStartXML.   ElementOrFail(OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
+                        IdentificationXML        = AuthorizeStartXML.   ElementOrFail(OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
                         QRCodeIdentificationXML  = IdentificationXML.Element      (OICPNS.CommonTypes   + "QRCodeIdentification");
                         PnCIdentificationXML     = IdentificationXML.Element      (OICPNS.CommonTypes   + "PlugAndChargeIdentification");
                         RemoteIdentificationXML  = IdentificationXML.Element      (OICPNS.CommonTypes   + "RemoteIdentification");
@@ -347,7 +347,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     catch (Exception e)
                     {
 
-                        Log.Timestamp("Invalid RemoteStartXML: " + e.Message);
+                        Log.Timestamp("Invalid AuthorizeStartXML: " + e.Message);
 
                         return new HTTPResponseBuilder() {
 
@@ -412,32 +412,39 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #endregion
 
+
+                    EVSEOperator_Id     OperatorId        = null;
+                    Auth_Token          AuthToken         = null;
+                    ChargingProduct_Id  PartnerProductId  = null;
+                    TimeSpan            QueryTimeout      = TimeSpan.FromMinutes(1);
+
                     #region Call async subscribers
 
-                    var Response = RemoteStartResult.Error;
+                    var Response = AuthorizeStartResult.Error;
 
-                    var OnRSt = _OnRemoteStartDelegateList.FirstOrDefault();
+                    var OnRSt = _OnAuthorizeStartDelegateList.FirstOrDefault();
                     if (OnRSt != null)
                     {
 
                         var CTS = new CancellationTokenSource();
 
-                        var task = OnRSt.Invoke(DateTime.Now,
+                        var task = OnRSt.Invoke(CTS.Token,
+                                                DateTime.Now,
                                                 RoamingNetworkId,
-                                                SessionId,
-                                                PartnerSessionId,
-                                                ProviderId,
-                                                eMAId,
+                                                OperatorId,
+                                                AuthToken,
                                                 EVSEId,
-                                                ChargingProductId,
-                                                CTS.Token);
+                                                SessionId,
+                                                PartnerProductId,
+                                                PartnerSessionId,
+                                                QueryTimeout);
 
                         task.Wait();
                         Response = task.Result;
 
                     }
 
-                    //Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
+                    //Log.WriteLine("[" + DateTime.Now + "] CPOServer: AuthorizeStartResult: " + Response.ToString());
 
                     #endregion
 
@@ -446,42 +453,42 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     switch (Response)
                     {
 
-                        case RemoteStartResult.Success:
+                        case AuthorizeStartResult.Success:
                             HubjectCode         = "000";
                             HubjectDescription  = "Ready to charge!";
                             break;
 
-                        case RemoteStartResult.SessionId_AlreadyInUse:
+                        case AuthorizeStartResult.SessionId_AlreadyInUse:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case RemoteStartResult.EVSE_NotReachable:
+                        case AuthorizeStartResult.EVSE_NotReachable:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case RemoteStartResult.Start_Timeout:
+                        case AuthorizeStartResult.Start_Timeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case RemoteStartResult.EVSEReserved:
+                        case AuthorizeStartResult.EVSEReserved:
                             HubjectCode         = "601";
                             HubjectDescription  = "EVSE reserved!";
                             break;
 
-                        case RemoteStartResult.EVSE_AlreadyInUse:
+                        case AuthorizeStartResult.EVSE_AlreadyInUse:
                             HubjectCode         = "602";
                             HubjectDescription  = "EVSE is already in use!";
                             break;
 
-                        case RemoteStartResult.UnknownEVSE:
+                        case AuthorizeStartResult.UnknownEVSE:
                             HubjectCode         = "603";
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case RemoteStartResult.EVSEOutOfService:
+                        case AuthorizeStartResult.EVSEOutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;
@@ -524,10 +531,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 #endregion
 
-                #region Process an OICP RemoteStop HTTP/SOAP/XML call
+                #region Process an OICP AuthorizeStop HTTP/SOAP/XML call
 
-                var RemoteStopXML  = RemoteStopXMLs.FirstOrDefault();
-                if (RemoteStopXML != null)
+                var AuthorizeStopXML  = AuthorizeStopXMLs.FirstOrDefault();
+                if (AuthorizeStopXML != null)
                 {
 
                     #region Documentation
@@ -538,7 +545,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     //    <soapenv:Header/>
                     //
                     //    <soapenv:Body>
-                    //       <Authorization:eRoamingAuthorizeRemoteStop>
+                    //       <Authorization:eRoamingAuthorizeAuthorizeStop>
                     // 
                     //          <Authorization:SessionID>?</Authorization:SessionID>
                     // 
@@ -549,7 +556,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     // 
                     //          <Authorization:EVSEID>?</Authorization:EVSEID>
                     // 
-                    //       </Authorization:eRoamingAuthorizeRemoteStop>
+                    //       </Authorization:eRoamingAuthorizeAuthorizeStop>
                     //    </soapenv:Body>
                     //
                     // </soapenv:Envelope>
@@ -568,20 +575,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     try
                     {
 
-                        SessionId         = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "SessionID",        "No SessionID XML tag provided!"));
+                        SessionId         = ChargingSession_Id.Parse(AuthorizeStopXML.ElementValueOrFail   (OICPNS.Authorization + "SessionID",        "No SessionID XML tag provided!"));
 
-                        PartnerSessionIdXML = RemoteStopXML.Element(OICPNS.Authorization + "PartnerSessionID");
+                        PartnerSessionIdXML = AuthorizeStopXML.Element(OICPNS.Authorization + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
                             PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId        = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID",       "No ProviderID XML tag provided!"));
-                        EVSEId            = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",           "No EVSEID XML tag provided!"));
+                        ProviderId        = EVSP_Id.           Parse(AuthorizeStopXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID",       "No ProviderID XML tag provided!"));
+                        EVSEId            = EVSE_Id.           Parse(AuthorizeStopXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",           "No EVSEID XML tag provided!"));
 
                     }
                     catch (Exception e)
                     {
 
-                        Log.Timestamp("Invalid RemoteStopXML: " + e.Message);
+                        Log.Timestamp("Invalid AuthorizeStopXML: " + e.Message);
 
                         return new HTTPResponseBuilder() {
 
@@ -648,9 +655,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Call async subscribers
 
-                    var Response = RemoteStopResult.Error;
+                    var Response = AuthorizeStopResult.Error;
 
-                    var OnRSt = _OnRemoteStopDelegateList.FirstOrDefault();
+                    var OnRSt = _OnAuthorizeStopDelegateList.FirstOrDefault();
                     if (OnRSt != null)
                     {
 
@@ -669,7 +676,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     }
 
-                    //Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
+                    //Log.WriteLine("[" + DateTime.Now + "] CPOServer: AuthorizeStartResult: " + Response.ToString());
 
                     #endregion
 
@@ -678,32 +685,32 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     switch (Response)
                     {
 
-                        case RemoteStopResult.Success:
+                        case AuthorizeStopResult.Success:
                             HubjectCode         = "000";
                             HubjectDescription  = "Ready to stop charging!";
                             break;
 
-                        case RemoteStopResult.SessionIsInvalid:
+                        case AuthorizeStopResult.SessionIsInvalid:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case RemoteStopResult.EVSE_NotReachable:
+                        case AuthorizeStopResult.EVSE_NotReachable:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case RemoteStopResult.Stop_Timeout:
+                        case AuthorizeStopResult.Stop_Timeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case RemoteStopResult.UnknownEVSE:
+                        case AuthorizeStopResult.UnknownEVSE:
                             HubjectCode         = "603";
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case RemoteStopResult.EVSEOutOfService:
+                        case AuthorizeStopResult.EVSEOutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;
@@ -840,18 +847,18 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Register SOAP-XML Request via GET
 
             this.AddMethodCallback(HTTPMethod.GET,
-                                   URIPrefix + "/RNs/{RoamingNetworkId}/RemoteStartStop",
+                                   URIPrefix + "/RNs/{RoamingNetworkId}/AuthorizeStartStop",
                                    HTTPContentType.XMLTEXT_UTF8,
-                                   HTTPDelegate: RemoteStartStopDelegate);
+                                   HTTPDelegate: AuthorizeStartStopDelegate);
 
             #endregion
 
             #region Register SOAP-XML Request via POST
 
             this.AddMethodCallback(HTTPMethod.POST,
-                                   URIPrefix + "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                   URIPrefix + "/RNs/{RoamingNetwork}/AuthorizeStartStop",
                                    HTTPContentType.XMLTEXT_UTF8,
-                                   HTTPDelegate: RemoteStartStopDelegate);
+                                   HTTPDelegate: AuthorizeStartStopDelegate);
 
             #endregion
 
@@ -859,7 +866,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             // HTML
             this.AddMethodCallback(HTTPMethod.GET,
-                                   URIPrefix + "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                   URIPrefix + "/RNs/{RoamingNetwork}/AuthorizeStartStop",
                                    HTTPContentType.HTML_UTF8,
                                    HTTPDelegate: HTTPRequest => {
 
@@ -868,7 +875,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                            ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Content         = ("/RNs/" + RoamingNetworkId + "/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
                                            Connection      = "close"
                                        };
 
@@ -876,7 +883,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             // Text
             this.AddMethodCallback(HTTPMethod.GET,
-                                   "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                   "/RNs/{RoamingNetwork}/AuthorizeStartStop",
                                    HTTPContentType.TEXT_UTF8,
                                    HTTPDelegate: HTTPRequest => {
 
@@ -885,7 +892,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                        return new HTTPResponseBuilder() {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                            ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                           Content         = ("/RNs/" + RoamingNetworkId + "/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
                                            Connection      = "close"
                                        };
 
@@ -902,28 +909,28 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region OnRemoteStart(RemoteStartDelegate)
+        #region OnAuthorizeStart(AuthorizeStartDelegate)
 
         /// <summary>
-        /// Register a RemoteStart delegate.
+        /// Register a AuthorizeStart delegate.
         /// </summary>
-        /// <param name="RemoteStartDelegate">A RemoteStart delegate.</param>
-        public void OnRemoteStart(OnRemoteStartDelegate RemoteStartDelegate)
+        /// <param name="AuthorizeStartDelegate">A AuthorizeStart delegate.</param>
+        public void OnAuthorizeStart(OnAuthorizeStartDelegate AuthorizeStartDelegate)
         {
-            _OnRemoteStartDelegateList.Add(RemoteStartDelegate);
+            _OnAuthorizeStartDelegateList.Add(AuthorizeStartDelegate);
         }
 
         #endregion
 
-        #region OnRemoteStop(RemoteStopDelegate)
+        #region OnAuthorizeStop(AuthorizeStopDelegate)
 
         /// <summary>
-        /// Register a RemoteStart delegate.
+        /// Register a AuthorizeStart delegate.
         /// </summary>
-        /// <param name="RemoteStartDelegate">A RemoteStart delegate.</param>
-        public void OnRemoteStop(OnRemoteStopDelegate RemoteStopDelegate)
+        /// <param name="AuthorizeStartDelegate">A AuthorizeStart delegate.</param>
+        public void OnAuthorizeStop(OnAuthorizeStopDelegate AuthorizeStopDelegate)
         {
-            _OnRemoteStopDelegateList.Add(RemoteStopDelegate);
+            _OnAuthorizeStopDelegateList.Add(AuthorizeStopDelegate);
         }
 
         #endregion
