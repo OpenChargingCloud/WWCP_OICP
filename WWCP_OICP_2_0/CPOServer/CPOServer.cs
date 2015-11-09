@@ -160,12 +160,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 #endregion
 
-                //Log.WriteLine("");
-                //Log.Timestamp("Incoming XML request:");
-                //Log.WriteLine("XML payload:");
-                //Log.WriteLine(XMLRequest.Data.ToString());
-                //Log.WriteLine("");
-
                 #region Get SOAP request...
 
                 IEnumerable<XElement> RemoteStartXMLs;
@@ -413,19 +407,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #endregion
 
+                    #region Call async subscribers
 
                     var Response = RemoteStartResult.Error;
-
-                    //var OnRemoteStartLocal = OnRemoteStart;
-                    //if (OnRemoteStartLocal != null)
-                    //    Response = OnRemoteStartLocal(DateTime.Now,
-                    //                                  RoamingNetworkId,
-                    //                                  SessionId,
-                    //                                  PartnerSessionId,
-                    //                                  ProviderId,
-                    //                                  eMAId,
-                    //                                  EVSEId,
-                    //                                  ChargingProductId);
 
                     var OnRSt = _OnRemoteStartDelegateList.FirstOrDefault();
                     if (OnRSt != null)
@@ -448,7 +432,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     }
 
-                    Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
+                    //Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
+
+                    #endregion
+
+                    #region Map result
 
                     switch (Response)
                     {
@@ -501,7 +489,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     }
 
-                    #region SOAPResponse
+                    #endregion
+
+                    #region Return SOAPResponse
 
                     return new HTTPResponseBuilder() {
                         HTTPStatusCode  = HTTPStatusCode.OK,
@@ -651,6 +641,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #endregion
 
+                    #region Call async subscribers
+
                     var Response = RemoteStopResult.Error;
 
                     var OnRSt = _OnRemoteStopDelegateList.FirstOrDefault();
@@ -672,7 +664,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     }
 
-                    Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
+                    //Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
+
+                    #endregion
+
+                    #region Map result
 
                     switch (Response)
                     {
@@ -715,7 +711,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     }
 
-                    #region SOAPResponse
+                    #endregion
+
+                    #region Return SOAPResponse
 
                     var SOAPContent = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
