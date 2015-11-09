@@ -468,7 +468,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     }
 
-
                     Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
 
                     switch (Response)
