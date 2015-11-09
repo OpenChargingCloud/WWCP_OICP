@@ -682,6 +682,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                             HubjectDescription  = "Ready to stop charging!";
                             break;
 
+                        case RemoteStopResult.SessionIsInvalid:
+                            HubjectCode         = "400";
+                            HubjectDescription  = "Session is invalid";
+                            break;
+
                         case RemoteStopResult.EVSE_NotReachable:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
