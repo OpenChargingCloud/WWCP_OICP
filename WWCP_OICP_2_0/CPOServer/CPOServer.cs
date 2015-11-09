@@ -30,6 +30,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 using org.GraphDefined.WWCP.LocalService;
+using System.Threading;
 
 #endregion
 
@@ -41,6 +42,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// </summary>
     public class CPOServer : HTTPServer
     {
+
+        private List<OnRemoteStartDelegateAsync> _OnRemoteStartDelegateList;
 
         #region Events
 
@@ -72,6 +75,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="IPPort">The TCP listing port.</param>
         public CPOServer(IPPort  IPPort)
         {
+
+            this._OnRemoteStartDelegateList = new List<OnRemoteStartDelegateAsync>();
+
+
 
             this.AttachTCPPort(IPPort);
 
@@ -427,18 +434,40 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     var Response = RemoteStartResult.Error;
 
-                    var OnRemoteStartLocal = OnRemoteStart;
-                    if (OnRemoteStartLocal != null)
-                        Response = OnRemoteStartLocal(DateTime.Now,
-                                                      RoamingNetworkId,
-                                                      SessionId,
-                                                      PartnerSessionId,
-                                                      ProviderId,
-                                                      eMAId,
-                                                      EVSEId,
-                                                      ChargingProductId);
+                    //var OnRemoteStartLocal = OnRemoteStart;
+                    //if (OnRemoteStartLocal != null)
+                    //    Response = OnRemoteStartLocal(DateTime.Now,
+                    //                                  RoamingNetworkId,
+                    //                                  SessionId,
+                    //                                  PartnerSessionId,
+                    //                                  ProviderId,
+                    //                                  eMAId,
+                    //                                  EVSEId,
+                    //                                  ChargingProductId);
 
-                    Log.WriteLine(Response.ToString());
+                    var OnRSt = _OnRemoteStartDelegateList.FirstOrDefault();
+                    if (OnRSt != null)
+                    {
+
+                        var CTS = new CancellationTokenSource();
+
+                        var task = OnRSt.Invoke(DateTime.Now,
+                                                RoamingNetworkId,
+                                                SessionId,
+                                                PartnerSessionId,
+                                                ProviderId,
+                                                eMAId,
+                                                EVSEId,
+                                                ChargingProductId,
+                                                CTS.Token);
+
+                        task.Wait();
+                        Response = task.Result;
+
+                    }
+
+
+                    Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
 
                     switch (Response)
                     {
@@ -868,6 +897,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
+
+
+        public void RegisterRemoteStart(OnRemoteStartDelegateAsync RemoteStartDelegate)
+        {
+            _OnRemoteStartDelegateList.Add(RemoteStartDelegate);
+        }
+
 
     }
 
