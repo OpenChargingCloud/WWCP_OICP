@@ -45,6 +45,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         private List<OnRemoteStartDelegateAsync> _OnRemoteStartDelegateList;
 
+        public HTTPDelegate RS_HTTPDelegate;
+
         #region Events
 
         #region OnRemoteStart
@@ -902,6 +904,38 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public void RegisterRemoteStart(OnRemoteStartDelegateAsync RemoteStartDelegate)
         {
             _OnRemoteStartDelegateList.Add(RemoteStartDelegate);
+        }
+
+
+
+        public void DoRSt()
+        {
+
+            RemoteStartResult Response = RemoteStartResult.UnknownEVSE;
+
+            var OnRSt = _OnRemoteStartDelegateList.FirstOrDefault();
+            if (OnRSt != null)
+            {
+
+                var CTS = new CancellationTokenSource();
+
+                var task = OnRSt.Invoke(DateTime.Now,
+                                        RoamingNetwork_Id.Parse("Prod"),
+                                        ChargingSession_Id.Parse("2305"),
+                                        ChargingSession_Id.Parse("0815"),
+                                        EVSP_Id.Parse("DE*ICE"),
+                                        eMA_Id.Parse("DE*ICE*I00861*7"),
+                                        EVSE_Id.Parse("+49*822*2230161163*1"),
+                                        ChargingProduct_Id.Parse("AC1"),
+                                        CTS.Token);
+
+                task.Wait();
+                Response = task.Result;
+
+            }
+
+            Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
+
         }
 
 
