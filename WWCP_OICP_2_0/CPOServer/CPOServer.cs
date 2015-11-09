@@ -43,29 +43,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     public class CPOServer : HTTPServer
     {
 
-        private List<OnRemoteStartDelegateAsync> _OnRemoteStartDelegateList;
+        #region Data
 
-        public HTTPDelegate RS_HTTPDelegate;
-
-        #region Events
-
-        #region OnRemoteStart
-
-        /// <summary>
-        /// An event fired whenever a remote start command was received.
-        /// </summary>
-        public event OnRemoteStartDelegate OnRemoteStart;
-
-        #endregion
-
-        #region OnRemoteStop
-
-        /// <summary>
-        /// An event fired whenever a remote stop command was received.
-        /// </summary>
-        public event OnRemoteStopDelegate OnRemoteStop;
-
-        #endregion
+        private readonly List<OnRemoteStartDelegate> _OnRemoteStartDelegateList;
+        private readonly List<OnRemoteStopDelegate>  _OnRemoteStopDelegateList;
 
         #endregion
 
@@ -78,9 +59,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public CPOServer(IPPort  IPPort)
         {
 
-            this._OnRemoteStartDelegateList = new List<OnRemoteStartDelegateAsync>();
-
-
+            this._OnRemoteStartDelegateList = new List<OnRemoteStartDelegate>();
+            this._OnRemoteStopDelegateList  = new List<OnRemoteStopDelegate>();
 
             this.AttachTCPPort(IPPort);
 
@@ -674,16 +654,35 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     var Response = RemoteStopResult.Error;
 
-                    var OnRemoteStopLocal = OnRemoteStop;
-                    if (OnRemoteStopLocal != null)
-                        Response = OnRemoteStopLocal(DateTime.Now,
-                                                     RoamingNetworkId,
-                                                     SessionId,
-                                                     PartnerSessionId,
-                                                     ProviderId,
-                                                     EVSEId);
+                    //var OnRemoteStopLocal = OnRemoteStop;
+                    //if (OnRemoteStopLocal != null)
+                    //    Response = OnRemoteStopLocal(DateTime.Now,
+                    //                                 RoamingNetworkId,
+                    //                                 SessionId,
+                    //                                 PartnerSessionId,
+                    //                                 ProviderId,
+                    //                                 EVSEId);
 
-                    Log.WriteLine(Response.ToString());
+                    var OnRSt = _OnRemoteStopDelegateList.FirstOrDefault();
+                    if (OnRSt != null)
+                    {
+
+                        var CTS = new CancellationTokenSource();
+
+                        var task = OnRSt.Invoke(DateTime.Now,
+                                                RoamingNetworkId,
+                                                SessionId,
+                                                PartnerSessionId,
+                                                ProviderId,
+                                                EVSEId,
+                                                CTS.Token);
+
+                        task.Wait();
+                        Response = task.Result;
+
+                    }
+
+                    Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
 
                     switch (Response)
                     {
@@ -900,10 +899,31 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        public void RegisterRemoteStart(OnRemoteStartDelegateAsync RemoteStartDelegate)
+        #region OnRemoteStart(RemoteStartDelegate)
+
+        /// <summary>
+        /// Register a RemoteStart delegate.
+        /// </summary>
+        /// <param name="RemoteStartDelegate">A RemoteStart delegate.</param>
+        public void OnRemoteStart(OnRemoteStartDelegate RemoteStartDelegate)
         {
             _OnRemoteStartDelegateList.Add(RemoteStartDelegate);
         }
+
+        #endregion
+
+        #region OnRemoteStop(RemoteStopDelegate)
+
+        /// <summary>
+        /// Register a RemoteStart delegate.
+        /// </summary>
+        /// <param name="RemoteStartDelegate">A RemoteStart delegate.</param>
+        public void OnRemoteStop(OnRemoteStopDelegate RemoteStopDelegate)
+        {
+            _OnRemoteStopDelegateList.Add(RemoteStopDelegate);
+        }
+
+        #endregion
 
 
 
