@@ -675,7 +675,101 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region GetChargeDetailRecords
+        #region GetChargeDetailRecords(ProviderId, From, To, QueryTimeout = null)
+
+        /// <summary>
+        /// Create a new task querying charge detail records from the OICP server.
+        /// </summary>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="From">The starting time.</param>
+        /// <param name="To">The end time.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>>
+
+            GetChargeDetailRecords(EVSP_Id     ProviderId,
+                                   DateTime    From,
+                                   DateTime    To,
+                                   TimeSpan?   QueryTimeout  = null)
+
+        {
+
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException("ProviderId", "The given parameter must not be null!");
+
+            #endregion
+
+            try
+            {
+
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                        UserAgent,
+                                                        false,
+                                                        DNSClient))
+
+                {
+
+                    return await _OICPClient.Query(EMP_XMLMethods.GetChargeDetailRecords(ProviderId,
+                                                                                         From,
+                                                                                         To),
+                                                   "eRoamingGetChargeDetailRecords",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                                                   OnSuccess: XMLData => {
+
+                                                       return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(XMLData.HttpResponse,
+                                                                                                                        eRoamingChargeDetailRecord.ParseXML(XMLData.Content));
+
+                                                   },
+
+                                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
+
+                                                       SendSOAPError(timestamp, soapclient, soapfault.Content);
+
+                                                       return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(soapfault.HttpResponse,
+                                                                                                                        new eRoamingChargeDetailRecord[0],
+                                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                       return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(httpresponse,
+                                                                                                                        new eRoamingChargeDetailRecord[0],
+                                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnException: (timestamp, sender, exception) => {
+
+                                                       SendException(timestamp, sender, exception);
+
+                                                       return null;
+
+                                                   }
+
+                                            );
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+
+                SendException(DateTime.Now, this, e);
+
+                return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(e);
+
+            }
+
+        }
 
         #endregion
 

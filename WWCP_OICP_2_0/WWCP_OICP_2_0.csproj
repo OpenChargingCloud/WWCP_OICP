@@ -60,6 +60,7 @@
     <Compile Include="Objects\EVSEStatusRecord.cs" />
     <Compile Include="Responses\eMAIdWithPIN.cs" />
     <Compile Include="Responses\AuthorizationIdentification.cs" />
+    <Compile Include="Responses\eRoamingChargeDetailRecord.cs" />
     <Compile Include="Responses\eRoamingAuthorizationStop.cs" />
     <Compile Include="Responses\eRoamingMobileAuthorizationStart.cs" />
     <Compile Include="Responses\eRoamingEvseSearchResult.cs" />
