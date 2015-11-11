@@ -1301,7 +1301,36 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         {
 
-            return null;
+            var Ack = await _CPOClient.SendChargeDetailRecord(EVSEId,
+                                                              SessionId,
+                                                              PartnerProductId,
+                                                              SessionStart,
+                                                              SessionEnd,
+                                                              AuthToken,
+                                                              eMAId,
+                                                              PartnerSessionId,
+                                                              ChargingStart,
+                                                              ChargingEnd,
+                                                              MeterValueStart,
+                                                              MeterValueEnd,
+                                                              MeterValuesInBetween,
+                                                              ConsumedEnergy,
+                                                              MeteringSignature,
+                                                              HubOperatorId,
+                                                              HubProviderId,
+                                                              QueryTimeout);
+
+
+
+            // true
+            if (Ack.Content.Result)
+                return new HTTPResponse<SENDCDRResult>(Ack.HttpResponse,
+                                                       new SENDCDRResult(_AuthorizatorId) { State = SENDCDRState.Forwarded });
+
+            // false
+            else
+                return new HTTPResponse<SENDCDRResult>(Ack.HttpResponse,
+                                                       new SENDCDRResult(_AuthorizatorId) { State = SENDCDRState.False });
 
         }
 
