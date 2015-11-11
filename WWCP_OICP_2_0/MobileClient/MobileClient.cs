@@ -122,10 +122,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return await _OICPClient.Query(EMP_XMLMethods.MobileAuthorizeStartXML(EVSEId,
-                                                                                          EVCOId,
-                                                                                          PIN,
-                                                                                          PartnerProductId),
+                    return await _OICPClient.Query(Mobile_XMLMethods.MobileAuthorizeStartXML(EVSEId,
+                                                                                             EVCOId,
+                                                                                             PIN,
+                                                                                             PartnerProductId),
                                                    "eRoamingMobileAuthorizeStart",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -300,7 +300,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return await _OICPClient.Query(EMP_XMLMethods.MobileRemoteStartXML(SessionId),
+                    return await _OICPClient.Query(Mobile_XMLMethods.MobileRemoteStartXML(SessionId),
                                                    "eRoamingMobileRemoteStart",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -397,7 +397,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return await _OICPClient.Query(EMP_XMLMethods.MobileRemoteStopXML(SessionId),
+                    return await _OICPClient.Query(Mobile_XMLMethods.MobileRemoteStopXML(SessionId),
                                                    "eRoamingMobileRemoteStop",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 

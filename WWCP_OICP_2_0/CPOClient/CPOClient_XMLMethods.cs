@@ -789,20 +789,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                  (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
                                  (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
-                                 new XElement(OICPNS.Authorization + "SessionStart", SessionStart),
-                                 new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd),
-                                 (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  MeterValueStart.Value.ToString(CultureInfo.InvariantCulture.NumberFormat)) : null,
-                                 (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    MeterValueEnd.  Value.ToString(CultureInfo.InvariantCulture.NumberFormat)) : null,
+
+                                 new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
+                                 new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
+
+                                 (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
+                                 (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", ".")) : null,
 
                                  _MeterValuesInBetween.Length > 0 ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
                                                                         _MeterValuesInBetween.
-                                                                            Select(value => new XElement(OICPNS.CommonTypes + "MeterValue", value.ToString(CultureInfo.InvariantCulture.NumberFormat))).
+                                                                            Select(value => new XElement(OICPNS.CommonTypes + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
                                                                             ToArray()
                                                                     )
                                                                   : null,
 
-                                 ConsumedEnergy    != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    ConsumedEnergy.Value.ToString(CultureInfo.InvariantCulture.NumberFormat)) : null,
+                                 ConsumedEnergy    != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", ".")) : null,
                                  MeteringSignature != null ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)        : null,
+
                                  HubOperatorId     != null ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString()) : null,
                                  HubProviderId     != null ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString()) : null
 
