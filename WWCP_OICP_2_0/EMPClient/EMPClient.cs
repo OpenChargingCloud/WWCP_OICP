@@ -722,7 +722,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                    OnSuccess: XMLData => {
 
                                                        return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(XMLData.HttpResponse,
-                                                                                                                        eRoamingChargeDetailRecord.ParseXML(XMLData.Content));
+                                                                                                                    eRoamingChargeDetailRecords.ParseXML(XMLData.Content));
 
                                                    },
 

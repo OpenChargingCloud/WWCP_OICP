@@ -22,6 +22,8 @@ using System.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Xml.Linq;
+using org.GraphDefined.WWCP.OICP_2_0;
 
 #endregion
 
@@ -31,19 +33,10 @@ namespace org.GraphDefined.WWCP
     /// <summary>
     /// An OICP v2.0 charge detail record for a charging session.
     /// </summary>
-    public class OICPChargeDetailRecord : IEquatable <OICPChargeDetailRecord>,
-                                          IComparable<OICPChargeDetailRecord>,
-                                          IComparable
+    public class eRoamingChargeDetailRecord : IEquatable <eRoamingChargeDetailRecord>,
+                                              IComparable<eRoamingChargeDetailRecord>,
+                                              IComparable
     {
-
-        #region Data
-
-        /// <summary>
-        /// The default max size of the charging station (aggregated EVSE) status history.
-        /// </summary>
-        public const UInt16 DefaultStationStatusHistorySize = 50;
-
-        #endregion
 
         #region Properties
 
@@ -328,7 +321,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="MeteringSignature">An optional signature for the metering values.</param>
         /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
-        public OICPChargeDetailRecord(EVSE_Id              EVSEId,
+        public eRoamingChargeDetailRecord(EVSE_Id              EVSEId,
                                       ChargingSession_Id   SessionId,
                                       ChargingProduct_Id   PartnerProductId,
                                       DateTime             SessionStart,
@@ -394,6 +387,133 @@ namespace org.GraphDefined.WWCP
         #endregion
 
 
+        #region (static) Parse(eRoamingChargeDetailRecordXML, OnException = null)
+
+        public static eRoamingChargeDetailRecord Parse(XElement             eRoamingChargeDetailRecordXML,
+                                                       OnExceptionDelegate  OnException  = null)
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            // 
+            //    <soapenv:Header/>
+            // 
+            //    <soapenv:Body>
+            //       <Authorization:eRoamingChargeDetailRecords>
+            // 
+            //          <!--Zero or more repetitions:-->
+            //          <Authorization:eRoamingChargeDetailRecord>
+            // 
+            //             <Authorization:SessionID>de164e08-1c88-1293-537b-be355041070e</Authorization:SessionID>
+            // 
+            //             <!--Optional:-->
+            //             <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+            // 
+            //             <!--Optional:-->
+            //             <Authorization:PartnerProductID>AC1</Authorization:PartnerProductID>
+            // 
+            //             <Authorization:EvseID>DE*GEF*E123456789*1</Authorization:EvseID>
+            // 
+            //             <Authorization:Identification>
+            //               <!--You have a CHOICE of the next 4 items at this level-->
+            // 
+            //               <CommonTypes:RFIDmifarefamilyIdentification>
+            //                  <CommonTypes:UID>08152305</CommonTypes:UID>
+            //               </CommonTypes:RFIDmifarefamilyIdentification>
+            // 
+            //               <CommonTypes:QRCodeIdentification>
+            // 
+            //                  <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+            // 
+            //                  <!--You have a CHOICE of the next 2 items at this level-->
+            //                  <CommonTypes:PIN>1234</CommonTypes:PIN>
+            // 
+            //                  <CommonTypes:HashedPIN>
+            //                     <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
+            //                     <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
+            //                     <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
+            //                  </CommonTypes:HashedPIN>
+            // 
+            //               </CommonTypes:QRCodeIdentification>
+            // 
+            //               <CommonTypes:PlugAndChargeIdentification>
+            //                  <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+            //               </CommonTypes:PlugAndChargeIdentification>
+            // 
+            //               <CommonTypes:RemoteIdentification>
+            //                  <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+            //               </CommonTypes:RemoteIdentification>
+            // 
+            //             </Authorization:Identification>
+            // 
+            //             <!--Optional:-->
+            //             <Authorization:ChargingStart>2015-10-23T15:45:30.000Z</Authorization:ChargingStart>
+            //             <!--Optional:-->
+            //             <Authorization:ChargingEnd>2015-10-23T16:59:31.000Z</Authorization:ChargingEnd>
+            // 
+            //             <Authorization:SessionStart>2015-10-23T15:45:00.000Z</Authorization:SessionStart>
+            //             <Authorization:SessionEnd>2015-10-23T17:45:00.000Z</Authorization:SessionEnd>
+            // 
+            //             <!--Optional:-->
+            //             <Authorization:MeterValueStart>123.456</Authorization:MeterValueStart>
+            //             <!--Optional:-->
+            //             <Authorization:MeterValueEnd>234.567</Authorization:MeterValueEnd>
+            //             <!--Optional:-->
+            //             <Authorization:MeterValueInBetween>
+            //               <!--1 or more repetitions: \d\.\d{0,3} -->
+            //               <Authorization:MeterValue>123.456</Authorization:MeterValue>
+            //               <Authorization:MeterValue>189.768</Authorization:MeterValue>
+            //               <Authorization:MeterValue>223.312</Authorization:MeterValue>
+            //               <Authorization:MeterValue>234.560</Authorization:MeterValue>
+            //               <Authorization:MeterValue>234.567</Authorization:MeterValue>
+            //             </Authorization:MeterValueInBetween>
+            // 
+            //             <!--Optional:-->
+            //             <Authorization:ConsumedEnergy>111.111</Authorization:ConsumedEnergy>
+            //             <!--Optional:-->
+            //             <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
+            // 
+            //             <!--Optional:-->
+            //             <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
+            //             <!--Optional:-->
+            //             <Authorization:HubProviderID>?</Authorization:HubProviderID>
+            // 
+            //          </Authorization:eRoamingChargeDetailRecord>
+            // 
+            //       </Authorization:eRoamingChargeDetailRecords>
+            //    </soapenv:Body>
+            // 
+            // </soapenv:Envelope>
+
+            #endregion
+
+
+            if (eRoamingChargeDetailRecordXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecord")
+                throw new Exception("Invalid eRoamingChargeDetailRecord XML!");
+
+            // var AuthenticationDataXML  = eRoamingChargeDetailRecordXML.Element(OICPNS.AuthenticationData + "AuthenticationData");
+            // var StatusCodeXML          = eRoamingChargeDetailRecordXML.Element(OICPNS.AuthenticationData + "StatusCode");
+
+            // if (AuthenticationDataXML != null)
+            //     return new eRoamingAuthenticationData(AuthenticationDataXML.
+            //                                               Elements  (OICPNS.AuthenticationData + "ProviderAuthenticationData").
+            //                                               SafeSelect(ProviderAuthenticationDataXML => ProviderAuthenticationData.Parse(ProviderAuthenticationDataXML)).
+            //                                               Where     (ProviderAuthenticationData    => ProviderAuthenticationData != null),
+            //                                           StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+            //
+            //
+            // return new eRoamingAuthenticationData(StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+
+            return null;
+
+        }
+
+        #endregion
+
+
         #region IComparable<OICPChargeDetailRecord> Members
 
         #region CompareTo(Object)
@@ -409,7 +529,7 @@ namespace org.GraphDefined.WWCP
                 throw new ArgumentNullException("The given object must not be null!");
 
             // Check if the given object is a charge detail record.
-            var OICPChargeDetailRecord = Object as OICPChargeDetailRecord;
+            var OICPChargeDetailRecord = Object as eRoamingChargeDetailRecord;
             if ((Object) OICPChargeDetailRecord == null)
                 throw new ArgumentException("The given object is not a charge detail record!");
 
@@ -425,7 +545,7 @@ namespace org.GraphDefined.WWCP
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="OICPChargeDetailRecord">A charge detail record object to compare with.</param>
-        public Int32 CompareTo(OICPChargeDetailRecord OICPChargeDetailRecord)
+        public Int32 CompareTo(eRoamingChargeDetailRecord OICPChargeDetailRecord)
         {
 
             if ((Object) OICPChargeDetailRecord == null)
@@ -455,7 +575,7 @@ namespace org.GraphDefined.WWCP
                 return false;
 
             // Check if the given object is a charge detail record.
-            var OICPChargeDetailRecord = Object as OICPChargeDetailRecord;
+            var OICPChargeDetailRecord = Object as eRoamingChargeDetailRecord;
             if ((Object) OICPChargeDetailRecord == null)
                 return false;
 
@@ -472,7 +592,7 @@ namespace org.GraphDefined.WWCP
         /// </summary>
         /// <param name="OICPChargeDetailRecord">A charge detail record to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(OICPChargeDetailRecord OICPChargeDetailRecord)
+        public Boolean Equals(eRoamingChargeDetailRecord OICPChargeDetailRecord)
         {
 
             if ((Object) OICPChargeDetailRecord == null)

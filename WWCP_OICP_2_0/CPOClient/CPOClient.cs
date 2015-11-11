@@ -1313,7 +1313,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            SendChargeDetailRecord(OICPChargeDetailRecord  ChargeDetailRecord,
+            SendChargeDetailRecord(eRoamingChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?               QueryTimeout  = null)
 
         {

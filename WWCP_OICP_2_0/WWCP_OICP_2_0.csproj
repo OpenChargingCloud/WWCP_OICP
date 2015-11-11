@@ -60,7 +60,7 @@
     <Compile Include="Objects\EVSEStatusRecord.cs" />
     <Compile Include="Responses\eMAIdWithPIN.cs" />
     <Compile Include="Responses\AuthorizationIdentification.cs" />
-    <Compile Include="Responses\eRoamingChargeDetailRecord.cs" />
+    <Compile Include="Responses\eRoamingChargeDetailRecords.cs" />
     <Compile Include="Responses\eRoamingAuthorizationStop.cs" />
     <Compile Include="Responses\eRoamingMobileAuthorizationStart.cs" />
     <Compile Include="Responses\eRoamingEvseSearchResult.cs" />
@@ -71,7 +71,7 @@
     <Compile Include="Responses\ProviderAuthenticationData.cs" />
     <Compile Include="Responses\OperatorEVSEStatus.cs" />
     <Compile Include="Responses\OperatorEVSEData.cs" />
-    <Compile Include="Objects\OICPChargeDetailRecord.cs" />
+    <Compile Include="Objects\eRoamingChargeDetailRecord.cs" />
     <Compile Include="Responses\eRoamingEVSEStatus.cs" />
     <Compile Include="Responses\eRoamingEVSEData.cs" />
     <Compile Include="Objects\GeoCoordinatesResponseFormatTypes.cs" />
