@@ -924,8 +924,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                    OnSuccess: XMLData =>
                                                    {
 
-
-
                                                        return new HTTPResponse<eRoamingAuthorizationStart>(XMLData.HttpResponse,
                                                                                                            eRoamingAuthorizationStart.Parse(XMLData.Content));
 
@@ -1313,7 +1311,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<SENDCDRResult>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             SendChargeDetailRecord(OICPChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?               QueryTimeout  = null)
@@ -1354,7 +1352,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region SendChargeDetailRecord(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, AuthToken = null, eMAId = null, PartnerSessionId = null, ..., QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP SendChargeDetailRecord request.
+        /// Create an OICP v2.0 SendChargeDetailRecord request.
         /// </summary>
         /// <param name="EVSEId">An EVSE identification.</param>
         /// <param name="SessionId">The OICP session identification from the Authorize Start request.</param>
@@ -1374,7 +1372,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<SENDCDRResult>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             SendChargeDetailRecord(EVSE_Id              EVSEId,
                                    ChargingSession_Id   SessionId,
@@ -1491,67 +1489,79 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                               #endregion
 
                                                               var ack = eRoamingAcknowledgement.Parse(XMLData.Content);
+                                                              return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse, ack);
 
-                                                              #region Ok
-
-                                                             if (ack.Result)
-                                                                 return new HTTPResponse<SENDCDRResult>(XMLData.HttpResponse,
-                                                                                                        new SENDCDRResult(AuthorizatorId) {
-                                                                                                            State             = SENDCDRState.Forwarded,
-                                                                                                            PartnerSessionId  = PartnerSessionId,
-                                                                                                            Description       = ack.StatusCode.Description
-                                                                                                        });
-
-                                                             #endregion
-
-                                                              #region Error
-
-                                                             return new HTTPResponse<SENDCDRResult>(XMLData.HttpResponse,
-                                                                                                    new SENDCDRResult(AuthorizatorId) {
-                                                                                                        State             = SENDCDRState.False,
-                                                                                                        PartnerSessionId  = PartnerSessionId,
-                                                                                                        Description       = ack.StatusCode.Description
-                                                                                                    });
-
-                                                             #endregion
+                                                            //  #region Ok
+                                                            //
+                                                            // if (ack.Result)
+                                                            //     return new HTTPResponse<SENDCDRResult>(XMLData.HttpResponse,
+                                                            //                                            new SENDCDRResult(AuthorizatorId) {
+                                                            //                                                State             = SENDCDRState.Forwarded,
+                                                            //                                                PartnerSessionId  = PartnerSessionId,
+                                                            //                                                Description       = ack.StatusCode.Description
+                                                            //                                            });
+                                                            //
+                                                            // #endregion
+                                                            //
+                                                            //  #region Error
+                                                            //
+                                                            // return new HTTPResponse<SENDCDRResult>(XMLData.HttpResponse,
+                                                            //                                        new SENDCDRResult(AuthorizatorId) {
+                                                            //                                            State             = SENDCDRState.False,
+                                                            //                                            PartnerSessionId  = PartnerSessionId,
+                                                            //                                            Description       = ack.StatusCode.Description
+                                                            //                                        });
+                                                            //
+                                                            // #endregion
 
                                                           },
+
+                                                         // OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                                         //
+                                                         //     DebugX.Log("SendCDR led to a fault!" + Environment.NewLine);
+                                                         //
+                                                         //     return new HTTPResponse<SENDCDRResult>(soapfault.HttpResponse,
+                                                         //                                            new SENDCDRResult(AuthorizatorId) {
+                                                         //                                                State             = SENDCDRState.False,
+                                                         //                                                PartnerSessionId  = PartnerSessionId,
+                                                         //                                                Description       = soapfault.ToString()
+                                                         //                                            },
+                                                         //                                            IsFault: true);
 
                                                           OnSOAPFault: (timestamp, soapclient, soapfault) => {
 
-                                                              DebugX.Log("SendCDR led to a fault!" + Environment.NewLine);
+                                                       SendSOAPError(timestamp, soapclient, soapfault.Content);
 
-                                                              return new HTTPResponse<SENDCDRResult>(soapfault.HttpResponse,
-                                                                                                     new SENDCDRResult(AuthorizatorId) {
-                                                                                                         State             = SENDCDRState.False,
-                                                                                                         PartnerSessionId  = PartnerSessionId,
-                                                                                                         Description       = soapfault.ToString()
-                                                                                                     },
-                                                                                                     IsFault: true);
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                                                                           new eRoamingAcknowledgement(false,
+                                                                                                                                       -1,
+                                                                                                                                       soapfault.Content.ToString()),
+                                                                                                           IsFault: true);
 
-                                                          },
+                                                   },
 
-                                                          OnHTTPError: (t, s, e) => {
+                                                   OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                              //var OnHTTPErrorLocal = OnHTTPError;
-                                                              //if (OnHTTPErrorLocal != null)
-                                                              //    OnHTTPErrorLocal(t, s, e);
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                              return null;
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                           new eRoamingAcknowledgement(false,
+                                                                                                                                       -1,
+                                                                                                                                       httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                       httpresponse.Content.ToUTF8String()),
+                                                                                                           IsFault: true);
 
-                                                          },
+                                                   },
 
-                                                          OnException: (t, s, e) => {
+                                                   OnException: (timestamp, sender, exception) => {
 
-                                                              //var OnExceptionLocal = OnException;
-                                                              //if (OnExceptionLocal != null)
-                                                              //    OnExceptionLocal(t, s, e);
+                                                       SendException(timestamp, sender, exception);
 
-                                                              return null;
+                                                       return null;
 
-                                                          }
+                                                   }
 
-                                                         );
+                                                  );
 
                 }
 
@@ -1563,12 +1573,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 SendException(DateTime.Now, this, e);
 
-                return new HTTPResponse<SENDCDRResult>(new HTTPResponse(),
-                                                       new SENDCDRResult(AuthorizatorId) {
-                                                           State             = SENDCDRState.False,
-                                                           PartnerSessionId  = PartnerSessionId,
-                                                           Description       = "An exception occured: " + e.Message
-                                                       });
+                return new HTTPResponse<eRoamingAcknowledgement>(new HTTPResponse(),
+                                                                 new eRoamingAcknowledgement(false,
+                                                                                             -1,
+                                                                                             "An exception occured: " + e.Message));
 
             }
 

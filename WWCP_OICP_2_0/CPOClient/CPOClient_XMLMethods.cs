@@ -798,7 +798,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                  _MeterValuesInBetween.Length > 0 ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
                                                                         _MeterValuesInBetween.
-                                                                            Select(value => new XElement(OICPNS.CommonTypes + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
+                                                                            Select(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
                                                                             ToArray()
                                                                     )
                                                                   : null,

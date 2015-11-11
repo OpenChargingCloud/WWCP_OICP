@@ -1217,7 +1217,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<SENDCDRResult>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?           QueryTimeout  = null)
@@ -1249,7 +1249,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                            MeterValuesInBetween:  ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? ChargeDetailRecord.MeterValues.Select(v => v.Value)       : null,
                                                            ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
                                                            MeteringSignature:     ChargeDetailRecord.MeteringSignature,
-                                                           
                                                            QueryTimeout:          QueryTimeout);
 
         }
