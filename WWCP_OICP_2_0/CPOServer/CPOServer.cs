@@ -929,6 +929,86 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region GetEVSEByIdRequest(EVSEId, QueryTimeout = null) // <- Note!
+
+        ///// <summary>
+        ///// Create a new task requesting the static EVSE data
+        ///// for the given EVSE identification.
+        ///// </summary>
+        ///// <param name="EVSEId">The unique identification of the EVSE.</param>
+        ///// <param name="QueryTimeout">An optional timeout for this query.</param>
+        //public Task<HTTPResponse<EVSEDataRecord>>
+
+        //    GetEVSEByIdRequest(EVSE_Id    EVSEId,
+        //                       TimeSpan?  QueryTimeout  = null)
+
+        //{
+
+        //    try
+        //    {
+
+        //        using (var _OICPClient = new SOAPClient(Hostname,
+        //                                                TCPPort,
+        //                                                HTTPVirtualHost,
+        //                                                "/ibis/ws/eRoamingEvseData_V2.0",
+        //                                                UserAgent,
+        //                                                DNSClient))
+        //        {
+
+        //            return _OICPClient.Query(EMP_XMLMethods.GetEVSEByIdRequestXML(EVSEId),
+        //                                     "eRoamingEvseById",
+        //                                     QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+        //                                     OnSuccess: XMLData =>
+
+        //                                         #region Documentation
+
+        //                                         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                                         //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+        //                                         //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //                                         //   <soapenv:Header/>
+        //                                         //   <soapenv:Body>
+        //                                         //      <EVSEData:eRoamingEvseDataRecord deltaType="?" lastUpdate="?">
+        //                                         //          [...]
+        //                                         //      </EVSEData:eRoamingEvseDataRecord>
+        //                                         //    </soapenv:Body>
+        //                                         // </soapenv:Envelope>
+
+        //                                         #endregion
+
+        //                                         new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
+        //                                                                          XMLMethods.ParseEVSEDataRecordXML(XMLData.Content)),
+
+        //                                     OnSOAPFault: Fault =>
+        //                                         new HTTPResponse<EVSEDataRecord>(
+        //                                             Fault.HttpResponse,
+        //                                             new Exception(Fault.Content.ToString())),
+
+        //                                     OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
+
+        //                                     OnException: (t, s, e) => SendOnException(t, s, e)
+
+        //                                    );
+
+        //        }
+
+        //    }
+
+        //    catch (Exception e)
+        //    {
+
+        //        SendOnException(DateTime.Now, this, e);
+
+        //        return new Task<HTTPResponse<EVSEDataRecord>>(
+        //            () => new HTTPResponse<EVSEDataRecord>(e));
+
+        //    }
+
+        //}
+
+        #endregion
+
+
     }
 
 }
