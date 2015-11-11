@@ -55,6 +55,7 @@
     <Compile Include="EMPClient\EMP_XMLMethods.cs" />
     <Compile Include="EMPClient\EMPUpstreamService.cs" />
     <Compile Include="Helpers\OICPException.cs" />
+    <Compile Include="MobileClient\MobileClient.cs" />
     <Compile Include="Objects\EVSEStatusRecord.cs" />
     <Compile Include="Responses\eMAIdWithPIN.cs" />
     <Compile Include="Responses\AuthorizationIdentification.cs" />
