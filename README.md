@@ -1,5 +1,5 @@
-WWCP OICP-Bindings
-==================
+WWCP OICP v2.0
+==============
 
 This software will allow the communication between World Wide Charging Protocol (WWCP) entities and entities implementing the _Open InterCharge Protocol (OICP)_, which is defined and used by [Hubject GmbH](http://www.hubject.com). The focus of this protocol are the communication aspects of a central clearing house. For more details on this protocol please visit http://www.intercharge.eu.
 
@@ -17,5 +17,5 @@ If you are working in the field of e-mobility you should consider to become a me
 ### How to use?
 
  - The methods available for charge point operators can be found here: [client-side](CPOClient.md) and [server-side](CPOServer.md)
- - The methods available for e-mobility providers can be found here: [client-side](EMPClient.md)
-
+ - The methods available for e-mobility providers can be found here: [client-side](EMPClient.md) and [server-side](EMPServer.md)
+ - The methods available for mobile authentication can be found here: [client-side](MobileClient.md)
