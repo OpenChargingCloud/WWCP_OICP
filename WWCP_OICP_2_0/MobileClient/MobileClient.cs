@@ -74,6 +74,37 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region MobileAuthorizeStart(EVSEId, eMAIdWithPin, PartnerProductId = null, GetNewSession = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Create a new task sending a mobile AuthorizeStart request.
+        /// </summary>
+        /// <param name="EVSEId">The EVSE identification.</param>
+        /// <param name="eMAIdWithPin">The eMA identification with its PIN for identification.</param>
+        /// <param name="PartnerProductId">The optional charging product identification.</param>
+        /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingMobileAuthorizationStart>>
+
+            MobileAuthorizeStart(EVSE_Id       EVSEId,
+                                 eMAIdWithPIN  eMAIdWithPin,
+                                 String        PartnerProductId  = null,
+                                 Boolean?      GetNewSession     = null,
+                                 TimeSpan?     QueryTimeout      = null)
+
+        {
+
+            return await MobileAuthorizeStart(EVSEId,
+                                              eMAIdWithPin.eMAId,
+                                              eMAIdWithPin.PIN,
+                                              PartnerProductId,
+                                              GetNewSession,
+                                              QueryTimeout);
+
+        }
+
+        #endregion
+
         #region MobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductId = null, GetNewSession = null, QueryTimeout = null)
 
         /// <summary>
