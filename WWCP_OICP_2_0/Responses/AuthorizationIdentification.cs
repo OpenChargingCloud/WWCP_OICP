@@ -130,6 +130,24 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+
+        #region AuthorizationIdentification(AuthInfo)
+
+        public AuthorizationIdentification(AuthInfo AuthInfo)
+        {
+
+            this._AuthToken                    = AuthInfo.AuthToken;
+            this._QRCodeIdentification         = new eMAIdWithPIN(AuthInfo.QRCodeIdentification.eMAId,
+                                                                  AuthInfo.QRCodeIdentification.PIN,
+                                                                  AuthInfo.QRCodeIdentification.Function,
+                                                                  AuthInfo.QRCodeIdentification.Salt);
+            this._PlugAndChargeIdentification  = AuthInfo.PlugAndChargeIdentification;
+            this._RemoteIdentification         = AuthInfo.RemoteIdentification;
+
+        }
+
+        #endregion
+
         #endregion
 
 
@@ -180,9 +198,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region (static) Parse(AuthorizationIdentificationXML)
+        #region (static) Parse(AuthorizationIdentificationXML, OnException = null)
 
-        public static AuthorizationIdentification Parse(XElement  AuthorizationIdentificationXML)
+        public static AuthorizationIdentification Parse(XElement  AuthorizationIdentificationXML,
+                                                        OnExceptionDelegate  OnException  = null)
         {
 
             var RFIDmifarefamilyIdentificationXML = AuthorizationIdentificationXML.Element(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification");

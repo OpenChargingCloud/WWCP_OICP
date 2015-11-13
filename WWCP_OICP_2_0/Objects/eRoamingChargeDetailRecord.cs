@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
@@ -30,7 +31,7 @@ namespace org.GraphDefined.WWCP
 {
 
     /// <summary>
-    /// An OICP v2.0 charge detail record for a charging session.
+    /// An OICP v2.0 charge detail record.
     /// </summary>
     public class eRoamingChargeDetailRecord : IEquatable <eRoamingChargeDetailRecord>,
                                               IComparable<eRoamingChargeDetailRecord>,
@@ -269,10 +270,10 @@ namespace org.GraphDefined.WWCP
 
         #region HubOperatorId
 
-        private readonly EVSEOperator_Id _HubOperatorId;
+        private readonly HubOperator_Id _HubOperatorId;
 
         [Optional]
-        public EVSEOperator_Id HubOperatorId
+        public HubOperator_Id HubOperatorId
         {
             get
             {
@@ -302,17 +303,17 @@ namespace org.GraphDefined.WWCP
         #region Constructor(s)
 
         /// <summary>
-        /// Create a charge detail record for the given charging session (identification).
+        /// Create a charge detail record.
         /// </summary>
         /// <param name="EVSEId">An EVSE identification.</param>
         /// <param name="SessionId">The charging session identification from the Authorize Start request.</param>
         /// <param name="PartnerProductId">An unqiue identification for the consumed charging product.</param>
         /// <param name="SessionStart">The timestamp of the session start.</param>
         /// <param name="SessionEnd">The timestamp of the session end.</param>
-        /// <param name="AuthToken">An optional (RFID) user identification.</param>
-        /// <param name="eMAId">An optional e-Mobility account identification.</param>
+        /// <param name="Identification">An identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="ChargingTime">Optional timestamps of the charging start/stop.</param>
+        /// <param name="ChargingStart">An optional charging start timestamp.</param>
+        /// <param name="ChargingEnd">An optional charging end timestamp.</param>
         /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
         /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
@@ -320,23 +321,22 @@ namespace org.GraphDefined.WWCP
         /// <param name="MeteringSignature">An optional signature for the metering values.</param>
         /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
-        public eRoamingChargeDetailRecord(EVSE_Id              EVSEId,
-                                      ChargingSession_Id   SessionId,
-                                      ChargingProduct_Id   PartnerProductId,
-                                      DateTime             SessionStart,
-                                      DateTime             SessionEnd,
-                                      Auth_Token           AuthToken             = null,
-                                      eMA_Id               eMAId                 = null,
-                                      ChargingSession_Id   PartnerSessionId      = null,
-                                      DateTime?            ChargingStart         = null,
-                                      DateTime?            ChargingEnd           = null,
-                                      Double?              MeterValueStart       = null,
-                                      Double?              MeterValueEnd         = null,
-                                      IEnumerable<Double>  MeterValuesInBetween  = null,
-                                      Double?              ConsumedEnergy        = null,
-                                      String               MeteringSignature     = null,
-                                      EVSEOperator_Id      HubOperatorId         = null,
-                                      EVSP_Id              HubProviderId         = null)
+        public eRoamingChargeDetailRecord(EVSE_Id                      EVSEId,
+                                          ChargingSession_Id           SessionId,
+                                          ChargingProduct_Id           PartnerProductId,
+                                          DateTime                     SessionStart,
+                                          DateTime                     SessionEnd,
+                                          AuthorizationIdentification  Identification,
+                                          ChargingSession_Id           PartnerSessionId      = null,
+                                          DateTime?                    ChargingStart         = null,
+                                          DateTime?                    ChargingEnd           = null,
+                                          Double?                      MeterValueStart       = null,
+                                          Double?                      MeterValueEnd         = null,
+                                          IEnumerable<Double>          MeterValuesInBetween  = null,
+                                          Double?                      ConsumedEnergy        = null,
+                                          String                       MeteringSignature     = null,
+                                          HubOperator_Id               HubOperatorId         = null,
+                                          EVSP_Id                      HubProviderId         = null)
 
         {
 
@@ -456,9 +456,9 @@ namespace org.GraphDefined.WWCP
             //             <Authorization:SessionStart>2015-10-23T15:45:00.000Z</Authorization:SessionStart>
             //             <Authorization:SessionEnd>2015-10-23T17:45:00.000Z</Authorization:SessionEnd>
             // 
-            //             <!--Optional:-->
+            //             <!--Optional: \d\.\d{0,3} -->
             //             <Authorization:MeterValueStart>123.456</Authorization:MeterValueStart>
-            //             <!--Optional:-->
+            //             <!--Optional: \d\.\d{0,3} -->
             //             <Authorization:MeterValueEnd>234.567</Authorization:MeterValueEnd>
             //             <!--Optional:-->
             //             <Authorization:MeterValueInBetween>
@@ -493,20 +493,120 @@ namespace org.GraphDefined.WWCP
             if (eRoamingChargeDetailRecordXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecord")
                 throw new Exception("Invalid eRoamingChargeDetailRecord XML!");
 
-            // var AuthenticationDataXML  = eRoamingChargeDetailRecordXML.Element(OICPNS.AuthenticationData + "AuthenticationData");
-            // var StatusCodeXML          = eRoamingChargeDetailRecordXML.Element(OICPNS.AuthenticationData + "StatusCode");
+            var Identification = eRoamingChargeDetailRecordXML.MapElementOrFail(OICPNS.Authorization + "Identification",
+                                                                                "The Identification is invalid!",
+                                                                                AuthorizationIdentification.Parse,
+                                                                                OnException);
 
-            // if (AuthenticationDataXML != null)
-            //     return new eRoamingAuthenticationData(AuthenticationDataXML.
-            //                                               Elements  (OICPNS.AuthenticationData + "ProviderAuthenticationData").
-            //                                               SafeSelect(ProviderAuthenticationDataXML => ProviderAuthenticationData.Parse(ProviderAuthenticationDataXML)).
-            //                                               Where     (ProviderAuthenticationData    => ProviderAuthenticationData != null),
-            //                                           StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
-            //
-            //
-            // return new eRoamingAuthenticationData(StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
 
-            return null;
+            return new eRoamingChargeDetailRecord(
+
+                eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionID",
+                                                                    EVSE_Id.Parse,
+                                                                    "The EvseID is invalid!"),
+
+                eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionID",
+                                                                    ChargingSession_Id.Parse,
+                                                                    "The SessionID is invalid!"),
+
+                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerProductID",
+                                                                    ChargingProduct_Id.Parse),
+
+                eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionStart",
+                                                                    DateTime.Parse,
+                                                                    "The SessionStart is invalid!"),
+
+                eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionEnd",
+                                                                    DateTime.Parse,
+                                                                    "The SessionStart is invalid!"),
+                Identification,
+                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerSessionID",
+                                                                    ChargingSession_Id.Parse),
+
+                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "ChargingStart",
+                                                                    v => new Nullable<DateTime>(DateTime.Parse(v)),
+                                                                    null),
+
+                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "ChargingEnd",
+                                                                    v => new Nullable<DateTime>(DateTime.Parse(v)),
+                                                                    null),
+
+                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "MeterValueStart",
+                                                                    v => new Nullable<Double>(Double.Parse(v)),
+                                                                    null),
+
+                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "MeterValueEnd",
+                                                                    v => new Nullable<Double>(Double.Parse(v)),
+                                                                    null),
+
+                eRoamingChargeDetailRecordXML.MapValues            (OICPNS.Authorization + "MeterValuesInBetween",
+                                                                    OICPNS.Authorization + "MeterValue",
+                                                                    Double.Parse),
+
+                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "ConsumedEnergy",
+                                                                    v => new Nullable<Double>(Double.Parse(v)),
+                                                                    null),
+
+                eRoamingChargeDetailRecordXML.ElementValueOrDefault(OICPNS.Authorization + "MeteringSignature"),
+
+                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubOperatorID",
+                                                                                            HubOperator_Id.Parse,
+                                                                                            null),
+
+                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubProviderID",
+                                                                                            EVSP_Id.Parse,
+                                                                                            null));
+
+        }
+
+        #endregion
+
+        #region ToXML()
+
+        public XElement ToXML()
+        {
+
+            return new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
+
+                new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
+                new XElement(OICPNS.Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
+                new XElement(OICPNS.Authorization + "PartnerProductID", (PartnerProductId != null) ? PartnerProductId.ToString() : ""),
+                new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
+
+                new XElement(OICPNS.Authorization + "Identification",
+                    (AuthToken != null)
+                        ? new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
+                               new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString())
+                          )
+                        : new XElement(OICPNS.CommonTypes + "RemoteIdentification",
+                               new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
+                          )
+                ),
+
+                (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
+                (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
+
+                new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
+                new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
+
+                (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
+                (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", ".")) : null,
+
+                MeterValuesInBetween != null
+                    ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
+                          MeterValuesInBetween.
+                              SafeSelect(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
+                              ToArray()
+                      )
+                    : null,
+
+                ConsumedEnergy    != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", ".")) : null,
+                MeteringSignature != null ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)        : null,
+
+                HubOperatorId     != null ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString()) : null,
+                HubProviderId     != null ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString()) : null
+
+            );
 
         }
 

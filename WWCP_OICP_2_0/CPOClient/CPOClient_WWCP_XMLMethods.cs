@@ -34,7 +34,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// OICP v2.0 CPOClient XML methods.
     /// </summary>
-    public static class CPOClient_XMLMethods
+    public static class CPOClient_WWCP_XMLMethods
     {
 
         #region PushEVSEDataXML(GroupedData,           OICPAction = fullLoad, OperatorId = null, OperatorName = null)
@@ -616,18 +616,39 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region SendChargeDetailRecordXML(ChargeDetailRecord)
+
+        /// <summary>
+        /// Create an OICP v2.0 SendChargeDetailRecord XML request.
+        /// </summary>
+        /// <param name="ChargeDetailRecord">The charge detail record.</param>
+        public static XElement SendChargeDetailRecordXML(eRoamingChargeDetailRecord  ChargeDetailRecord)
+        {
+
+            #region Initial checks
+
+            if (ChargeDetailRecord == null)
+                throw new ArgumentNullException("ChargeDetailRecord", "The given parameter must not be null!");
+
+            #endregion
+
+            return SOAP.Encapsulation(ChargeDetailRecord.ToXML());
+
+        }
+
+        #endregion
+
         #region SendChargeDetailRecordXML(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, AuthToken = null, eMAId = null, PartnerSessionId = null, ..., QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP SendChargeDetailRecord XML request.
+        /// Create an OICP v2.0 SendChargeDetailRecord XML request.
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="PartnerProductId">The ev charging product identification.</param>
         /// <param name="SessionStart">The session start timestamp.</param>
         /// <param name="SessionEnd">The session end timestamp.</param>
-        /// <param name="AuthToken">An optional (RFID) user identification.</param>
-        /// <param name="eMAId">An optional e-Mobility account identification.</param>
+        /// <param name="Identification">An identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="ChargingStart">An optional charging start timestamp.</param>
         /// <param name="ChargingEnd">An optional charging end timestamp.</param>
@@ -638,23 +659,22 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="MeteringSignature">An optional signature for the metering values.</param>
         /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
-        public static XElement SendChargeDetailRecordXML(EVSE_Id              EVSEId,
-                                                         ChargingSession_Id   SessionId,
-                                                         ChargingProduct_Id   PartnerProductId,
-                                                         DateTime             SessionStart,
-                                                         DateTime             SessionEnd,
-                                                         Auth_Token           AuthToken             = null,
-                                                         eMA_Id               eMAId                 = null,
-                                                         ChargingSession_Id   PartnerSessionId      = null,
-                                                         DateTime?            ChargingStart         = null,
-                                                         DateTime?            ChargingEnd           = null,
-                                                         Double?              MeterValueStart       = null,
-                                                         Double?              MeterValueEnd         = null,
-                                                         IEnumerable<Double>  MeterValuesInBetween  = null,
-                                                         Double?              ConsumedEnergy        = null,
-                                                         String               MeteringSignature     = null,
-                                                         EVSEOperator_Id      HubOperatorId         = null,
-                                                         EVSP_Id              HubProviderId         = null)
+        public static XElement SendChargeDetailRecordXML(EVSE_Id                      EVSEId,
+                                                         ChargingSession_Id           SessionId,
+                                                         ChargingProduct_Id           PartnerProductId,
+                                                         DateTime                     SessionStart,
+                                                         DateTime                     SessionEnd,
+                                                         AuthorizationIdentification  Identification,
+                                                         ChargingSession_Id           PartnerSessionId      = null,
+                                                         DateTime?                    ChargingStart         = null,
+                                                         DateTime?                    ChargingEnd           = null,
+                                                         Double?                      MeterValueStart       = null,
+                                                         Double?                      MeterValueEnd         = null,
+                                                         IEnumerable<Double>          MeterValuesInBetween  = null,
+                                                         Double?                      ConsumedEnergy        = null,
+                                                         String                       MeteringSignature     = null,
+                                                         HubOperator_Id               HubOperatorId         = null,
+                                                         EVSP_Id                      HubProviderId         = null)
         {
 
             #region Documentation
@@ -762,13 +782,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (SessionEnd       == null)
                 throw new ArgumentNullException("SessionEnd",        "The given parameter must not be null!");
 
-            if (AuthToken        == null &&
-                eMAId            == null)
-                throw new ArgumentNullException("AuthToken / eMAId", "At least one of the given parameters must not be null!");
+            if (Identification   == null)
+                throw new ArgumentNullException("Identification",    "The given parameter must not be null!");
 
             #endregion
 
-            var _MeterValuesInBetween = MeterValuesInBetween != null ? MeterValuesInBetween.ToArray() : new Double[0];
 
             return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
 
@@ -777,15 +795,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                  new XElement(OICPNS.Authorization + "PartnerProductID", (PartnerProductId != null) ? PartnerProductId.ToString() : ""),
                                  new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
 
-                                 new XElement(OICPNS.Authorization + "Identification",
-                                     (AuthToken != null)
-                                         ? new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                                new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString())
-                                           )
-                                         : new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                                                new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
-                                           )
-                                 ),
+                                 Identification.ToXML(OICPNS.Authorization),
 
                                  (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
                                  (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
@@ -796,12 +806,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                  (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
                                  (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", ".")) : null,
 
-                                 _MeterValuesInBetween.Length > 0 ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
-                                                                        _MeterValuesInBetween.
-                                                                            Select(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
-                                                                            ToArray()
-                                                                    )
-                                                                  : null,
+                                 MeterValuesInBetween != null
+                                     ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
+                                           MeterValuesInBetween.
+                                               SafeSelect(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
+                                               ToArray()
+                                       )
+                                     : null,
 
                                  ConsumedEnergy    != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", ".")) : null,
                                  MeteringSignature != null ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)        : null,

@@ -38,8 +38,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// OICP v2.0 CPO Upstream Service(s).
     /// </summary>
-    public class CPOUpstreamService : IAuthServices,
-                                      IDataServices
+    public class CPOClient_WWCP : IAuthServices,
+                                  IDataServices
     {
 
         #region Data
@@ -195,7 +195,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public CPOUpstreamService(String           Hostname,
+        public CPOClient_WWCP(String           Hostname,
                                   IPPort           TCPPort,
                                   String           HTTPVirtualHost  = null,
                                   Authorizator_Id  AuthorizatorId   = null,
@@ -1196,14 +1196,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<AuthenticationData>>
+        public async Task<HTTPResponse<eRoamingAuthenticationData>>
 
             PullAuthenticationData(EVSEOperator_Id  OperatorId,
                                    TimeSpan?        QueryTimeout = null)
 
         {
 
-            return null;
+            return await _CPOClient.PullAuthenticationData(OperatorId,
+                                                           QueryTimeout);
 
         }
 
@@ -1229,9 +1230,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (ChargeDetailRecord == null)
                 throw new ArgumentNullException("ChargeDetailRecord", "The given parameter must not be null!");
 
-            if ( ChargeDetailRecord.SessionTime == null || !ChargeDetailRecord.SessionTime.HasValue)
-                throw new ArgumentNullException("SessionTime", "The given parameter must not be null or empty!");
-
             #endregion
 
             return await _CPOClient.SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
@@ -1239,8 +1237,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                            PartnerProductId:      ChargeDetailRecord.PartnerProductId,
                                                            SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
                                                            SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime,
-                                                           AuthToken:             ChargeDetailRecord.AuthToken,
-                                                           eMAId:                 ChargeDetailRecord.eMAId,
+                                                           Identification:        new AuthorizationIdentification(ChargeDetailRecord.Identification),
                                                            PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
                                                            ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.StartTimeOpt : null,
                                                            ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.EndTimeOpt   : null,
@@ -1255,7 +1252,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region SendChargeDetailRecord(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, AuthToken = null, eMAId = null, PartnerSessionId = null, ..., QueryTimeout = null)
+        #region SendChargeDetailRecord(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, Identification, PartnerSessionId = null, ..., QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP SendChargeDetailRecord request.
@@ -1265,8 +1262,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="PartnerProductId">The ev charging product identification.</param>
         /// <param name="SessionStart">The session start timestamp.</param>
         /// <param name="SessionEnd">The session end timestamp.</param>
-        /// <param name="AuthToken">An optional (RFID) user identification.</param>
-        /// <param name="eMAId">An optional e-Mobility account identification.</param>
+        /// <param name="Identification">An identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="ChargingStart">An optional charging start timestamp.</param>
         /// <param name="ChargingEnd">An optional charging end timestamp.</param>
@@ -1285,8 +1281,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                    ChargingProduct_Id   PartnerProductId,
                                    DateTime             SessionStart,
                                    DateTime             SessionEnd,
-                                   Auth_Token           AuthToken             = null,
-                                   eMA_Id               eMAId                 = null,
+                                   AuthInfo             Identification,
                                    ChargingSession_Id   PartnerSessionId      = null,
                                    DateTime?            ChargingStart         = null,
                                    DateTime?            ChargingEnd           = null,
@@ -1295,7 +1290,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                    IEnumerable<Double>  MeterValuesInBetween  = null,
                                    Double?              ConsumedEnergy        = null,
                                    String               MeteringSignature     = null,
-                                   EVSEOperator_Id      HubOperatorId         = null,
+                                   HubOperator_Id       HubOperatorId         = null,
                                    EVSP_Id              HubProviderId         = null,
                                    TimeSpan?            QueryTimeout          = null)
 
@@ -1306,8 +1301,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                               PartnerProductId,
                                                               SessionStart,
                                                               SessionEnd,
-                                                              AuthToken,
-                                                              eMAId,
+                                                              new AuthorizationIdentification(Identification),
                                                               PartnerSessionId,
                                                               ChargingStart,
                                                               ChargingEnd,
@@ -1335,12 +1329,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
-
-
-
-
-
-
 
 
 

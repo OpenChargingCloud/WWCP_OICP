@@ -311,7 +311,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _DNSClient))
                     {
 
-                        return await _OICPClient.Query(CPOClient_XMLMethods.PushEVSEDataXML(_EVSEDataRecords,
+                        return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.PushEVSEDataXML(_EVSEDataRecords,
                                                                                             OICPAction,
                                                                                             OperatorId,
                                                                                             OperatorName),
@@ -912,7 +912,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    return await _OICPClient.Query(CPOClient_XMLMethods.AuthorizeStartXML(OperatorId,
+                    return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.AuthorizeStartXML(OperatorId,
                                                                                           AuthToken,
                                                                                           EVSEId,
                                                                                           PartnerProductId,
@@ -1032,7 +1032,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    return await _OICPClient.Query(CPOClient_XMLMethods.AuthorizeStopXML(OperatorId,
+                    return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.AuthorizeStopXML(OperatorId,
                                                                                          SessionId,
                                                                                          AuthToken,
                                                                                          EVSEId,
@@ -1134,7 +1134,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    return await _OICPClient.Query(CPOClient_XMLMethods.PullAuthenticationDataXML(OperatorId),
+                    return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.PullAuthenticationDataXML(OperatorId),
                                                    "eRoamingPullAuthenticationData",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -1314,7 +1314,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             SendChargeDetailRecord(eRoamingChargeDetailRecord  ChargeDetailRecord,
-                                   TimeSpan?               QueryTimeout  = null)
+                                   TimeSpan?                   QueryTimeout  = null)
 
         {
 
@@ -1325,31 +1325,84 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            return await SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
-                                                SessionId:             ChargeDetailRecord.SessionId,
-                                                PartnerProductId:      ChargeDetailRecord.PartnerProductId,
-                                                SessionStart:          ChargeDetailRecord.SessionStart,
-                                                SessionEnd:            ChargeDetailRecord.SessionEnd,
-                                                AuthToken:             ChargeDetailRecord.AuthToken,
-                                                eMAId:                 ChargeDetailRecord.eMAId,
-                                                PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
-                                                ChargingStart:         ChargeDetailRecord.ChargingStart,
-                                                ChargingEnd:           ChargeDetailRecord.ChargingEnd,
-                                                MeterValueStart:       ChargeDetailRecord.MeterValueStart,
-                                                MeterValueEnd:         ChargeDetailRecord.MeterValueEnd,
-                                                MeterValuesInBetween:  ChargeDetailRecord.MeterValuesInBetween,
-                                                ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
-                                                MeteringSignature:     ChargeDetailRecord.MeteringSignature,
-                                                HubOperatorId:         ChargeDetailRecord.HubOperatorId,
-                                                HubProviderId:         ChargeDetailRecord.HubProviderId,
+            try
+            {
 
-                                                QueryTimeout:          QueryTimeout);
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                        DNSClient: _DNSClient))
+                {
+
+                    return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.SendChargeDetailRecordXML(ChargeDetailRecord),
+                                                   "eRoamingChargeDetailRecord",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                                                   OnSuccess: XMLData => {
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
+                                                                                                        eRoamingAcknowledgement.Parse(XMLData.Content));
+
+                                                   },
+
+                                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
+
+                                                       SendSOAPError(timestamp, soapclient, soapfault.Content);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    soapfault.Content.ToString()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                    httpresponse.Content.ToUTF8String()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   OnException: (timestamp, sender, exception) => {
+
+                                                       SendException(timestamp, sender, exception);
+
+                                                       return null;
+
+                                                   }
+
+                                                  );
+
+                }
+
+            }
+
+            // Note: Will only catch SOAPClient init and query init exceptions!
+            catch (Exception e)
+            {
+
+                SendException(DateTime.Now, this, e);
+
+                return new HTTPResponse<eRoamingAcknowledgement>(new HTTPResponse(),
+                                                                 new eRoamingAcknowledgement(false,
+                                                                                             -1,
+                                                                                             "An exception occured: " + e.Message));
+
+            }
 
         }
 
         #endregion
 
-        #region SendChargeDetailRecord(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, AuthToken = null, eMAId = null, PartnerSessionId = null, ..., QueryTimeout = null)
+        #region SendChargeDetailRecord(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, Identification, PartnerSessionId = null, ..., QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP v2.0 SendChargeDetailRecord request.
@@ -1359,11 +1412,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="PartnerProductId"></param>
         /// <param name="SessionStart">The timestamp of the session start.</param>
         /// <param name="SessionEnd">The timestamp of the session end.</param>
-        /// <param name="AuthToken">An optional (RFID) user identification.</param>
-        /// <param name="eMAId">An optional e-Mobility account identification.</param>
+        /// <param name="Identification">An identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="ChargingStart">Optional timestamp of the charging start.</param>
-        /// <param name="ChargingEnd">Optional timestamp of the charging stop.</param>
+        /// <param name="ChargingStart">An optional charging start timestamp.</param>
+        /// <param name="ChargingEnd">An optional charging end timestamp.</param>
         /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
         /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
         /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
@@ -1374,24 +1426,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            SendChargeDetailRecord(EVSE_Id              EVSEId,
-                                   ChargingSession_Id   SessionId,
-                                   ChargingProduct_Id   PartnerProductId,
-                                   DateTime             SessionStart,
-                                   DateTime             SessionEnd,
-                                   Auth_Token           AuthToken             = null,
-                                   eMA_Id               eMAId                 = null,
-                                   ChargingSession_Id   PartnerSessionId      = null,
-                                   DateTime?            ChargingStart         = null,
-                                   DateTime?            ChargingEnd           = null,
-                                   Double?              MeterValueStart       = null,
-                                   Double?              MeterValueEnd         = null,
-                                   IEnumerable<Double>  MeterValuesInBetween  = null,
-                                   Double?              ConsumedEnergy        = null,
-                                   String               MeteringSignature     = null,
-                                   EVSEOperator_Id      HubOperatorId         = null,
-                                   EVSP_Id              HubProviderId         = null,
-                                   TimeSpan?            QueryTimeout          = null)
+            SendChargeDetailRecord(EVSE_Id                      EVSEId,
+                                   ChargingSession_Id           SessionId,
+                                   ChargingProduct_Id           PartnerProductId,
+                                   DateTime                     SessionStart,
+                                   DateTime                     SessionEnd,
+                                   AuthorizationIdentification  Identification,
+                                   ChargingSession_Id           PartnerSessionId      = null,
+                                   DateTime?                    ChargingStart         = null,
+                                   DateTime?                    ChargingEnd           = null,
+                                   Double?                      MeterValueStart       = null,
+                                   Double?                      MeterValueEnd         = null,
+                                   IEnumerable<Double>          MeterValuesInBetween  = null,
+                                   Double?                      ConsumedEnergy        = null,
+                                   String                       MeteringSignature     = null,
+                                   HubOperator_Id               HubOperatorId         = null,
+                                   EVSP_Id                      HubProviderId         = null,
+                                   TimeSpan?                    QueryTimeout          = null)
 
         {
 
@@ -1412,9 +1463,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (SessionEnd       == null)
                 throw new ArgumentNullException("SessionEnd",        "The given parameter must not be null!");
 
-            if (AuthToken        == null &&
-                eMAId            == null)
-                throw new ArgumentNullException("AuthToken / eMAId", "At least one of the given parameters must not be null!");
+            if (Identification   == null)
+                throw new ArgumentNullException("Identification",    "The given parameter must not be null!");
 
             #endregion
 
@@ -1428,13 +1478,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    return await _OICPClient.Query(CPOClient_XMLMethods.SendChargeDetailRecordXML(EVSEId,
+                    return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.SendChargeDetailRecordXML(EVSEId,
                                                                                                   SessionId,
                                                                                                   PartnerProductId,
                                                                                                   SessionStart,
                                                                                                   SessionEnd,
-                                                                                                  AuthToken,
-                                                                                                  eMAId,
+                                                                                                  Identification,
                                                                                                   PartnerSessionId,
                                                                                                   ChargingStart,
                                                                                                   ChargingEnd,
@@ -1445,98 +1494,27 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                                                                   MeteringSignature,
                                                                                                   HubOperatorId,
                                                                                                   HubProviderId),
-                                                          "eRoamingChargeDetailRecord",
-                                                          QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                   "eRoamingChargeDetailRecord",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                                          OnSuccess: XMLData =>
-                                                          {
+                                                   OnSuccess: XMLData =>
+                                                   {
 
-                                                              #region Documentation
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
+                                                                                                        eRoamingAcknowledgement.Parse(XMLData.Content));
 
-                                                              // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                              //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                                                              //
-                                                              //    <soapenv:Header/>
-                                                              //
-                                                              //    <soapenv:Body>
-                                                              //       <CommonTypes:eRoamingAcknowledgement>
-                                                              // 
-                                                              //          <CommonTypes:Result>?</CommonTypes:Result>
-                                                              // 
-                                                              //          <CommonTypes:StatusCode>
-                                                              // 
-                                                              //             <CommonTypes:Code>?</CommonTypes:Code>
-                                                              // 
-                                                              //             <!--Optional:-->
-                                                              //             <CommonTypes:Description>?</CommonTypes:Description>
-                                                              // 
-                                                              //             <!--Optional:-->
-                                                              //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-                                                              // 
-                                                              //          </CommonTypes:StatusCode>
-                                                              // 
-                                                              //          <!--Optional:-->
-                                                              //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
-                                                              // 
-                                                              //          <!--Optional:-->
-                                                              //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
-                                                              // 
-                                                              //       </CommonTypes:eRoamingAcknowledgement>
-                                                              //    </soapenv:Body>
-                                                              //
-                                                              // </soapenv:Envelope>
+                                                   },
 
-                                                              #endregion
 
-                                                              var ack = eRoamingAcknowledgement.Parse(XMLData.Content);
-                                                              return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse, ack);
-
-                                                            //  #region Ok
-                                                            //
-                                                            // if (ack.Result)
-                                                            //     return new HTTPResponse<SENDCDRResult>(XMLData.HttpResponse,
-                                                            //                                            new SENDCDRResult(AuthorizatorId) {
-                                                            //                                                State             = SENDCDRState.Forwarded,
-                                                            //                                                PartnerSessionId  = PartnerSessionId,
-                                                            //                                                Description       = ack.StatusCode.Description
-                                                            //                                            });
-                                                            //
-                                                            // #endregion
-                                                            //
-                                                            //  #region Error
-                                                            //
-                                                            // return new HTTPResponse<SENDCDRResult>(XMLData.HttpResponse,
-                                                            //                                        new SENDCDRResult(AuthorizatorId) {
-                                                            //                                            State             = SENDCDRState.False,
-                                                            //                                            PartnerSessionId  = PartnerSessionId,
-                                                            //                                            Description       = ack.StatusCode.Description
-                                                            //                                        });
-                                                            //
-                                                            // #endregion
-
-                                                          },
-
-                                                         // OnSOAPFault: (timestamp, soapclient, soapfault) => {
-                                                         //
-                                                         //     DebugX.Log("SendCDR led to a fault!" + Environment.NewLine);
-                                                         //
-                                                         //     return new HTTPResponse<SENDCDRResult>(soapfault.HttpResponse,
-                                                         //                                            new SENDCDRResult(AuthorizatorId) {
-                                                         //                                                State             = SENDCDRState.False,
-                                                         //                                                PartnerSessionId  = PartnerSessionId,
-                                                         //                                                Description       = soapfault.ToString()
-                                                         //                                            },
-                                                         //                                            IsFault: true);
-
-                                                          OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
 
                                                        SendSOAPError(timestamp, soapclient, soapfault.Content);
 
                                                        return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
-                                                                                                           new eRoamingAcknowledgement(false,
-                                                                                                                                       -1,
-                                                                                                                                       soapfault.Content.ToString()),
-                                                                                                           IsFault: true);
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    soapfault.Content.ToString()),
+                                                                                                        IsFault: true);
 
                                                    },
 
@@ -1545,11 +1523,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                        return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                           new eRoamingAcknowledgement(false,
-                                                                                                                                       -1,
-                                                                                                                                       httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                       httpresponse.Content.ToUTF8String()),
-                                                                                                           IsFault: true);
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                    httpresponse.Content.ToUTF8String()),
+                                                                                                        IsFault: true);
 
                                                    },
 

@@ -28,14 +28,6 @@ using System.Xml.Linq;
 namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
-    public enum PINCrypto
-    {
-        none,
-        MD5,
-        SHA1
-    }
-
-
     public class eMAIdWithPIN
     {
 

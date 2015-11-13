@@ -48,9 +48,9 @@
     <Compile Include="EMPServer\EMPServer.cs" />
     <Compile Include="Helpers\AOICPUpstreamService.cs" />
     <Compile Include="CPOClient\CPOClient.cs" />
-    <Compile Include="CPOClient\CPOClient_XMLMethods.cs" />
+    <Compile Include="CPOClient\CPOClient_WWCP_XMLMethods.cs" />
     <Compile Include="CPOClient\CPO_XMLMethods.cs" />
-    <Compile Include="CPOClient\CPOUpstreamService.cs" />
+    <Compile Include="CPOClient\CPOClient_WWCP.cs" />
     <Compile Include="EMPClient\EMPClient.cs" />
     <Compile Include="EMPClient\EMP_XMLMethods.cs" />
     <Compile Include="EMPClient\EMPUpstreamService.cs" />
@@ -58,8 +58,8 @@
     <Compile Include="MobileClient\Mobile_XMLMethods.cs" />
     <Compile Include="MobileClient\MobileClient.cs" />
     <Compile Include="Objects\EVSEStatusRecord.cs" />
-    <Compile Include="Responses\eMAIdWithPIN.cs" />
     <Compile Include="Responses\AuthorizationIdentification.cs" />
+    <Compile Include="Responses\eMAIdWithPIN.cs" />
     <Compile Include="Responses\eRoamingChargeDetailRecords.cs" />
     <Compile Include="Responses\eRoamingAuthorizationStop.cs" />
     <Compile Include="Responses\eRoamingMobileAuthorizationStart.cs" />

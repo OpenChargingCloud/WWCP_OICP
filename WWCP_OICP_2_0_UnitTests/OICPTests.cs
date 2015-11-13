@@ -398,7 +398,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
                                        PartnerProductId:      ChargingProduct_Id.Parse("AC1"),
                                        SessionStart:          DateTime.Now,
                                        SessionEnd:            DateTime.Now - TimeSpan.FromHours(3),
-                                       AuthToken:             AuthToken,
+                                       Identification:        AuthorizationIdentification.FromAuthToken(AuthToken),
                                        PartnerSessionId:      ChargingSession_Id.Parse("0815"),
                                        ChargingStart:         DateTime.Now,
                                        ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),
@@ -529,7 +529,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
             var result = await HubjectEMP.
                 GetChargeDetailRecords(EVSP_Id.Parse("DE*GDF"),
                                        new DateTime(2015, 10, 1),
-                                       new DateTime(2015, 10, 31));
+                                       DateTime.Now);
 
             Console.WriteLine(result.Content.Count() + " charge detail records found!");
 
