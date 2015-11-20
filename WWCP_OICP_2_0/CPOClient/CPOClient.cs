@@ -589,96 +589,96 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (EVSEStatusDiff == null)
                 return;
 
-            if (EVSEStatusDiff.NewStatus.    Count()  == 0 &&
-                EVSEStatusDiff.ChangedStatus.Count()  == 0 &&
-                EVSEStatusDiff.RemovedIds.   Count()  == 0)
-                return;
-
             var TrackingId = Guid.NewGuid().ToString();
 
             #region Insert new EVSEs...
 
-            var NewEVSEStatus  = EVSEStatusDiff.
-                                     NewStatus.
-                                     Select(v => new EVSEStatusRecord(v.Key, v.Value.AsOICPEVSEStatus())).
-                                     ToArray();
-
-            var OnNewEVSEStatusSendingLocal = OnNewEVSEStatusSending;
-            if (OnNewEVSEStatusSendingLocal != null)
-                OnNewEVSEStatusSendingLocal(DateTime.Now, NewEVSEStatus, _HTTPVirtualHost, TrackingId);
-
-
-            var EVSEStatesInsertXML = NewEVSEStatus.
-                                          PushEVSEStatusXML(EVSEStatusDiff.EVSEOperatorId,
-                                                            EVSEStatusDiff.EVSEOperatorName[Languages.de],
-                                                            ActionType.insert);
-
-            using (var _OICPClient = new SOAPClient(_Hostname,
-                                                    _TCPPort,
-                                                    _HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingEvseStatus_V2.0",
-                                                    _UserAgent,
-                                                    false,
-                                                    _DNSClient))
-
+            if (EVSEStatusDiff.NewStatus.Count() > 0)
             {
 
-                var NewEVSEStatusSendingTask = await
+                var NewEVSEStatus  = EVSEStatusDiff.
+                                         NewStatus.
+                                         Select(v => new EVSEStatusRecord(v.Key, v.Value.AsOICPEVSEStatus())).
+                                         ToArray();
 
-                    _OICPClient.
-                         Query(EVSEStatesInsertXML,
-                               "eRoamingPushEvseStatus",
-                               QueryTimeout: TimeSpan.FromSeconds(180),
-
-                               OnSuccess: XMLData => {
-
-                                   var ack = eRoamingAcknowledgement.Parse(XMLData.Content);
-
-                                   var OnNewEVSEStatusSentLocal = OnNewEVSEStatusSent;
-                                   if (OnNewEVSEStatusSentLocal != null)
-                                       OnNewEVSEStatusSentLocal(DateTime.Now, TrackingId, ack);
-
-                                   return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse, ack, false);
-
-                               },
+                var OnNewEVSEStatusSendingLocal = OnNewEVSEStatusSending;
+                if (OnNewEVSEStatusSendingLocal != null)
+                    OnNewEVSEStatusSendingLocal(DateTime.Now, NewEVSEStatus, _HTTPVirtualHost, TrackingId);
 
 
-                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                var EVSEStatesInsertXML = NewEVSEStatus.
+                                              PushEVSEStatusXML(EVSEStatusDiff.EVSEOperatorId,
+                                                                EVSEStatusDiff.EVSEOperatorName[Languages.de],
+                                                                ActionType.insert);
 
-                                   var nack = new eRoamingAcknowledgement(false, 0, "SOAPFault", "");
+                using (var _OICPClient = new SOAPClient(_Hostname,
+                                                        _TCPPort,
+                                                        _HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                        _UserAgent,
+                                                        false,
+                                                        _DNSClient))
 
-                                   var OnNewEVSEStatusSentLocal = OnNewEVSEStatusSent;
-                                   if (OnNewEVSEStatusSentLocal != null)
-                                       OnNewEVSEStatusSentLocal(DateTime.Now, TrackingId, nack);
+                {
 
-                                   return new HTTPResponse<eRoamingAcknowledgement>(
-                                       soapfault.HttpResponse,
-                                       nack,
-                                       IsFault: true);
+                    var NewEVSEStatusSendingTask = await
 
-                               },
+                        _OICPClient.
+                             Query(EVSEStatesInsertXML,
+                                   "eRoamingPushEvseStatus",
+                                   QueryTimeout: TimeSpan.FromSeconds(180),
 
-                               OnHTTPError: (t, s, e) => {
+                                   OnSuccess: XMLData => {
 
-                                   //var OnHTTPErrorLocal = OnHTTPError;
-                                   //if (OnHTTPErrorLocal != null)
-                                   //    OnHTTPErrorLocal(t, s, e);
+                                       var ack = eRoamingAcknowledgement.Parse(XMLData.Content);
 
-                                   return null;
+                                       var OnNewEVSEStatusSentLocal = OnNewEVSEStatusSent;
+                                       if (OnNewEVSEStatusSentLocal != null)
+                                           OnNewEVSEStatusSentLocal(DateTime.Now, TrackingId, ack);
 
-                               },
+                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse, ack, false);
 
-                               OnException: (t, s, e) => {
+                                   },
 
-                                   //var OnExceptionLocal = OnException;
-                                   //if (OnExceptionLocal != null)
-                                   //    OnExceptionLocal(t, s, e);
 
-                                   return null;
+                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
 
-                               }
+                                       var nack = new eRoamingAcknowledgement(false, 0, "SOAPFault", "");
 
-                              );
+                                       var OnNewEVSEStatusSentLocal = OnNewEVSEStatusSent;
+                                       if (OnNewEVSEStatusSentLocal != null)
+                                           OnNewEVSEStatusSentLocal(DateTime.Now, TrackingId, nack);
+
+                                       return new HTTPResponse<eRoamingAcknowledgement>(
+                                           soapfault.HttpResponse,
+                                           nack,
+                                           IsFault: true);
+
+                                   },
+
+                                   OnHTTPError: (t, s, e) => {
+
+                                       //var OnHTTPErrorLocal = OnHTTPError;
+                                       //if (OnHTTPErrorLocal != null)
+                                       //    OnHTTPErrorLocal(t, s, e);
+
+                                       return null;
+
+                                   },
+
+                                   OnException: (t, s, e) => {
+
+                                       //var OnExceptionLocal = OnException;
+                                       //if (OnExceptionLocal != null)
+                                       //    OnExceptionLocal(t, s, e);
+
+                                       return null;
+
+                                   }
+
+                                  );
+
+                }
 
             }
 
@@ -686,90 +686,95 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Upload EVSE changes...
 
-            var ChangedEVSEStatus = EVSEStatusDiff.
-                                        ChangedStatus.
-                                        Select(v => new EVSEStatusRecord(v.Key, v.Value.AsOICPEVSEStatus())).
-                                        ToArray();
-
-            var OnChangedEVSEStatusSendingLocal = OnChangedEVSEStatusSending;
-            if (OnChangedEVSEStatusSendingLocal != null)
-                OnChangedEVSEStatusSendingLocal(DateTime.Now, ChangedEVSEStatus, _HTTPVirtualHost, TrackingId);
-
-
-            var EVSEStatesUpdateXML = ChangedEVSEStatus.
-                                          PushEVSEStatusXML(EVSEStatusDiff.EVSEOperatorId,
-                                                            EVSEStatusDiff.EVSEOperatorName[Languages.de],
-                                                            ActionType.update);
-
-
-            using (var _OICPClient = new SOAPClient(_Hostname,
-                                                    _TCPPort,
-                                                    _HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingEvseStatus_V2.0",
-                                                    _UserAgent,
-                                                    false,
-                                                    _DNSClient))
-
+            if (EVSEStatusDiff.ChangedStatus.Count() > 0)
             {
 
-                var ChangedEVSEStatusSendingTask = await
+                var ChangedEVSEStatus = EVSEStatusDiff.
+                                            ChangedStatus.
+                                            Select(v => new EVSEStatusRecord(v.Key, v.Value.AsOICPEVSEStatus())).
+                                            ToArray();
 
-                    _OICPClient.
-                         Query(EVSEStatesUpdateXML,
-                               "eRoamingPushEvseStatus",
-                               QueryTimeout: TimeSpan.FromSeconds(180),
-
-                               OnSuccess: XMLData => {
-
-                                   var ack = eRoamingAcknowledgement.Parse(XMLData.Content);
-
-                                   DebugX.Log("eRoamingPushEvseStatus => " + ack.Result);
-
-                                   var OnChangedEVSEStatusSentLocal = OnChangedEVSEStatusSent;
-                                   if (OnChangedEVSEStatusSentLocal != null)
-                                       OnChangedEVSEStatusSentLocal(DateTime.Now, TrackingId, ack);
-
-                                   return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse, ack, false);
-
-                               },
+                var OnChangedEVSEStatusSendingLocal = OnChangedEVSEStatusSending;
+                if (OnChangedEVSEStatusSendingLocal != null)
+                    OnChangedEVSEStatusSendingLocal(DateTime.Now, ChangedEVSEStatus, _HTTPVirtualHost, TrackingId);
 
 
-                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                var EVSEStatesUpdateXML = ChangedEVSEStatus.
+                                              PushEVSEStatusXML(EVSEStatusDiff.EVSEOperatorId,
+                                                                EVSEStatusDiff.EVSEOperatorName[Languages.de],
+                                                                ActionType.update);
 
-                                   var nack = new eRoamingAcknowledgement(false, 0, "SOAPFault", "");
 
-                                   var OnChangedEVSEStatusSentLocal = OnChangedEVSEStatusSent;
-                                   if (OnChangedEVSEStatusSentLocal != null)
-                                       OnChangedEVSEStatusSentLocal(DateTime.Now, TrackingId, nack);
+                using (var _OICPClient = new SOAPClient(_Hostname,
+                                                        _TCPPort,
+                                                        _HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                        _UserAgent,
+                                                        false,
+                                                        _DNSClient))
 
-                                   return new HTTPResponse<eRoamingAcknowledgement>(
-                                       soapfault.HttpResponse,
-                                       nack,
-                                       IsFault: true);
+                {
 
-                               },
+                    var ChangedEVSEStatusSendingTask = await
 
-                               OnHTTPError: (t, s, e) => {
+                        _OICPClient.
+                             Query(EVSEStatesUpdateXML,
+                                   "eRoamingPushEvseStatus",
+                                   QueryTimeout: TimeSpan.FromSeconds(180),
 
-                                   //var OnHTTPErrorLocal = OnHTTPError;
-                                   //if (OnHTTPErrorLocal != null)
-                                   //    OnHTTPErrorLocal(t, s, e);
+                                   OnSuccess: XMLData => {
 
-                                   return null;
+                                       var ack = eRoamingAcknowledgement.Parse(XMLData.Content);
 
-                               },
+                                       DebugX.Log("eRoamingPushEvseStatus => " + ack.Result);
 
-                               OnException: (t, s, e) => {
+                                       var OnChangedEVSEStatusSentLocal = OnChangedEVSEStatusSent;
+                                       if (OnChangedEVSEStatusSentLocal != null)
+                                           OnChangedEVSEStatusSentLocal(DateTime.Now, TrackingId, ack);
 
-                                   //var OnExceptionLocal = OnException;
-                                   //if (OnExceptionLocal != null)
-                                   //    OnExceptionLocal(t, s, e);
+                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse, ack, false);
 
-                                   return null;
+                                   },
 
-                               }
 
-                              );
+                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
+
+                                       var nack = new eRoamingAcknowledgement(false, 0, "SOAPFault", "");
+
+                                       var OnChangedEVSEStatusSentLocal = OnChangedEVSEStatusSent;
+                                       if (OnChangedEVSEStatusSentLocal != null)
+                                           OnChangedEVSEStatusSentLocal(DateTime.Now, TrackingId, nack);
+
+                                       return new HTTPResponse<eRoamingAcknowledgement>(
+                                           soapfault.HttpResponse,
+                                           nack,
+                                           IsFault: true);
+
+                                   },
+
+                                   OnHTTPError: (t, s, e) => {
+
+                                       //var OnHTTPErrorLocal = OnHTTPError;
+                                       //if (OnHTTPErrorLocal != null)
+                                       //    OnHTTPErrorLocal(t, s, e);
+
+                                       return null;
+
+                                   },
+
+                                   OnException: (t, s, e) => {
+
+                                       //var OnExceptionLocal = OnException;
+                                       //if (OnExceptionLocal != null)
+                                       //    OnExceptionLocal(t, s, e);
+
+                                       return null;
+
+                                   }
+
+                                  );
+
+                }
 
             }
 
@@ -777,87 +782,92 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Remove outdated EVSEs...
 
-            var RemovedEVSEStatus = EVSEStatusDiff.
-                                        RemovedIds.
-                                        ToArray();
-
-            var OnRemovedEVSEStatusSendingLocal = OnRemovedEVSEStatusSending;
-            if (OnRemovedEVSEStatusSendingLocal != null)
-                OnRemovedEVSEStatusSendingLocal(DateTime.Now, RemovedEVSEStatus, _HTTPVirtualHost, TrackingId);
-
-
-            var EVSEStatesRemoveXML = RemovedEVSEStatus.
-                                          PushEVSEStatusXML(EVSEStatusType.Unavailable,
-                                                            EVSEStatusDiff.EVSEOperatorId,
-                                                            EVSEStatusDiff.EVSEOperatorName[Languages.de],
-                                                            ActionType.delete);
-
-            using (var _OICPClient = new SOAPClient(_Hostname,
-                                                    _TCPPort,
-                                                    _HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingEvseStatus_V2.0",
-                                                    _UserAgent,
-                                                    false,
-                                                    _DNSClient))
-
+            if (EVSEStatusDiff.RemovedIds.Count() > 0)
             {
 
-                var RemovedEVSEIdsSendingTask = await
+                var RemovedEVSEStatus = EVSEStatusDiff.
+                                            RemovedIds.
+                                            ToArray();
 
-                    _OICPClient.
-                         Query(EVSEStatesRemoveXML,
-                               "eRoamingPushEvseStatus",
-                               QueryTimeout: TimeSpan.FromSeconds(180),
-
-                               OnSuccess: XMLData => {
-
-                                   var ack = eRoamingAcknowledgement.Parse(XMLData.Content);
-
-                                   var OnRemovedEVSEStatusSentLocal = OnRemovedEVSEStatusSent;
-                                   if (OnRemovedEVSEStatusSentLocal != null)
-                                       OnRemovedEVSEStatusSentLocal(DateTime.Now, TrackingId, ack);
-
-                                   return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse, ack, false);
-
-                               },
+                var OnRemovedEVSEStatusSendingLocal = OnRemovedEVSEStatusSending;
+                if (OnRemovedEVSEStatusSendingLocal != null)
+                    OnRemovedEVSEStatusSendingLocal(DateTime.Now, RemovedEVSEStatus, _HTTPVirtualHost, TrackingId);
 
 
-                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                var EVSEStatesRemoveXML = RemovedEVSEStatus.
+                                              PushEVSEStatusXML(EVSEStatusType.Unavailable,
+                                                                EVSEStatusDiff.EVSEOperatorId,
+                                                                EVSEStatusDiff.EVSEOperatorName[Languages.de],
+                                                                ActionType.delete);
 
-                                   var nack = new eRoamingAcknowledgement(false, 0, "SOAPFault", "");
+                using (var _OICPClient = new SOAPClient(_Hostname,
+                                                        _TCPPort,
+                                                        _HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                        _UserAgent,
+                                                        false,
+                                                        _DNSClient))
 
-                                   var OnRemovedEVSEStatusSentLocal = OnRemovedEVSEStatusSent;
-                                   if (OnRemovedEVSEStatusSentLocal != null)
-                                       OnRemovedEVSEStatusSentLocal(DateTime.Now, TrackingId, nack);
+                {
 
-                                   return new HTTPResponse<eRoamingAcknowledgement>(
-                                       soapfault.HttpResponse,
-                                       nack,
-                                       IsFault: true);
+                    var RemovedEVSEIdsSendingTask = await
 
-                               },
+                        _OICPClient.
+                             Query(EVSEStatesRemoveXML,
+                                   "eRoamingPushEvseStatus",
+                                   QueryTimeout: TimeSpan.FromSeconds(180),
 
-                               OnHTTPError: (t, s, e) => {
+                                   OnSuccess: XMLData => {
 
-                                   //var OnHTTPErrorLocal = OnHTTPError;
-                                   //if (OnHTTPErrorLocal != null)
-                                   //    OnHTTPErrorLocal(t, s, e);
+                                       var ack = eRoamingAcknowledgement.Parse(XMLData.Content);
 
-                                   return null;
+                                       var OnRemovedEVSEStatusSentLocal = OnRemovedEVSEStatusSent;
+                                       if (OnRemovedEVSEStatusSentLocal != null)
+                                           OnRemovedEVSEStatusSentLocal(DateTime.Now, TrackingId, ack);
 
-                               },
+                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse, ack, false);
 
-                               OnException: (t, s, e) => {
+                                   },
 
-                                   //var OnExceptionLocal = OnException;
-                                   //if (OnExceptionLocal != null)
-                                   //    OnExceptionLocal(t, s, e);
 
-                                   return null;
+                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
 
-                               }
+                                       var nack = new eRoamingAcknowledgement(false, 0, "SOAPFault", "");
 
-                              );
+                                       var OnRemovedEVSEStatusSentLocal = OnRemovedEVSEStatusSent;
+                                       if (OnRemovedEVSEStatusSentLocal != null)
+                                           OnRemovedEVSEStatusSentLocal(DateTime.Now, TrackingId, nack);
+
+                                       return new HTTPResponse<eRoamingAcknowledgement>(
+                                           soapfault.HttpResponse,
+                                           nack,
+                                           IsFault: true);
+
+                                   },
+
+                                   OnHTTPError: (t, s, e) => {
+
+                                       //var OnHTTPErrorLocal = OnHTTPError;
+                                       //if (OnHTTPErrorLocal != null)
+                                       //    OnHTTPErrorLocal(t, s, e);
+
+                                       return null;
+
+                                   },
+
+                                   OnException: (t, s, e) => {
+
+                                       //var OnExceptionLocal = OnException;
+                                       //if (OnExceptionLocal != null)
+                                       //    OnExceptionLocal(t, s, e);
+
+                                       return null;
+
+                                   }
+
+                                  );
+
+                }
 
             }
 
