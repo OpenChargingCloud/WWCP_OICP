@@ -567,7 +567,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 new XElement(OICPNS.EVSEData + "Address",
 
                     new XElement(OICPNS.CommonTypes + "Country",          EVSE.ChargingStation.Address.Country.Alpha3Code),
-                    new XElement(OICPNS.CommonTypes + "City",             EVSE.ChargingStation.Address.City),
+                    new XElement(OICPNS.CommonTypes + "City",             EVSE.ChargingStation.Address.City.FirstText),
                     new XElement(OICPNS.CommonTypes + "Street",           EVSE.ChargingStation.Address.Street), // OICPEVSEData.0 requires at least 5 characters!
 
                     EVSE.ChargingStation.Address.PostalCode. IsNotNullOrEmpty()
