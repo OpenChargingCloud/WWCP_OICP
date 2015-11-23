@@ -106,7 +106,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor", "").Trim(),
                                AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
                                "",
-                               AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City", "Missing 'City'-XML tag!").Trim(),
+                               I18NString.Create(Languages.unknown, AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City", "Missing 'City'-XML tag!").Trim()),
                                _Country);
 
             // Currently not used OICP address information!

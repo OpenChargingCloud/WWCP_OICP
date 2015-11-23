@@ -457,12 +457,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                           (Address         != null            &&
                                            Address.Country != Country.unknown &&
-                                           Address.City.  IsNotNullOrEmpty()  &&
+                                          !Address.City.   Any()  &&
                                            Address.Street.IsNotNullOrEmpty())
                                               ? new XElement(OICPNS.EVSESearch + "Address",
 
                                                     new XElement(OICPNS.CommonTypes + "Country" + Address.Country.ToString()),
-                                                    new XElement(OICPNS.CommonTypes + "City"    + Address.City),
+                                                    new XElement(OICPNS.CommonTypes + "City"    + Address.City.FirstText),
                                                     new XElement(OICPNS.CommonTypes + "Street"  + Address.Street),
 
                                                     Address.PostalCode.IsNotNullOrEmpty()

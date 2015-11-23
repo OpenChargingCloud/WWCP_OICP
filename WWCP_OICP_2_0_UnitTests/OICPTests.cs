@@ -49,7 +49,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
 
                     Address:              Address.Create(
                                               Country.Germany,
-                                              "07749", "Jena",
+                                              "07749", I18NString.Create(Languages.de, "Jena"),
                                               "Biberweg", "18"
                                           ),
 

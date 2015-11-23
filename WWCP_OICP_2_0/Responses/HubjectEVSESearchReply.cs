@@ -65,7 +65,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Street",      ""),
                                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode",  ""),
                                                       "",
-                                                      AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "City",        ""),
+                                                      I18NString.Create(Languages.unknown, AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "City", "")),
                                                       Country.Parse(AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Country", "").
                                                                                Replace("Deutschland", "Germany")) // Stupid work-around!
                                                       //Region        = Address.Element(NS.OICPv1_2CommonTypes + "Region"    ).Value,
