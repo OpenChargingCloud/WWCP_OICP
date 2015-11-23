@@ -443,45 +443,45 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Map result
 
-                    switch (Response)
+                    switch (Response.Result)
                     {
 
-                        case RemoteStartResult.Success:
+                        case RemoteStartResultType.Success:
                             HubjectCode         = "000";
                             HubjectDescription  = "Ready to charge!";
                             break;
 
-                        case RemoteStartResult.SessionId_AlreadyInUse:
+                        case RemoteStartResultType.SessionId_AlreadyInUse:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case RemoteStartResult.EVSE_NotReachable:
+                        case RemoteStartResultType.EVSE_NotReachable:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case RemoteStartResult.Start_Timeout:
+                        case RemoteStartResultType.Start_Timeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case RemoteStartResult.EVSEReserved:
+                        case RemoteStartResultType.EVSEReserved:
                             HubjectCode         = "601";
                             HubjectDescription  = "EVSE reserved!";
                             break;
 
-                        case RemoteStartResult.EVSE_AlreadyInUse:
+                        case RemoteStartResultType.EVSE_AlreadyInUse:
                             HubjectCode         = "602";
                             HubjectDescription  = "EVSE is already in use!";
                             break;
 
-                        case RemoteStartResult.UnknownEVSE:
+                        case RemoteStartResultType.UnknownEVSE:
                             HubjectCode         = "603";
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case RemoteStartResult.EVSEOutOfService:
+                        case RemoteStartResultType.EVSEOutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;
@@ -669,7 +669,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     }
 
-                    //Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
+                    //Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStopResult: " + Response.ToString());
 
                     #endregion
 
