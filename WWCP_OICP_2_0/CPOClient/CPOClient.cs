@@ -1422,7 +1422,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="PartnerProductId"></param>
         /// <param name="SessionStart">The timestamp of the session start.</param>
         /// <param name="SessionEnd">The timestamp of the session end.</param>
-        /// <param name="Identification">An identification.</param>
+        /// <param name="Identification">An ev customer identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="ChargingStart">An optional charging start timestamp.</param>
         /// <param name="ChargingEnd">An optional charging end timestamp.</param>

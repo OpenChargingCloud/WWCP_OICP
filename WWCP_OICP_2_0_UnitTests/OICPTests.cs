@@ -267,31 +267,29 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
         public async Task TestSearchEVSE(EMPClient HubjectEMP)
         {
 
-            var req = HubjectEMP.
+            Task.Factory.StartNew(async () => {
 
-                SearchEVSE(EVSP_Id.Parse("DE*GDF"),
-                           SearchCenter:  new GeoCoordinate(Latitude. Parse(49.731102),
-                                                            Longitude.Parse(10.142533)),
-                           DistanceKM:    100,
-                           Plug:          PlugTypes.Type2Outlet,
-                           QueryTimeout:  TimeSpan.FromSeconds(120)).
+                var result = await HubjectEMP.
+                    SearchEVSE(EVSP_Id.Parse("DE*GDF"),
+                               SearchCenter:  new GeoCoordinate(Latitude. Parse(49.731102),
+                                                                Longitude.Parse(10.142533)),
+                               DistanceKM:    100,
+                               Plug:          PlugTypes.Type2Outlet,
+                               QueryTimeout:  TimeSpan.FromSeconds(120));
 
-                ContinueWith(task =>
-                {
+                if (result.Content.HasResults())
+                    Console.WriteLine(result.Content.
+                                          EVSEMatches.
+                                          Select(match => "'" + match.EVSEDataRecord.ChargingStationName.FirstText  + " / " +
+                                                                match.EVSEDataRecord.EVSEId.             ToString() + "' in " +
+                                                                match.Distance + " km").
+                                          AggregateWith(Environment.NewLine) +
+                                          Environment.NewLine);
 
-                    var eRoamingEvseSearchResult = task.Result.Content;
+            }).
 
-                    if (eRoamingEvseSearchResult.HasResults())
-                        Console.WriteLine(eRoamingEvseSearchResult.
-                                              EVSEMatches.
-                                              Select(match => "'" + match.EVSEDataRecord.ChargingStationName.FirstText + " / " + match.EVSEDataRecord.EVSEId.ToString() +
-                                                                 "' in " +
-                                                                 match.Distance +
-                                                                 " km").
-                                              AggregateWith(Environment.NewLine) +
-                                              Environment.NewLine);
-
-                });
+            // Wait for the task to complete...
+            Wait();
 
         }
 
@@ -523,15 +521,85 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
 
         }
 
-        public async Task TestGetChargeDetailRecords(EMPClient HubjectEMP)
+
+        public void TestChargeDetailRecord(CPOClient HubjectCPO)
         {
 
-            var result = await HubjectEMP.
-                GetChargeDetailRecords(EVSP_Id.Parse("DE*GDF"),
-                                       new DateTime(2015, 10, 1),
-                                       DateTime.Now);
+            Task.Factory.StartNew(async () => {
 
-            Console.WriteLine(result.Content.Count() + " charge detail records found!");
+                var AuthStartResult = await HubjectCPO.
+                    AuthorizeStart(EVSEOperator_Id.Parse("DE*GEF"),
+                                   Auth_Token.     Parse("08152305"),
+                                   EVSE_Id.        Parse("DE*GEF*E123456789*1"));
+
+                ConsoleX.WriteLines("AuthStart result:",
+                                    AuthStartResult.Content.AuthorizationStatus,
+                                    AuthStartResult.Content.StatusCode.Code,
+                                    AuthStartResult.Content.StatusCode.Description);
+
+                await Task.Delay(1000);
+
+
+                var AuthStopResult = await HubjectCPO.
+                    AuthorizeStop(EVSEOperator_Id.Parse("DE*GEF"),
+                                  AuthStartResult.Content.SessionId,
+                                  Auth_Token.     Parse("08152305"),
+                                  EVSE_Id.        Parse("DE*GEF*E123456789*1"));
+
+                ConsoleX.WriteLines("AuthStop result:",
+                                    AuthStopResult.Content.AuthorizationStatus,
+                                    AuthStopResult.Content.StatusCode.Code,
+                                    AuthStopResult.Content.StatusCode.Description,
+                                    AuthStopResult.Content.StatusCode.AdditionalInfo);
+
+                await Task.Delay(1000);
+
+
+                var SendCDRResult = await HubjectCPO.
+                    SendChargeDetailRecord(EVSEId:                EVSE_Id.Parse("DE*GEF*E123456789*1"),
+                                           SessionId:             AuthStartResult.Content.SessionId,
+                                           PartnerProductId:      ChargingProduct_Id.Parse("AC1"),
+                                           SessionStart:          DateTime.Now,
+                                           SessionEnd:            DateTime.Now - TimeSpan.FromHours(3),
+                                           Identification:        AuthorizationIdentification.FromAuthToken(Auth_Token.Parse("08152305")),
+                                           PartnerSessionId:      ChargingSession_Id.Parse("0815"),
+                                           ChargingStart:         DateTime.Now,
+                                           ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),
+                                           MeterValueStart:       123.456,
+                                           MeterValueEnd:         234.567,
+                                           MeterValuesInBetween:  Enumeration.Create(123.456, 189.768, 223.312, 234.560, 234.567),
+                                           ConsumedEnergy:        111.111,
+                                           QueryTimeout:          TimeSpan.FromSeconds(120));
+
+                ConsoleX.WriteLines("SendCDR result:",
+                                    SendCDRResult.Content.Result,
+                                    SendCDRResult.Content.StatusCode.Code,
+                                    SendCDRResult.Content.StatusCode.Description,
+                                    SendCDRResult.Content.StatusCode.AdditionalInfo);
+
+            }).
+
+            // Wait for the task to complete...
+            Wait();
+
+        }
+
+        public void TestGetChargeDetailRecords(EMPClient HubjectEMP)
+        {
+
+            Task.Factory.StartNew(async () => {
+
+                var result = await HubjectEMP.
+                    GetChargeDetailRecords(EVSP_Id.Parse("DE*GDF"),
+                                           new DateTime(2015, 10,  1),
+                                           new DateTime(2015, 10, 31));
+
+                Console.WriteLine(result.Content.Count() + " charge detail records found!");
+
+            }).
+
+            // Wait for the task to complete...
+            Wait();
 
         }
 

@@ -406,15 +406,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             // 
             //          <!--Optional:-->
             //          <EVSESearch:Address>
-            //             <CommonTypes:Country>?</CommonTypes:Country>
-            //             <CommonTypes:City>?</CommonTypes:City>
-            //             <CommonTypes:Street>?</CommonTypes:Street>
+            //             <CommonTypes:Country>DE</CommonTypes:Country>
+            //             <CommonTypes:City>Jena</CommonTypes:City>
+            //             <CommonTypes:Street>Biberweg</CommonTypes:Street>
             //             <!--Optional:-->
-            //             <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
+            //             <CommonTypes:PostalCode>07749</CommonTypes:PostalCode>
             //             <!--Optional:-->
-            //             <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
+            //             <CommonTypes:HouseNum>18</CommonTypes:HouseNum>
             //             <!--Optional:-->
-            //             <CommonTypes:Floor>?</CommonTypes:Floor>
+            //             <CommonTypes:Floor>2</CommonTypes:Floor>
             //             <!--Optional:-->
             //             <CommonTypes:Region>?</CommonTypes:Region>
             //             <!--Optional:-->
@@ -429,10 +429,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //          <EVSESearch:Plug>Type 2 Outlet</EVSESearch:Plug>
             // 
             //          <!--Optional:-->
-            //          <EVSESearch:ChargingFacility>?</EVSESearch:ChargingFacility>
+            //          <EVSESearch:ChargingFacility>380 - 480V, 3-Phase ≤ 16A</EVSESearch:ChargingFacility>
             // 
             //       </EVSESearch:eRoamingSearchEvse>
             //    </soapenv:Body>
+            // 
             // </soapenv:Envelope>
 
             #endregion

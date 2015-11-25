@@ -131,7 +131,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             // 
             //                <EVSESearch:Distance>?</EVSESearch:Distance>
             // 
-            //                <EVSESearch:EVSE deltaType="?" lastUpdate="?">
+            //                <EVSESearch:EVSE>
             // 
             //                   <EVSEData:EvseId>?</EVSEData:EvseId>
             // 
@@ -321,7 +321,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             // 
             //                <EVSESearch:Distance>?</EVSESearch:Distance>
             // 
-            //                <EVSESearch:EVSE deltaType="?" lastUpdate="?">
+            //                <EVSESearch:EVSE>
             //                   [...]
             //                </EVSESearch:EVSE>
             //
