@@ -137,10 +137,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         {
 
             this._AuthToken                    = AuthInfo.AuthToken;
-            this._QRCodeIdentification         = new eMAIdWithPIN(AuthInfo.QRCodeIdentification.eMAId,
-                                                                  AuthInfo.QRCodeIdentification.PIN,
-                                                                  AuthInfo.QRCodeIdentification.Function,
-                                                                  AuthInfo.QRCodeIdentification.Salt);
+            this._QRCodeIdentification         = AuthInfo.QRCodeIdentification != null
+                                                     ? new eMAIdWithPIN(AuthInfo.QRCodeIdentification.eMAId,
+                                                                        AuthInfo.QRCodeIdentification.PIN,
+                                                                        AuthInfo.QRCodeIdentification.Function,
+                                                                        AuthInfo.QRCodeIdentification.Salt)
+                                                     : null;
             this._PlugAndChargeIdentification  = AuthInfo.PlugAndChargeIdentification;
             this._RemoteIdentification         = AuthInfo.RemoteIdentification;
 
