@@ -200,7 +200,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region (static) Parse(AuthorizationIdentificationXML, OnException = null)
 
-        public static AuthorizationIdentification Parse(XElement  AuthorizationIdentificationXML,
+        public static AuthorizationIdentification Parse(XElement             AuthorizationIdentificationXML,
                                                         OnExceptionDelegate  OnException  = null)
         {
 

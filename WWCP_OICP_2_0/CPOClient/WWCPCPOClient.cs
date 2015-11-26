@@ -38,8 +38,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// OICP v2.0 CPO Upstream Service(s).
     /// </summary>
-    public class CPOClient_WWCP : IAuthServices,
-                                  IDataServices
+    public class WWCPCPOClient : IAuthServices,
+                                 IDataServices
     {
 
         #region Data
@@ -195,13 +195,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public CPOClient_WWCP(String           Hostname,
-                                  IPPort           TCPPort,
-                                  String           HTTPVirtualHost  = null,
-                                  Authorizator_Id  AuthorizatorId   = null,
-                                  String           HTTPUserAgent    = "GraphDefined OICP v2.0 Gateway CPO Upstream Services",
-                                  TimeSpan?        QueryTimeout     = null,
-                                  DNSClient        DNSClient        = null)
+        public WWCPCPOClient(String           Hostname,
+                             IPPort           TCPPort,
+                             String           HTTPVirtualHost  = null,
+                             Authorizator_Id  AuthorizatorId   = null,
+                             String           HTTPUserAgent    = "GraphDefined OICP v2.0 Gateway CPO Upstream Services",
+                             TimeSpan?        QueryTimeout     = null,
+                             DNSClient        DNSClient        = null)
         {
 
             this._CPOClient       = new CPOClient(Hostname,
@@ -301,10 +301,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _CPOClient.DNSClient))
                     {
 
-                        return await _OICPClient.Query(CPO_XMLMethods.PushEVSEDataXML(GroupedData,
-                                                                                      OICPAction,
-                                                                                      OperatorId,
-                                                                                      OperatorName),
+                        return await _OICPClient.Query(WWCPCPOClient_XMLMethods.PushEVSEDataXML(GroupedData,
+                                                                                                OICPAction,
+                                                                                                OperatorId,
+                                                                                                OperatorName),
 
                                                        "eRoamingPushEvseData",
                                                        QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : _CPOClient.QueryTimeout,
@@ -694,10 +694,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _CPOClient.DNSClient))
                     {
 
-                        return await _OICPClient.Query(CPO_XMLMethods.PushEVSEDataXML(_EVSEs,
-                                                                                      OICPAction,
-                                                                                      OperatorId,
-                                                                                      OperatorName),
+                        return await _OICPClient.Query(WWCPCPOClient_XMLMethods.PushEVSEDataXML(_EVSEs,
+                                                                                                OICPAction,
+                                                                                                OperatorId,
+                                                                                                OperatorName),
 
                                                        "eRoamingPushEvseData",
                                                        QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : _CPOClient.QueryTimeout,

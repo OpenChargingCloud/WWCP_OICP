@@ -36,7 +36,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 CPOClient.
+    /// OICP v2.0 CPOClient.
     /// </summary>
     public class CPOClient : AOICPUpstreamService
     {
@@ -311,7 +311,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _DNSClient))
                     {
 
-                        return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.PushEVSEDataXML(_EVSEDataRecords,
+                        return await _OICPClient.Query(CPOClient_XMLMethods.PushEVSEDataXML(_EVSEDataRecords,
                                                                                             OICPAction,
                                                                                             OperatorId,
                                                                                             OperatorName),
@@ -922,7 +922,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.AuthorizeStartXML(OperatorId,
+                    return await _OICPClient.Query(CPOClient_XMLMethods.AuthorizeStartXML(OperatorId,
                                                                                           AuthToken,
                                                                                           EVSEId,
                                                                                           PartnerProductId,
@@ -1042,7 +1042,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.AuthorizeStopXML(OperatorId,
+                    return await _OICPClient.Query(CPOClient_XMLMethods.AuthorizeStopXML(OperatorId,
                                                                                          SessionId,
                                                                                          AuthToken,
                                                                                          EVSEId,
@@ -1144,7 +1144,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.PullAuthenticationDataXML(OperatorId),
+                    return await _OICPClient.Query(CPOClient_XMLMethods.PullAuthenticationDataXML(OperatorId),
                                                    "eRoamingPullAuthenticationData",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -1345,7 +1345,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.SendChargeDetailRecordXML(ChargeDetailRecord),
+                    return await _OICPClient.Query(CPOClient_XMLMethods.SendChargeDetailRecordXML(ChargeDetailRecord),
                                                    "eRoamingChargeDetailRecord",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -1488,7 +1488,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         DNSClient: _DNSClient))
                 {
 
-                    return await _OICPClient.Query(CPOClient_WWCP_XMLMethods.SendChargeDetailRecordXML(EVSEId,
+                    return await _OICPClient.Query(CPOClient_XMLMethods.SendChargeDetailRecordXML(EVSEId,
                                                                                                   SessionId,
                                                                                                   PartnerProductId,
                                                                                                   SessionStart,

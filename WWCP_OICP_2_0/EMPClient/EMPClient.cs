@@ -37,7 +37,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// A simple OICP v2.0 EMP client.
+    /// OICP v2.0 EMP client.
     /// </summary>
     public class EMPClient : AOICPUpstreamService
     {
@@ -108,10 +108,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                         DNSClient))
                 {
 
-                    return await _OICPClient.Query(EMP_XMLMethods.PullEVSEDataRequestXML(ProviderId,
-                                                                                         SearchCenter,
-                                                                                         DistanceKM,
-                                                                                         LastCall),
+                    return await _OICPClient.Query(EMPClient_XMLMethods.PullEVSEDataRequestXML(ProviderId,
+                                                                                               SearchCenter,
+                                                                                               DistanceKM,
+                                                                                               LastCall),
                                                    "eRoamingPullEVSEData",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -211,7 +211,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                    // _OICPClient.RemoteCertificateValidator = this.RemoteCertificateValidator;
                    // _OICPClient.ClientCertificateSelector  = this.ClientCertificateSelector;
 
-                    return await _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusRequestXML(ProviderId, SearchCenter, DistanceKM, EVSEStatusFilter),
+                    return await _OICPClient.Query(EMPClient_XMLMethods.PullEVSEStatusRequestXML(ProviderId,
+                                                                                                 SearchCenter,
+                                                                                                 DistanceKM,
+                                                                                                 EVSEStatusFilter),
                                                    "eRoamingPullEVSEStatus",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -301,7 +304,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return await _OICPClient.Query(EMP_XMLMethods.PullEVSEStatusByIdRequestXML(ProviderId, EVSEIds),
+                    return await _OICPClient.Query(EMPClient_XMLMethods.PullEVSEStatusByIdRequestXML(ProviderId,
+                                                                                                     EVSEIds),
                                                    "eRoamingPullEvseStatusById",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -400,12 +404,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return await _OICPClient.Query(EMP_XMLMethods.SearchEvseRequestXML(ProviderId,
-                                                                                       SearchCenter,
-                                                                                       DistanceKM,
-                                                                                       Address,
-                                                                                       Plug,
-                                                                                       ChargingFacility),
+                    return await _OICPClient.Query(EMPClient_XMLMethods.SearchEvseRequestXML(ProviderId,
+                                                                                             SearchCenter,
+                                                                                             DistanceKM,
+                                                                                             Address,
+                                                                                             Plug,
+                                                                                             ChargingFacility),
                                                    "eRoamingSearchEvse",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -504,8 +508,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return await _OICPClient.Query(EMP_XMLMethods.PushAuthenticationData(ProviderAuthenticationDataRecords,
-                                                                                         OICPAction),
+                    return await _OICPClient.Query(EMPClient_XMLMethods.PushAuthenticationData(ProviderAuthenticationDataRecords,
+                                                                                               OICPAction),
                                                    "eRoamingPushAuthenticationData",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -609,9 +613,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return await _OICPClient.Query(EMP_XMLMethods.PushAuthenticationData(AuthorizationIdentifications,
-                                                                                         ProviderId,
-                                                                                         OICPAction),
+                    return await _OICPClient.Query(EMPClient_XMLMethods.PushAuthenticationData(AuthorizationIdentifications,
+                                                                                               ProviderId,
+                                                                                               OICPAction),
                                                    "eRoamingPushAuthenticationData",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -713,9 +717,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return await _OICPClient.Query(EMP_XMLMethods.GetChargeDetailRecords(ProviderId,
-                                                                                         From,
-                                                                                         To),
+                    return await _OICPClient.Query(EMPClient_XMLMethods.GetChargeDetailRecords(ProviderId,
+                                                                                               From,
+                                                                                               To),
                                                    "eRoamingGetChargeDetailRecords",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 

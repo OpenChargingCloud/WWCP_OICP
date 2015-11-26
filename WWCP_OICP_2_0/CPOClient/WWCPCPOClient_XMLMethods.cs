@@ -32,9 +32,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// OICP EVSEData.0 CPO management operations.
+    /// OICP v2.0 CPO management operations.
     /// </summary>
-    public static class CPO_XMLMethods
+    public static class WWCPCPOClient_XMLMethods
     {
 
         #region Data

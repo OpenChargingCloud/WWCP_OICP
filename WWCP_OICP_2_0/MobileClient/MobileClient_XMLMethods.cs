@@ -34,24 +34,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// OICP v2.0 Mobile management methods.
     /// </summary>
-    public static class Mobile_XMLMethods
+    public static class MobileClient_XMLMethods
     {
 
-        #region MobileAuthorizeStartXML(EVSEId, EVCOId, PIN, PartnerProductId = null, GetNewSession = null)
+        #region MobileAuthorizeStartXML(EVSEId, eMAIdWithPIN, PartnerProductId = null, GetNewSession = null)
 
         /// <summary>
         /// Create a new MobileAuthorizeStart request.
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="EVCOId">The eMA identification.</param>
+        /// <param name="eMAIdWithPIN">The eMA identification with its PIN.</param>
         /// <param name="PIN">The PIN for the eMA identification.</param>
         /// <param name="PartnerProductId">The optional charging product identification.</param>
         /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
-        public static XElement MobileAuthorizeStartXML(EVSE_Id   EVSEId,
-                                                       eMA_Id    EVCOId,
-                                                       String    PIN,
-                                                       String    PartnerProductId  = null,
-                                                       Boolean?  GetNewSession     = null)
+        public static XElement MobileAuthorizeStartXML(EVSE_Id       EVSEId,
+                                                       eMAIdWithPIN  eMAIdWithPIN,
+                                                       String        PartnerProductId  = null,
+                                                       Boolean?      GetNewSession     = null)
         {
 
             #region Documentation
@@ -100,11 +99,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (EVSEId == null)
                 throw new ArgumentNullException("EVSEId", "The given parameter must not be null!");
 
-            if (EVCOId == null)
-                throw new ArgumentNullException("EVCOId", "The given parameter must not be null!");
-
-            if (PIN.IsNullOrEmpty())
-                throw new ArgumentNullException("PIN", "The given parameter must not be null or empty!");
+            if (eMAIdWithPIN == null)
+                throw new ArgumentNullException("eMAIdWithPIN", "The given parameter must not be null!");
 
             #endregion
 
@@ -112,10 +108,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                           new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.OriginId.ToString()),
 
-                                          new XElement(OICPNS.MobileAuthorization + "QRCodeIdentification",
-                                              new XElement(OICPNS.CommonTypes + "EVCOID", EVCOId.ToString()),
-                                              new XElement(OICPNS.CommonTypes + "PIN",    PIN)
-                                          ),
+                                          eMAIdWithPIN.ToXML(),
 
                                           (PartnerProductId != null)
                                               ? new XElement(OICPNS.MobileAuthorization + "PartnerProductID", PartnerProductId.ToString())

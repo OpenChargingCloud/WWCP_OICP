@@ -32,9 +32,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// OICP v2.0 EMP management methods.
+    /// OICP v2.0 EMP client XML methods.
     /// </summary>
-    public static class EMP_XMLMethods
+    public static class EMPClient_XMLMethods
     {
 
         #region GetEVSEByIdRequestXML(EVSEId) // <- Note!
@@ -530,7 +530,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //    <soapenv:Body>
             //       <AuthenticationData:eRoamingPushAuthenticationData>
             // 
-            //          <AuthenticationData:ActionType>?</AuthenticationData:ActionType>
+            //          <AuthenticationData:ActionType>fullLoad|update|insert|delete</AuthenticationData:ActionType>
             // 
             //          <AuthenticationData:ProviderAuthenticationData>
             // 

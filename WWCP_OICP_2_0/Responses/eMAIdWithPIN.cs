@@ -107,16 +107,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region eMAIdWithPIN(eMAId, PIN, Function, Salt = "")
+        #region eMAIdWithPIN(eMAId, HashedPIN, Function, Salt = "")
 
         public eMAIdWithPIN(eMA_Id     eMAId,
-                            String     PIN,
+                            String     HashedPIN,
                             PINCrypto  Function,
                             String     Salt = "")
         {
 
             this._eMAId     = eMAId;
-            this._PIN       = PIN;
+            this._PIN       = HashedPIN;
             this._Function  = Function;
             this._Salt      = Salt;
 
@@ -127,12 +127,40 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
+        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        // 
+        // [...]
+        // 
+        //    <CommonTypes:QRCodeIdentification>
+        // 
+        //       <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        // 
+        //       <!--You have a CHOICE of the next 2 items at this level-->
+        //       <CommonTypes:PIN>?</CommonTypes:PIN>
+        // 
+        //       <CommonTypes:HashedPIN>
+        //          <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
+        //          <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
+        //          <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
+        //       </CommonTypes:HashedPIN>
+        // 
+        //    </CommonTypes:QRCodeIdentification>
+        // 
+        // [...]
+        // 
+        // </soapenv:Envelope>
+
+        #endregion
+
         #region (static) Parse(QRCodeIdentificationXML)
 
         public static eMAIdWithPIN Parse(XElement QRCodeIdentificationXML)
         {
-
-            String _PIN    = null;
 
             var _eMA_Id       = QRCodeIdentificationXML.MapValueOrFail(OICPNS.CommonTypes + "EVCOID",
                                                                        eMA_Id.Parse,

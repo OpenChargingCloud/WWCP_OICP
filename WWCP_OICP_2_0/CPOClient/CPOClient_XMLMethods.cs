@@ -32,9 +32,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// OICP v2.0 CPOClient XML methods.
+    /// OICP v2.0 CPO client XML methods.
     /// </summary>
-    public static class CPOClient_WWCP_XMLMethods
+    public static class CPOClient_XMLMethods
     {
 
         #region PushEVSEDataXML(GroupedData,           OICPAction = fullLoad, OperatorId = null, OperatorName = null)
@@ -592,7 +592,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             //
             //    <soapenv:Body>
             //       <AuthenticationData:eRoamingPullAuthenticationData>
-            //          <AuthenticationData:OperatorID>?</AuthenticationData:OperatorID>
+            //          <AuthenticationData:OperatorID>DE*GEF</AuthenticationData:OperatorID>
             //       </AuthenticationData:eRoamingPullAuthenticationData>
             //    </soapenv:Body>
             //

@@ -18,18 +18,13 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
-using org.GraphDefined.Vanaheimr.Aegir;
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using System.Xml.Linq;
-using org.GraphDefined.WWCP.LocalService;
+using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
 
 #endregion
 
@@ -37,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// A simple OICP v2.0 Mobile client.
+    /// A OICP v2.0 Mobile client.
     /// </summary>
     public class MobileClient : AOICPUpstreamService
     {
@@ -74,29 +69,30 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region MobileAuthorizeStart(EVSEId, eMAIdWithPin, PartnerProductId = null, GetNewSession = null, QueryTimeout = null)
+        #region MobileAuthorizeStart(EVSEId, eMAId, PIN, PartnerProductId = null, GetNewSession = null, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task sending a mobile AuthorizeStart request.
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="eMAIdWithPin">The eMA identification with its PIN for identification.</param>
+        /// <param name="eMAId">The eMA identification.</param>
+        /// <param name="PIN">The PIN of the eMA identification.</param>
         /// <param name="PartnerProductId">The optional charging product identification.</param>
         /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingMobileAuthorizationStart>>
 
-            MobileAuthorizeStart(EVSE_Id       EVSEId,
-                                 eMAIdWithPIN  eMAIdWithPin,
-                                 String        PartnerProductId  = null,
-                                 Boolean?      GetNewSession     = null,
-                                 TimeSpan?     QueryTimeout      = null)
+            MobileAuthorizeStart(EVSE_Id    EVSEId,
+                                 eMA_Id     eMAId,
+                                 String     PIN,
+                                 String     PartnerProductId  = null,
+                                 Boolean?   GetNewSession     = null,
+                                 TimeSpan?  QueryTimeout      = null)
 
         {
 
             return await MobileAuthorizeStart(EVSEId,
-                                              eMAIdWithPin.eMAId,
-                                              eMAIdWithPin.PIN,
+                                              new eMAIdWithPIN(eMAId, PIN),
                                               PartnerProductId,
                                               GetNewSession,
                                               QueryTimeout);
@@ -105,25 +101,59 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region MobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductId = null, GetNewSession = null, QueryTimeout = null)
+        #region MobileAuthorizeStart(EVSEId, eMAId, HashedPIN, Function, Salt, PartnerProductId = null, GetNewSession = null, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task sending a mobile AuthorizeStart request.
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="EVCOId">The eMA identification.</param>
-        /// <param name="PIN">The PIN for the eMA identification.</param>
+        /// <param name="eMAId">The eMA identification.</param>
+        /// <param name="HashedPIN">The PIN of the eMA identification.</param>
+        /// <param name="Function">The crypto hash function of the eMA identification.</param>
+        /// <param name="Salt">The Salt of the eMA identification.</param>
         /// <param name="PartnerProductId">The optional charging product identification.</param>
         /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingMobileAuthorizationStart>>
 
             MobileAuthorizeStart(EVSE_Id    EVSEId,
-                                 eMA_Id     EVCOId,
-                                 String     PIN,
+                                 eMA_Id     eMAId,
+                                 String     HashedPIN,
+                                 PINCrypto  Function,
+                                 String     Salt,
                                  String     PartnerProductId  = null,
                                  Boolean?   GetNewSession     = null,
                                  TimeSpan?  QueryTimeout      = null)
+
+        {
+
+            return await MobileAuthorizeStart(EVSEId,
+                                              new eMAIdWithPIN(eMAId, HashedPIN, Function, Salt),
+                                              PartnerProductId,
+                                              GetNewSession,
+                                              QueryTimeout);
+
+        }
+
+        #endregion
+
+        #region MobileAuthorizeStart(EVSEId, eMAIdWithPIN, PartnerProductId = null, GetNewSession = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Create a new task sending a mobile AuthorizeStart request.
+        /// </summary>
+        /// <param name="EVSEId">The EVSE identification.</param>
+        /// <param name="eMAIdWithPIN">The eMA identification with its PIN.</param>
+        /// <param name="ProductId">The optional charging product identification.</param>
+        /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingMobileAuthorizationStart>>
+
+            MobileAuthorizeStart(EVSE_Id       EVSEId,
+                                 eMAIdWithPIN  eMAIdWithPIN,
+                                 String        ProductId      = null,
+                                 Boolean?      GetNewSession  = null,
+                                 TimeSpan?     QueryTimeout   = null)
 
         {
 
@@ -132,11 +162,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (EVSEId == null)
                 throw new ArgumentNullException("EVSEId", "The given parameter must not be null!");
 
-            if (EVCOId == null)
-                throw new ArgumentNullException("EVCOId", "The given parameter must not be null!");
-
-            if (PIN == null)
-                throw new ArgumentNullException("PIN", "The given parameter must not be null!");
+            if (eMAIdWithPIN == null)
+                throw new ArgumentNullException("eMAIdWithPIN", "The given parameter must not be null!");
 
             #endregion
 
@@ -153,10 +180,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return await _OICPClient.Query(Mobile_XMLMethods.MobileAuthorizeStartXML(EVSEId,
-                                                                                             EVCOId,
-                                                                                             PIN,
-                                                                                             PartnerProductId),
+                    return await _OICPClient.Query(MobileClient_XMLMethods.MobileAuthorizeStartXML(EVSEId,
+                                                                                                   eMAIdWithPIN,
+                                                                                                   ProductId,
+                                                                                                   GetNewSession.Value),
                                                    "eRoamingMobileAuthorizeStart",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -331,7 +358,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return await _OICPClient.Query(Mobile_XMLMethods.MobileRemoteStartXML(SessionId),
+                    return await _OICPClient.Query(MobileClient_XMLMethods.MobileRemoteStartXML(SessionId),
                                                    "eRoamingMobileRemoteStart",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -428,7 +455,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 {
 
-                    return await _OICPClient.Query(Mobile_XMLMethods.MobileRemoteStopXML(SessionId),
+                    return await _OICPClient.Query(MobileClient_XMLMethods.MobileRemoteStopXML(SessionId),
                                                    "eRoamingMobileRemoteStop",
                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 

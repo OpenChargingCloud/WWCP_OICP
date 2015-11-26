@@ -294,123 +294,119 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
         }
 
 
-        public async Task TestPushAuthenticationData(EMPClient HubjectEMP)
+        public void TestPushAuthenticationData(EMPClient HubjectEMP)
         {
 
-            var req = HubjectEMP.
+            Task.Factory.StartNew(async () => {
 
-                PushAuthenticationData(Enumeration.Create(  // ([A-Za-z]{2} \-? [A-Za-z0-9]{3} \-? C[A-Za-z0-9]{8}[\*|\-]?[\d|X])
+                var result = await HubjectEMP.
+                    PushAuthenticationData(Enumeration.Create(  // ([A-Za-z]{2} \-? [A-Za-z0-9]{3} \-? C[A-Za-z0-9]{8}[\*|\-]?[\d|X])
 
-                                           AuthorizationIdentification.FromAuthToken
-                                               (Auth_Token.Parse("08152305")),
+                                               AuthorizationIdentification.FromAuthToken
+                                                   (Auth_Token.Parse("08152305")),
 
-                                           AuthorizationIdentification.FromQRCodeIdentification
-                                               (eMA_Id.Parse("DE-GDF-C123ABC56-X"),
-                                                "1234") //DE**GDF*CAETE4*3"), "1234") //
-                                       ),
-                                       ProviderId: EVSP_Id.Parse("DE*GDF"),
-                                       OICPAction: ActionType.fullLoad,
-                                       QueryTimeout: TimeSpan.FromSeconds(120)).
+                                               AuthorizationIdentification.FromQRCodeIdentification
+                                                   (eMA_Id.Parse("DE-GDF-C123ABC56-X"),
+                                                    "1234") //DE**GDF*CAETE4*3"), "1234") //
 
-                ContinueWith(task =>
+                                           ),
+                                           ProviderId:   EVSP_Id.   Parse("DE*GDF"),
+                                           OICPAction:   ActionType.fullLoad,
+                                           QueryTimeout: TimeSpan.  FromSeconds(120));
+
+
+                if (result.Content.Result)
+                    Console.WriteLine("success!");
+                else
                 {
+                    ConsoleX.WriteLines("PushAuthenticationData result:",
+                                        result.Content.StatusCode.Code,
+                                        result.Content.StatusCode.Description,
+                                        result.Content.StatusCode.AdditionalInfo);
+                }
 
-                    var Acknowledgement = task.Result.Content;
+            }).
 
-                    if (Acknowledgement.Result)
-                        Console.WriteLine("success!");
-
-                    else
-                    {
-                        Console.WriteLine(Acknowledgement.StatusCode.Code);
-                        Console.WriteLine(Acknowledgement.StatusCode.Description);
-                        Console.WriteLine(Acknowledgement.StatusCode.AdditionalInfo);
-                    }
-
-                });
+            // Wait for the task to complete...
+            Wait();
 
         }
 
         public async Task TestPullAuthenticationData(CPOClient HubjectCPO)
         {
 
-            var req = HubjectCPO.
-                PullAuthenticationData(EVSEOperator_Id.Parse("DE*GEF"),
-                                       QueryTimeout:  TimeSpan.FromSeconds(120)).
+            Task.Factory.StartNew(async () => {
 
-                ContinueWith(task =>
-                {
+                var result = await HubjectCPO.
+                    PullAuthenticationData(EVSEOperator_Id.Parse("DE*GEF"),
+                                           QueryTimeout: TimeSpan.FromSeconds(120));
 
-                    var AuthenticationDataResult = task.Result.Content;
 
-                    if (AuthenticationDataResult.StatusCode.HasResult)
-                        Console.WriteLine(AuthenticationDataResult.
-                                              ProviderAuthenticationDataRecords.
-                                              Select(authdata => "'" + authdata.ProviderId.ToString() +
-                                                                 "' has " +
-                                                                 authdata.AuthorizationIdentifications.Count() +
-                                                                 " credentials").
-                                              AggregateWith(Environment.NewLine) +
-                                              Environment.NewLine);
+                if (result.Content.StatusCode.HasResult)
+                    Console.WriteLine(result.Content.
+                                          ProviderAuthenticationDataRecords.
+                                          Select(authdata => "Provider '" + authdata.ProviderId.ToString() +
+                                                             "' has " +
+                                                             authdata.AuthorizationIdentifications.Count() +
+                                                             " credentials").
+                                          AggregateWith(Environment.NewLine) +
+                                          Environment.NewLine);
 
-                });
+            }).
+
+            // Wait for the task to complete...
+            Wait();
 
         }
 
 
-        public async Task TestAuth(CPOClient   HubjectCPO,
-                                   Auth_Token  AuthToken)
+        public void TestAuthStart(CPOClient   HubjectCPO,
+                                  Auth_Token  AuthToken)
         {
 
-            var AuthStartResult = await HubjectCPO.AuthorizeStart(EVSEOperator_Id.Parse("DE*GEF"),
-                                                                  AuthToken,
-                                                                  EVSE_Id.        Parse("DE*GEF*E123456789*1"));
+            Task.Factory.StartNew(async () => {
 
-            ConsoleX.WriteLines("AuthStart result:",
-                                AuthStartResult.Content.AuthorizationStatus,
-                                AuthStartResult.Content.StatusCode.Code,
-                                AuthStartResult.Content.StatusCode.Description,
-                                AuthStartResult.Content.StatusCode.AdditionalInfo);
+                var AuthStartResult = await HubjectCPO.AuthorizeStart(EVSEOperator_Id.Parse("DE*GEF"),
+                                                                      AuthToken,
+                                                                      EVSE_Id.        Parse("DE*GEF*E123456789*1"));
 
-            await Task.Delay(1000);
+                ConsoleX.WriteLines("AuthStart result:",
+                                    AuthStartResult.Content.AuthorizationStatus,
+                                    AuthStartResult.Content.StatusCode.Code,
+                                    AuthStartResult.Content.StatusCode.Description,
+                                    AuthStartResult.Content.StatusCode.AdditionalInfo);
 
+            }).
 
-            var AuthStopResult = await HubjectCPO.
-                AuthorizeStop(EVSEOperator_Id.Parse("DE*GEF"),
-                              AuthStartResult.Content.SessionId,
-                              AuthToken,
-                              EVSE_Id.        Parse("DE*GEF*E123456789*1"));
+            // Wait for the task to complete...
+            Wait();
 
-            ConsoleX.WriteLines("AuthStop result:",
-                                AuthStopResult.Content.AuthorizationStatus,
-                                AuthStopResult.Content.StatusCode.Code,
-                                AuthStopResult.Content.StatusCode.Description,
-                                AuthStopResult.Content.StatusCode.AdditionalInfo);
-
-            await Task.Delay(1000);
+        }
 
 
-            var SendCDRResult = await HubjectCPO.
-                SendChargeDetailRecord(EVSEId:                EVSE_Id.Parse("DE*GEF*E123456789*1"),
-                                       SessionId:             AuthStartResult.Content.SessionId,
-                                       PartnerProductId:      ChargingProduct_Id.Parse("AC1"),
-                                       SessionStart:          DateTime.Now,
-                                       SessionEnd:            DateTime.Now - TimeSpan.FromHours(3),
-                                       Identification:        AuthorizationIdentification.FromAuthToken(AuthToken),
-                                       PartnerSessionId:      ChargingSession_Id.Parse("0815"),
-                                       ChargingStart:         DateTime.Now,
-                                       ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),
-                                       MeterValueStart:       123.456,
-                                       MeterValueEnd:         234.567,
-                                       MeterValuesInBetween:  Enumeration.Create(123.456, 189.768, 223.312, 234.560, 234.567),
-                                       ConsumedEnergy:        111.111,
-                                       QueryTimeout:          TimeSpan.FromSeconds(120));
+        public void TestAuthStop(CPOClient           HubjectCPO,
+                                 ChargingSession_Id  SessionId,
+                                 Auth_Token          AuthToken)
+        {
 
-            ConsoleX.WriteLines("SendCDR result:",
-                                SendCDRResult.Content.Result,
-                                SendCDRResult.Content.StatusCode.Code,
-                                SendCDRResult.Content.StatusCode.Description,
-                                SendCDRResult.Content.StatusCode.AdditionalInfo);
+            Task.Factory.StartNew(async () => {
+
+                var AuthStopResult = await HubjectCPO.
+                    AuthorizeStop(EVSEOperator_Id.Parse("DE*GEF"),
+                                  SessionId,
+                                  AuthToken,
+                                  EVSE_Id.        Parse("DE*GEF*E123456789*1"));
+
+                ConsoleX.WriteLines("AuthStop result:",
+                                    AuthStopResult.Content.AuthorizationStatus,
+                                    AuthStopResult.Content.StatusCode.Code,
+                                    AuthStopResult.Content.StatusCode.Description,
+                                    AuthStopResult.Content.StatusCode.AdditionalInfo);
+
+            }).
+
+            // Wait for the task to complete...
+            Wait();
 
         }
 
