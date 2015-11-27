@@ -521,12 +521,16 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
         public void TestChargeDetailRecord(CPOClient HubjectCPO)
         {
 
+            var EVSEOperatorId  = EVSEOperator_Id.Parse("DE*GEF");
+            var EVSEId          = EVSE_Id.        Parse("DE*GEF*E123456789*1");
+            var AuthToken       = Auth_Token.     Parse("08152305");
+
             Task.Factory.StartNew(async () => {
 
                 var AuthStartResult = await HubjectCPO.
-                    AuthorizeStart(EVSEOperator_Id.Parse("DE*GEF"),
-                                   Auth_Token.     Parse("08152305"),
-                                   EVSE_Id.        Parse("DE*GEF*E123456789*1"));
+                    AuthorizeStart(EVSEOperatorId,
+                                   AuthToken,
+                                   EVSEId);
 
                 ConsoleX.WriteLines("AuthStart result:",
                                     AuthStartResult.Content.AuthorizationStatus,
@@ -537,10 +541,10 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
 
 
                 var AuthStopResult = await HubjectCPO.
-                    AuthorizeStop(EVSEOperator_Id.Parse("DE*GEF"),
+                    AuthorizeStop(EVSEOperatorId,
                                   AuthStartResult.Content.SessionId,
-                                  Auth_Token.     Parse("08152305"),
-                                  EVSE_Id.        Parse("DE*GEF*E123456789*1"));
+                                  AuthToken,
+                                  EVSEId);
 
                 ConsoleX.WriteLines("AuthStop result:",
                                     AuthStopResult.Content.AuthorizationStatus,
@@ -552,12 +556,12 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
 
 
                 var SendCDRResult = await HubjectCPO.
-                    SendChargeDetailRecord(EVSEId:                EVSE_Id.Parse("DE*GEF*E123456789*1"),
+                    SendChargeDetailRecord(EVSEId:                EVSEId,
                                            SessionId:             AuthStartResult.Content.SessionId,
                                            PartnerProductId:      ChargingProduct_Id.Parse("AC1"),
                                            SessionStart:          DateTime.Now,
                                            SessionEnd:            DateTime.Now - TimeSpan.FromHours(3),
-                                           Identification:        AuthorizationIdentification.FromAuthToken(Auth_Token.Parse("08152305")),
+                                           Identification:        AuthorizationIdentification.FromAuthToken(AuthToken),
                                            PartnerSessionId:      ChargingSession_Id.Parse("0815"),
                                            ChargingStart:         DateTime.Now,
                                            ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),
