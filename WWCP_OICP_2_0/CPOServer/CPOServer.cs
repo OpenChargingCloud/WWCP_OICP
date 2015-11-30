@@ -422,15 +422,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                         var CTS = new CancellationTokenSource();
 
-                        var task = OnRSt.Invoke(DateTime.Now,
+                        var task = OnRSt.Invoke(CTS.Token,
+                                                DateTime.Now,
                                                 RoamingNetworkId,
+                                                EVSEId,
+                                                ChargingProductId,
                                                 SessionId,
                                                 PartnerSessionId,
                                                 ProviderId,
-                                                eMAId,
-                                                EVSEId,
-                                                ChargingProductId,
-                                                CTS.Token);
+                                                eMAId);
 
                         task.Wait();
                         Response = task.Result;
@@ -656,13 +656,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                         var CTS = new CancellationTokenSource();
 
-                        var task = OnRSt.Invoke(DateTime.Now,
+                        var task = OnRSt.Invoke(CTS.Token,
+                                                DateTime.Now,
                                                 RoamingNetworkId,
+                                                EVSEId,
                                                 SessionId,
                                                 PartnerSessionId,
-                                                ProviderId,
-                                                EVSEId,
-                                                CTS.Token);
+                                                ProviderId);
 
                         task.Wait();
                         Response = task.Result;
@@ -675,35 +675,35 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Map result
 
-                    switch (Response)
+                    switch (Response.Result)
                     {
 
-                        case RemoteStopResult.Success:
+                        case RemoteStopResultType.Success:
                             HubjectCode         = "000";
                             HubjectDescription  = "Ready to stop charging!";
                             break;
 
-                        case RemoteStopResult.SessionIsInvalid:
+                        case RemoteStopResultType.SessionIsInvalid:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case RemoteStopResult.EVSE_NotReachable:
+                        case RemoteStopResultType.EVSE_NotReachable:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case RemoteStopResult.Stop_Timeout:
+                        case RemoteStopResultType.Stop_Timeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case RemoteStopResult.UnknownEVSE:
+                        case RemoteStopResultType.UnknownEVSE:
                             HubjectCode         = "603";
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case RemoteStopResult.EVSEOutOfService:
+                        case RemoteStopResultType.EVSEOutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;

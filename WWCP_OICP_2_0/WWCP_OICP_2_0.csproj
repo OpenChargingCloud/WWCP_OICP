@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CPOServer\OnRemoteStartDelegate.cs" />
+    <Compile Include="CPOServer\OnRemoteStopDelegate.cs" />
     <Compile Include="EMPServer\EMPServer.cs" />
     <Compile Include="Helpers\AOICPUpstreamService.cs" />
     <Compile Include="CPOClient\CPOClient.cs" />
