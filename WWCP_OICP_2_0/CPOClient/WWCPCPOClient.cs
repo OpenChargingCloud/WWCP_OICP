@@ -1040,7 +1040,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushEVSEStatus(IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>>  EVSEStatus,
+            PushEVSEStatus(IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>>  EVSEStatus,
                            ActionType                                          OICPAction    = ActionType.update,
                            EVSEOperator_Id                                     OperatorId    = null,
                            String                                              OperatorName  = null,

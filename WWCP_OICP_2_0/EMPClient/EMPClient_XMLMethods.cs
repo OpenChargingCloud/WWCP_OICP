@@ -201,7 +201,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         public static XElement PullEVSEStatusRequestXML(EVSP_Id          ProviderId,
                                                         GeoCoordinate    SearchCenter  = null,
                                                         Double           DistanceKM    = 0.0,
-                                                        OICPEVSEStatusType?  EVSEStatus    = null)
+                                                        EVSEStatusType?  EVSEStatus    = null)
         {
 
             #region Documentation

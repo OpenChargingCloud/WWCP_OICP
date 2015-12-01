@@ -186,11 +186,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingEVSEStatus>>
 
-            PullEVSEStatus(EVSP_Id              ProviderId,
-                           GeoCoordinate        SearchCenter      = null,
-                           Double               DistanceKM        = 0.0,
-                           OICPEVSEStatusType?  EVSEStatusFilter  = null,
-                           TimeSpan?            QueryTimeout      = null)
+            PullEVSEStatus(EVSP_Id          ProviderId,
+                           GeoCoordinate    SearchCenter      = null,
+                           Double           DistanceKM        = 0.0,
+                           EVSEStatusType?  EVSEStatusFilter  = null,
+                           TimeSpan?        QueryTimeout      = null)
 
         {
 

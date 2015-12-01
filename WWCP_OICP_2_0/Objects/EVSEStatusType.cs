@@ -18,13 +18,13 @@
 namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
-    public enum OICPEVSEStatusType
+    public enum EVSEStatusType
     {
+        Unknown,
         Available,
         Reserved,
         Occupied,
         OutOfService,
-        Unknown,
         EvseNotFound   // PullEVSEStatusById!
     }
 

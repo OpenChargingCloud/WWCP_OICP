@@ -406,7 +406,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushEVSEStatus(IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>>  EVSEStatus,
+            PushEVSEStatus(IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>>  EVSEStatus,
                            ActionType                                              OICPAction    = ActionType.update,
                            EVSEOperator_Id                                         OperatorId    = null,
                            String                                                  OperatorName  = null,
@@ -795,7 +795,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
 
                 var EVSEStatesRemoveXML = RemovedEVSEStatus.
-                                              PushEVSEStatusXML(EVSEStatusType.Unavailable,
+                                              PushEVSEStatusXML(EVSEStatusType.OutOfService,
                                                                 EVSEStatusDiff.EVSEOperatorId,
                                                                 EVSEStatusDiff.EVSEOperatorName[Languages.de],
                                                                 ActionType.delete);

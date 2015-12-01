@@ -183,7 +183,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             PullEVSEStatus(EVSP_Id              ProviderId,
                            GeoCoordinate        SearchCenter      = null,
                            Double               DistanceKM        = 0.0,
-                           OICPEVSEStatusType?  EVSEStatusFilter  = null,
+                           EVSEStatusType?  EVSEStatusFilter  = null,
                            TimeSpan?            QueryTimeout      = null)
 
         {

@@ -1251,7 +1251,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         }
 
-        internal static IEnumerable<XElement> ToEvseStatusRecords(this IEnumerable<KeyValuePair<EVSE_Id, OICPEVSEStatusType>> EVSEIdAndStatus)
+        internal static IEnumerable<XElement> ToEvseStatusRecords(this IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>> EVSEIdAndStatus)
         {
 
             #region Documentation
@@ -1290,7 +1290,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region (internal) ToEvseStatusRecords(this EVSEIds, CommonStatus)
 
         internal static IEnumerable<XElement> ToEvseStatusRecords(this IEnumerable<EVSE_Id>  EVSEIds,
-                                                                  EVSEStatusType             CommonStatus)
+                                                                  WWCP.EVSEStatusType        CommonStatus)
         {
 
             #region Inital checks
@@ -1310,7 +1310,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         internal static IEnumerable<XElement> ToEvseStatusRecords(this IEnumerable<EVSE_Id>  EVSEIds,
-                                                                  OICPEVSEStatusType             CommonStatus)
+                                                                  OICP_2_0.EVSEStatusType    CommonStatus)
         {
 
             #region Documentation

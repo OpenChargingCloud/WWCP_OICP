@@ -26,11 +26,9 @@ using System.Threading.Tasks;
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 
-using org.GraphDefined.WWCP.OICP_2_0;
-
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
+namespace org.GraphDefined.WWCP.OICP_2_0.UnitTests
 {
 
     public class OICPTests
@@ -154,9 +152,9 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
         public async Task TestPushEVSEStatus(CPOClient HubjectCPO)
         {
 
-            var EVSEStatus = new Dictionary<EVSE_Id, OICPEVSEStatusType>();
-            EVSEStatus.Add(EVSE_Id.Parse("DE*GEF*E123456789*1"), OICPEVSEStatusType.Available);
-            EVSEStatus.Add(EVSE_Id.Parse("DE*GEF*E123456789*2"), OICPEVSEStatusType.Occupied);
+            var EVSEStatus = new Dictionary<EVSE_Id, EVSEStatusType>();
+            EVSEStatus.Add(EVSE_Id.Parse("DE*GEF*E123456789*1"), EVSEStatusType.Available);
+            EVSEStatus.Add(EVSE_Id.Parse("DE*GEF*E123456789*2"), EVSEStatusType.Occupied);
 
             var req3 = HubjectCPO.
 
@@ -194,7 +192,7 @@ namespace org.GraphDefined.WWCP.OICPClient_1_2.UnitTests
                                          SearchCenter:      new GeoCoordinate(Latitude. Parse(49.731102),
                                                                               Longitude.Parse(10.142533)),
                                          DistanceKM:        100,
-                                         EVSEStatusFilter:  OICPEVSEStatusType.Available,
+                                         EVSEStatusFilter:  EVSEStatusType.Available,
                                          QueryTimeout:      TimeSpan.FromSeconds(120)).
 
                           ContinueWith(task =>

@@ -505,57 +505,57 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
 
 
-        public static EVSEStatusType AsEVSEStatusType(this OICPEVSEStatusType EVSEStatus)
+        public static WWCP.EVSEStatusType AsEVSEStatusType(this OICP_2_0.EVSEStatusType EVSEStatus)
         {
 
             switch (EVSEStatus)
             {
 
-                case OICPEVSEStatusType.Available:
-                    return EVSEStatusType.Available;
+                case OICP_2_0.EVSEStatusType.Available:
+                    return WWCP.EVSEStatusType.Available;
 
-                case OICPEVSEStatusType.Reserved:
-                    return EVSEStatusType.Reserved;
+                case OICP_2_0.EVSEStatusType.Reserved:
+                    return WWCP.EVSEStatusType.Reserved;
 
-                case OICPEVSEStatusType.Occupied:
-                    return EVSEStatusType.Occupied;
+                case OICP_2_0.EVSEStatusType.Occupied:
+                    return WWCP.EVSEStatusType.Occupied;
 
-                case OICPEVSEStatusType.OutOfService:
-                    return EVSEStatusType.OutOfService;
+                case OICP_2_0.EVSEStatusType.OutOfService:
+                    return WWCP.EVSEStatusType.OutOfService;
 
-                case OICPEVSEStatusType.EvseNotFound:
-                    return EVSEStatusType.EvseNotFound;
+                case OICP_2_0.EVSEStatusType.EvseNotFound:
+                    return WWCP.EVSEStatusType.EvseNotFound;
 
                 default:
-                    return EVSEStatusType.Unknown;
+                    return WWCP.EVSEStatusType.Unspecified;
 
             }
 
         }
 
-        public static OICPEVSEStatusType AsOICPEVSEStatus(this EVSEStatusType EVSEStatus)
+        public static OICP_2_0.EVSEStatusType AsOICPEVSEStatus(this WWCP.EVSEStatusType EVSEStatus)
         {
 
             switch (EVSEStatus)
             {
 
-                case EVSEStatusType.Available:
-                    return OICPEVSEStatusType.Available;
+                case WWCP.EVSEStatusType.Available:
+                    return OICP_2_0.EVSEStatusType.Available;
 
-                case EVSEStatusType.Reserved:
-                    return OICPEVSEStatusType.Reserved;
+                case WWCP.EVSEStatusType.Reserved:
+                    return OICP_2_0.EVSEStatusType.Reserved;
 
-                case EVSEStatusType.Occupied:
-                    return OICPEVSEStatusType.Occupied;
+                case WWCP.EVSEStatusType.Occupied:
+                    return OICP_2_0.EVSEStatusType.Occupied;
 
-                case EVSEStatusType.OutOfService:
-                    return OICPEVSEStatusType.OutOfService;
+                case WWCP.EVSEStatusType.OutOfService:
+                    return OICP_2_0.EVSEStatusType.OutOfService;
 
-                case EVSEStatusType.EvseNotFound:
-                    return OICPEVSEStatusType.EvseNotFound;
+                case WWCP.EVSEStatusType.EvseNotFound:
+                    return OICP_2_0.EVSEStatusType.EvseNotFound;
 
                 default:
-                    return OICPEVSEStatusType.Unknown;
+                    return OICP_2_0.EVSEStatusType.Unknown;
 
             }
 

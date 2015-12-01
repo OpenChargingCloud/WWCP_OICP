@@ -52,9 +52,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Status
 
-        private readonly OICPEVSEStatusType _Status;
+        private readonly EVSEStatusType _Status;
 
-        public OICPEVSEStatusType Status
+        public EVSEStatusType Status
         {
             get
             {
@@ -69,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region Constructor(s)
 
         public EVSEStatusRecord(EVSE_Id         Id,
-                                OICPEVSEStatusType  Status)
+                                EVSEStatusType  Status)
 
         {
 
@@ -117,7 +117,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 return new EVSEStatusRecord(
                     EVSE_Id.Parse(EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseId")),
-                    (OICPEVSEStatusType) Enum.Parse(typeof(OICPEVSEStatusType), EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus"))
+                    (EVSEStatusType) Enum.Parse(typeof(EVSEStatusType), EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus"))
                 );
 
             }
@@ -166,7 +166,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Implicit conversion from KeyValuePair to EVSEStatusRecord.
         /// </summary>
-        public EVSEStatusRecord ToEVSEStatusRecord(KeyValuePair<EVSE_Id, OICPEVSEStatusType> KeyValuePair)
+        public EVSEStatusRecord ToEVSEStatusRecord(KeyValuePair<EVSE_Id, EVSEStatusType> KeyValuePair)
         {
             return new EVSEStatusRecord(KeyValuePair.Key, KeyValuePair.Value);
         }
@@ -178,9 +178,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Implicit conversion from EVSEStatusRecord to KeyValuePair.
         /// </summary>
-        public KeyValuePair<EVSE_Id, OICPEVSEStatusType> ToKeyValuePair(EVSEStatusRecord EVSEStatusRecord)
+        public KeyValuePair<EVSE_Id, EVSEStatusType> ToKeyValuePair(EVSEStatusRecord EVSEStatusRecord)
         {
-            return new KeyValuePair<EVSE_Id, OICPEVSEStatusType>(EVSEStatusRecord.Id, EVSEStatusRecord.Status);
+            return new KeyValuePair<EVSE_Id, EVSEStatusType>(EVSEStatusRecord.Id, EVSEStatusRecord.Status);
         }
 
         #endregion
