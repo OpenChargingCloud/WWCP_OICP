@@ -23,7 +23,7 @@ using System.Diagnostics;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.Services.DNS;
+using org.GraphDefined.Vanaheimr.Hermod.DNS;
 
 using OICPv2_0 = org.GraphDefined.WWCP.OICP_2_0;
 
