@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2015 GraphDefined GmbH
- * This file is part of WWCP OICP <https://github.com/WorldWideCharging/WWCP_OICP>
+ * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1236,11 +1236,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                            SessionId:             ChargeDetailRecord.SessionId,
                                                            PartnerProductId:      ChargeDetailRecord.PartnerProductId,
                                                            SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
-                                                           SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime,
+                                                           SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
                                                            Identification:        new AuthorizationIdentification(ChargeDetailRecord.Identification),
                                                            PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
-                                                           ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.StartTimeOpt : null,
-                                                           ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.EndTimeOpt   : null,
+                                                           ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new Nullable<DateTime>(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
+                                                           ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ?                        ChargeDetailRecord.SessionTime.Value.EndTime    : null,
                                                            MeterValueStart:       ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.First().Value) : null,
                                                            MeterValueEnd:         ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.Last(). Value) : null,
                                                            MeterValuesInBetween:  ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? ChargeDetailRecord.MeterValues.Select(v => v.Value)       : null,

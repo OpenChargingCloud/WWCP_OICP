@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2015 GraphDefined GmbH
- * This file is part of WWCP OICP <https://github.com/WorldWideCharging/WWCP_OICP>
+ * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -504,8 +504,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region AsWWCPEVSEStatus(this EVSEStatus)
 
-        public static WWCP.EVSEStatusType AsEVSEStatusType(this OICP_2_0.EVSEStatusType EVSEStatus)
+        /// <summary>
+        /// Convert an OICP v2.0 EVSE status into a corresponding WWCP EVSE status.
+        /// </summary>
+        /// <param name="EVSEStatus">An OICP v2.0 EVSE status.</param>
+        /// <returns>The corresponding WWCP EVSE status.</returns>
+        public static WWCP.EVSEStatusType AsWWCPEVSEStatus(this OICP_2_0.EVSEStatusType EVSEStatus)
         {
 
             switch (EVSEStatus)
@@ -533,6 +539,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         }
 
+        #endregion
+
+        #region AsOICPEVSEStatus(this EVSEStatus)
+
+        /// <summary>
+        /// Convert a WWCP EVSE status into a corresponding OICP v2.0 EVSE status.
+        /// </summary>
+        /// <param name="EVSEStatus">An WWCP EVSE status.</param>
+        /// <returns>The corresponding OICP v2.0 EVSE status.</returns>
         public static OICP_2_0.EVSEStatusType AsOICPEVSEStatus(this WWCP.EVSEStatusType EVSEStatus)
         {
 
@@ -560,6 +575,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             }
 
         }
+
+        #endregion
 
     }
 
