@@ -428,8 +428,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                         var CTS = new CancellationTokenSource();
 
-                        var task = OnRSt.Invoke(CTS.Token,
-                                                DateTime.Now,
+                        var task = OnRSt.Invoke(DateTime.Now,
+                                                this,
+                                                CTS.Token,
                                                 RoamingNetworkId,
                                                 OperatorId,
                                                 AuthToken,
@@ -664,12 +665,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                         var CTS = new CancellationTokenSource();
 
                         var task = OnRSt.Invoke(DateTime.Now,
+                                                this,
+                                                CTS.Token,
                                                 RoamingNetworkId,
                                                 SessionId,
                                                 PartnerSessionId,
                                                 ProviderId,
-                                                EVSEId,
-                                                CTS.Token);
+                                                EVSEId);
 
                         task.Wait();
                         Response = task.Result;

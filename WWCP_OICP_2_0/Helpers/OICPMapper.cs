@@ -524,13 +524,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     return WWCP.EVSEStatusType.Reserved;
 
                 case OICP_2_0.EVSEStatusType.Occupied:
-                    return WWCP.EVSEStatusType.Occupied;
+                    return WWCP.EVSEStatusType.Charging;
 
                 case OICP_2_0.EVSEStatusType.OutOfService:
                     return WWCP.EVSEStatusType.OutOfService;
 
                 case OICP_2_0.EVSEStatusType.EvseNotFound:
-                    return WWCP.EVSEStatusType.EvseNotFound;
+                    return WWCP.EVSEStatusType.UnknownEVSE;
 
                 default:
                     return WWCP.EVSEStatusType.Unspecified;
@@ -560,13 +560,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 case WWCP.EVSEStatusType.Reserved:
                     return OICP_2_0.EVSEStatusType.Reserved;
 
-                case WWCP.EVSEStatusType.Occupied:
+                case WWCP.EVSEStatusType.Charging:
                     return OICP_2_0.EVSEStatusType.Occupied;
 
                 case WWCP.EVSEStatusType.OutOfService:
                     return OICP_2_0.EVSEStatusType.OutOfService;
 
-                case WWCP.EVSEStatusType.EvseNotFound:
+                case WWCP.EVSEStatusType.UnknownEVSE:
                     return OICP_2_0.EVSEStatusType.EvseNotFound;
 
                 default:

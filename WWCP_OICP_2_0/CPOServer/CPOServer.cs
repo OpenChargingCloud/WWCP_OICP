@@ -414,7 +414,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Call async subscribers
 
-                    var Response = RemoteStartResult.Error;
+                    var Response = RemoteStartResult.Error();
 
                     var OnRSt = _OnRemoteStartDelegateList.FirstOrDefault();
                     if (OnRSt != null)
@@ -422,8 +422,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                         var CTS = new CancellationTokenSource();
 
-                        var task = OnRSt.Invoke(CTS.Token,
-                                                DateTime.Now,
+                        var task = OnRSt.Invoke(DateTime.Now,
+                                                this,
+                                                CTS.Token,
                                                 RoamingNetworkId,
                                                 EVSEId,
                                                 ChargingProductId,
@@ -451,27 +452,27 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                             HubjectDescription  = "Ready to charge!";
                             break;
 
-                        case RemoteStartResultType.SessionId_AlreadyInUse:
+                        case RemoteStartResultType.InvalidSessionId:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case RemoteStartResultType.EVSE_NotReachable:
+                        case RemoteStartResultType.Offline:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case RemoteStartResultType.Start_Timeout:
+                        case RemoteStartResultType.Timeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case RemoteStartResultType.EVSEReserved:
+                        case RemoteStartResultType.Reserved:
                             HubjectCode         = "601";
                             HubjectDescription  = "EVSE reserved!";
                             break;
 
-                        case RemoteStartResultType.EVSE_AlreadyInUse:
+                        case RemoteStartResultType.AlreadyInUse:
                             HubjectCode         = "602";
                             HubjectDescription  = "EVSE is already in use!";
                             break;
@@ -481,7 +482,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case RemoteStartResultType.EVSEOutOfService:
+                        case RemoteStartResultType.OutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;
@@ -648,7 +649,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Call async subscribers
 
-                    var Response = RemoteStopResult.Error;
+                    var Response = RemoteStopResult.Error();
 
                     var OnRSt = _OnRemoteStopDelegateList.FirstOrDefault();
                     if (OnRSt != null)
@@ -656,8 +657,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                         var CTS = new CancellationTokenSource();
 
-                        var task = OnRSt.Invoke(CTS.Token,
-                                                DateTime.Now,
+                        var task = OnRSt.Invoke(DateTime.Now,
+                                                this,
+                                                CTS.Token,
                                                 RoamingNetworkId,
                                                 EVSEId,
                                                 SessionId,
@@ -683,17 +685,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                             HubjectDescription  = "Ready to stop charging!";
                             break;
 
-                        case RemoteStopResultType.SessionIsInvalid:
+                        case RemoteStopResultType.InvalidSessionId:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case RemoteStopResultType.EVSE_NotReachable:
+                        case RemoteStopResultType.Offline:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case RemoteStopResultType.Stop_Timeout:
+                        case RemoteStopResultType.Timeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
@@ -703,7 +705,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case RemoteStopResultType.EVSEOutOfService:
+                        case RemoteStopResultType.OutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;
