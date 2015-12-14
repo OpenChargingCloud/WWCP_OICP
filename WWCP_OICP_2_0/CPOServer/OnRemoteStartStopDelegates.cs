@@ -35,7 +35,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="CancellationToken">A token to cancel this task.</param>
-    /// <param name="RoamingNetworkId">The unique identification for the roaming network.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="ChargingProductId">The unique identification of the choosen charging product at the given EVSE.</param>
     /// <param name="SessionId">The unique identification for this charging session.</param>
@@ -46,7 +45,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     public delegate Task<RemoteStartResult> OnRemoteStartDelegate(DateTime            Timestamp,
                                                                   CPOServer           Sender,
                                                                   CancellationToken   CancellationToken,
-                                                                  RoamingNetwork_Id   RoamingNetworkId,
                                                                   EVSE_Id             EVSEId,
                                                                   ChargingProduct_Id  ChargingProductId,
                                                                   ChargingSession_Id  SessionId,
@@ -61,7 +59,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="CancellationToken">A token to cancel this task.</param>
-    /// <param name="RoamingNetworkId">The unique identification for the roaming network.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="SessionId">The unique identification for this charging session.</param>
     /// <param name="PartnerSessionId">The unique identification for this charging session on the partner side.</param>
@@ -70,7 +67,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     public delegate Task<RemoteStopResult> OnRemoteStopDelegate(DateTime             Timestamp,
                                                                 CPOServer            Sender,
                                                                 CancellationToken    CancellationToken,
-                                                                RoamingNetwork_Id    RoamingNetworkId,
                                                                 EVSE_Id              EVSEId,
                                                                 ChargingSession_Id   SessionId,
                                                                 ChargingSession_Id   PartnerSessionId,

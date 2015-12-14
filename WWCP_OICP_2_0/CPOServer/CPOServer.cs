@@ -20,17 +20,18 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Illias.ConsoleLog;
 using org.GraphDefined.Vanaheimr.Hermod;
+using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 using org.GraphDefined.WWCP.LocalService;
-using System.Threading;
 
 #endregion
 
@@ -38,72 +39,180 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// OICP v2.0 CPO HTTP/SOAP/XML server.
+    /// OICP v2.0 CPO HTTP/SOAP/XML Server API.
     /// </summary>
-    public class CPOServer : HTTPServer
+    public class CPOServer
     {
 
         #region Data
 
-        private readonly List<OnRemoteStartDelegate> _OnRemoteStartDelegateList;
-        private readonly List<OnRemoteStopDelegate>  _OnRemoteStopDelegateList;
+        private const           String  DefaultHTTPServerName  = "OICP v2.0 CPO HTTP/SOAP/XML Server API";
+        private static readonly IPPort  DefaultHTTPServerPort  = new IPPort(2002);
 
         #endregion
 
-        public event OnRemoteStartDelegate OnRemoteStartEvent;
-        public event OnRemoteStopDelegate  OnRemoteStopEvent;
+        #region Properties
+
+        #region HTTPServer
+
+        private readonly HTTPServer _HTTPServer;
+
+        public HTTPServer HTTPServer
+        {
+            get
+            {
+                return _HTTPServer;
+            }
+        }
+
+        #endregion
+
+        #region URIPrefix
+
+        private readonly String _URIPrefix;
+
+        public String URIPrefix
+        {
+            get
+            {
+                return _URIPrefix;
+            }
+        }
+
+        #endregion
+
+        #region DNSClient
+
+        private readonly DNSClient _DNSClient;
+
+        public DNSClient DNSClient
+        {
+            get
+            {
+                return _DNSClient;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// An event sent whenever an EVSE should start charging.
+        /// </summary>
+        public event OnRemoteStartDelegate OnRemoteStart;
+
+        /// <summary>
+        /// An event sent whenever an EVSE should stop charging.
+        /// </summary>
+        public event OnRemoteStopDelegate  OnRemoteStop;
+
+        #endregion
 
         #region Constructor(s)
 
+        #region CPOServer(HTTPServerName, TCPPort = null, URIPrefix = "", DNSClient = null)
+
         /// <summary>
-        /// Initialize the OICP HTTP/SOAP/XML CPO server using IPAddress.Any.
+        /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML CPO Server API using IPAddress.Any.
         /// </summary>
-        /// <param name="TCPPort">The TCP listing port.</param>
+        /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
+        /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
-        public CPOServer(IPPort  TCPPort,
-                         String  URIPrefix = "")
+        /// <param name="DNSClient">An optional DNS client to use.</param>
+        public CPOServer(String    HTTPServerName  = DefaultHTTPServerName,
+                         IPPort    TCPPort         = null,
+                         String    URIPrefix       = "",
+                         DNSClient DNSClient       = null)
+
+            : this(new HTTPServer(TCPPort != null ? TCPPort : DefaultHTTPServerPort,
+                                  HTTPServerName),
+                   URIPrefix,
+                   DNSClient)
+
+        { }
+
+        #endregion
+
+        #region CPOServer(HTTPServer, URIPrefix = "", DNSClient = null)
+
+        /// <summary>
+        /// Use the given HTTP server for the OICP HTTP/SOAP/XML CPO Server API using IPAddress.Any.
+        /// </summary>
+        /// <param name="HTTPServer">A HTTP server.</param>
+        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="DNSClient">An optional DNS client to use.</param>
+        public CPOServer(HTTPServer  HTTPServer,
+                         String      URIPrefix  = "",
+                         DNSClient   DNSClient  = null)
         {
 
-            this._OnRemoteStartDelegateList = new List<OnRemoteStartDelegate>();
-            this._OnRemoteStopDelegateList  = new List<OnRemoteStopDelegate>();
+            #region Initial checks
 
-            this.AttachTCPPort(TCPPort);
+            if (HTTPServer == null)
+                throw new ArgumentNullException("HTTPServer", "The given parameter must not be null!");
+
+            if (URIPrefix.IsNullOrEmpty())
+                throw new ArgumentNullException("URIPrefix", "The given parameter must not be null or empty!");
+
+            if (!URIPrefix.StartsWith("/"))
+                URIPrefix = "/" + URIPrefix;
+
+            #endregion
+
+            RegisterURITemplates();
+
+            _HTTPServer.Start();
+
+        }
+
+        #endregion
+
+        #endregion
+
+
+        #region (private) RegisterURITemplates()
+
+        private void RegisterURITemplates()
+        {
 
             #region / (HTTPRoot)
 
             // HTML
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   URIPrefix + "/",
-                                   HTTPContentType.HTML_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+                                          URIPrefix + "/",
+                                          HTTPContentType.HTML_UTF8,
+                                          HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
-                                       return new HTTPResponseBuilder() {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
+                                              return new HTTPResponseBuilder() {
+                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                                  ContentType     = HTTPContentType.HTML_UTF8,
+                                                  Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  Connection      = "close"
+                                              };
 
-                                   });
+                                          });
 
             // Text
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   URIPrefix + "/",
-                                   HTTPContentType.TEXT_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+                                          URIPrefix + "/",
+                                          HTTPContentType.TEXT_UTF8,
+                                          HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
-                                       return new HTTPResponseBuilder() {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
+                                              return new HTTPResponseBuilder() {
+                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                                  ContentType     = HTTPContentType.HTML_UTF8,
+                                                  Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  Connection      = "close"
+                                              };
 
-                                   });
+                                          });
 
             #endregion
 
@@ -113,9 +222,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             HTTPDelegate RemoteStartStopDelegate = HTTPRequest => {
 
-                //var _EventTrackingId = EventTracking_Id.New;
-                //Log.WriteLine("Event tracking: " + _EventTrackingId);
-
                 #region Try to parse the RoamingNetworkId
 
                 RoamingNetwork_Id RoamingNetworkId;
@@ -123,22 +229,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 if (!RoamingNetwork_Id.TryParse(HTTPRequest.ParsedURIParameters[0], out RoamingNetworkId))
                     return new HTTPResponseBuilder() {
                         HTTPStatusCode  = HTTPStatusCode.BadRequest,
-                        Server          = this.DefaultServerName,
+                        Server          = _HTTPServer.DefaultServerName,
+                        Date            = DateTime.Now
                     };
 
                 #endregion
-
-                //#region Try to get the RoamingNetwork
-
-                //RoamingNetwork RoamingNetwork;
-
-                //if (!RoamingNetworks.TryGetRoamingNetwork(RoamingNetworkId, out RoamingNetwork))
-                //    return new HTTPResponseBuilder() {
-                //        HTTPStatusCode  = HTTPStatusCode.NotFound,
-                //        Server          = this.DefaultServerName,
-                //    };
-
-                //#endregion
 
                 #region ParseXMLRequestBody... or fail!
 
@@ -146,10 +241,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 if (XMLRequest.HasErrors)
                 {
 
-                    Log.WriteLine("Invalid XML request!");
-                    Log.WriteLine(HTTPRequest.Content.ToUTF8String());
+                    //Log.WriteLine("Invalid XML request!");
+                    //Log.WriteLine(HTTPRequest.Content.ToUTF8String());
 
-                    GetEventSource(Semantics.DebugLog).
+                    _HTTPServer.GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
@@ -189,9 +284,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 catch (Exception e)
                 {
 
-                    Log.WriteLine("Invalid XML request!");
+                    //Log.WriteLine("Invalid XML request!");
 
-                    GetEventSource(Semantics.DebugLog).
+                    _HTTPServer.GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
@@ -347,7 +442,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     catch (Exception e)
                     {
 
-                        Log.Timestamp("Invalid RemoteStartXML: " + e.Message);
+                        //Log.Timestamp("Invalid RemoteStartXML: " + e.Message);
 
                         return new HTTPResponseBuilder() {
 
@@ -416,29 +511,26 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     var Response = RemoteStartResult.Error();
 
-                    var OnRSt = _OnRemoteStartDelegateList.FirstOrDefault();
-                    if (OnRSt != null)
+                    var OnRemoteStartLocal = OnRemoteStart;
+                    if (OnRemoteStartLocal != null)
                     {
 
                         var CTS = new CancellationTokenSource();
 
-                        var task = OnRSt.Invoke(DateTime.Now,
-                                                this,
-                                                CTS.Token,
-                                                RoamingNetworkId,
-                                                EVSEId,
-                                                ChargingProductId,
-                                                SessionId,
-                                                PartnerSessionId,
-                                                ProviderId,
-                                                eMAId);
+                        var task = OnRemoteStartLocal(DateTime.Now,
+                                                      this,
+                                                      CTS.Token,
+                                                      EVSEId,
+                                                      ChargingProductId,
+                                                      SessionId,
+                                                      PartnerSessionId,
+                                                      ProviderId,
+                                                      eMAId);
 
                         task.Wait();
                         Response = task.Result;
 
                     }
-
-                    //Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStartResult: " + Response.ToString());
 
                     #endregion
 
@@ -582,7 +674,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     catch (Exception e)
                     {
 
-                        Log.Timestamp("Invalid RemoteStopXML: " + e.Message);
+                        //Log.Timestamp("Invalid RemoteStopXML: " + e.Message);
 
                         return new HTTPResponseBuilder() {
 
@@ -651,27 +743,24 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     var Response = RemoteStopResult.Error();
 
-                    var OnRSt = _OnRemoteStopDelegateList.FirstOrDefault();
-                    if (OnRSt != null)
+                    var OnRemoteStopLocal = OnRemoteStop;
+                    if (OnRemoteStopLocal != null)
                     {
 
                         var CTS = new CancellationTokenSource();
 
-                        var task = OnRSt.Invoke(DateTime.Now,
-                                                this,
-                                                CTS.Token,
-                                                RoamingNetworkId,
-                                                EVSEId,
-                                                SessionId,
-                                                PartnerSessionId,
-                                                ProviderId);
+                        var task = OnRemoteStopLocal(DateTime.Now,
+                                                     this,
+                                                     CTS.Token,
+                                                     EVSEId,
+                                                     SessionId,
+                                                     PartnerSessionId,
+                                                     ProviderId);
 
                         task.Wait();
                         Response = task.Result;
 
                     }
-
-                    //Log.WriteLine("[" + DateTime.Now + "] CPOServer: RemoteStopResult: " + Response.ToString());
 
                     #endregion
 
@@ -747,7 +836,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 }
 
                 #endregion
-
 
                 #region GetEVSEByIdRequest(EVSEId, QueryTimeout = null)
 
@@ -828,7 +916,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 #endregion
 
-
                 return new HTTPResponseBuilder() {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
@@ -841,91 +928,135 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Register SOAP-XML Request via GET
 
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   URIPrefix + "/RNs/{RoamingNetworkId}/RemoteStartStop",
-                                   HTTPContentType.XMLTEXT_UTF8,
-                                   HTTPDelegate: RemoteStartStopDelegate);
+            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+                                          URIPrefix + "/RNs/{RoamingNetworkId}/RemoteStartStop",
+                                          HTTPContentType.XMLTEXT_UTF8,
+                                          HTTPDelegate: RemoteStartStopDelegate);
 
             #endregion
 
             #region Register SOAP-XML Request via POST
 
-            this.AddMethodCallback(HTTPMethod.POST,
-                                   URIPrefix + "/RNs/{RoamingNetwork}/RemoteStartStop",
-                                   HTTPContentType.XMLTEXT_UTF8,
-                                   HTTPDelegate: RemoteStartStopDelegate);
+            _HTTPServer.AddMethodCallback(HTTPMethod.POST,
+                                          URIPrefix + "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                          HTTPContentType.XMLTEXT_UTF8,
+                                          HTTPDelegate: RemoteStartStopDelegate);
 
             #endregion
 
             #region Register HTML+Plaintext ErrorResponse
 
             // HTML
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   URIPrefix + "/RNs/{RoamingNetwork}/RemoteStartStop",
-                                   HTTPContentType.HTML_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+                                          URIPrefix + "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                          HTTPContentType.HTML_UTF8,
+                                          HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
-                                       return new HTTPResponseBuilder() {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
+                                              return new HTTPResponseBuilder() {
+                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                                  ContentType     = HTTPContentType.HTML_UTF8,
+                                                  Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  Connection      = "close"
+                                              };
 
-                                   });
+                                          });
 
             // Text
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   "/RNs/{RoamingNetwork}/RemoteStartStop",
-                                   HTTPContentType.TEXT_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+                                          "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                          HTTPContentType.TEXT_UTF8,
+                                          HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
-                                       return new HTTPResponseBuilder() {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
+                                              return new HTTPResponseBuilder() {
+                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                                  ContentType     = HTTPContentType.HTML_UTF8,
+                                                  Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  Connection      = "close"
+                                              };
 
-                                   });
-
-            #endregion
+                                          });
 
             #endregion
 
-            this.Start();
+            #endregion
 
         }
 
         #endregion
 
 
-        #region OnRemoteStart(RemoteStartDelegate)
+        #region (internal) SendRemoteStart(...)
 
-        /// <summary>
-        /// Register a RemoteStart delegate.
-        /// </summary>
-        /// <param name="RemoteStartDelegate">A RemoteStart delegate.</param>
-        public void OnRemoteStart(OnRemoteStartDelegate RemoteStartDelegate)
+        internal async Task<RemoteStartResult> SendRemoteStart(DateTime            Timestamp,
+                                                               CPOServer           Sender,
+                                                               CancellationToken   CancellationToken,
+                                                               EVSE_Id             EVSEId,
+                                                               ChargingProduct_Id  ChargingProductId,
+                                                               ChargingSession_Id  SessionId,
+                                                               ChargingSession_Id  PartnerSessionId,
+                                                               EVSP_Id             ProviderId,
+                                                               eMA_Id              eMAId)
         {
-            _OnRemoteStartDelegateList.Add(RemoteStartDelegate);
+
+            var OnRemoteStartLocal = OnRemoteStart;
+            if (OnRemoteStartLocal == null)
+                return RemoteStartResult.Error();
+
+            var results = await Task.WhenAll(OnRemoteStartLocal.
+                                                 GetInvocationList().
+                                                 Select(subscriber => (subscriber as OnRemoteStartDelegate)
+                                                     (Timestamp,
+                                                      this,
+                                                      CancellationToken,
+                                                      EVSEId,
+                                                      ChargingProductId,
+                                                      SessionId,
+                                                      PartnerSessionId,
+                                                      ProviderId,
+                                                      eMAId)));
+
+            return results.
+                       Where(result => result.Result != RemoteStartResultType.Unspecified).
+                       First();
+
         }
 
         #endregion
 
-        #region OnRemoteStop(RemoteStopDelegate)
+        #region (internal) SendRemoteStop(...)
 
-        /// <summary>
-        /// Register a RemoteStart delegate.
-        /// </summary>
-        /// <param name="RemoteStartDelegate">A RemoteStart delegate.</param>
-        public void OnRemoteStop(OnRemoteStopDelegate RemoteStopDelegate)
+        internal async Task<RemoteStopResult> SendRemoteStop(DateTime             Timestamp,
+                                                             CPOServer            Sender,
+                                                             CancellationToken    CancellationToken,
+                                                             EVSE_Id              EVSEId,
+                                                             ChargingSession_Id   SessionId,
+                                                             ChargingSession_Id   PartnerSessionId,
+                                                             EVSP_Id              ProviderId)
         {
-            _OnRemoteStopDelegateList.Add(RemoteStopDelegate);
+
+            var OnRemoteStopLocal = OnRemoteStop;
+            if (OnRemoteStopLocal == null)
+                return RemoteStopResult.Error();
+
+            var results = await Task.WhenAll(OnRemoteStopLocal.
+                                                 GetInvocationList().
+                                                 Select(subscriber => (subscriber as OnRemoteStopDelegate)
+                                                     (Timestamp,
+                                                      this,
+                                                      CancellationToken,
+                                                      EVSEId,
+                                                      SessionId,
+                                                      PartnerSessionId,
+                                                      ProviderId)));
+
+            return results.
+                       Where(result => result.Result != RemoteStopResultType.Unspecified).
+                       First();
+
         }
 
         #endregion

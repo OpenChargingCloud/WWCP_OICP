@@ -31,6 +31,8 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 using org.GraphDefined.WWCP.LocalService;
 using System.Threading;
+using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -40,70 +42,172 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// OICP v2.0 EMP HTTP/SOAP/XML server.
     /// </summary>
-    public class EMPServer : HTTPServer
+    public class EMPServer
     {
 
         #region Data
 
-        private readonly List<OnAuthorizeStartDelegate> _OnAuthorizeStartDelegateList;
-        private readonly List<OnAuthorizeStopDelegate>  _OnAuthorizeStopDelegateList;
+        private const           String  DefaultHTTPServerName  = "OICP v2.0 EMP HTTP/SOAP/XML Server API";
+        private static readonly IPPort  DefaultHTTPServerPort  = new IPPort(2002);
 
         #endregion
 
-        public event OnAuthorizeStartDelegate OnAuthorizeStartEvent;
-        public event OnAuthorizeStopDelegate  OnAuthorizeStopEvent;
+        #region Properties
+
+        #region HTTPServer
+
+        private readonly HTTPServer _HTTPServer;
+
+        public HTTPServer HTTPServer
+        {
+            get
+            {
+                return _HTTPServer;
+            }
+        }
+
+        #endregion
+
+        #region URIPrefix
+
+        private readonly String _URIPrefix;
+
+        public String URIPrefix
+        {
+            get
+            {
+                return _URIPrefix;
+            }
+        }
+
+        #endregion
+
+        #region DNSClient
+
+        private readonly DNSClient _DNSClient;
+
+        public DNSClient DNSClient
+        {
+            get
+            {
+                return _DNSClient;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Events
+
+        public event OnAuthorizeStartDelegate OnAuthorizeStart;
+
+        public event OnAuthorizeStopDelegate  OnAuthorizeStop;
+
+        #endregion
 
         #region Constructor(s)
 
+        #region EMPServer(HTTPServerName, TCPPort = null, URIPrefix = "", DNSClient = null)
+
         /// <summary>
-        /// Initialize the OICP HTTP/SOAP/XML EMP server using IPAddress.Any.
+        /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML EMP Server API using IPAddress.Any.
         /// </summary>
-        /// <param name="TCPPort">The TCP listing port.</param>
+        /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
+        /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
-        public EMPServer(IPPort  TCPPort,
-                         String  URIPrefix = "")
+        /// <param name="DNSClient">An optional DNS client to use.</param>
+        public EMPServer(String    HTTPServerName  = DefaultHTTPServerName,
+                         IPPort    TCPPort         = null,
+                         String    URIPrefix       = "",
+                         DNSClient DNSClient       = null)
+
+            : this(new HTTPServer(TCPPort != null ? TCPPort : DefaultHTTPServerPort,
+                                  HTTPServerName),
+                   URIPrefix,
+                   DNSClient)
+
+        { }
+
+        #endregion
+
+        #region EMPServer(HTTPServer, URIPrefix = "", DNSClient = null)
+
+        /// <summary>
+        /// Use the given HTTP server for the OICP HTTP/SOAP/XML EMP Server API using IPAddress.Any.
+        /// </summary>
+        /// <param name="HTTPServer">A HTTP server.</param>
+        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="DNSClient">An optional DNS client to use.</param>
+        public EMPServer(HTTPServer  HTTPServer,
+                         String      URIPrefix  = "",
+                         DNSClient   DNSClient  = null)
         {
 
-            this._OnAuthorizeStartDelegateList = new List<OnAuthorizeStartDelegate>();
-            this._OnAuthorizeStopDelegateList  = new List<OnAuthorizeStopDelegate>();
+            #region Initial checks
 
-            this.AttachTCPPort(TCPPort);
+            if (HTTPServer == null)
+                throw new ArgumentNullException("HTTPServer", "The given parameter must not be null!");
+
+            if (URIPrefix.IsNullOrEmpty())
+                throw new ArgumentNullException("URIPrefix", "The given parameter must not be null or empty!");
+
+            if (!URIPrefix.StartsWith("/"))
+                URIPrefix = "/" + URIPrefix;
+
+            #endregion
+
+            RegisterURITemplates();
+
+            _HTTPServer.Start();
+
+        }
+
+        #endregion
+
+        #endregion
+
+
+        #region (private) RegisterURITemplates()
+
+        private void RegisterURITemplates()
+        {
 
             #region / (HTTPRoot)
 
             // HTML
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   URIPrefix + "/",
-                                   HTTPContentType.HTML_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+                                          URIPrefix + "/",
+                                          HTTPContentType.HTML_UTF8,
+                                          HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
-                                       return new HTTPResponseBuilder() {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/{RoamingNetworkId}/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
+                                              return new HTTPResponseBuilder() {
+                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                                  ContentType     = HTTPContentType.HTML_UTF8,
+                                                  Content         = ("/RNs/{RoamingNetworkId}/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  Connection      = "close"
+                                              };
 
-                                   });
+                                          });
 
             // Text
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   URIPrefix + "/",
-                                   HTTPContentType.TEXT_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+                                          URIPrefix + "/",
+                                          HTTPContentType.TEXT_UTF8,
+                                          HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
-                                       return new HTTPResponseBuilder() {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/{RoamingNetworkId}/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
+                                              return new HTTPResponseBuilder() {
+                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                                  ContentType     = HTTPContentType.HTML_UTF8,
+                                                  Content         = ("/RNs/{RoamingNetworkId}/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  Connection      = "close"
+                                              };
 
-                                   });
+                                          });
 
             #endregion
 
@@ -123,7 +227,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 if (!RoamingNetwork_Id.TryParse(HTTPRequest.ParsedURIParameters[0], out RoamingNetworkId))
                     return new HTTPResponseBuilder() {
                         HTTPStatusCode  = HTTPStatusCode.BadRequest,
-                        Server          = this.DefaultServerName,
+                        Server          = _HTTPServer.DefaultServerName,
                     };
 
                 #endregion
@@ -149,7 +253,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     Log.WriteLine("Invalid XML request!");
                     Log.WriteLine(HTTPRequest.Content.ToUTF8String());
 
-                    GetEventSource(Semantics.DebugLog).
+                    _HTTPServer.GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
@@ -191,7 +295,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     Log.WriteLine("Invalid XML request!");
 
-                    GetEventSource(Semantics.DebugLog).
+                    _HTTPServer.GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
@@ -420,25 +524,25 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Call async subscribers
 
-                    var Response = AuthorizeStartResult.Error;
+                    var Response = AuthorizeStartResultType.Error;
 
-                    var OnRSt = _OnAuthorizeStartDelegateList.FirstOrDefault();
-                    if (OnRSt != null)
+                    var OnAuthorizeStartLocal = OnAuthorizeStart;
+                    if (OnAuthorizeStartLocal != null)
                     {
 
                         var CTS = new CancellationTokenSource();
 
-                        var task = OnRSt.Invoke(DateTime.Now,
-                                                this,
-                                                CTS.Token,
-                                                RoamingNetworkId,
-                                                OperatorId,
-                                                AuthToken,
-                                                EVSEId,
-                                                SessionId,
-                                                PartnerProductId,
-                                                PartnerSessionId,
-                                                QueryTimeout);
+                        var task = OnAuthorizeStartLocal(DateTime.Now,
+                                                         this,
+                                                         CTS.Token,
+                                                         RoamingNetworkId,
+                                                         OperatorId,
+                                                         AuthToken,
+                                                         EVSEId,
+                                                         SessionId,
+                                                         PartnerProductId,
+                                                         PartnerSessionId,
+                                                         QueryTimeout);
 
                         task.Wait();
                         Response = task.Result;
@@ -454,42 +558,42 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     switch (Response)
                     {
 
-                        case AuthorizeStartResult.Success:
+                        case AuthorizeStartResultType.Success:
                             HubjectCode         = "000";
                             HubjectDescription  = "Ready to charge!";
                             break;
 
-                        case AuthorizeStartResult.SessionId_AlreadyInUse:
+                        case AuthorizeStartResultType.SessionId_AlreadyInUse:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case AuthorizeStartResult.EVSE_NotReachable:
+                        case AuthorizeStartResultType.EVSE_NotReachable:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case AuthorizeStartResult.Start_Timeout:
+                        case AuthorizeStartResultType.Start_Timeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case AuthorizeStartResult.EVSEReserved:
+                        case AuthorizeStartResultType.EVSEReserved:
                             HubjectCode         = "601";
                             HubjectDescription  = "EVSE reserved!";
                             break;
 
-                        case AuthorizeStartResult.EVSE_AlreadyInUse:
+                        case AuthorizeStartResultType.EVSE_AlreadyInUse:
                             HubjectCode         = "602";
                             HubjectDescription  = "EVSE is already in use!";
                             break;
 
-                        case AuthorizeStartResult.UnknownEVSE:
+                        case AuthorizeStartResultType.UnknownEVSE:
                             HubjectCode         = "603";
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case AuthorizeStartResult.EVSEOutOfService:
+                        case AuthorizeStartResultType.EVSEOutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;
@@ -656,22 +760,22 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Call async subscribers
 
-                    var Response = AuthorizeStopResult.Error;
+                    var Response = AuthorizeStopResultType.Error;
 
-                    var OnRSt = _OnAuthorizeStopDelegateList.FirstOrDefault();
-                    if (OnRSt != null)
+                    var OnAuthorizeStopLocal = OnAuthorizeStop;
+                    if (OnAuthorizeStopLocal != null)
                     {
 
                         var CTS = new CancellationTokenSource();
 
-                        var task = OnRSt.Invoke(DateTime.Now,
-                                                this,
-                                                CTS.Token,
-                                                RoamingNetworkId,
-                                                SessionId,
-                                                PartnerSessionId,
-                                                ProviderId,
-                                                EVSEId);
+                        var task = OnAuthorizeStopLocal(DateTime.Now,
+                                                        this,
+                                                        CTS.Token,
+                                                        RoamingNetworkId,
+                                                        SessionId,
+                                                        PartnerSessionId,
+                                                        ProviderId,
+                                                        EVSEId);
 
                         task.Wait();
                         Response = task.Result;
@@ -687,32 +791,32 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     switch (Response)
                     {
 
-                        case AuthorizeStopResult.Success:
+                        case AuthorizeStopResultType.Success:
                             HubjectCode         = "000";
                             HubjectDescription  = "Ready to stop charging!";
                             break;
 
-                        case AuthorizeStopResult.SessionIsInvalid:
+                        case AuthorizeStopResultType.SessionIsInvalid:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case AuthorizeStopResult.EVSE_NotReachable:
+                        case AuthorizeStopResultType.EVSE_NotReachable:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case AuthorizeStopResult.Stop_Timeout:
+                        case AuthorizeStopResultType.Stop_Timeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case AuthorizeStopResult.UnknownEVSE:
+                        case AuthorizeStopResultType.UnknownEVSE:
                             HubjectCode         = "603";
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case AuthorizeStopResult.EVSEOutOfService:
+                        case AuthorizeStopResultType.EVSEOutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;
@@ -848,91 +952,139 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Register SOAP-XML Request via GET
 
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   URIPrefix + "/RNs/{RoamingNetworkId}/AuthorizeStartStop",
-                                   HTTPContentType.XMLTEXT_UTF8,
-                                   HTTPDelegate: AuthorizeStartStopDelegate);
+            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+                                          URIPrefix + "/RNs/{RoamingNetworkId}/AuthorizeStartStop",
+                                          HTTPContentType.XMLTEXT_UTF8,
+                                          HTTPDelegate: AuthorizeStartStopDelegate);
 
             #endregion
 
             #region Register SOAP-XML Request via POST
 
-            this.AddMethodCallback(HTTPMethod.POST,
-                                   URIPrefix + "/RNs/{RoamingNetwork}/AuthorizeStartStop",
-                                   HTTPContentType.XMLTEXT_UTF8,
-                                   HTTPDelegate: AuthorizeStartStopDelegate);
+            _HTTPServer.AddMethodCallback(HTTPMethod.POST,
+                                          URIPrefix + "/RNs/{RoamingNetwork}/AuthorizeStartStop",
+                                          HTTPContentType.XMLTEXT_UTF8,
+                                          HTTPDelegate: AuthorizeStartStopDelegate);
 
             #endregion
 
             #region Register HTML+Plaintext ErrorResponse
 
             // HTML
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   URIPrefix + "/RNs/{RoamingNetwork}/AuthorizeStartStop",
-                                   HTTPContentType.HTML_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+                                          URIPrefix + "/RNs/{RoamingNetwork}/AuthorizeStartStop",
+                                          HTTPContentType.HTML_UTF8,
+                                          HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
-                                       return new HTTPResponseBuilder() {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/" + RoamingNetworkId + "/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
+                                              return new HTTPResponseBuilder() {
+                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                                  ContentType     = HTTPContentType.HTML_UTF8,
+                                                  Content         = ("/RNs/" + RoamingNetworkId + "/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  Connection      = "close"
+                                              };
 
-                                   });
+                                          });
 
             // Text
-            this.AddMethodCallback(HTTPMethod.GET,
-                                   "/RNs/{RoamingNetwork}/AuthorizeStartStop",
-                                   HTTPContentType.TEXT_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+                                          "/RNs/{RoamingNetwork}/AuthorizeStartStop",
+                                          HTTPContentType.TEXT_UTF8,
+                                          HTTPDelegate: HTTPRequest => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
 
-                                       return new HTTPResponseBuilder() {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/" + RoamingNetworkId + "/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
+                                              return new HTTPResponseBuilder() {
+                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                                  ContentType     = HTTPContentType.HTML_UTF8,
+                                                  Content         = ("/RNs/" + RoamingNetworkId + "/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  Connection      = "close"
+                                              };
 
-                                   });
-
-            #endregion
+                                          });
 
             #endregion
 
-            this.Start();
+            #endregion
 
         }
 
         #endregion
 
 
-        #region OnAuthorizeStart(AuthorizeStartDelegate)
+        #region (internal) SendAuthorizeStart(...)
 
-        /// <summary>
-        /// Register a AuthorizeStart delegate.
-        /// </summary>
-        /// <param name="AuthorizeStartDelegate">A AuthorizeStart delegate.</param>
-        public void OnAuthorizeStart(OnAuthorizeStartDelegate AuthorizeStartDelegate)
+        internal async Task<AuthorizeStartResultType> SendAuthorizeStart(DateTime            Timestamp,
+                                                                         CancellationToken   CancellationToken,
+                                                                         RoamingNetwork_Id   RoamingNetworkId,
+                                                                         EVSEOperator_Id     OperatorId,
+                                                                         Auth_Token          AuthToken,
+                                                                         EVSE_Id             EVSEId            = null,
+                                                                         ChargingSession_Id  SessionId         = null,
+                                                                         ChargingProduct_Id  PartnerProductId  = null,
+                                                                         ChargingSession_Id  PartnerSessionId  = null,
+                                                                         TimeSpan?           QueryTimeout      = null)
         {
-            _OnAuthorizeStartDelegateList.Add(AuthorizeStartDelegate);
+
+            var OnAuthorizeStartLocal = OnAuthorizeStart;
+            if (OnAuthorizeStartLocal == null)
+                return AuthorizeStartResultType.Error;
+
+            var results = await Task.WhenAll(OnAuthorizeStartLocal.
+                                                 GetInvocationList().
+                                                 Select(subscriber => (subscriber as OnAuthorizeStartDelegate)
+                                                     (Timestamp,
+                                                      this,
+                                                      CancellationToken,
+                                                      RoamingNetworkId,
+                                                      OperatorId,
+                                                      AuthToken,
+                                                      EVSEId            = null,
+                                                      SessionId         = null,
+                                                      PartnerProductId  = null,
+                                                      PartnerSessionId  = null,
+                                                      QueryTimeout      = null)));
+
+            return results.
+                       Where(result => result != AuthorizeStartResultType.Unspecified).
+                       First();
+
         }
 
         #endregion
 
-        #region OnAuthorizeStop(AuthorizeStopDelegate)
+        #region (internal) SendAuthorizeStop(...)
 
-        /// <summary>
-        /// Register a AuthorizeStart delegate.
-        /// </summary>
-        /// <param name="AuthorizeStartDelegate">A AuthorizeStart delegate.</param>
-        public void OnAuthorizeStop(OnAuthorizeStopDelegate AuthorizeStopDelegate)
+        internal async Task<AuthorizeStopResultType> SendAuthorizeStop(DateTime            Timestamp,
+                                                                       CancellationToken   CancellationToken,
+                                                                       RoamingNetwork_Id   RoamingNetworkId,
+                                                                       ChargingSession_Id  SessionId,
+                                                                       ChargingSession_Id  PartnerSessionId,
+                                                                       EVSP_Id             ProviderId,
+                                                                       EVSE_Id             EVSEId)
         {
-            _OnAuthorizeStopDelegateList.Add(AuthorizeStopDelegate);
+
+            var OnAuthorizeStopLocal = OnAuthorizeStop;
+            if (OnAuthorizeStopLocal == null)
+                return AuthorizeStopResultType.Error;
+
+            var results = await Task.WhenAll(OnAuthorizeStopLocal.
+                                                 GetInvocationList().
+                                                 Select(subscriber => (subscriber as OnAuthorizeStopDelegate)
+                                                     (Timestamp,
+                                                      this,
+                                                      CancellationToken,
+                                                      RoamingNetworkId,
+                                                      SessionId,
+                                                      PartnerSessionId,
+                                                      ProviderId,
+                                                      EVSEId)));
+
+            return results.
+                       Where(result => result != AuthorizeStopResultType.Unspecified).
+                       First();
+
         }
 
         #endregion

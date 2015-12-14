@@ -43,7 +43,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <param name="PartnerSessionId">An optional partner session identification.</param>
     /// <param name="QueryTimeout">An optional timeout for this query.</param>
     /// <returns>A AuthorizeStartResult task.</returns>
-    public delegate Task<AuthorizeStartResult> OnAuthorizeStartDelegate(DateTime            Timestamp,
+    public delegate Task<AuthorizeStartResultType> OnAuthorizeStartDelegate(DateTime            Timestamp,
                                                                         EMPServer           Sender,
                                                                         CancellationToken   CancellationToken,
                                                                         RoamingNetwork_Id   RoamingNetworkId,
@@ -68,14 +68,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <returns>A remote stop result object.</returns>
-    public delegate Task<AuthorizeStopResult> OnAuthorizeStopDelegate(DateTime            Timestamp,
-                                                                      EMPServer           Sender,
-                                                                      CancellationToken   CancellationToken,
-                                                                      RoamingNetwork_Id   RoamingNetworkId,
-                                                                      ChargingSession_Id  SessionId,
-                                                                      ChargingSession_Id  PartnerSessionId,
-                                                                      EVSP_Id             ProviderId,
-                                                                      EVSE_Id             EVSEId);
+    public delegate Task<AuthorizeStopResultType> OnAuthorizeStopDelegate(DateTime            Timestamp,
+                                                                          EMPServer           Sender,
+                                                                          CancellationToken   CancellationToken,
+                                                                          RoamingNetwork_Id   RoamingNetworkId,
+                                                                          ChargingSession_Id  SessionId,
+                                                                          ChargingSession_Id  PartnerSessionId,
+                                                                          EVSP_Id             ProviderId,
+                                                                          EVSE_Id             EVSEId);
 
 
 }
