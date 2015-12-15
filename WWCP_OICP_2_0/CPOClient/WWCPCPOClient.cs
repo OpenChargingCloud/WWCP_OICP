@@ -38,8 +38,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// OICP v2.0 CPO Upstream Service(s).
     /// </summary>
-    public class WWCPCPOClient : IAuthServices,
-                                 IDataServices
+    public class WWCPCPOClient : IAuthServices
+                                 //IDataServices
     {
 
         #region Data

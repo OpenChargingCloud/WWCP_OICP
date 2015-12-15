@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// OICP v2.0 EMP upstream services.
     /// </summary>
-    public class EMPUpstreamService : IRoamingProviderProvided_EVSPServices
+    public class EMPUpstreamService
     {
 
         #region Data
