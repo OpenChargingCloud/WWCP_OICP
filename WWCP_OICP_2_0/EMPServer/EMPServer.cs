@@ -227,15 +227,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (HTTPServer == null)
                 throw new ArgumentNullException("HTTPServer", "The given parameter must not be null!");
 
-            if (URIPrefix.IsNullOrEmpty())
-                throw new ArgumentNullException("URIPrefix", "The given parameter must not be null or empty!");
-
-            if (!URIPrefix.StartsWith("/"))
+            if (URIPrefix.Length > 0 && !URIPrefix.StartsWith("/"))
                 URIPrefix = "/" + URIPrefix;
 
             #endregion
 
-            this._DNSClient  = HTTPServer.DNSClient;
+            this._HTTPServer  = HTTPServer;
+            this._URIPrefix   = URIPrefix;
+            this._DNSClient   = HTTPServer.DNSClient;
 
             RegisterURITemplates();
 
