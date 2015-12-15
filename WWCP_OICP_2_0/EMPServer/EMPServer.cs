@@ -100,15 +100,92 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Events
 
+        #region OnAuthorizeStart
+
         public event OnAuthorizeStartDelegate OnAuthorizeStart;
+
+        #endregion
+
+        #region OnAuthorizeStop
 
         public event OnAuthorizeStopDelegate  OnAuthorizeStop;
 
         #endregion
 
+
+        // Generic HTTP events...
+
+        #region RequestLog
+
+        /// <summary>
+        /// An event called whenever a request came in.
+        /// </summary>
+        public event RequestLogHandler RequestLog
+        {
+
+            add
+            {
+                _HTTPServer.RequestLog += value;
+            }
+
+            remove
+            {
+                _HTTPServer.RequestLog -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region AccessLog
+
+        /// <summary>
+        /// An event called whenever a request could successfully be processed.
+        /// </summary>
+        public event AccessLogHandler AccessLog
+        {
+
+            add
+            {
+                _HTTPServer.AccessLog += value;
+            }
+
+            remove
+            {
+                _HTTPServer.AccessLog -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region ErrorLog
+
+        /// <summary>
+        /// An event called whenever a request resulted in an error.
+        /// </summary>
+        public event ErrorLogHandler ErrorLog
+        {
+
+            add
+            {
+                _HTTPServer.ErrorLog += value;
+            }
+
+            remove
+            {
+                _HTTPServer.ErrorLog -= value;
+            }
+
+        }
+
+        #endregion
+
+        #endregion
+
         #region Constructor(s)
 
-        #region EMPServer(HTTPServerName, TCPPort = null, URIPrefix = "", DNSClient = null)
+        #region EMPServer(HTTPServerName, TCPPort = null, URIPrefix = "", DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML EMP Server API using IPAddress.Any.
@@ -117,31 +194,32 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
+        /// <param name="AutoStart">Start the server immediately.</param>
         public EMPServer(String    HTTPServerName  = DefaultHTTPServerName,
                          IPPort    TCPPort         = null,
                          String    URIPrefix       = "",
-                         DNSClient DNSClient       = null)
+                         DNSClient DNSClient       = null,
+                         Boolean   AutoStart       = false)
 
             : this(new HTTPServer(TCPPort != null ? TCPPort : DefaultHTTPServerPort,
-                                  HTTPServerName),
-                   URIPrefix,
-                   DNSClient)
+                                  DefaultServerName:  HTTPServerName,
+                                  DNSClient:          DNSClient,
+                                  Autostart:          AutoStart),
+                   URIPrefix)
 
         { }
 
         #endregion
 
-        #region EMPServer(HTTPServer, URIPrefix = "", DNSClient = null)
+        #region EMPServer(HTTPServer, URIPrefix = "")
 
         /// <summary>
         /// Use the given HTTP server for the OICP HTTP/SOAP/XML EMP Server API using IPAddress.Any.
         /// </summary>
         /// <param name="HTTPServer">A HTTP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
-        /// <param name="DNSClient">An optional DNS client to use.</param>
         public EMPServer(HTTPServer  HTTPServer,
-                         String      URIPrefix  = "",
-                         DNSClient   DNSClient  = null)
+                         String      URIPrefix  = "")
         {
 
             #region Initial checks
@@ -157,9 +235,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            RegisterURITemplates();
+            this._DNSClient  = HTTPServer.DNSClient;
 
-            _HTTPServer.Start();
+            RegisterURITemplates();
 
         }
 
@@ -1089,6 +1167,24 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+
+        #region Start()
+
+        public void Start()
+        {
+            _HTTPServer.Start();
+        }
+
+        #endregion
+
+        #region Shutdown(Message = null, Wait = true)
+
+        public void Shutdown(String Message = null, Boolean Wait = true)
+        {
+            _HTTPServer.Shutdown(Message, Wait);
+        }
+
+        #endregion
 
     }
 
