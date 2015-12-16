@@ -1274,7 +1274,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public new async Task<HTTPResponse<SENDCDRResult>>
+        public new async Task<HTTPResponse<SendCDRResult>>
 
             SendChargeDetailRecord(EVSE_Id              EVSEId,
                                    ChargingSession_Id   SessionId,
@@ -1318,13 +1318,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             // true
             if (Ack.Content.Result)
-                return new HTTPResponse<SENDCDRResult>(Ack.HttpResponse,
-                                                       new SENDCDRResult(_AuthorizatorId) { State = SENDCDRState.Forwarded });
+                return new HTTPResponse<SendCDRResult>(Ack.HttpResponse,
+                                                       SendCDRResult.Forwarded(_AuthorizatorId));
 
             // false
             else
-                return new HTTPResponse<SENDCDRResult>(Ack.HttpResponse,
-                                                       new SENDCDRResult(_AuthorizatorId) { State = SENDCDRState.False });
+                return new HTTPResponse<SendCDRResult>(Ack.HttpResponse,
+                                                       SendCDRResult.False(_AuthorizatorId));
 
         }
 
