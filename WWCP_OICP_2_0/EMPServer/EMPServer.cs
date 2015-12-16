@@ -20,6 +20,8 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
@@ -27,12 +29,8 @@ using Newtonsoft.Json.Linq;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Illias.ConsoleLog;
 using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-
-using org.GraphDefined.WWCP.LocalService;
-using System.Threading;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using System.Threading.Tasks;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 

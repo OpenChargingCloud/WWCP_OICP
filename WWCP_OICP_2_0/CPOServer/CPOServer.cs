@@ -31,8 +31,6 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
-using org.GraphDefined.WWCP.LocalService;
-
 #endregion
 
 namespace org.GraphDefined.WWCP.OICP_2_0

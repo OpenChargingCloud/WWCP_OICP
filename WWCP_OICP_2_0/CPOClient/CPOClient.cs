@@ -22,13 +22,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using org.GraphDefined.WWCP.LocalService;
-
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 

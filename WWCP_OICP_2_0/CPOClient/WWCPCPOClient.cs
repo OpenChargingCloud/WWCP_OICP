@@ -28,8 +28,6 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 
-using org.GraphDefined.WWCP.LocalService;
-
 #endregion
 
 namespace org.GraphDefined.WWCP.OICP_2_0
@@ -39,7 +37,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// OICP v2.0 CPO Upstream Service(s).
     /// </summary>
     public class WWCPCPOClient : IAuthServices
-                                 //IDataServices
     {
 
         #region Data
@@ -220,35 +217,35 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Tokens
 
-        public IEnumerable<KeyValuePair<Auth_Token, AuthorizationResult>> AllTokens
+        public IEnumerable<KeyValuePair<Auth_Token, TokenAuthorizationResultType>> AllTokens
         {
             get
             {
-                return new KeyValuePair<Auth_Token, AuthorizationResult>[0];
+                return new KeyValuePair<Auth_Token, TokenAuthorizationResultType>[0];
             }
         }
 
-        public IEnumerable<KeyValuePair<Auth_Token, AuthorizationResult>> AuthorizedTokens
+        public IEnumerable<KeyValuePair<Auth_Token, TokenAuthorizationResultType>> AuthorizedTokens
         {
             get
             {
-                return new KeyValuePair<Auth_Token, AuthorizationResult>[0];
+                return new KeyValuePair<Auth_Token, TokenAuthorizationResultType>[0];
             }
         }
 
-        public IEnumerable<KeyValuePair<Auth_Token, AuthorizationResult>> NotAuthorizedTokens
+        public IEnumerable<KeyValuePair<Auth_Token, TokenAuthorizationResultType>> NotAuthorizedTokens
         {
             get
             {
-                return new KeyValuePair<Auth_Token, AuthorizationResult>[0];
+                return new KeyValuePair<Auth_Token, TokenAuthorizationResultType>[0];
             }
         }
 
-        public IEnumerable<KeyValuePair<Auth_Token, AuthorizationResult>> BlockedTokens
+        public IEnumerable<KeyValuePair<Auth_Token, TokenAuthorizationResultType>> BlockedTokens
         {
             get
             {
-                return new KeyValuePair<Auth_Token, AuthorizationResult>[0];
+                return new KeyValuePair<Auth_Token, TokenAuthorizationResultType>[0];
             }
         }
 
@@ -1083,7 +1080,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<AUTHSTARTResult>>
+        public async Task<HTTPResponse<AuthStartResult>>
 
             AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
@@ -1105,22 +1102,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             // Authorized
             if (AuthorizationStartResult.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                return new HTTPResponse<AUTHSTARTResult>(AuthorizationStartResult.HttpResponse,
-                                                         new AUTHSTARTResult(AuthorizatorId) {
-                                                             AuthorizationResult  = AuthorizationResult.Authorized,
+                return new HTTPResponse<AuthStartResult>(AuthorizationStartResult.HttpResponse,
+                                                         new AuthStartResult(AuthorizatorId) {
+                                                             AuthorizationResult  = AuthorizeStartResultType.Success,
                                                              SessionId            = AuthorizationStartResult.Content.SessionId,
-                                                             PartnerSessionId     = AuthorizationStartResult.Content.PartnerSessionId,
                                                              ProviderId           = AuthorizationStartResult.Content.ProviderId,
                                                              Description          = AuthorizationStartResult.Content.StatusCode.Description,
                                                              AdditionalInfo       = AuthorizationStartResult.Content.StatusCode.AdditionalInfo
                                                          });
 
             // NotAuthorized
-            return new HTTPResponse<AUTHSTARTResult>(AuthorizationStartResult.HttpResponse,
-                                                     new AUTHSTARTResult(AuthorizatorId) {
-                                                         AuthorizationResult  = AuthorizationResult.NotAuthorized,
+            return new HTTPResponse<AuthStartResult>(AuthorizationStartResult.HttpResponse,
+                                                     new AuthStartResult(AuthorizatorId) {
+                                                         AuthorizationResult  = AuthorizeStartResultType.Error,
                                                          SessionId            = AuthorizationStartResult.Content.SessionId,
-                                                         PartnerSessionId     = AuthorizationStartResult.Content.PartnerSessionId,
                                                          ProviderId           = AuthorizationStartResult.Content.ProviderId,
                                                          Description          = AuthorizationStartResult.Content.StatusCode.Description,
                                                          AdditionalInfo       = AuthorizationStartResult.Content.StatusCode.AdditionalInfo
@@ -1145,7 +1140,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<AUTHSTOPResult>> AuthorizeStop(EVSEOperator_Id      OperatorId,
+        public async Task<HTTPResponse<AuthStopResult>> AuthorizeStop(EVSEOperator_Id      OperatorId,
                                                                       ChargingSession_Id   SessionId,
                                                                       Auth_Token           AuthToken,
                                                                       EVSE_Id              EVSEId            = null,
@@ -1162,11 +1157,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             // Authorized
             if (AuthorizationStopResult.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                return new HTTPResponse<AUTHSTOPResult>(AuthorizationStopResult.HttpResponse,
-                                                        new AUTHSTOPResult(AuthorizatorId) {
-                                                            AuthorizationResult  = AuthorizationResult.Authorized,
+                return new HTTPResponse<AuthStopResult>(AuthorizationStopResult.HttpResponse,
+                                                        new AuthStopResult(AuthorizatorId) {
+                                                            AuthorizationResult  = AuthorizeStopResultType.Success,
                                                             SessionId            = AuthorizationStopResult.Content.SessionId,
-                                                            PartnerSessionId     = AuthorizationStopResult.Content.PartnerSessionId,
                                                             ProviderId           = AuthorizationStopResult.Content.ProviderId,
                                                             Description          = AuthorizationStopResult.Content.StatusCode.Description,
                                                             AdditionalInfo       = AuthorizationStopResult.Content.StatusCode.AdditionalInfo
@@ -1174,11 +1168,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             // NotAuthorized
             else
-                return new HTTPResponse<AUTHSTOPResult>(AuthorizationStopResult.HttpResponse,
-                                                        new AUTHSTOPResult(AuthorizatorId) {
-                                                            AuthorizationResult  = AuthorizationResult.NotAuthorized,
+                return new HTTPResponse<AuthStopResult>(AuthorizationStopResult.HttpResponse,
+                                                        new AuthStopResult(AuthorizatorId) {
+                                                            AuthorizationResult  = AuthorizeStopResultType.Error,
                                                             SessionId            = AuthorizationStopResult.Content.SessionId,
-                                                            PartnerSessionId     = AuthorizationStopResult.Content.PartnerSessionId,
                                                             ProviderId           = AuthorizationStopResult.Content.ProviderId,
                                                             Description          = AuthorizationStopResult.Content.StatusCode.Description,
                                                             AdditionalInfo       = AuthorizationStopResult.Content.StatusCode.AdditionalInfo

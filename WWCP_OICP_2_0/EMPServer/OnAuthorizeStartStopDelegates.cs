@@ -21,8 +21,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using org.GraphDefined.WWCP.LocalService;
-
 #endregion
 
 namespace org.GraphDefined.WWCP.OICP_2_0

@@ -25,13 +25,9 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Illias.ConsoleLog;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
-
-using org.GraphDefined.WWCP.LocalService;
-using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
@@ -168,8 +164,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 if (XMLRequest.HasErrors)
                 {
 
-                    Log.WriteLine("Invalid XML request!");
-                    Log.WriteLine(HTTPRequest.Content.ToUTF8String());
+                    //Log.WriteLine("Invalid XML request!");
+                    //Log.WriteLine(HTTPRequest.Content.ToUTF8String());
 
                     GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
@@ -422,7 +418,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 catch (Exception e)
                 {
 
-                    Log.WriteLine("Invalid XML request!");
+                    //Log.WriteLine("Invalid XML request!");
 
                     GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
