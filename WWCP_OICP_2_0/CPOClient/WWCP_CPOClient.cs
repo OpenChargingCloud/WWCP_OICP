@@ -1090,13 +1090,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         {
 
-            var AuthStartTask = await _CPOClient.AuthorizeStart(OperatorId,
-                                                                  AuthToken,
-                                                                  EVSEId,
-                                                                  SessionId,
-                                                                  ChargingProductId,
-                                                                  null,
-                                                                  QueryTimeout);
+            var AuthStartTask  = await _CPOClient.AuthorizeStart(OperatorId,
+                                                                   AuthToken,
+                                                                   EVSEId,
+                                                                   SessionId,
+                                                                   ChargingProductId,
+                                                                   null,
+                                                                   QueryTimeout);
 
             if (AuthStartTask.HttpResponse.HTTPStatusCode == HTTPStatusCode.OK)
             {
@@ -1178,39 +1178,38 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<AuthStopEVSEResult> AuthorizeStop(EVSEOperator_Id      OperatorId,
-                                                        ChargingSession_Id   SessionId,
-                                                        Auth_Token           AuthToken,
-                                                        EVSE_Id              EVSEId            = null,
-                                                        TimeSpan?            QueryTimeout      = null)
+        public async Task<AuthStopEVSEResult> AuthorizeStop(EVSEOperator_Id     OperatorId,
+                                                            ChargingSession_Id  SessionId,
+                                                            Auth_Token          AuthToken,
+                                                            EVSE_Id             EVSEId        = null,
+                                                            TimeSpan?           QueryTimeout  = null)
         {
 
-            var AuthorizationStopResult = await _CPOClient.AuthorizeStop(OperatorId,
-                                                                         SessionId,
-                                                                         AuthToken,
-                                                                         EVSEId,
-                                                                         null,
-                                                                         QueryTimeout);
+            var AuthStopTask  = await _CPOClient.AuthorizeStop(OperatorId,
+                                                               SessionId,
+                                                               AuthToken,
+                                                               EVSEId,
+                                                               null,
+                                                               QueryTimeout);
 
-            // Authorized
-            if (AuthorizationStopResult.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                return new AuthStopEVSEResult(AuthorizatorId) {
-                           AuthorizationResult  = AuthStopEVSEResultType.Success,
-                           SessionId            = AuthorizationStopResult.Content.SessionId,
-                           ProviderId           = AuthorizationStopResult.Content.ProviderId,
-                           Description          = AuthorizationStopResult.Content.StatusCode.Description,
-                           AdditionalInfo       = AuthorizationStopResult.Content.StatusCode.AdditionalInfo
-                       };
+            if (AuthStopTask.HttpResponse.HTTPStatusCode == HTTPStatusCode.OK)
+            {
 
-            // NotAuthorized
-            else
-                return new AuthStopEVSEResult(AuthorizatorId) {
-                           AuthorizationResult  = AuthStopEVSEResultType.Error,
-                           SessionId            = AuthorizationStopResult.Content.SessionId,
-                           ProviderId           = AuthorizationStopResult.Content.ProviderId,
-                           Description          = AuthorizationStopResult.Content.StatusCode.Description,
-                           AdditionalInfo       = AuthorizationStopResult.Content.StatusCode.AdditionalInfo
-                       };
+                if (AuthStopTask.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                    return AuthStopEVSEResult.Authorized(AuthorizatorId,
+                                                         AuthStopTask.Content.ProviderId,
+                                                         AuthStopTask.Content.StatusCode.Description,
+                                                         AuthStopTask.Content.StatusCode.AdditionalInfo);
+
+                return AuthStopEVSEResult.NotAuthorized(AuthorizatorId,
+                                                        AuthStopTask.Content.ProviderId,
+                                                        AuthStopTask.Content.StatusCode.Description,
+                                                        AuthStopTask.Content.StatusCode.AdditionalInfo);
+
+            }
+
+            return AuthStopEVSEResult.Error(AuthorizatorId,
+                                            "HTTP error: " + AuthStopTask.HttpResponse.HTTPStatusCode.ToString());
 
         }
 

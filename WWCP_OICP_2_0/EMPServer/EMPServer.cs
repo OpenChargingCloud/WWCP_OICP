@@ -867,22 +867,22 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     switch (Response)
                     {
 
-                        case AuthStopEVSEResultType.Success:
+                        case AuthStopEVSEResultType.Authorized:
                             HubjectCode         = "000";
                             HubjectDescription  = "Ready to stop charging!";
                             break;
 
-                        case AuthStopEVSEResultType.SessionIsInvalid:
+                        case AuthStopEVSEResultType.InvalidSessionId:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case AuthStopEVSEResultType.NotReachable:
+                        case AuthStopEVSEResultType.EVSECommunicationTimeout:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case AuthStopEVSEResultType.Timeout:
+                        case AuthStopEVSEResultType.StopChargingTimeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
