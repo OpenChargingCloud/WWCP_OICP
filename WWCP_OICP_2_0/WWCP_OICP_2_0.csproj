@@ -51,8 +51,8 @@
     <Compile Include="Helpers\AOICPUpstreamService.cs" />
     <Compile Include="CPOClient\CPOClient.cs" />
     <Compile Include="CPOClient\CPOClient_XMLMethods.cs" />
-    <Compile Include="CPOClient\WWCPCPOClient_XMLMethods.cs" />
-    <Compile Include="CPOClient\WWCPCPOClient.cs" />
+    <Compile Include="CPOClient\WWCP_CPOClient_XMLMethods.cs" />
+    <Compile Include="CPOClient\WWCP_CPOClient.cs" />
     <Compile Include="EMPClient\EMPClient.cs" />
     <Compile Include="EMPClient\EMPClient_XMLMethods.cs" />
     <Compile Include="EMPClient\EMPUpstreamService.cs" />

@@ -34,7 +34,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// OICP v2.0 CPO management operations.
     /// </summary>
-    public static class WWCPCPOClient_XMLMethods
+    public static class WWCP_CPOClient_XMLMethods
     {
 
         #region Data

@@ -36,7 +36,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// OICP v2.0 CPO Upstream Service(s).
     /// </summary>
-    public class WWCPCPOClient : IAuthServices
+    public class WWCP_CPOClient : IAuthServices
     {
 
         #region Data
@@ -192,13 +192,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public WWCPCPOClient(String           Hostname,
-                             IPPort           TCPPort,
-                             String           HTTPVirtualHost  = null,
-                             Authorizator_Id  AuthorizatorId   = null,
-                             String           HTTPUserAgent    = "GraphDefined OICP v2.0 Gateway CPO Upstream Services",
-                             TimeSpan?        QueryTimeout     = null,
-                             DNSClient        DNSClient        = null)
+        public WWCP_CPOClient(String           Hostname,
+                              IPPort           TCPPort,
+                              String           HTTPVirtualHost  = null,
+                              Authorizator_Id  AuthorizatorId   = null,
+                              String           HTTPUserAgent    = "GraphDefined OICP v2.0 Gateway CPO Upstream Services",
+                              TimeSpan?        QueryTimeout     = null,
+                              DNSClient        DNSClient        = null)
         {
 
             this._CPOClient       = new CPOClient(Hostname,
@@ -298,7 +298,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _CPOClient.DNSClient))
                     {
 
-                        return await _OICPClient.Query(WWCPCPOClient_XMLMethods.PushEVSEDataXML(GroupedData,
+                        return await _OICPClient.Query(WWCP_CPOClient_XMLMethods.PushEVSEDataXML(GroupedData,
                                                                                                 OICPAction,
                                                                                                 OperatorId,
                                                                                                 OperatorName),
@@ -691,7 +691,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                             _CPOClient.DNSClient))
                     {
 
-                        return await _OICPClient.Query(WWCPCPOClient_XMLMethods.PushEVSEDataXML(_EVSEs,
+                        return await _OICPClient.Query(WWCP_CPOClient_XMLMethods.PushEVSEDataXML(_EVSEs,
                                                                                                 OICPAction,
                                                                                                 OperatorId,
                                                                                                 OperatorName),
@@ -1068,7 +1068,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, ChargingProductId = null, SessionId = null, QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP v2.0 AuthorizeStart request.
@@ -1076,56 +1076,95 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
+        /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="PartnerProductId">An optional partner product identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<AuthStartResult>>
+        public async Task<AuthStartEVSEResult>
 
             AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
-                           EVSE_Id             EVSEId            = null,
-                           ChargingSession_Id  SessionId         = null,
-                           ChargingProduct_Id  PartnerProductId  = null,   // [maxlength: 100]
-                           ChargingSession_Id  PartnerSessionId  = null,   // [maxlength: 50]
-                           TimeSpan?           QueryTimeout      = null)
+                           EVSE_Id             EVSEId             = null,
+                           ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
+                           ChargingSession_Id  SessionId          = null,
+                           TimeSpan?           QueryTimeout       = null)
 
         {
 
-            var AuthorizationStartResult = await _CPOClient.AuthorizeStart(OperatorId,
-                                                                           AuthToken,
-                                                                           EVSEId,
-                                                                           SessionId,
-                                                                           PartnerProductId,
-                                                                           PartnerSessionId,
-                                                                           QueryTimeout);
+            var AuthStartTask = await _CPOClient.AuthorizeStart(OperatorId,
+                                                                  AuthToken,
+                                                                  EVSEId,
+                                                                  SessionId,
+                                                                  ChargingProductId,
+                                                                  null,
+                                                                  QueryTimeout);
 
-            // Authorized
-            if (AuthorizationStartResult.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                return new HTTPResponse<AuthStartResult>(AuthorizationStartResult.HttpResponse,
-                                                         new AuthStartResult(AuthorizatorId) {
-                                                             AuthorizationResult  = AuthorizeStartResultType.Success,
-                                                             SessionId            = AuthorizationStartResult.Content.SessionId,
-                                                             ProviderId           = AuthorizationStartResult.Content.ProviderId,
-                                                             Description          = AuthorizationStartResult.Content.StatusCode.Description,
-                                                             AdditionalInfo       = AuthorizationStartResult.Content.StatusCode.AdditionalInfo
-                                                         });
+            if (AuthStartTask.HttpResponse.HTTPStatusCode == HTTPStatusCode.OK)
+            {
 
-            // NotAuthorized
-            return new HTTPResponse<AuthStartResult>(AuthorizationStartResult.HttpResponse,
-                                                     new AuthStartResult(AuthorizatorId) {
-                                                         AuthorizationResult  = AuthorizeStartResultType.Error,
-                                                         SessionId            = AuthorizationStartResult.Content.SessionId,
-                                                         ProviderId           = AuthorizationStartResult.Content.ProviderId,
-                                                         Description          = AuthorizationStartResult.Content.StatusCode.Description,
-                                                         AdditionalInfo       = AuthorizationStartResult.Content.StatusCode.AdditionalInfo
-                                                     });
+                if (AuthStartTask.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                    return AuthStartEVSEResult.Authorized(AuthorizatorId,
+                                                          AuthStartTask.Content.SessionId,
+                                                          AuthStartTask.Content.ProviderId,
+                                                          AuthStartTask.Content.StatusCode.Description,
+                                                          AuthStartTask.Content.StatusCode.AdditionalInfo);
+
+                return AuthStartEVSEResult.NotAuthorized(AuthorizatorId,
+                                                         AuthStartTask.Content.ProviderId,
+                                                         AuthStartTask.Content.StatusCode.Description,
+                                                         AuthStartTask.Content.StatusCode.AdditionalInfo);
+
+            }
+
+            return AuthStartEVSEResult.Error(AuthorizatorId,
+                                             "HTTP error: " + AuthStartTask.HttpResponse.HTTPStatusCode.ToString());
 
         }
 
         #endregion
 
-        #region AuthorizeStop(OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeStart(OperatorId, AuthToken, ChargingStationId, ChargingProductId = null, SessionId = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Create an OICP v2.0 AuthorizeStart request.
+        /// </summary>
+        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="ChargingStationId">A charging station identification.</param>
+        /// <param name="ChargingProductId">An optional charging product identification.</param>
+        /// <param name="SessionId">An optional session identification.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<AuthStartChargingStationResult>
+
+            AuthorizeStart(EVSEOperator_Id     OperatorId,
+                           Auth_Token          AuthToken,
+                           ChargingStation_Id  ChargingStationId,
+                           ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
+                           ChargingSession_Id  SessionId          = null,
+                           TimeSpan?           QueryTimeout       = null)
+
+        {
+
+            #region Initial checks
+
+            if (OperatorId        == null)
+                throw new ArgumentNullException("OperatorId",         "The given parameter must not be null!");
+
+            if (AuthToken         == null)
+                throw new ArgumentNullException("AuthToken",          "The given parameter must not be null!");
+
+            if (ChargingStationId == null)
+                throw new ArgumentNullException("ChargingStationId",  "The given parameter must not be null!");
+
+            #endregion
+
+            //ToDo: Implement AuthorizeStart(...ChargingStationId...)
+            return AuthStartChargingStationResult.Error(AuthorizatorId, "Not implemented!");
+
+        }
+
+        #endregion
+
+        #region AuthorizeStop(OperatorId, SessionId, AuthToken, EVSEId = null, QueryTimeout = null)
 
         // UID => Not everybody can stop any session, but maybe another
         //        UID than the UID which started the session!
@@ -1138,48 +1177,84 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<AuthStopResult>> AuthorizeStop(EVSEOperator_Id      OperatorId,
-                                                                      ChargingSession_Id   SessionId,
-                                                                      Auth_Token           AuthToken,
-                                                                      EVSE_Id              EVSEId            = null,
-                                                                      ChargingSession_Id   PartnerSessionId  = null,   // [maxlength: 50]
-                                                                      TimeSpan?            QueryTimeout      = null)
+        public async Task<AuthStopEVSEResult> AuthorizeStop(EVSEOperator_Id      OperatorId,
+                                                        ChargingSession_Id   SessionId,
+                                                        Auth_Token           AuthToken,
+                                                        EVSE_Id              EVSEId            = null,
+                                                        TimeSpan?            QueryTimeout      = null)
         {
 
             var AuthorizationStopResult = await _CPOClient.AuthorizeStop(OperatorId,
                                                                          SessionId,
                                                                          AuthToken,
                                                                          EVSEId,
-                                                                         PartnerSessionId,
+                                                                         null,
                                                                          QueryTimeout);
 
             // Authorized
             if (AuthorizationStopResult.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                return new HTTPResponse<AuthStopResult>(AuthorizationStopResult.HttpResponse,
-                                                        new AuthStopResult(AuthorizatorId) {
-                                                            AuthorizationResult  = AuthorizeStopResultType.Success,
-                                                            SessionId            = AuthorizationStopResult.Content.SessionId,
-                                                            ProviderId           = AuthorizationStopResult.Content.ProviderId,
-                                                            Description          = AuthorizationStopResult.Content.StatusCode.Description,
-                                                            AdditionalInfo       = AuthorizationStopResult.Content.StatusCode.AdditionalInfo
-                                                        });
+                return new AuthStopEVSEResult(AuthorizatorId) {
+                           AuthorizationResult  = AuthStopEVSEResultType.Success,
+                           SessionId            = AuthorizationStopResult.Content.SessionId,
+                           ProviderId           = AuthorizationStopResult.Content.ProviderId,
+                           Description          = AuthorizationStopResult.Content.StatusCode.Description,
+                           AdditionalInfo       = AuthorizationStopResult.Content.StatusCode.AdditionalInfo
+                       };
 
             // NotAuthorized
             else
-                return new HTTPResponse<AuthStopResult>(AuthorizationStopResult.HttpResponse,
-                                                        new AuthStopResult(AuthorizatorId) {
-                                                            AuthorizationResult  = AuthorizeStopResultType.Error,
-                                                            SessionId            = AuthorizationStopResult.Content.SessionId,
-                                                            ProviderId           = AuthorizationStopResult.Content.ProviderId,
-                                                            Description          = AuthorizationStopResult.Content.StatusCode.Description,
-                                                            AdditionalInfo       = AuthorizationStopResult.Content.StatusCode.AdditionalInfo
-                                                        });
+                return new AuthStopEVSEResult(AuthorizatorId) {
+                           AuthorizationResult  = AuthStopEVSEResultType.Error,
+                           SessionId            = AuthorizationStopResult.Content.SessionId,
+                           ProviderId           = AuthorizationStopResult.Content.ProviderId,
+                           Description          = AuthorizationStopResult.Content.StatusCode.Description,
+                           AdditionalInfo       = AuthorizationStopResult.Content.StatusCode.AdditionalInfo
+                       };
 
         }
 
         #endregion
+
+        #region AuthorizeStop(OperatorId, SessionId, AuthToken, ChargingStationId, QueryTimeout = null)
+
+        /// <summary>
+        /// Create an OICP v2.0 AuthorizeStop request.
+        /// </summary>
+        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="SessionId">The session identification from the AuthorizeStart request.</param>
+        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="ChargingStationId">A charging station identification.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<AuthStopChargingStationResult> AuthorizeStop(EVSEOperator_Id      OperatorId,
+                                                                       ChargingSession_Id   SessionId,
+                                                                       Auth_Token           AuthToken,
+                                                                       ChargingStation_Id   ChargingStationId,
+                                                                       TimeSpan?            QueryTimeout      = null)
+
+        {
+
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+
+            if (SessionId  == null)
+                throw new ArgumentNullException("SessionId",  "The given parameter must not be null!");
+
+            if (AuthToken  == null)
+                throw new ArgumentNullException("AuthToken",  "The given parameter must not be null!");
+
+            #endregion
+
+            return new AuthStopChargingStationResult(AuthorizatorId) {
+                       AuthorizationResult  = AuthStopChargingStationResultType.Error
+                   };
+
+        }
+
+        #endregion
+
 
 
         #region PullAuthenticationData(OperatorId, QueryTimeout = null)
@@ -1211,7 +1286,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<eRoamingAcknowledgement>
 
             SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?           QueryTimeout  = null)
@@ -1225,27 +1300,29 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            return await _CPOClient.SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
-                                                           SessionId:             ChargeDetailRecord.SessionId,
-                                                           PartnerProductId:      ChargeDetailRecord.PartnerProductId,
-                                                           SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
-                                                           SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
-                                                           Identification:        new AuthorizationIdentification(ChargeDetailRecord.Identification),
-                                                           PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
-                                                           ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new Nullable<DateTime>(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
-                                                           ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ?                        ChargeDetailRecord.SessionTime.Value.EndTime    : null,
-                                                           MeterValueStart:       ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.First().Value) : null,
-                                                           MeterValueEnd:         ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.Last(). Value) : null,
-                                                           MeterValuesInBetween:  ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? ChargeDetailRecord.MeterValues.Select(v => v.Value)       : null,
-                                                           ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
-                                                           MeteringSignature:     ChargeDetailRecord.MeteringSignature,
-                                                           QueryTimeout:          QueryTimeout);
+            var result = await _CPOClient.SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
+                                                                 SessionId:             ChargeDetailRecord.SessionId,
+                                                                 PartnerProductId:      ChargeDetailRecord.PartnerProductId,
+                                                                 SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
+                                                                 SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
+                                                                 Identification:        new AuthorizationIdentification(ChargeDetailRecord.Identification),
+                                                                 PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
+                                                                 ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new Nullable<DateTime>(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
+                                                                 ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ?                        ChargeDetailRecord.SessionTime.Value.EndTime    : null,
+                                                                 MeterValueStart:       ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.First().Value) : null,
+                                                                 MeterValueEnd:         ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.Last(). Value) : null,
+                                                                 MeterValuesInBetween:  ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? ChargeDetailRecord.MeterValues.Select(v => v.Value)       : null,
+                                                                 ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
+                                                                 MeteringSignature:     ChargeDetailRecord.MeteringSignature,
+                                                                 QueryTimeout:          QueryTimeout);
+
+            return result.Content;
 
         }
 
         #endregion
 
-        #region SendChargeDetailRecord(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, Identification, PartnerSessionId = null, ..., QueryTimeout = null)
+        #region SendChargeDetailRecord(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, Identification, ..., QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP SendChargeDetailRecord request.
@@ -1256,7 +1333,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="SessionStart">The session start timestamp.</param>
         /// <param name="SessionEnd">The session end timestamp.</param>
         /// <param name="Identification">An identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="ChargingStart">An optional charging start timestamp.</param>
         /// <param name="ChargingEnd">An optional charging end timestamp.</param>
         /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
@@ -1267,7 +1343,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public new async Task<HTTPResponse<SendCDRResult>>
+        public new async Task<SendCDRResult>
 
             SendChargeDetailRecord(EVSE_Id              EVSEId,
                                    ChargingSession_Id   SessionId,
@@ -1275,7 +1351,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                    DateTime             SessionStart,
                                    DateTime             SessionEnd,
                                    AuthInfo             Identification,
-                                   ChargingSession_Id   PartnerSessionId      = null,
                                    DateTime?            ChargingStart         = null,
                                    DateTime?            ChargingEnd           = null,
                                    Double?              MeterValueStart       = null,
@@ -1295,7 +1370,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                               SessionStart,
                                                               SessionEnd,
                                                               new AuthorizationIdentification(Identification),
-                                                              PartnerSessionId,
+                                                              null,
                                                               ChargingStart,
                                                               ChargingEnd,
                                                               MeterValueStart,
@@ -1311,13 +1386,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             // true
             if (Ack.Content.Result)
-                return new HTTPResponse<SendCDRResult>(Ack.HttpResponse,
-                                                       SendCDRResult.Forwarded(_AuthorizatorId));
+                return SendCDRResult.Forwarded(_AuthorizatorId);
 
             // false
             else
-                return new HTTPResponse<SendCDRResult>(Ack.HttpResponse,
-                                                       SendCDRResult.False(_AuthorizatorId));
+                return SendCDRResult.False(_AuthorizatorId);
 
         }
 

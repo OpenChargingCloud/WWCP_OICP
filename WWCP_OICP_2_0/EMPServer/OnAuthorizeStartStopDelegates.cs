@@ -41,17 +41,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <param name="PartnerSessionId">An optional partner session identification.</param>
     /// <param name="QueryTimeout">An optional timeout for this query.</param>
     /// <returns>A AuthorizeStartResult task.</returns>
-    public delegate Task<AuthorizeStartResultType> OnAuthorizeStartDelegate(DateTime            Timestamp,
-                                                                        EMPServer           Sender,
-                                                                        CancellationToken   CancellationToken,
-                                                                        RoamingNetwork_Id   RoamingNetworkId,
-                                                                        EVSEOperator_Id     OperatorId,
-                                                                        Auth_Token          AuthToken,
-                                                                        EVSE_Id             EVSEId            = null,
-                                                                        ChargingSession_Id  SessionId         = null,
-                                                                        ChargingProduct_Id  PartnerProductId  = null,
-                                                                        ChargingSession_Id  PartnerSessionId  = null,
-                                                                        TimeSpan?           QueryTimeout      = null);
+    public delegate Task<AuthStartEVSEResultType> OnAuthorizeStartDelegate(DateTime            Timestamp,
+                                                                           EMPServer           Sender,
+                                                                           CancellationToken   CancellationToken,
+                                                                           RoamingNetwork_Id   RoamingNetworkId,
+                                                                           EVSEOperator_Id     OperatorId,
+                                                                           Auth_Token          AuthToken,
+                                                                           EVSE_Id             EVSEId            = null,
+                                                                           ChargingSession_Id  SessionId         = null,
+                                                                           ChargingProduct_Id  PartnerProductId  = null,
+                                                                           ChargingSession_Id  PartnerSessionId  = null,
+                                                                           TimeSpan?           QueryTimeout      = null);
 
 
     /// <summary>
@@ -66,7 +66,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <returns>A remote stop result object.</returns>
-    public delegate Task<AuthorizeStopResultType> OnAuthorizeStopDelegate(DateTime            Timestamp,
+    public delegate Task<AuthStopEVSEResultType> OnAuthorizeStopDelegate(DateTime            Timestamp,
                                                                           EMPServer           Sender,
                                                                           CancellationToken   CancellationToken,
                                                                           RoamingNetwork_Id   RoamingNetworkId,

@@ -584,7 +584,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Call async subscribers
 
-                    var Response = RemoteStartResult.Error();
+                    var Response = RemoteStartEVSEResult.Error("");
 
                     var OnRemoteStartLocal = OnRemoteStart;
                     if (OnRemoteStartLocal != null)
@@ -614,42 +614,42 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     switch (Response.Result)
                     {
 
-                        case RemoteStartResultType.Success:
+                        case RemoteStartEVSEResultType.Success:
                             HubjectCode         = "000";
                             HubjectDescription  = "Ready to charge!";
                             break;
 
-                        case RemoteStartResultType.InvalidSessionId:
+                        case RemoteStartEVSEResultType.InvalidSessionId:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case RemoteStartResultType.Offline:
+                        case RemoteStartEVSEResultType.Offline:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case RemoteStartResultType.Timeout:
+                        case RemoteStartEVSEResultType.Timeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case RemoteStartResultType.Reserved:
+                        case RemoteStartEVSEResultType.Reserved:
                             HubjectCode         = "601";
                             HubjectDescription  = "EVSE reserved!";
                             break;
 
-                        case RemoteStartResultType.AlreadyInUse:
+                        case RemoteStartEVSEResultType.AlreadyInUse:
                             HubjectCode         = "602";
                             HubjectDescription  = "EVSE is already in use!";
                             break;
 
-                        case RemoteStartResultType.UnknownEVSE:
+                        case RemoteStartEVSEResultType.UnknownEVSE:
                             HubjectCode         = "603";
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case RemoteStartResultType.OutOfService:
+                        case RemoteStartEVSEResultType.OutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;
@@ -1066,20 +1066,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region (internal) SendRemoteStart(...)
 
-        internal async Task<RemoteStartResult> SendRemoteStart(DateTime            Timestamp,
-                                                               CPOServer           Sender,
-                                                               CancellationToken   CancellationToken,
-                                                               EVSE_Id             EVSEId,
-                                                               ChargingProduct_Id  ChargingProductId,
-                                                               ChargingSession_Id  SessionId,
-                                                               ChargingSession_Id  PartnerSessionId,
-                                                               EVSP_Id             ProviderId,
-                                                               eMA_Id              eMAId)
+        internal async Task<RemoteStartEVSEResult> SendRemoteStart(DateTime            Timestamp,
+                                                                   CPOServer           Sender,
+                                                                   CancellationToken   CancellationToken,
+                                                                   EVSE_Id             EVSEId,
+                                                                   ChargingProduct_Id  ChargingProductId,
+                                                                   ChargingSession_Id  SessionId,
+                                                                   ChargingSession_Id  PartnerSessionId,
+                                                                   EVSP_Id             ProviderId,
+                                                                   eMA_Id              eMAId)
         {
 
             var OnRemoteStartLocal = OnRemoteStart;
             if (OnRemoteStartLocal == null)
-                return RemoteStartResult.Error();
+                return RemoteStartEVSEResult.Error();
 
             var results = await Task.WhenAll(OnRemoteStartLocal.
                                                  GetInvocationList().
@@ -1095,7 +1095,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                       eMAId)));
 
             return results.
-                       Where(result => result.Result != RemoteStartResultType.Unspecified).
+                       Where(result => result.Result != RemoteStartEVSEResultType.Unspecified).
                        First();
 
         }

@@ -599,7 +599,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Call async subscribers
 
-                    var Response = AuthorizeStartResultType.Error;
+                    var Response = AuthStartEVSEResultType.Error;
 
                     var OnAuthorizeStartLocal = OnAuthorizeStart;
                     if (OnAuthorizeStartLocal != null)
@@ -633,42 +633,43 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     switch (Response)
                     {
 
-                        case AuthorizeStartResultType.Success:
+                        case AuthStartEVSEResultType.Authorized:
                             HubjectCode         = "000";
                             HubjectDescription  = "Ready to charge!";
                             break;
 
-                        case AuthorizeStartResultType.SessionId_AlreadyInUse:
+                        case AuthStartEVSEResultType.InvalidSessionId:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case AuthorizeStartResultType.EVSE_NotReachable:
+                        case AuthStartEVSEResultType.EVSECommunicationTimeout:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case AuthorizeStartResultType.Start_Timeout:
+                        case AuthStartEVSEResultType.StartChargingTimeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case AuthorizeStartResultType.EVSEReserved:
+                        case AuthStartEVSEResultType.Reserved:
                             HubjectCode         = "601";
                             HubjectDescription  = "EVSE reserved!";
                             break;
 
-                        case AuthorizeStartResultType.EVSE_AlreadyInUse:
-                            HubjectCode         = "602";
-                            HubjectDescription  = "EVSE is already in use!";
-                            break;
+                        //Note: Can not happen, or?
+                        //case AuthStartEVSEResultType.AlreadyInUse:
+                        //    HubjectCode         = "602";
+                        //    HubjectDescription  = "EVSE is already in use!";
+                        //    break;
 
-                        case AuthorizeStartResultType.UnknownEVSE:
+                        case AuthStartEVSEResultType.UnknownEVSE:
                             HubjectCode         = "603";
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case AuthorizeStartResultType.EVSEOutOfService:
+                        case AuthStartEVSEResultType.OutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;
@@ -835,7 +836,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Call async subscribers
 
-                    var Response = AuthorizeStopResultType.Error;
+                    var Response = AuthStopEVSEResultType.Error;
 
                     var OnAuthorizeStopLocal = OnAuthorizeStop;
                     if (OnAuthorizeStopLocal != null)
@@ -866,32 +867,32 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     switch (Response)
                     {
 
-                        case AuthorizeStopResultType.Success:
+                        case AuthStopEVSEResultType.Success:
                             HubjectCode         = "000";
                             HubjectDescription  = "Ready to stop charging!";
                             break;
 
-                        case AuthorizeStopResultType.SessionIsInvalid:
+                        case AuthStopEVSEResultType.SessionIsInvalid:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case AuthorizeStopResultType.EVSE_NotReachable:
+                        case AuthStopEVSEResultType.NotReachable:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case AuthorizeStopResultType.Stop_Timeout:
+                        case AuthStopEVSEResultType.Timeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case AuthorizeStopResultType.UnknownEVSE:
+                        case AuthStopEVSEResultType.UnknownEVSE:
                             HubjectCode         = "603";
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case AuthorizeStopResultType.EVSEOutOfService:
+                        case AuthStopEVSEResultType.OutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;
@@ -1090,7 +1091,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region (internal) SendAuthorizeStart(...)
 
-        internal async Task<AuthorizeStartResultType> SendAuthorizeStart(DateTime            Timestamp,
+        internal async Task<AuthStartEVSEResultType> SendAuthorizeStart(DateTime            Timestamp,
                                                                          CancellationToken   CancellationToken,
                                                                          RoamingNetwork_Id   RoamingNetworkId,
                                                                          EVSEOperator_Id     OperatorId,
@@ -1104,7 +1105,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             var OnAuthorizeStartLocal = OnAuthorizeStart;
             if (OnAuthorizeStartLocal == null)
-                return AuthorizeStartResultType.Error;
+                return AuthStartEVSEResultType.Error;
 
             var results = await Task.WhenAll(OnAuthorizeStartLocal.
                                                  GetInvocationList().
@@ -1122,7 +1123,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                       QueryTimeout      = null)));
 
             return results.
-                       Where(result => result != AuthorizeStartResultType.Unspecified).
+                       Where(result => result != AuthStartEVSEResultType.Unspecified).
                        First();
 
         }
@@ -1131,7 +1132,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region (internal) SendAuthorizeStop(...)
 
-        internal async Task<AuthorizeStopResultType> SendAuthorizeStop(DateTime            Timestamp,
+        internal async Task<AuthStopEVSEResultType> SendAuthorizeStop(DateTime            Timestamp,
                                                                        CancellationToken   CancellationToken,
                                                                        RoamingNetwork_Id   RoamingNetworkId,
                                                                        ChargingSession_Id  SessionId,
@@ -1142,7 +1143,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             var OnAuthorizeStopLocal = OnAuthorizeStop;
             if (OnAuthorizeStopLocal == null)
-                return AuthorizeStopResultType.Error;
+                return AuthStopEVSEResultType.Error;
 
             var results = await Task.WhenAll(OnAuthorizeStopLocal.
                                                  GetInvocationList().
@@ -1157,7 +1158,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                       EVSEId)));
 
             return results.
-                       Where(result => result != AuthorizeStopResultType.Unspecified).
+                       Where(result => result != AuthStopEVSEResultType.Unspecified).
                        First();
 
         }

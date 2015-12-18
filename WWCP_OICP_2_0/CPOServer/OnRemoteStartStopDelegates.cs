@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="eMAId">The unique identification of the e-mobility account.</param>
     /// <returns>A RemoteStartResult task.</returns>
-    public delegate Task<RemoteStartResult> OnRemoteStartDelegate(DateTime            Timestamp,
+    public delegate Task<RemoteStartEVSEResult> OnRemoteStartDelegate(DateTime            Timestamp,
                                                                   CPOServer           Sender,
                                                                   CancellationToken   CancellationToken,
                                                                   EVSE_Id             EVSEId,

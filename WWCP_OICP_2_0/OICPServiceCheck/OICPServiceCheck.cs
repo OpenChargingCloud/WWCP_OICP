@@ -127,9 +127,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region UpstreamService
 
-        private readonly OICPv2_0.WWCPCPOClient _UpstreamService;
+        private readonly OICPv2_0.WWCP_CPOClient _UpstreamService;
 
-        public OICPv2_0.WWCPCPOClient UpstreamService
+        public OICPv2_0.WWCP_CPOClient UpstreamService
         {
             get
             {
@@ -192,7 +192,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             ServiceCheckLock             = new Object();
             ServiceCheckTimer            = new Timer(RunServiceCheck, null, TimeSpan.FromDays(30), _CheckEvery);
 
-            this._UpstreamService        = new OICPv2_0.WWCPCPOClient(Hostname,
+            this._UpstreamService        = new OICPv2_0.WWCP_CPOClient(Hostname,
                                                                            IPPort,
                                                                            RemoteHTTPVirtualHost,
                                                                            AuthorizatorId != null ? AuthorizatorId : Authorizator_Id.Parse("HubjectQA"),
