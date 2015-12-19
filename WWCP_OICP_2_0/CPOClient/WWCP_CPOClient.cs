@@ -1246,9 +1246,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            return new AuthStopChargingStationResult(AuthorizatorId) {
-                       AuthorizationResult  = AuthStopChargingStationResultType.Error
-                   };
+            return AuthStopChargingStationResult.Error(AuthorizatorId);
 
         }
 

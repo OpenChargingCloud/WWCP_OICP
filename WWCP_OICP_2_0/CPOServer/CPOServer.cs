@@ -816,7 +816,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Call async subscribers
 
-                    var Response = RemoteStopResult.Error();
+                    var Response = RemoteStopEVSEResult.Error();
 
                     var OnRemoteStopLocal = OnRemoteStop;
                     if (OnRemoteStopLocal != null)
@@ -844,32 +844,32 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     switch (Response.Result)
                     {
 
-                        case RemoteStopResultType.Success:
+                        case RemoteStopEVSEResultType.Success:
                             HubjectCode         = "000";
                             HubjectDescription  = "Ready to stop charging!";
                             break;
 
-                        case RemoteStopResultType.InvalidSessionId:
+                        case RemoteStopEVSEResultType.InvalidSessionId:
                             HubjectCode         = "400";
                             HubjectDescription  = "Session is invalid";
                             break;
 
-                        case RemoteStopResultType.Offline:
+                        case RemoteStopEVSEResultType.Offline:
                             HubjectCode         = "501";
                             HubjectDescription  = "Communication to EVSE failed!";
                             break;
 
-                        case RemoteStopResultType.Timeout:
+                        case RemoteStopEVSEResultType.Timeout:
                             HubjectCode         = "510";
                             HubjectDescription  = "No EV connected to EVSE!";
                             break;
 
-                        case RemoteStopResultType.UnknownEVSE:
+                        case RemoteStopEVSEResultType.UnknownEVSE:
                             HubjectCode         = "603";
                             HubjectDescription  = "Unknown EVSE ID!";
                             break;
 
-                        case RemoteStopResultType.OutOfService:
+                        case RemoteStopEVSEResultType.OutOfService:
                             HubjectCode         = "700";
                             HubjectDescription  = "EVSE out of service!";
                             break;
@@ -1104,7 +1104,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region (internal) SendRemoteStop(...)
 
-        internal async Task<RemoteStopResult> SendRemoteStop(DateTime             Timestamp,
+        internal async Task<RemoteStopEVSEResult> SendRemoteStop(DateTime             Timestamp,
                                                              CPOServer            Sender,
                                                              CancellationToken    CancellationToken,
                                                              EVSE_Id              EVSEId,
@@ -1115,7 +1115,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             var OnRemoteStopLocal = OnRemoteStop;
             if (OnRemoteStopLocal == null)
-                return RemoteStopResult.Error();
+                return RemoteStopEVSEResult.Error();
 
             var results = await Task.WhenAll(OnRemoteStopLocal.
                                                  GetInvocationList().
@@ -1129,7 +1129,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                       ProviderId)));
 
             return results.
-                       Where(result => result.Result != RemoteStopResultType.Unspecified).
+                       Where(result => result.Result != RemoteStopEVSEResultType.Unspecified).
                        First();
 
         }
