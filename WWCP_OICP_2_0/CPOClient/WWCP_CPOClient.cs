@@ -1068,22 +1068,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, ChargingProductId = null, SessionId = null, QueryTimeout = null)
+        #region AuthorizeStart(OperatorId, AuthToken, ChargingProductId = null, SessionId = null, QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP v2.0 AuthorizeStart request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<AuthStartEVSEResult>
+        public async Task<AuthStartResult>
 
             AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
-                           EVSE_Id             EVSEId             = null,
                            ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
                            ChargingSession_Id  SessionId          = null,
                            TimeSpan?           QueryTimeout       = null)
@@ -1091,12 +1089,66 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         {
 
             var AuthStartTask  = await _CPOClient.AuthorizeStart(OperatorId,
-                                                                   AuthToken,
-                                                                   EVSEId,
-                                                                   SessionId,
-                                                                   ChargingProductId,
-                                                                   null,
-                                                                   QueryTimeout);
+                                                                 AuthToken,
+                                                                 null,
+                                                                 SessionId,
+                                                                 ChargingProductId,
+                                                                 null,
+                                                                 QueryTimeout);
+
+            if (AuthStartTask.HttpResponse.HTTPStatusCode == HTTPStatusCode.OK)
+            {
+
+                if (AuthStartTask.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                    return AuthStartResult.Authorized(AuthorizatorId,
+                                                      AuthStartTask.Content.SessionId,
+                                                      AuthStartTask.Content.ProviderId,
+                                                      AuthStartTask.Content.StatusCode.Description,
+                                                      AuthStartTask.Content.StatusCode.AdditionalInfo);
+
+                return AuthStartResult.NotAuthorized(AuthorizatorId,
+                                                     AuthStartTask.Content.ProviderId,
+                                                     AuthStartTask.Content.StatusCode.Description,
+                                                     AuthStartTask.Content.StatusCode.AdditionalInfo);
+
+            }
+
+            return AuthStartResult.Error(AuthorizatorId,
+                                         "HTTP error: " + AuthStartTask.HttpResponse.HTTPStatusCode.ToString());
+
+        }
+
+        #endregion
+
+        #region AuthorizeStart(OperatorId, AuthToken, EVSEId, ChargingProductId = null, SessionId = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Create an OICP v2.0 AuthorizeStart request at the given EVSE.
+        /// </summary>
+        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="EVSEId">The unique identification of an EVSE.</param>
+        /// <param name="ChargingProductId">An optional charging product identification.</param>
+        /// <param name="SessionId">An optional session identification.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<AuthStartEVSEResult>
+
+            AuthorizeStart(EVSEOperator_Id     OperatorId,
+                           Auth_Token          AuthToken,
+                           EVSE_Id             EVSEId,
+                           ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
+                           ChargingSession_Id  SessionId          = null,
+                           TimeSpan?           QueryTimeout       = null)
+
+        {
+
+            var AuthStartTask  = await _CPOClient.AuthorizeStart(OperatorId,
+                                                                 AuthToken,
+                                                                 EVSEId,
+                                                                 SessionId,
+                                                                 ChargingProductId,
+                                                                 null,
+                                                                 QueryTimeout);
 
             if (AuthStartTask.HttpResponse.HTTPStatusCode == HTTPStatusCode.OK)
             {
@@ -1125,11 +1177,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region AuthorizeStart(OperatorId, AuthToken, ChargingStationId, ChargingProductId = null, SessionId = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP v2.0 AuthorizeStart request.
+        /// Create an OICP v2.0 AuthorizeStart request at the given charging station.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="ChargingStationId">A charging station identification.</param>
+        /// <param name="ChargingStationId">The unique identification of a charging station.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
@@ -1164,7 +1216,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region AuthorizeStop(OperatorId, SessionId, AuthToken, EVSEId = null, QueryTimeout = null)
+
+        #region AuthorizeStop(OperatorId, SessionId, AuthToken, QueryTimeout = null)
 
         // UID => Not everybody can stop any session, but maybe another
         //        UID than the UID which started the session!
@@ -1176,12 +1229,61 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="EVSEId">An optional EVSE identification.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<AuthStopResult> AuthorizeStop(EVSEOperator_Id     OperatorId,
+                                                        ChargingSession_Id  SessionId,
+                                                        Auth_Token          AuthToken,
+                                                        TimeSpan?           QueryTimeout  = null)
+        {
+
+            var AuthStopTask  = await _CPOClient.AuthorizeStop(OperatorId,
+                                                               SessionId,
+                                                               AuthToken,
+                                                               null,
+                                                               null,
+                                                               QueryTimeout);
+
+            if (AuthStopTask.HttpResponse.HTTPStatusCode == HTTPStatusCode.OK)
+            {
+
+                if (AuthStopTask.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                    return AuthStopResult.Authorized(AuthorizatorId,
+                                                     AuthStopTask.Content.ProviderId,
+                                                     AuthStopTask.Content.StatusCode.Description,
+                                                     AuthStopTask.Content.StatusCode.AdditionalInfo);
+
+                return AuthStopResult.NotAuthorized(AuthorizatorId,
+                                                    AuthStopTask.Content.ProviderId,
+                                                    AuthStopTask.Content.StatusCode.Description,
+                                                    AuthStopTask.Content.StatusCode.AdditionalInfo);
+
+            }
+
+            return AuthStopResult.Error(AuthorizatorId,
+                                        "HTTP error: " + AuthStopTask.HttpResponse.HTTPStatusCode.ToString());
+
+        }
+
+        #endregion
+
+        #region AuthorizeStop(OperatorId, EVSEId, SessionId, AuthToken, QueryTimeout = null)
+
+        // UID => Not everybody can stop any session, but maybe another
+        //        UID than the UID which started the session!
+        //        (e.g. car sharing)
+
+        /// <summary>
+        /// Create an OICP v2.0 AuthorizeStop request.
+        /// </summary>
+        /// <param name="OperatorId">An EVSE Operator identification.</param>
+        /// <param name="EVSEId">The unique identification of an EVSE.</param>
+        /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
+        /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<AuthStopEVSEResult> AuthorizeStop(EVSEOperator_Id     OperatorId,
+                                                            EVSE_Id             EVSEId,
                                                             ChargingSession_Id  SessionId,
                                                             Auth_Token          AuthToken,
-                                                            EVSE_Id             EVSEId        = null,
                                                             TimeSpan?           QueryTimeout  = null)
         {
 
@@ -1215,21 +1317,21 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region AuthorizeStop(OperatorId, SessionId, AuthToken, ChargingStationId, QueryTimeout = null)
+        #region AuthorizeStop(OperatorId, ChargingStationId, SessionId, AuthToken, QueryTimeout = null)
 
         /// <summary>
         /// Create an OICP v2.0 AuthorizeStop request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="ChargingStationId">A charging station identification.</param>
         /// <param name="SessionId">The session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="ChargingStationId">A charging station identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<AuthStopChargingStationResult> AuthorizeStop(EVSEOperator_Id      OperatorId,
-                                                                       ChargingSession_Id   SessionId,
-                                                                       Auth_Token           AuthToken,
-                                                                       ChargingStation_Id   ChargingStationId,
-                                                                       TimeSpan?            QueryTimeout      = null)
+        public async Task<AuthStopChargingStationResult> AuthorizeStop(EVSEOperator_Id     OperatorId,
+                                                                       ChargingStation_Id  ChargingStationId,
+                                                                       ChargingSession_Id  SessionId,
+                                                                       Auth_Token          AuthToken,
+                                                                       TimeSpan?           QueryTimeout  = null)
 
         {
 
@@ -1251,7 +1353,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
-
 
 
         #region PullAuthenticationData(OperatorId, QueryTimeout = null)
