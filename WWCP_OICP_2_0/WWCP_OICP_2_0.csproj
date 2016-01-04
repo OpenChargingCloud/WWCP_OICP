@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CPOServer\CPOServerLogger.cs" />
+    <Compile Include="EMPServer\EMPServerLogger.cs" />
     <Compile Include="EMPServer\OnAuthorizeStartStopDelegates.cs" />
     <Compile Include="CPOServer\OnRemoteStartStopDelegates.cs" />
     <Compile Include="EMPServer\EMPServer.cs" />

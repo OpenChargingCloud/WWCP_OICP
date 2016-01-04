@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2015 GraphDefined GmbH
+ * Copyright (c) 2014-2016 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
@@ -100,12 +100,38 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region OnAuthorizeStart
 
+        /// <summary>
+        /// An event sent whenever a authorize start command was received.
+        /// </summary>
+        public event RequestLogHandler OnLogAuthorizeStart;
+
+        /// <summary>
+        /// An event sent whenever a authorize start response was sent.
+        /// </summary>
+        public event AccessLogHandler OnLogAuthorizeStarted;
+
+        /// <summary>
+        /// An event sent whenever a authorize start command was received.
+        /// </summary>
         public event OnAuthorizeStartDelegate OnAuthorizeStart;
 
         #endregion
 
         #region OnAuthorizeStop
 
+        /// <summary>
+        /// An event sent whenever a authorize start command was received.
+        /// </summary>
+        public event RequestLogHandler OnLogAuthorizeStop;
+
+        /// <summary>
+        /// An event sent whenever a authorize start response was sent.
+        /// </summary>
+        public event AccessLogHandler OnLogAuthorizeStopped;
+
+        /// <summary>
+        /// An event sent whenever a authorize start command was received.
+        /// </summary>
         public event OnAuthorizeStopDelegate  OnAuthorizeStop;
 
         #endregion
@@ -292,9 +318,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             HTTPDelegate AuthorizeStartStopDelegate = HTTPRequest => {
 
-                //var _EventTrackingId = EventTracking_Id.New;
-                //Log.WriteLine("Event tracking: " + _EventTrackingId);
-
                 #region Try to parse the RoamingNetworkId
 
                 RoamingNetwork_Id RoamingNetworkId;
@@ -306,18 +329,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     };
 
                 #endregion
-
-                //#region Try to get the RoamingNetwork
-
-                //RoamingNetwork RoamingNetwork;
-
-                //if (!RoamingNetworks.TryGetRoamingNetwork(RoamingNetworkId, out RoamingNetwork))
-                //    return new HTTPResponseBuilder() {
-                //        HTTPStatusCode  = HTTPStatusCode.NotFound,
-                //        Server          = this.DefaultServerName,
-                //    };
-
-                //#endregion
 
                 #region ParseXMLRequestBody... or fail!
 
@@ -470,6 +481,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     // </soapenv:Envelope>
 
                     #endregion
+
+                    var OnLogAuthorizeStartLocal = OnLogAuthorizeStart;
+                    if (OnLogAuthorizeStartLocal != null)
+                        OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, HTTPRequest);
 
                     #region Parse request parameters
 
@@ -686,25 +701,36 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Return SOAPResponse
 
-                    return new HTTPResponseBuilder() {
+                    var Now = DateTime.Now;
+
+                    var HTTPResponse = new HTTPResponseBuilder() {
                         HTTPStatusCode  = HTTPStatusCode.OK,
+                        Server          = HTTPServer.DefaultServerName,
+                        Date            = Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                        Content         = SOAP.Encapsulation(
+                                              new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                                                 new XElement(OICPNS.CommonTypes + "Result", "true"),
+                                                  new XElement(OICPNS.CommonTypes + "Result", "true"),
 
-                                                                 new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                     new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
-                                                                     new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
-                                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
-                                                                 ),
+                                                  new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                      new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
+                                                      new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
+                                                      new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+                                                  ),
 
-                                                                 new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-                                                                 //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
+                                                  new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
+                                                  //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
 
-                                                            )).ToString().
-                                                               ToUTF8Bytes()
+                                             )).ToString().
+                                                ToUTF8Bytes()
                     };
+
+                    var OnLogAuthorizeStartedLocal = OnLogAuthorizeStarted;
+                    if (OnLogAuthorizeStartedLocal != null)
+                        OnLogAuthorizeStartedLocal(Now, this.HTTPServer, HTTPRequest, HTTPResponse);
+
+                    return HTTPResponse;
 
                     #endregion
 
@@ -743,6 +769,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     // </soapenv:Envelope>
 
                     #endregion
+
+                    var OnLogAuthorizeStopLocal = OnLogAuthorizeStop;
+                    if (OnLogAuthorizeStopLocal != null)
+                        OnLogAuthorizeStopLocal(DateTime.Now, this.HTTPServer, HTTPRequest);
 
                     #region Parse request parameters
 
@@ -909,25 +939,34 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Return SOAPResponse
 
-                    var SOAPContent = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                    var Now = DateTime.Now;
 
-                                                             new XElement(OICPNS.CommonTypes + "Result", "true"),
-
-                                                             new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                 new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
-                                                                 new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
-                                                                 new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
-                                                             ),
-
-                                                             new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-
-                                                         )).ToString();
-
-                    return new HTTPResponseBuilder() {
+                    var HTTPResponse = new HTTPResponseBuilder() {
                         HTTPStatusCode  = HTTPStatusCode.OK,
+                        Server          = HTTPServer.DefaultServerName,
+                        Date            = Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAPContent.ToUTF8Bytes()
+                        Content         = SOAP.Encapsulation(
+                                              new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+
+                                                  new XElement(OICPNS.CommonTypes + "Result", "true"),
+
+                                                  new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                      new XElement(OICPNS.CommonTypes + "Code", HubjectCode),
+                                                      new XElement(OICPNS.CommonTypes + "Description", HubjectDescription),
+                                                      new XElement(OICPNS.CommonTypes + "AdditionalInfo", HubjectAdditionalInfo)
+                                                  ),
+
+                                                  new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
+
+                                              )).ToString().ToUTF8Bytes()
                     };
+
+                    var OnLogAuthorizeStoppedLocal = OnLogAuthorizeStopped;
+                    if (OnLogAuthorizeStoppedLocal != null)
+                        OnLogAuthorizeStoppedLocal(Now, this.HTTPServer, HTTPRequest, HTTPResponse);
+
+                    return HTTPResponse;
 
                     #endregion
 

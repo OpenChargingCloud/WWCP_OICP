@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2015 GraphDefined GmbH
+ * Copyright (c) 2014-2016 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
@@ -100,7 +100,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region OnRemoteStart
 
         /// <summary>
-        /// An event sent whenever an EVSE should start charging.
+        /// An event sent whenever a remote start command was received.
+        /// </summary>
+        public event RequestLogHandler OnLogRemoteStart;
+
+        /// <summary>
+        /// An event sent whenever a remote start response was sent.
+        /// </summary>
+        public event AccessLogHandler OnLogRemoteStarted;
+
+        /// <summary>
+        /// An event sent whenever a remote start command was received.
         /// </summary>
         public event OnRemoteStartDelegate OnRemoteStart;
 
@@ -109,7 +119,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region OnRemoteStop
 
         /// <summary>
-        /// An event sent whenever an EVSE should stop charging.
+        /// An event sent whenever a remote stop command was received.
+        /// </summary>
+        public event RequestLogHandler OnLogRemoteStop;
+
+        /// <summary>
+        /// An event sent whenever a remote stop response was sent.
+        /// </summary>
+        public event AccessLogHandler OnLogRemoteStopped;
+
+        /// <summary>
+        /// An event sent whenever a remote stop command was received.
         /// </summary>
         public event OnRemoteStopDelegate  OnRemoteStop;
 
@@ -462,6 +482,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #endregion
 
+                    var OnLogRemoteStartLocal = OnLogRemoteStart;
+                    if (OnLogRemoteStartLocal != null)
+                        OnLogRemoteStartLocal(DateTime.Now, this.HTTPServer, HTTPRequest);
+
                     #region Parse request parameters
 
                     XElement            IdentificationXML;
@@ -666,25 +690,36 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Return SOAPResponse
 
-                    return new HTTPResponseBuilder() {
+                    var Now = DateTime.Now;
+
+                    var HTTPResponse = new HTTPResponseBuilder() {
                         HTTPStatusCode  = HTTPStatusCode.OK,
+                        Server          = HTTPServer.DefaultServerName,
+                        Date            = Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                        Content         = SOAP.Encapsulation(
+                                              new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                                                 new XElement(OICPNS.CommonTypes + "Result", "true"),
+                                                  new XElement(OICPNS.CommonTypes + "Result", "true"),
 
-                                                                 new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                     new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
-                                                                     new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
-                                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
-                                                                 ),
+                                                  new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                      new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
+                                                      new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
+                                                      new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+                                                  ),
 
-                                                                 new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-                                                                 //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
+                                                  new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
+                                                  //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
 
-                                                            )).ToString().
-                                                               ToUTF8Bytes()
+                                             )).ToString().
+                                                ToUTF8Bytes()
                     };
+
+                    var OnLogRemoteStartedLocal = OnLogRemoteStarted;
+                    if (OnLogRemoteStartedLocal != null)
+                        OnLogRemoteStartedLocal(Now, this.HTTPServer, HTTPRequest, HTTPResponse);
+
+                    return HTTPResponse;
 
                     #endregion
 
@@ -723,6 +758,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     // </soapenv:Envelope>
 
                     #endregion
+
+                    var OnLogRemoteStopLocal = OnLogRemoteStop;
+                    if (OnLogRemoteStopLocal != null)
+                        OnLogRemoteStopLocal(DateTime.Now, this.HTTPServer, HTTPRequest);
 
                     #region Parse request parameters
 
@@ -886,25 +925,34 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                     #region Return SOAPResponse
 
-                    var SOAPContent = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                    var Now = DateTime.Now;
 
-                                                             new XElement(OICPNS.CommonTypes + "Result", "true"),
-
-                                                             new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                 new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
-                                                                 new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
-                                                                 new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
-                                                             ),
-
-                                                             new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-
-                                                         )).ToString();
-
-                    return new HTTPResponseBuilder() {
+                    var HTTPResponse = new HTTPResponseBuilder() {
                         HTTPStatusCode  = HTTPStatusCode.OK,
+                        Server          = HTTPServer.DefaultServerName,
+                        Date            = Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAPContent.ToUTF8Bytes()
+                        Content         = SOAP.Encapsulation(
+                                              new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+
+                                                  new XElement(OICPNS.CommonTypes + "Result", "true"),
+
+                                                  new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                      new XElement(OICPNS.CommonTypes + "Code", HubjectCode),
+                                                      new XElement(OICPNS.CommonTypes + "Description", HubjectDescription),
+                                                      new XElement(OICPNS.CommonTypes + "AdditionalInfo", HubjectAdditionalInfo)
+                                                  ),
+
+                                                  new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
+
+                                              )).ToString().ToUTF8Bytes()
                     };
+
+                    var OnLogRemoteStartedLocal = OnLogRemoteStarted;
+                    if (OnLogRemoteStartedLocal != null)
+                        OnLogRemoteStartedLocal(Now, this.HTTPServer, HTTPRequest, HTTPResponse);
+
+                    return HTTPResponse;
 
                     #endregion
 
