@@ -188,14 +188,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="Hostname">The hostname of the OICP service.</param>
         /// <param name="TCPPort">The TCP port of the OICP service.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the OICP service.</param>
-        /// <param name="AuthorizatorId">An optional unique authorizator identification.</param>
+        /// <param name="_AuthorizatorId">An optional unique authorizator identification.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public WWCP_CPOClient(String           Hostname,
                               IPPort           TCPPort,
                               String           HTTPVirtualHost  = null,
-                              Authorizator_Id  AuthorizatorId   = null,
+                              Authorizator_Id  _AuthorizatorId   = null,
                               String           HTTPUserAgent    = "GraphDefined OICP v2.0 Gateway CPO Upstream Services",
                               TimeSpan?        QueryTimeout     = null,
                               DNSClient        DNSClient        = null)
@@ -208,7 +208,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                   QueryTimeout,
                                                   DNSClient);
 
-            this._AuthorizatorId  = AuthorizatorId;
+            this._AuthorizatorId  = _AuthorizatorId;
 
         }
 
@@ -1088,6 +1088,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         {
 
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException("OperatorId", "The given EVSE operator identification must not be null!");
+
+            if (AuthToken == null)
+                throw new ArgumentNullException("AuthToken",  "The given authentication token must not be null!");
+
+            #endregion
+
             var AuthStartTask  = await _CPOClient.AuthorizeStart(OperatorId,
                                                                  AuthToken,
                                                                  null,
@@ -1100,20 +1110,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             {
 
                 if (AuthStartTask.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                    return AuthStartResult.Authorized(AuthorizatorId,
+                    return AuthStartResult.Authorized(_AuthorizatorId,
                                                       AuthStartTask.Content.SessionId,
                                                       AuthStartTask.Content.ProviderId,
                                                       AuthStartTask.Content.StatusCode.Description,
                                                       AuthStartTask.Content.StatusCode.AdditionalInfo);
 
-                return AuthStartResult.NotAuthorized(AuthorizatorId,
+                return AuthStartResult.NotAuthorized(_AuthorizatorId,
                                                      AuthStartTask.Content.ProviderId,
                                                      AuthStartTask.Content.StatusCode.Description,
                                                      AuthStartTask.Content.StatusCode.AdditionalInfo);
 
             }
 
-            return AuthStartResult.Error(AuthorizatorId,
+            return AuthStartResult.Error(_AuthorizatorId,
                                          "HTTP error: " + AuthStartTask.HttpResponse.HTTPStatusCode.ToString());
 
         }
@@ -1142,6 +1152,19 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         {
 
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException("OperatorId", "The given EVSE operator identification must not be null!");
+
+            if (AuthToken == null)
+                throw new ArgumentNullException("AuthToken",  "The given authentication token must not be null!");
+
+            if (EVSEId    == null)
+                throw new ArgumentNullException("EVSEId",     "The given EVSE identification must not be null!");
+
+            #endregion
+
             var AuthStartTask  = await _CPOClient.AuthorizeStart(OperatorId,
                                                                  AuthToken,
                                                                  EVSEId,
@@ -1154,20 +1177,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             {
 
                 if (AuthStartTask.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                    return AuthStartEVSEResult.Authorized(AuthorizatorId,
+                    return AuthStartEVSEResult.Authorized(_AuthorizatorId,
                                                           AuthStartTask.Content.SessionId,
                                                           AuthStartTask.Content.ProviderId,
                                                           AuthStartTask.Content.StatusCode.Description,
                                                           AuthStartTask.Content.StatusCode.AdditionalInfo);
 
-                return AuthStartEVSEResult.NotAuthorized(AuthorizatorId,
+                return AuthStartEVSEResult.NotAuthorized(_AuthorizatorId,
                                                          AuthStartTask.Content.ProviderId,
                                                          AuthStartTask.Content.StatusCode.Description,
                                                          AuthStartTask.Content.StatusCode.AdditionalInfo);
 
             }
 
-            return AuthStartEVSEResult.Error(AuthorizatorId,
+            return AuthStartEVSEResult.Error(_AuthorizatorId,
                                              "HTTP error: " + AuthStartTask.HttpResponse.HTTPStatusCode.ToString());
 
         }
@@ -1199,18 +1222,18 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Initial checks
 
             if (OperatorId        == null)
-                throw new ArgumentNullException("OperatorId",         "The given parameter must not be null!");
+                throw new ArgumentNullException("OperatorId",         "The given EVSE operator identification must not be null!");
 
             if (AuthToken         == null)
-                throw new ArgumentNullException("AuthToken",          "The given parameter must not be null!");
+                throw new ArgumentNullException("AuthToken",          "The given authentication token must not be null!");
 
             if (ChargingStationId == null)
-                throw new ArgumentNullException("ChargingStationId",  "The given parameter must not be null!");
+                throw new ArgumentNullException("ChargingStationId",  "The given charging station identification must not be null!");
 
             #endregion
 
             //ToDo: Implement AuthorizeStart(...ChargingStationId...)
-            return AuthStartChargingStationResult.Error(AuthorizatorId, "Not implemented!");
+            return AuthStartChargingStationResult.Error(_AuthorizatorId, "Not implemented!");
 
         }
 
@@ -1230,10 +1253,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<AuthStopResult> AuthorizeStop(EVSEOperator_Id     OperatorId,
-                                                        ChargingSession_Id  SessionId,
-                                                        Auth_Token          AuthToken,
-                                                        TimeSpan?           QueryTimeout  = null)
+        public async Task<AuthStopResult>
+
+            AuthorizeStop(EVSEOperator_Id     OperatorId,
+                          ChargingSession_Id  SessionId,
+                          Auth_Token          AuthToken,
+                          TimeSpan?           QueryTimeout  = null)
         {
 
             var AuthStopTask  = await _CPOClient.AuthorizeStop(OperatorId,
@@ -1247,19 +1272,19 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             {
 
                 if (AuthStopTask.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                    return AuthStopResult.Authorized(AuthorizatorId,
+                    return AuthStopResult.Authorized(_AuthorizatorId,
                                                      AuthStopTask.Content.ProviderId,
                                                      AuthStopTask.Content.StatusCode.Description,
                                                      AuthStopTask.Content.StatusCode.AdditionalInfo);
 
-                return AuthStopResult.NotAuthorized(AuthorizatorId,
+                return AuthStopResult.NotAuthorized(_AuthorizatorId,
                                                     AuthStopTask.Content.ProviderId,
                                                     AuthStopTask.Content.StatusCode.Description,
                                                     AuthStopTask.Content.StatusCode.AdditionalInfo);
 
             }
 
-            return AuthStopResult.Error(AuthorizatorId,
+            return AuthStopResult.Error(_AuthorizatorId,
                                         "HTTP error: " + AuthStopTask.HttpResponse.HTTPStatusCode.ToString());
 
         }
@@ -1280,11 +1305,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<AuthStopEVSEResult> AuthorizeStop(EVSEOperator_Id     OperatorId,
-                                                            EVSE_Id             EVSEId,
-                                                            ChargingSession_Id  SessionId,
-                                                            Auth_Token          AuthToken,
-                                                            TimeSpan?           QueryTimeout  = null)
+        public async Task<AuthStopEVSEResult>
+
+            AuthorizeStop(EVSEOperator_Id     OperatorId,
+                          EVSE_Id             EVSEId,
+                          ChargingSession_Id  SessionId,
+                          Auth_Token          AuthToken,
+                          TimeSpan?           QueryTimeout  = null)
         {
 
             var AuthStopTask  = await _CPOClient.AuthorizeStop(OperatorId,
@@ -1298,19 +1325,19 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             {
 
                 if (AuthStopTask.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                    return AuthStopEVSEResult.Authorized(AuthorizatorId,
+                    return AuthStopEVSEResult.Authorized(_AuthorizatorId,
                                                          AuthStopTask.Content.ProviderId,
                                                          AuthStopTask.Content.StatusCode.Description,
                                                          AuthStopTask.Content.StatusCode.AdditionalInfo);
 
-                return AuthStopEVSEResult.NotAuthorized(AuthorizatorId,
+                return AuthStopEVSEResult.NotAuthorized(_AuthorizatorId,
                                                         AuthStopTask.Content.ProviderId,
                                                         AuthStopTask.Content.StatusCode.Description,
                                                         AuthStopTask.Content.StatusCode.AdditionalInfo);
 
             }
 
-            return AuthStopEVSEResult.Error(AuthorizatorId,
+            return AuthStopEVSEResult.Error(_AuthorizatorId,
                                             "HTTP error: " + AuthStopTask.HttpResponse.HTTPStatusCode.ToString());
 
         }
@@ -1327,11 +1354,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="SessionId">The session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<AuthStopChargingStationResult> AuthorizeStop(EVSEOperator_Id     OperatorId,
-                                                                       ChargingStation_Id  ChargingStationId,
-                                                                       ChargingSession_Id  SessionId,
-                                                                       Auth_Token          AuthToken,
-                                                                       TimeSpan?           QueryTimeout  = null)
+        public async Task<AuthStopChargingStationResult>
+
+            AuthorizeStop(EVSEOperator_Id     OperatorId,
+                          ChargingStation_Id  ChargingStationId,
+                          ChargingSession_Id  SessionId,
+                          Auth_Token          AuthToken,
+                          TimeSpan?           QueryTimeout  = null)
 
         {
 
@@ -1348,7 +1377,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            return AuthStopChargingStationResult.Error(AuthorizatorId);
+            return AuthStopChargingStationResult.Error(_AuthorizatorId);
 
         }
 
@@ -1441,7 +1470,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public new async Task<SendCDRResult>
+        public async Task<SendCDRResult>
 
             SendChargeDetailRecord(EVSE_Id              EVSEId,
                                    ChargingSession_Id   SessionId,

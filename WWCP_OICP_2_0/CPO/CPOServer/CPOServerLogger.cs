@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2016 GraphDefined GmbH
- * This file is part of WWCP Core <https://github.com/GraphDefined/WWCP_Core>
+ * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,28 +27,28 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// An OICP v2.0 EMP server logger.
+    /// An OICP v2.0 CPO server logger.
     /// </summary>
-    public class EMPServerLogger : HTTPLogger
+    public class CPOServerLogger : HTTPLogger
     {
 
         #region Data
 
-        private readonly EMPServer _EMPServer;
+        private readonly CPOServer _CPOServer;
 
         #endregion
 
         #region Constructor(s)
 
-        #region EMPServerLogger(EMPServer)
+        #region CPOServerLogger(CPOServer)
 
         /// <summary>
-        /// Create a new OICP v2.0 EMP server logger using the default logging delegates.
+        /// Create a new OICP v2.0 CPO server logger using the default logging delegates.
         /// </summary>
-        /// <param name="EMPServer">A OICP v2.0 EMP server.</param>
-        public EMPServerLogger(EMPServer EMPServer)
+        /// <param name="CPOServer">A OICP v2.0 CPO server.</param>
+        public CPOServerLogger(CPOServer CPOServer)
 
-            : this(EMPServer,
+            : this(CPOServer,
                    Default_LogHTTPRequest_toConsole,
                    Default_LogHTTPRequest_toDisc,
                    Default_LogHTTPResponse_toConsole,
@@ -58,23 +58,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region EMPServerLogger(EMPServer, ... Logging delegates ...)
+        #region CPOServerLogger(CPOServer, ... Logging delegates ...)
 
         /// <summary>
-        /// Create a new OICP v2.0 EMP server logger using the given logging delegates.
+        /// Create a new OICP v2.0 CPO server logger using the given logging delegates.
         /// </summary>
-        /// <param name="EMPServer">A OICP v2.0 EMP server.</param>
+        /// <param name="CPOServer">A OICP v2.0 CPO server.</param>
         /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
         /// <param name="LogHTTPRequest_toDisc">A delegate to log incoming HTTP requests to disc.</param>
         /// <param name="LogHTTPResponse_toConsole">A delegate to log HTTP requests/responses to console.</param>
         /// <param name="LogHTTPResponse_toDisc">A delegate to log HTTP requests/responses to disc.</param>
-        public EMPServerLogger(EMPServer                                  EMPServer,
+        public CPOServerLogger(CPOServer                                  CPOServer,
                                Action<String, HTTPRequest>                LogHTTPRequest_toConsole,
                                Action<String, HTTPRequest>                LogHTTPRequest_toDisc,
                                Action<String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toConsole,
                                Action<String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toDisc)
 
-            : base(EMPServer.HTTPServer,
+            : base(CPOServer.HTTPServer,
                    LogHTTPRequest_toConsole,
                    LogHTTPRequest_toDisc,
                    LogHTTPResponse_toConsole,
@@ -84,40 +84,40 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Initial checks
 
-            if (EMPServer == null)
-                throw new ArgumentNullException("EMPServer", "The given OICP v2.0 EMP server must not be null!");
+            if (CPOServer == null)
+                throw new ArgumentNullException("CPOServer", "The given OICP v2.0 CPO server must not be null!");
 
             #endregion
 
-            this._EMPServer = EMPServer;
+            this._CPOServer = CPOServer;
 
-            #region Register authorize start/stop log events
+            #region Register remote start/stop log events
 
-            RegisterEvent("AuthorizeStart",
-                          handler => _EMPServer.OnLogAuthorizeStart += handler,
-                          handler => _EMPServer.OnLogAuthorizeStart -= handler,
-                          "Authorize", "All").
+            RegisterEvent("RemoteStart",
+                          handler => _CPOServer.OnLogRemoteStart += handler,
+                          handler => _CPOServer.OnLogRemoteStart -= handler,
+                          "Remote", "All").
                 RegisterDefaultConsoleLogTarget().
                 RegisterDefaultDiscLogTarget();
 
-            RegisterEvent("AuthorizeStarted",
-                          handler => _EMPServer.OnLogAuthorizeStarted += handler,
-                          handler => _EMPServer.OnLogAuthorizeStarted -= handler,
-                          "Authorize", "All").
+            RegisterEvent("RemoteStarted",
+                          handler => _CPOServer.OnLogRemoteStarted += handler,
+                          handler => _CPOServer.OnLogRemoteStarted -= handler,
+                          "Remote", "All").
                 RegisterDefaultConsoleLogTarget().
                 RegisterDefaultDiscLogTarget();
 
-            RegisterEvent("AuthorizeStop",
-                          handler => _EMPServer.OnLogAuthorizeStop += handler,
-                          handler => _EMPServer.OnLogAuthorizeStop -= handler,
-                          "Authorize", "All").
+            RegisterEvent("RemoteStop",
+                          handler => _CPOServer.OnLogRemoteStop += handler,
+                          handler => _CPOServer.OnLogRemoteStop -= handler,
+                          "Remote", "All").
                 RegisterDefaultConsoleLogTarget().
                 RegisterDefaultDiscLogTarget();
 
-            RegisterEvent("AuthorizeStopped",
-                          handler => _EMPServer.OnLogAuthorizeStopped += handler,
-                          handler => _EMPServer.OnLogAuthorizeStopped -= handler,
-                          "Authorize", "All").
+            RegisterEvent("RemoteStopped",
+                          handler => _CPOServer.OnLogRemoteStopped += handler,
+                          handler => _CPOServer.OnLogRemoteStopped -= handler,
+                          "Remote", "All").
                 RegisterDefaultConsoleLogTarget().
                 RegisterDefaultDiscLogTarget();
 

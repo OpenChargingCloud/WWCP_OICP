@@ -44,8 +44,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Data
 
-        private const           String  DefaultHTTPServerName  = "OICP v2.0 CPO HTTP/SOAP/XML Server API";
-        private static readonly IPPort  DefaultHTTPServerPort  = new IPPort(2002);
+        /// <summary>
+        /// The default HTTP/SOAP/XML server name.
+        /// </summary>
+        public const           String  DefaultHTTPServerName  = "OICP v2.0 CPO HTTP/SOAP/XML Server API";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML server TCP port.
+        /// </summary>
+        public static readonly IPPort  DefaultHTTPServerPort  = new IPPort(2002);
 
         #endregion
 
@@ -217,7 +224,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        /// <param name="AutoStart">Start the server immediately.</param>
+        /// <param name="AutoStart">Whether to start the server immediately or not.</param>
         public CPOServer(String    HTTPServerName  = DefaultHTTPServerName,
                          IPPort    TCPPort         = null,
                          String    URIPrefix       = "",
@@ -1152,13 +1159,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region (internal) SendRemoteStop(...)
 
-        internal async Task<RemoteStopEVSEResult> SendRemoteStop(DateTime             Timestamp,
-                                                             CPOServer            Sender,
-                                                             CancellationToken    CancellationToken,
-                                                             EVSE_Id              EVSEId,
-                                                             ChargingSession_Id   SessionId,
-                                                             ChargingSession_Id   PartnerSessionId,
-                                                             EVSP_Id              ProviderId)
+        internal async Task<RemoteStopEVSEResult> SendRemoteStop(DateTime            Timestamp,
+                                                                 CPOServer           Sender,
+                                                                 CancellationToken   CancellationToken,
+                                                                 EVSE_Id             EVSEId,
+                                                                 ChargingSession_Id  SessionId,
+                                                                 ChargingSession_Id  PartnerSessionId,
+                                                                 EVSP_Id             ProviderId)
         {
 
             var OnRemoteStopLocal = OnRemoteStop;

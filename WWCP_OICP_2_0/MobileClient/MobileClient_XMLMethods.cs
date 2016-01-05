@@ -108,14 +108,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                           new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.OriginId.ToString()),
 
-                                          eMAIdWithPIN.ToXML(),
+                                          eMAIdWithPIN.ToXML(OICPNS.MobileAuthorization),
 
                                           (PartnerProductId != null)
                                               ? new XElement(OICPNS.MobileAuthorization + "PartnerProductID", PartnerProductId.ToString())
                                               : null,
 
                                           (GetNewSession != null && GetNewSession.HasValue)
-                                              ? new XElement(OICPNS.MobileAuthorization + "GetNewSession", GetNewSession.Value.ToString())
+                                              ? new XElement(OICPNS.MobileAuthorization + "GetNewSession", GetNewSession.Value ? "true" : "false")
                                               : null
 
                                      ));

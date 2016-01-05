@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2016 GraphDefined GmbH
- * This file is part of WWCP Core <https://github.com/GraphDefined/WWCP_Core>
+ * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,14 +41,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <param name="eMAId">The unique identification of the e-mobility account.</param>
     /// <returns>A RemoteStartResult task.</returns>
     public delegate Task<RemoteStartEVSEResult> OnRemoteStartDelegate(DateTime            Timestamp,
-                                                                  CPOServer           Sender,
-                                                                  CancellationToken   CancellationToken,
-                                                                  EVSE_Id             EVSEId,
-                                                                  ChargingProduct_Id  ChargingProductId,
-                                                                  ChargingSession_Id  SessionId,
-                                                                  ChargingSession_Id  PartnerSessionId,
-                                                                  EVSP_Id             ProviderId,
-                                                                  eMA_Id              eMAId);
+                                                                      CPOServer           Sender,
+                                                                      CancellationToken   CancellationToken,
+                                                                      EVSE_Id             EVSEId,
+                                                                      ChargingProduct_Id  ChargingProductId,
+                                                                      ChargingSession_Id  SessionId,
+                                                                      ChargingSession_Id  PartnerSessionId,
+                                                                      EVSP_Id             ProviderId,
+                                                                      eMA_Id              eMAId);
 
 
     /// <summary>
@@ -63,14 +63,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender..</param>
     /// <returns>A RemoteStopResult task.</returns>
     public delegate Task<RemoteStopEVSEResult> OnRemoteStopDelegate(DateTime             Timestamp,
-                                                                CPOServer            Sender,
-                                                                CancellationToken    CancellationToken,
-                                                                EVSE_Id              EVSEId,
-                                                                ChargingSession_Id   SessionId,
-                                                                ChargingSession_Id   PartnerSessionId,
-                                                                EVSP_Id              ProviderId);
+                                                                    CPOServer            Sender,
+                                                                    CancellationToken    CancellationToken,
+                                                                    EVSE_Id              EVSEId,
+                                                                    ChargingSession_Id   SessionId,
+                                                                    ChargingSession_Id   PartnerSessionId,
+                                                                    EVSP_Id              ProviderId);
 
 
 }
-
-

@@ -46,19 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CPOServer\CPOServerLogger.cs" />
-    <Compile Include="EMPServer\EMPServerLogger.cs" />
-    <Compile Include="EMPServer\OnAuthorizeStartStopDelegates.cs" />
-    <Compile Include="CPOServer\OnRemoteStartStopDelegates.cs" />
-    <Compile Include="EMPServer\EMPServer.cs" />
+    <Compile Include="CPO\CPORoamingWWCP.cs" />
+    <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
+    <Compile Include="EMP\EMPServer\EMPServerLogger.cs" />
+    <Compile Include="EMP\EMPServer\OnAuthorizeStartStopDelegates.cs" />
+    <Compile Include="CPO\CPOServer\OnRemoteStartStopDelegates.cs" />
+    <Compile Include="EMP\EMPServer\EMPServer.cs" />
     <Compile Include="Helpers\AOICPUpstreamService.cs" />
-    <Compile Include="CPOClient\CPOClient.cs" />
-    <Compile Include="CPOClient\CPOClient_XMLMethods.cs" />
-    <Compile Include="CPOClient\WWCP_CPOClient_XMLMethods.cs" />
-    <Compile Include="CPOClient\WWCP_CPOClient.cs" />
-    <Compile Include="EMPClient\EMPClient.cs" />
-    <Compile Include="EMPClient\EMPClient_XMLMethods.cs" />
-    <Compile Include="EMPClient\EMPUpstreamService.cs" />
+    <Compile Include="CPO\CPOClient\CPOClient.cs" />
+    <Compile Include="CPO\CPOClient\CPOClient_XMLMethods.cs" />
+    <Compile Include="CPO\CPOClient\WWCP_CPOClient_XMLMethods.cs" />
+    <Compile Include="CPO\CPOClient\WWCP_CPOClient.cs" />
+    <Compile Include="EMP\EMPClient\EMPClient.cs" />
+    <Compile Include="EMP\EMPClient\EMPClient_XMLMethods.cs" />
+    <Compile Include="EMP\EMPClient\EMPUpstreamService.cs" />
     <Compile Include="Helpers\OICPException.cs" />
     <Compile Include="MobileClient\MobileClient_XMLMethods.cs" />
     <Compile Include="MobileClient\MobileClient.cs" />
@@ -97,12 +98,13 @@
     <Compile Include="Helpers\OICPNS.cs" />
     <Compile Include="Helpers\SOAP.cs" />
     <Compile Include="Helpers\XML\XMLMethods.cs" />
-    <Compile Include="CPOServer\CPOServer.cs" />
+    <Compile Include="CPO\CPOServer\CPOServer.cs" />
     <Compile Include="Objects\EVSEDataRecord.cs" />
     <Compile Include="OICPImporter\OICPImporter.cs" />
     <Compile Include="OICPServer\OICPServer.cs" />
     <Compile Include="OICPServiceCheck\OICPServiceCheck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CPO\CPORoaming.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

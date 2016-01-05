@@ -193,12 +193,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(Namespace = null)
 
-        public XElement ToXML( )
+        public XElement ToXML(XNamespace Namespace = null)
         {
 
-            return new XElement(OICPNS.CommonTypes + "QRCodeIdentification",
+            if (Namespace == null)
+                Namespace = OICPNS.CommonTypes;
+
+            return new XElement(Namespace + "QRCodeIdentification",
 
                           new XElement(OICPNS.CommonTypes + "EVCOID", _eMAId.ToString()),
 

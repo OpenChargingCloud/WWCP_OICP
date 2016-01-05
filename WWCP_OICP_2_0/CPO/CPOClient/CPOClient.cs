@@ -39,8 +39,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     public class CPOClient : AOICPUpstreamService
     {
 
+        #region Data
+
+        /// <summary>
+        /// The default HTTP user agent string.
+        /// </summary>
+        public const String DefaultHTTPUserAgent = "GraphDefined OICP v2.0 CPOClient";
+
         private Authorizator_Id AuthorizatorId = Authorizator_Id.Parse("");
 
+        #endregion
 
         #region Events
 
@@ -135,16 +143,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Create a new OICP v2.0 CPOClient.
         /// </summary>
-        /// <param name="Hostname">The hostname of the OICP service.</param>
-        /// <param name="TCPPort">An optional TCP port of the OICP service.</param>
-        /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the OICP service.</param>
-        /// <param name="HTTPUserAgent">An optional HTTP user agent identification string.</param>
+        /// <param name="Hostname">The hostname of the remote OICP service.</param>
+        /// <param name="TCPPort">An optional TCP port of the remote OICP service.</param>
+        /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
+        /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CPOClient(String    Hostname,
                          IPPort    TCPPort          = null,
                          String    HTTPVirtualHost  = null,
-                         String    HTTPUserAgent    = "GraphDefined OICP v2.0 CPOClient",
+                         String    HTTPUserAgent    = DefaultHTTPUserAgent,
                          TimeSpan? QueryTimeout     = null,
                          DNSClient DNSClient        = null)
 
@@ -903,10 +911,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+                throw new ArgumentNullException("OperatorId", "The given EVSE operator identification must not be null!");
 
-            if (AuthToken  == null)
-                throw new ArgumentNullException("AuthToken",  "The given parameter must not be null!");
+            if (AuthToken == null)
+                throw new ArgumentNullException("AuthToken",  "The given authentication token must not be null!");
 
             #endregion
 
