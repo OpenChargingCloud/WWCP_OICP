@@ -578,6 +578,75 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+
+        #region AsWWCPActionType(this Action)
+
+        /// <summary>
+        /// Convert an OICP v2.0 action type into a corresponding WWCP EVSE action type.
+        /// </summary>
+        /// <param name="ActionType">An OICP v2.0 action type.</param>
+        /// <returns>The corresponding WWCP action type.</returns>
+        public static WWCP.ActionType AsWWCPActionType(this OICP_2_0.ActionType ActionType)
+        {
+
+            switch (ActionType)
+            {
+
+                case OICP_2_0.ActionType.fullLoad:
+                    return WWCP.ActionType.fullLoad;
+
+                case OICP_2_0.ActionType.update:
+                    return WWCP.ActionType.update;
+
+                case OICP_2_0.ActionType.insert:
+                    return WWCP.ActionType.insert;
+
+                case OICP_2_0.ActionType.delete:
+                    return WWCP.ActionType.delete;
+
+                default:
+                    return WWCP.ActionType.fullLoad;
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsOICPActionType(this ActionType)
+
+        /// <summary>
+        /// Convert a WWCP action type into a corresponding OICP v2.0 action type.
+        /// </summary>
+        /// <param name="ActionType">An WWCP action type.</param>
+        /// <returns>The corresponding OICP v2.0 action type.</returns>
+        public static OICP_2_0.ActionType AsOICPActionType(this WWCP.ActionType ActionType)
+        {
+
+            switch (ActionType)
+            {
+
+                case WWCP.ActionType.fullLoad:
+                    return OICP_2_0.ActionType.fullLoad;
+
+                case WWCP.ActionType.update:
+                    return OICP_2_0.ActionType.update;
+
+                case WWCP.ActionType.insert:
+                    return OICP_2_0.ActionType.insert;
+
+                case WWCP.ActionType.delete:
+                    return OICP_2_0.ActionType.delete;
+
+                default:
+                    return OICP_2_0.ActionType.fullLoad;
+
+            }
+
+        }
+
+        #endregion
+
     }
 
 }

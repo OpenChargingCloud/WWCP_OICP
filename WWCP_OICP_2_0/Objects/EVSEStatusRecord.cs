@@ -19,9 +19,9 @@
 
 using System;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using System.Collections.Generic;
 
 #endregion
 
@@ -40,6 +40,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         private readonly EVSE_Id _Id;
 
+        /// <summary>
+        /// The unique identification of an EVSE.
+        /// </summary>
         public EVSE_Id Id
         {
             get
@@ -54,6 +57,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         private readonly EVSEStatusType _Status;
 
+        /// <summary>
+        /// The current status of an EVSE.
+        /// </summary>
         public EVSEStatusType Status
         {
             get
@@ -68,6 +74,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Constructor(s)
 
+        /// <summary>
+        /// Create a new EVSE status record.
+        /// </summary>
+        /// <param name="Id">The unique identification of an EVSE.</param>
+        /// <param name="Status">The current status of an EVSE.</param>
         public EVSEStatusRecord(EVSE_Id         Id,
                                 EVSEStatusType  Status)
 
@@ -76,11 +87,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #region Initial checks
 
             if (Id == null)
-                throw new ArgumentNullException("Id", "The given parameter must not be null!");
+                throw new ArgumentNullException("Id", "The given unique identification of an EVSE must not be null!");
 
             #endregion
 
-            this._Id  = Id;
+            this._Id      = Id;
             this._Status  = Status;
 
         }
@@ -90,6 +101,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Parse(EVSEStatusRecordXML)
 
+        /// <summary>
+        /// Parse the EVSE identification and its current status from the given OICP XML.
+        /// </summary>
+        /// <param name="EVSEStatusRecordXML">An OICP XML.</param>
         public static EVSEStatusRecord Parse(XElement EVSEStatusRecordXML)
         {
 
@@ -130,8 +145,25 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+        #region Parse(KeyValuePair)
+
+        /// <summary>
+        /// Convert the given key-value-pair into an EVSE status record.
+        /// </summary>
+        public static EVSEStatusRecord Parse(KeyValuePair<EVSE_Id, EVSEStatusType> KeyValuePair)
+        {
+            return new EVSEStatusRecord(KeyValuePair.Key, KeyValuePair.Value);
+        }
+
+        #endregion
+
+
         #region ToXML()
 
+        /// <summary>
+        /// Return an OICP XML representation of this EVSE status record.
+        /// </summary>
+        /// <returns></returns>
         public XElement ToXML()
         {
 
@@ -160,27 +192,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-
-        #region (implicit) ToEVSEStatusRecord(KeyValuePair)
-
-        /// <summary>
-        /// Implicit conversion from KeyValuePair to EVSEStatusRecord.
-        /// </summary>
-        public EVSEStatusRecord ToEVSEStatusRecord(KeyValuePair<EVSE_Id, EVSEStatusType> KeyValuePair)
-        {
-            return new EVSEStatusRecord(KeyValuePair.Key, KeyValuePair.Value);
-        }
-
-        #endregion
-
-        #region (implicit) ToKeyValuePair(EVSEStatusRecord EVSEStatusRecord)
+        #region ToKeyValuePair()
 
         /// <summary>
-        /// Implicit conversion from EVSEStatusRecord to KeyValuePair.
+        /// Conversion this EVSE status record to a key-value-pair.
         /// </summary>
-        public KeyValuePair<EVSE_Id, EVSEStatusType> ToKeyValuePair(EVSEStatusRecord EVSEStatusRecord)
+        public KeyValuePair<EVSE_Id, EVSEStatusType> ToKeyValuePair()
         {
-            return new KeyValuePair<EVSE_Id, EVSEStatusType>(EVSEStatusRecord.Id, EVSEStatusRecord.Status);
+            return new KeyValuePair<EVSE_Id, EVSEStatusType>(_Id, _Status);
         }
 
         #endregion

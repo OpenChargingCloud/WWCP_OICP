@@ -252,6 +252,29 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+
+        public async Task<Acknowledgement> PushEVSEStatus(IEnumerable<KeyValuePair<EVSE_Id, WWCP.EVSEStatusType>>  EVSEStatus,
+                                                          WWCP.ActionType                                          OICPAction    = WWCP.ActionType.update,
+                                                          EVSEOperator_Id                                          OperatorId    = null,
+                                                          TimeSpan?                                                QueryTimeout  = null)
+        {
+            return new Acknowledgement(true);
+        }
+
+        public async Task PushEVSEStatus(EVSEStatusDiff  EVSEStatusDiff,
+                                         TimeSpan?       QueryTimeout  = null)
+        {
+            return;
+        }
+
+        async Task<SendCDRResult> IEVSEOperatorServices.SendChargeDetailRecord(ChargeDetailRecord ChargeDetailRecord, TimeSpan? QueryTimeout)
+        {
+            return SendCDRResult.Forwarded(_AuthorizatorId);
+        }
+
+
+
+
         #region PushEVSEData(GroupedData,      OICPAction = fullLoad, OperatorId = null, OperatorName = null, QueryTimeout = null)
 
         /// <summary>
@@ -1061,7 +1084,29 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         {
 
-            await _CPOClient.PushEVSEStatusUpdates(EVSEStatusDiff);
+            await _CPOClient.PushEVSEStatus(EVSEStatusDiff);
+
+        }
+
+        #endregion
+
+
+        #region PullAuthenticationData(OperatorId, QueryTimeout = null)
+
+        /// <summary>
+        /// Create an OICP v2.0 PullAuthenticationData request.
+        /// </summary>
+        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingAuthenticationData>>
+
+            PullAuthenticationData(EVSEOperator_Id  OperatorId,
+                                   TimeSpan?        QueryTimeout = null)
+
+        {
+
+            return await _CPOClient.PullAuthenticationData(OperatorId,
+                                                           QueryTimeout);
 
         }
 
@@ -1378,28 +1423,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             #endregion
 
             return AuthStopChargingStationResult.Error(_AuthorizatorId);
-
-        }
-
-        #endregion
-
-
-        #region PullAuthenticationData(OperatorId, QueryTimeout = null)
-
-        /// <summary>
-        /// Create an OICP v2.0 PullAuthenticationData request.
-        /// </summary>
-        /// <param name="OperatorId">An EVSE operator identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAuthenticationData>>
-
-            PullAuthenticationData(EVSEOperator_Id  OperatorId,
-                                   TimeSpan?        QueryTimeout = null)
-
-        {
-
-            return await _CPOClient.PullAuthenticationData(OperatorId,
-                                                           QueryTimeout);
 
         }
 

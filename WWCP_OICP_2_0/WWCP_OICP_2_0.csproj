@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CPO\CPORoamingWWCPExtentions.cs" />
     <Compile Include="CPO\CPORoamingWWCP.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
     <Compile Include="EMP\EMPServer\EMPServerLogger.cs" />

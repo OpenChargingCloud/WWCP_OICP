@@ -162,7 +162,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region CPORoaming(RemoteHostname, RemoteTCPPort, RemoteHTTPVirtualHost, ... )
+        #region CPORoaming(RemoteHostname, RemoteTCPPort = null, RemoteHTTPVirtualHost = null, ... )
 
         /// <summary>
         /// Create a new OICP roaming client for CPOs.
@@ -377,14 +377,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region PushEVSEStatus(EVSEStatus, OICPAction = update, OperatorId, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(EVSEStatus, OICPAction = update, OperatorId, OperatorName = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create a new task pushing EVSE status records onto the OICP server.
+        /// Create a new task pushing EVSE status key-value-pairs onto the OICP server.
         /// </summary>
-        /// <param name="EVSEStatus">An enumeration of EVSE Id and status records.</param>
+        /// <param name="EVSEStatus">An enumeration of EVSE identification and status key-value-pairs.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
-        /// <param name="OperatorId">An optional EVSE operator Id to use. Otherwise it will be taken from the EVSE data records.</param>
+        /// <param name="OperatorId">An optional EVSE operator identification to use. Otherwise it will be taken from the EVSE data records.</param>
         /// <param name="OperatorName">An optional EVSE operator name.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<eRoamingAcknowledgement>
@@ -453,20 +453,22 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region PushEVSEStatusUpdates(EVSEStatusDiff)
+        #region PushEVSEStatus(EVSEStatusDiff, QueryTimeout = null)
 
         /// <summary>
         /// Send EVSE status updates upstream.
         /// </summary>
         /// <param name="EVSEStatusDiff">An EVSE status diff.</param>
-        public async Task PushEVSEStatusUpdates(EVSEStatusDiff  EVSEStatusDiff)
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task PushEVSEStatus(EVSEStatusDiff  EVSEStatusDiff,
+                                         TimeSpan?       QueryTimeout  = null)
 
         {
 
             if (EVSEStatusDiff == null)
                 return;
 
-            await _CPOClient.PushEVSEStatusUpdates(EVSEStatusDiff);
+            await _CPOClient.PushEVSEStatus(EVSEStatusDiff, QueryTimeout);
 
         }
 

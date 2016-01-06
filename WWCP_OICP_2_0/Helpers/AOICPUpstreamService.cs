@@ -35,7 +35,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// An abstract base class for all OICP v2.0 upstream services.
     /// </summary>
-    public abstract class AOICPUpstreamService
+    public abstract class AOICPUpstreamService : IDisposable
     {
 
         #region Data
@@ -338,6 +338,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             return false;
 
         }
+
+        #endregion
+
+
+        #region Dispose()
+
+        /// <summary>
+        /// Dispose this object.
+        /// </summary>
+        public virtual void Dispose()
+        { }
 
         #endregion
 

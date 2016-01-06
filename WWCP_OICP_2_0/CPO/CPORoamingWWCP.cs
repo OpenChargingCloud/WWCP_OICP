@@ -21,6 +21,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 
@@ -45,6 +47,40 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Properties
 
+        #region Id
+
+        private readonly RoamingProvider_Id _Id;
+
+        /// <summary>
+        /// The unique identification of the roaming provider.
+        /// </summary>
+        public RoamingProvider_Id Id
+        {
+            get
+            {
+                return _Id;
+            }
+        }
+
+        #endregion
+
+        #region Name
+
+        private readonly I18NString _Name;
+
+        /// <summary>
+        /// The offical (multi-language) name of the roaming provider.
+        /// </summary>
+        public I18NString Name
+        {
+            get
+            {
+                return _Name;
+            }
+        }
+
+        #endregion
+
         #region RoamingNetworkId
 
         /// <summary>
@@ -60,22 +96,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region RoamingProviderId
-
-        private readonly RoamingProvider_Id _RoamingProviderId;
-
-        /// <summary>
-        /// The unique identification of the roaming provider.
-        /// </summary>
-        public RoamingProvider_Id RoamingProviderId
-        {
-            get
-            {
-                return _RoamingProviderId;
-            }
-        }
-
-        #endregion
 
         #region CPORoaming
 
@@ -89,6 +109,36 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             get
             {
                 return _CPORoaming;
+            }
+        }
+
+        #endregion
+
+        #region CPOClient
+
+        /// <summary>
+        /// The CPO client.
+        /// </summary>
+        public CPOClient CPOClient
+        {
+            get
+            {
+                return _CPORoaming.CPOClient;
+            }
+        }
+
+        #endregion
+
+        #region CPOServer
+
+        /// <summary>
+        /// The CPO server.
+        /// </summary>
+        public CPOServer CPOServer
+        {
+            get
+            {
+                return _CPORoaming.CPOServer;
             }
         }
 
@@ -118,33 +168,42 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Constructor(s)
 
-        #region CPORoamingWWCP(RoamingNetwork, RoamingProviderId, CPORoaming)
+        #region CPORoamingWWCP(Id, Name, RoamingNetwork, CPORoaming)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for EVSE operators/CPOs.
         /// </summary>
+        /// <param name="Id">The unique identification of the roaming provider.</param>
+        /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
-        /// <param name="RoamingProviderId">The unique identification of the roaming provider.</param>
-        /// <param name="CPORoaming">A OICP CPO raoming object to be mapped to WWCP.</param>
-        public CPORoamingWWCP(RoamingNetwork      RoamingNetwork,
-                              RoamingProvider_Id  RoamingProviderId,
+        /// <param name="CPORoaming">A OICP CPO roaming object to be mapped to WWCP.</param>
+        public CPORoamingWWCP(RoamingProvider_Id  Id,
+                              I18NString          Name,
+                              RoamingNetwork      RoamingNetwork,
                               CPORoaming          CPORoaming)
         {
 
             #region Initial checks
 
-            if (RoamingNetwork == null)
-                throw new ArgumentNullException("RoamingNetwork", "The given roaming network must not be null!");
+            if (Id             == null)
+                throw new ArgumentNullException("Id",              "The given unique roaming provider identification must not be null or empty!");
 
-            if (CPORoaming == null)
-                throw new ArgumentNullException("CPORoaming", "The given OICP CPO Roaming object must not be null!");
+            if (Name.IsNullOrEmpty())
+                throw new ArgumentNullException("Name",            "The given roaming provider name must not be null or empty!");
+
+            if (RoamingNetwork == null)
+                throw new ArgumentNullException("RoamingNetwork",  "The given roaming network must not be null!");
+
+            if (CPORoaming     == null)
+                throw new ArgumentNullException("CPORoaming",      "The given OICP CPO Roaming object must not be null!");
 
             #endregion
 
+            this._Id                 = Id;
+            this._Name               = Name;
             this._RoamingNetwork     = RoamingNetwork;
             this._CPORoaming         = CPORoaming;
-            this._RoamingProviderId  = RoamingProviderId;
-            this._AuthorizatorId     = Authorizator_Id.Parse(RoamingProviderId.ToString());
+            this._AuthorizatorId     = Authorizator_Id.Parse(Id.ToString());
 
             #region Link RemoteStart/-Stop events
 
@@ -186,22 +245,25 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region CPORoamingWWCP(RoamingNetwork, RoamingProviderId, CPOClient, CPOServer)
+        #region CPORoamingWWCP(Id, Name, RoamingNetwork, CPOClient, CPOServer)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for EVSE operators/CPOs.
         /// </summary>
+        /// <param name="Id">The unique identification of the roaming provider.</param>
+        /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
-        /// <param name="RoamingProviderId">The unique identification of the roaming provider.</param>
         /// <param name="CPOClient">An OICP CPO client.</param>
         /// <param name="CPOServer">An OICP CPO sever.</param>
-        public CPORoamingWWCP(RoamingNetwork      RoamingNetwork,
-                              RoamingProvider_Id  RoamingProviderId,
+        public CPORoamingWWCP(RoamingProvider_Id  Id,
+                              I18NString          Name,
+                              RoamingNetwork      RoamingNetwork,
                               CPOClient           CPOClient,
                               CPOServer           CPOServer)
 
-            : this(RoamingNetwork,
-                   RoamingProviderId,
+            : this(Id,
+                   Name,
+                   RoamingNetwork,
                    new CPORoaming(CPOClient,
                                   CPOServer))
 
@@ -209,13 +271,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region CPORoamingWWCP(RoamingNetwork, RoamingProviderId, ...)
+        #region CPORoamingWWCP(Id, Name, RoamingNetwork, RemoteHostName, ...)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for EVSE operators/CPOs.
         /// </summary>
+        /// <param name="Id">The unique identification of the roaming provider.</param>
+        /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
-        /// <param name="RoamingProviderId">The unique identification of the roaming provider.</param>
         /// 
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
@@ -229,8 +292,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public CPORoamingWWCP(RoamingNetwork      RoamingNetwork,
-                              RoamingProvider_Id  RoamingProviderId,
+        public CPORoamingWWCP(RoamingProvider_Id  Id,
+                              I18NString          Name,
+                              RoamingNetwork      RoamingNetwork,
 
                               String              RemoteHostname,
                               IPPort              RemoteTCPPort          = null,
@@ -245,8 +309,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                               DNSClient           DNSClient              = null)
 
-            : this(RoamingNetwork,
-                   RoamingProviderId,
+            : this(Id,
+                   Name,
+                   RoamingNetwork,
                    new CPORoaming(RemoteHostname,
                                   RemoteTCPPort,
                                   RemoteHTTPVirtualHost,
@@ -267,157 +332,371 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        //#region PushEVSEData(EVSEDataRecord, OICPAction = insert, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(GroupedData,      ActionType = fullLoad, OperatorId = null, OperatorName = null, QueryTimeout = null)
 
-        ///// <summary>
-        ///// Create a new task pushing a single EVSE data record onto the OICP server.
-        ///// </summary>
-        ///// <param name="EVSEDataRecord">An EVSE data record.</param>
-        ///// <param name="OICPAction">An optional OICP action.</param>
-        ///// <param name="OperatorId">An optional EVSE operator Id to use. Otherwise it will be taken from the EVSE data record.</param>
-        ///// <param name="OperatorName">An optional EVSE operator name.</param>
-        ///// <param name="IncludeEVSEs">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
-        ///// <param name="QueryTimeout">An optional timeout for this query.</param>
-        //public async Task<eRoamingAcknowledgement>
+        /// <summary>
+        /// Upload the given lookup of EVSEs grouped by their EVSE operator.
+        /// </summary>
+        /// <param name="GroupedData">A lookup of EVSEs grouped by their EVSE operator.</param>
+        /// <param name="ActionType">The server-side data management operation.</param>
+        /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
+        /// <param name="OperatorName">The optional name of the EVSE operator.</param>
+        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        public async Task<Acknowledgement>
 
-        //    PushEVSEData(EVSEDataRecord                 EVSEDataRecord,
-        //                 ActionType                     OICPAction    = ActionType.insert,
-        //                 EVSEOperator_Id                OperatorId    = null,
-        //                 String                         OperatorName  = null,
-        //                 Func<EVSEDataRecord, Boolean>  IncludeEVSEs  = null,
-        //                 TimeSpan?                      QueryTimeout  = null)
+            PushEVSEData(ILookup<EVSEOperator, IEnumerable<EVSE>>  GroupedData,
+                         WWCP.ActionType                           ActionType    = WWCP.ActionType.fullLoad,
+                         EVSEOperator_Id                           OperatorId    = null,
+                         String                                    OperatorName  = null,
+                         TimeSpan?                                 QueryTimeout  = null)
 
-        //{
+        {
 
-        //    return await _CPORoaming.PushEVSEData(EVSEDataRecord,
-        //                                          OICPAction,
-        //                                          OperatorId,
-        //                                          OperatorName,
-        //                                          IncludeEVSEs,
-        //                                          QueryTimeout);
+            #region Initial checks
 
-        //}
+            if (GroupedData == null)
+                throw new ArgumentNullException("GroupedData", "The given parameter must not be null!");
 
-        //#endregion
+            #endregion
 
-        //#region PushEVSEData(OICPAction, params EVSEDataRecords)
+            return new Acknowledgement(true);
 
-        ///// <summary>
-        ///// Create a new task pushing EVSE data records onto the OICP server.
-        ///// </summary>
-        ///// <param name="OICPAction">The OICP action.</param>
-        ///// <param name="EVSEDataRecords">An array of EVSE data records.</param>
-        //public async Task<eRoamingAcknowledgement>
+        }
 
-        //    PushEVSEData(ActionType               OICPAction,
-        //                 params EVSEDataRecord[]  EVSEDataRecords)
-        //{
+        #endregion
 
-        //    return await _CPORoaming.PushEVSEData(OICPAction,
-        //                                          EVSEDataRecords);
+        #region PushEVSEData(EVSEOperator,     ActionType = fullLoad, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
-        //}
+        /// <summary>
+        /// Upload the all filtered EVSE data of the given EVSE operator.
+        /// </summary>
+        /// <param name="EVSEOperator">An EVSE operator.</param>
+        /// <param name="ActionType">The server-side data management operation.</param>
+        /// <param name="OperatorName">An optional alternative EVSE operator name used for uploading.</param>
+        /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<Acknowledgement>
 
-        //#endregion
+            PushEVSEData(EVSEOperator         EVSEOperator,
+                         WWCP.ActionType      ActionType    = WWCP.ActionType.fullLoad,
+                         String               OperatorName  = null,
+                         Func<EVSE, Boolean>  IncludeEVSEs  = null,
+                         TimeSpan?            QueryTimeout  = null)
 
-        //#region PushEVSEData(OICPAction, OperatorId, params EVSEDataRecords)
+        {
 
-        ///// <summary>
-        ///// Create a new task pushing EVSE data records onto the OICP server.
-        ///// </summary>
-        ///// <param name="OICPAction">The OICP action.</param>
-        ///// <param name="OperatorId">The EVSE operator Id to use.</param>
-        ///// <param name="EVSEDataRecords">An array of EVSE data records.</param>
-        //public async Task<eRoamingAcknowledgement>
+            #region Initial checks
 
-        //    PushEVSEData(ActionType               OICPAction,
-        //                 EVSEOperator_Id          OperatorId,
-        //                 params EVSEDataRecord[]  EVSEDataRecords)
-        //{
+            if (EVSEOperator == null)
+                throw new ArgumentNullException("EVSEOperator", "The given EVSE operator must not be null!");
 
-        //    return await _CPORoaming.PushEVSEData(OICPAction,
-        //                                          OperatorId,
-        //                                          EVSEDataRecords);
+            #endregion
 
-        //}
+            return await PushEVSEData(new EVSEOperator[] { EVSEOperator },
+                                      ActionType,
+                                      EVSEOperator.Id,
+                                      OperatorName.IsNotNullOrEmpty()
+                                          ? OperatorName
+                                          : EVSEOperator.Name.Any()
+                                                ? EVSEOperator.Name.FirstText
+                                                : null,
+                                      IncludeEVSEs,
+                                      QueryTimeout);
 
-        //#endregion
+        }
 
-        //#region PushEVSEData(OICPAction, OperatorId, OperatorName, params EVSEDataRecords)
+        #endregion
 
-        ///// <summary>
-        ///// Create a new task pushing EVSE data records onto the OICP server.
-        ///// </summary>
-        ///// <param name="OICPAction">The OICP action.</param>
-        ///// <param name="OperatorId">The EVSE operator Id to use.</param>
-        ///// <param name="OperatorName">The EVSE operator name.</param>
-        ///// <param name="EVSEDataRecords">An array of EVSE data records.</param>
-        //public async Task<eRoamingAcknowledgement>
+        #region PushEVSEData(EVSEOperators,    ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
-        //    PushEVSEData(ActionType               OICPAction,
-        //                 EVSEOperator_Id          OperatorId,
-        //                 String                   OperatorName,
-        //                 params EVSEDataRecord[]  EVSEDataRecords)
-        //{
+        /// <summary>
+        /// Upload the all filtered EVSE data of all given EVSE operators.
+        /// </summary>
+        /// <param name="EVSEOperators">An enumeration of EVSE operators.</param>
+        /// <param name="ActionType">The server-side data management operation.</param>
+        /// <param name="OperatorId"></param>
+        /// <param name="OperatorName">An optional alternative EVSE operator name used for uploading all EVSEs.</param>
+        /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// <returns></returns>
+        public async Task<Acknowledgement>
 
-        //    return await _CPORoaming.PushEVSEData(OICPAction,
-        //                                          OperatorId,
-        //                                          OperatorName,
-        //                                          EVSEDataRecords);
+            PushEVSEData(IEnumerable<EVSEOperator>  EVSEOperators,
+                         WWCP.ActionType            ActionType    = WWCP.ActionType.fullLoad,
+                         EVSEOperator_Id            OperatorId    = null,
+                         String                     OperatorName  = null,
+                         Func<EVSE, Boolean>        IncludeEVSEs  = null,
+                         TimeSpan?                  QueryTimeout  = null)
 
-        //}
+        {
 
-        //#endregion
+            #region Initial checks
 
-        //#region PushEVSEData(EVSEDataRecords, OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+            if (EVSEOperators == null)
+                throw new ArgumentNullException("EVSEOperators",  "The given enumeration of EVSE operators must not be null!");
 
-        ///// <summary>
-        ///// Create a new task pushing EVSE data records onto the OICP server.
-        ///// </summary>
-        ///// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
-        ///// <param name="OICPAction">An optional OICP action.</param>
-        ///// <param name="OperatorId">An optional EVSE operator Id to use. Otherwise it will be taken from the EVSE data records.</param>
-        ///// <param name="OperatorName">An optional EVSE operator name.</param>
-        ///// <param name="IncludeEVSEs">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
-        ///// <param name="QueryTimeout">An optional timeout for this query.</param>
-        //public async Task<eRoamingAcknowledgement>
+            var _EVSEOperators = EVSEOperators.ToArray();
 
-        //    PushEVSEData(IEnumerable<EVSEDataRecord>    EVSEDataRecords,
-        //                 ActionType                     OICPAction    = ActionType.fullLoad,
-        //                 EVSEOperator_Id                OperatorId    = null,
-        //                 String                         OperatorName  = null,
-        //                 Func<EVSEDataRecord, Boolean>  IncludeEVSEs  = null,
-        //                 TimeSpan?                      QueryTimeout  = null)
+            if (!_EVSEOperators.Any())
+                throw new ArgumentNullException("EVSEOperators",  "The given enumeration of EVSE operators must not be empty!");
 
-        //{
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
 
-        //    #region Initial checks
+            #endregion
 
-        //    if (EVSEDataRecords == null)
-        //        throw new ArgumentNullException("EVSEDataRecords", "The given parameter must not be null!");
+            return await PushEVSEData(_EVSEOperators.ToLookup(evseoperator => evseoperator,
+                                                              evseoperator => evseoperator.SelectMany(pool    => pool.ChargingStations).
+                                                                                           SelectMany(station => station.EVSEs).
+                                                                                           Where     (evse    => IncludeEVSEs(evse))),
+                                      ActionType,
+                                      OperatorId,
+                                      OperatorName,
+                                      QueryTimeout);
 
-        //    if (IncludeEVSEs == null)
-        //        IncludeEVSEs = EVSEId => true;
+        }
 
-        //    var _EVSEDataRecords = EVSEDataRecords.
-        //                               Where(evse => IncludeEVSEs(evse)).
-        //                               ToArray();
-
-        //    #endregion
-
-        //    return await _CPORoaming.PushEVSEData(EVSEDataRecords,
-        //                                          OICPAction,
-        //                                          OperatorId,
-        //                                          OperatorName,
-        //                                          IncludeEVSEs,
-        //                                          QueryTimeout);
-
-        //}
-
-        //#endregion
+        #endregion
 
 
-        //#region PushEVSEStatus(EVSEStatus, OICPAction = update, OperatorId, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+
+
+
+        #region PushEVSEData(EVSEDataRecord, OICPAction = insert, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Create a new task pushing a single EVSE data record onto the OICP server.
+        /// </summary>
+        /// <param name="EVSEDataRecord">An EVSE data record.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="OperatorId">An optional EVSE operator Id to use. Otherwise it will be taken from the EVSE data record.</param>
+        /// <param name="OperatorName">An optional EVSE operator name.</param>
+        /// <param name="IncludeEVSEs">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<eRoamingAcknowledgement>
+
+            PushEVSEData(EVSEDataRecord                 EVSEDataRecord,
+                         ActionType                     OICPAction    = ActionType.insert,
+                         EVSEOperator_Id                OperatorId    = null,
+                         String                         OperatorName  = null,
+                         Func<EVSEDataRecord, Boolean>  IncludeEVSEs  = null,
+                         TimeSpan?                      QueryTimeout  = null)
+
+        {
+
+            return await _CPORoaming.PushEVSEData(EVSEDataRecord,
+                                                  OICPAction,
+                                                  OperatorId,
+                                                  OperatorName,
+                                                  IncludeEVSEs,
+                                                  QueryTimeout);
+
+        }
+
+        #endregion
+
+        #region PushEVSEData(OICPAction, params EVSEDataRecords)
+
+        /// <summary>
+        /// Create a new task pushing EVSE data records onto the OICP server.
+        /// </summary>
+        /// <param name="OICPAction">The OICP action.</param>
+        /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
+        public async Task<eRoamingAcknowledgement>
+
+            PushEVSEData(ActionType               OICPAction,
+                         params EVSEDataRecord[]  EVSEDataRecords)
+        {
+
+            return await _CPORoaming.PushEVSEData(OICPAction,
+                                                  EVSEDataRecords);
+
+        }
+
+        #endregion
+
+        #region PushEVSEData(OICPAction, OperatorId, params EVSEDataRecords)
+
+        /// <summary>
+        /// Create a new task pushing EVSE data records onto the OICP server.
+        /// </summary>
+        /// <param name="OICPAction">The OICP action.</param>
+        /// <param name="OperatorId">The EVSE operator Id to use.</param>
+        /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
+        public async Task<eRoamingAcknowledgement>
+
+            PushEVSEData(ActionType               OICPAction,
+                         EVSEOperator_Id          OperatorId,
+                         params EVSEDataRecord[]  EVSEDataRecords)
+        {
+
+            return await _CPORoaming.PushEVSEData(OICPAction,
+                                                  OperatorId,
+                                                  EVSEDataRecords);
+
+        }
+
+        #endregion
+
+        #region PushEVSEData(OICPAction, OperatorId, OperatorName, params EVSEDataRecords)
+
+        /// <summary>
+        /// Create a new task pushing EVSE data records onto the OICP server.
+        /// </summary>
+        /// <param name="OICPAction">The OICP action.</param>
+        /// <param name="OperatorId">The EVSE operator Id to use.</param>
+        /// <param name="OperatorName">The EVSE operator name.</param>
+        /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
+        public async Task<eRoamingAcknowledgement>
+
+            PushEVSEData(ActionType               OICPAction,
+                         EVSEOperator_Id          OperatorId,
+                         String                   OperatorName,
+                         params EVSEDataRecord[]  EVSEDataRecords)
+        {
+
+            return await _CPORoaming.PushEVSEData(OICPAction,
+                                                  OperatorId,
+                                                  OperatorName,
+                                                  EVSEDataRecords);
+
+        }
+
+        #endregion
+
+        #region PushEVSEData(EVSEDataRecords, OICPAction = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Create a new task pushing EVSE data records onto the OICP server.
+        /// </summary>
+        /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
+        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="OperatorId">An optional EVSE operator Id to use. Otherwise it will be taken from the EVSE data records.</param>
+        /// <param name="OperatorName">An optional EVSE operator name.</param>
+        /// <param name="IncludeEVSEs">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<eRoamingAcknowledgement>
+
+            PushEVSEData(IEnumerable<EVSEDataRecord>    EVSEDataRecords,
+                         ActionType                     OICPAction    = ActionType.fullLoad,
+                         EVSEOperator_Id                OperatorId    = null,
+                         String                         OperatorName  = null,
+                         Func<EVSEDataRecord, Boolean>  IncludeEVSEs  = null,
+                         TimeSpan?                      QueryTimeout  = null)
+
+        {
+
+            #region Initial checks
+
+            if (EVSEDataRecords == null)
+                throw new ArgumentNullException("EVSEDataRecords", "The given parameter must not be null!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
+            var _EVSEDataRecords = EVSEDataRecords.
+                                       Where(evse => IncludeEVSEs(evse)).
+                                       ToArray();
+
+            #endregion
+
+            return await _CPORoaming.PushEVSEData(EVSEDataRecords,
+                                                  OICPAction,
+                                                  OperatorId,
+                                                  OperatorName,
+                                                  IncludeEVSEs,
+                                                  QueryTimeout);
+
+        }
+
+        #endregion
+
+
+        #region PushEVSEStatus(EVSEOperator, OICPAction = update, IncludeEVSEs = null, QueryTimeout = null)
+
+        public async Task<Acknowledgement>
+
+            PushEVSEStatus(EVSEOperator         EVSEOperator,
+                           ActionType           OICPAction    = ActionType.update,
+                           Func<EVSE, Boolean>  IncludeEVSEs  = null,
+                           TimeSpan?            QueryTimeout  = null)
+
+        {
+
+            #region Initial checks
+
+            if (EVSEOperator == null)
+                throw new ArgumentNullException("EVSEOperator", "The given parameter must not be null!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSEId => true;
+
+            #endregion
+
+            var _AllEVSEs = EVSEOperator.
+                                AllEVSEs.
+                                Where(IncludeEVSEs).
+                                Select(evse => new KeyValuePair<EVSE_Id, EVSEStatusType>(evse.Id, evse.Status.Value.AsOICPEVSEStatus())).
+                                ToArray();
+
+            if (_AllEVSEs.Any())
+            {
+
+                var result = await _CPORoaming.PushEVSEStatus(_AllEVSEs,
+                                                              ActionType.update,
+                                                              EVSEOperator.Id,
+                                                              EVSEOperator.Name.Any() ? EVSEOperator.Name.FirstText : null,
+                                                              QueryTimeout);
+
+                if (result.Result == true)
+                    return new Acknowledgement(true);
+
+                else
+                    return new Acknowledgement(false, result.StatusCode.Description);
+
+            }
+
+            return new Acknowledgement(true);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatus(EVSEStatus, ActionType = update, OperatorId, QueryTimeout = null)
+
+        /// <summary>
+        /// Create a new task pushing EVSE status key-value-pairs.
+        /// </summary>
+        /// <param name="EVSEStatus">An enumeration of EVSE identification and status key-value-pairs.</param>
+        /// <param name="ActionType">An optional action type.</param>
+        /// <param name="OperatorId">An optional EVSE operator identification to use. Otherwise it will be taken from the EVSE data records.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<Acknowledgement>
+
+            PushEVSEStatus(IEnumerable<KeyValuePair<EVSE_Id, WWCP.EVSEStatusType>>  EVSEStatus,
+                           WWCP.ActionType                                          ActionType    = WWCP.ActionType.update,
+                           EVSEOperator_Id                                          OperatorId    = null,
+                           TimeSpan?                                                QueryTimeout  = null)
+
+        {
+
+            var result = await _CPORoaming.PushEVSEStatus(EVSEStatus.Select(kvp => new KeyValuePair<EVSE_Id, EVSEStatusType>(kvp.Key, kvp.Value.AsOICPEVSEStatus())),
+                                                          ActionType.AsOICPActionType(),
+                                                          OperatorId,
+                                                          null,
+                                                          QueryTimeout);
+
+            if (result.Result == true)
+                return new Acknowledgement(true);
+
+            else
+                return new Acknowledgement(false, result.StatusCode.Description);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatus(EVSEStatus, OICPAction = update, OperatorId, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         ///// <summary>
         ///// Create a new task pushing EVSE status records onto the OICP server.
@@ -427,37 +706,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         ///// <param name="OperatorId">An optional EVSE operator Id to use. Otherwise it will be taken from the EVSE data records.</param>
         ///// <param name="OperatorName">An optional EVSE operator name.</param>
         ///// <param name="QueryTimeout">An optional timeout for this query.</param>
-        //public async Task<eRoamingAcknowledgement>
-
-        //    PushEVSEStatus(IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>>  EVSEStatus,
-        //                   ActionType                                          OICPAction    = ActionType.update,
-        //                   EVSEOperator_Id                                     OperatorId    = null,
-        //                   String                                              OperatorName  = null,
-        //                   TimeSpan?                                           QueryTimeout  = null)
-
-        //{
-
-        //    return await _CPORoaming.PushEVSEStatus(EVSEStatus,
-        //                                            OICPAction,
-        //                                            OperatorId,
-        //                                            OperatorName,
-        //                                            QueryTimeout);
-
-        //}
-
-        //#endregion
-
-        //#region PushEVSEStatus(EVSEStatus, OICPAction = update, OperatorId, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
-
-        ///// <summary>
-        ///// Create a new task pushing EVSE status records onto the OICP server.
-        ///// </summary>
-        ///// <param name="EVSEStatus">An enumeration of EVSE Id and status records.</param>
-        ///// <param name="OICPAction">An optional OICP action.</param>
-        ///// <param name="OperatorId">An optional EVSE operator Id to use. Otherwise it will be taken from the EVSE data records.</param>
-        ///// <param name="OperatorName">An optional EVSE operator name.</param>
-        ///// <param name="QueryTimeout">An optional timeout for this query.</param>
-        //public async Task<eRoamingAcknowledgement>
+        //public async Task<Acknowledgement>
 
         //    PushEVSEStatus(IEnumerable<EVSEStatusRecord>  EVSEStatus,
         //                   ActionType                     OICPAction    = ActionType.update,
@@ -472,137 +721,80 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         //    if (EVSEStatus == null)
         //        throw new ArgumentNullException("EVSEStatus", "The given parameter must not be null!");
 
+        //    var _EVSEStatus = EVSEStatus.ToArray();
+
+        //    if (!_EVSEStatus.Any())
+        //        return new Acknowledgement(true);
+
         //    if (OperatorId == null)
-        //        OperatorId = EVSEStatus.First().Id.OperatorId;
+        //        OperatorId = _EVSEStatus.First().Id.OperatorId;
 
         //    #endregion
 
-        //    return await _CPORoaming.PushEVSEStatus(EVSEStatus,
-        //                                            OICPAction,
-        //                                            OperatorId,
-        //                                            OperatorName,
-        //                                            QueryTimeout);
+        //    var result = await _CPORoaming.PushEVSEStatus(_EVSEStatus,
+        //                                                  OICPAction,
+        //                                                  OperatorId,
+        //                                                  OperatorName,
+        //                                                  QueryTimeout);
+
+
+        //    if (result.Result == true)
+        //        return new Acknowledgement(true);
+
+        //    else
+        //        return new Acknowledgement(false, result.StatusCode.Description);
+
 
         //}
 
-        //#endregion
+        #endregion
 
-        //#region PushEVSEStatusUpdates(EVSEStatusDiff)
+        #region PushEVSEStatus(EVSEStatusDiff, QueryTimeout = null)
 
-        ///// <summary>
-        ///// Send EVSE status updates upstream.
-        ///// </summary>
-        ///// <param name="EVSEStatusDiff">An EVSE status diff.</param>
-        //public async Task PushEVSEStatusUpdates(EVSEStatusDiff  EVSEStatusDiff)
+        /// <summary>
+        /// Send EVSE status updates.
+        /// </summary>
+        /// <param name="EVSEStatusDiff">An EVSE status diff.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task PushEVSEStatus(EVSEStatusDiff  EVSEStatusDiff,
+                                         TimeSpan?       QueryTimeout  = null)
 
-        //{
+        {
 
-        //    if (EVSEStatusDiff == null)
-        //        return;
+            if (EVSEStatusDiff == null)
+                return;
 
-        //    await _CPORoaming.PushEVSEStatusUpdates(EVSEStatusDiff);
+            await _CPORoaming.PushEVSEStatus(EVSEStatusDiff);
 
-        //}
+        }
 
-        //#endregion
+        #endregion
 
-        //#region PullAuthenticationData(OperatorId, QueryTimeout = null)
 
-        ///// <summary>
-        ///// Create an OICP v2.0 PullAuthenticationData request.
-        ///// </summary>
-        ///// <param name="OperatorId">An EVSE operator identification.</param>
-        ///// <param name="QueryTimeout">An optional timeout for this query.</param>
-        //public async Task<eRoamingAuthenticationData> PullAuthenticationData(EVSEOperator_Id  OperatorId,
-        //                                                                     TimeSpan?        QueryTimeout = null)
-        //{
+        #region PullAuthenticationData(OperatorId, QueryTimeout = null)
 
-        //    #region Initial checks
+        /// <summary>
+        /// Create an OICP v2.0 PullAuthenticationData request.
+        /// </summary>
+        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<eRoamingAuthenticationData> PullAuthenticationData(EVSEOperator_Id  OperatorId,
+                                                                             TimeSpan?        QueryTimeout = null)
+        {
 
-        //    if (OperatorId == null)
-        //        throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+            #region Initial checks
 
-        //    #endregion
+            if (OperatorId == null)
+                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
 
-        //    return await _CPORoaming.PullAuthenticationData(OperatorId,
-        //                                                    QueryTimeout);
+            #endregion
 
-        //}
+            return await _CPORoaming.PullAuthenticationData(OperatorId,
+                                                            QueryTimeout);
 
-        //#endregion
+        }
 
-        //#region (internal) SendRemoteStart(...)
-
-        //internal async Task<RemoteStartEVSEResult> SendRemoteStart(DateTime            Timestamp,
-        //                                                           CPOServer           Sender,
-        //                                                           CancellationToken   CancellationToken,
-        //                                                           EVSE_Id             EVSEId,
-        //                                                           ChargingProduct_Id  ChargingProductId,
-        //                                                           ChargingSession_Id  SessionId,
-        //                                                           ChargingSession_Id  PartnerSessionId,
-        //                                                           EVSP_Id             ProviderId,
-        //                                                           eMA_Id              eMAId)
-        //{
-
-        //    var OnRemoteStartLocal = OnRemoteStart;
-        //    if (OnRemoteStartLocal == null)
-        //        return RemoteStartEVSEResult.Error();
-
-        //    var results = await Task.WhenAll(OnRemoteStartLocal.
-        //                                         GetInvocationList().
-        //                                         Select(subscriber => (subscriber as OnRemoteStartDelegate)
-        //                                             (Timestamp,
-        //                                              this.CPOServer,
-        //                                              CancellationToken,
-        //                                              EVSEId,
-        //                                              ChargingProductId,
-        //                                              SessionId,
-        //                                              PartnerSessionId,
-        //                                              ProviderId,
-        //                                              eMAId)));
-
-        //    return results.
-        //               Where(result => result.Result != RemoteStartEVSEResultType.Unspecified).
-        //               First();
-
-        //}
-
-        //#endregion
-
-        //#region (internal) SendRemoteStop(...)
-
-        //internal async Task<RemoteStopEVSEResult> SendRemoteStop(DateTime            Timestamp,
-        //                                                         CPOServer           Sender,
-        //                                                         CancellationToken   CancellationToken,
-        //                                                         EVSE_Id             EVSEId,
-        //                                                         ChargingSession_Id  SessionId,
-        //                                                         ChargingSession_Id  PartnerSessionId,
-        //                                                         EVSP_Id             ProviderId)
-        //{
-
-        //    var OnRemoteStopLocal = OnRemoteStop;
-        //    if (OnRemoteStopLocal == null)
-        //        return RemoteStopEVSEResult.Error();
-
-        //    var results = await Task.WhenAll(OnRemoteStopLocal.
-        //                                         GetInvocationList().
-        //                                         Select(subscriber => (subscriber as OnRemoteStopDelegate)
-        //                                             (Timestamp,
-        //                                              this.CPOServer,
-        //                                              CancellationToken,
-        //                                              EVSEId,
-        //                                              SessionId,
-        //                                              PartnerSessionId,
-        //                                              ProviderId)));
-
-        //    return results.
-        //               Where(result => result.Result != RemoteStopEVSEResultType.Unspecified).
-        //               First();
-
-        //}
-
-        //#endregion
-
+        #endregion
 
 
         #region AuthorizeStart(OperatorId, AuthToken, ChargingProductId = null, SessionId = null, QueryTimeout = null)
@@ -634,25 +826,25 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            var AuthStartTask = await _CPORoaming.AuthorizeStart(OperatorId,
-                                                                 AuthToken,
-                                                                 null,
-                                                                 SessionId,
-                                                                 ChargingProductId,
-                                                                 null,
-                                                                 QueryTimeout);
+            var result = await _CPORoaming.AuthorizeStart(OperatorId,
+                                                          AuthToken,
+                                                          null,
+                                                          SessionId,
+                                                          ChargingProductId,
+                                                          null,
+                                                          QueryTimeout);
 
-            if (AuthStartTask.AuthorizationStatus == AuthorizationStatusType.Authorized)
+            if (result.AuthorizationStatus == AuthorizationStatusType.Authorized)
                 return AuthStartResult.Authorized(_AuthorizatorId,
-                                                  AuthStartTask.SessionId,
-                                                  AuthStartTask.ProviderId,
-                                                  AuthStartTask.StatusCode.Description,
-                                                  AuthStartTask.StatusCode.AdditionalInfo);
+                                                  result.SessionId,
+                                                  result.ProviderId,
+                                                  result.StatusCode.Description,
+                                                  result.StatusCode.AdditionalInfo);
 
             return AuthStartResult.NotAuthorized(_AuthorizatorId,
-                                                 AuthStartTask.ProviderId,
-                                                 AuthStartTask.StatusCode.Description,
-                                                 AuthStartTask.StatusCode.AdditionalInfo);
+                                                 result.ProviderId,
+                                                 result.StatusCode.Description,
+                                                 result.StatusCode.AdditionalInfo);
 
         }
 
@@ -693,25 +885,25 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            var AuthStartTask  = await _CPORoaming.AuthorizeStart(OperatorId,
-                                                                  AuthToken,
-                                                                  EVSEId,
-                                                                  SessionId,
-                                                                  ChargingProductId,
-                                                                  null,
-                                                                  QueryTimeout);
+            var result  = await _CPORoaming.AuthorizeStart(OperatorId,
+                                                           AuthToken,
+                                                           EVSEId,
+                                                           SessionId,
+                                                           ChargingProductId,
+                                                           null,
+                                                           QueryTimeout);
 
-            if (AuthStartTask.AuthorizationStatus == AuthorizationStatusType.Authorized)
+            if (result.AuthorizationStatus == AuthorizationStatusType.Authorized)
                 return AuthStartEVSEResult.Authorized(_AuthorizatorId,
-                                                      AuthStartTask.SessionId,
-                                                      AuthStartTask.ProviderId,
-                                                      AuthStartTask.StatusCode.Description,
-                                                      AuthStartTask.StatusCode.AdditionalInfo);
+                                                      result.SessionId,
+                                                      result.ProviderId,
+                                                      result.StatusCode.Description,
+                                                      result.StatusCode.AdditionalInfo);
 
             return AuthStartEVSEResult.NotAuthorized(_AuthorizatorId,
-                                                     AuthStartTask.ProviderId,
-                                                     AuthStartTask.StatusCode.Description,
-                                                     AuthStartTask.StatusCode.AdditionalInfo);
+                                                     result.ProviderId,
+                                                     result.StatusCode.Description,
+                                                     result.StatusCode.AdditionalInfo);
 
         }
 
@@ -781,23 +973,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                           TimeSpan?           QueryTimeout  = null)
         {
 
-            var AuthStopTask  = await _CPORoaming.AuthorizeStop(OperatorId,
-                                                                SessionId,
-                                                                AuthToken,
-                                                                null,
-                                                                null,
-                                                                QueryTimeout);
+            var result  = await _CPORoaming.AuthorizeStop(OperatorId,
+                                                          SessionId,
+                                                          AuthToken,
+                                                          null,
+                                                          null,
+                                                          QueryTimeout);
 
-            if (AuthStopTask.AuthorizationStatus == AuthorizationStatusType.Authorized)
+            if (result.AuthorizationStatus == AuthorizationStatusType.Authorized)
                 return AuthStopResult.Authorized(_AuthorizatorId,
-                                                 AuthStopTask.ProviderId,
-                                                 AuthStopTask.StatusCode.Description,
-                                                 AuthStopTask.StatusCode.AdditionalInfo);
+                                                 result.ProviderId,
+                                                 result.StatusCode.Description,
+                                                 result.StatusCode.AdditionalInfo);
 
             return AuthStopResult.NotAuthorized(_AuthorizatorId,
-                                                AuthStopTask.ProviderId,
-                                                AuthStopTask.StatusCode.Description,
-                                                AuthStopTask.StatusCode.AdditionalInfo);
+                                                result.ProviderId,
+                                                result.StatusCode.Description,
+                                                result.StatusCode.AdditionalInfo);
 
         }
 
@@ -826,23 +1018,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                           TimeSpan?           QueryTimeout  = null)
         {
 
-            var AuthStopTask  = await _CPORoaming.AuthorizeStop(OperatorId,
-                                                                SessionId,
-                                                                AuthToken,
-                                                                EVSEId,
-                                                                null,
-                                                                QueryTimeout);
+            var result  = await _CPORoaming.AuthorizeStop(OperatorId,
+                                                          SessionId,
+                                                          AuthToken,
+                                                          EVSEId,
+                                                          null,
+                                                          QueryTimeout);
 
-            if (AuthStopTask.AuthorizationStatus == AuthorizationStatusType.Authorized)
+            if (result.AuthorizationStatus == AuthorizationStatusType.Authorized)
                 return AuthStopEVSEResult.Authorized(_AuthorizatorId,
-                                                     AuthStopTask.ProviderId,
-                                                     AuthStopTask.StatusCode.Description,
-                                                     AuthStopTask.StatusCode.AdditionalInfo);
+                                                     result.ProviderId,
+                                                     result.StatusCode.Description,
+                                                     result.StatusCode.AdditionalInfo);
 
             return AuthStopEVSEResult.NotAuthorized(_AuthorizatorId,
-                                                    AuthStopTask.ProviderId,
-                                                    AuthStopTask.StatusCode.Description,
-                                                    AuthStopTask.StatusCode.AdditionalInfo);
+                                                    result.ProviderId,
+                                                    result.StatusCode.Description,
+                                                    result.StatusCode.AdditionalInfo);
 
         }
 
@@ -895,7 +1087,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingAcknowledgement>
+        public async Task<SendCDRResult>
 
             SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?           QueryTimeout  = null)
@@ -909,21 +1101,29 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            return await _CPORoaming.SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
-                                                            SessionId:             ChargeDetailRecord.SessionId,
-                                                            PartnerProductId:      ChargeDetailRecord.PartnerProductId,
-                                                            SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
-                                                            SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
-                                                            Identification:        new AuthorizationIdentification(ChargeDetailRecord.Identification),
-                                                            PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
-                                                            ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new Nullable<DateTime>(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
-                                                            ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ?                        ChargeDetailRecord.SessionTime.Value.EndTime    : null,
-                                                            MeterValueStart:       ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.First().Value) : null,
-                                                            MeterValueEnd:         ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.Last(). Value) : null,
-                                                            MeterValuesInBetween:  ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? ChargeDetailRecord.MeterValues.Select(v => v.Value)       : null,
-                                                            ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
-                                                            MeteringSignature:     ChargeDetailRecord.MeteringSignature,
-                                                            QueryTimeout:          QueryTimeout);
+            var result = await _CPORoaming.SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
+                                                                  SessionId:             ChargeDetailRecord.SessionId,
+                                                                  PartnerProductId:      ChargeDetailRecord.PartnerProductId,
+                                                                  SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
+                                                                  SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
+                                                                  Identification:        new AuthorizationIdentification(ChargeDetailRecord.Identification),
+                                                                  PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
+                                                                  ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new Nullable<DateTime>(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
+                                                                  ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ?                        ChargeDetailRecord.SessionTime.Value.EndTime    : null,
+                                                                  MeterValueStart:       ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.First().Value) : null,
+                                                                  MeterValueEnd:         ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.Last(). Value) : null,
+                                                                  MeterValuesInBetween:  ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? ChargeDetailRecord.MeterValues.Select(v => v.Value)       : null,
+                                                                  ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
+                                                                  MeteringSignature:     ChargeDetailRecord.MeteringSignature,
+                                                                  QueryTimeout:          QueryTimeout);
+
+            // true
+            if (result.Result)
+                return SendCDRResult.Forwarded(_AuthorizatorId);
+
+            // false
+            else
+                return SendCDRResult.False(_AuthorizatorId);
 
         }
 
@@ -971,27 +1171,27 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         {
 
-            var Ack = await _CPORoaming.SendChargeDetailRecord(EVSEId,
-                                                               SessionId,
-                                                               PartnerProductId,
-                                                               SessionStart,
-                                                               SessionEnd,
-                                                               new AuthorizationIdentification(Identification),
-                                                               null,
-                                                               ChargingStart,
-                                                               ChargingEnd,
-                                                               MeterValueStart,
-                                                               MeterValueEnd,
-                                                               MeterValuesInBetween,
-                                                               ConsumedEnergy,
-                                                               MeteringSignature,
-                                                               HubOperatorId,
-                                                               HubProviderId,
-                                                               QueryTimeout);
+            var result = await _CPORoaming.SendChargeDetailRecord(EVSEId,
+                                                                  SessionId,
+                                                                  PartnerProductId,
+                                                                  SessionStart,
+                                                                  SessionEnd,
+                                                                  new AuthorizationIdentification(Identification),
+                                                                  null,
+                                                                  ChargingStart,
+                                                                  ChargingEnd,
+                                                                  MeterValueStart,
+                                                                  MeterValueEnd,
+                                                                  MeterValuesInBetween,
+                                                                  ConsumedEnergy,
+                                                                  MeteringSignature,
+                                                                  HubOperatorId,
+                                                                  HubProviderId,
+                                                                  QueryTimeout);
 
 
             // true
-            if (Ack.Result)
+            if (result.Result)
                 return SendCDRResult.Forwarded(_AuthorizatorId);
 
             // false
