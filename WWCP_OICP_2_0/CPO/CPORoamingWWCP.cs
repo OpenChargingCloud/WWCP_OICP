@@ -612,12 +612,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region PushEVSEStatus(EVSEOperator, OICPAction = update, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(EVSEOperator, ActionType = update, IncludeEVSEs = null, QueryTimeout = null)
 
         public async Task<Acknowledgement>
 
             PushEVSEStatus(EVSEOperator         EVSEOperator,
-                           ActionType           OICPAction    = ActionType.update,
+                           WWCP.ActionType      ActionType    = WWCP.ActionType.update,
                            Func<EVSE, Boolean>  IncludeEVSEs  = null,
                            TimeSpan?            QueryTimeout  = null)
 
@@ -629,7 +629,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 throw new ArgumentNullException("EVSEOperator", "The given parameter must not be null!");
 
             if (IncludeEVSEs == null)
-                IncludeEVSEs = EVSEId => true;
+                IncludeEVSEs = EVSE => true;
 
             #endregion
 
@@ -643,7 +643,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             {
 
                 var result = await _CPORoaming.PushEVSEStatus(_AllEVSEs,
-                                                              ActionType.update,
+                                                              ActionType.AsOICPActionType(),
                                                               EVSEOperator.Id,
                                                               EVSEOperator.Name.Any() ? EVSEOperator.Name.FirstText : null,
                                                               QueryTimeout);
