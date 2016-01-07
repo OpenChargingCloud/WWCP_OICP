@@ -332,19 +332,19 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region PushEVSEData(GroupedData,      ActionType = fullLoad, OperatorId = null, OperatorName = null, QueryTimeout = null)
+        #region PushEVSEData(GroupedEVSEs,      ActionType = fullLoad, OperatorId = null, OperatorName = null, QueryTimeout = null)
 
         /// <summary>
         /// Upload the given lookup of EVSEs grouped by their EVSE operator.
         /// </summary>
-        /// <param name="GroupedData">A lookup of EVSEs grouped by their EVSE operator.</param>
+        /// <param name="GroupedEVSEs">A lookup of EVSEs grouped by their EVSE operator.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public async Task<Acknowledgement>
 
-            PushEVSEData(ILookup<EVSEOperator, IEnumerable<EVSE>>  GroupedData,
+            PushEVSEData(ILookup<EVSEOperator, IEnumerable<EVSE>>  GroupedEVSEs,
                          WWCP.ActionType                           ActionType    = WWCP.ActionType.fullLoad,
                          EVSEOperator_Id                           OperatorId    = null,
                          String                                    OperatorName  = null,
@@ -354,10 +354,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Initial checks
 
-            if (GroupedData == null)
-                throw new ArgumentNullException("GroupedData", "The given parameter must not be null!");
+            if (GroupedEVSEs == null)
+                throw new ArgumentNullException("GroupedEVSEs", "The given lookup of EVSEs must not be null!");
 
             #endregion
+
+
+            var NumberOfEVSEs = GroupedEVSEs.
+                                    Select    (group    => group.Select(EVSEs => EVSEs.Count())).
+                                    SelectMany(subtotal => subtotal).
+                                    Sum       ();
+
 
             return new Acknowledgement(true);
 

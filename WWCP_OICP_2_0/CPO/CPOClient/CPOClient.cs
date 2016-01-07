@@ -168,7 +168,132 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region PushEVSEData(EVSEDataRecord, OICPAction = insert, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(GroupedEVSEs,      OICPAction = fullLoad, OperatorId = null, OperatorName = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Upload the given lookup of EVSEs grouped by their EVSE operator.
+        /// </summary>
+        /// <param name="GroupedEVSEs">A lookup of EVSEs grouped by their EVSE operator.</param>
+        /// <param name="OICPAction">The server-side data management operation.</param>
+        /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
+        /// <param name="OperatorName">The optional name of the EVSE operator.</param>
+        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+
+            PushEVSEData(ILookup<EVSEOperator, IEnumerable<EVSEDataRecord>>  GroupedEVSEs,
+                         ActionType                                          OICPAction    = ActionType.fullLoad,
+                         EVSEOperator_Id                                     OperatorId    = null,
+                         String                                              OperatorName  = null,
+                         TimeSpan?                                           QueryTimeout  = null)
+
+        {
+
+            #region Initial checks
+
+            if (GroupedEVSEs == null)
+                throw new ArgumentNullException("GroupedEVSEs", "The given lookup of EVSEs must not be null!");
+
+            #endregion
+
+            #region Get effective number of EVSE data records to upload
+
+            var NumberOfEVSEs = GroupedEVSEs.
+                                    Select    (group    => group.Select(EVSEs => EVSEs.Count())).
+                                    SelectMany(subtotal => subtotal).
+                                    Sum       ();
+
+            #endregion
+
+
+            if (NumberOfEVSEs > 0)
+            {
+
+                using (var _OICPClient = new SOAPClient(_Hostname,
+                                                        _TCPPort,
+                                                        _HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingEvseData_V2.0",
+                                                        _UserAgent,
+                                                        false,
+                                                        _DNSClient))
+                {
+
+                    return await _OICPClient.Query(CPOClient_XMLMethods.PushEVSEDataXML(GroupedEVSEs,
+                                                                                        OICPAction,
+                                                                                        OperatorId,
+                                                                                        OperatorName),
+                                                   "eRoamingPushEvseData",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                                                   #region OnSuccess
+
+                                                   OnSuccess: XMLData => {
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
+                                                                                                       eRoamingAcknowledgement.Parse(XMLData.Content),
+                                                                                                       false);
+
+                                                   },
+
+                                                   #endregion
+
+                                                   #region OnSOAPFault
+
+                                                   OnSOAPFault: (timestamp, soapclient, soapfault) => {
+
+                                                       DebugX.Log(OICPAction + " of EVSE data led to a fault!" + Environment.NewLine);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(
+                                                           soapfault.HttpResponse,
+                                                           new eRoamingAcknowledgement(false, 0, "", ""),
+                                                           IsFault: true);
+
+                                                   },
+
+                                                   #endregion
+
+                                                   #region OnHTTPError
+
+                                                   OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                       SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                        new eRoamingAcknowledgement(false,
+                                                                                                                                    -1,
+                                                                                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                    httpresponse.Content.ToUTF8String()),
+                                                                                                        IsFault: true);
+
+                                                   },
+
+                                                   #endregion
+
+                                                   #region OnException
+
+                                                   OnException: (timestamp, sender, exception) => {
+
+                                                       SendException(timestamp, sender, exception);
+
+                                                       return null;
+
+                                                   }
+
+                                                   #endregion
+
+                                               );
+
+                }
+
+            }
+
+            else
+                return new HTTPResponse<eRoamingAcknowledgement>(new eRoamingAcknowledgement(true, 0));
+
+        }
+
+        #endregion
+
+        #region PushEVSEData(EVSEDataRecord,    OICPAction = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task pushing a single EVSE data record onto the OICP server.
@@ -190,7 +315,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         {
 
-            return await PushEVSEData(new EVSEDataRecord[1] { EVSEDataRecord },
+            return await PushEVSEData(new EVSEDataRecord[] { EVSEDataRecord },
                                       OICPAction,
                                       OperatorId,
                                       OperatorName,
@@ -305,8 +430,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                 if (_EVSEDataRecords.Any())
                 {
-
-                    DebugX.Log(OICPAction + " of " + _EVSEDataRecords.Count() + " EVSE static data records at " + _HTTPVirtualHost + "...");
 
                     using (var _OICPClient = new SOAPClient(_Hostname,
                                                             _TCPPort,

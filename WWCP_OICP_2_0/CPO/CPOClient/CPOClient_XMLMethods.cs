@@ -37,9 +37,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     public static class CPOClient_XMLMethods
     {
 
-        #region PushEVSEDataXML(GroupedData,           OICPAction = fullLoad, OperatorId = null, OperatorName = null)
+        #region PushEVSEDataXML(GroupedEVSEs,          OICPAction = fullLoad, OperatorId = null, OperatorName = null)
 
-        public static XElement PushEVSEDataXML(ILookup<EVSEOperator, IEnumerable<EVSEDataRecord>>  GroupedData,
+        public static XElement PushEVSEDataXML(ILookup<EVSEOperator, IEnumerable<EVSEDataRecord>>  GroupedEVSEs,
                                                ActionType                                          OICPAction    = ActionType.fullLoad,
                                                EVSEOperator_Id                                     OperatorId    = null,
                                                String                                              OperatorName  = null)
@@ -47,9 +47,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:EVSEData      = "http://www.hubject.com/b2b/services/evsedata/EVSEData.0"
-            //                   xmlns:CommonTypes     = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
+            // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEData     = "http://www.hubject.com/b2b/services/evsedata/EVSEData.0"
+            //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
             //
             //    <soapenv:Header/>
             //    <soapenv:Body>
@@ -78,14 +78,14 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #region Initial checks
 
-            if (GroupedData == null)
-                throw new ArgumentNullException("GroupedData", "The given parameter must not be null!");
+            if (GroupedEVSEs == null)
+                throw new ArgumentNullException("GroupedEVSEs", "The given llokup of EVSE data records must not be null!");
 
             #endregion
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
                                       new XElement(OICPNS.EVSEData + "ActionType", OICPAction.ToString()),
-                                      GroupedData.Select(datagroup =>
+                                      GroupedEVSEs.Select(datagroup =>
                                           new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
                                               new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId != null
