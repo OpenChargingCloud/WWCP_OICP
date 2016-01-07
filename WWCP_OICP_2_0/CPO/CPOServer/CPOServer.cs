@@ -352,7 +352,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
                                            new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
-                                           new JProperty("XMLRequest",    HTTPRequest.Content.ToUTF8String()) //ToDo: Handle errors!
+                                           new JProperty("XMLRequest",    HTTPRequest.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
                                        ).ToString().
                                          Replace(Environment.NewLine, ""));
 

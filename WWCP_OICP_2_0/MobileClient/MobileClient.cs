@@ -292,7 +292,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        return new HTTPResponse<eRoamingMobileAuthorizationStart>(httpresponse,
                                                                                                                  new eRoamingMobileAuthorizationStart(-1,
                                                                                                                                                       Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                      AdditionalInfo: httpresponse.Content.ToUTF8String()),
+                                                                                                                                                      AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
                                                                                                                  IsFault: true);
 
                                                    },
@@ -389,7 +389,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                                                                         new eRoamingAcknowledgement(false,
                                                                                                                                     -1,
                                                                                                                                     Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                    AdditionalInfo: httpresponse.Content.ToUTF8String()),
+                                                                                                                                    AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
                                                                                                         IsFault: true);
 
                                                    },
@@ -486,7 +486,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                                                                         new eRoamingAcknowledgement(false,
                                                                                                                                     -1,
                                                                                                                                     Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                    AdditionalInfo: httpresponse.Content.ToUTF8String()),
+                                                                                                                                    AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
                                                                                                         IsFault: true);
 
                                                    },

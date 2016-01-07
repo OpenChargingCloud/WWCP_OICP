@@ -337,7 +337,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 {
 
                     Log.WriteLine("Invalid XML request!");
-                    Log.WriteLine(HTTPRequest.Content.ToUTF8String());
+                    Log.WriteLine(HTTPRequest.HTTPBody.ToUTF8String());
 
                     _HTTPServer.GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
@@ -345,7 +345,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
                                            new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
-                                           new JProperty("XMLRequest",    HTTPRequest.Content.ToUTF8String()) //ToDo: Handle errors!
+                                           new JProperty("XMLRequest",    HTTPRequest.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
                                        ).ToString().
                                          Replace(Environment.NewLine, ""));
 

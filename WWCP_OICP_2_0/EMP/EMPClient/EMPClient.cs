@@ -137,7 +137,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        return new HTTPResponse<eRoamingEVSEData>(httpresponse,
                                                                                                  new eRoamingEVSEData(StatusCode: new StatusCode(-1,
                                                                                                                                                  Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                 AdditionalInfo: httpresponse.Content.ToUTF8String())),
+                                                                                                                                                 AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
                                                                                                  IsFault: true);
 
                                                    },
@@ -241,7 +241,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        return new HTTPResponse<eRoamingEVSEStatus>(httpresponse,
                                                                                                    new eRoamingEVSEStatus(new StatusCode(-1,
                                                                                                                                          httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                         httpresponse.Content.ToUTF8String())),
+                                                                                                                                         httpresponse.HTTPBody.ToUTF8String())),
                                                                                                    IsFault: true);
 
                                                    },
@@ -332,7 +332,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                        return new HTTPResponse<eRoamingEVSEStatusById>(httpresponse,
                                                                                                        new eRoamingEVSEStatusById(new StatusCode(-1,
                                                                                                                                                  httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                 httpresponse.Content.ToUTF8String())),
+                                                                                                                                                 httpresponse.HTTPBody.ToUTF8String())),
                                                                                                        IsFault: true);
 
                                                    },
@@ -538,7 +538,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                                                                         new eRoamingAcknowledgement(false,
                                                                                                                                     -1,
                                                                                                                                     Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                    AdditionalInfo: httpresponse.Content.ToUTF8String()),
+                                                                                                                                    AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
                                                                                                         IsFault: true);
 
                                                    },
@@ -644,7 +644,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                                                                         new eRoamingAcknowledgement(false,
                                                                                                                                     -1,
                                                                                                                                     Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                    AdditionalInfo: httpresponse.Content.ToUTF8String()),
+                                                                                                                                    AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
                                                                                                         IsFault: true);
 
                                                    },
