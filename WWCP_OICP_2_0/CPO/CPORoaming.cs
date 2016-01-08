@@ -212,6 +212,46 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
+        #region PushEVSEData(GroupedEVSEs,      OICPAction = fullLoad, OperatorId = null, OperatorName = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Upload the given lookup of EVSEs grouped by their EVSE operator.
+        /// </summary>
+        /// <param name="GroupedEVSEs">A lookup of EVSEs grouped by their EVSE operator.</param>
+        /// <param name="OICPAction">The server-side data management operation.</param>
+        /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
+        /// <param name="OperatorName">The optional name of the EVSE operator.</param>
+        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        public async Task<eRoamingAcknowledgement>
+
+            PushEVSEData(ILookup<EVSEOperator, IEnumerable<EVSEDataRecord>>  GroupedEVSEs,
+                         ActionType                                          OICPAction    = ActionType.fullLoad,
+                         EVSEOperator_Id                                     OperatorId    = null,
+                         String                                              OperatorName  = null,
+                         TimeSpan?                                           QueryTimeout  = null)
+
+        {
+
+            #region Initial checks
+
+            if (GroupedEVSEs == null)
+                throw new ArgumentNullException("GroupedEVSEs", "The given lookup of EVSEs must not be null!");
+
+            #endregion
+
+            var result = await _CPOClient.PushEVSEData(GroupedEVSEs,
+                                                       OICPAction,
+                                                       OperatorId,
+                                                       OperatorName,
+                                                       QueryTimeout);
+
+            //ToDo: Process the HTTP!
+            return result.Content;
+
+        }
+
+        #endregion
+
         #region PushEVSEData(EVSEDataRecord, OICPAction = insert, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         /// <summary>

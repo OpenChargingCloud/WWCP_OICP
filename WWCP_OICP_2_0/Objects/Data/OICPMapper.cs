@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 
 #endregion
 
@@ -498,6 +499,43 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     return "Unspecified";
 
             }
+
+        }
+
+        #endregion
+
+
+        #region AsOICPEVSEDataRecord(this EVSE)
+
+        /// <summary>
+        /// Convert a WWCP EVSE into a corresponding OICP EVSE data record.
+        /// </summary>
+        /// <param name="EVSE">A WWCP EVSE.</param>
+        /// <returns>The corresponding OICP EVSE data record.</returns>
+        public static EVSEDataRecord AsOICPEVSEDataRecord(this WWCP.EVSE EVSE)
+        {
+
+            return new EVSEDataRecord(EVSE.Id,
+                                      EVSE.ChargingStation.Id.ToString(),
+                                      EVSE.ChargingStation.Name,
+                                      EVSE.ChargingStation.Address,
+                                      EVSE.ChargingStation.GeoLocation,
+                                      EVSE.SocketOutlets.Select(socketoutlet => socketoutlet.Plug),
+                                      EVSE.ChargingFacilities,
+                                      EVSE.ChargingModes,
+                                      EVSE.ChargingStation.AuthenticationModes,
+                                      EVSE.MaxCapacity_kWh.HasValue ? (Int32) EVSE.MaxCapacity_kWh : new Int32?(),
+                                      EVSE.ChargingStation.PaymentOptions,
+                                      EVSE.ChargingStation.Accessibility,
+                                      EVSE.ChargingStation.HotlinePhoneNumber,
+                                      EVSE.Description, // AdditionalInfo
+                                      EVSE.ChargingStation.ChargingPool.EntranceLocation,
+                                      EVSE.ChargingStation.OpeningTime.IsOpen24Hours,
+                                      EVSE.ChargingStation.OpeningTime,
+                                      null, // HubOperatorId
+                                      null, // ClearingHouseId
+                                      EVSE.ChargingStation.IsHubjectCompatible,
+                                      EVSE.ChargingStation.DynamicInfoAvailable);
 
         }
 

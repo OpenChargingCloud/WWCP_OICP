@@ -85,21 +85,22 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
                                       new XElement(OICPNS.EVSEData + "ActionType", OICPAction.ToString()),
-                                      GroupedEVSEs.Select(datagroup =>
+                                      GroupedEVSEs.Select(group =>
                                           new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
                                               new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId != null
                                                                                                 ? OperatorId
-                                                                                                : datagroup.Key.Id).OriginId),
+                                                                                                : group.Key.Id).OriginId),
 
-                                              (OperatorName.IsNotNullOrEmpty() || datagroup.Key.Name.Any())
+                                              (OperatorName.IsNotNullOrEmpty() || group.Key.Name.Any())
                                                   ? new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName.IsNotNullOrEmpty()
                                                                                                         ? OperatorName
-                                                                                                        : datagroup.Key.Name.First().Text))
+                                                                                                        : group.Key.Name.First().Text))
                                                   : null,
 
                                               // <EvseDataRecord> ... </EvseDataRecord>
-                                              datagroup.ToArray()
+                                              group.SelectMany(evsedatarecords => evsedatarecords.Select(evsedatarecord => evsedatarecord.ToXML())).
+                                                    ToArray()
 
                                           )).ToArray()
                                       ));
@@ -110,11 +111,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region PushEVSEDataXML(this EVSEDataRecords,  OICPAction = insert,   OperatorId = null, OperatorName = null, IncludeEVSEs = null)
 
-        public static XElement PushEVSEDataXML(this IEnumerable<EVSEDataRecord> EVSEDataRecords,
-                                               ActionType OICPAction = ActionType.insert,
-                                               EVSEOperator_Id OperatorId = null,
-                                               String OperatorName = null,
-                                               Func<EVSEDataRecord, Boolean> IncludeEVSEs = null)
+        public static XElement PushEVSEDataXML(this IEnumerable<EVSEDataRecord>  EVSEDataRecords,
+                                               ActionType                        OICPAction    = ActionType.insert,
+                                               EVSEOperator_Id                   OperatorId    = null,
+                                               String                            OperatorName  = null,
+                                               Func<EVSEDataRecord, Boolean>     IncludeEVSEs  = null)
         {
 
             #region Documentation

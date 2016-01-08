@@ -18,23 +18,27 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Xml.Linq;
-using System.Collections.Generic;
 
 #endregion
 
 namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
-    public static class ExtentionMethods
+    /// <summary>
+    /// OICP v2.0 exceptions.
+    /// </summary>
+    public class OICPException : ApplicationException
     {
 
-        public static IEnumerable<HubjectEVSESearchReply> ParseSearchReplies(XElement XML)
+        private readonly StatusCode _StatusCode;
+
+        /// <summary>
+        /// Create a new OICP v2.0 exception for the given status code.
+        /// </summary>
+        /// <param name="StatusCode"></param>
+        public OICPException(StatusCode  StatusCode)
         {
-            return (from   EvseMatch
-                    in     XML.Descendants(OICPNS.EVSESearch + "EvseMatch")
-                    select new HubjectEVSESearchReply(EvseMatch)).ToArray();
+            this._StatusCode  = StatusCode;
         }
 
     }

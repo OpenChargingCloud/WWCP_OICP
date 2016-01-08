@@ -51,6 +51,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         private readonly EVSE_Id _EVSEId;
 
+        /// <summary>
+        /// The unique identification of the Electric Vehicle Supply Equipment.
+        /// </summary>
         public EVSE_Id EVSEId
         {
             get
@@ -198,6 +201,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         private IEnumerable<PlugTypes> _Plugs;
 
+        /// <summary>
+        /// The types of the charging plugs.
+        /// </summary>
         public IEnumerable<PlugTypes> Plugs
         {
 

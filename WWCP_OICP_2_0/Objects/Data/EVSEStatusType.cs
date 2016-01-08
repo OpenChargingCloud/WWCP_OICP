@@ -18,14 +18,43 @@
 namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
+    /// <summary>
+    /// The current status of an OICP v2.0 Electric Vehicle Supply Equipment.
+    /// </summary>
     public enum EVSEStatusType
     {
+
+        /// <summary>
+        /// The status or EVSE is unknown.
+        /// </summary>
         Unknown,
+
+        /// <summary>
+        /// The EVSE is available.
+        /// </summary>
         Available,
+
+        /// <summary>
+        /// The EVSE is reserved.
+        /// </summary>
         Reserved,
+
+        /// <summary>
+        /// The EVSE is occupied.
+        /// </summary>
         Occupied,
+
+        /// <summary>
+        /// The EVSE is out of service.
+        /// </summary>
         OutOfService,
-        EvseNotFound   // PullEVSEStatusById!
+
+        /// <summary>
+        /// The EVSE was not found.
+        /// (PullEVSEStatusById)
+        /// </summary>
+        EvseNotFound
+
     }
 
 }

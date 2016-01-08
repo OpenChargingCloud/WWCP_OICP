@@ -29,7 +29,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 Electric Vehicle Supply Equipment Status (EVSE).
+    /// The current status of an OICP v2.0 Electric Vehicle Supply Equipment.
     /// </summary>
     public class EVSEStatusRecord
     {

@@ -18,14 +18,14 @@
 #region Usings
 
 using System;
+using System.Xml.Linq;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using System.Security.Cryptography.X509Certificates;
-using System.Net.Security;
-using System.Xml.Linq;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -33,9 +33,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// An abstract base class for all OICP v2.0 upstream services.
+    /// An abstract base class for all OICP v2.0 clients.
     /// </summary>
-    public abstract class AOICPUpstreamService : IDisposable
+    public abstract class AOICPClient : IDisposable
     {
 
         #region Data
@@ -191,7 +191,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #region Constructor(s)
 
         /// <summary>
-        /// Create an abstract OICP upstream service.
+        /// Create an abstract OICP v2.0 client.
         /// </summary>
         /// <param name="Hostname">The OICP hostname to connect to.</param>
         /// <param name="TCPPort">The OICP TCP port to connect to.</param>
@@ -199,12 +199,12 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <param name="UserAgent">An optional HTTP user agent to use.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
-        internal AOICPUpstreamService(String     Hostname,
-                                      IPPort     TCPPort,
-                                      String     HTTPVirtualHost  = null,
-                                      String     UserAgent        = "GraphDefined OICP Gateway",
-                                      TimeSpan?  QueryTimeout     = null,
-                                      DNSClient  DNSClient        = null)
+        internal AOICPClient(String     Hostname,
+                             IPPort     TCPPort,
+                             String     HTTPVirtualHost  = null,
+                             String     UserAgent        = "GraphDefined OICP Gateway",
+                             TimeSpan?  QueryTimeout     = null,
+                             DNSClient  DNSClient        = null)
         {
 
             #region Initial checks
@@ -307,7 +307,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         }
 
         #endregion
-
 
 
         #region IsHubjectError(XML)

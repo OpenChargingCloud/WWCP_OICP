@@ -163,6 +163,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Events
 
+        #region OnEVSEDataPush/-Pushed
+
+        /// <summary>
+        /// An event fired whenever new EVSE data will be send upstream.
+        /// </summary>
+        public event OnEVSEDataPushDelegate OnEVSEDataPush;
+
+        /// <summary>
+        /// An event fired whenever new EVSE data had been send upstream.
+        /// </summary>
+        public event OnEVSEDataPushedDelegate OnEVSEDataPushed;
+
+        #endregion
+
 
         #endregion
 
@@ -332,7 +346,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         #endregion
 
 
-        #region PushEVSEData(GroupedEVSEs,      ActionType = fullLoad, OperatorId = null, OperatorName = null, QueryTimeout = null)
+        #region PushEVSEData(GroupedEVSEs,     ActionType = fullLoad, OperatorId = null, OperatorName = null, QueryTimeout = null)
 
         /// <summary>
         /// Upload the given lookup of EVSEs grouped by their EVSE operator.
@@ -357,16 +371,51 @@ namespace org.GraphDefined.WWCP.OICP_2_0
             if (GroupedEVSEs == null)
                 throw new ArgumentNullException("GroupedEVSEs", "The given lookup of EVSEs must not be null!");
 
+            Acknowledgement Acknowledgement = null;
+
             #endregion
 
+            #region Get effective number of EVSE data records to upload
 
             var NumberOfEVSEs = GroupedEVSEs.
                                     Select    (group    => group.Select(EVSEs => EVSEs.Count())).
                                     SelectMany(subtotal => subtotal).
                                     Sum       ();
 
+            #endregion
 
-            return new Acknowledgement(true);
+
+            if (NumberOfEVSEs > 0)
+            {
+
+                var OnEVSEDataPushLocal = OnEVSEDataPush;
+                if (OnEVSEDataPushLocal != null)
+                    OnEVSEDataPushLocal(DateTime.Now, this, this.Id.ToString(), this.RoamingNetworkId, ActionType, GroupedEVSEs, (UInt32) NumberOfEVSEs);
+
+                var result = await _CPORoaming.PushEVSEData(GroupedEVSEs.ToLookup(group => group.Key,
+                                                                                  group => group.SelectMany(evses => evses.Select(evse => evse.AsOICPEVSEDataRecord()))),
+                                                            ActionType.AsOICPActionType(),
+                                                            OperatorId,
+                                                            OperatorName,
+                                                            QueryTimeout);
+
+                if (result.Result == true)
+                    Acknowledgement = new Acknowledgement(true);
+
+                else
+                    Acknowledgement = new Acknowledgement(false, result.StatusCode.Description);
+
+            }
+
+            else
+                Acknowledgement = new Acknowledgement(true);
+
+
+            var OnEVSEDataPushedLocal = OnEVSEDataPushed;
+            if (OnEVSEDataPushedLocal != null)
+                OnEVSEDataPushedLocal(DateTime.Now, this, this.Id.ToString(), this.RoamingNetworkId, ActionType, GroupedEVSEs, (UInt32) NumberOfEVSEs, Acknowledgement);
+
+            return Acknowledgement;
 
         }
 

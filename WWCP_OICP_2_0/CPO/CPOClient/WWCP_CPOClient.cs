@@ -175,6 +175,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// An event fired whenever a HTTP error occured.
         /// </summary>
         public event OnHTTPErrorDelegate OnHTTPError;
+        public event OnEVSEDataPushDelegate OnEVSEDataPush;
+        public event OnEVSEDataPushedDelegate OnEVSEDataPushed;
 
         #endregion
 
@@ -302,8 +304,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            try
-            {
 
                 var NumberOfEVSEs = GroupedData.Select(v => v.Select(w => w.Count())).SelectMany(x => x).Sum();
 
@@ -398,29 +398,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     }
 
                 }
+
                 else
-                {
-
-                    DebugX.Log(OICPAction + " of EVSE static data sets at " + _CPOClient.HTTPVirtualHost + " skipped!");
-
-                    return new HTTPResponse<eRoamingAcknowledgement>();
-
-                }
-
-            }
-
-            // Note: Will only catch SOAPClient init and query init exceptions!
-            catch (Exception e)
-            {
-
-                SendOnException(DateTime.Now, this, e);
-
-                if (e.InnerException != null)
-                    e = e.InnerException;
-
-                return new HTTPResponse<eRoamingAcknowledgement>(new HTTPResponse(), new eRoamingAcknowledgement(false, 0, e.Message), e);
-
-            }
+                    return HTTPResponse<eRoamingAcknowledgement>.OK(new eRoamingAcknowledgement(true, 0));
 
         }
 
@@ -697,8 +677,6 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            try
-            {
 
                 if (_EVSEs.Any())
                 {
@@ -791,26 +769,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                     }
 
                 }
+
                 else
-                {
-
-                    DebugX.Log(OICPAction + " of EVSE static data sets at " + _CPOClient.HTTPVirtualHost + " skipped!");
-
-                    return new HTTPResponse<eRoamingAcknowledgement>();
-
-                }
-
-            }
-
-            // Note: Will only catch SOAPClient init and query init exceptions!
-            catch (Exception e)
-            {
-
-                SendOnException(DateTime.Now, this, e);
-
-                return new HTTPResponse<eRoamingAcknowledgement>(new HTTPResponse(), e);
-
-            }
+                    return HTTPResponse<eRoamingAcknowledgement>.OK(new eRoamingAcknowledgement(true, 0));
 
         }
 
@@ -912,10 +873,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushEVSEStatus(EVSEOperator         EVSEOperator,
-                           ActionType           OICPAction    = ActionType.update,
-                           Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                           TimeSpan?            QueryTimeout  = null)
+            PushEVSEStatus(EVSEOperator EVSEOperator,
+                           ActionType OICPAction = ActionType.update,
+                           Func<EVSE, Boolean> IncludeEVSEs = null,
+                           TimeSpan? QueryTimeout = null)
 
         {
 
@@ -929,38 +890,35 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             #endregion
 
-            try
+            var AllEVSEs = EVSEOperator.
+                               AllEVSEs.
+                               Where(IncludeEVSEs).
+                               //Where(evse => !EVSEOperator.InvalidEVSEIds.Contains(evse.Id)).
+                               ToArray();
+
+            if (AllEVSEs.Any())
             {
 
-                var AllEVSEs = EVSEOperator.
-                                   AllEVSEs.
-                                   Where(IncludeEVSEs).
-                                   //Where(evse => !EVSEOperator.InvalidEVSEIds.Contains(evse.Id)).
-                                   ToArray();
+                DebugX.Log(OICPAction + " of " + AllEVSEs.Length + " EVSE states at " + _CPOClient.HTTPVirtualHost + "...");
 
-                if (AllEVSEs.Any())
+                using (var _OICPClient = new SOAPClient(_CPOClient.Hostname,
+                                                        _CPOClient.TCPPort,
+                                                        _CPOClient.HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                        _CPOClient.UserAgent,
+                                                        false,
+                                                        _CPOClient.DNSClient))
                 {
 
-                    DebugX.Log(OICPAction + " of " + AllEVSEs.Length + " EVSE states at " + _CPOClient.HTTPVirtualHost + "...");
+                    return await _OICPClient.Query(AllEVSEs.
+                                                       PushEVSEStatusXML(OICPAction,
+                                                                         EVSEOperator.Id,
+                                                                         EVSEOperator.Name[Languages.de]),
+                                                   "eRoamingPushEvseStatus",
+                                                   QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : _CPOClient.QueryTimeout,
 
-                    using (var _OICPClient = new SOAPClient(_CPOClient.Hostname,
-                                                            _CPOClient.TCPPort,
-                                                            _CPOClient.HTTPVirtualHost,
-                                                            "/ibis/ws/eRoamingEvseStatus_V2.0",
-                                                            _CPOClient.UserAgent,
-                                                            false,
-                                                            _CPOClient.DNSClient))
-                    {
-
-                        return await _OICPClient.Query(AllEVSEs.
-                                                           PushEVSEStatusXML(OICPAction,
-                                                                             EVSEOperator.Id,
-                                                                             EVSEOperator.Name[Languages.de]),
-                                                       "eRoamingPushEvseStatus",
-                                                       QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : _CPOClient.QueryTimeout,
-
-                                                       OnSuccess: XMLData =>
-                                                       {
+                                                   OnSuccess: XMLData =>
+                                                   {
 
                                                            #region Documentation
 
@@ -985,25 +943,27 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                            #endregion
 
                                                            var ack = eRoamingAcknowledgement.Parse(XMLData.Content);
-                                                           DebugX.Log(OICPAction + " of EVSE states: " + ack.Result + " / " + ack.StatusCode.Description + Environment.NewLine);
+                                                       DebugX.Log(OICPAction + " of EVSE states: " + ack.Result + " / " + ack.StatusCode.Description + Environment.NewLine);
 
-                                                           return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse, ack, false);
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse, ack, false);
 
-                                                       },
+                                                   },
 
 
-                                                       OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                                   OnSOAPFault: (timestamp, soapclient, soapfault) =>
+                                                   {
 
-                                                           DebugX.Log(OICPAction + " of EVSE states led to a fault!" + Environment.NewLine);
+                                                       DebugX.Log(OICPAction + " of EVSE states led to a fault!" + Environment.NewLine);
 
-                                                           return new HTTPResponse<eRoamingAcknowledgement>(
-                                                               soapfault.HttpResponse,
-                                                               new eRoamingAcknowledgement(false, 0, "", ""),
-                                                               IsFault: true);
+                                                       return new HTTPResponse<eRoamingAcknowledgement>(
+                                                           soapfault.HttpResponse,
+                                                           new eRoamingAcknowledgement(false, 0, "", ""),
+                                                           IsFault: true);
 
-                                                       },
+                                                   },
 
-                                                       OnHTTPError: (t, s, e) => {
+                                                   OnHTTPError: (t, s, e) =>
+                                                   {
 
                                                            //var OnHTTPErrorLocal = OnHTTPError;
                                                            //if (OnHTTPErrorLocal != null)
@@ -1011,9 +971,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                            return null;
 
-                                                       },
+                                                   },
 
-                                                       OnException: (t, s, e) => {
+                                                   OnException: (t, s, e) =>
+                                                   {
 
                                                            //var OnExceptionLocal = OnException;
                                                            //if (OnExceptionLocal != null)
@@ -1021,36 +982,16 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
                                                            return null;
 
-                                                       }
+                                                   }
 
-                                                      );
-
-                    }
-
-                }
-                else
-                {
-
-                    DebugX.Log(OICPAction + " of EVSE states at " + _CPOClient.HTTPVirtualHost + " skipped!");
-
-                    return new HTTPResponse<eRoamingAcknowledgement>();
+                                                  );
 
                 }
 
             }
 
-            // Note: Will only catch SOAPClient init and query init exceptions!
-            catch (Exception e)
-            {
-
-                SendOnException(DateTime.Now, this, e);
-
-                if (e.InnerException != null)
-                    e = e.InnerException;
-
-                return new HTTPResponse<eRoamingAcknowledgement>(new HTTPResponse(), new eRoamingAcknowledgement(false, 0, e.Message), e);
-
-            }
+            else
+                return HTTPResponse<eRoamingAcknowledgement>.OK(new eRoamingAcknowledgement(true, 0));
 
         }
 
