@@ -89,6 +89,18 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+        #region DNSClient
+
+        public DNSClient DNSClient
+        {
+            get
+            {
+                return _CPOServer.DNSClient;
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Events

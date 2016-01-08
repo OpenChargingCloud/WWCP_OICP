@@ -100,7 +100,8 @@
     <Compile Include="Objects\EVSEDataRecord.cs" />
     <Compile Include="OICPImporter\OICPImporter.cs" />
     <Compile Include="OICPServer\OICPServer.cs" />
-    <Compile Include="OICPServiceCheck\OICPServiceCheck.cs" />
+    <Compile Include="CPO\CPOServiceCheck.cs" />
+    <Compile Include="IO\AServiceCheck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CPO\CPORoaming.cs" />
   </ItemGroup>

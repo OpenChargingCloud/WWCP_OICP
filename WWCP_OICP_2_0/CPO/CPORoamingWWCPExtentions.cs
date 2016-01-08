@@ -18,10 +18,11 @@
 #region Usings
 
 using System;
+using System.Threading.Tasks;
 
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -126,6 +127,31 @@ namespace org.GraphDefined.WWCP
         }
 
         #endregion
+
+
+
+        public static OICP_2_0.CPOServiceCheck<T>
+
+            CreateOICPCPOServiceCheck<T>(this RoamingProvider                                                       RoamingProvider,
+                                         Func<DateTime, OICP_2_0.CPOServiceCheck<T>, OICP_2_0.CPORoaming, Task<T>>  Checker       = null,
+                                         TimeSpan?                                                                  CheckEvery    = null,
+                                         Action<T>                                                                  OnFirstCheck  = null,
+                                         Action<T>                                                                  OnEveryCheck  = null)
+        {
+
+            var X = (RoamingProvider.OperatorRoamingService as OICP_2_0.CPORoamingWWCP);
+
+            if (X == null)
+                throw new ArgumentException("The given roaming provider is not an OICP v2.0 CPO roaming provider!", "RoamingProvider");
+
+            return new OICP_2_0.CPOServiceCheck<T>(X.CPORoaming,
+                                                        Checker,
+                                                        CheckEvery,
+                                                        OnFirstCheck,
+                                                        OnEveryCheck);
+
+        }
+
 
     }
 

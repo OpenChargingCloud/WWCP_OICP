@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Data
 
-        private const           String  DefaultHTTPServerName  = "OICP v2.0 EMP HTTP/SOAP/XML Server API";
+        private const           String  DefaultHTTPServerName  = "OICP v2.0 HTTP/SOAP/XML EMP Server API";
         private static readonly IPPort  DefaultHTTPServerPort  = new IPPort(2002);
 
         #endregion

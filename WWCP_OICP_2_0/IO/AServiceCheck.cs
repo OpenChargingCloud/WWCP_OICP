@@ -26,6 +26,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 
 using OICPv2_0 = org.GraphDefined.WWCP.OICP_2_0;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -33,10 +34,10 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
     /// <summary>
-    /// Check the OICP services
+    /// Check any OICP services.
     /// </summary>
     /// <typeparam name="T">The type of data which will be processed on every update run.</typeparam>
-    public class OICPServiceCheck<T>
+    public abstract class AServiceCheck<T>
     {
 
         #region Data
@@ -45,57 +46,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         private readonly        Object                         ServiceCheckLock;
         private readonly        Timer                          ServiceCheckTimer;
 
-        private readonly        Action<OICPServiceCheck<T>>    _OnFirstCheck;
-        private readonly        Action<OICPServiceCheck<T>>    _OnEveryCheck;
-
-        public  readonly static IPPort                         DefaultTCPPort            = new IPPort(443);
         public  readonly static TimeSpan                       DefaultServiceCheckEvery  = TimeSpan.FromSeconds(10);
 
         #endregion
 
         #region Properties
-
-        #region Hostname
-
-        private readonly String _Hostname;
-
-        public String Hostname
-        {
-            get
-            {
-                return _Hostname;
-            }
-        }
-
-        #endregion
-
-        #region RemoteHTTPVirtualHost
-
-        private readonly String _RemoteHTTPVirtualHost;
-
-        public String RemoteHTTPVirtualHost
-        {
-            get
-            {
-                return _RemoteHTTPVirtualHost;
-            }
-        }
-
-        #endregion
-
-        #region IPPort
-
-        private readonly IPPort _IPPort;
-
-        public IPPort IPPort
-        {
-            get
-            {
-                return _IPPort;
-            }
-        }
-
-        #endregion
 
         #region DNSClient
 
@@ -141,62 +96,20 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region Events
-
-        /// <summary>
-        /// A delegate called whenever a new service check was initiated.
-        /// </summary>
-        public delegate void OnEveryRunDelegate(OICPServiceCheck<T> OICPWatcher);
-
-        /// <summary>
-        /// An event fired whenever a new service check was initiated.
-        /// </summary>
-        public event OnEveryRunDelegate OnEveryRun;
-
-        #endregion
-
         #region Constructor(s)
 
-        public OICPServiceCheck(String                       Hostname,
-                                IPPort                       IPPort                = null,
-                                String                       RemoteHTTPVirtualHost = null,
-                                DNSClient                    DNSClient             = null,
-                                TimeSpan?                    CheckEvery            = null,
-                                Authorizator_Id              AuthorizatorId        = null,
-
-                                Action<OICPServiceCheck<T>>  OnFirstCheck          = null,
-                                Action<OICPServiceCheck<T>>  OnEveryCheck          = null)
+        public AServiceCheck(DNSClient        DNSClient              = null,
+                             TimeSpan?        CheckEvery             = null,
+                             Authorizator_Id  AuthorizatorId         = null)
 
         {
 
-            #region Initial checks
-
-            if (Hostname.IsNullOrEmpty())
-                throw new ArgumentNullException("Hostname", "The given parameter must not be null or empty!");
-
-            #endregion
-
-            this._Hostname               = Hostname;
-            this._IPPort                 = IPPort                != null ? IPPort                : new IPPort(443);
-            this._RemoteHTTPVirtualHost  = RemoteHTTPVirtualHost != null ? RemoteHTTPVirtualHost : Hostname;
             this._DNSClient              = DNSClient             != null ? DNSClient             : new DNSClient();
             this._CheckEvery             = CheckEvery            != null ? CheckEvery.Value      : DefaultServiceCheckEvery;
-
-            this._OnFirstCheck           = OnFirstCheck;
-            this._OnEveryCheck           = OnEveryCheck;
-
-            if (this._OnEveryCheck != null)
-                this.OnEveryRun += W => this._OnEveryCheck(W);
 
             // Start not now but veeeeery later!
             ServiceCheckLock             = new Object();
             ServiceCheckTimer            = new Timer(RunServiceCheck, null, TimeSpan.FromDays(30), _CheckEvery);
-
-            this._UpstreamService        = new OICPv2_0.WWCP_CPOClient(Hostname,
-                                                                           IPPort,
-                                                                           RemoteHTTPVirtualHost,
-                                                                           AuthorizatorId != null ? AuthorizatorId : Authorizator_Id.Parse("HubjectQA"),
-                                                                           DNSClient: DNSClient);
 
         }
 
@@ -208,7 +121,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Start the OICP service check.
         /// </summary>
-        public OICPServiceCheck<T> Start()
+        public AServiceCheck<T> Start()
         {
 
             if (Monitor.TryEnter(ServiceCheckLock))
@@ -249,6 +162,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
+        protected abstract Task EveryRun(DateTime Timestamp);
 
         #region (private, Timer) RunServiceCheck(Status)
 
@@ -276,9 +190,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 try
                 {
 
-                    var OnEveryRunLocal = OnEveryRun;
-                    if (OnEveryRunLocal != null)
-                        OnEveryRunLocal(this);
+                    var Task = EveryRun(DateTime.Now);
+                    Task.Wait();
 
                     #region Debug info
 
