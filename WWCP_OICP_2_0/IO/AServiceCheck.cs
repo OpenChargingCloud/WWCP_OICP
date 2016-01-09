@@ -36,17 +36,17 @@ namespace org.GraphDefined.WWCP.OICP_2_0
     /// <summary>
     /// Check any OICP services.
     /// </summary>
-    /// <typeparam name="T">The type of data which will be processed on every update run.</typeparam>
-    public abstract class AServiceCheck<T>
+    /// <typeparam name="TResult">The type of data which will be processed on every update run.</typeparam>
+    public abstract class AServiceCheck<TResult>
     {
 
         #region Data
 
-        private                 Boolean                        Started = false;
-        private readonly        Object                         ServiceCheckLock;
-        private readonly        Timer                          ServiceCheckTimer;
-
-        public  readonly static TimeSpan                       DefaultServiceCheckEvery  = TimeSpan.FromSeconds(10);
+        private             Boolean          Started = false;
+        private   readonly  Object           ServiceCheckLock;
+        private   readonly  Timer            ServiceCheckTimer;
+        protected readonly  Action<TResult>  _OnFirstCheck;
+        protected readonly  Action<TResult>  _OnEveryCheck;
 
         #endregion
 
@@ -80,15 +80,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #endregion
 
-        #region UpstreamService
+        #region InitialDelay
 
-        private readonly OICPv2_0.WWCP_CPOClient _UpstreamService;
+        private readonly TimeSpan? _InitialDelay;
 
-        public OICPv2_0.WWCP_CPOClient UpstreamService
+        public TimeSpan? InitialDelay
         {
             get
             {
-                return _UpstreamService;
+                return _InitialDelay;
             }
         }
 
@@ -98,18 +98,23 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Constructor(s)
 
-        public AServiceCheck(DNSClient        DNSClient              = null,
-                             TimeSpan?        CheckEvery             = null,
-                             Authorizator_Id  AuthorizatorId         = null)
+        public AServiceCheck(TimeSpan         CheckEvery,
+                             Action<TResult>  OnFirstCheck,
+                             Action<TResult>  OnEveryCheck,
+                             TimeSpan?        InitialDelay  = null,
+                             DNSClient        DNSClient     = null)
 
         {
 
-            this._DNSClient              = DNSClient             != null ? DNSClient             : new DNSClient();
-            this._CheckEvery             = CheckEvery            != null ? CheckEvery.Value      : DefaultServiceCheckEvery;
+            this._CheckEvery    = CheckEvery;
+            this._OnFirstCheck  = OnFirstCheck;
+            this._OnEveryCheck  = OnEveryCheck;
+            this._InitialDelay  = InitialDelay;
+            this._DNSClient     = DNSClient != null ? DNSClient : new DNSClient();
 
             // Start not now but veeeeery later!
-            ServiceCheckLock             = new Object();
-            ServiceCheckTimer            = new Timer(RunServiceCheck, null, TimeSpan.FromDays(30), _CheckEvery);
+            ServiceCheckLock    = new Object();
+            ServiceCheckTimer   = new Timer(RunServiceCheck, null, TimeSpan.FromDays(30), _CheckEvery);
 
         }
 
@@ -121,8 +126,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// Start the OICP service check.
         /// </summary>
-        public AServiceCheck<T> Start()
+        public AServiceCheck<TResult> Start()
         {
+
+            if (_InitialDelay.HasValue)
+                Thread.Sleep(_InitialDelay.Value);
 
             if (Monitor.TryEnter(ServiceCheckLock))
             {

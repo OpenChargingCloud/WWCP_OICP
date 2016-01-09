@@ -128,30 +128,46 @@ namespace org.GraphDefined.WWCP
 
         #endregion
 
+        #region CreateOICPCPOServiceCheck(this RoamingProvider, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, InitialDelay = null)
 
-
+        /// <summary>
+        /// Create a new OICP v2.0 service checker.
+        /// </summary>
+        /// <typeparam name="T">The type of the data returned by the service checker.</typeparam>
+        /// <param name="RoamingProvider">A roaming provider.</param>
+        /// <param name="ServiceChecker">A function to check the OICP v2.0 service regularly and providing some result.</param>
+        /// <param name="OnFirstCheck">A delegate processing the first check result.</param>
+        /// <param name="OnEveryCheck">A delegate processing a check result.</param>
+        /// <param name="CheckEvery">The time span between two consecutive service checks.</param>
+        /// <param name="InitialDelay">Initial delay between startup and first check.</param>
         public static OICP_2_0.CPOServiceCheck<T>
 
-            CreateOICPCPOServiceCheck<T>(this RoamingProvider                                                       RoamingProvider,
-                                         Func<DateTime, OICP_2_0.CPOServiceCheck<T>, OICP_2_0.CPORoaming, Task<T>>  Checker       = null,
-                                         TimeSpan?                                                                  CheckEvery    = null,
-                                         Action<T>                                                                  OnFirstCheck  = null,
-                                         Action<T>                                                                  OnEveryCheck  = null)
+            CreateOICPCPOServiceCheck<T>(this RoamingProvider                 RoamingProvider,
+                                         OICP_2_0.CPOServiceCheckDelegate<T>  ServiceChecker,
+                                         Action<T>                            OnFirstCheck,
+                                         Action<T>                            OnEveryCheck,
+                                         TimeSpan                             CheckEvery,
+                                         TimeSpan?                            InitialDelay = null)
         {
 
-            var X = (RoamingProvider.OperatorRoamingService as OICP_2_0.CPORoamingWWCP);
+            #region Initial checks
 
-            if (X == null)
+            var _CPORoamingWWCP = (RoamingProvider.OperatorRoamingService as OICP_2_0.CPORoamingWWCP);
+
+            if (_CPORoamingWWCP == null)
                 throw new ArgumentException("The given roaming provider is not an OICP v2.0 CPO roaming provider!", "RoamingProvider");
 
-            return new OICP_2_0.CPOServiceCheck<T>(X.CPORoaming,
-                                                        Checker,
-                                                        CheckEvery,
-                                                        OnFirstCheck,
-                                                        OnEveryCheck);
+            #endregion
+
+            return new OICP_2_0.CPOServiceCheck<T>(_CPORoamingWWCP.CPORoaming,
+                                                   ServiceChecker,
+                                                   OnFirstCheck,
+                                                   OnEveryCheck,
+                                                   CheckEvery);
 
         }
 
+        #endregion
 
     }
 

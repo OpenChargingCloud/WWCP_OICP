@@ -439,9 +439,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region OpeningTime
 
-        private OpeningTime _OpeningTime;
+        private OpeningTimes _OpeningTime;
 
-        public OpeningTime OpeningTime
+        public OpeningTimes OpeningTime
         {
 
             get
@@ -588,7 +588,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                               I18NString                        AdditionalInfo              = null,
                               GeoCoordinate                     GeoChargingPointEntrance    = null,
                               Boolean?                          IsOpen24Hours               = null,
-                              OpeningTime                       OpeningTime                 = null,
+                              OpeningTimes                       OpeningTime                 = null,
                               HubOperator_Id                    HubOperatorId               = null,
                               RoamingProvider_Id                ClearingHouseId             = null,
                               Boolean                           IsHubjectCompatible         = true,
@@ -641,13 +641,13 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
 
             if (IsOpen24Hours != null && IsOpen24Hours.HasValue && IsOpen24Hours.Value)
-                this._OpeningTime  = OpeningTime.Open24Hours;
+                this._OpeningTime  = OpeningTimes.Open24Hours;
 
             if (OpeningTime != null)
                 this._OpeningTime  = OpeningTime;
 
             if (OpeningTime == null && (IsOpen24Hours == null || !IsOpen24Hours.HasValue))
-                this._OpeningTime = OpeningTime.Open24Hours;
+                this._OpeningTime = OpeningTimes.Open24Hours;
 
         }
 
@@ -982,7 +982,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
             if (EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsOpen24Hours", "Missing 'IsOpen24Hours'-XML tag!") == "true")
             {
-                EVSEDataRecord.OpeningTime = OpeningTime.Open24Hours;
+                EVSEDataRecord.OpeningTime = OpeningTimes.Open24Hours;
             }
 
             else
@@ -991,7 +991,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 var OpeningTimeXML = EVSEDataRecordXML.Element(OICPNS.EVSEData + "OpeningTime");
                 if (OpeningTimeXML != null)
                 {
-                    EVSEDataRecord.OpeningTime = new OpeningTime(OpeningTimeXML.Value.Trim());
+                    EVSEDataRecord.OpeningTime = new OpeningTimes(OpeningTimeXML.Value.Trim());
                 }
 
             }

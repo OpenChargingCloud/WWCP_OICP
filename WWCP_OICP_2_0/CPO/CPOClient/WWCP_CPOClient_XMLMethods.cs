@@ -698,11 +698,11 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                       )
                     : null,
 
-                new XElement(OICPNS.EVSEData + "IsOpen24Hours",         EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours ? "true" : "false"),
+                new XElement(OICPNS.EVSEData + "IsOpen24Hours",         EVSE.ChargingStation.ChargingPool.OpeningTimes.IsOpen24Hours ? "true" : "false"),
 
-                EVSE.ChargingStation.ChargingPool.OpeningTime.IsOpen24Hours
+                EVSE.ChargingStation.ChargingPool.OpeningTimes.IsOpen24Hours
                     ? null
-                    : new XElement(OICPNS.EVSEData + "OpeningTime",     EVSE.ChargingStation.ChargingPool.OpeningTime.Text),
+                    : new XElement(OICPNS.EVSEData + "OpeningTime",     EVSE.ChargingStation.ChargingPool.OpeningTimes.Text),
 
                 // <!--Optional:-->
                 // <v1:HubOperatorID>?</v1:HubOperatorID>

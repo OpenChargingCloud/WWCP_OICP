@@ -238,7 +238,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                                                           _ChargingPool.Description           = EvseDataRecord.AdditionalInfo;
                                                                                           _ChargingPool.LocationLanguage      = LocationLanguage;
                                                                                           _ChargingPool.EntranceLocation      = EvseDataRecord.GeoChargingPointEntrance;
-                                                                                          _ChargingPool.OpeningTime           = EvseDataRecord.OpeningTime;
+                                                                                          _ChargingPool.OpeningTimes           = EvseDataRecord.OpeningTime;
                                                                                           _ChargingPool.AuthenticationModes   = new ReactiveSet<AuthenticationModes>(EvseDataRecord.AuthenticationModes);
                                                                                           _ChargingPool.PaymentOptions        = new ReactiveSet<PaymentOptions>     (EvseDataRecord.PaymentOptions);
                                                                                           _ChargingPool.Accessibility         = EvseDataRecord.Accessibility;
@@ -258,7 +258,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                                                                                                                 pool.GeoLocation                 = EvseDataRecord.GeoCoordinate;
                                                                                                                                 pool.LocationLanguage            = LocationLanguage;
                                                                                                                                 pool.EntranceLocation            = EvseDataRecord.GeoChargingPointEntrance;
-                                                                                                                                pool.OpeningTime                 = EvseDataRecord.OpeningTime;
+                                                                                                                                pool.OpeningTimes                 = EvseDataRecord.OpeningTime;
                                                                                                                                 pool.AuthenticationModes         = new ReactiveSet<AuthenticationModes>(EvseDataRecord.AuthenticationModes);
                                                                                                                                 pool.PaymentOptions              = new ReactiveSet<PaymentOptions>     (EvseDataRecord.PaymentOptions);
                                                                                                                                 pool.Accessibility               = EvseDataRecord.Accessibility;

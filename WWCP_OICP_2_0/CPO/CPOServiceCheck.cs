@@ -32,11 +32,14 @@ using org.GraphDefined.Vanaheimr.Hermod.DNS;
 namespace org.GraphDefined.WWCP.OICP_2_0
 {
 
+    public delegate Task<TResult> CPOServiceCheckDelegate<TResult>(DateTime Timestamp, CPOServiceCheck<TResult> CPOServiceCheck, CPORoaming CPORoaming);
+
+
     /// <summary>
     /// Check any OICP v2.0 CPO service.
     /// </summary>
-    /// <typeparam name="T">The type of data which will be processed on every update run.</typeparam>
-    public class CPOServiceCheck<T> : AServiceCheck<T>
+    /// <typeparam name="TResult">The type of data which will be processed on every update run.</typeparam>
+    public class CPOServiceCheck<TResult> : AServiceCheck<TResult>
     {
 
         #region Data
@@ -44,16 +47,15 @@ namespace org.GraphDefined.WWCP.OICP_2_0
         /// <summary>
         /// The default HTTP user agent string.
         /// </summary>
-        public const String DefaultHTTPUserAgent = "GraphDefined OICP v2.0 CPO Service Check";
+        public  const    String                            DefaultHTTPUserAgent   = "GraphDefined OICP v2.0 CPO Service Check";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public const String DefaultHTTPServerName = "OICP v2.0 HTTP/SOAP/XML CPO Service Check Server API";
+        public  const    String                            DefaultHTTPServerName  = "OICP v2.0 HTTP/SOAP/XML CPO Service Check Server API";
 
-        private readonly Action<T> _OnFirstCheck;
-        private readonly Action<T> _OnEveryCheck;
-        private readonly Func<DateTime, CPOServiceCheck<T>, CPORoaming, Task<T>> _Checker;
+
+        private readonly CPOServiceCheckDelegate<TResult>  _ServiceChecker;
 
         #endregion
 
@@ -63,6 +65,9 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         private readonly CPORoaming _CPORoaming;
 
+        /// <summary>
+        /// The CPO roaming provider for this service check.
+        /// </summary>
         public CPORoaming CPORoaming
         {
             get
@@ -91,59 +96,69 @@ namespace org.GraphDefined.WWCP.OICP_2_0
 
         #region Constructor(s)
 
-        public CPOServiceCheck(String                                 Hostname,
-                               IPPort                                 IPPort                 = null,
-                               String                                 RemoteHTTPVirtualHost  = null,
-                               String                                 HTTPUserAgent          = DefaultHTTPUserAgent,
-                               TimeSpan?                              QueryTimeout           = null,
+        #region CPOServiceCheck(ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, RemoteHostname, RemoteTCPPort, ...)
 
-                               String                                 ServerName             = CPOServer.DefaultHTTPServerName,
-                               IPPort                                 ServerTCPPort          = null,
-                               String                                 ServerURIPrefix        = "",
-                               Boolean                                ServerAutoStart        = false,
+        public CPOServiceCheck(CPOServiceCheckDelegate<TResult>  ServiceChecker,
+                               Action<TResult>                   OnFirstCheck,
+                               Action<TResult>                   OnEveryCheck,
+                               TimeSpan                          CheckEvery,
 
-                               Func<DateTime, CPOServiceCheck<T>, CPORoaming, Task<T>>  Checker                = null,
-                               TimeSpan?                              CheckEvery             = null,
-                               Action<T>                              OnFirstCheck           = null,
-                               Action<T>                              OnEveryCheck           = null,
+                               String                            RemoteHostname,
+                               IPPort                            RemoteTCPPort          = null,
+                               String                            RemoteHTTPVirtualHost  = null,
+                               String                            HTTPUserAgent          = DefaultHTTPUserAgent,
+                               TimeSpan?                         QueryTimeout           = null,
 
-                               DNSClient                              DNSClient              = null)
+                               String                            ServerName             = CPOServer.DefaultHTTPServerName,
+                               IPPort                            ServerTCPPort          = null,
+                               String                            ServerURIPrefix        = "",
+                               Boolean                           ServerAutoStart        = false,
 
-            : this(new CPORoaming(Hostname,
-                                               IPPort,
-                                               RemoteHTTPVirtualHost,
-                                               HTTPUserAgent,
-                                               QueryTimeout,
+                               TimeSpan?                         InitialDelay           = null,
+                               DNSClient                         DNSClient              = null)
 
-                                               ServerName,
-                                               ServerTCPPort,
-                                               ServerURIPrefix,
-                                               ServerAutoStart,
+            : this(new CPORoaming(RemoteHostname,
+                                  RemoteTCPPort,
+                                  RemoteHTTPVirtualHost,
+                                  HTTPUserAgent,
+                                  QueryTimeout,
 
-                                               DNSClient: DNSClient),
+                                  ServerName,
+                                  ServerTCPPort,
+                                  ServerURIPrefix,
+                                  ServerAutoStart,
 
-                   Checker, CheckEvery, OnFirstCheck, OnEveryCheck)
+                                  DNSClient: DNSClient),
+
+                   ServiceChecker,
+                   OnFirstCheck,
+                   OnEveryCheck,
+                   CheckEvery,
+                   InitialDelay)
 
         { }
 
-        public CPOServiceCheck(CPORoaming                                   CPORoaming,
+        #endregion
 
-                               Func<DateTime, CPOServiceCheck<T>, CPORoaming, Task<T>>  Checker                = null,
-                               TimeSpan?                                    CheckEvery             = null,
-                               Action<T>                                    OnFirstCheck           = null,
-                               Action<T>                                    OnEveryCheck           = null)
+        #region CPOServiceCheck(CPORoaming, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery = null)
 
-            : base(CPORoaming.DNSClient, CheckEvery, Authorizator_Id.Parse("CPO Service Check"))
+        public CPOServiceCheck(CPORoaming                        CPORoaming,
+                               CPOServiceCheckDelegate<TResult>  ServiceChecker,
+                               Action<TResult>                   OnFirstCheck,
+                               Action<TResult>                   OnEveryCheck,
+                               TimeSpan                          CheckEvery,
+                               TimeSpan?                         InitialDelay = null)
+
+            : base(CheckEvery, OnFirstCheck, OnEveryCheck, InitialDelay, CPORoaming.DNSClient)
 
         {
 
-            this._CPORoaming    = CPORoaming;
-
-            this._Checker       = Checker;
-            this._OnFirstCheck  = OnFirstCheck;
-            this._OnEveryCheck  = OnEveryCheck;
+            this._CPORoaming      = CPORoaming;
+            this._ServiceChecker  = ServiceChecker;
 
         }
+
+        #endregion
 
         #endregion
 
@@ -154,9 +169,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
            // if (OnEveryRunLocal != null)
            //     OnEveryRunLocal(Timestamp, this, _Checker(DateTime.Now, this));
 
-            var ch = await _Checker(DateTime.Now, this, this.CPORoaming);
-
-            _OnEveryCheck(ch);
+            _OnEveryCheck(await _ServiceChecker(DateTime.Now, this, this.CPORoaming));
 
 
             //var results = await Task.WhenAll(OnEveryRun.

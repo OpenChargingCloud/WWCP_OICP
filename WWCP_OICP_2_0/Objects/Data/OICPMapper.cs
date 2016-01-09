@@ -530,8 +530,8 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                                       EVSE.ChargingStation.HotlinePhoneNumber,
                                       EVSE.Description, // AdditionalInfo
                                       EVSE.ChargingStation.ChargingPool.EntranceLocation,
-                                      EVSE.ChargingStation.OpeningTime.IsOpen24Hours,
-                                      EVSE.ChargingStation.OpeningTime,
+                                      EVSE.ChargingStation.OpeningTimes.IsOpen24Hours,
+                                      EVSE.ChargingStation.OpeningTimes,
                                       null, // HubOperatorId
                                       null, // ClearingHouseId
                                       EVSE.ChargingStation.IsHubjectCompatible,
