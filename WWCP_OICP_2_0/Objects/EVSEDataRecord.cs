@@ -991,7 +991,7 @@ namespace org.GraphDefined.WWCP.OICP_2_0
                 var OpeningTimeXML = EVSEDataRecordXML.Element(OICPNS.EVSEData + "OpeningTime");
                 if (OpeningTimeXML != null)
                 {
-                    EVSEDataRecord.OpeningTime = new OpeningTimes(OpeningTimeXML.Value.Trim());
+                    EVSEDataRecord.OpeningTime = OpeningTimes.FreeText(OpeningTimeXML.Value.Trim());
                 }
 
             }
