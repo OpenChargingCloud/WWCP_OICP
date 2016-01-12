@@ -1658,18 +1658,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            var result = await _CPORoaming.SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
+            var result = await _CPORoaming.SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSE.Id,
                                                                   SessionId:             ChargeDetailRecord.SessionId,
-                                                                  PartnerProductId:      ChargeDetailRecord.PartnerProductId,
+                                                                  PartnerProductId:      ChargeDetailRecord.ChargingProductId,
                                                                   SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
                                                                   SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
                                                                   Identification:        new AuthorizationIdentification(ChargeDetailRecord.Identification),
-                                                                  PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
+                                                                  //PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
                                                                   ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new Nullable<DateTime>(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
                                                                   ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ?                        ChargeDetailRecord.SessionTime.Value.EndTime    : null,
-                                                                  MeterValueStart:       ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.First().Value) : null,
-                                                                  MeterValueEnd:         ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? new Double?(ChargeDetailRecord.MeterValues.Last(). Value) : null,
-                                                                  MeterValuesInBetween:  ChargeDetailRecord.MeterValues != null && ChargeDetailRecord.MeterValues.Any() ? ChargeDetailRecord.MeterValues.Select(v => v.Value)       : null,
+                                                                  MeterValueStart:       ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeterValues.First().Value) : null,
+                                                                  MeterValueEnd:         ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeterValues.Last(). Value) : null,
+                                                                  MeterValuesInBetween:  ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? ChargeDetailRecord.EnergyMeterValues.Select(v => v.Value)       : null,
                                                                   ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
                                                                   MeteringSignature:     ChargeDetailRecord.MeteringSignature,
                                                                   QueryTimeout:          QueryTimeout);
@@ -1704,8 +1704,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
         /// <param name="ConsumedEnergy">The optional amount of consumed energy.</param>
         /// <param name="MeteringSignature">An optional signature for the metering values.</param>
-        /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
-        /// <param name="HubProviderId">An optional identification of the hub provider.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<SendCDRResult>
 
@@ -1722,8 +1720,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                    IEnumerable<Double>  MeterValuesInBetween  = null,
                                    Double?              ConsumedEnergy        = null,
                                    String               MeteringSignature     = null,
-                                   HubOperator_Id       HubOperatorId         = null,
-                                   EVSP_Id              HubProviderId         = null,
                                    TimeSpan?            QueryTimeout          = null)
 
         {
@@ -1742,8 +1738,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                   MeterValuesInBetween,
                                                                   ConsumedEnergy,
                                                                   MeteringSignature,
-                                                                  HubOperatorId,
-                                                                  HubProviderId,
+                                                                  null,
+                                                                  null,
                                                                   QueryTimeout);
 
 
