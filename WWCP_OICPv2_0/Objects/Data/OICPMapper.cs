@@ -518,7 +518,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
 
             var _EVSEDataRecord = new EVSEDataRecord(EVSE.Id,
-                                                     EVSE.ChargingStation.ChargingPool.EVSEOperator,
+                                                     EVSE.Operator,
                                                      EVSE.ChargingStation.Id.ToFormat(IdFormatType.NEW).ToString(),
                                                      EVSE.ChargingStation.Name,
                                                      EVSE.ChargingStation.Address,
