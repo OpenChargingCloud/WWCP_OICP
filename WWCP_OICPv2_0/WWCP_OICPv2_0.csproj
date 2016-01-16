@@ -64,6 +64,7 @@
     <Compile Include="IO\OICPExceptions.cs" />
     <Compile Include="MobileClient\MobileClient_XMLMethods.cs" />
     <Compile Include="MobileClient\MobileClient.cs" />
+    <Compile Include="Objects\Data\AuthenticationModes.cs" />
     <Compile Include="Objects\EVSEStatusRecord.cs" />
     <Compile Include="Objects\Data\AuthorizationIdentification.cs" />
     <Compile Include="Objects\Data\eMAIdWithPIN.cs" />

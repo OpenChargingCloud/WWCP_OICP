@@ -1256,16 +1256,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 _ChargingFacilities.NotNullAny()
                     ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
-                          _ChargingFacilities.Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   ChargingFacility.  ToString().Replace("_", " "))))
+                          _ChargingFacilities.Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   OICPMapper.AsString(ChargingFacility))))
                     : null,
 
                 _ChargingModes.NotNullAny()
                     ? new XElement(OICPNS.EVSEData + "ChargingModes",
-                          _ChargingModes.     Select(ChargingMode       => new XElement(OICPNS.EVSEData + "ChargingMode",       ChargingMode.      ToString())))
+                          _ChargingModes.     Select(ChargingMode       => new XElement(OICPNS.EVSEData + "ChargingMode",       OICPMapper.AsString(ChargingMode))))
                     : null,
 
                 new XElement(OICPNS.EVSEData + "AuthenticationModes",
-                    _AuthenticationModes.     Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode.ToString().Replace("_", " ")))
+                    _AuthenticationModes.     Select(AuthenticationMode => OICPMapper.AsString(AuthenticationMode)).
+                                              Where (AuthenticationMode => AuthenticationMode != "Unknown").
+                                              Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode))
                 ),
 
                 _MaxCapacity_kWh.HasValue
@@ -1273,7 +1275,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     : null,
 
                 new XElement(OICPNS.EVSEData + "PaymentOptions",
-                    _PaymentOptions.          Select(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      PaymentOption.     ToString().Replace("_", " ")))
+                    _PaymentOptions.          Select(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      OICPMapper.AsString(PaymentOption)))
                 ),
 
                 new XElement(OICPNS.EVSEData + "Accessibility",     _Accessibility.ToString().Replace("_", " ")),

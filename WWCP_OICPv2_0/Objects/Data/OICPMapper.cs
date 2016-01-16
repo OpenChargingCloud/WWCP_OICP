@@ -135,9 +135,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region AsAuthenticationMode(AuthenticationMode)
 
         /// <summary>
-        /// Maps an OICP authentication mode to a WWCP authentication mode.
+        /// Maps a string to an OICP authentication mode.
         /// </summary>
-        /// <param name="AuthenticationMode">An authentication mode.</param>
+        /// <param name="AuthenticationMode">A text-representation of an authentication mode.</param>
         public static AuthenticationModes AsAuthenticationMode(String AuthenticationMode)
         {
 
@@ -526,7 +526,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      EVSE.SocketOutlets.Select(socketoutlet => socketoutlet.Plug),
                                                      EVSE.ChargingFacilities,
                                                      EVSE.ChargingModes,
-                                                     EVSE.ChargingStation.AuthenticationModes,
+                                                     EVSE.ChargingStation.AuthenticationModes.
+                                                                              Select(mode => OICPMapper.AsOICPAuthenticationMode(mode)).
+                                                                              Where (mode => mode != AuthenticationModes.Unkown),
                                                      EVSE.MaxCapacity_kWh.HasValue ? (Int32) EVSE.MaxCapacity_kWh : new Int32?(),
                                                      EVSE.ChargingStation.PaymentOptions,
                                                      EVSE.ChargingStation.Accessibility,
@@ -685,6 +687,66 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 default:
                     return OICPv2_0.ActionType.fullLoad;
+
+            }
+
+        }
+
+        #endregion
+
+
+        #region AsOICPAuthenticationMode(AuthenticationMode)
+
+        /// <summary>
+        /// Maps a WWCP authentication mode to an OICP authentication mode.
+        /// </summary>
+        /// <param name="AuthMode">A WWCP-representation of an authentication mode.</param>
+        public static AuthenticationModes AsOICPAuthenticationMode(AuthenticationMode AuthMode)
+        {
+
+            switch (AuthMode.Type)
+            {
+
+                case "RFIDMifareClassic":  return AuthenticationModes.NFC_RFID_Classic;
+                case "RFIDMifareDESFire":  return AuthenticationModes.NFC_RFID_DESFire;
+                case "ISO/IEC 15118 PLC":  return AuthenticationModes.PnC;
+                case "REMOTE":             return AuthenticationModes.REMOTE;
+                case "Direct payment":     return AuthenticationModes.DirectPayment;
+
+                default:                   return AuthenticationModes.Unkown;
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsWWCPAuthenticationMode(AuthenticationMode)
+
+        public static AuthenticationMode AsWWCPAuthenticationMode(this AuthenticationModes AuthMode)
+        {
+
+            switch (AuthMode)
+            {
+
+                case AuthenticationModes.NFC_RFID_Classic:
+                    return AuthenticationMode.RFID(RFIDAuthenticationModes.MifareClassic);
+
+                case AuthenticationModes.NFC_RFID_DESFire:
+                    return AuthenticationMode.RFID(RFIDAuthenticationModes.MifareDESFire);
+
+                case AuthenticationModes.PnC:
+                    return AuthenticationMode.ISO15118_PLC;
+
+                case AuthenticationModes.REMOTE:
+                    return AuthenticationMode.REMOTE;
+
+                case AuthenticationModes.DirectPayment:
+                    return AuthenticationMode.DirectPayment;
+
+
+                default:
+                    return AuthenticationMode.Unkown;
 
             }
 
