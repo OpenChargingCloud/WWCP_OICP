@@ -184,103 +184,28 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                "eRoamingMobileAuthorizeStart",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               OnSuccess: XMLData => {
+                                               #region OnSuccess
 
-                                                   #region Documentation
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingMobileAuthorizationStart.Parse),
 
-                                                       // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
-                                                       //                   xmlns:MobileAuthorization = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0"
-                                                       //                   xmlns:CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                                                       //
-                                                       //    <soapenv:Header/>
-                                                       //
-                                                       //    <soapenv:Body>
-                                                       //       <MobileAuthorization:eRoamingMobileAuthorizationStart>
-                                                       // 
-                                                       //          <!--Optional:-->
-                                                       //          <MobileAuthorization:SessionID>?</MobileAuthorization:SessionID>
-                                                       // 
-                                                       //          <MobileAuthorization:AuthorizationStatus>?</MobileAuthorization:AuthorizationStatus>
-                                                       // 
-                                                       //          <!--Optional:-->
-                                                       //          <MobileAuthorization:StatusCode>
-                                                       //             <CommonTypes:Code>?</CommonTypes:Code>
-                                                       //             <!--Optional:-->
-                                                       //             <CommonTypes:Description>?</CommonTypes:Description>
-                                                       //             <!--Optional:-->
-                                                       //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-                                                       //          </MobileAuthorization:StatusCode>
-                                                       // 
-                                                       //          <!--Optional:-->
-                                                       //          <MobileAuthorization:TermsOfUse>?</MobileAuthorization:TermsOfUse>
-                                                       // 
-                                                       //          <MobileAuthorization:GeoCoordinates>
-                                                       // 
-                                                       //             <!--You have a CHOICE of the next 3 items at this level-->
-                                                       //             <CommonTypes:Google>
-                                                       //                <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
-                                                       //             </CommonTypes:Google>
-                                                       // 
-                                                       //             <CommonTypes:DecimalDegree>
-                                                       //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
-                                                       //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
-                                                       //             </CommonTypes:DecimalDegree>
-                                                       // 
-                                                       //             <CommonTypes:DegreeMinuteSeconds>
-                                                       //                <CommonTypes:Longitude>?</CommonTypes:Longitude>
-                                                       //                <CommonTypes:Latitude>?</CommonTypes:Latitude>
-                                                       //             </CommonTypes:DegreeMinuteSeconds>
-                                                       // 
-                                                       //          </MobileAuthorization:GeoCoordinates>
-                                                       // 
-                                                       //          <!--Optional:-->
-                                                       //          <MobileAuthorization:Address>
-                                                       //             <CommonTypes:Country>?</CommonTypes:Country>
-                                                       //             <CommonTypes:City>?</CommonTypes:City>
-                                                       //             <CommonTypes:Street>?</CommonTypes:Street>
-                                                       //             <!--Optional:-->
-                                                       //             <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
-                                                       //             <!--Optional:-->
-                                                       //             <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
-                                                       //             <!--Optional:-->
-                                                       //             <CommonTypes:Floor>?</CommonTypes:Floor>
-                                                       //             <!--Optional:-->
-                                                       //             <CommonTypes:Region>?</CommonTypes:Region>
-                                                       //             <!--Optional:-->
-                                                       //             <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
-                                                       //          </MobileAuthorization:Address>
-                                                       // 
-                                                       //          <!--Optional:-->
-                                                       //          <MobileAuthorization:AdditionalInfo>?</MobileAuthorization:AdditionalInfo>
-                                                       //          <!--Optional:-->
-                                                       //          <MobileAuthorization:EnAdditionalInfo>?</MobileAuthorization:EnAdditionalInfo>
-                                                       //          <!--Optional:-->
-                                                       //          <MobileAuthorization:ChargingStationName>?</MobileAuthorization:ChargingStationName>
-                                                       //          <!--Optional:-->
-                                                       //          <MobileAuthorization:EnChargingStationName>?</MobileAuthorization:EnChargingStationName>
-                                                       // 
-                                                       //       </MobileAuthorization:eRoamingMobileAuthorizationStart>
-                                                       //    </soapenv:Body>
-                                                       //
-                                                       // </soapenv:Envelope>
+                                               #endregion
 
-                                                       #endregion
+                                               #region OnSOAPFault
 
-                                                   return new HTTPResponse<eRoamingMobileAuthorizationStart>(XMLData.HttpResponse,
-                                                                                                             eRoamingMobileAuthorizationStart.Parse(XMLData.Content));
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                               },
+                                                   SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
-
-                                                   SendSOAPError(timestamp, soapclient, soapfault.Content);
-
-                                                   return new HTTPResponse<eRoamingMobileAuthorizationStart>(soapfault.HttpResponse,
+                                                   return new HTTPResponse<eRoamingMobileAuthorizationStart>(httpresponse,
                                                                                                              new eRoamingMobileAuthorizationStart(-1,
-                                                                                                                                                  Description: soapfault.Content.ToString()),
+                                                                                                                                                  Description: httpresponse.Content.ToString()),
                                                                                                              IsFault: true);
 
                                                },
+
+                                               #endregion
+
+                                               #region OnHTTPError
 
                                                OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
@@ -294,6 +219,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                },
 
+                                               #endregion
+
+                                               #region OnException
+
                                                OnException: (timestamp, sender, exception) => {
 
                                                    SendException(timestamp, sender, exception);
@@ -301,6 +230,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    return null;
 
                                                }
+
+                                               #endregion
 
                                         );
 
@@ -338,24 +269,29 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                "eRoamingMobileRemoteStart",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               OnSuccess: XMLData => {
+                                               #region OnSuccess
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
-                                                                                                    eRoamingAcknowledgement.Parse(XMLData.Content));
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
 
-                                               },
+                                               #endregion
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               #region OnSOAPFault
 
-                                                   SendSOAPError(timestamp, soapclient, soapfault.Content);
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                   SendSOAPError(timestamp, soapclient, httpresponse.Content);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
                                                                                                     new eRoamingAcknowledgement(false,
                                                                                                                                 -1,
-                                                                                                                                Description: soapfault.Content.ToString()),
+                                                                                                                                Description: httpresponse.Content.ToString()),
                                                                                                     IsFault: true);
 
                                                },
+
+                                               #endregion
+
+                                               #region OnHTTPError
 
                                                OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
@@ -370,6 +306,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                },
 
+                                               #endregion
+
+                                               #region OnException
+
                                                OnException: (timestamp, sender, exception) => {
 
                                                    SendException(timestamp, sender, exception);
@@ -377,6 +317,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    return null;
 
                                                }
+
+                                               #endregion
 
                                         );
 
@@ -414,24 +356,29 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                "eRoamingMobileRemoteStop",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               OnSuccess: XMLData => {
+                                               #region OnSuccess
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
-                                                                                                    eRoamingAcknowledgement.Parse(XMLData.Content));
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
 
-                                               },
+                                               #endregion
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               #region OnSOAPFault
 
-                                                   SendSOAPError(timestamp, soapclient, soapfault.Content);
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                   SendSOAPError(timestamp, soapclient, httpresponse.Content);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
                                                                                                     new eRoamingAcknowledgement(false,
                                                                                                                                 -1,
-                                                                                                                                Description: soapfault.Content.ToString()),
+                                                                                                                                Description: httpresponse.Content.ToString()),
                                                                                                     IsFault: true);
 
                                                },
+
+                                               #endregion
+
+                                               #region OnHTTPError
 
                                                OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
@@ -446,6 +393,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                },
 
+                                               #endregion
+
+                                               #region OnException
+
                                                OnException: (timestamp, sender, exception) => {
 
                                                    SendException(timestamp, sender, exception);
@@ -453,6 +404,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    return null;
 
                                                }
+
+                                               #endregion
 
                                         );
 

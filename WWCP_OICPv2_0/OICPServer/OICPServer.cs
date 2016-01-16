@@ -115,11 +115,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 this.AddMethodCallback(HTTPMethod.GET,
                                        "/",
                                        HTTPContentType.HTML_UTF8,
-                                       HTTPDelegate: HTTPRequest => {
+                                       HTTPDelegate: Request => {
 
-                                           var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                           var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                           return new HTTPResponseBuilder() {
+                                           return new HTTPResponseBuilder(Request) {
                                                HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                ContentType     = HTTPContentType.HTML_UTF8,
                                                Content         = ("/RNs/{RoamingNetworkId} is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
@@ -132,11 +132,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 this.AddMethodCallback(HTTPMethod.GET,
                                        "/",
                                        HTTPContentType.TEXT_UTF8,
-                                       HTTPDelegate: HTTPRequest => {
+                                       HTTPDelegate: Request => {
 
-                                           var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                           var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                           return new HTTPResponseBuilder() {
+                                           return new HTTPResponseBuilder(Request) {
                                                HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                ContentType     = HTTPContentType.HTML_UTF8,
                                                Content         = ("/RNs/{RoamingNetworkId} is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
@@ -153,14 +153,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Generic OICPServerDelegate
 
-            HTTPDelegate OICPServerDelegate = HTTPRequest => {
+            HTTPDelegate OICPServerDelegate = Request => {
 
                 //var _EventTrackingId = EventTracking_Id.New;
                 //Log.WriteLine("Event tracking: " + _EventTrackingId);
 
                 #region Parse XML request body... or fail!
 
-                var XMLRequest = HTTPRequest.ParseXMLRequestBody();
+                var XMLRequest = Request.ParseXMLRequestBody();
                 if (XMLRequest.HasErrors)
                 {
 
@@ -172,8 +172,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
-                                           new JProperty("XMLRequest",    HTTPRequest.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
+                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
+                                           new JProperty("XMLRequest",    Request.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
                                        ).ToString().
                                          Replace(Environment.NewLine, ""));
 
@@ -255,7 +255,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         #region HTTPResponse
 
-                        return new HTTPResponseBuilder() {
+                        return new HTTPResponseBuilder(Request) {
                             HTTPStatusCode  = HTTPStatusCode.OK,
                             ContentType     = HTTPContentType.XMLTEXT_UTF8,
                             Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
@@ -268,8 +268,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                          new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
                                                                      )
 
-                                                                )).ToString().
-                                                                   ToUTF8Bytes()
+                                                                )).ToUTF8Bytes()
                         };
 
                         #endregion
@@ -343,7 +342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         #region HTTPResponse
 
-                        return new HTTPResponseBuilder() {
+                        return new HTTPResponseBuilder(Request) {
                             HTTPStatusCode  = HTTPStatusCode.OK,
                             ContentType     = HTTPContentType.XMLTEXT_UTF8,
                             Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
@@ -356,8 +355,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                          new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
                                                                      )
 
-                                                                )).ToString().
-                                                                   ToUTF8Bytes()
+                                                                )).ToUTF8Bytes()
                         };
 
                         #endregion
@@ -389,7 +387,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region HTTPResponse: Unkown XML/SOAP message
 
-                    return new HTTPResponseBuilder() {
+                    return new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
@@ -405,8 +403,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                  new XElement(OICPNS.CommonTypes + "SessionID", "")
                                                                  //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
 
-                                                            )).ToString().
-                                                               ToUTF8Bytes()
+                                                            )).ToUTF8Bytes()
                     };
 
                     #endregion
@@ -425,13 +422,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
+                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
                                            new JProperty("Exception",     e.Message),
                                            new JProperty("XMLRequest",    XMLRequest.ToString())
                                        ).ToString().
                                          Replace(Environment.NewLine, ""));
 
-                    return new HTTPResponseBuilder() {
+                    return new HTTPResponseBuilder(Request) {
 
                         HTTPStatusCode = HTTPStatusCode.OK,
                         ContentType    = HTTPContentType.XMLTEXT_UTF8,
@@ -445,7 +442,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo", e.Message)
                                                                 )
 
-                                                            )).ToString().ToUTF8Bytes()
+                                                            )).ToUTF8Bytes()
 
                     };
 
@@ -491,11 +488,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             this.AddMethodCallback(HTTPMethod.GET,
                                    "/RNs/{RoamingNetwork}",
                                    HTTPContentType.HTML_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+                                   HTTPDelegate: Request => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                       var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                       return new HTTPResponseBuilder() {
+                                       return new HTTPResponseBuilder(Request) {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                            ContentType     = HTTPContentType.HTML_UTF8,
                                            Content         = ("/RNs/" + RoamingNetworkId + " is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
@@ -508,11 +505,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             this.AddMethodCallback(HTTPMethod.GET,
                                    "/RNs/{RoamingNetwork}",
                                    HTTPContentType.TEXT_UTF8,
-                                   HTTPDelegate: HTTPRequest => {
+                                   HTTPDelegate: Request => {
 
-                                       var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                       var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                       return new HTTPResponseBuilder() {
+                                       return new HTTPResponseBuilder(Request) {
                                            HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                            ContentType     = HTTPContentType.HTML_UTF8,
                                            Content         = ("/RNs/" + RoamingNetworkId + " is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),

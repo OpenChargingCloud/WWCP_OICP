@@ -286,11 +286,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
                                           URIPrefix + "/",
                                           HTTPContentType.HTML_UTF8,
-                                          HTTPDelegate: HTTPRequest => {
+                                          HTTPDelegate: Request => {
 
-                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                              return new HTTPResponseBuilder() {
+                                              return new HTTPResponseBuilder(Request) {
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                   ContentType     = HTTPContentType.HTML_UTF8,
                                                   Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
@@ -303,11 +303,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
                                           URIPrefix + "/",
                                           HTTPContentType.TEXT_UTF8,
-                                          HTTPDelegate: HTTPRequest => {
+                                          HTTPDelegate: Request => {
 
-                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                              return new HTTPResponseBuilder() {
+                                              return new HTTPResponseBuilder(Request) {
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                   ContentType     = HTTPContentType.HTML_UTF8,
                                                   Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
@@ -322,14 +322,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Generic RemoteStartStopDelegate
 
-            HTTPDelegate RemoteStartStopDelegate = HTTPRequest => {
+            HTTPDelegate RemoteStartStopDelegate = Request => {
 
                 #region Try to parse the RoamingNetworkId
 
                 RoamingNetwork_Id RoamingNetworkId;
 
-                if (!RoamingNetwork_Id.TryParse(HTTPRequest.ParsedURIParameters[0], out RoamingNetworkId))
-                    return new HTTPResponseBuilder() {
+                if (!RoamingNetwork_Id.TryParse(Request.ParsedURIParameters[0], out RoamingNetworkId))
+                    return new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.BadRequest,
                         Server          = _HTTPServer.DefaultServerName,
                         Date            = DateTime.Now
@@ -339,7 +339,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 #region ParseXMLRequestBody... or fail!
 
-                var XMLRequest = HTTPRequest.ParseXMLRequestBody();
+                var XMLRequest = Request.ParseXMLRequestBody();
                 if (XMLRequest.HasErrors)
                 {
 
@@ -351,8 +351,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
-                                           new JProperty("XMLRequest",    HTTPRequest.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
+                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
+                                           new JProperty("XMLRequest",    Request.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
                                        ).ToString().
                                          Replace(Environment.NewLine, ""));
 
@@ -393,13 +393,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
+                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
                                            new JProperty("Exception",     e.Message),
                                            new JProperty("XMLRequest",    XMLRequest.ToString())
                                        ).ToString().
                                          Replace(Environment.NewLine, ""));
 
-                    return new HTTPResponseBuilder() {
+                    return new HTTPResponseBuilder(Request) {
 
                         HTTPStatusCode = HTTPStatusCode.OK,
                         ContentType    = HTTPContentType.XMLTEXT_UTF8,
@@ -491,7 +491,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var OnLogRemoteStartLocal = OnLogRemoteStart;
                     if (OnLogRemoteStartLocal != null)
-                        OnLogRemoteStartLocal(DateTime.Now, this.HTTPServer, HTTPRequest);
+                        OnLogRemoteStartLocal(DateTime.Now, this.HTTPServer, Request);
 
                     #region Parse request parameters
 
@@ -550,7 +550,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         //Log.Timestamp("Invalid RemoteStartXML: " + e.Message);
 
-                        return new HTTPResponseBuilder() {
+                        return new HTTPResponseBuilder(Request) {
 
                                 HTTPStatusCode  = HTTPStatusCode.OK,
                                 ContentType     = HTTPContentType.XMLTEXT_UTF8,
@@ -699,7 +699,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var Now = DateTime.Now;
 
-                    var HTTPResponse = new HTTPResponseBuilder() {
+                    var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         Server          = HTTPServer.DefaultServerName,
                         Date            = Now,
@@ -724,7 +724,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var OnLogRemoteStartedLocal = OnLogRemoteStarted;
                     if (OnLogRemoteStartedLocal != null)
-                        OnLogRemoteStartedLocal(Now, this.HTTPServer, HTTPRequest, HTTPResponse);
+                        OnLogRemoteStartedLocal(Now, this.HTTPServer, Request, HTTPResponse);
 
                     return HTTPResponse;
 
@@ -768,7 +768,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var OnLogRemoteStopLocal = OnLogRemoteStop;
                     if (OnLogRemoteStopLocal != null)
-                        OnLogRemoteStopLocal(DateTime.Now, this.HTTPServer, HTTPRequest);
+                        OnLogRemoteStopLocal(DateTime.Now, this.HTTPServer, Request);
 
                     #region Parse request parameters
 
@@ -797,7 +797,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         //Log.Timestamp("Invalid RemoteStopXML: " + e.Message);
 
-                        return new HTTPResponseBuilder() {
+                        return new HTTPResponseBuilder(Request) {
 
                                 HTTPStatusCode  = HTTPStatusCode.OK,
                                 ContentType     = HTTPContentType.XMLTEXT_UTF8,
@@ -934,7 +934,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var Now = DateTime.Now;
 
-                    var HTTPResponse = new HTTPResponseBuilder() {
+                    var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         Server          = HTTPServer.DefaultServerName,
                         Date            = Now,
@@ -957,7 +957,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var OnLogRemoteStartedLocal = OnLogRemoteStarted;
                     if (OnLogRemoteStartedLocal != null)
-                        OnLogRemoteStartedLocal(Now, this.HTTPServer, HTTPRequest, HTTPResponse);
+                        OnLogRemoteStartedLocal(Now, this.HTTPServer, Request, HTTPResponse);
 
                     return HTTPResponse;
 
@@ -1046,7 +1046,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 #endregion
 
-                return new HTTPResponseBuilder() {
+                return new HTTPResponseBuilder(Request) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = "Error!".ToUTF8Bytes()
@@ -1080,11 +1080,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
                                           URIPrefix + "/RNs/{RoamingNetwork}/RemoteStartStop",
                                           HTTPContentType.HTML_UTF8,
-                                          HTTPDelegate: HTTPRequest => {
+                                          HTTPDelegate: Request => {
 
-                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                              return new HTTPResponseBuilder() {
+                                              return new HTTPResponseBuilder(Request) {
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                   ContentType     = HTTPContentType.HTML_UTF8,
                                                   Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
@@ -1097,11 +1097,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
                                           "/RNs/{RoamingNetwork}/RemoteStartStop",
                                           HTTPContentType.TEXT_UTF8,
-                                          HTTPDelegate: HTTPRequest => {
+                                          HTTPDelegate: Request => {
 
-                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                              return new HTTPResponseBuilder() {
+                                              return new HTTPResponseBuilder(Request) {
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                   ContentType     = HTTPContentType.HTML_UTF8,
                                                   Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),

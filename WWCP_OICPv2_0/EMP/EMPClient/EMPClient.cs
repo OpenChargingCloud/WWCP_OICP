@@ -119,22 +119,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                "eRoamingPullEVSEData",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               OnSuccess: XMLData => {
+                                               #region OnSuccess
 
-                                                   return new HTTPResponse<eRoamingEVSEData>(XMLData.HttpResponse,
-                                                                                             eRoamingEVSEData.Parse(XMLData.Content, base.SendException));
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingEVSEData.Parse, base.SendException),
 
-                                               },
+                                               #endregion
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               #region OnSOAPFault
+
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
                                                    DebugX.Log("'PullEVSEDataRequest' lead to a SOAP fault!");
 
-                                                   return new HTTPResponse<eRoamingEVSEData>(soapfault.HttpResponse,
-                                                                                             null,
+                                                   return new HTTPResponse<eRoamingEVSEData>(httpresponse,
                                                                                              IsFault: true);
 
                                                },
+
+                                               #endregion
+
+                                               #region OnHTTPError
 
                                                OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
@@ -148,6 +152,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                },
 
+                                               #endregion
+
+                                               #region OnException
+
                                                OnException: (timestamp, sender, exception) => {
 
                                                    SendException(timestamp, sender, exception);
@@ -155,6 +163,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    return null;
 
                                                }
+
+                                               #endregion
 
                                               );
 
@@ -206,22 +216,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                "eRoamingPullEVSEStatus",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               OnSuccess: XMLData => {
+                                               #region OnSuccess
 
-                                                   return new HTTPResponse<eRoamingEVSEStatus>(XMLData.HttpResponse,
-                                                                                               eRoamingEVSEStatus.Parse(XMLData.Content));
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingEVSEStatus.Parse),
 
-                                               },
+                                               #endregion
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               #region OnSOAPFault
+
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
                                                    DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
-                                                   return new HTTPResponse<eRoamingEVSEStatus>(soapfault.HttpResponse,
-                                                                                               null,
+                                                   return new HTTPResponse<eRoamingEVSEStatus>(httpresponse,
                                                                                                IsFault: true);
 
                                                },
+
+                                               #endregion
+
+                                               #region OnHTTPError
 
                                                OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
@@ -235,6 +249,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                },
 
+                                               #endregion
+
+                                               #region OnException
+
                                                OnException: (timestamp, sender, exception) => {
 
                                                    SendException(timestamp, sender, exception);
@@ -242,6 +260,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    return null;
 
                                                }
+
+                                               #endregion
 
                                               );
 
@@ -282,22 +302,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                "eRoamingPullEvseStatusById",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               OnSuccess: XMLData => {
+                                               #region OnSuccess
 
-                                                   return new HTTPResponse<eRoamingEVSEStatusById>(XMLData.HttpResponse,
-                                                                                                   eRoamingEVSEStatusById.Parse(XMLData.Content));
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingEVSEStatusById.Parse),
 
-                                               },
+                                               #endregion
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               #region OnSOAPFault
+
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
                                                    DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
-                                                   return new HTTPResponse<eRoamingEVSEStatusById>(soapfault.HttpResponse,
-                                                                                                   null,
+                                                   return new HTTPResponse<eRoamingEVSEStatusById>(httpresponse,
                                                                                                    IsFault: true);
 
                                                },
+
+                                               #endregion
+
+                                               #region OnHTTPError
 
                                                OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
@@ -311,6 +335,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                },
 
+                                               #endregion
+
+                                               #region OnException
+
                                                OnException: (timestamp, sender, exception) => {
 
                                                    SendException(timestamp, sender, exception);
@@ -318,6 +346,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    return null;
 
                                                }
+
+                                               #endregion
 
                                         );
 
@@ -371,36 +401,47 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                "eRoamingSearchEvse",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               OnSuccess: XMLData => {
+                                               #region OnSOAPFault
+
+                                               OnSuccess: XMLResponse => {
 
                                                    OICPException _OICPException = null;
-                                                   if (IsHubjectError(XMLData.Content, out _OICPException, SendException))
-                                                       return HTTPResponse<eRoamingEvseSearchResult>.Exception(_OICPException);
+                                                   if (IsHubjectError(XMLResponse.Content, out _OICPException, SendException))
+                                                       return new HTTPResponse<eRoamingEvseSearchResult>(XMLResponse.HTTPRequest, _OICPException);
 
-                                                   return new HTTPResponse<eRoamingEvseSearchResult>(XMLData.HttpResponse,
-                                                                                                     eRoamingEvseSearchResult.Parse(XMLData.Content));
+                                                   return XMLResponse.Parse(eRoamingEvseSearchResult.Parse);
 
                                                },
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               #endregion
+
+                                               #region OnSOAPFault
+
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
                                                    DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
-                                                   return new HTTPResponse<eRoamingEvseSearchResult>(soapfault.HttpResponse,
-                                                                                                     null,
+                                                   return new HTTPResponse<eRoamingEvseSearchResult>(httpresponse,
                                                                                                      IsFault: true);
 
                                                },
+
+                                               #endregion
+
+                                               #region OnHTTPError
 
                                                OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
                                                    SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                    return new HTTPResponse<eRoamingEvseSearchResult>(httpresponse,
-                                                                                                     null,
                                                                                                      IsFault: true);
 
                                                },
+
+                                               #endregion
+
+                                               #region OnException
 
                                                OnException: (timestamp, sender, exception) => {
 
@@ -409,6 +450,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    return null;
 
                                                }
+
+                                               #endregion
 
                                         );
 
@@ -450,24 +493,29 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                "eRoamingPushAuthenticationData",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               OnSuccess: XMLData => {
+                                               #region OnSuccess
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
-                                                                                                    eRoamingAcknowledgement.Parse(XMLData.Content));
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
 
-                                               },
+                                               #endregion
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               #region OnSOAPFault
 
-                                                   SendSOAPError(timestamp, soapclient, soapfault.Content);
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                   SendSOAPError(timestamp, soapclient, httpresponse.Content);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
                                                                                                     new eRoamingAcknowledgement(false,
                                                                                                                                 -1,
-                                                                                                                                Description: soapfault.Content.ToString()),
+                                                                                                                                Description: httpresponse.Content.ToString()),
                                                                                                     IsFault: true);
 
                                                },
+
+                                               #endregion
+
+                                               #region OnHTTPError
 
                                                OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
@@ -482,6 +530,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                },
 
+                                               #endregion
+
+                                               #region OnHTTPError
+
                                                OnException: (timestamp, sender, exception) => {
 
                                                    SendException(timestamp, sender, exception);
@@ -489,6 +541,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    return null;
 
                                                }
+
+                                               #endregion
 
                                         );
 
@@ -532,24 +586,29 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                "eRoamingPushAuthenticationData",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               OnSuccess: XMLData => {
+                                               #region OnSuccess
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
-                                                                                                    eRoamingAcknowledgement.Parse(XMLData.Content));
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
 
-                                               },
+                                               #endregion
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               #region OnSOAPFault
 
-                                                   SendSOAPError(timestamp, soapclient, soapfault.Content);
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                   SendSOAPError(timestamp, soapclient, httpresponse.Content);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
                                                                                                     new eRoamingAcknowledgement(false,
                                                                                                                                 -1,
-                                                                                                                                Description: soapfault.Content.ToString()),
+                                                                                                                                Description: httpresponse.Content.ToString()),
                                                                                                     IsFault: true);
 
                                                },
+
+                                               #endregion
+
+                                               #region OnHTTPError
 
                                                OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
@@ -564,6 +623,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                },
 
+                                               #endregion
+
+                                               #region OnException
+
                                                OnException: (timestamp, sender, exception) => {
 
                                                    SendException(timestamp, sender, exception);
@@ -571,6 +634,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    return null;
 
                                                }
+
+                                               #endregion
 
                                         );
 
@@ -615,22 +680,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                "eRoamingGetChargeDetailRecords",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               OnSuccess: XMLData => {
+                                               #region OnSuccess
 
-                                                   return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(XMLData.HttpResponse,
-                                                                                                                    eRoamingChargeDetailRecords.ParseXML(XMLData.Content));
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingChargeDetailRecords.ParseXML),
 
-                                               },
+                                               #endregion
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               #region OnSOAPFault
 
-                                                   SendSOAPError(timestamp, soapclient, soapfault.Content);
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(soapfault.HttpResponse,
+                                                   SendSOAPError(timestamp, soapclient, httpresponse.Content);
+
+                                                   return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(httpresponse,
                                                                                                                     new eRoamingChargeDetailRecord[0],
                                                                                                                     IsFault: true);
 
                                                },
+
+                                               #endregion
+
+                                               #region OnHTTPError
 
                                                OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
@@ -642,6 +712,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                },
 
+                                               #endregion
+
+                                               #region OnException
+
                                                OnException: (timestamp, sender, exception) => {
 
                                                    SendException(timestamp, sender, exception);
@@ -649,6 +723,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    return null;
 
                                                }
+
+                                               #endregion
 
                                         );
 

@@ -267,20 +267,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                       #region OnSuccess
 
-                                                      OnSuccess: XMLData => new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
-                                                                                                                      eRoamingAcknowledgement.Parse(XMLData.Content),
-                                                                                                                      false),
+                                                      OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
 
                                                       #endregion
 
                                                       #region OnSOAPFault
 
-                                                      OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                                      OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                          SendSOAPError(timestamp, this, soapfault.Content);
+                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
                                                           return new HTTPResponse<eRoamingAcknowledgement>(
-                                                              soapfault.HttpResponse,
+                                                              httpresponse,
                                                               new eRoamingAcknowledgement(false, 0, "", ""),
                                                               IsFault: true);
 
@@ -565,20 +563,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                       #region OnSuccess
 
-                                                      OnSuccess: XMLData => new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
-                                                                                                                      eRoamingAcknowledgement.Parse(XMLData.Content),
-                                                                                                                      false),
+                                                      OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
 
                                                       #endregion
 
                                                       #region OnSOAPFault
 
-                                                      OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                                      OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                          SendSOAPError(timestamp, this, soapfault.Content);
+                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
                                                           return new HTTPResponse<eRoamingAcknowledgement>(
-                                                              soapfault.HttpResponse,
+                                                              httpresponse,
                                                               new eRoamingAcknowledgement(false, 0, "", ""),
                                                               IsFault: true);
 
@@ -861,21 +857,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                #region OnSuccess
 
-                                               OnSuccess: XMLData => new HTTPResponse<eRoamingAuthorizationStart>(XMLData.HttpResponse,
-                                                                                                                  eRoamingAuthorizationStart.Parse(XMLData.Content)),
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthorizationStart.Parse),
 
                                                #endregion
 
                                                #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendSOAPError(timestamp, this, soapfault.Content);
+                                                   SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAuthorizationStart>(soapfault.HttpResponse,
+                                                   return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
                                                                                                        new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
                                                                                                                                       StatusCode: new StatusCode(-1,
-                                                                                                                                                                 Description: soapfault.Content.ToString())),
+                                                                                                                                                                 Description: httpresponse.Content.ToString())),
                                                                                                        IsFault: true);
 
                                                },
@@ -960,21 +955,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                #region OnSuccess
 
-                                               OnSuccess: XMLData => new HTTPResponse<eRoamingAuthorizationStop>(XMLData.HttpResponse,
-                                                                                                                 eRoamingAuthorizationStop.Parse(XMLData.Content)),
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthorizationStop.Parse),
 
                                                #endregion
 
                                                #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendSOAPError(timestamp, this, soapfault.Content);
+                                                   SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAuthorizationStop>(soapfault.HttpResponse,
+                                                   return new HTTPResponse<eRoamingAuthorizationStop>(httpresponse,
                                                                                                       new eRoamingAuthorizationStop(AuthorizationStatusType.NotAuthorized,
                                                                                                                                     StatusCode: new StatusCode(-1,
-                                                                                                                                                               Description: soapfault.Content.ToString())),
+                                                                                                                                                               Description: httpresponse.Content.ToString())),
                                                                                                       IsFault: true);
 
                                                },
@@ -1044,19 +1038,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                #region OnSuccess
 
-                                               OnSuccess: XMLData => new HTTPResponse<eRoamingAuthenticationData>(XMLData.HttpResponse,
-                                                                                                                  eRoamingAuthenticationData.Parse(XMLData.Content)),
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthenticationData.Parse),
 
                                                #endregion
 
                                                #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendSOAPError(timestamp, this, soapfault.Content);
+                                                   SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAuthenticationData>(soapfault.HttpResponse,
-                                                                                                       null,
+                                                   return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
                                                                                                        IsFault: true);
 
                                                },
@@ -1070,7 +1062,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    SendHTTPError(timestamp, this, httpresponse);
 
                                                    return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
-                                                                                                       null,
                                                                                                        IsFault: true);
 
                                                },
@@ -1126,21 +1117,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                #region OnSuccess
 
-                                               OnSuccess: XMLData => new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
-                                                                                                               eRoamingAcknowledgement.Parse(XMLData.Content)),
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
 
                                                #endregion
 
                                                #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendSOAPError(timestamp, this, soapfault.Content);
+                                                   SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
                                                                                                     new eRoamingAcknowledgement(false,
                                                                                                                                 -1,
-                                                                                                                                soapfault.Content.ToString()),
+                                                                                                                                httpresponse.Content.ToString()),
                                                                                                     IsFault: true);
 
                                                },
@@ -1257,21 +1247,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                #region OnSuccess
 
-                                               OnSuccess: XMLData => new HTTPResponse<eRoamingAcknowledgement>(XMLData.HttpResponse,
-                                                                                                               eRoamingAcknowledgement.Parse(XMLData.Content)),
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse), 
 
                                                #endregion
 
                                                #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, soapfault) => {
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendSOAPError(timestamp, this, soapfault.Content);
+                                                   SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(soapfault.HttpResponse,
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
                                                                                                     new eRoamingAcknowledgement(false,
                                                                                                                                 -1,
-                                                                                                                                soapfault.Content.ToString()),
+                                                                                                                                httpresponse.Content.ToString()),
                                                                                                     IsFault: true);
 
                                                },

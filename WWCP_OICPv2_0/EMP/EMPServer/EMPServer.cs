@@ -280,11 +280,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
                                           URIPrefix + "/",
                                           HTTPContentType.HTML_UTF8,
-                                          HTTPDelegate: HTTPRequest => {
+                                          HTTPDelegate: Request => {
 
-                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                              return new HTTPResponseBuilder() {
+                                              return new HTTPResponseBuilder(Request) {
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                   ContentType     = HTTPContentType.HTML_UTF8,
                                                   Content         = ("/RNs/{RoamingNetworkId}/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
@@ -297,11 +297,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
                                           URIPrefix + "/",
                                           HTTPContentType.TEXT_UTF8,
-                                          HTTPDelegate: HTTPRequest => {
+                                          HTTPDelegate: Request => {
 
-                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                              return new HTTPResponseBuilder() {
+                                              return new HTTPResponseBuilder(Request) {
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                   ContentType     = HTTPContentType.HTML_UTF8,
                                                   Content         = ("/RNs/{RoamingNetworkId}/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
@@ -316,14 +316,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Generic AuthorizeStartStopDelegate
 
-            HTTPDelegate AuthorizeStartStopDelegate = HTTPRequest => {
+            HTTPDelegate AuthorizeStartStopDelegate = Request => {
 
                 #region Try to parse the RoamingNetworkId
 
                 RoamingNetwork_Id RoamingNetworkId;
 
-                if (!RoamingNetwork_Id.TryParse(HTTPRequest.ParsedURIParameters[0], out RoamingNetworkId))
-                    return new HTTPResponseBuilder() {
+                if (!RoamingNetwork_Id.TryParse(Request.ParsedURIParameters[0], out RoamingNetworkId))
+                    return new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.BadRequest,
                         Server          = _HTTPServer.DefaultServerName,
                     };
@@ -332,20 +332,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 #region ParseXMLRequestBody... or fail!
 
-                var XMLRequest = HTTPRequest.ParseXMLRequestBody();
+                var XMLRequest = Request.ParseXMLRequestBody();
                 if (XMLRequest.HasErrors)
                 {
 
                     Log.WriteLine("Invalid XML request!");
-                    Log.WriteLine(HTTPRequest.HTTPBody.ToUTF8String());
+                    Log.WriteLine(Request.HTTPBody.ToUTF8String());
 
                     _HTTPServer.GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
-                                           new JProperty("XMLRequest",    HTTPRequest.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
+                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
+                                           new JProperty("XMLRequest",    Request.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
                                        ).ToString().
                                          Replace(Environment.NewLine, ""));
 
@@ -386,13 +386,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  HTTPRequest.RemoteSocket.ToString()),
+                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
                                            new JProperty("Exception",     e.Message),
                                            new JProperty("XMLRequest",    XMLRequest.ToString())
                                        ).ToString().
                                          Replace(Environment.NewLine, ""));
 
-                    return new HTTPResponseBuilder() {
+                    return new HTTPResponseBuilder(Request) {
 
                         HTTPStatusCode = HTTPStatusCode.OK,
                         ContentType    = HTTPContentType.XMLTEXT_UTF8,
@@ -484,7 +484,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var OnLogAuthorizeStartLocal = OnLogAuthorizeStart;
                     if (OnLogAuthorizeStartLocal != null)
-                        OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, HTTPRequest);
+                        OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, Request);
 
                     #region Parse request parameters
 
@@ -543,7 +543,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         Log.Timestamp("Invalid AuthorizeStartXML: " + e.Message);
 
-                        return new HTTPResponseBuilder() {
+                        return new HTTPResponseBuilder(Request) {
 
                                 HTTPStatusCode  = HTTPStatusCode.OK,
                                 ContentType     = HTTPContentType.XMLTEXT_UTF8,
@@ -703,7 +703,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var Now = DateTime.Now;
 
-                    var HTTPResponse = new HTTPResponseBuilder() {
+                    var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         Server          = HTTPServer.DefaultServerName,
                         Date            = Now,
@@ -728,7 +728,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var OnLogAuthorizeStartedLocal = OnLogAuthorizeStarted;
                     if (OnLogAuthorizeStartedLocal != null)
-                        OnLogAuthorizeStartedLocal(Now, this.HTTPServer, HTTPRequest, HTTPResponse);
+                        OnLogAuthorizeStartedLocal(Now, this.HTTPServer, Request, HTTPResponse);
 
                     return HTTPResponse;
 
@@ -772,7 +772,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var OnLogAuthorizeStopLocal = OnLogAuthorizeStop;
                     if (OnLogAuthorizeStopLocal != null)
-                        OnLogAuthorizeStopLocal(DateTime.Now, this.HTTPServer, HTTPRequest);
+                        OnLogAuthorizeStopLocal(DateTime.Now, this.HTTPServer, Request);
 
                     #region Parse request parameters
 
@@ -801,7 +801,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         Log.Timestamp("Invalid AuthorizeStopXML: " + e.Message);
 
-                        return new HTTPResponseBuilder() {
+                        return new HTTPResponseBuilder(Request) {
 
                                 HTTPStatusCode  = HTTPStatusCode.OK,
                                 ContentType     = HTTPContentType.XMLTEXT_UTF8,
@@ -941,7 +941,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var Now = DateTime.Now;
 
-                    var HTTPResponse = new HTTPResponseBuilder() {
+                    var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         Server          = HTTPServer.DefaultServerName,
                         Date            = Now,
@@ -964,7 +964,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var OnLogAuthorizeStoppedLocal = OnLogAuthorizeStopped;
                     if (OnLogAuthorizeStoppedLocal != null)
-                        OnLogAuthorizeStoppedLocal(Now, this.HTTPServer, HTTPRequest, HTTPResponse);
+                        OnLogAuthorizeStoppedLocal(Now, this.HTTPServer, Request, HTTPResponse);
 
                     return HTTPResponse;
 
@@ -1055,7 +1055,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 #endregion
 
 
-                return new HTTPResponseBuilder() {
+                return new HTTPResponseBuilder(Request) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = "Error!".ToUTF8Bytes()
@@ -1089,11 +1089,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
                                           URIPrefix + "/RNs/{RoamingNetwork}/AuthorizeStartStop",
                                           HTTPContentType.HTML_UTF8,
-                                          HTTPDelegate: HTTPRequest => {
+                                          HTTPDelegate: Request => {
 
-                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                              return new HTTPResponseBuilder() {
+                                              return new HTTPResponseBuilder(Request) {
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                   ContentType     = HTTPContentType.HTML_UTF8,
                                                   Content         = ("/RNs/" + RoamingNetworkId + "/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
@@ -1106,11 +1106,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
                                           "/RNs/{RoamingNetwork}/AuthorizeStartStop",
                                           HTTPContentType.TEXT_UTF8,
-                                          HTTPDelegate: HTTPRequest => {
+                                          HTTPDelegate: Request => {
 
-                                              var RoamingNetworkId = HTTPRequest.ParsedURIParameters[0];
+                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
 
-                                              return new HTTPResponseBuilder() {
+                                              return new HTTPResponseBuilder(Request) {
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                   ContentType     = HTTPContentType.HTML_UTF8,
                                                   Content         = ("/RNs/" + RoamingNetworkId + "/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
