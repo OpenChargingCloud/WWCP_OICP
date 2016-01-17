@@ -39,11 +39,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Data
 
-        private readonly RoamingNetwork                    _RoamingNetwork;
+        private readonly RoamingNetwork               _RoamingNetwork;
 
-        private readonly Authorizator_Id                   _AuthorizatorId;
+        private readonly Authorizator_Id              _AuthorizatorId;
 
-        private readonly EVSEDataRecordProcessingDelegate  _EVSEDataRecordProcessing;
+        private readonly EVSE2EVSEDataRecordDelegate  _EVSE2EVSEDataRecord;
+
+        private readonly EVSEDataRecord2XMLDelegate   _EVSEDataRecord2XML;
 
         #endregion
 
@@ -212,7 +214,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region CPORoamingWWCP(Id, Name, RoamingNetwork, CPORoaming, EVSEDataRecordProcessing = null)
+        #region CPORoamingWWCP(Id, Name, RoamingNetwork, CPORoaming, EVSE2EVSEDataRecord = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for EVSE operators/CPOs.
@@ -221,12 +223,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
         /// <param name="CPORoaming">A OICP CPO roaming object to be mapped to WWCP.</param>
-        /// <param name="EVSEDataRecordProcessing">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
-        public CPORoamingWWCP(RoamingProvider_Id                Id,
-                              I18NString                        Name,
-                              RoamingNetwork                    RoamingNetwork,
-                              CPORoaming                        CPORoaming,
-                              EVSEDataRecordProcessingDelegate  EVSEDataRecordProcessing = null)
+        /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
+        /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
+        public CPORoamingWWCP(RoamingProvider_Id           Id,
+                              I18NString                   Name,
+                              RoamingNetwork               RoamingNetwork,
+                              CPORoaming                   CPORoaming,
+                              EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord  = null,
+                              EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML   = null)
 
         {
 
@@ -251,7 +255,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             this._RoamingNetwork            = RoamingNetwork;
             this._CPORoaming                = CPORoaming;
             this._AuthorizatorId            = Authorizator_Id.Parse(Id.ToString());
-            this._EVSEDataRecordProcessing  = EVSEDataRecordProcessing;
+            this._EVSE2EVSEDataRecord       = EVSE2EVSEDataRecord;
+            this._EVSEDataRecord2XML        = EVSEDataRecord2XML;
 
             #region Link RemoteStart/-Stop events
 
@@ -303,20 +308,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
         /// <param name="CPOClient">An OICP CPO client.</param>
         /// <param name="CPOServer">An OICP CPO sever.</param>
-        /// <param name="EVSEDataRecordProcessing">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
-        public CPORoamingWWCP(RoamingProvider_Id                Id,
-                              I18NString                        Name,
-                              RoamingNetwork                    RoamingNetwork,
-                              CPOClient                         CPOClient,
-                              CPOServer                         CPOServer,
-                              EVSEDataRecordProcessingDelegate  EVSEDataRecordProcessing = null)
+        /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
+        /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
+        public CPORoamingWWCP(RoamingProvider_Id           Id,
+                              I18NString                   Name,
+                              RoamingNetwork               RoamingNetwork,
+                              CPOClient                    CPOClient,
+                              CPOServer                    CPOServer,
+                              EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord  = null,
+                              EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML   = null)
 
             : this(Id,
                    Name,
                    RoamingNetwork,
                    new CPORoaming(CPOClient,
                                   CPOServer),
-                   EVSEDataRecordProcessing)
+                   EVSE2EVSEDataRecord,
+                   EVSEDataRecord2XML)
 
         { }
 
@@ -342,25 +350,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
-        /// <param name="EVSEDataRecordProcessing">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
+        /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
+        /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public CPORoamingWWCP(RoamingProvider_Id                Id,
-                              I18NString                        Name,
-                              RoamingNetwork                    RoamingNetwork,
+        public CPORoamingWWCP(RoamingProvider_Id           Id,
+                              I18NString                   Name,
+                              RoamingNetwork               RoamingNetwork,
 
-                              String                            RemoteHostname,
-                              IPPort                            RemoteTCPPort             = null,
-                              String                            RemoteHTTPVirtualHost     = null,
-                              String                            HTTPUserAgent             = CPOClient.DefaultHTTPUserAgent,
-                              TimeSpan?                         QueryTimeout              = null,
+                              String                       RemoteHostname,
+                              IPPort                       RemoteTCPPort          = null,
+                              String                       RemoteHTTPVirtualHost  = null,
+                              String                       HTTPUserAgent          = CPOClient.DefaultHTTPUserAgent,
+                              TimeSpan?                    QueryTimeout           = null,
 
-                              String                            ServerName                = CPOServer.DefaultHTTPServerName,
-                              IPPort                            ServerTCPPort             = null,
-                              String                            ServerURIPrefix           = "",
-                              Boolean                           ServerAutoStart           = false,
+                              String                       ServerName             = CPOServer.DefaultHTTPServerName,
+                              IPPort                       ServerTCPPort          = null,
+                              String                       ServerURIPrefix        = "",
+                              Boolean                      ServerAutoStart        = false,
 
-                              EVSEDataRecordProcessingDelegate  EVSEDataRecordProcessing  = null,
-                              DNSClient                         DNSClient                 = null)
+                              EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord    = null,
+                              EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML     = null,
+                              DNSClient                    DNSClient              = null)
 
             : this(Id,
                    Name,
@@ -378,7 +388,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                   ServerAutoStart,
 
                                   DNSClient),
-                   EVSEDataRecordProcessing)
+                   EVSE2EVSEDataRecord,
+                   EVSEDataRecord2XML)
 
         { }
 
@@ -443,7 +454,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 var result = await _CPORoaming.PushEVSEData(GroupedEVSEs.
                                                                 SelectMany(group => group).
                                                                 ToLookup  (evse  => evse.Operator,
-                                                                           evse  => evse.AsOICPEVSEDataRecord(_EVSEDataRecordProcessing)),
+                                                                           evse  => evse.AsOICPEVSEDataRecord(_EVSE2EVSEDataRecord)),
                                                             ActionType.AsOICPActionType(),
                                                             OperatorId,
                                                             OperatorName,

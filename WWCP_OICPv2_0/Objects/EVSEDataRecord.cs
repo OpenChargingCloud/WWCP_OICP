@@ -46,6 +46,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Properties
 
+        #region EVSE
+
+        private readonly EVSE _EVSE;
+
+        /// <summary>
+        /// The related the Electric Vehicle Supply Equipment (EVSE).
+        /// </summary>
+        public EVSE EVSE
+        {
+            get
+            {
+                return _EVSE;
+            }
+        }
+
+        #endregion
+
         #region EVSEId
 
         private readonly EVSE_Id _EVSEId;
@@ -564,6 +581,65 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
         #region Constructor(s)
+
+        #region (internal) EVSEDataRecord(EVSE, ...)
+
+        /// <summary>
+        /// Create a new EVSE data record.
+        /// </summary>
+        /// <param name="EVSE">An EVSE identification.</param>
+        internal EVSEDataRecord(EVSE                              EVSE,
+                                String                            ChargingStationId           = null,
+                                I18NString                        ChargingStationName         = null,
+                                Address                           Address                     = null,
+                                GeoCoordinate                     GeoCoordinate               = null,
+                                IEnumerable<PlugTypes>            Plugs                       = null,
+                                IEnumerable<ChargingFacilities>   ChargingFacilities          = null,
+                                IEnumerable<ChargingModes>        ChargingModes               = null,
+                                IEnumerable<AuthenticationModes>  AuthenticationModes         = null,
+                                Int32?                            MaxCapacity                 = null,
+                                IEnumerable<PaymentOptions>       PaymentOptions              = null,
+                                AccessibilityTypes                Accessibility               = AccessibilityTypes.Free_publicly_accessible,
+                                String                            HotlinePhoneNumber          = null,
+                                I18NString                        AdditionalInfo              = null,
+                                GeoCoordinate                     GeoChargingPointEntrance    = null,
+                                Boolean?                          IsOpen24Hours               = null,
+                                OpeningTimes                      OpeningTime                 = null,
+                                HubOperator_Id                    HubOperatorId               = null,
+                                RoamingProvider_Id                ClearingHouseId             = null,
+                                Boolean                           IsHubjectCompatible         = true,
+                                Boolean                           DynamicInfoAvailable        = true)
+
+            : this(EVSE.Id,
+                   EVSE.Operator,
+                   ChargingStationId,
+                   ChargingStationName,
+                   Address,
+                   GeoCoordinate,
+                   Plugs,
+                   ChargingFacilities,
+                   ChargingModes,
+                   AuthenticationModes,
+                   MaxCapacity,
+                   PaymentOptions,
+                   Accessibility,
+                   HotlinePhoneNumber,
+                   AdditionalInfo,
+                   GeoChargingPointEntrance,
+                   IsOpen24Hours,
+                   OpeningTime,
+                   HubOperatorId,
+                   ClearingHouseId,
+                   IsHubjectCompatible,
+                   DynamicInfoAvailable)
+
+        {
+
+            this._EVSE = EVSE;
+
+        }
+
+        #endregion
 
         #region EVSEDataRecord(EVSEId, EVSEOperator = null)
 

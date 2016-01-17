@@ -60,29 +60,33 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// 
+        /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
+        /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
+        /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        /// <param name="EVSEDataRecordProcessing">A delegate to process an EVSE data record before pushing it to the roaming provider.</param>
-        public static RoamingProvider CreateNewOICPRoamingProvider(this RoamingNetwork                        RoamingNetwork,
-                                                                   RoamingProvider_Id                         Id,
-                                                                   I18NString                                 Name,
+        public static RoamingProvider CreateNewOICPRoamingProvider(this RoamingNetwork                   RoamingNetwork,
+                                                                   RoamingProvider_Id                    Id,
+                                                                   I18NString                            Name,
 
-                                                                   String                                     RemoteHostname,
-                                                                   IPPort                                     RemoteTCPPort             = null,
-                                                                   String                                     RemoteHTTPVirtualHost     = null,
-                                                                   String                                     HTTPUserAgent             = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
-                                                                   TimeSpan?                                  QueryTimeout              = null,
+                                                                   String                                RemoteHostname,
+                                                                   IPPort                                RemoteTCPPort          = null,
+                                                                   String                                RemoteHTTPVirtualHost  = null,
+                                                                   String                                HTTPUserAgent          = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
+                                                                   TimeSpan?                             QueryTimeout           = null,
 
-                                                                   String                                     ServerName                = OICPv2_0.CPOServer.DefaultHTTPServerName,
-                                                                   IPPort                                     ServerTCPPort             = null,
-                                                                   String                                     ServerURIPrefix           = "",
-                                                                   Boolean                                    ServerAutoStart           = true,
+                                                                   String                                ServerName             = OICPv2_0.CPOServer.DefaultHTTPServerName,
+                                                                   IPPort                                ServerTCPPort          = null,
+                                                                   String                                ServerURIPrefix        = "",
+                                                                   Boolean                               ServerAutoStart        = true,
 
-                                                                   DNSClient                                  DNSClient                 = null,
+                                                                   DNSClient                             DNSClient              = null,
 
-                                                                   OICPv2_0.EVSEDataRecordProcessingDelegate  EVSEDataRecordProcessing  = null,
-                                                                   Action<OICPv2_0.CPORoamingWWCP>            OICPConfigurator          = null,
-                                                                   Action<RoamingProvider>                    Configurator              = null)
+                                                                   OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord    = null,
+                                                                   OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML     = null,
+
+                                                                   Action<OICPv2_0.CPORoamingWWCP>       OICPConfigurator       = null,
+                                                                   Action<RoamingProvider>               Configurator           = null)
 
         {
 
@@ -117,7 +121,8 @@ namespace org.GraphDefined.WWCP
                                                                  ServerURIPrefix,
                                                                  ServerAutoStart,
 
-                                                                 EVSEDataRecordProcessing,
+                                                                 EVSE2EVSEDataRecord,
+                                                                 EVSEDataRecord2XML,
                                                                  DNSClient);
 
             var ConfiguratorLocal = OICPConfigurator;

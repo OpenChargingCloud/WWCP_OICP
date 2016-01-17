@@ -506,20 +506,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region AsOICPEVSEDataRecord(this EVSE, EVSEDataRecordProcessing = null)
+        #region AsOICPEVSEDataRecord(this EVSE, EVSE2EVSEDataRecord = null)
 
         /// <summary>
         /// Convert a WWCP EVSE into a corresponding OICP EVSE data record.
         /// </summary>
         /// <param name="EVSE">A WWCP EVSE.</param>
-        /// <param name="EVSEDataRecordProcessing">A delegate to process an EVSE data record, e.g. before pushing it to a roaming provider.</param>
+        /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to a roaming provider.</param>
         /// <returns>The corresponding OICP EVSE data record.</returns>
-        public static EVSEDataRecord AsOICPEVSEDataRecord(this WWCP.EVSE                    EVSE,
-                                                          EVSEDataRecordProcessingDelegate  EVSEDataRecordProcessing = null)
+        public static EVSEDataRecord AsOICPEVSEDataRecord(this WWCP.EVSE               EVSE,
+                                                          EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord = null)
         {
 
-            var _EVSEDataRecord = new EVSEDataRecord(EVSE.Id,
-                                                     EVSE.Operator,
+            var _EVSEDataRecord = new EVSEDataRecord(EVSE,
                                                      EVSE.ChargingStation.Id.ToFormat(IdFormatType.NEW).ToString(),
                                                      EVSE.ChargingStation.Name,
                                                      EVSE.ChargingStation.Address,
@@ -543,8 +542,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      EVSE.ChargingStation.IsHubjectCompatible,
                                                      EVSE.ChargingStation.DynamicInfoAvailable);
 
-            return EVSEDataRecordProcessing != null
-                       ? EVSEDataRecordProcessing(EVSE, _EVSEDataRecord)
+            return EVSE2EVSEDataRecord != null
+                       ? EVSE2EVSEDataRecord(EVSE, _EVSEDataRecord)
                        : _EVSEDataRecord;
 
         }
