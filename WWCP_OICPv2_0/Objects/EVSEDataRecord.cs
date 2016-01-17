@@ -1282,7 +1282,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(_HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
 
                 _AdditionalInfo.has(Languages.de)
-                    ? new XElement(OICPNS.EVSEData + "AdditionalInfo", _AdditionalInfo)
+                    ? new XElement(OICPNS.EVSEData + "AdditionalInfo", _AdditionalInfo[Languages.de])
                     : null,
 
                 _AdditionalInfo.has(Languages.en)

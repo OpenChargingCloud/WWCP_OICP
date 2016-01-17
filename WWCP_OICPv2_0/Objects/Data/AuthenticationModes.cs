@@ -15,20 +15,25 @@
  * limitations under the License.
  */
 
+#region Usings
+
+using System;
+
+#endregion
+
 namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
+    [Flags]
     public enum AuthenticationModes
     {
 
-        Unkown,
-        NFC_RFID_Classic,
-        NFC_RFID_DESFire,
-        PnC,                    // ISO/IEC 15118
-        REMOTE,                 // App, QR-Code, Phone
-        DirectPayment,          // Remote use via direct payment. E.g. intercharge direct
-        SMS,
-        Phone
+        Unkown              =  0,
+        NFC_RFID_Classic    =  1,
+        NFC_RFID_DESFire    =  2,
+        PnC                 =  4,   // ISO/IEC 15118 PLC
+        REMOTE              =  8,   // App, QR-Code, Phone
+        DirectPayment       = 16    // Remote use via direct payment. E.g. intercharge direct
 
     }
 

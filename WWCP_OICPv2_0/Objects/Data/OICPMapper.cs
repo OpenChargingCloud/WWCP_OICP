@@ -19,6 +19,7 @@
 
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 #endregion
 
@@ -527,13 +528,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      EVSE.ChargingFacilities,
                                                      EVSE.ChargingModes,
                                                      EVSE.ChargingStation.AuthenticationModes.
-                                                                              Select(mode => OICPMapper.AsOICPAuthenticationMode(mode)).
-                                                                              Where (mode => mode != AuthenticationModes.Unkown),
+                                                                              SelectMany(mode => OICPMapper.AsOICPAuthenticationMode(mode)).
+                                                                              Where     (mode => mode != AuthenticationModes.Unkown),
                                                      EVSE.MaxCapacity_kWh.HasValue ? (Int32) EVSE.MaxCapacity_kWh : new Int32?(),
                                                      EVSE.ChargingStation.PaymentOptions,
                                                      EVSE.ChargingStation.Accessibility,
                                                      EVSE.ChargingStation.HotlinePhoneNumber,
-                                                     EVSE.Description, // AdditionalInfo
+                                                     EVSE.ChargingStation.Description, // AdditionalInfo
                                                      EVSE.ChargingStation.ChargingPool.EntranceLocation,
                                                      EVSE.ChargingStation.OpeningTimes.IsOpen24Hours,
                                                      EVSE.ChargingStation.OpeningTimes,
@@ -701,21 +702,21 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// Maps a WWCP authentication mode to an OICP authentication mode.
         /// </summary>
         /// <param name="AuthMode">A WWCP-representation of an authentication mode.</param>
-        public static AuthenticationModes AsOICPAuthenticationMode(AuthenticationMode AuthMode)
+        public static IEnumerable<AuthenticationModes> AsOICPAuthenticationMode(AuthenticationMode AuthMode)
         {
 
             switch (AuthMode.Type)
             {
 
-                case "RFIDMifareClassic":  return AuthenticationModes.NFC_RFID_Classic;
-                case "RFIDMifareDESFire":  return AuthenticationModes.NFC_RFID_DESFire;
-                case "ISO/IEC 15118 PLC":  return AuthenticationModes.PnC;
-                case "REMOTE":             return AuthenticationModes.REMOTE;
-                case "Direct payment":     return AuthenticationModes.DirectPayment;
+                case "RFID":               return new AuthenticationModes[] { AuthenticationModes.NFC_RFID_Classic, AuthenticationModes.NFC_RFID_DESFire };
+                //case "RFIDMifareDESFire":  return AuthenticationModes.NFC_RFID_DESFire;
+                case "ISO/IEC 15118 PLC":  return new AuthenticationModes[] { AuthenticationModes.PnC };
+                case "REMOTE":             return new AuthenticationModes[] { AuthenticationModes.REMOTE };
+                case "Direct payment":     return new AuthenticationModes[] { AuthenticationModes.DirectPayment };
 
-                default:                   return AuthenticationModes.Unkown;
+                default:                   return new AuthenticationModes[] { AuthenticationModes.Unkown };
 
-            }
+        }
 
         }
 
