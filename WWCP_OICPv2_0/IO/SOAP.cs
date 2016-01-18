@@ -17,6 +17,7 @@
 
 #region Usings
 
+using System;
 using System.Xml.Linq;
 
 using SOAPNS = org.GraphDefined.Vanaheimr.Hermod.SOAP;
@@ -36,21 +37,34 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// Encapsulate the given XML within a XML SOAP frame.
         /// </summary>
         /// <param name="XML">The internal XML.</param>
-        public static XElement Encapsulation(XElement XML)
+        /// <param name="XMLNamespaces">An optional delegate to process the XML namespaces.</param>
+        public static XElement Encapsulation(XElement               XML,
+                                             XMLNamespacesDelegate  XMLNamespaces = null)
         {
 
-            return new XElement(SOAPNS.NS.SOAPEnvelope + "Envelope",
-                       new XAttribute(XNamespace.Xmlns + "SOAP",                SOAPNS.NS.SOAPEnvelope.    NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.        NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.           NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.         NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "MobileAuthorization", OICPNS.MobileAuthorization.NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "Authorization",       OICPNS.Authorization.      NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "AuthenticationData",  OICPNS.AuthenticationData. NamespaceName),
-                       new XAttribute(XNamespace.Xmlns + "EVSESearch",          OICPNS.EVSESearch.         NamespaceName),
+            #region Initial checks
 
-                       new XElement(SOAPNS.NS.SOAPEnvelope + "Header"),
-                       new XElement(SOAPNS.NS.SOAPEnvelope + "Body", XML));
+            if (XML == null)
+                throw new ArgumentNullException("XML", "The given XML must not be null!");
+
+            if (XMLNamespaces == null)
+                XMLNamespaces = xml => xml;
+
+            #endregion
+
+            return XMLNamespaces(
+                       new XElement(SOAPNS.NS.SOAPEnvelope + "Envelope",
+                           new XAttribute(XNamespace.Xmlns + "SOAP",                SOAPNS.NS.SOAPEnvelope.    NamespaceName),
+                           new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.        NamespaceName),
+                           new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.           NamespaceName),
+                           new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.         NamespaceName),
+                           new XAttribute(XNamespace.Xmlns + "MobileAuthorization", OICPNS.MobileAuthorization.NamespaceName),
+                           new XAttribute(XNamespace.Xmlns + "Authorization",       OICPNS.Authorization.      NamespaceName),
+                           new XAttribute(XNamespace.Xmlns + "AuthenticationData",  OICPNS.AuthenticationData. NamespaceName),
+                           new XAttribute(XNamespace.Xmlns + "EVSESearch",          OICPNS.EVSESearch.         NamespaceName),
+
+                           new XElement(SOAPNS.NS.SOAPEnvelope + "Header"),
+                           new XElement(SOAPNS.NS.SOAPEnvelope + "Body", XML)));
 
         }
 
