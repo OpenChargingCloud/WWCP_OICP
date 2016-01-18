@@ -26,11 +26,15 @@ using System.Threading.Tasks;
 namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
-    public delegate XElement       XMLNamespacesDelegate      (XElement XML);
+    public delegate XElement       XMLNamespacesDelegate        (XElement XML);
 
-    public delegate EVSEDataRecord EVSE2EVSEDataRecordDelegate(EVSE EVSE, EVSEDataRecord EVSEDataRecord);
+    public delegate EVSEDataRecord EVSE2EVSEDataRecordDelegate  (EVSE EVSE, EVSEDataRecord EVSEDataRecord);
 
-    public delegate XElement       EVSEDataRecord2XMLDelegate (EVSEDataRecord EVSEDataRecord, XElement XML);
+    public delegate XElement       EVSEDataRecord2XMLDelegate   (EVSEDataRecord EVSEDataRecord, XElement XML);
+
+    public delegate XElement       EVSEStatusRecord2XMLDelegate (EVSEStatusRecord EVSEStatusRecord, XElement XML);
+
+    public delegate XElement       XMLPostProcessingDelegate    (XElement XML);
 
     public delegate Task<TResult>  CPOServiceCheckDelegate<TResult>(DateTime Timestamp, CPOServiceCheck<TResult> CPOServiceCheck, CPORoaming CPORoaming);
 

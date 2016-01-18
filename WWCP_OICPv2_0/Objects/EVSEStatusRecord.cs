@@ -36,6 +36,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Properties
 
+        #region EVSE
+
+        private readonly EVSE _EVSE;
+
+        /// <summary>
+        /// The related the Electric Vehicle Supply Equipment (EVSE).
+        /// </summary>
+        public EVSE EVSE
+        {
+            get
+            {
+                return _EVSE;
+            }
+        }
+
+        #endregion
+
         #region Id
 
         private readonly EVSE_Id _Id;
@@ -74,8 +91,36 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
+        #region EVSEStatusRecord(EVSE)
+
         /// <summary>
-        /// Create a new EVSE status record.
+        /// Create a new OICPv2.0 EVSE status record and store
+        /// a reference to the given EVSE.
+        /// </summary>
+        /// <param name="EVSE">The current status of an EVSE.</param>
+        public EVSEStatusRecord(EVSE EVSE)
+
+        {
+
+            #region Initial checks
+
+            if (EVSE == null)
+                throw new ArgumentNullException("EVSE", "The given EVSE must not be null!");
+
+            #endregion
+
+            this._EVSE    = EVSE;
+            this._Id      = EVSE.Id;
+            this._Status  = OICPMapper.AsOICPEVSEStatus(EVSE.Status.Value);
+
+        }
+
+        #endregion
+
+        #region EVSEStatusRecord(Id, Status)
+
+        /// <summary>
+        /// Create a new OICPv2.0 EVSE status record.
         /// </summary>
         /// <param name="Id">The unique identification of an EVSE.</param>
         /// <param name="Status">The current status of an EVSE.</param>
@@ -95,6 +140,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             this._Status  = Status;
 
         }
+
+        #endregion
 
         #endregion
 
