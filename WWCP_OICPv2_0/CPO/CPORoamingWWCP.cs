@@ -937,7 +937,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     Acknowledgement = new Acknowledgement(true);
 
                 else
-                    Acknowledgement = new Acknowledgement(false, result.StatusCode.Description);
+                    Acknowledgement = new Acknowledgement(false, result.StatusCode.Description +
+                                                                 Environment.NewLine +
+                                                                 result.StatusCode.AdditionalInfo);
 
             }
 
