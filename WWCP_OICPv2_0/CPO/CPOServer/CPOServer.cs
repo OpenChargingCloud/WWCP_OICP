@@ -862,7 +862,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Call async subscribers
 
-                    var Response = RemoteStopEVSEResult.Error();
+                    var Response = RemoteStopEVSEResult.Error(SessionId);
 
                     var OnRemoteStopLocal = OnRemoteStop;
                     if (OnRemoteStopLocal != null)
@@ -1170,7 +1170,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             var OnRemoteStopLocal = OnRemoteStop;
             if (OnRemoteStopLocal == null)
-                return RemoteStopEVSEResult.Error();
+                return RemoteStopEVSEResult.Error(SessionId);
 
             var results = await Task.WhenAll(OnRemoteStopLocal.
                                                  GetInvocationList().

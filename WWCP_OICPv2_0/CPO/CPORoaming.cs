@@ -889,7 +889,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             var OnRemoteStopLocal = OnRemoteStop;
             if (OnRemoteStopLocal == null)
-                return RemoteStopEVSEResult.Error();
+                return RemoteStopEVSEResult.Error(SessionId);
 
             var results = await Task.WhenAll(OnRemoteStopLocal.
                                                  GetInvocationList().
