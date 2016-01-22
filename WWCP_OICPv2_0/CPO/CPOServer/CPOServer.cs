@@ -625,7 +625,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         var task = OnRemoteStartLocal(DateTime.Now,
                                                       this,
-                                                      CTS.Token,
+                                                      Request.CancellationToken,
+                                                      Request.EventTrackingId,
                                                       EVSEId,
                                                       ChargingProductId,
                                                       SessionId,
@@ -872,7 +873,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         var task = OnRemoteStopLocal(DateTime.Now,
                                                      this,
-                                                     CTS.Token,
+                                                     Request.CancellationToken,
+                                                     Request.EventTrackingId,
                                                      EVSEId,
                                                      SessionId,
                                                      PartnerSessionId,
@@ -1124,12 +1126,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         internal async Task<RemoteStartEVSEResult> SendRemoteStart(DateTime            Timestamp,
                                                                    CPOServer           Sender,
                                                                    CancellationToken   CancellationToken,
+                                                                   EventTracking_Id    EventTrackingId,
                                                                    EVSE_Id             EVSEId,
                                                                    ChargingProduct_Id  ChargingProductId,
                                                                    ChargingSession_Id  SessionId,
                                                                    ChargingSession_Id  PartnerSessionId,
                                                                    EVSP_Id             ProviderId,
-                                                                   eMA_Id              eMAId)
+                                                                   eMA_Id              eMAId,
+                                                                   TimeSpan?           QueryTimeout  = null)
         {
 
             var OnRemoteStartLocal = OnRemoteStart;
@@ -1142,12 +1146,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      (Timestamp,
                                                       this,
                                                       CancellationToken,
+                                                      EventTrackingId,
                                                       EVSEId,
                                                       ChargingProductId,
                                                       SessionId,
                                                       PartnerSessionId,
                                                       ProviderId,
-                                                      eMAId)));
+                                                      eMAId,
+                                                      QueryTimeout)));
 
             return results.
                        Where(result => result.Result != RemoteStartEVSEResultType.Unspecified).
@@ -1162,10 +1168,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         internal async Task<RemoteStopEVSEResult> SendRemoteStop(DateTime            Timestamp,
                                                                  CPOServer           Sender,
                                                                  CancellationToken   CancellationToken,
+                                                                 EventTracking_Id    EventTrackingId,
                                                                  EVSE_Id             EVSEId,
                                                                  ChargingSession_Id  SessionId,
                                                                  ChargingSession_Id  PartnerSessionId,
-                                                                 EVSP_Id             ProviderId)
+                                                                 EVSP_Id             ProviderId,
+                                                                 TimeSpan?           QueryTimeout  = null)
         {
 
             var OnRemoteStopLocal = OnRemoteStop;
@@ -1178,10 +1186,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      (Timestamp,
                                                       this,
                                                       CancellationToken,
+                                                      EventTrackingId,
                                                       EVSEId,
                                                       SessionId,
                                                       PartnerSessionId,
-                                                      ProviderId)));
+                                                      ProviderId,
+                                                      QueryTimeout)));
 
             return results.
                        Where(result => result.Result != RemoteStopEVSEResultType.Unspecified).

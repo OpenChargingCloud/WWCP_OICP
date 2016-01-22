@@ -17,6 +17,7 @@
 
 #region Usings
 
+using org.GraphDefined.Vanaheimr.Illias;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,12 +44,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public delegate Task<RemoteStartEVSEResult> OnRemoteStartDelegate(DateTime            Timestamp,
                                                                       CPOServer           Sender,
                                                                       CancellationToken   CancellationToken,
+                                                                      EventTracking_Id    EventTrackingId,
                                                                       EVSE_Id             EVSEId,
                                                                       ChargingProduct_Id  ChargingProductId,
                                                                       ChargingSession_Id  SessionId,
                                                                       ChargingSession_Id  PartnerSessionId,
                                                                       EVSP_Id             ProviderId,
-                                                                      eMA_Id              eMAId);
+                                                                      eMA_Id              eMAId,
+                                                                      TimeSpan?           QueryTimeout  = null);
 
 
     /// <summary>
@@ -65,10 +68,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public delegate Task<RemoteStopEVSEResult> OnRemoteStopDelegate(DateTime             Timestamp,
                                                                     CPOServer            Sender,
                                                                     CancellationToken    CancellationToken,
+                                                                    EventTracking_Id     EventTrackingId,
                                                                     EVSE_Id              EVSEId,
                                                                     ChargingSession_Id   SessionId,
                                                                     ChargingSession_Id   PartnerSessionId,
-                                                                    EVSP_Id              ProviderId);
+                                                                    EVSP_Id              ProviderId,
+                                                                    TimeSpan?            QueryTimeout  = null);
 
 
 }

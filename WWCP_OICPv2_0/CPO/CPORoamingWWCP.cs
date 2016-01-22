@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using System.Threading;
 
 #endregion
 
@@ -263,34 +264,42 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             this._CPORoaming.OnRemoteStart += (Timestamp,
                                                Sender,
                                                CancellationToken,
+                                               EventTrackingId,
                                                EVSEId,
                                                ChargingProductId,
                                                SessionId,
                                                PartnerSessionId,
                                                ProviderId,
-                                               eMAId)  => _RoamingNetwork.RemoteStart(Timestamp,
-                                                                                      //Sender,
-                                                                                      CancellationToken,
-                                                                                      EVSEId,
-                                                                                      ChargingProductId,
-                                                                                      null,
-                                                                                      SessionId,
-                                                                                      //PartnerSessionId,
-                                                                                      ProviderId,
-                                                                                      eMAId);
+                                               eMAId,
+                                               QueryTimeout)  => _RoamingNetwork.RemoteStart(Timestamp,
+                                                                                             //Sender,
+                                                                                             CancellationToken,
+                                                                                             EventTrackingId,
+                                                                                             EVSEId,
+                                                                                             ChargingProductId,
+                                                                                             null,
+                                                                                             SessionId,
+                                                                                             //PartnerSessionId,
+                                                                                             ProviderId,
+                                                                                             eMAId,
+                                                                                             QueryTimeout);
 
             this._CPORoaming.OnRemoteStop += (Timestamp,
                                               Sender,
                                               CancellationToken,
+                                              EventTrackingId,
                                               EVSEId,
                                               SessionId,
                                               PartnerSessionId,
-                                              ProviderId)  => _RoamingNetwork.RemoteStop(Timestamp,
-                                                                                         CancellationToken,
-                                                                                         EVSEId,
-                                                                                         SessionId,
-                                                                                         ReservationHandling.Close,
-                                                                                         ProviderId);
+                                              ProviderId,
+                                              QueryTimeout)  => _RoamingNetwork.RemoteStop(Timestamp,
+                                                                                           CancellationToken,
+                                                                                           EventTrackingId,
+                                                                                           EVSEId,
+                                                                                           SessionId,
+                                                                                           ReservationHandling.Close,
+                                                                                           ProviderId,
+                                                                                           QueryTimeout);
 
             #endregion
 
@@ -1376,7 +1385,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<AuthStartResult>
 
-            AuthorizeStart(EVSEOperator_Id     OperatorId,
+            AuthorizeStart(DateTime            Timestamp,
+                           CancellationToken   CancellationToken,
+                           EventTracking_Id    EventTrackingId,
+                           EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            ChargingProduct_Id  ChargingProductId  = null,
                            ChargingSession_Id  SessionId          = null,
@@ -1430,7 +1442,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<AuthStartEVSEResult>
 
-            AuthorizeStart(EVSEOperator_Id     OperatorId,
+            AuthorizeStart(DateTime            Timestamp,
+                           CancellationToken   CancellationToken,
+                           EventTracking_Id    EventTrackingId,
+                           EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            EVSE_Id             EVSEId,
                            ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
@@ -1489,7 +1504,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<AuthStartChargingStationResult>
 
-            AuthorizeStart(EVSEOperator_Id     OperatorId,
+            AuthorizeStart(DateTime            Timestamp,
+                           CancellationToken   CancellationToken,
+                           EventTracking_Id    EventTrackingId,
+                           EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            ChargingStation_Id  ChargingStationId,
                            ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
@@ -1534,7 +1552,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<AuthStopResult>
 
-            AuthorizeStop(EVSEOperator_Id     OperatorId,
+            AuthorizeStop(DateTime            Timestamp,
+                          CancellationToken   CancellationToken,
+                          EventTracking_Id    EventTrackingId,
+                          EVSEOperator_Id     OperatorId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
                           TimeSpan?           QueryTimeout  = null)
@@ -1578,7 +1599,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<AuthStopEVSEResult>
 
-            AuthorizeStop(EVSEOperator_Id     OperatorId,
+            AuthorizeStop(DateTime            Timestamp,
+                          CancellationToken   CancellationToken,
+                          EventTracking_Id    EventTrackingId,
+                          EVSEOperator_Id     OperatorId,
                           EVSE_Id             EVSEId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
@@ -1619,7 +1643,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<AuthStopChargingStationResult>
 
-            AuthorizeStop(EVSEOperator_Id     OperatorId,
+            AuthorizeStop(DateTime            Timestamp,
+                          CancellationToken   CancellationToken,
+                          EventTracking_Id    EventTrackingId,
+                          EVSEOperator_Id     OperatorId,
                           ChargingStation_Id  ChargingStationId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
@@ -1659,7 +1686,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<SendCDRResult>
 
-            SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
+            SendChargeDetailRecord(DateTime            Timestamp,
+                                   CancellationToken   CancellationToken,
+                                   EventTracking_Id    EventTrackingId,
+                                   ChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?           QueryTimeout  = null)
 
         {
@@ -1720,7 +1750,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<SendCDRResult>
 
-            SendChargeDetailRecord(EVSE_Id              EVSEId,
+            SendChargeDetailRecord(DateTime             Timestamp,
+                                   CancellationToken    CancellationToken,
+                                   EventTracking_Id     EventTrackingId,
+                                   EVSE_Id              EVSEId,
                                    ChargingSession_Id   SessionId,
                                    ChargingProduct_Id   PartnerProductId,
                                    DateTime             SessionStart,
