@@ -625,8 +625,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return await PushEVSEData(ChargingStation.EVSEs,
                                       ActionType,
-                                      OperatorId   != null ? OperatorId   : ChargingStation.ChargingPool.EVSEOperator.Id,
-                                      OperatorName != null ? OperatorName : ChargingStation.ChargingPool.EVSEOperator.Name.FirstText,
+                                      OperatorId   != null ? OperatorId   : ChargingStation.ChargingPool.Operator.Id,
+                                      OperatorName != null ? OperatorName : ChargingStation.ChargingPool.Operator.Name.FirstText,
                                       IncludeEVSEs,
                                       QueryTimeout);
 
@@ -705,8 +705,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return await PushEVSEData(ChargingPool.EVSEs,
                                       ActionType,
-                                      OperatorId   != null ? OperatorId   : ChargingPool.EVSEOperator.Id,
-                                      OperatorName != null ? OperatorName : ChargingPool.EVSEOperator.Name.FirstText,
+                                      OperatorId   != null ? OperatorId   : ChargingPool.Operator.Id,
+                                      OperatorName != null ? OperatorName : ChargingPool.Operator.Name.FirstText,
                                       IncludeEVSEs,
                                       QueryTimeout);
 
@@ -1096,8 +1096,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return await PushEVSEStatus(ChargingStation.EVSEs,
                                         ActionType,
-                                        OperatorId   != null ? OperatorId   : ChargingStation.ChargingPool.EVSEOperator.Id,
-                                        OperatorName != null ? OperatorName : ChargingStation.ChargingPool.EVSEOperator.Name.FirstText,
+                                        OperatorId   != null ? OperatorId   : ChargingStation.ChargingPool.Operator.Id,
+                                        OperatorName != null ? OperatorName : ChargingStation.ChargingPool.Operator.Name.FirstText,
                                         IncludeEVSEs,
                                         QueryTimeout);
 
@@ -1176,8 +1176,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return await PushEVSEStatus(ChargingPool.EVSEs,
                                         ActionType,
-                                        OperatorId   != null ? OperatorId   : ChargingPool.EVSEOperator.Id,
-                                        OperatorName != null ? OperatorName : ChargingPool.EVSEOperator.Name.FirstText,
+                                        OperatorId   != null ? OperatorId   : ChargingPool.Operator.Id,
+                                        OperatorName != null ? OperatorName : ChargingPool.Operator.Name.FirstText,
                                         IncludeEVSEs,
                                         QueryTimeout);
 
