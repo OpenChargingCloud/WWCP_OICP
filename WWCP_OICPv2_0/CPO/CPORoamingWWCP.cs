@@ -1255,7 +1255,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            return await PushEVSEStatus(EVSEOperator.AllEVSEs,
+            return await PushEVSEStatus(EVSEOperator.EVSEs,
                                         ActionType,
                                         EVSEOperator.Id,
                                         OperatorName.IsNotNullOrEmpty()
