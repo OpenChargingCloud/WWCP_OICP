@@ -1463,7 +1463,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 throw new ArgumentNullException("AuthToken",  "The given authentication token must not be null!");
 
             if (EVSEId    == null)
-                throw new ArgumentNullException("EVSEId",     "The given EVSE identification must not be null!");
+                throw new ArgumentNullException(nameof(EVSEId),     "The given EVSE identification must not be null!");
 
             #endregion
 

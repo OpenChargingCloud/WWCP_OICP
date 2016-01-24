@@ -111,7 +111,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 throw new ArgumentNullException("ChargePoolInfo", "The given parameter must not be null!");
 
             if (EVSEId         == null)
-                throw new ArgumentNullException("EVSEId",         "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(EVSEId),         "The given parameter must not be null!");
 
             #endregion
 
