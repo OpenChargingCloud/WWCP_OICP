@@ -18,12 +18,8 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Threading;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 

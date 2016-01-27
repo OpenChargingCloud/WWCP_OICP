@@ -22,9 +22,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -32,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP roaming client for CPOs.
+    /// A OICP v2.0 roaming client for CPOs.
     /// </summary>
     public class CPORoaming
     {
@@ -93,7 +94,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region DNSClient
 
         /// <summary>
-        /// The DNS defines which DNS servers to use.
+        /// The DNS client defines which DNS servers to use.
         /// </summary>
         public DNSClient DNSClient
         {
@@ -154,16 +155,50 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
+        #region OnRemoteStart
 
         /// <summary>
         /// An event sent whenever a remote start command was received.
         /// </summary>
-        public event OnRemoteStartDelegate OnRemoteStart;
+        public event OnRemoteStartDelegate OnRemoteStart
+        {
+
+            add
+            {
+                _CPOServer.OnRemoteStart += value;
+            }
+
+            remove
+            {
+                _CPOServer.OnRemoteStart -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnRemoteStop
 
         /// <summary>
         /// An event sent whenever a remote stop command was received.
         /// </summary>
-        public event OnRemoteStopDelegate  OnRemoteStop;
+        public event OnRemoteStopDelegate OnRemoteStop
+
+        {
+
+            add
+            {
+                _CPOServer.OnRemoteStop += value;
+            }
+
+            remove
+            {
+                _CPOServer.OnRemoteStop -= value;
+            }
+
+        }
+
+        #endregion
 
         #endregion
 
@@ -183,50 +218,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             this._CPOClient        = CPOClient;
             this._CPOServer        = CPOServer;
             this._CPOServerLogger  = new CPOServerLogger(this._CPOServer);
-
-            #region Link RemoteStart/-Stop events
-
-            this._CPOServer.OnRemoteStart += (Timestamp,
-                                              Sender,
-                                              CancellationToken,
-                                              EventTrackingId,
-                                              EVSEId,
-                                              ChargingProductId,
-                                              SessionId,
-                                              PartnerSessionId,
-                                              ProviderId,
-                                              eMAId,
-                                              QueryTimeout)  => SendRemoteStart(Timestamp,
-                                                                                Sender,
-                                                                                CancellationToken,
-                                                                                EventTrackingId,
-                                                                                EVSEId,
-                                                                                ChargingProductId,
-                                                                                SessionId,
-                                                                                PartnerSessionId,
-                                                                                ProviderId,
-                                                                                eMAId,
-                                                                                QueryTimeout);
-
-            this._CPOServer.OnRemoteStop += (Timestamp,
-                                             Sender,
-                                             CancellationToken,
-                                             EventTrackingId,
-                                             EVSEId,
-                                             SessionId,
-                                             PartnerSessionId,
-                                             ProviderId,
-                                             QueryTimeout) => SendRemoteStop(Timestamp,
-                                                                             Sender,
-                                                                             CancellationToken,
-                                                                             EventTrackingId,
-                                                                             EVSEId,
-                                                                             SessionId,
-                                                                             PartnerSessionId,
-                                                                             ProviderId,
-                                                                             QueryTimeout);
-
-            #endregion
 
         }
 
@@ -841,87 +832,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             //ToDo: Process the HTTP!
             return result.Content;
-
-        }
-
-        #endregion
-
-
-        #region (internal) SendRemoteStart(...)
-
-        internal async Task<RemoteStartEVSEResult> SendRemoteStart(DateTime            Timestamp,
-                                                                   CPOServer           Sender,
-                                                                   CancellationToken   CancellationToken,
-                                                                   EventTracking_Id    EventTrackingId,
-                                                                   EVSE_Id             EVSEId,
-                                                                   ChargingProduct_Id  ChargingProductId,
-                                                                   ChargingSession_Id  SessionId,
-                                                                   ChargingSession_Id  PartnerSessionId,
-                                                                   EVSP_Id             ProviderId,
-                                                                   eMA_Id              eMAId,
-                                                                   TimeSpan?           QueryTimeout  = null)
-        {
-
-            var OnRemoteStartLocal = OnRemoteStart;
-            if (OnRemoteStartLocal == null)
-                return RemoteStartEVSEResult.Error();
-
-            var results = await Task.WhenAll(OnRemoteStartLocal.
-                                                 GetInvocationList().
-                                                 Select(subscriber => (subscriber as OnRemoteStartDelegate)
-                                                     (Timestamp,
-                                                      this.CPOServer,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      EVSEId,
-                                                      ChargingProductId,
-                                                      SessionId,
-                                                      PartnerSessionId,
-                                                      ProviderId,
-                                                      eMAId,
-                                                      QueryTimeout)));
-
-            return results.
-                       Where(result => result.Result != RemoteStartEVSEResultType.Unspecified).
-                       First();
-
-        }
-
-        #endregion
-
-        #region (internal) SendRemoteStop(...)
-
-        internal async Task<RemoteStopEVSEResult> SendRemoteStop(DateTime            Timestamp,
-                                                                 CPOServer           Sender,
-                                                                 CancellationToken   CancellationToken,
-                                                                 EventTracking_Id    EventTrackingId,
-                                                                 EVSE_Id             EVSEId,
-                                                                 ChargingSession_Id  SessionId,
-                                                                 ChargingSession_Id  PartnerSessionId,
-                                                                 EVSP_Id             ProviderId,
-                                                                 TimeSpan?           QueryTimeout  = null)
-        {
-
-            var OnRemoteStopLocal = OnRemoteStop;
-            if (OnRemoteStopLocal == null)
-                return RemoteStopEVSEResult.Error(SessionId);
-
-            var results = await Task.WhenAll(OnRemoteStopLocal.
-                                                 GetInvocationList().
-                                                 Select(subscriber => (subscriber as OnRemoteStopDelegate)
-                                                     (Timestamp,
-                                                      this.CPOServer,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      EVSEId,
-                                                      SessionId,
-                                                      PartnerSessionId,
-                                                      ProviderId,
-                                                      QueryTimeout)));
-
-            return results.
-                       Where(result => result.Result != RemoteStopEVSEResultType.Unspecified).
-                       First();
 
         }
 

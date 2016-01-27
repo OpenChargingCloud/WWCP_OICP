@@ -17,10 +17,11 @@
 
 #region Usings
 
-using org.GraphDefined.Vanaheimr.Illias;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -34,13 +35,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="CancellationToken">A token to cancel this task.</param>
+    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="ChargingProductId">The unique identification of the choosen charging product at the given EVSE.</param>
     /// <param name="SessionId">The unique identification for this charging session.</param>
     /// <param name="PartnerSessionId">The unique identification for this charging session on the partner side.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="eMAId">The unique identification of the e-mobility account.</param>
-    /// <returns>A RemoteStartResult task.</returns>
+    /// <param name="QueryTimeout">An optional timeout for this request.</param>
     public delegate Task<RemoteStartEVSEResult> OnRemoteStartDelegate(DateTime            Timestamp,
                                                                       CPOServer           Sender,
                                                                       CancellationToken   CancellationToken,
@@ -60,11 +62,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="CancellationToken">A token to cancel this task.</param>
+    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="SessionId">The unique identification for this charging session.</param>
     /// <param name="PartnerSessionId">The unique identification for this charging session on the partner side.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender..</param>
-    /// <returns>A RemoteStopResult task.</returns>
+    /// <param name="QueryTimeout">An optional timeout for this request.</param>
     public delegate Task<RemoteStopEVSEResult> OnRemoteStopDelegate(DateTime             Timestamp,
                                                                     CPOServer            Sender,
                                                                     CancellationToken    CancellationToken,

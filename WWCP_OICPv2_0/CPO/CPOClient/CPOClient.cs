@@ -34,7 +34,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// OICP v2.0 CPOClient.
+    /// A OICP v2.0 CPO client.
     /// </summary>
     public class CPOClient : AOICPClient
     {

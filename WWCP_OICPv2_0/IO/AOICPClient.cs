@@ -144,7 +144,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         protected readonly DNSClient _DNSClient;
 
         /// <summary>
-        /// The DNS defines which DNS servers to use.
+        /// The DNS client defines which DNS servers to use.
         /// </summary>
         public DNSClient DNSClient
         {

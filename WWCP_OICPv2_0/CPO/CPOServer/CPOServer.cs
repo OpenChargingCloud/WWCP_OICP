@@ -37,7 +37,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// OICP v2.0 CPO HTTP/SOAP/XML Server API.
+    /// A OICP v2.0 CPO HTTP/SOAP/XML Server API.
     /// </summary>
     public class CPOServer
     {

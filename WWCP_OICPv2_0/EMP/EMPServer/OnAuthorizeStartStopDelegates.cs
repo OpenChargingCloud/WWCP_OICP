@@ -21,6 +21,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using org.GraphDefined.Vanaheimr.Illias;
+
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPv2_0
@@ -32,6 +34,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="CancellationToken">A token to cancel this task.</param>
+    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="RoamingNetworkId">The unique identification for the roaming network.</param>
     /// <param name="OperatorId">An EVSE operator identification.</param>
     /// <param name="AuthToken">A (RFID) user identification.</param>
@@ -39,19 +42,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <param name="SessionId">An optional session identification.</param>
     /// <param name="PartnerProductId">An optional partner product identification.</param>
     /// <param name="PartnerSessionId">An optional partner session identification.</param>
-    /// <param name="QueryTimeout">An optional timeout for this query.</param>
-    /// <returns>A AuthorizeStartResult task.</returns>
-    public delegate Task<AuthStartEVSEResultType> OnAuthorizeStartDelegate(DateTime            Timestamp,
-                                                                           EMPServer           Sender,
-                                                                           CancellationToken   CancellationToken,
-                                                                           RoamingNetwork_Id   RoamingNetworkId,
-                                                                           EVSEOperator_Id     OperatorId,
-                                                                           Auth_Token          AuthToken,
-                                                                           EVSE_Id             EVSEId            = null,
-                                                                           ChargingSession_Id  SessionId         = null,
-                                                                           ChargingProduct_Id  PartnerProductId  = null,
-                                                                           ChargingSession_Id  PartnerSessionId  = null,
-                                                                           TimeSpan?           QueryTimeout      = null);
+    /// <param name="QueryTimeout">An optional timeout for this request.</param>
+    public delegate Task<AuthStartEVSEResult> OnAuthorizeStartDelegate(DateTime            Timestamp,
+                                                                       EMPServer           Sender,
+                                                                       CancellationToken   CancellationToken,
+                                                                       EventTracking_Id    EventTrackingId,
+                                                                       RoamingNetwork_Id   RoamingNetworkId,
+                                                                       EVSEOperator_Id     OperatorId,
+                                                                       Auth_Token          AuthToken,
+                                                                       EVSE_Id             EVSEId            = null,
+                                                                       ChargingSession_Id  SessionId         = null,
+                                                                       ChargingProduct_Id  PartnerProductId  = null,
+                                                                       ChargingSession_Id  PartnerSessionId  = null,
+                                                                       TimeSpan?           QueryTimeout      = null);
 
 
     /// <summary>
@@ -60,21 +63,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="CancellationToken">A token to cancel this task.</param>
+    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="RoamingNetworkId">The unique identification for the roaming network.</param>
     /// <param name="SessionId">The unique identification for this charging session.</param>
     /// <param name="PartnerSessionId">The unique identification for this charging session on the partner side.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
-    /// <returns>A remote stop result object.</returns>
-    public delegate Task<AuthStopEVSEResultType> OnAuthorizeStopDelegate(DateTime            Timestamp,
-                                                                          EMPServer           Sender,
-                                                                          CancellationToken   CancellationToken,
-                                                                          RoamingNetwork_Id   RoamingNetworkId,
-                                                                          ChargingSession_Id  SessionId,
-                                                                          ChargingSession_Id  PartnerSessionId,
-                                                                          EVSP_Id             ProviderId,
-                                                                          EVSE_Id             EVSEId);
-
+    /// <param name="QueryTimeout">An optional timeout for this request.</param>
+    public delegate Task<AuthStopEVSEResult> OnAuthorizeStopDelegate(DateTime            Timestamp,
+                                                                     EMPServer           Sender,
+                                                                     CancellationToken   CancellationToken,
+                                                                     EventTracking_Id    EventTrackingId,
+                                                                     RoamingNetwork_Id   RoamingNetworkId,
+                                                                     ChargingSession_Id  SessionId,
+                                                                     ChargingSession_Id  PartnerSessionId,
+                                                                     EVSP_Id             ProviderId,
+                                                                     EVSE_Id             EVSEId,
+                                                                     TimeSpan?           QueryTimeout  = null);
 
 }
 

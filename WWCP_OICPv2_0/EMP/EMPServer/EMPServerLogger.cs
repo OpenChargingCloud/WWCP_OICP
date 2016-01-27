@@ -27,7 +27,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// An OICP v2.0 EMP server logger.
+    /// A OICP v2.0 EMP server logger.
     /// </summary>
     public class EMPServerLogger : HTTPLogger
     {
