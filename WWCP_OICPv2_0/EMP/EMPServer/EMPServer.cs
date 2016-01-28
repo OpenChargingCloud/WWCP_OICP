@@ -520,27 +520,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, Request);
 
 
-                    //return new HTTPResponseBuilder(Request) {
-                    //
-                    //        HTTPStatusCode  = HTTPStatusCode.OK,
-                    //        ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                    //        Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-                    //
-                    //                                                 new XElement(OICPNS.CommonTypes + "Result", "true"),
-                    //
-                    //                                                 new XElement(OICPNS.CommonTypes + "StatusCode",
-                    //                                                     new XElement(OICPNS.CommonTypes + "Code",           "000"),
-                    //                                                     new XElement(OICPNS.CommonTypes + "Description",    ""),
-                    //                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo", "")
-                    //                                                 )
-                    //
-                    //                                                 //new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-                    //
-                    //                                             )).ToUTF8Bytes()
-                    //
-                    //};
-
-
                     #region Parse request parameters
 
                     XElement            IdentificationXML;
@@ -556,6 +535,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     EVSE_Id             EVSEId              = null;
                     eMA_Id              eMAId               = null;
                     ChargingProduct_Id  ChargingProductId   = null;
+                    Auth_Token          AuthToken           = null;
 
                     try
                     {
@@ -569,28 +549,28 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         OperatorId               = EVSEOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID", "No OperatorID XML tag provided!"));
                         EVSEId                   = EVSE_Id.           Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
+
+                        IdentificationXML = AuthorizeStartXML.Element(OICPNS.Authorization + "Identification");
+                        if (IdentificationXML != null)
+                        {
+
+                            var RFIDmifarefamilyIdentificationXML = IdentificationXML.Element(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification");
+                            if (RFIDmifarefamilyIdentificationXML != null)
+                            {
+
+                                var UIDXML = IdentificationXML.Element(OICPNS.CommonTypes + "UID");
+                                if (UIDXML != null)
+                                {
+                                    AuthToken = Auth_Token.Parse(UIDXML.Value);
+                                }
+
+                            }
+
+                        }
+
                         ChargingProductIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerProductID");
                         if (ChargingProductIdXML != null)
                             ChargingProductId = ChargingProduct_Id.Parse(ChargingProductIdXML.Value);
-
-                        IdentificationXML        = AuthorizeStartXML.   ElementOrFail(OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
-                        QRCodeIdentificationXML  = IdentificationXML.Element      (OICPNS.CommonTypes   + "QRCodeIdentification");
-                        PnCIdentificationXML     = IdentificationXML.Element      (OICPNS.CommonTypes   + "PlugAndChargeIdentification");
-                        RemoteIdentificationXML  = IdentificationXML.Element      (OICPNS.CommonTypes   + "RemoteIdentification");
-
-                        if (QRCodeIdentificationXML == null &&
-                            PnCIdentificationXML    == null &&
-                            RemoteIdentificationXML == null)
-                            throw new Exception("Neither a QRCodeIdentification, PlugAndChargeIdentification, nor a RemoteIdentification was provided!");
-
-                        if      (QRCodeIdentificationXML != null)
-                            eMAId = eMA_Id.Parse(QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
-
-                        else if (PnCIdentificationXML != null)
-                            eMAId = eMA_Id.Parse(PnCIdentificationXML.   ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
-
-                        else if (RemoteIdentificationXML != null)
-                            eMAId = eMA_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                     }
                     catch (Exception e)
@@ -602,11 +582,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                 HTTPStatusCode  = HTTPStatusCode.OK,
                                 ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                                Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                                Content         = SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizationStart",
 
-                                                                         new XElement(OICPNS.CommonTypes + "Result", "false"),
+                                                                         new XElement(OICPNS.Authorization + "AuthorizationStatus", "NotAuthorized"),
 
-                                                                         new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                         new XElement(OICPNS.Authorization + "StatusCode",
                                                                              new XElement(OICPNS.CommonTypes + "Code",           "022"),
                                                                              new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
                                                                              new XElement(OICPNS.CommonTypes + "AdditionalInfo",  e.Message)
@@ -663,7 +643,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
                     //EVSEOperator_Id     OperatorId        = null;
-                    Auth_Token          AuthToken         = null;
+                    //Auth_Token          AuthToken         = null;
                     ChargingProduct_Id  PartnerProductId  = null;
                     TimeSpan            QueryTimeout      = TimeSpan.FromMinutes(1);
 
@@ -762,11 +742,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         Date            = Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(
-                                              new XElement(OICPNS.CommonTypes + "eRoamingAuthorizationStart",
+                                              new XElement(OICPNS.Authorization + "eRoamingAuthorizationStart",
 
-                                                  new XElement(OICPNS.CommonTypes + "Result", "true"),
+                                                  new XElement(OICPNS.Authorization + "AuthorizationStatus", Response.Result == AuthStartEVSEResultType.Authorized ? "Authorized" : "NotAuthorized"),
 
-                                                  new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                  new XElement(OICPNS.Authorization + "StatusCode",
                                                       new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
                                                       new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
                                                       new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
