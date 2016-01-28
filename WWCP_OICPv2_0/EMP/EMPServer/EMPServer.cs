@@ -549,23 +549,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         OperatorId               = EVSEOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID", "No OperatorID XML tag provided!"));
                         EVSEId                   = EVSE_Id.           Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
-                        Console.WriteLine("OperatorId found" + OperatorId.ToString());
-                        Console.WriteLine("EVSEId found" + EVSEId.ToString());
+                        Console.WriteLine("OperatorId: " + OperatorId.ToString());
+                        Console.WriteLine("EVSEId: " + EVSEId.ToString());
 
                         IdentificationXML = AuthorizeStartXML.Element(OICPNS.Authorization + "Identification");
                         if (IdentificationXML != null)
                         {
 
-                            Console.WriteLine("Identification found");
 
                             var RFIDmifarefamilyIdentificationXML = IdentificationXML.Element(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification");
                             if (RFIDmifarefamilyIdentificationXML != null)
                             {
 
-                                Console.WriteLine("RFIDmifarefamilyIdentification found");
-
                                 var UIDXML = RFIDmifarefamilyIdentificationXML.Element(OICPNS.CommonTypes + "UID");
-                                Console.WriteLine("UIDXML.Value: " + UIDXML.Value);
 
                                 if (UIDXML != null)
                                 {
