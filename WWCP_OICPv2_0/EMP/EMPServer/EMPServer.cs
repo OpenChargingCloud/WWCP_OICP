@@ -632,7 +632,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    Console.WriteLine("Result: " + result.Result.ToString());
 
                     #region Map result
 
