@@ -342,6 +342,32 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 Console.WriteLine(Request.EntirePDU);
                 Console.WriteLine("---------------");
 
+                // <?xml version='1.0' encoding='UTF-8'?>
+                // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v2.0"
+                //                   xmlns:fn      = "http://www.w3.org/2005/xpath-functions" 
+                //                   xmlns:isns    = "http://schemas.xmlsoap.org/soap/envelope/"
+                //                   xmlns:sbp     = "http://www.inubit.com/eMobility/SBP"
+                //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v2.0">
+                // 
+                // <soapenv:Body>
+                //   <tns:eRoamingAuthorizeStart>
+                //
+                //     <tns:SessionID>8852dc28-0a88-1296-707b-517f3e853f32</tns:SessionID>
+                //     <tns:OperatorID>+49*822</tns:OperatorID>
+                //
+                //     <tns:Identification>
+                //       <cmn:RFIDmifarefamilyIdentification>
+                //         <cmn:UID>AA3634527A2280</cmn:UID>
+                //       </cmn:RFIDmifarefamilyIdentification>
+                //     </tns:Identification>
+                //
+                //   </tns:eRoamingAuthorizeStart>
+                // </soapenv:Body>
+                // 
+                // </soapenv:Envelope>
+
+
                 #region ParseXMLRequestBody... or fail!
 
                 var XMLRequest = Request.ParseXMLRequestBody();
@@ -371,8 +397,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 try
                 {
 
-                    AuthorizeStartXMLs = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeAuthorizeStart");
-                    AuthorizeStopXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeAuthorizeStop");
+                    AuthorizeStartXMLs = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart");
+                    AuthorizeStopXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop");
 
                     if (!AuthorizeStartXMLs.Any() && !AuthorizeStopXMLs.Any())
                         throw new Exception("Must be either AuthorizeStart or AuthorizeStop XML request!");
