@@ -605,8 +605,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    Console.WriteLine("parsed!");
-
                     var HubjectCode            = "320";
                     var HubjectDescription     = "Service not available!";
                     var HubjectAdditionalInfo  = "";
@@ -652,7 +650,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     if (AuthToken.ToString() == "049a607a3f3480" ||
                         AuthToken.ToString() == "dbb32688" ||
-                        AuthToken.ToString() == "AB3634527A2280")
+                        AuthToken.ToString() == "AA3634527A2280")
                     {
                         Response = AuthStartEVSEResult.Authorized(Authorizator_Id.Parse("lo"), SessionId, EVSP_Id.Parse("DE*GEF"));
                     }
