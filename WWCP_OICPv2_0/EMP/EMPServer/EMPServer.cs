@@ -520,25 +520,25 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, Request);
 
 
-                    return new HTTPResponseBuilder(Request) {
-
-                            HTTPStatusCode  = HTTPStatusCode.OK,
-                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                            Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-
-                                                                     new XElement(OICPNS.CommonTypes + "Result", "true"),
-
-                                                                     new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                         new XElement(OICPNS.CommonTypes + "Code",           "000"),
-                                                                         new XElement(OICPNS.CommonTypes + "Description",    ""),
-                                                                         new XElement(OICPNS.CommonTypes + "AdditionalInfo", "")
-                                                                     )
-
-                                                                     //new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-
-                                                                 )).ToUTF8Bytes()
-
-                    };
+                    //return new HTTPResponseBuilder(Request) {
+                    //
+                    //        HTTPStatusCode  = HTTPStatusCode.OK,
+                    //        ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                    //        Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                    //
+                    //                                                 new XElement(OICPNS.CommonTypes + "Result", "true"),
+                    //
+                    //                                                 new XElement(OICPNS.CommonTypes + "StatusCode",
+                    //                                                     new XElement(OICPNS.CommonTypes + "Code",           "000"),
+                    //                                                     new XElement(OICPNS.CommonTypes + "Description",    ""),
+                    //                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo", "")
+                    //                                                 )
+                    //
+                    //                                                 //new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
+                    //
+                    //                                             )).ToUTF8Bytes()
+                    //
+                    //};
 
 
                     #region Parse request parameters
@@ -762,7 +762,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         Date            = Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(
-                                              new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                                              new XElement(OICPNS.CommonTypes + "eRoamingAuthorizationStart",
 
                                                   new XElement(OICPNS.CommonTypes + "Result", "true"),
 
