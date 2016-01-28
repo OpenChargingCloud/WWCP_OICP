@@ -739,8 +739,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                              )).ToUTF8Bytes()
                     };
 
-                    Console.WriteLine(HTTPResponse.Content.ToUTF8String());
-
 
                     #region Send OnLogAuthorizeStarted event
 
