@@ -751,11 +751,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                              )).ToUTF8Bytes()
                     };
 
-                    Console.WriteLine(HTTPResponse.Content.ToUTF8String());
+                    //var OnLogAuthorizeStartedLocal = OnLogAuthorizeStarted;
+                    //if (OnLogAuthorizeStartedLocal != null)
+                    //    OnLogAuthorizeStartedLocal(Now, this.HTTPServer, Request, HTTPResponse);
 
-                    var OnLogAuthorizeStartedLocal = OnLogAuthorizeStarted;
-                    if (OnLogAuthorizeStartedLocal != null)
-                        OnLogAuthorizeStartedLocal(Now, this.HTTPServer, Request, HTTPResponse);
+                    Console.WriteLine(HTTPResponse.Content.ToUTF8String());
 
                     return HTTPResponse;
 
