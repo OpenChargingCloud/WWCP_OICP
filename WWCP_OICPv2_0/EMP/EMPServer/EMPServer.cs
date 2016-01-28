@@ -338,6 +338,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             HTTPDelegate AuthorizeStartStopDelegate = Request => {
 
+                Console.WriteLine("Incoming XML!!!");
+                Console.WriteLine(Request.HTTPBody.ToUTF8String());
+
                 #region ParseXMLRequestBody... or fail!
 
                 var XMLRequest = Request.ParseXMLRequestBody();
@@ -1080,6 +1083,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             _HTTPServer.AddMethodCallback(HTTPMethod.POST,
                                           URIPrefix + "/RNs/{RoamingNetwork}/AuthorizeStartStop",
+                                          HTTPContentType.XMLTEXT_UTF8,
+                                          HTTPDelegate: AuthorizeStartStopDelegate);
+
+            #endregion
+
+            #region Register SOAP-XML Request via POST
+
+            _HTTPServer.AddMethodCallback(HTTPMethod.POST,
+                                          URIPrefix + "/RNs/{RoamingNetwork}/RemoteStartStop",
                                           HTTPContentType.XMLTEXT_UTF8,
                                           HTTPDelegate: AuthorizeStartStopDelegate);
 
