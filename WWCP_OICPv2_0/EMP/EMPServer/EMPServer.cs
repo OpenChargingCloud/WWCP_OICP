@@ -658,6 +658,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                         Response = AuthStartEVSEResult.NotAuthorized(Authorizator_Id.Parse("lo"), EVSP_Id.Parse("DE*GEF"));
 
+                    Console.WriteLine("Result: " + Response.Result.ToString());
 
                     #region Map result
 
