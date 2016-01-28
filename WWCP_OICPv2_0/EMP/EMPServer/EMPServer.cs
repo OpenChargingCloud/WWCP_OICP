@@ -339,7 +339,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             HTTPDelegate AuthorizeStartStopDelegate = Request => {
 
                 Console.WriteLine("Incoming XML!!!");
-                Console.WriteLine(Request.HTTPBody.ToUTF8String());
+                Console.WriteLine(Request.EntirePDU);
+                Console.WriteLine("---------------");
 
                 #region ParseXMLRequestBody... or fail!
 
