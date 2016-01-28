@@ -650,7 +650,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     if (AuthToken.ToString().ToLower() == "049a607a3f3480".ToLower() ||
                         AuthToken.ToString().ToLower() == "dbb32688".ToLower() ||
-                        AuthToken.ToString().ToLower() == "AA3634527A2280".ToLower())
+                        AuthToken.ToString().ToLower() == "BA3634527A2280".ToLower())
                     {
                         Response = AuthStartEVSEResult.Authorized(Authorizator_Id.Parse("lo"), SessionId, EVSP_Id.Parse("DE*GEF"));
                         HubjectCode = "000";
