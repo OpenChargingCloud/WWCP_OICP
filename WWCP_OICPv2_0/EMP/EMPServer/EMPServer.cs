@@ -48,7 +48,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public const           String  DefaultHTTPServerName  = "OICP v2.0 HTTP/SOAP/XML EMP Server API";
+        public const           String  DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML EMP Server API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
@@ -650,8 +650,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                             case AuthStartEVSEResultType.NotAuthorized:
                                 HubjectCode         = "102";
-                                HubjectDescription  = "RFID Authentication failed";
-                      //          HubjectDescription  = "RFID Authentication failed - invalid UID";
+                                HubjectDescription  = "RFID Authentication failed - invalid UID";
                                 break;
 
                             case AuthStartEVSEResultType.InvalidSessionId:
