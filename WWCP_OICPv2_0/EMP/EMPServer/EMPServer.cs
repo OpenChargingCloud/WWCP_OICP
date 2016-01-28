@@ -519,6 +519,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     if (OnLogAuthorizeStartLocal != null)
                         OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, Request);
 
+
+                    return new HTTPResponseBuilder(Request) {
+
+                            HTTPStatusCode  = HTTPStatusCode.OK,
+                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                            Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+
+                                                                     new XElement(OICPNS.CommonTypes + "Result", "true"),
+
+                                                                     new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                                         new XElement(OICPNS.CommonTypes + "Code",           "0"),
+                                                                         new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
+                                                                         new XElement(OICPNS.CommonTypes + "AdditionalInfo", "")
+                                                                     )
+
+                                                                 )).ToUTF8Bytes()
+
+                    };
+
+
                     #region Parse request parameters
 
                     XElement            IdentificationXML;
@@ -530,7 +550,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     ChargingSession_Id  SessionId           = null;
                     ChargingSession_Id  PartnerSessionId    = null;
-                    EVSP_Id             ProviderId          = null;
+                    EVSEOperator_Id     OperatorId          = null;
                     EVSE_Id             EVSEId              = null;
                     eMA_Id              eMAId               = null;
                     ChargingProduct_Id  ChargingProductId   = null;
@@ -544,8 +564,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         if (PartnerSessionIdXML != null)
                             PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId               = EVSP_Id.           Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId                   = EVSE_Id.           Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        OperatorId               = EVSEOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID", "No OperatorID XML tag provided!"));
+                        EVSEId                   = EVSE_Id.           Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                         ChargingProductIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerProductID");
                         if (ChargingProductIdXML != null)
@@ -590,7 +610,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                              new XElement(OICPNS.CommonTypes + "AdditionalInfo",  e.Message)
                                                                          )
 
-                                                                     )).ToString().ToUTF8Bytes()
+                                                                     )).ToUTF8Bytes()
 
                         };
 
@@ -640,7 +660,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     #endregion
 
 
-                    EVSEOperator_Id     OperatorId        = null;
+                    //EVSEOperator_Id     OperatorId        = null;
                     Auth_Token          AuthToken         = null;
                     ChargingProduct_Id  PartnerProductId  = null;
                     TimeSpan            QueryTimeout      = TimeSpan.FromMinutes(1);
