@@ -648,6 +648,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                 HubjectDescription  = "Ready to charge!";
                                 break;
 
+                            case AuthStartEVSEResultType.NotAuthorized:
+                                HubjectCode         = "102";
+                                HubjectDescription  = "RFID Authentication failed - invalid UID";
+                                break;
+
                             case AuthStartEVSEResultType.InvalidSessionId:
                                 HubjectCode         = "400";
                                 HubjectDescription  = "Session is invalid";
