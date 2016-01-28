@@ -1073,7 +1073,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Register SOAP-XML Request via GET
 
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/RNs/{RoamingNetworkId}/AuthorizeStartStop",
+                                          URIPrefix + "/AuthorizeStartStop",
                                           HTTPContentType.XMLTEXT_UTF8,
                                           HTTPDelegate: AuthorizeStartStopDelegate);
 
@@ -1082,7 +1082,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Register SOAP-XML Request via POST
 
             _HTTPServer.AddMethodCallback(HTTPMethod.POST,
-                                          URIPrefix + "/RNs/{RoamingNetwork}/AuthorizeStartStop",
+                                          URIPrefix + "/AuthorizeStartStop",
                                           HTTPContentType.XMLTEXT_UTF8,
                                           HTTPDelegate: AuthorizeStartStopDelegate);
 
@@ -1091,7 +1091,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Register SOAP-XML Request via POST
 
             _HTTPServer.AddMethodCallback(HTTPMethod.POST,
-                                          URIPrefix + "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                          URIPrefix + "/RemoteStartStop",
                                           HTTPContentType.XMLTEXT_UTF8,
                                           HTTPDelegate: AuthorizeStartStopDelegate);
 
@@ -1101,7 +1101,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             // HTML
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/RNs/{RoamingNetwork}/AuthorizeStartStop",
+                                          URIPrefix + "/AuthorizeStartStop",
                                           HTTPContentType.HTML_UTF8,
                                           HTTPDelegate: Request => {
 
@@ -1118,7 +1118,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             // Text
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          "/RNs/{RoamingNetwork}/AuthorizeStartStop",
+                                          URIPrefix + "/AuthorizeStartStop",
                                           HTTPContentType.TEXT_UTF8,
                                           HTTPDelegate: Request => {
 

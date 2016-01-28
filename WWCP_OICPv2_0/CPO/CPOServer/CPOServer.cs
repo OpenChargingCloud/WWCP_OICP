@@ -1039,7 +1039,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Register SOAP-XML Request via GET
 
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/RNs/{RoamingNetworkId}/RemoteStartStop",
+                                          URIPrefix + "/RemoteStartStop",
                                           HTTPContentType.XMLTEXT_UTF8,
                                           HTTPDelegate: RemoteStartStopDelegate);
 
@@ -1048,7 +1048,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Register SOAP-XML Request via POST
 
             _HTTPServer.AddMethodCallback(HTTPMethod.POST,
-                                          URIPrefix + "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                          URIPrefix + "/RemoteStartStop",
                                           HTTPContentType.XMLTEXT_UTF8,
                                           HTTPDelegate: RemoteStartStopDelegate);
 
@@ -1058,7 +1058,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             // HTML
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                          URIPrefix + "/RemoteStartStop",
                                           HTTPContentType.HTML_UTF8,
                                           HTTPDelegate: Request => {
 
@@ -1075,7 +1075,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             // Text
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          "/RNs/{RoamingNetwork}/RemoteStartStop",
+                                          URIPrefix + "/RemoteStartStop",
                                           HTTPContentType.TEXT_UTF8,
                                           HTTPDelegate: Request => {
 
