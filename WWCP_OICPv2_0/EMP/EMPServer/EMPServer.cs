@@ -603,13 +603,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-
-
-                    TimeSpan QueryTimeout = TimeSpan.FromMinutes(1);
-
                     #region Call async subscribers
 
-                    AuthStartEVSEResult Response = null;
+                    AuthStartEVSEResult result = null;
+
+                    var QueryTimeout = TimeSpan.FromMinutes(1);
 
                     var OnAuthorizeStartLocal = OnAuthorizeStart;
                     if (OnAuthorizeStartLocal != null)
@@ -626,97 +624,77 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          EVSEId,
                                                          SessionId,
                                                          ChargingProductId,
-                                                         PartnerSessionId);
+                                                         PartnerSessionId,
+                                                         QueryTimeout);
 
                         task.Wait();
-                        Response = task.Result;
+                        result = task.Result;
 
                     }
 
                     #endregion
 
-                    //if (AuthToken.ToString().ToLower() == "049a607a3f3480".ToLower() ||
-                    //    AuthToken.ToString().ToLower() == "dbb32688".      ToLower() ||
-                    //    AuthToken.ToString().ToLower() == "AA3634527A2280".ToLower())
-                    //{
 
-                    //    Response = AuthStartEVSEResult.Authorized(Authorizator_Id.Parse("lo"), SessionId, EVSP_Id.Parse("DE*GDF"));
-                    //    HubjectCode            = "000";
-                    //    HubjectDescription     = "Ready to charge!";
-                    //    HubjectAdditionalInfo  = "";
-
-                    //}
-
-                    //else
-                    //{
-
-                    //    Response = AuthStartEVSEResult.NotAuthorized(Authorizator_Id.Parse("lo"), EVSP_Id.Parse("DE*GDF"));
-                    //    HubjectCode            = "102";
-                    //    HubjectDescription     = "Authentication failed!";
-                    //    HubjectAdditionalInfo  = "";
-
-                    //}
-
-                    Console.WriteLine("Result: " + Response.Result.ToString());
+                    Console.WriteLine("Result: " + result.Result.ToString());
 
                     #region Map result
 
-                    var HubjectCode            = "320";
-                    var HubjectDescription     = "Service not available!";
+                    var HubjectCode            = "";
+                    var HubjectDescription     = "";
                     var HubjectAdditionalInfo  = "";
 
-                    //if (Response != null)
-                    //    switch (Response.Result)
-                    //    {
+                    if (result != null)
+                        switch (result.Result)
+                        {
 
-                    //        case AuthStartEVSEResultType.Authorized:
-                    //            HubjectCode         = "000";
-                    //            HubjectDescription  = "Ready to charge!";
-                    //            break;
+                            case AuthStartEVSEResultType.Authorized:
+                                HubjectCode         = "000";
+                                HubjectDescription  = "Ready to charge!";
+                                break;
 
-                    //        case AuthStartEVSEResultType.InvalidSessionId:
-                    //            HubjectCode         = "400";
-                    //            HubjectDescription  = "Session is invalid";
-                    //            break;
+                            case AuthStartEVSEResultType.InvalidSessionId:
+                                HubjectCode         = "400";
+                                HubjectDescription  = "Session is invalid";
+                                break;
 
-                    //        case AuthStartEVSEResultType.EVSECommunicationTimeout:
-                    //            HubjectCode         = "501";
-                    //            HubjectDescription  = "Communication to EVSE failed!";
-                    //            break;
+                            case AuthStartEVSEResultType.EVSECommunicationTimeout:
+                                HubjectCode         = "501";
+                                HubjectDescription  = "Communication to EVSE failed!";
+                                break;
 
-                    //        case AuthStartEVSEResultType.StartChargingTimeout:
-                    //            HubjectCode         = "510";
-                    //            HubjectDescription  = "No EV connected to EVSE!";
-                    //            break;
+                            case AuthStartEVSEResultType.StartChargingTimeout:
+                                HubjectCode         = "510";
+                                HubjectDescription  = "No EV connected to EVSE!";
+                                break;
 
-                    //        case AuthStartEVSEResultType.Reserved:
-                    //            HubjectCode         = "601";
-                    //            HubjectDescription  = "EVSE reserved!";
-                    //            break;
+                            case AuthStartEVSEResultType.Reserved:
+                                HubjectCode         = "601";
+                                HubjectDescription  = "EVSE reserved!";
+                                break;
 
-                    //        //Note: Can not happen, or?
-                    //        //case AuthStartEVSEResultType.AlreadyInUse:
-                    //        //    HubjectCode         = "602";
-                    //        //    HubjectDescription  = "EVSE is already in use!";
-                    //        //    break;
+                            //Note: Can not happen, or?
+                            //case AuthStartEVSEResultType.AlreadyInUse:
+                            //    HubjectCode         = "602";
+                            //    HubjectDescription  = "EVSE is already in use!";
+                            //    break;
 
-                    //        case AuthStartEVSEResultType.UnknownEVSE:
-                    //            HubjectCode         = "603";
-                    //            HubjectDescription  = "Unknown EVSE ID!";
-                    //            break;
+                            case AuthStartEVSEResultType.UnknownEVSE:
+                                HubjectCode         = "603";
+                                HubjectDescription  = "Unknown EVSE ID!";
+                                break;
 
-                    //        case AuthStartEVSEResultType.OutOfService:
-                    //            HubjectCode         = "700";
-                    //            HubjectDescription  = "EVSE out of service!";
-                    //            break;
+                            case AuthStartEVSEResultType.OutOfService:
+                                HubjectCode         = "700";
+                                HubjectDescription  = "EVSE out of service!";
+                                break;
 
 
-                    //        default:
-                    //            HubjectCode         = "320";
-                    //            HubjectDescription  = "Service not available!";
-                    //            break;
+                            default:
+                                HubjectCode         = "320";
+                                HubjectDescription  = "Service not available!";
+                                break;
 
-                    //    }
+                        }
 
                     #endregion
 
@@ -731,7 +709,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         Content         = SOAP.Encapsulation(
                                               new XElement(OICPNS.Authorization + "eRoamingAuthorizationStart",
 
-                                                  new XElement(OICPNS.Authorization + "AuthorizationStatus", Response.Result == AuthStartEVSEResultType.Authorized ? "Authorized" : "NotAuthorized"),
+                                                  new XElement(OICPNS.Authorization + "AuthorizationStatus", result.Result == AuthStartEVSEResultType.Authorized ? "Authorized" : "NotAuthorized"),
 
                                                   new XElement(OICPNS.Authorization + "StatusCode",
                                                       new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
