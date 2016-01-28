@@ -627,9 +627,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     //var OnAuthorizeStartLocal = OnAuthorizeStart;
                     //if (OnAuthorizeStartLocal != null)
                     //{
-                    
+
                     //    var CTS = new CancellationTokenSource();
-                    
+
                     //    var task = OnAuthorizeStartLocal(DateTime.Now,
                     //                                     this,
                     //                                     CTS.Token,
@@ -640,10 +640,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     //                                     SessionId,
                     //                                     PartnerProductId,
                     //                                     PartnerSessionId);
-                    
+
                     //    task.Wait();
                     //    Response = task.Result;
-                    
+
                     //}
 
                     #endregion
@@ -657,7 +657,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         HubjectDescription = "Ready to charge!";
                         HubjectAdditionalInfo = "";
                     }
+
+                    else
+                    {
                         Response = AuthStartEVSEResult.NotAuthorized(Authorizator_Id.Parse("lo"), EVSP_Id.Parse("DE*GEF"));
+                        HubjectCode = "000";
+                        HubjectDescription = "Ready to charge!";
+                        HubjectAdditionalInfo = "";
+                    }
 
                     Console.WriteLine("Result: " + Response.Result.ToString());
 
