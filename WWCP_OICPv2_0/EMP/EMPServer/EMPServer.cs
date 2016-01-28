@@ -523,9 +523,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     #region Parse request parameters
 
                     XElement            IdentificationXML;
-                    XElement            QRCodeIdentificationXML;
-                    XElement            PnCIdentificationXML;
-                    XElement            RemoteIdentificationXML;
                     XElement            PartnerSessionIdXML;
                     XElement            ChargingProductIdXML;
 
@@ -562,6 +559,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                 if (UIDXML != null)
                                 {
                                     AuthToken = Auth_Token.Parse(UIDXML.Value);
+                                    Console.WriteLine("AuthToken: " + AuthToken.ToString());
                                 }
 
                             }
@@ -606,38 +604,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Documentation
 
-                    // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                    //
-                    //    <soapenv:Header/>
-                    //
-                    //    <soapenv:Body>
-                    //       <CommonTypes:eRoamingAcknowledgement>
-                    // 
-                    //          <CommonTypes:Result>?</CommonTypes:Result>
-                    // 
-                    //          <CommonTypes:StatusCode>
-                    // 
-                    //             <CommonTypes:Code>?</CommonTypes:Code>
-                    // 
-                    //             <!--Optional:-->
-                    //             <CommonTypes:Description>?</CommonTypes:Description>
-                    // 
-                    //             <!--Optional:-->
-                    //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-                    // 
-                    //          </CommonTypes:StatusCode>
-                    // 
-                    //          <!--Optional:-->
-                    //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
-                    // 
-                    //          <!--Optional:-->
-                    //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
-                    // 
-                    //       </CommonTypes:eRoamingAcknowledgement>
-                    //    </soapenv:Body>
-                    //
-                    // </soapenv:Envelope>
 
                     #endregion
 
