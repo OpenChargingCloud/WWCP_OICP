@@ -653,17 +653,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         AuthToken.ToString().ToLower() == "BA3634527A2280".ToLower())
                     {
                         Response = AuthStartEVSEResult.Authorized(Authorizator_Id.Parse("lo"), SessionId, EVSP_Id.Parse("DE*GEF"));
-                        HubjectCode = "000";
-                        HubjectDescription = "Ready to charge!";
-                        HubjectAdditionalInfo = "";
+                        HubjectCode            = "000";
+                        HubjectDescription     = "Ready to charge!";
+                        HubjectAdditionalInfo  = "";
                     }
 
                     else
                     {
                         Response = AuthStartEVSEResult.NotAuthorized(Authorizator_Id.Parse("lo"), EVSP_Id.Parse("DE*GEF"));
-                        HubjectCode = "000";
-                        HubjectDescription = "Ready to charge!";
-                        HubjectAdditionalInfo = "";
+                        HubjectCode            = "102";
+                        HubjectDescription     = "Authentication failed!";
+                        HubjectAdditionalInfo  = "";
                     }
 
                     Console.WriteLine("Result: " + Response.Result.ToString());
