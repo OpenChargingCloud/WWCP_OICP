@@ -652,7 +652,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         AuthToken.ToString().ToLower() == "dbb32688".ToLower() ||
                         AuthToken.ToString().ToLower() == "BA3634527A2280".ToLower())
                     {
-                        Response = AuthStartEVSEResult.Authorized(Authorizator_Id.Parse("lo"), SessionId, EVSP_Id.Parse("DE*GEF"));
+                        Response = AuthStartEVSEResult.Authorized(Authorizator_Id.Parse("lo"), SessionId, EVSP_Id.Parse("DE*GDF"));
                         HubjectCode            = "000";
                         HubjectDescription     = "Ready to charge!";
                         HubjectAdditionalInfo  = "";
@@ -660,7 +660,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     else
                     {
-                        Response = AuthStartEVSEResult.NotAuthorized(Authorizator_Id.Parse("lo"), EVSP_Id.Parse("DE*GEF"));
+                        Response = AuthStartEVSEResult.NotAuthorized(Authorizator_Id.Parse("lo"), EVSP_Id.Parse("DE*GDF"));
                         HubjectCode            = "102";
                         HubjectDescription     = "Authentication failed!";
                         HubjectAdditionalInfo  = "";
