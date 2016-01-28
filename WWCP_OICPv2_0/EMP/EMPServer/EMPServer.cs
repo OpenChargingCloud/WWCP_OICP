@@ -624,35 +624,38 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     AuthStartEVSEResult Response = null;
 
-                    var OnAuthorizeStartLocal = OnAuthorizeStart;
-                    if (OnAuthorizeStartLocal != null)
-                    {
+                    //var OnAuthorizeStartLocal = OnAuthorizeStart;
+                    //if (OnAuthorizeStartLocal != null)
+                    //{
                     
-                        var CTS = new CancellationTokenSource();
+                    //    var CTS = new CancellationTokenSource();
                     
-                        var task = OnAuthorizeStartLocal(DateTime.Now,
-                                                         this,
-                                                         CTS.Token,
-                                                         EventTracking_Id.New,
-                                                         OperatorId,
-                                                         AuthToken,
-                                                         EVSEId,
-                                                         SessionId,
-                                                         PartnerProductId,
-                                                         PartnerSessionId);
+                    //    var task = OnAuthorizeStartLocal(DateTime.Now,
+                    //                                     this,
+                    //                                     CTS.Token,
+                    //                                     EventTracking_Id.New,
+                    //                                     OperatorId,
+                    //                                     AuthToken,
+                    //                                     EVSEId,
+                    //                                     SessionId,
+                    //                                     PartnerProductId,
+                    //                                     PartnerSessionId);
                     
-                        task.Wait();
-                        Response = task.Result;
+                    //    task.Wait();
+                    //    Response = task.Result;
                     
-                    }
+                    //}
 
                     #endregion
 
-                    if (AuthToken.ToString() == "049a607a3f3480" ||
-                        AuthToken.ToString() == "dbb32688" ||
-                        AuthToken.ToString() == "AA3634527A2280")
+                    if (AuthToken.ToString().ToLower() == "049a607a3f3480".ToLower() ||
+                        AuthToken.ToString().ToLower() == "dbb32688".ToLower() ||
+                        AuthToken.ToString().ToLower() == "AA3634527A2280".ToLower())
                     {
                         Response = AuthStartEVSEResult.Authorized(Authorizator_Id.Parse("lo"), SessionId, EVSP_Id.Parse("DE*GEF"));
+                        HubjectCode = "000";
+                        HubjectDescription = "Ready to charge!";
+                        HubjectAdditionalInfo = "";
                     }
                         Response = AuthStartEVSEResult.NotAuthorized(Authorizator_Id.Parse("lo"), EVSP_Id.Parse("DE*GEF"));
 
@@ -660,58 +663,58 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Map result
 
-                    if (Response != null)
-                        switch (Response.Result)
-                        {
+                    //if (Response != null)
+                    //    switch (Response.Result)
+                    //    {
 
-                            case AuthStartEVSEResultType.Authorized:
-                                HubjectCode         = "000";
-                                HubjectDescription  = "Ready to charge!";
-                                break;
+                    //        case AuthStartEVSEResultType.Authorized:
+                    //            HubjectCode         = "000";
+                    //            HubjectDescription  = "Ready to charge!";
+                    //            break;
 
-                            case AuthStartEVSEResultType.InvalidSessionId:
-                                HubjectCode         = "400";
-                                HubjectDescription  = "Session is invalid";
-                                break;
+                    //        case AuthStartEVSEResultType.InvalidSessionId:
+                    //            HubjectCode         = "400";
+                    //            HubjectDescription  = "Session is invalid";
+                    //            break;
 
-                            case AuthStartEVSEResultType.EVSECommunicationTimeout:
-                                HubjectCode         = "501";
-                                HubjectDescription  = "Communication to EVSE failed!";
-                                break;
+                    //        case AuthStartEVSEResultType.EVSECommunicationTimeout:
+                    //            HubjectCode         = "501";
+                    //            HubjectDescription  = "Communication to EVSE failed!";
+                    //            break;
 
-                            case AuthStartEVSEResultType.StartChargingTimeout:
-                                HubjectCode         = "510";
-                                HubjectDescription  = "No EV connected to EVSE!";
-                                break;
+                    //        case AuthStartEVSEResultType.StartChargingTimeout:
+                    //            HubjectCode         = "510";
+                    //            HubjectDescription  = "No EV connected to EVSE!";
+                    //            break;
 
-                            case AuthStartEVSEResultType.Reserved:
-                                HubjectCode         = "601";
-                                HubjectDescription  = "EVSE reserved!";
-                                break;
+                    //        case AuthStartEVSEResultType.Reserved:
+                    //            HubjectCode         = "601";
+                    //            HubjectDescription  = "EVSE reserved!";
+                    //            break;
 
-                            //Note: Can not happen, or?
-                            //case AuthStartEVSEResultType.AlreadyInUse:
-                            //    HubjectCode         = "602";
-                            //    HubjectDescription  = "EVSE is already in use!";
-                            //    break;
+                    //        //Note: Can not happen, or?
+                    //        //case AuthStartEVSEResultType.AlreadyInUse:
+                    //        //    HubjectCode         = "602";
+                    //        //    HubjectDescription  = "EVSE is already in use!";
+                    //        //    break;
 
-                            case AuthStartEVSEResultType.UnknownEVSE:
-                                HubjectCode         = "603";
-                                HubjectDescription  = "Unknown EVSE ID!";
-                                break;
+                    //        case AuthStartEVSEResultType.UnknownEVSE:
+                    //            HubjectCode         = "603";
+                    //            HubjectDescription  = "Unknown EVSE ID!";
+                    //            break;
 
-                            case AuthStartEVSEResultType.OutOfService:
-                                HubjectCode         = "700";
-                                HubjectDescription  = "EVSE out of service!";
-                                break;
+                    //        case AuthStartEVSEResultType.OutOfService:
+                    //            HubjectCode         = "700";
+                    //            HubjectDescription  = "EVSE out of service!";
+                    //            break;
 
 
-                            default:
-                                HubjectCode         = "320";
-                                HubjectDescription  = "Service not available!";
-                                break;
+                    //        default:
+                    //            HubjectCode         = "320";
+                    //            HubjectDescription  = "Service not available!";
+                    //            break;
 
-                        }
+                    //    }
 
                     #endregion
 
