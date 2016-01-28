@@ -565,6 +565,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                 Console.WriteLine("RFIDmifarefamilyIdentification found");
 
                                 var UIDXML = IdentificationXML.Element(OICPNS.CommonTypes + "UID");
+                                Console.WriteLine("UIDXML.Value: " + UIDXML.Value);
+
                                 if (UIDXML != null)
                                 {
                                     AuthToken = Auth_Token.Parse(UIDXML.Value);
