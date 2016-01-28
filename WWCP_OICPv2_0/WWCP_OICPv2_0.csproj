@@ -51,6 +51,8 @@
     <Compile Include="CPO\CPORoamingWWCPExtentions.cs" />
     <Compile Include="CPO\CPORoamingWWCP.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
+    <Compile Include="EMP\EMPRoamingWWCPExtentions.cs" />
+    <Compile Include="EMP\EMPRoamingWWCP.cs" />
     <Compile Include="EMP\EMPRoaming.cs" />
     <Compile Include="EMP\EMPServer\EMPServerLogger.cs" />
     <Compile Include="EMP\EMPServer\OnAuthorizeStartStopDelegates.cs" />

@@ -33,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A WWCP wrapper for the OICP roaming client for EVSE operators/CPOs.
+    /// A WWCP wrapper for the OICP v2.0 roaming client for EVSE operators/CPOs.
     /// </summary>
     public class CPORoamingWWCP : IOperatorRoamingService
     {

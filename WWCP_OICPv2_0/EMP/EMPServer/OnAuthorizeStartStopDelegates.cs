@@ -35,7 +35,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="CancellationToken">A token to cancel this task.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-    /// <param name="RoamingNetworkId">The unique identification for the roaming network.</param>
     /// <param name="OperatorId">An EVSE operator identification.</param>
     /// <param name="AuthToken">A (RFID) user identification.</param>
     /// <param name="EVSEId">An optional EVSE identification.</param>
@@ -47,7 +46,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                        EMPServer           Sender,
                                                                        CancellationToken   CancellationToken,
                                                                        EventTracking_Id    EventTrackingId,
-                                                                       RoamingNetwork_Id   RoamingNetworkId,
                                                                        EVSEOperator_Id     OperatorId,
                                                                        Auth_Token          AuthToken,
                                                                        EVSE_Id             EVSEId            = null,
@@ -64,7 +62,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="CancellationToken">A token to cancel this task.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-    /// <param name="RoamingNetworkId">The unique identification for the roaming network.</param>
     /// <param name="SessionId">The unique identification for this charging session.</param>
     /// <param name="PartnerSessionId">The unique identification for this charging session on the partner side.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
@@ -74,7 +71,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                      EMPServer           Sender,
                                                                      CancellationToken   CancellationToken,
                                                                      EventTracking_Id    EventTrackingId,
-                                                                     RoamingNetwork_Id   RoamingNetworkId,
                                                                      ChargingSession_Id  SessionId,
                                                                      ChargingSession_Id  PartnerSessionId,
                                                                      EVSP_Id             ProviderId,

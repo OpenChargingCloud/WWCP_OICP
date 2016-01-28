@@ -288,16 +288,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                           HTTPContentType.HTML_UTF8,
                                           HTTPDelegate: Request => {
 
-                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
-
                                               return new HTTPResponseBuilder(Request) {
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                   ContentType     = HTTPContentType.HTML_UTF8,
-                                                  Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  Content         = (@"Please use ""/RemoteStartStop"" as a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
                                                   Connection      = "close"
                                               };
 
-                                          });
+                                          },
+                                          AllowReplacement: URIReplacement.Allow);
 
             // Text
             _HTTPServer.AddMethodCallback(HTTPMethod.GET,
@@ -305,37 +304,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                           HTTPContentType.TEXT_UTF8,
                                           HTTPDelegate: Request => {
 
-                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
-
                                               return new HTTPResponseBuilder(Request) {
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
                                                   ContentType     = HTTPContentType.HTML_UTF8,
-                                                  Content         = ("/RNs/{RoamingNetworkId}/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  Content         = (@"Please use ""/RemoteStartStop"" as a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
                                                   Connection      = "close"
                                               };
 
-                                          });
+                                          },
+                                          AllowReplacement: URIReplacement.Allow);
 
             #endregion
 
-            #region /RNs/{RoamingNetworkId}/RemoteStartStop
+            #region /RemoteStartStop
 
             #region Generic RemoteStartStopDelegate
 
             HTTPDelegate RemoteStartStopDelegate = Request => {
-
-                #region Try to parse the RoamingNetworkId
-
-                RoamingNetwork_Id RoamingNetworkId;
-
-                if (!RoamingNetwork_Id.TryParse(Request.ParsedURIParameters[0], out RoamingNetworkId))
-                    return new HTTPResponseBuilder(Request) {
-                        HTTPStatusCode  = HTTPStatusCode.BadRequest,
-                        Server          = _HTTPServer.DefaultServerName,
-                        Date            = DateTime.Now
-                    };
-
-                #endregion
 
                 #region ParseXMLRequestBody... or fail!
 
@@ -343,16 +328,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 if (XMLRequest.HasErrors)
                 {
 
-                    //Log.WriteLine("Invalid XML request!");
-                    //Log.WriteLine(HTTPRequest.Content.ToUTF8String());
-
                     _HTTPServer.GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
-                                       new JObject(
-                                           new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
+                                       JSONObject.Create(
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
                                            new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
-                                           new JProperty("XMLRequest",    Request.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
+                                           new JProperty("XMLRequest",    Request.HTTPBody != null ? Request.HTTPBody.ToUTF8String() : "")
                                        ).ToString().
                                          Replace(Environment.NewLine, ""));
 
@@ -386,12 +367,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 catch (Exception e)
                 {
 
-                    //Log.WriteLine("Invalid XML request!");
-
                     _HTTPServer.GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
-                                       new JObject(
-                                           new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
+                                       JSONObject.Create(
                                            new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
                                            new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
                                            new JProperty("Exception",     e.Message),

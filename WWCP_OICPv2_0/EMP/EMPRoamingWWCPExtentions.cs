@@ -30,12 +30,12 @@ namespace org.GraphDefined.WWCP
 {
 
     /// <summary>
-    /// Exytentions methods for the WWCP wrapper for OICP v2.0 roaming clients for EVSE operators/CPOs.
+    /// Exytentions methods for the WWCP wrapper for OICP v2.0 roaming clients for e-mobility providers/EMPs.
     /// </summary>
-    public static class CPORoamingWWCPExtentions
+    public static class EMPRoamingWWCPExtentions
     {
 
-        #region CreateOICP_CPORoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ... , Action = null)
+        #region CreateOICP_EMPRoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ... , Action = null)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -60,32 +60,26 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// 
-        /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
-        /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
-        /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static RoamingProvider CreateOICP_CPORoamingProvider(this RoamingNetwork                   RoamingNetwork,
+        public static RoamingProvider CreateOICP_EMPRoamingProvider(this RoamingNetwork                   RoamingNetwork,
                                                                     RoamingProvider_Id                    Id,
                                                                     I18NString                            Name,
 
                                                                     String                                RemoteHostname,
                                                                     IPPort                                RemoteTCPPort          = null,
                                                                     String                                RemoteHTTPVirtualHost  = null,
-                                                                    String                                HTTPUserAgent          = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
+                                                                    String                                HTTPUserAgent          = OICPv2_0.EMPClient.DefaultHTTPUserAgent,
                                                                     TimeSpan?                             QueryTimeout           = null,
 
-                                                                    String                                ServerName             = OICPv2_0.CPOServer.DefaultHTTPServerName,
+                                                                    String                                ServerName             = OICPv2_0.EMPServer.DefaultHTTPServerName,
                                                                     IPPort                                ServerTCPPort          = null,
                                                                     String                                ServerURIPrefix        = "",
                                                                     Boolean                               ServerAutoStart        = true,
 
                                                                     DNSClient                             DNSClient              = null,
 
-                                                                    OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord    = null,
-                                                                    OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML     = null,
-
-                                                                    Action<OICPv2_0.CPORoamingWWCP>       OICPConfigurator       = null,
+                                                                    Action<OICPv2_0.EMPRoamingWWCP>       OICPConfigurator       = null,
                                                                     Action<RoamingProvider>               Configurator           = null)
 
         {
@@ -106,7 +100,7 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_0.CPORoamingWWCP(Id,
+            var NewRoamingProvider = new OICPv2_0.EMPRoamingWWCP(Id,
                                                                  Name,
                                                                  RoamingNetwork,
 
@@ -121,8 +115,6 @@ namespace org.GraphDefined.WWCP
                                                                  ServerURIPrefix,
                                                                  ServerAutoStart,
 
-                                                                 EVSE2EVSEDataRecord,
-                                                                 EVSEDataRecord2XML,
                                                                  DNSClient);
 
             var ConfiguratorLocal = OICPConfigurator;
@@ -136,44 +128,44 @@ namespace org.GraphDefined.WWCP
 
         #endregion
 
-        #region CreateOICP_CPOServiceCheck(this RoamingProvider, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, InitialDelay = null)
+        #region CreateOICP_EMPServiceCheck(this RoamingProvider, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, InitialDelay = null)
 
-        /// <summary>
-        /// Create a new OICP v2.0 service checker.
-        /// </summary>
-        /// <typeparam name="T">The type of the data returned by the service checker.</typeparam>
-        /// <param name="RoamingProvider">A roaming provider.</param>
-        /// <param name="ServiceChecker">A function to check the OICP v2.0 service regularly and providing some result.</param>
-        /// <param name="OnFirstCheck">A delegate processing the first check result.</param>
-        /// <param name="OnEveryCheck">A delegate processing a check result.</param>
-        /// <param name="CheckEvery">The time span between two consecutive service checks.</param>
-        /// <param name="InitialDelay">Initial delay between startup and first check.</param>
-        public static OICPv2_0.CPOServiceCheck<T>
+        ///// <summary>
+        ///// Create a new OICP v2.0 service checker.
+        ///// </summary>
+        ///// <typeparam name="T">The type of the data returned by the service checker.</typeparam>
+        ///// <param name="RoamingProvider">A roaming provider.</param>
+        ///// <param name="ServiceChecker">A function to check the OICP v2.0 service regularly and providing some result.</param>
+        ///// <param name="OnFirstCheck">A delegate processing the first check result.</param>
+        ///// <param name="OnEveryCheck">A delegate processing a check result.</param>
+        ///// <param name="CheckEvery">The time span between two consecutive service checks.</param>
+        ///// <param name="InitialDelay">Initial delay between startup and first check.</param>
+        //public static OICPv2_0.EMPServiceCheck<T>
 
-            CreateOICP_CPOServiceCheck<T>(this RoamingProvider                 RoamingProvider,
-                                          OICPv2_0.CPOServiceCheckDelegate<T>  ServiceChecker,
-                                          Action<T>                            OnFirstCheck,
-                                          Action<T>                            OnEveryCheck,
-                                          TimeSpan                             CheckEvery,
-                                          TimeSpan?                            InitialDelay = null)
-        {
+        //    CreateOICP_EMPServiceCheck<T>(this RoamingProvider                 RoamingProvider,
+        //                                  OICPv2_0.EMPServiceCheckDelegate<T>  ServiceChecker,
+        //                                  Action<T>                            OnFirstCheck,
+        //                                  Action<T>                            OnEveryCheck,
+        //                                  TimeSpan                             CheckEvery,
+        //                                  TimeSpan?                            InitialDelay = null)
+        //{
 
-            #region Initial checks
+        //    #region Initial checks
 
-            var _CPORoamingWWCP = (RoamingProvider.OperatorRoamingService as OICPv2_0.CPORoamingWWCP);
+        //    var _EMPRoamingWWCP = (RoamingProvider.OperatorRoamingService as OICPv2_0.EMPRoamingWWCP);
 
-            if (_CPORoamingWWCP == null)
-                throw new ArgumentException("The given roaming provider is not an OICP v2.0 CPO roaming provider!", "RoamingProvider");
+        //    if (_EMPRoamingWWCP == null)
+        //        throw new ArgumentException("The given roaming provider is not an OICP v2.0 EMP roaming provider!", "RoamingProvider");
 
-            #endregion
+        //    #endregion
 
-            return new OICPv2_0.CPOServiceCheck<T>(_CPORoamingWWCP.CPORoaming,
-                                                   ServiceChecker,
-                                                   OnFirstCheck,
-                                                   OnEveryCheck,
-                                                   CheckEvery);
+        //    return new OICPv2_0.EMPServiceCheck<T>(_EMPRoamingWWCP.EMPRoaming,
+        //                                           ServiceChecker,
+        //                                           OnFirstCheck,
+        //                                           OnEveryCheck,
+        //                                           CheckEvery);
 
-        }
+        //}
 
         #endregion
 
