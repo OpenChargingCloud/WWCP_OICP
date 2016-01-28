@@ -338,9 +338,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             HTTPDelegate AuthorizeStartStopDelegate = Request => {
 
-                Console.WriteLine("Incoming XML!!!");
-                Console.WriteLine(Request.EntirePDU);
-                Console.WriteLine("---------------");
+                Console.WriteLine("Incoming eRoamingAuthorizeAuthorizeStart or eRoamingAuthorizeAuthorizeStop!!!");
 
                 #region ParseXMLRequestBody... or fail!
 
@@ -634,7 +632,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-
                     Console.WriteLine("Result: " + result.Result.ToString());
 
                     #region Map result
@@ -699,8 +696,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     #endregion
 
 
-
-
                     var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         Server          = HTTPServer.DefaultServerName,
@@ -709,19 +704,21 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         Content         = SOAP.Encapsulation(
                                               new XElement(OICPNS.Authorization + "eRoamingAuthorizationStart",
 
+                                                  new XElement(OICPNS.CommonTypes + "SessionID", SessionId),
+
                                                   new XElement(OICPNS.Authorization + "AuthorizationStatus", result.Result == AuthStartEVSEResultType.Authorized ? "Authorized" : "NotAuthorized"),
 
                                                   new XElement(OICPNS.Authorization + "StatusCode",
                                                       new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
                                                       new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
                                                       new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
-                                                  ),
-
-                                                  new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-                                                  //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
+                                                  )
 
                                              )).ToUTF8Bytes()
                     };
+
+                    Console.WriteLine(HTTPResponse.Content.ToUTF8String());
+
 
                     #region Send OnLogAuthorizeStarted event
 
@@ -739,8 +736,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
 
                     #endregion
-
-                    Console.WriteLine(HTTPResponse.Content.ToUTF8String());
 
                     return HTTPResponse;
 
@@ -780,9 +775,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    var OnLogAuthorizeStopLocal = OnLogAuthorizeStop;
-                    if (OnLogAuthorizeStopLocal != null)
-                        OnLogAuthorizeStopLocal(DateTime.Now, this.HTTPServer, Request);
+                    #region Send OnLogAuthorizeStop event
+
+                    try
+                    {
+
+                        var OnLogAuthorizeStopLocal = OnLogAuthorizeStop;
+                        if (OnLogAuthorizeStopLocal != null)
+                            OnLogAuthorizeStopLocal(DateTime.Now, this.HTTPServer, Request);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("EMPServer.OnLogAuthorizeStart lead to an exception: " + e.Message);
+                    }
+
+                    #endregion
+
 
                     #region Parse request parameters
 
@@ -950,12 +959,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Return SOAPResponse
 
-                    var Now = DateTime.Now;
-
                     var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         Server          = HTTPServer.DefaultServerName,
-                        Date            = Now,
+                        Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(
                                               new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
@@ -973,13 +980,29 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                               )).ToString().ToUTF8Bytes()
                     };
 
-                    var OnLogAuthorizeStoppedLocal = OnLogAuthorizeStopped;
-                    if (OnLogAuthorizeStoppedLocal != null)
-                        OnLogAuthorizeStoppedLocal(Now, this.HTTPServer, Request, HTTPResponse);
+                    #endregion
 
-                    return HTTPResponse;
+                    Console.WriteLine(HTTPResponse.Content.ToUTF8String());
+
+
+                    #region Send OnLogAuthorizeStopped event
+
+                    try
+                    {
+
+                        var OnLogAuthorizeStoppedLocal = OnLogAuthorizeStopped;
+                        if (OnLogAuthorizeStoppedLocal != null)
+                            OnLogAuthorizeStoppedLocal(HTTPResponse.Timestamp, this.HTTPServer, Request, HTTPResponse);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("EMPServer.OnLogAuthorizeStopped lead to an exception: " + e.Message);
+                    }
 
                     #endregion
+
+                    return HTTPResponse;
 
                 }
 
