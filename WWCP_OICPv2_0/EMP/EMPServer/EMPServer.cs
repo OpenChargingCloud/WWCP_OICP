@@ -515,9 +515,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    var OnLogAuthorizeStartLocal = OnLogAuthorizeStart;
-                    if (OnLogAuthorizeStartLocal != null)
-                        OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, Request);
+                  //  var OnLogAuthorizeStartLocal = OnLogAuthorizeStart;
+                  //  if (OnLogAuthorizeStartLocal != null)
+                  //      OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, Request);
 
 
                     #region Parse request parameters
