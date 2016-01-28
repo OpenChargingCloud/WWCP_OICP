@@ -554,9 +554,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         if (IdentificationXML != null)
                         {
 
+                            Console.WriteLine("Identification found");
+
                             var RFIDmifarefamilyIdentificationXML = IdentificationXML.Element(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification");
                             if (RFIDmifarefamilyIdentificationXML != null)
                             {
+
+                                Console.WriteLine("RFIDmifarefamilyIdentification found");
 
                                 var UIDXML = IdentificationXML.Element(OICPNS.CommonTypes + "UID");
                                 if (UIDXML != null)
