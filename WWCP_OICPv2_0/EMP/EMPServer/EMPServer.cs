@@ -572,7 +572,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     EVSEId                   = EVSE_Id.           Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "EVSEID",      "No EVSEID XML tag provided!"));
 
                     Console.WriteLine("OperatorId: " + OperatorId.ToString());
-                    Console.WriteLine("EVSEId: " + EVSEId.ToString());
+                    Console.WriteLine("EVSEId: "     + EVSEId.    ToString());
 
                     IdentificationXML = AuthorizeStartXML.Element(OICPNS.Authorization + "Identification");
                     if (IdentificationXML != null)
@@ -704,14 +704,32 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         Content         = SOAP.Encapsulation(
                                               new XElement(OICPNS.Authorization + "eRoamingAuthorizationStart",
 
-                                                  new XElement(OICPNS.CommonTypes + "SessionID", SessionId),
+                                                  SessionId != null
+                                                      ? new XElement(OICPNS.CommonTypes + "SessionID",         SessionId.ToString())
+                                                      : null,
+
+                                                  PartnerSessionId != null
+                                                      ? new XElement(OICPNS.CommonTypes + "PartnerSessionID",  SessionId.ToString())
+                                                      : null,
+
+                                                  result.ProviderId != null
+                                                      ? new XElement(OICPNS.CommonTypes + "ProviderID",        result.ProviderId.ToString())
+                                                      : null,
 
                                                   new XElement(OICPNS.Authorization + "AuthorizationStatus", result.Result == AuthStartEVSEResultType.Authorized ? "Authorized" : "NotAuthorized"),
 
                                                   new XElement(OICPNS.Authorization + "StatusCode",
-                                                      new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
-                                                      new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
-                                                      new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+
+                                                      new XElement(OICPNS.CommonTypes +       "Code",            HubjectCode),
+
+                                                      HubjectDescription.IsNotNullOrEmpty()
+                                                          ? new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription)
+                                                          : null,
+
+                                                      HubjectAdditionalInfo.IsNotNullOrEmpty()
+                                                          ? new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+                                                          : null
+
                                                   )
 
                                              )).ToUTF8Bytes()

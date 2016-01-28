@@ -190,12 +190,38 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event sent whenever a authorize start command was received.
         /// </summary>
-        public event RequestLogHandler OnLogAuthorizeStop;
+        public event RequestLogHandler OnLogAuthorizeStop
+        {
+
+            add
+            {
+                _EMPServer.OnLogAuthorizeStop += value;
+            }
+
+            remove
+            {
+                _EMPServer.OnLogAuthorizeStop -= value;
+            }
+
+        }
 
         /// <summary>
         /// An event sent whenever a authorize start response was sent.
         /// </summary>
-        public event AccessLogHandler OnLogAuthorizeStopped;
+        public event AccessLogHandler OnLogAuthorizeStopped
+        {
+
+            add
+            {
+                _EMPServer.OnLogAuthorizeStopped += value;
+            }
+
+            remove
+            {
+                _EMPServer.OnLogAuthorizeStopped -= value;
+            }
+
+        }
 
         /// <summary>
         /// An event sent whenever a authorize start command was received.
