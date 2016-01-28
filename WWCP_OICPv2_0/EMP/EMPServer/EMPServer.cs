@@ -704,15 +704,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                               new XElement(OICPNS.Authorization + "eRoamingAuthorizationStart",
 
                                                   SessionId != null
-                                                      ? new XElement(OICPNS.CommonTypes + "SessionID",         SessionId.ToString())
+                                                      ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.ToString())
                                                       : null,
 
                                                   PartnerSessionId != null
-                                                      ? new XElement(OICPNS.CommonTypes + "PartnerSessionID",  SessionId.ToString())
+                                                      ? new XElement(OICPNS.Authorization + "PartnerSessionID",  SessionId.ToString())
                                                       : null,
 
                                                   result.ProviderId != null
-                                                      ? new XElement(OICPNS.CommonTypes + "ProviderID",        result.ProviderId.ToString())
+                                                      ? new XElement(OICPNS.Authorization + "ProviderID",        result.ProviderId.ToString())
                                                       : null,
 
                                                   new XElement(OICPNS.Authorization + "AuthorizationStatus", result.Result == AuthStartEVSEResultType.Authorized ? "Authorized" : "NotAuthorized"),
