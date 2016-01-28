@@ -738,9 +738,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                   new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
                                                   //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
 
-                                             )).ToString().
-                                                ToUTF8Bytes()
+                                             )).ToUTF8Bytes()
                     };
+
+                    Console.WriteLine(HTTPResponse.Content.ToUTF8String());
 
                     var OnLogAuthorizeStartedLocal = OnLogAuthorizeStarted;
                     if (OnLogAuthorizeStartedLocal != null)
