@@ -622,29 +622,31 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     AuthStartEVSEResult Response = null;
 
-                    var OnAuthorizeStartLocal = OnAuthorizeStart;
-                    if (OnAuthorizeStartLocal != null)
-                    {
-
-                        var CTS = new CancellationTokenSource();
-
-                        var task = OnAuthorizeStartLocal(DateTime.Now,
-                                                         this,
-                                                         CTS.Token,
-                                                         EventTracking_Id.New,
-                                                         OperatorId,
-                                                         AuthToken,
-                                                         EVSEId,
-                                                         SessionId,
-                                                         PartnerProductId,
-                                                         PartnerSessionId);
-
-                        task.Wait();
-                        Response = task.Result;
-
-                    }
+                    //var OnAuthorizeStartLocal = OnAuthorizeStart;
+                    //if (OnAuthorizeStartLocal != null)
+                    //{
+                    //
+                    //    var CTS = new CancellationTokenSource();
+                    //
+                    //    var task = OnAuthorizeStartLocal(DateTime.Now,
+                    //                                     this,
+                    //                                     CTS.Token,
+                    //                                     EventTracking_Id.New,
+                    //                                     OperatorId,
+                    //                                     AuthToken,
+                    //                                     EVSEId,
+                    //                                     SessionId,
+                    //                                     PartnerProductId,
+                    //                                     PartnerSessionId);
+                    //
+                    //    task.Wait();
+                    //    Response = task.Result;
+                    //
+                    //}
 
                     #endregion
+
+                    Response = AuthStartEVSEResult.Authorized(Authorizator_Id.Parse("lo"), SessionId, EVSP_Id.Parse("DE*GEF"));
 
                     #region Map result
 
