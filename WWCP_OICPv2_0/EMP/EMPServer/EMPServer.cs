@@ -515,13 +515,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                  //  var OnLogAuthorizeStartLocal = OnLogAuthorizeStart;
-                  //  if (OnLogAuthorizeStartLocal != null)
-                  //      OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, Request);
+                    var OnLogAuthorizeStartLocal = OnLogAuthorizeStart;
+                    if (OnLogAuthorizeStartLocal != null)
+                        OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, Request);
 
 
                     #region Parse request parameters
 
+                    XElement            SessionIdXML;
                     XElement            IdentificationXML;
                     XElement            PartnerSessionIdXML;
                     XElement            ChargingProductIdXML;
@@ -537,7 +538,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     try
                     {
 
-                        SessionId                = ChargingSession_Id.Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",        null));
+                        SessionIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "SessionID");
+                        if (SessionIdXML != null)
+                            SessionId            = ChargingSession_Id.Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",        null));
 
                         PartnerSessionIdXML      = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
@@ -597,6 +600,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
 
                     #endregion
+
+                    Console.WriteLine("parsed!");
 
                     var HubjectCode            = "320";
                     var HubjectDescription     = "Service not available!";
