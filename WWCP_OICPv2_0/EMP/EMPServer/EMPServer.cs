@@ -529,10 +529,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                      new XElement(OICPNS.CommonTypes + "Result", "true"),
 
                                                                      new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                         new XElement(OICPNS.CommonTypes + "Code",           "0"),
-                                                                         new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
+                                                                         new XElement(OICPNS.CommonTypes + "Code",           "000"),
+                                                                         new XElement(OICPNS.CommonTypes + "Description",    ""),
                                                                          new XElement(OICPNS.CommonTypes + "AdditionalInfo", "")
                                                                      )
+
+                                                                     //new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
 
                                                                  )).ToUTF8Bytes()
 
