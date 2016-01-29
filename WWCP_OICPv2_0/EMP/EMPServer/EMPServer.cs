@@ -769,6 +769,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 if (AuthorizeStopXML != null)
                 {
 
+                    Console.WriteLine("AuthorizeStopXMLs: " + AuthorizeStopXML.ToString());
+
+
                     #region Documentation
 
                     // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
