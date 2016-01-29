@@ -1126,12 +1126,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                           HTTPContentType.XMLTEXT_UTF8,
                                           HTTPDelegate: AuthorizeStartStopDelegate);
 
-            #endregion
-
-            #region Register SOAP-XML Request via POST
-
-            _HTTPServer.AddMethodCallback(HTTPMethod.POST,
-                                          URIPrefix + "/AuthorizeStartStop",
+            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+                                          URIPrefix + "/RemoteStartStop",
                                           HTTPContentType.XMLTEXT_UTF8,
                                           HTTPDelegate: AuthorizeStartStopDelegate);
 
