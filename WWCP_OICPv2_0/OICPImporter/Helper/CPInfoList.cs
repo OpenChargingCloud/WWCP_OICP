@@ -75,7 +75,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
 
             #endregion
 

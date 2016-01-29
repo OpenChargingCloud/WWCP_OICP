@@ -145,6 +145,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 RegisterDefaultConsoleLogTarget().
                 RegisterDefaultDiscLogTarget();
 
+            RegisterEvent("ChargeDetailRecordSend",
+                          handler => _EMPServer.OnLogChargeDetailRecordSend += handler,
+                          handler => _EMPServer.OnLogChargeDetailRecordSend -= handler,
+                          "CDR", "All").
+                RegisterDefaultConsoleLogTarget().
+                RegisterDefaultDiscLogTarget();
+
+            RegisterEvent("ChargeDetailRecordSent",
+                          handler => _EMPServer.OnLogChargeDetailRecordSent += handler,
+                          handler => _EMPServer.OnLogChargeDetailRecordSent -= handler,
+                          "CDR", "All").
+                RegisterDefaultConsoleLogTarget().
+                RegisterDefaultDiscLogTarget();
+
             #endregion
 
         }

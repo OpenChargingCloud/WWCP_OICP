@@ -467,13 +467,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    var OnLogRemoteStartLocal = OnLogRemoteStart;
-                    if (OnLogRemoteStartLocal != null)
-                        OnLogRemoteStartLocal(DateTime.Now, this.HTTPServer, Request);
+                    #region Send OnLogChargeDetailRecordSend event
+
+                    try
+                    {
+
+                        var OnLogRemoteStartLocal = OnLogRemoteStart;
+                        if (OnLogRemoteStartLocal != null)
+                            OnLogRemoteStartLocal(DateTime.Now, this.HTTPServer, Request);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("CPOServer.OnLogRemoteStart lead to an exception: " + e.Message);
+                    }
+
+                    #endregion
+
 
                     #region Parse request parameters
 
-                    XElement            IdentificationXML;
+                    XElement IdentificationXML;
                     XElement            QRCodeIdentificationXML;
                     XElement            PnCIdentificationXML;
                     XElement            RemoteIdentificationXML;
@@ -550,9 +564,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    var HubjectCode            = "";
-                    var HubjectDescription     = "";
-                    var HubjectAdditionalInfo  = "";
 
                     #region Documentation
 
@@ -593,7 +604,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Call async subscribers
 
-                    var Response = RemoteStartEVSEResult.Error("");
+                    RemoteStartEVSEResult response = null;
 
                     var OnRemoteStartLocal = OnRemoteStart;
                     if (OnRemoteStartLocal != null)
@@ -613,7 +624,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                       eMAId);
 
                         task.Wait();
-                        Response = task.Result;
+                        response = task.Result;
 
                     }
 
@@ -621,72 +632,75 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Map result
 
-                    switch (Response.Result)
-                    {
+                    var HubjectCode            = "320";
+                    var HubjectDescription     = "Service not available!";
+                    var HubjectAdditionalInfo  = "";
 
-                        case RemoteStartEVSEResultType.Success:
-                            HubjectCode         = "000";
-                            HubjectDescription  = "Ready to charge!";
-                            break;
+                    if (response != null)
+                        switch (response.Result)
+                        {
 
-                        case RemoteStartEVSEResultType.InvalidSessionId:
-                            HubjectCode         = "400";
-                            HubjectDescription  = "Session is invalid";
-                            break;
+                            case RemoteStartEVSEResultType.Success:
+                                HubjectCode         = "000";
+                                HubjectDescription  = "Ready to charge!";
+                                break;
 
-                        case RemoteStartEVSEResultType.Offline:
-                            HubjectCode         = "501";
-                            HubjectDescription  = "Communication to EVSE failed!";
-                            break;
+                            case RemoteStartEVSEResultType.InvalidSessionId:
+                                HubjectCode         = "400";
+                                HubjectDescription  = "Session is invalid";
+                                break;
 
-                        case RemoteStartEVSEResultType.Timeout:
-                            HubjectCode         = "510";
-                            HubjectDescription  = "No EV connected to EVSE!";
-                            break;
+                            case RemoteStartEVSEResultType.Offline:
+                                HubjectCode         = "501";
+                                HubjectDescription  = "Communication to EVSE failed!";
+                                break;
 
-                        case RemoteStartEVSEResultType.Reserved:
-                            HubjectCode         = "601";
-                            HubjectDescription  = "EVSE reserved!";
-                            break;
+                            case RemoteStartEVSEResultType.Timeout:
+                                HubjectCode         = "510";
+                                HubjectDescription  = "No EV connected to EVSE!";
+                                break;
 
-                        case RemoteStartEVSEResultType.AlreadyInUse:
-                            HubjectCode         = "602";
-                            HubjectDescription  = "EVSE is already in use!";
-                            break;
+                            case RemoteStartEVSEResultType.Reserved:
+                                HubjectCode         = "601";
+                                HubjectDescription  = "EVSE reserved!";
+                                break;
 
-                        case RemoteStartEVSEResultType.UnknownEVSE:
-                            HubjectCode         = "603";
-                            HubjectDescription  = "Unknown EVSE ID!";
-                            break;
+                            case RemoteStartEVSEResultType.AlreadyInUse:
+                                HubjectCode         = "602";
+                                HubjectDescription  = "EVSE is already in use!";
+                                break;
 
-                        case RemoteStartEVSEResultType.OutOfService:
-                            HubjectCode         = "700";
-                            HubjectDescription  = "EVSE out of service!";
-                            break;
+                            case RemoteStartEVSEResultType.UnknownEVSE:
+                                HubjectCode         = "603";
+                                HubjectDescription  = "Unknown EVSE ID!";
+                                break;
+
+                            case RemoteStartEVSEResultType.OutOfService:
+                                HubjectCode         = "700";
+                                HubjectDescription  = "EVSE out of service!";
+                                break;
 
 
-                        default:
-                            HubjectCode         = "320";
-                            HubjectDescription  = "Service not available!";
-                            break;
+                            default:
+                                HubjectCode         = "320";
+                                HubjectDescription  = "Service not available!";
+                                break;
 
-                    }
+                        }
 
                     #endregion
 
                     #region Return SOAPResponse
 
-                    var Now = DateTime.Now;
-
                     var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         Server          = HTTPServer.DefaultServerName,
-                        Date            = Now,
+                        Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(
                                               new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                                  new XElement(OICPNS.CommonTypes + "Result", "true"),
+                                                  new XElement(OICPNS.CommonTypes + "Result", response != null && response.Result == RemoteStartEVSEResultType.Success ? "true" : "false"),
 
                                                   new XElement(OICPNS.CommonTypes + "StatusCode",
                                                       new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
@@ -697,17 +711,31 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                   new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
                                                   //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
 
-                                             )).ToString().
-                                                ToUTF8Bytes()
+                                             )).ToUTF8Bytes()
                     };
 
-                    var OnLogRemoteStartedLocal = OnLogRemoteStarted;
-                    if (OnLogRemoteStartedLocal != null)
-                        OnLogRemoteStartedLocal(Now, this.HTTPServer, Request, HTTPResponse);
-
-                    return HTTPResponse;
 
                     #endregion
+
+
+                    #region Send OnLogRemoteStarted event
+
+                    try
+                    {
+
+                        var OnLogRemoteStartedLocal = OnLogRemoteStarted;
+                        if (OnLogRemoteStartedLocal != null)
+                            OnLogRemoteStartedLocal(HTTPResponse.Timestamp, this.HTTPServer, Request, HTTPResponse);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("CPOServer.OnLogRemoteStarted lead to an exception: " + e.Message);
+                    }
+
+                    #endregion
+
+                    return HTTPResponse;
 
                 }
 
@@ -745,13 +773,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    var OnLogRemoteStopLocal = OnLogRemoteStop;
-                    if (OnLogRemoteStopLocal != null)
-                        OnLogRemoteStopLocal(DateTime.Now, this.HTTPServer, Request);
+                    #region Send OnLogChargeDetailRecordSend event
+
+                    try
+                    {
+
+                        var OnLogRemoteStopLocal = OnLogRemoteStop;
+                        if (OnLogRemoteStopLocal != null)
+                            OnLogRemoteStopLocal(DateTime.Now, this.HTTPServer, Request);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("CPOServer.OnLogRemoteStop lead to an exception: " + e.Message);
+                    }
+
+                    #endregion
+
 
                     #region Parse request parameters
 
-                    XElement            PartnerSessionIdXML;
+                    XElement PartnerSessionIdXML;
 
                     ChargingSession_Id  SessionId;
                     ChargingSession_Id  PartnerSessionId        = null;
@@ -798,9 +840,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    var HubjectCode            = "";
-                    var HubjectDescription     = "";
-                    var HubjectAdditionalInfo  = "";
 
                     #region Documentation
 
@@ -841,7 +880,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Call async subscribers
 
-                    var Response = RemoteStopEVSEResult.Error(SessionId);
+                    RemoteStopEVSEResult response = null;
 
                     var OnRemoteStopLocal = OnRemoteStop;
                     if (OnRemoteStopLocal != null)
@@ -859,7 +898,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ProviderId);
 
                         task.Wait();
-                        Response = task.Result;
+                        response = task.Result;
 
                     }
 
@@ -867,81 +906,98 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Map result
 
-                    switch (Response.Result)
-                    {
+                    var HubjectCode            = "320";
+                    var HubjectDescription     = "Service not available!";
+                    var HubjectAdditionalInfo  = "";
 
-                        case RemoteStopEVSEResultType.Success:
-                            HubjectCode         = "000";
-                            HubjectDescription  = "Ready to stop charging!";
-                            break;
+                    if (response != null)
+                        switch (response.Result)
+                        {
 
-                        case RemoteStopEVSEResultType.InvalidSessionId:
-                            HubjectCode         = "400";
-                            HubjectDescription  = "Session is invalid";
-                            break;
+                            case RemoteStopEVSEResultType.Success:
+                                HubjectCode         = "000";
+                                HubjectDescription  = "Ready to stop charging!";
+                                break;
 
-                        case RemoteStopEVSEResultType.Offline:
-                            HubjectCode         = "501";
-                            HubjectDescription  = "Communication to EVSE failed!";
-                            break;
+                            case RemoteStopEVSEResultType.InvalidSessionId:
+                                HubjectCode         = "400";
+                                HubjectDescription  = "Session is invalid";
+                                break;
 
-                        case RemoteStopEVSEResultType.Timeout:
-                            HubjectCode         = "510";
-                            HubjectDescription  = "No EV connected to EVSE!";
-                            break;
+                            case RemoteStopEVSEResultType.Offline:
+                                HubjectCode         = "501";
+                                HubjectDescription  = "Communication to EVSE failed!";
+                                break;
 
-                        case RemoteStopEVSEResultType.UnknownEVSE:
-                            HubjectCode         = "603";
-                            HubjectDescription  = "Unknown EVSE ID!";
-                            break;
+                            case RemoteStopEVSEResultType.Timeout:
+                                HubjectCode         = "510";
+                                HubjectDescription  = "No EV connected to EVSE!";
+                                break;
 
-                        case RemoteStopEVSEResultType.OutOfService:
-                            HubjectCode         = "700";
-                            HubjectDescription  = "EVSE out of service!";
-                            break;
+                            case RemoteStopEVSEResultType.UnknownEVSE:
+                                HubjectCode         = "603";
+                                HubjectDescription  = "Unknown EVSE ID!";
+                                break;
+
+                            case RemoteStopEVSEResultType.OutOfService:
+                                HubjectCode         = "700";
+                                HubjectDescription  = "EVSE out of service!";
+                                break;
 
 
-                        default:
-                            HubjectCode         = "320";
-                            HubjectDescription  = "Service not available!";
-                            break;
+                            default:
+                                HubjectCode         = "320";
+                                HubjectDescription  = "Service not available!";
+                                break;
 
-                    }
+                        }
 
                     #endregion
 
                     #region Return SOAPResponse
 
-                    var Now = DateTime.Now;
-
                     var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         Server          = HTTPServer.DefaultServerName,
-                        Date            = Now,
+                        Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(
                                               new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                                  new XElement(OICPNS.CommonTypes + "Result", "true"),
+                                                  new XElement(OICPNS.CommonTypes + "Result", response != null && response.Result == RemoteStopEVSEResultType.Success ? "true" : "false"),
 
                                                   new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                      new XElement(OICPNS.CommonTypes + "Code", HubjectCode),
-                                                      new XElement(OICPNS.CommonTypes + "Description", HubjectDescription),
+                                                      new XElement(OICPNS.CommonTypes + "Code",           HubjectCode),
+                                                      new XElement(OICPNS.CommonTypes + "Description",    HubjectDescription),
                                                       new XElement(OICPNS.CommonTypes + "AdditionalInfo", HubjectAdditionalInfo)
                                                   ),
 
                                                   new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
 
-                                              )).ToString().ToUTF8Bytes()
+                                              )).ToUTF8Bytes()
                     };
 
-                    var OnLogRemoteStartedLocal = OnLogRemoteStarted;
-                    if (OnLogRemoteStartedLocal != null)
-                        OnLogRemoteStartedLocal(Now, this.HTTPServer, Request, HTTPResponse);
+                    #endregion
 
-                    return HTTPResponse;
+
+                    #region Send OnLogRemoteStopped event
+
+                    try
+                    {
+
+                        var OnLogRemoteStoppedLocal = OnLogRemoteStopped;
+                        if (OnLogRemoteStoppedLocal != null)
+                            OnLogRemoteStoppedLocal(HTTPResponse.Timestamp, this.HTTPServer, Request, HTTPResponse);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("CPOServer.OnLogRemoteStopped lead to an exception: " + e.Message);
+                    }
 
                     #endregion
+
+                    return HTTPResponse;
 
                 }
 
@@ -1027,7 +1083,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 #endregion
 
                 return new HTTPResponseBuilder(Request) {
-                    HTTPStatusCode  = HTTPStatusCode.OK,
+                    HTTPStatusCode  = HTTPStatusCode.NotFound,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = "Error!".ToUTF8Bytes()
                 };

@@ -158,6 +158,25 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
+        #region OnChargeDetailRecord
+
+        /// <summary>
+        /// An event sent whenever a charge detail record was received.
+        /// </summary>
+        public event RequestLogHandler OnLogChargeDetailRecordSend;
+
+        /// <summary>
+        /// An event sent whenever a charge detail record response was sent.
+        /// </summary>
+        public event AccessLogHandler OnLogChargeDetailRecordSent;
+
+        /// <summary>
+        /// An event sent whenever a charge detail record was received.
+        /// </summary>
+        public event OnChargeDetailRecordDelegate OnChargeDetailRecord;
+
+        #endregion
+
 
         // Generic HTTP events...
 
@@ -338,7 +357,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             HTTPDelegate AuthorizeStartStopDelegate = Request => {
 
-                Console.WriteLine("Incoming eRoamingAuthorizeAuthorizeStart or eRoamingAuthorizeAuthorizeStop!!!");
+                Console.WriteLine("Incoming eRoamingAuthorizeAuthorizeStart, eRoamingAuthorizeAuthorizeStop or eRoamingChargeDetailRecord!!!");
 
                 #region ParseXMLRequestBody... or fail!
 
@@ -871,46 +890,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    var HubjectCode            = "320";
-                    var HubjectDescription     = "Service not available!";
-                    var HubjectAdditionalInfo  = "";
-
-                    #region Documentation
-
-                    // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                    //
-                    //    <soapenv:Header/>
-                    //
-                    //    <soapenv:Body>
-                    //       <CommonTypes:eRoamingAcknowledgement>
-                    // 
-                    //          <CommonTypes:Result>?</CommonTypes:Result>
-                    // 
-                    //          <CommonTypes:StatusCode>
-                    // 
-                    //             <CommonTypes:Code>?</CommonTypes:Code>
-                    // 
-                    //             <!--Optional:-->
-                    //             <CommonTypes:Description>?</CommonTypes:Description>
-                    // 
-                    //             <!--Optional:-->
-                    //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-                    // 
-                    //          </CommonTypes:StatusCode>
-                    // 
-                    //          <!--Optional:-->
-                    //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
-                    // 
-                    //          <!--Optional:-->
-                    //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
-                    // 
-                    //       </CommonTypes:eRoamingAcknowledgement>
-                    //    </soapenv:Body>
-                    //
-                    // </soapenv:Envelope>
-
-                    #endregion
 
                     #region Call async subscribers
 
@@ -936,11 +915,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     }
 
-                    //Log.WriteLine("[" + DateTime.Now + "] CPOServer: AuthorizeStartResult: " + Response.ToString());
-
                     #endregion
 
                     #region Map result
+
+                    var HubjectCode            = "320";
+                    var HubjectDescription     = "Service not available!";
+                    var HubjectAdditionalInfo  = "";
 
                     if (Response != null)
                         switch (Response.Result)
@@ -1011,8 +992,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    Console.WriteLine(HTTPResponse.Content.ToUTF8String());
-
 
                     #region Send OnLogAuthorizeStopped event
 
@@ -1043,7 +1022,138 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 if (ChargeDetailRecordXML != null)
                 {
 
+                    #region Send OnLogChargeDetailRecordSend event
+
+                    try
+                    {
+
+                        var OnLogChargeDetailRecordSendLocal = OnLogChargeDetailRecordSend;
+                        if (OnLogChargeDetailRecordSendLocal != null)
+                            OnLogChargeDetailRecordSendLocal(DateTime.Now, this.HTTPServer, Request);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("EMPServer.OnLogChargeDetailRecordSend lead to an exception: " + e.Message);
+                    }
+
+                    #endregion
+
+
+                    #region Parse request parameters
+
+                    var CDR = eRoamingChargeDetailRecord.Parse(ChargeDetailRecordXML);
+
                     Console.WriteLine("ChargeDetailRecordXML: " + ChargeDetailRecordXML.ToString());
+
+                    #endregion
+
+
+                    #region Call async subscribers
+
+                    SendCDRResult response = null;
+
+                    var OnAuthorizeStopLocal = OnAuthorizeStop;
+                    if (OnAuthorizeStopLocal != null)
+                    {
+
+                        var CTS = new CancellationTokenSource();
+
+                        var task = OnChargeDetailRecord(DateTime.Now,
+                                                        this,
+                                                        CTS.Token,
+                                                        EventTracking_Id.New,
+                                                        CDR);
+
+                        task.Wait();
+                        response = task.Result;
+
+                    }
+
+                    #endregion
+
+                    #region Map result
+
+                    var HubjectCode            = "320";
+                    var HubjectDescription     = "Service not available!";
+                    var HubjectAdditionalInfo  = "";
+
+                    if (response != null)
+                        switch (response.Status)
+                        {
+
+                            case SendCDRResultType.NotForwared:
+                                HubjectCode         = "009";
+                                HubjectDescription  = "Communication to EVSE failed!";
+                                break;
+
+                            case SendCDRResultType.Forwarded:
+                                HubjectCode         = "000";
+                                HubjectDescription  = "Charge detail record forwarded!";
+                                break;
+
+                            case SendCDRResultType.InvalidSessionId:
+                                HubjectCode         = "400";
+                                HubjectDescription  = "Session is invalid";
+                                break;
+
+                            case SendCDRResultType.UnknownEVSE:
+                                HubjectCode         = "603";
+                                HubjectDescription  = "Unknown EVSE identification!";
+                                break;
+
+
+                            default:
+                                HubjectCode         = "320";
+                                HubjectDescription  = "Service not available!";
+                                break;
+
+                        }
+
+                    #endregion
+
+                    #region Return SOAPResponse
+
+                    var HTTPResponse = new HTTPResponseBuilder(Request) {
+                        HTTPStatusCode  = HTTPStatusCode.OK,
+                        Server          = HTTPServer.DefaultServerName,
+                        Date            = DateTime.Now,
+                        ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                        Content         = SOAP.Encapsulation(
+                                              new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+
+                                                  new XElement(OICPNS.CommonTypes + "Result", response != null && response.Status == SendCDRResultType.Forwarded ? "true" : "false"),
+
+                                                  new XElement(OICPNS.CommonTypes + "StatusCode",
+                                                      new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
+                                                      new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
+                                                      new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+                                                  )
+
+                                             )).ToUTF8Bytes()
+                    };
+
+                    #endregion
+
+
+                    #region Send OnLogChargeDetailRecordSent event
+
+                    try
+                    {
+
+                        var OnLogChargeDetailRecordSentLocal = OnLogChargeDetailRecordSent;
+                        if (OnLogChargeDetailRecordSentLocal != null)
+                            OnLogChargeDetailRecordSentLocal(HTTPResponse.Timestamp, this.HTTPServer, Request, HTTPResponse);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log("EMPServer.OnLogChargeDetailRecordSent lead to an exception: " + e.Message);
+                    }
+
+                    #endregion
+
+                    return HTTPResponse;
 
                 }
 
@@ -1131,7 +1241,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
                 return new HTTPResponseBuilder(Request) {
-                    HTTPStatusCode  = HTTPStatusCode.OK,
+                    HTTPStatusCode  = HTTPStatusCode.NotFound,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = "Error!".ToUTF8Bytes()
                 };

@@ -274,10 +274,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException("OperatorId", "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId), "The given EVSE operator identification must not be null!");
 
             if (AuthToken == null)
-                throw new ArgumentNullException("AuthToken",  "The given authentication token must not be null!");
+                throw new ArgumentNullException(nameof(AuthToken),  "The given authentication token must not be null!");
 
             #endregion
 
@@ -387,13 +387,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
 
             if (SessionId  == null)
-                throw new ArgumentNullException("SessionId",  "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(SessionId),  "The given parameter must not be null!");
 
             if (AuthToken  == null)
-                throw new ArgumentNullException("AuthToken",  "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(AuthToken),  "The given parameter must not be null!");
 
             #endregion
 
@@ -451,7 +451,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
 
             #endregion
 
@@ -619,7 +619,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 throw new ArgumentNullException(nameof(EVSEId),            "The given parameter must not be null!");
 
             if (SessionId        == null)
-                throw new ArgumentNullException("SessionId",         "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(SessionId),         "The given parameter must not be null!");
 
             if (PartnerProductId == null)
                 throw new ArgumentNullException("PartnerProductId",  "The given parameter must not be null!");

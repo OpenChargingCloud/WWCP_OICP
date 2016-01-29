@@ -1398,10 +1398,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException("OperatorId", "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId), "The given EVSE operator identification must not be null!");
 
             if (AuthToken == null)
-                throw new ArgumentNullException("AuthToken",  "The given authentication token must not be null!");
+                throw new ArgumentNullException(nameof(AuthToken),  "The given authentication token must not be null!");
 
             #endregion
 
@@ -1457,10 +1457,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException("OperatorId", "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId), "The given EVSE operator identification must not be null!");
 
             if (AuthToken == null)
-                throw new ArgumentNullException("AuthToken",  "The given authentication token must not be null!");
+                throw new ArgumentNullException(nameof(AuthToken),  "The given authentication token must not be null!");
 
             if (EVSEId    == null)
                 throw new ArgumentNullException(nameof(EVSEId),     "The given EVSE identification must not be null!");
@@ -1519,10 +1519,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorId        == null)
-                throw new ArgumentNullException("OperatorId",         "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId),         "The given EVSE operator identification must not be null!");
 
             if (AuthToken         == null)
-                throw new ArgumentNullException("AuthToken",          "The given authentication token must not be null!");
+                throw new ArgumentNullException(nameof(AuthToken),          "The given authentication token must not be null!");
 
             if (ChargingStationId == null)
                 throw new ArgumentNullException("ChargingStationId",  "The given charging station identification must not be null!");
@@ -1564,9 +1564,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             var result  = await _CPORoaming.AuthorizeStop(OperatorId,
                                                           SessionId,
                                                           AuthToken,
-                                                          null,
-                                                          null,
-                                                          QueryTimeout);
+                                                          QueryTimeout: QueryTimeout);
 
             if (result.AuthorizationStatus == AuthorizationStatusType.Authorized)
                 return AuthStopResult.Authorized(_AuthorizatorId,
@@ -1657,13 +1655,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
 
             if (SessionId  == null)
-                throw new ArgumentNullException("SessionId",  "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(SessionId),  "The given parameter must not be null!");
 
             if (AuthToken  == null)
-                throw new ArgumentNullException("AuthToken",  "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(AuthToken),  "The given parameter must not be null!");
 
             #endregion
 
@@ -1723,7 +1721,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             // false
             else
-                return SendCDRResult.False(_AuthorizatorId);
+                return SendCDRResult.NotForwared(_AuthorizatorId);
 
         }
 
@@ -1795,7 +1793,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             // false
             else
-                return SendCDRResult.False(_AuthorizatorId);
+                return SendCDRResult.NotForwared(_AuthorizatorId);
 
         }
 
@@ -1818,7 +1816,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException("OperatorId", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
 
             #endregion
 
