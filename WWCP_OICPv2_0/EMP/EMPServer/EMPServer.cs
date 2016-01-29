@@ -819,20 +819,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     ChargingSession_Id  SessionId;
                     ChargingSession_Id  PartnerSessionId        = null;
-                    EVSP_Id             ProviderId;
+                    EVSEOperator_Id     OperatorId;
                     EVSE_Id             EVSEId;
 
                     try
                     {
 
-                        SessionId         = ChargingSession_Id.Parse(AuthorizeStopXML.ElementValueOrFail   (OICPNS.Authorization + "SessionID",        "No SessionID XML tag provided!"));
+                        SessionId         = ChargingSession_Id.Parse(AuthorizeStopXML.ElementValueOrFail    (OICPNS.Authorization + "SessionID",        "No SessionID XML tag provided!"));
 
                         PartnerSessionIdXML = AuthorizeStopXML.Element(OICPNS.Authorization + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
                             PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId        = EVSP_Id.           Parse(AuthorizeStopXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID",       "No ProviderID XML tag provided!"));
-                        EVSEId            = EVSE_Id.           Parse(AuthorizeStopXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",           "No EVSEID XML tag provided!"));
+                        OperatorId        = EVSEOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID",       "No OperatorID XML tag provided!"));
+                        EVSEId            = EVSE_Id.           Parse(AuthorizeStopXML. ElementValueOrFail   (OICPNS.Authorization + "EVSEID",           "No EVSEID XML tag provided!"));
 
                     }
                     catch (Exception e)
@@ -919,7 +919,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         EventTracking_Id.New,
                                                         SessionId,
                                                         PartnerSessionId,
-                                                        ProviderId,
+                                                        OperatorId,
                                                         EVSEId);
 
                         task.Wait();
@@ -1237,7 +1237,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                   RoamingNetwork_Id   RoamingNetworkId,
                                                                   ChargingSession_Id  SessionId,
                                                                   ChargingSession_Id  PartnerSessionId,
-                                                                  EVSP_Id             ProviderId,
+                                                                  EVSEOperator_Id     OperatorId,
                                                                   EVSE_Id             EVSEId)
         {
 
@@ -1254,7 +1254,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                       EventTrackingId,
                                                       SessionId,
                                                       PartnerSessionId,
-                                                      ProviderId,
+                                                      OperatorId,
                                                       EVSEId)));
 
             return results.

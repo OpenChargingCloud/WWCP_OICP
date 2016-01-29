@@ -64,7 +64,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="SessionId">The unique identification for this charging session.</param>
     /// <param name="PartnerSessionId">The unique identification for this charging session on the partner side.</param>
-    /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
+    /// <param name="OperatorId">The unique identification of the EVSE operator.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
     public delegate Task<AuthStopEVSEResult> OnAuthorizeStopDelegate(DateTime            Timestamp,
@@ -73,7 +73,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                      EventTracking_Id    EventTrackingId,
                                                                      ChargingSession_Id  SessionId,
                                                                      ChargingSession_Id  PartnerSessionId,
-                                                                     EVSP_Id             ProviderId,
+                                                                     EVSEOperator_Id     OperatorId,
                                                                      EVSE_Id             EVSEId,
                                                                      TimeSpan?           QueryTimeout  = null);
 
