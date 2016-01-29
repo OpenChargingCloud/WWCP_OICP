@@ -365,21 +365,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 IEnumerable<XElement> AuthorizeStartXMLs;
                 IEnumerable<XElement> AuthorizeStopXMLs;
+                IEnumerable<XElement> ChargeDetailRecordXMLs;
 
                 try
                 {
 
-                    AuthorizeStartXMLs = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart");
-                    AuthorizeStopXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop");
+                    AuthorizeStartXMLs     = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart");
+                    AuthorizeStopXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop");
+                    ChargeDetailRecordXMLs = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingChargeDetailRecord");
 
-                    if (!AuthorizeStartXMLs.Any() && !AuthorizeStopXMLs.Any())
-                        throw new Exception("Must be either AuthorizeStart or AuthorizeStop XML request!");
 
-                    if (AuthorizeStartXMLs.Count() > 1)
+                    if (!AuthorizeStartXMLs.Any() && !AuthorizeStopXMLs.Any() && !ChargeDetailRecordXMLs.Any())
+                        throw new Exception("Must be either AuthorizeStart, AuthorizeStop or ChargeDetailRecord XML request!");
+
+                    if (AuthorizeStartXMLs.    Count() > 1)
                         throw new Exception("Multiple AuthorizeStart XML tags within a single request are not supported!");
 
-                    if (AuthorizeStopXMLs. Count() > 1)
+                    if (AuthorizeStopXMLs.     Count() > 1)
                         throw new Exception("Multiple AuthorizeStop XML tags within a single request are not supported!");
+
+                    if (ChargeDetailRecordXMLs.Count() > 1)
+                        throw new Exception("Multiple ChargeDetailRecord XML tags within a single request are not supported!");
 
                 }
                 catch (Exception e)
@@ -419,7 +425,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 #endregion
 
-                #region Process an OICP AuthorizeStart HTTP/SOAP/XML call
+                #region Process an OICP AuthorizeStart      HTTP/SOAP/XML call
 
                 var AuthorizeStartXML = AuthorizeStartXMLs.FirstOrDefault();
                 if (AuthorizeStartXML != null)
@@ -763,13 +769,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 #endregion
 
-                #region Process an OICP AuthorizeStop  HTTP/SOAP/XML call
+                #region Process an OICP AuthorizeStop       HTTP/SOAP/XML call
 
                 var AuthorizeStopXML  = AuthorizeStopXMLs.FirstOrDefault();
                 if (AuthorizeStopXML != null)
                 {
 
-                    Console.WriteLine("AuthorizeStopXMLs: " + AuthorizeStopXML.ToString());
+                    Console.WriteLine("AuthorizeStopXML: " + AuthorizeStopXML.ToString());
 
 
                     #region Documentation
@@ -1026,6 +1032,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     #endregion
 
                     return HTTPResponse;
+
+                }
+
+                #endregion
+
+                #region Process an OICP ChargeDetailRecord  HTTP/SOAP/XML call
+
+                var ChargeDetailRecordXML = ChargeDetailRecordXMLs.FirstOrDefault();
+                if (ChargeDetailRecordXML != null)
+                {
+
+                    Console.WriteLine("ChargeDetailRecordXML: " + ChargeDetailRecordXML.ToString());
 
                 }
 
