@@ -30,9 +30,9 @@ namespace org.GraphDefined.WWCP
 {
 
     /// <summary>
-    /// Exytentions methods for the WWCP wrapper for OICP v2.0 roaming clients for e-mobility providers/EMPs.
+    /// Extentions methods for the WWCP wrapper for OICP v2.0 roaming clients for e-mobility providers/EMPs.
     /// </summary>
-    public static class EMPRoamingWWCPExtentions
+    public static class EMPExtentions
     {
 
         #region CreateOICP_EMPRoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ... , Action = null)
@@ -62,41 +62,41 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static RoamingProvider CreateOICP_EMPRoamingProvider(this RoamingNetwork                   RoamingNetwork,
-                                                                    RoamingProvider_Id                    Id,
-                                                                    I18NString                            Name,
+        public static EMPRoamingProvider CreateOICP_EMPRoamingProvider(this RoamingNetwork              RoamingNetwork,
+                                                                    RoamingProvider_Id               Id,
+                                                                    I18NString                       Name,
 
-                                                                    String                                RemoteHostname,
-                                                                    IPPort                                RemoteTCPPort          = null,
-                                                                    String                                RemoteHTTPVirtualHost  = null,
-                                                                    String                                HTTPUserAgent          = OICPv2_0.EMPClient.DefaultHTTPUserAgent,
-                                                                    TimeSpan?                             QueryTimeout           = null,
+                                                                    String                           RemoteHostname,
+                                                                    IPPort                           RemoteTCPPort          = null,
+                                                                    String                           RemoteHTTPVirtualHost  = null,
+                                                                    String                           HTTPUserAgent          = OICPv2_0.EMPClient.DefaultHTTPUserAgent,
+                                                                    TimeSpan?                        QueryTimeout           = null,
 
-                                                                    String                                ServerName             = OICPv2_0.EMPServer.DefaultHTTPServerName,
-                                                                    IPPort                                ServerTCPPort          = null,
-                                                                    String                                ServerURIPrefix        = "",
-                                                                    Boolean                               ServerAutoStart        = true,
+                                                                    String                           ServerName             = OICPv2_0.EMPServer.DefaultHTTPServerName,
+                                                                    IPPort                           ServerTCPPort          = null,
+                                                                    String                           ServerURIPrefix        = "",
+                                                                    Boolean                          ServerAutoStart        = true,
 
-                                                                    DNSClient                             DNSClient              = null,
+                                                                    DNSClient                        DNSClient              = null,
 
-                                                                    Action<OICPv2_0.EMPRoamingWWCP>       OICPConfigurator       = null,
-                                                                    Action<RoamingProvider>               Configurator           = null)
+                                                                    Action<OICPv2_0.EMPRoamingWWCP>  OICPConfigurator       = null,
+                                                                    Action<EMPRoamingProvider>          Configurator           = null)
 
         {
 
             #region Initial checks
 
-            if (RoamingNetwork    == null)
-                throw new ArgumentNullException("RoamingNetwork",  "The given roaming network must not be null!");
+            if (RoamingNetwork == null)
+                throw new ArgumentNullException(nameof(RoamingNetwork),  "The given roaming network must not be null!");
 
             if (Id == null)
-                throw new ArgumentNullException("Id",              "The given unique roaming provider identification must not be null!");
+                throw new ArgumentNullException(nameof(Id),              "The given unique roaming provider identification must not be null!");
 
             if (Name.IsNullOrEmpty())
-                throw new ArgumentNullException("Name",            "The given roaming provider name must not be null or empty!");
+                throw new ArgumentNullException(nameof(Name),            "The given roaming provider name must not be null or empty!");
 
-            if (RemoteHostname    == null)
-                throw new ArgumentNullException("RemoteHostname",  "The given remote hostname must not be null!");
+            if (RemoteHostname == null)
+                throw new ArgumentNullException(nameof(RemoteHostname),  "The given remote hostname must not be null!");
 
             #endregion
 

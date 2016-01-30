@@ -479,7 +479,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        DebugX.Log("CPOServer.OnLogRemoteStart lead to an exception: " + e.Message);
+                        e.Log("CPOServer.OnLogRemoteStart");
                     }
 
                     #endregion
@@ -730,7 +730,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        DebugX.Log("CPOServer.OnLogRemoteStarted lead to an exception: " + e.Message);
+                        e.Log("CPOServer.OnLogRemoteStarted");
                     }
 
                     #endregion
@@ -785,7 +785,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        DebugX.Log("CPOServer.OnLogRemoteStop lead to an exception: " + e.Message);
+                        e.Log("CPOServer.OnLogRemoteStop");
                     }
 
                     #endregion
@@ -992,7 +992,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        DebugX.Log("CPOServer.OnLogRemoteStopped lead to an exception: " + e.Message);
+                        e.Log("CPOServer.OnLogRemoteStopped");
                     }
 
                     #endregion

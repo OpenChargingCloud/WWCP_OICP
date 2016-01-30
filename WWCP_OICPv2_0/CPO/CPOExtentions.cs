@@ -30,9 +30,9 @@ namespace org.GraphDefined.WWCP
 {
 
     /// <summary>
-    /// Exytentions methods for the WWCP wrapper for OICP v2.0 roaming clients for EVSE operators/CPOs.
+    /// Extentions methods for the WWCP wrapper for OICP v2.0 roaming clients for EVSE operators/CPOs.
     /// </summary>
-    public static class CPORoamingWWCPExtentions
+    public static class CPOExtentions
     {
 
         #region CreateOICP_CPORoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ... , Action = null)
@@ -64,45 +64,45 @@ namespace org.GraphDefined.WWCP
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
-        /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static RoamingProvider CreateOICP_CPORoamingProvider(this RoamingNetwork                   RoamingNetwork,
-                                                                    RoamingProvider_Id                    Id,
-                                                                    I18NString                            Name,
+        public static CPORoamingProvider
 
-                                                                    String                                RemoteHostname,
-                                                                    IPPort                                RemoteTCPPort          = null,
-                                                                    String                                RemoteHTTPVirtualHost  = null,
-                                                                    String                                HTTPUserAgent          = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
-                                                                    TimeSpan?                             QueryTimeout           = null,
+            CreateOICP_CPORoamingProvider(this RoamingNetwork                   RoamingNetwork,
+                                          RoamingProvider_Id                    Id,
+                                          I18NString                            Name,
 
-                                                                    String                                ServerName             = OICPv2_0.CPOServer.DefaultHTTPServerName,
-                                                                    IPPort                                ServerTCPPort          = null,
-                                                                    String                                ServerURIPrefix        = "",
-                                                                    Boolean                               ServerAutoStart        = true,
+                                          String                                RemoteHostname,
+                                          IPPort                                RemoteTCPPort          = null,
+                                          String                                RemoteHTTPVirtualHost  = null,
+                                          String                                HTTPUserAgent          = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
+                                          TimeSpan?                             QueryTimeout           = null,
 
-                                                                    DNSClient                             DNSClient              = null,
+                                          String                                ServerName             = OICPv2_0.CPOServer.DefaultHTTPServerName,
+                                          IPPort                                ServerTCPPort          = null,
+                                          String                                ServerURIPrefix        = "",
+                                          Boolean                               ServerAutoStart        = true,
 
-                                                                    OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord    = null,
-                                                                    OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML     = null,
+                                          DNSClient                             DNSClient              = null,
 
-                                                                    Action<OICPv2_0.CPORoamingWWCP>       OICPConfigurator       = null,
-                                                                    Action<RoamingProvider>               Configurator           = null)
+                                          OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord    = null,
+                                          OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML     = null,
+
+                                          Action<OICPv2_0.CPORoamingWWCP>       OICPConfigurator       = null)
 
         {
 
             #region Initial checks
 
             if (RoamingNetwork    == null)
-                throw new ArgumentNullException("RoamingNetwork",  "The given roaming network must not be null!");
+                throw new ArgumentNullException(nameof(RoamingNetwork),  "The given roaming network must not be null!");
 
             if (Id == null)
-                throw new ArgumentNullException("Id",              "The given unique roaming provider identification must not be null!");
+                throw new ArgumentNullException(nameof(Id),              "The given unique roaming provider identification must not be null!");
 
             if (Name.IsNullOrEmpty())
-                throw new ArgumentNullException("Name",            "The given roaming provider name must not be null or empty!");
+                throw new ArgumentNullException(nameof(Name),            "The given roaming provider name must not be null or empty!");
 
             if (RemoteHostname    == null)
-                throw new ArgumentNullException("RemoteHostname",  "The given remote hostname must not be null!");
+                throw new ArgumentNullException(nameof(RemoteHostname),  "The given remote hostname must not be null!");
 
             #endregion
 
@@ -129,8 +129,7 @@ namespace org.GraphDefined.WWCP
             if (ConfiguratorLocal != null)
                 ConfiguratorLocal(NewRoamingProvider);
 
-            return RoamingNetwork.CreateNewRoamingProvider(NewRoamingProvider,
-                                                           Configurator);
+            return RoamingNetwork.CreateNewRoamingProvider(new CPORoamingProvider(Id, Name, RoamingNetwork, NewRoamingProvider));
 
         }
 
@@ -150,7 +149,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="InitialDelay">Initial delay between startup and first check.</param>
         public static OICPv2_0.CPOServiceCheck<T>
 
-            CreateOICP_CPOServiceCheck<T>(this RoamingProvider                 RoamingProvider,
+            CreateOICP_CPOServiceCheck<T>(this CPORoamingProvider              RoamingProvider,
                                           OICPv2_0.CPOServiceCheckDelegate<T>  ServiceChecker,
                                           Action<T>                            OnFirstCheck,
                                           Action<T>                            OnEveryCheck,

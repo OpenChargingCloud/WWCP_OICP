@@ -243,6 +243,64 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
+        #region OnChargeDetailRecord
+
+        /// <summary>
+        /// An event sent whenever a charge detail record was received.
+        /// </summary>
+        public event RequestLogHandler OnLogChargeDetailRecordSend
+        {
+
+            add
+            {
+                _EMPServer.OnLogChargeDetailRecordSend += value;
+            }
+
+            remove
+            {
+                _EMPServer.OnLogChargeDetailRecordSend -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event sent whenever a charge detail record response was sent.
+        /// </summary>
+        public event AccessLogHandler OnLogChargeDetailRecordSent
+        {
+
+            add
+            {
+                _EMPServer.OnLogChargeDetailRecordSent += value;
+            }
+
+            remove
+            {
+                _EMPServer.OnLogChargeDetailRecordSent -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event sent whenever a charge detail record was received.
+        /// </summary>
+        public event OnChargeDetailRecordDelegate OnChargeDetailRecord
+        {
+
+            add
+            {
+                _EMPServer.OnChargeDetailRecord += value;
+            }
+
+            remove
+            {
+                _EMPServer.OnChargeDetailRecord -= value;
+            }
+
+        }
+
+        #endregion
+
         #endregion
 
         #region Constructor(s)

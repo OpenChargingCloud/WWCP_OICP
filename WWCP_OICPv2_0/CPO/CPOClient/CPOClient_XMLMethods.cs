@@ -77,7 +77,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (GroupedEVSEs == null)
-                throw new ArgumentNullException("GroupedEVSEs", "The given llokup of EVSE data records must not be null!");
+                throw new ArgumentNullException(nameof(GroupedEVSEs),  "The given llokup of EVSE data records must not be null!");
 
             #endregion
 
@@ -153,7 +153,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (GroupedEVSEStatus == null)
-                throw new ArgumentNullException("GroupedData", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(GroupedEVSEStatus),  "The given parameter must not be null!");
 
             #endregion
 
@@ -192,7 +192,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region AuthorizeStartXML(OperatorId, AuthToken, EVSEId = null, PartnerProductId = null, SessionId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP EVSEData.0 Authorize Start XML request.
+        /// Create an OICP v2.0 Authorize Start XML request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
@@ -202,10 +202,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         public static XElement AuthorizeStartXML(EVSEOperator_Id     OperatorId,
                                                  Auth_Token          AuthToken,
-                                                 EVSE_Id             EVSEId            = null,   // OICP EVSEData.0: Optional
-                                                 ChargingProduct_Id  PartnerProductId  = null,   // OICP EVSEData.0: Optional [100]
-                                                 ChargingSession_Id  SessionId         = null,   // OICP EVSEData.0: Optional
-                                                 ChargingSession_Id  PartnerSessionId  = null)   // OICP EVSEData.0: Optional [50]
+                                                 EVSE_Id             EVSEId            = null,   // OICP v2.0: Optional
+                                                 ChargingProduct_Id  PartnerProductId  = null,   // OICP v2.0: Optional [100]
+                                                 ChargingSession_Id  SessionId         = null,   // OICP v2.0: Optional
+                                                 ChargingSession_Id  PartnerSessionId  = null)   // OICP v2.0: Optional [50]
         {
 
             #region Documentation
@@ -276,7 +276,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (OperatorId == null)
                 throw new ArgumentNullException(nameof(OperatorId), "The given EVSE operator identification must not be null!");
 
-            if (AuthToken == null)
+            if (AuthToken  == null)
                 throw new ArgumentNullException(nameof(AuthToken),  "The given authentication token must not be null!");
 
             #endregion
@@ -310,7 +310,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region AuthorizeStopXML (OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP EVSEData.0 AuthorizeStop XML request.
+        /// Create an OICP v2.0 AuthorizeStop XML request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="SessionId">The session identification.</param>
@@ -425,7 +425,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region PullAuthenticationDataXML(OperatorId)
 
         /// <summary>
-        /// Create an OICP EVSEData.0 PullAuthenticationData XML request.
+        /// Create an OICP v2.0 PullAuthenticationData XML request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         public static XElement PullAuthenticationDataXML(EVSEOperator_Id OperatorId)
@@ -476,7 +476,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ChargeDetailRecord == null)
-                throw new ArgumentNullException("ChargeDetailRecord", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(ChargeDetailRecord),  "The given parameter must not be null!");
 
             #endregion
 
@@ -622,53 +622,56 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 throw new ArgumentNullException(nameof(SessionId),         "The given parameter must not be null!");
 
             if (PartnerProductId == null)
-                throw new ArgumentNullException("PartnerProductId",  "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(PartnerProductId),  "The given parameter must not be null!");
 
             if (SessionStart     == null)
-                throw new ArgumentNullException("SessionStart",      "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(SessionStart),      "The given parameter must not be null!");
 
             if (SessionEnd       == null)
-                throw new ArgumentNullException("SessionEnd",        "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(SessionEnd),        "The given parameter must not be null!");
 
             if (Identification   == null)
-                throw new ArgumentNullException("Identification",    "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(Identification),    "The given parameter must not be null!");
 
             #endregion
 
 
-            return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
+            return SOAP.Encapsulation(
 
-                                 new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
-                                 new XElement(OICPNS.Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
-                                 new XElement(OICPNS.Authorization + "PartnerProductID", (PartnerProductId != null) ? PartnerProductId.ToString() : ""),
-                                 new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
+                       new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
 
-                                 Identification.ToXML(OICPNS.Authorization),
+                           new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
+                           new XElement(OICPNS.Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
+                           new XElement(OICPNS.Authorization + "PartnerProductID", (PartnerProductId != null) ? PartnerProductId.ToString() : ""),
+                           new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
 
-                                 (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
-                                 (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
+                           Identification.ToXML(OICPNS.Authorization),
 
-                                 new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
-                                 new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
+                           (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
+                           (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
 
-                                 (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
-                                 (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", ".")) : null,
+                           new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
+                           new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
 
-                                 MeterValuesInBetween != null
-                                     ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
-                                           MeterValuesInBetween.
-                                               SafeSelect(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
-                                               ToArray()
-                                       )
-                                     : null,
+                           (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
+                           (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", ".")) : null,
 
-                                 ConsumedEnergy    != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", ".")) : null,
-                                 MeteringSignature != null ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)        : null,
+                           MeterValuesInBetween != null
+                               ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
+                                     MeterValuesInBetween.
+                                         SafeSelect(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
+                                         ToArray()
+                                 )
+                               : null,
 
-                                 HubOperatorId     != null ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString()) : null,
-                                 HubProviderId     != null ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString()) : null
+                           ConsumedEnergy    != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", ".")) : null,
+                           MeteringSignature != null ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)        : null,
 
-                             ));
+                           HubOperatorId     != null ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString()) : null,
+                           HubProviderId     != null ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString()) : null
+
+                       )
+                   );
 
         }
 

@@ -42,7 +42,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Data
 
-        private readonly RoamingNetwork               _RoamingNetwork;
+        private readonly RoamingNetwork  _RoamingNetwork;
 
         #endregion
 
@@ -309,6 +309,64 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
+        #region OnChargeDetailRecord
+
+        /// <summary>
+        /// An event sent whenever a charge detail record was received.
+        /// </summary>
+        public event RequestLogHandler OnLogChargeDetailRecordSend
+        {
+
+            add
+            {
+                _EMPRoaming.OnLogChargeDetailRecordSend += value;
+            }
+
+            remove
+            {
+                _EMPRoaming.OnLogChargeDetailRecordSend -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event sent whenever a charge detail record response was sent.
+        /// </summary>
+        public event AccessLogHandler OnLogChargeDetailRecordSent
+        {
+
+            add
+            {
+                _EMPRoaming.OnLogChargeDetailRecordSent += value;
+            }
+
+            remove
+            {
+                _EMPRoaming.OnLogChargeDetailRecordSent -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event sent whenever a charge detail record was received.
+        /// </summary>
+        public event OnChargeDetailRecordDelegate OnChargeDetailRecord
+        {
+
+            add
+            {
+                _EMPRoaming.OnChargeDetailRecord += value;
+            }
+
+            remove
+            {
+                _EMPRoaming.OnChargeDetailRecord -= value;
+            }
+
+        }
+
+        #endregion
+
         #endregion
 
         #region Constructor(s)
@@ -333,13 +391,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (Id             == null)
-                throw new ArgumentNullException("Id",              "The given unique roaming provider identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Id),              "The given unique roaming provider identification must not be null or empty!");
 
             if (Name.IsNullOrEmpty())
-                throw new ArgumentNullException("Name",            "The given roaming provider name must not be null or empty!");
+                throw new ArgumentNullException(nameof(Name),            "The given roaming provider name must not be null or empty!");
 
             if (RoamingNetwork == null)
-                throw new ArgumentNullException("RoamingNetwork",  "The given roaming network must not be null!");
+                throw new ArgumentNullException(nameof(RoamingNetwork),  "The given roaming network must not be null!");
 
             if (EMPRoaming     == null)
                 throw new ArgumentNullException("EMPRoaming",      "The given OICP EMP Roaming object must not be null!");

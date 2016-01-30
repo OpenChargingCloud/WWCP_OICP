@@ -24,8 +24,8 @@ using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
@@ -929,12 +929,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAuthorizationStop>> AuthorizeStop(EVSEOperator_Id      OperatorId,
-                                                                                 ChargingSession_Id   SessionId,
-                                                                                 Auth_Token           AuthToken,
-                                                                                 EVSE_Id              EVSEId            = null,
-                                                                                 ChargingSession_Id   PartnerSessionId  = null,   // [maxlength: 50]
-                                                                                 TimeSpan?            QueryTimeout      = null)
+        public async Task<HTTPResponse<eRoamingAuthorizationStop>>
+
+            AuthorizeStop(EVSEOperator_Id      OperatorId,
+                          ChargingSession_Id   SessionId,
+                          Auth_Token           AuthToken,
+                          EVSE_Id              EVSEId            = null,
+                          ChargingSession_Id   PartnerSessionId  = null,   // [maxlength: 50]
+                          TimeSpan?            QueryTimeout      = null)
+
         {
 
             using (var _OICPClient = new SOAPClient(Hostname,

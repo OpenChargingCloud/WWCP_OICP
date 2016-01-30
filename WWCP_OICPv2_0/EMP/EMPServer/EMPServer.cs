@@ -564,7 +564,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        DebugX.Log("EMPServer.OnLogAuthorizeStart lead to an exception: " + e.Message);
+                        e.Log("EMPServer.OnLogAuthorizeStart");
                     }
 
                     #endregion
@@ -777,7 +777,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        DebugX.Log("EMPServer.OnLogAuthorizeStarted lead to an exception: " + e.Message);
+                        e.Log("EMPServer.OnLogAuthorizeStarted");
                     }
 
                     #endregion
@@ -835,7 +835,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        DebugX.Log("EMPServer.OnLogAuthorizeStart lead to an exception: " + e.Message);
+                        e.Log("EMPServer.OnLogAuthorizeStart");
                     }
 
                     #endregion
@@ -1005,7 +1005,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        DebugX.Log("EMPServer.OnLogAuthorizeStopped lead to an exception: " + e.Message);
+                        e.Log("EMPServer.OnLogAuthorizeStopped");
                     }
 
                     #endregion
@@ -1034,7 +1034,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        DebugX.Log("EMPServer.OnLogChargeDetailRecordSend lead to an exception: " + e.Message);
+                        e.Log("EMPServer.OnLogChargeDetailRecordSend");
                     }
 
                     #endregion
@@ -1148,7 +1148,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        DebugX.Log("EMPServer.OnLogChargeDetailRecordSent lead to an exception: " + e.Message);
+                        e.Log("EMPServer.OnLogChargeDetailRecordSent");
                     }
 
                     #endregion

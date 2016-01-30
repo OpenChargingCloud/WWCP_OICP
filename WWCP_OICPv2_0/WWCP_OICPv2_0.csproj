@@ -48,10 +48,10 @@
   <ItemGroup>
     <Compile Include="CPO\CPOClient\CPOClientDelegates.cs" />
     <Compile Include="CPO\CPODelegates.cs" />
-    <Compile Include="CPO\CPORoamingWWCPExtentions.cs" />
+    <Compile Include="CPO\CPOExtentions.cs" />
     <Compile Include="CPO\CPORoamingWWCP.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
-    <Compile Include="EMP\EMPRoamingWWCPExtentions.cs" />
+    <Compile Include="EMP\EMPExtentions.cs" />
     <Compile Include="EMP\EMPRoamingWWCP.cs" />
     <Compile Include="EMP\EMPRoaming.cs" />
     <Compile Include="EMP\EMPServer\EMPServerLogger.cs" />
