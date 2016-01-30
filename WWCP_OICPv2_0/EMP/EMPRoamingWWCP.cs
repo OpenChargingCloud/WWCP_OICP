@@ -234,27 +234,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event sent whenever a authorize start command was received.
         /// </summary>
-        public event OnAuthorizeStartDelegate OnAuthorizeStart
-        {
-
-            add
-            {
-                _EMPRoaming.OnAuthorizeStart += value;
-            }
-
-            remove
-            {
-                _EMPRoaming.OnAuthorizeStart -= value;
-            }
-
-        }
+        public event OnAuthorizeStartEVSEDelegate OnAuthorizeStartEVSE;
 
         #endregion
 
         #region OnAuthorizeStop
 
         /// <summary>
-        /// An event sent whenever a authorize start command was received.
+        /// An event sent whenever a authorize stop command was received.
         /// </summary>
         public event RequestLogHandler OnLogAuthorizeStop
         {
@@ -272,7 +259,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         /// <summary>
-        /// An event sent whenever a authorize start response was sent.
+        /// An event sent whenever a authorize stop response was sent.
         /// </summary>
         public event AccessLogHandler OnLogAuthorizeStopped
         {
@@ -290,22 +277,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         /// <summary>
-        /// An event sent whenever a authorize start command was received.
+        /// An event sent whenever a authorize stop command was received.
         /// </summary>
-        public event OnAuthorizeStopDelegate OnAuthorizeStop
-        {
-
-            add
-            {
-                _EMPRoaming.OnAuthorizeStop += value;
-            }
-
-            remove
-            {
-                _EMPRoaming.OnAuthorizeStop -= value;
-            }
-
-        }
+        public event OnAuthorizeStopEVSEDelegate OnAuthorizeStopEVSE;
 
         #endregion
 
@@ -350,20 +324,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event sent whenever a charge detail record was received.
         /// </summary>
-        public event OnChargeDetailRecordDelegate OnChargeDetailRecord
-        {
-
-            add
-            {
-                _EMPRoaming.OnChargeDetailRecord += value;
-            }
-
-            remove
-            {
-                _EMPRoaming.OnChargeDetailRecord -= value;
-            }
-
-        }
+        public event WWCP.OnChargeDetailRecordDelegate OnChargeDetailRecord;
 
         #endregion
 
@@ -404,11 +365,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            this._Id                        = Id;
-            this._Name                      = Name;
-            this._RoamingNetwork            = RoamingNetwork;
-            this._EMPRoaming                = EMPRoaming;
-            this._AuthorizatorId            = Authorizator_Id.Parse(Id.ToString());
+            this._Id              = Id;
+            this._Name            = Name;
+            this._RoamingNetwork  = RoamingNetwork;
+            this._EMPRoaming      = EMPRoaming;
+            this._AuthorizatorId  = Authorizator_Id.Parse(Id.ToString());
+
+            // Link AuthorizeStart/-Stop and CDR events
+            this._EMPRoaming.OnAuthorizeStart     += SendAuthorizeStart;
+            this._EMPRoaming.OnAuthorizeStop      += SendAuthorizeStop;
+            this._EMPRoaming.OnChargeDetailRecord += SendChargeDetailRecord;
 
         }
 
@@ -500,6 +466,117 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         { }
 
         #endregion
+
+        #endregion
+
+
+        #region (private) SendAuthorizeStart(...)
+
+        private async Task<AuthStartEVSEResult>
+
+            SendAuthorizeStart(DateTime            Timestamp,
+                               EMPServer           Sender,
+                               CancellationToken   CancellationToken,
+                               EventTracking_Id    EventTrackingId,
+                               EVSEOperator_Id     OperatorId,
+                               Auth_Token          AuthToken,
+                               EVSE_Id             EVSEId            = null,
+                               ChargingSession_Id  SessionId         = null,
+                               ChargingProduct_Id  PartnerProductId  = null,
+                               ChargingSession_Id  PartnerSessionId  = null,
+                               TimeSpan?           QueryTimeout      = null)
+
+        {
+
+            var OnAuthorizeStartLocal = OnAuthorizeStartEVSE;
+            if (OnAuthorizeStartLocal != null)
+            {
+
+                return await OnAuthorizeStartLocal(Timestamp,
+                                                   CancellationToken,
+                                                   EventTrackingId,
+                                                   OperatorId,
+                                                   AuthToken,
+                                                   EVSEId,
+                                                   PartnerProductId,
+                                                   SessionId,
+                                                   QueryTimeout);
+
+            }
+
+            else
+                return AuthStartEVSEResult.OutOfService(_AuthorizatorId);
+
+        }
+
+        #endregion
+
+        #region (private) SendAuthorizeStop(...)
+
+        private async Task<AuthStopEVSEResult>
+
+            SendAuthorizeStop(DateTime            Timestamp,
+                              EMPServer           Sender,
+                              CancellationToken   CancellationToken,
+                              EventTracking_Id    EventTrackingId,
+                              ChargingSession_Id  SessionId,
+                              ChargingSession_Id  PartnerSessionId,
+                              EVSEOperator_Id     OperatorId,
+                              EVSE_Id             EVSEId,
+                              Auth_Token          AuthToken,
+                              TimeSpan?           QueryTimeout  = null)
+
+        {
+
+            var OnAuthorizeStopEVSELocal = OnAuthorizeStopEVSE;
+            if (OnAuthorizeStopEVSELocal != null)
+            {
+
+                return await OnAuthorizeStopEVSELocal(Timestamp,
+                                                      CancellationToken,
+                                                      EventTrackingId,
+                                                      OperatorId,
+                                                      EVSEId,
+                                                      SessionId,
+                                                      AuthToken,
+                                                      QueryTimeout);
+
+            }
+
+            else
+                return AuthStopEVSEResult.OutOfService(_AuthorizatorId);
+
+        }
+
+        #endregion
+
+        #region (private) SendChargeDetailRecord(...)
+
+        private async Task<SendCDRResult>
+
+            SendChargeDetailRecord(DateTime                    Timestamp,
+                                   CancellationToken           CancellationToken,
+                                   EventTracking_Id            EventTrackingId,
+                                   eRoamingChargeDetailRecord  ChargeDetailRecord,
+                                   TimeSpan?                   QueryTimeout = null)
+
+        {
+
+            var OnChargeDetailRecordLocal = OnChargeDetailRecord;
+            if (OnChargeDetailRecordLocal != null)
+            {
+
+                return await OnChargeDetailRecordLocal(Timestamp,
+                                                       CancellationToken,
+                                                       EventTrackingId,
+                                                       ChargeDetailRecord.AsWWCPChargeDetailRecord(),
+                                                       QueryTimeout);
+
+            }
+
+            else
+                return SendCDRResult.OutOfService(_AuthorizatorId);
+        }
 
         #endregion
 

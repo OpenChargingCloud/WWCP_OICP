@@ -48,12 +48,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public const           String  DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML EMP Server API";
+        public const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML EMP Server API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
         /// </summary>
-        public static readonly IPPort  DefaultHTTPServerPort  = new IPPort(2003);
+        public static readonly IPPort    DefaultHTTPServerPort  = new IPPort(2003);
+
+        /// <summary>
+        /// The default query timeout.
+        /// </summary>
+        public static readonly TimeSpan  DefaultQueryTimeout    = TimeSpan.FromMinutes(1);
 
         #endregion
 
@@ -596,9 +601,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     OperatorId               = EVSEOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
                     EVSEId                   = EVSE_Id.           Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "EVSEID",      "No EVSEID XML tag provided!"));
 
-                    Console.WriteLine("OperatorId: " + OperatorId.ToString());
-                    Console.WriteLine("EVSEId: "     + EVSEId.    ToString());
-
                     IdentificationXML = AuthorizeStartXML.Element(OICPNS.Authorization + "Identification");
                     if (IdentificationXML != null)
                     {
@@ -611,10 +613,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                             var UIDXML = RFIDmifarefamilyIdentificationXML.Element(OICPNS.CommonTypes + "UID");
 
                             if (UIDXML != null)
-                            {
                                 AuthToken = Auth_Token.Parse(UIDXML.Value);
-                                Console.WriteLine("AuthToken: " + AuthToken.ToString());
-                            }
 
                         }
 
@@ -629,8 +628,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     #region Call async subscribers
 
                     AuthStartEVSEResult result = null;
-
-                    var QueryTimeout = TimeSpan.FromMinutes(1);
 
                     var OnAuthorizeStartLocal = OnAuthorizeStart;
                     if (OnAuthorizeStartLocal != null)
@@ -648,7 +645,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SessionId,
                                                          ChargingProductId,
                                                          PartnerSessionId,
-                                                         QueryTimeout);
+                                                         DefaultQueryTimeout);
 
                         task.Wait();
                         result = task.Result;
@@ -844,11 +841,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     #region Parse request parameters
 
                     XElement            PartnerSessionIdXML;
+                    XElement            IdentificationXML;
 
                     ChargingSession_Id  SessionId;
-                    ChargingSession_Id  PartnerSessionId        = null;
+                    ChargingSession_Id  PartnerSessionId  = null;
                     EVSEOperator_Id     OperatorId;
-                    EVSE_Id             EVSEId;
+                    EVSE_Id             EVSEId            = null;
+                    Auth_Token          AuthToken         = null;
 
                     try
                     {
@@ -859,8 +858,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         if (PartnerSessionIdXML != null)
                             PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        OperatorId        = EVSEOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID",       "No OperatorID XML tag provided!"));
-                        EVSEId            = EVSE_Id.           Parse(AuthorizeStopXML. ElementValueOrFail   (OICPNS.Authorization + "EVSEID",           "No EVSEID XML tag provided!"));
+                        OperatorId        = EVSEOperator_Id.   Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "OperatorID",       "No OperatorID XML tag provided!"));
+                        EVSEId            = EVSE_Id.           Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",           "No EVSEID XML tag provided!"));
+
+                        IdentificationXML = AuthorizeStopXML.Element(OICPNS.Authorization + "Identification");
+                        if (IdentificationXML != null)
+                        {
+
+
+                            var RFIDmifarefamilyIdentificationXML = IdentificationXML.Element(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification");
+                            if (RFIDmifarefamilyIdentificationXML != null)
+                            {
+
+                                var UIDXML = RFIDmifarefamilyIdentificationXML.Element(OICPNS.CommonTypes + "UID");
+
+                                if (UIDXML != null)
+                                    AuthToken = Auth_Token.Parse(UIDXML.Value);
+
+                            }
+
+                        }
 
                     }
                     catch (Exception e)
@@ -908,7 +925,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         SessionId,
                                                         PartnerSessionId,
                                                         OperatorId,
-                                                        EVSEId);
+                                                        EVSEId,
+                                                        AuthToken,
+                                                        DefaultQueryTimeout);
 
                         task.Wait();
                         Response = task.Result;
@@ -1060,10 +1079,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         var CTS = new CancellationTokenSource();
 
                         var task = OnChargeDetailRecord(DateTime.Now,
-                                                        this,
                                                         CTS.Token,
                                                         EventTracking_Id.New,
-                                                        CDR);
+                                                        CDR,
+                                                        DefaultQueryTimeout);
 
                         task.Wait();
                         response = task.Result;
@@ -1320,17 +1339,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region (internal) SendAuthorizeStart(...)
 
-        internal async Task<AuthStartEVSEResult> SendAuthorizeStart(DateTime            Timestamp,
-                                                                    CancellationToken   CancellationToken,
-                                                                    EventTracking_Id    EventTrackingId,
-                                                                    RoamingNetwork_Id   RoamingNetworkId,
-                                                                    EVSEOperator_Id     OperatorId,
-                                                                    Auth_Token          AuthToken,
-                                                                    EVSE_Id             EVSEId            = null,
-                                                                    ChargingSession_Id  SessionId         = null,
-                                                                    ChargingProduct_Id  PartnerProductId  = null,
-                                                                    ChargingSession_Id  PartnerSessionId  = null,
-                                                                    TimeSpan?           QueryTimeout      = null)
+        internal async Task<AuthStartEVSEResult>
+
+            SendAuthorizeStart(DateTime            Timestamp,
+                               CancellationToken   CancellationToken,
+                               EventTracking_Id    EventTrackingId,
+                               RoamingNetwork_Id   RoamingNetworkId,
+                               EVSEOperator_Id     OperatorId,
+                               Auth_Token          AuthToken,
+                               EVSE_Id             EVSEId            = null,
+                               ChargingSession_Id  SessionId         = null,
+                               ChargingProduct_Id  PartnerProductId  = null,
+                               ChargingSession_Id  PartnerSessionId  = null,
+                               TimeSpan?           QueryTimeout      = null)
+
         {
 
             var OnAuthorizeStartLocal = OnAuthorizeStart;
@@ -1362,14 +1384,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region (internal) SendAuthorizeStop(...)
 
-        internal async Task<AuthStopEVSEResult> SendAuthorizeStop(DateTime            Timestamp,
-                                                                  CancellationToken   CancellationToken,
-                                                                  EventTracking_Id    EventTrackingId,
-                                                                  RoamingNetwork_Id   RoamingNetworkId,
-                                                                  ChargingSession_Id  SessionId,
-                                                                  ChargingSession_Id  PartnerSessionId,
-                                                                  EVSEOperator_Id     OperatorId,
-                                                                  EVSE_Id             EVSEId)
+        internal async Task<AuthStopEVSEResult>
+
+            SendAuthorizeStop(DateTime            Timestamp,
+                              CancellationToken   CancellationToken,
+                              EventTracking_Id    EventTrackingId,
+                              RoamingNetwork_Id   RoamingNetworkId,
+                              ChargingSession_Id  SessionId,
+                              ChargingSession_Id  PartnerSessionId,
+                              EVSEOperator_Id     OperatorId,
+                              EVSE_Id             EVSEId,
+                              Auth_Token          AuthToken,
+                              TimeSpan?           QueryTimeout  = null)
+
         {
 
             var OnAuthorizeStopLocal = OnAuthorizeStop;
@@ -1386,7 +1413,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                       SessionId,
                                                       PartnerSessionId,
                                                       OperatorId,
-                                                      EVSEId)));
+                                                      EVSEId,
+                                                      AuthToken,
+                                                      QueryTimeout)));
 
             return results.
                        Where(result => result.Result != AuthStopEVSEResultType.Unspecified).

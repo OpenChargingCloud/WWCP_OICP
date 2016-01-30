@@ -127,6 +127,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Events
 
+        // Client methods (logging)
+
+
+
+        // Server methods
+
         #region OnAuthorizeStart
 
         /// <summary>
@@ -188,7 +194,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region OnAuthorizeStop
 
         /// <summary>
-        /// An event sent whenever a authorize start command was received.
+        /// An event sent whenever a authorize stop command was received.
         /// </summary>
         public event RequestLogHandler OnLogAuthorizeStop
         {
@@ -206,7 +212,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         /// <summary>
-        /// An event sent whenever a authorize start response was sent.
+        /// An event sent whenever a authorize stop response was sent.
         /// </summary>
         public event AccessLogHandler OnLogAuthorizeStopped
         {
@@ -224,7 +230,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         /// <summary>
-        /// An event sent whenever a authorize start command was received.
+        /// An event sent whenever a authorize stop command was received.
         /// </summary>
         public event OnAuthorizeStopDelegate  OnAuthorizeStop
         {

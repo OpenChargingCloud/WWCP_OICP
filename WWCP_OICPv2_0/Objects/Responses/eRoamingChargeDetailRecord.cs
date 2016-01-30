@@ -23,11 +23,10 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.WWCP.OICPv2_0;
 
 #endregion
 
-namespace org.GraphDefined.WWCP
+namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>

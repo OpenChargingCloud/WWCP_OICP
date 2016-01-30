@@ -47,12 +47,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public const           String  DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML CPO Server API";
+        public const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML CPO Server API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
         /// </summary>
-        public static readonly IPPort  DefaultHTTPServerPort  = new IPPort(2002);
+        public static readonly IPPort    DefaultHTTPServerPort  = new IPPort(2002);
+
+        /// <summary>
+        /// The default query timeout.
+        /// </summary>
+        public static readonly TimeSpan  DefaultQueryTimeout    = TimeSpan.FromMinutes(1);
 
         #endregion
 
@@ -621,7 +626,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                       SessionId,
                                                       PartnerSessionId,
                                                       ProviderId,
-                                                      eMAId);
+                                                      eMAId,
+                                                      DefaultQueryTimeout);
 
                         task.Wait();
                         response = task.Result;
@@ -895,7 +901,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      EVSEId,
                                                      SessionId,
                                                      PartnerSessionId,
-                                                     ProviderId);
+                                                     ProviderId,
+                                                     DefaultQueryTimeout);
 
                         task.Wait();
                         response = task.Result;

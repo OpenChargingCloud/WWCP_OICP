@@ -66,6 +66,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <param name="PartnerSessionId">The unique identification for this charging session on the partner side.</param>
     /// <param name="OperatorId">The unique identification of the EVSE operator.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
+    /// <param name="AuthToken">A (RFID) user identification.</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
     public delegate Task<AuthStopEVSEResult> OnAuthorizeStopDelegate(DateTime            Timestamp,
                                                                      EMPServer           Sender,
@@ -75,6 +76,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                      ChargingSession_Id  PartnerSessionId,
                                                                      EVSEOperator_Id     OperatorId,
                                                                      EVSE_Id             EVSEId,
+                                                                     Auth_Token          AuthToken,
                                                                      TimeSpan?           QueryTimeout  = null);
 
 }
