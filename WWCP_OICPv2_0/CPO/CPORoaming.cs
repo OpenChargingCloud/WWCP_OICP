@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -110,6 +111,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Events
 
+        // Client methods (logging)
+
         #region OnEVSEDataPush/-Pushed
 
         /// <summary>
@@ -120,14 +123,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                if (_CPOClient != null)
-                    _CPOClient.OnEVSEDataPush += value;
+                _CPOClient.OnEVSEDataPush += value;
             }
 
             remove
             {
-                if (_CPOClient != null)
-                    _CPOClient.OnEVSEDataPush -= value;
+                 _CPOClient.OnEVSEDataPush -= value;
             }
 
         }
@@ -140,22 +141,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                if (_CPOClient != null)
-                    _CPOClient.OnEVSEDataPushed += value;
+                _CPOClient.OnEVSEDataPushed += value;
             }
 
             remove
             {
-                if (_CPOClient != null)
-                    _CPOClient.OnEVSEDataPushed -= value;
+                _CPOClient.OnEVSEDataPushed -= value;
             }
 
         }
 
         #endregion
 
+        //ToDo: Add more CPOClient methods!
 
-        #region OnRemoteStart
+
+        // Server methods
+
+        #region OnRemoteStart/-Stop
 
         /// <summary>
         /// An event sent whenever a remote start command was received.
@@ -175,10 +178,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         }
 
-        #endregion
-
-        #region OnRemoteStop
-
         /// <summary>
         /// An event sent whenever a remote stop command was received.
         /// </summary>
@@ -194,6 +193,73 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             remove
             {
                 _CPOServer.OnRemoteStop -= value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region RequestLog
+
+        /// <summary>
+        /// An event called whenever a request came in.
+        /// </summary>
+        public event RequestLogHandler RequestLog
+        {
+
+            add
+            {
+                _CPOServer.RequestLog += value;
+            }
+
+            remove
+            {
+                _CPOServer.RequestLog -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region AccessLog
+
+        /// <summary>
+        /// An event called whenever a request could successfully be processed.
+        /// </summary>
+        public event AccessLogHandler AccessLog
+        {
+
+            add
+            {
+                _CPOServer.AccessLog += value;
+            }
+
+            remove
+            {
+                _CPOServer.AccessLog -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region ErrorLog
+
+        /// <summary>
+        /// An event called whenever a request resulted in an error.
+        /// </summary>
+        public event ErrorLogHandler ErrorLog
+        {
+
+            add
+            {
+                _CPOServer.ErrorLog += value;
+            }
+
+            remove
+            {
+                _CPOServer.ErrorLog -= value;
             }
 
         }

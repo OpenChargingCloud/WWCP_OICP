@@ -26,6 +26,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using System.Threading;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -183,6 +184,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Events
 
+        // Client methods (logging)
+
         #region OnEVSEDataPush/-Pushed
 
         /// <summary>
@@ -214,34 +217,99 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region OnAuthorizeStart/-Started
 
         /// <summary>
-        /// An event fired whenever an authentication token will be verified.
+        /// An event fired whenever an authentication token will be verified for charging.
         /// </summary>
-        public event WWCP.OnAuthorizeStartDelegate                   OnAuthorizeStart;
+        public event WWCP.OnAuthorizeStartDelegate              OnAuthorizeStart;
 
         /// <summary>
-        /// An event fired whenever an authentication token had been verified.
+        /// An event fired whenever an authentication token had been verified for charging.
         /// </summary>
-        public event WWCP.OnAuthorizeStartedDelegate                 OnAuthorizeStarted;
+        public event OnAuthorizeStartedDelegate                 OnAuthorizeStarted;
 
         /// <summary>
-        /// An event fired whenever an authentication token will be verified at the given EVSE.
+        /// An event fired whenever an authentication token will be verified for charging at the given EVSE.
         /// </summary>
-        public event WWCP.OnAuthorizeEVSEStartDelegate               OnAuthorizeEVSEStart;
+        public event OnAuthorizeEVSEStartDelegate               OnAuthorizeEVSEStart;
 
         /// <summary>
-        /// An event fired whenever an authentication token had been verified at the given EVSE.
+        /// An event fired whenever an authentication token had been verified for charging at the given EVSE.
         /// </summary>
-        public event WWCP.OnAuthorizeEVSEStartedDelegate             OnAuthorizeEVSEStarted;
+        public event OnAuthorizeEVSEStartedDelegate             OnAuthorizeEVSEStarted;
 
         /// <summary>
-        /// An event fired whenever an authentication token will be verified at the given charging station.
+        /// An event fired whenever an authentication token will be verified for charging at the given charging station.
         /// </summary>
-        public event WWCP.OnAuthorizeChargingStationStartDelegate    OnAuthorizeChargingStationStart;
+        public event OnAuthorizeChargingStationStartDelegate    OnAuthorizeChargingStationStart;
 
         /// <summary>
-        /// An event fired whenever an authentication token had been verified at the given charging station.
+        /// An event fired whenever an authentication token had been verified for charging at the given charging station.
         /// </summary>
-        public event WWCP.OnAuthorizeChargingStationStartedDelegate  OnAuthorizeChargingStationStarted;
+        public event OnAuthorizeChargingStationStartedDelegate  OnAuthorizeChargingStationStarted;
+
+        #endregion
+
+        #region OnAuthorizeStop/-Stopped
+
+        /// <summary>
+        /// An event fired whenever an authentication token will be verified to stop a charging process.
+        /// </summary>
+        public event WWCP.OnAuthorizeStopDelegate               OnAuthorizeStop;
+
+        /// <summary>
+        /// An event fired whenever an authentication token had been verified to stop a charging process.
+        /// </summary>
+        public event OnAuthorizeStoppedDelegate                 OnAuthorizeStopped;
+
+        /// <summary>
+        /// An event fired whenever an authentication token will be verified to stop a charging process at the given EVSE.
+        /// </summary>
+        public event OnAuthorizeEVSEStopDelegate                OnAuthorizeEVSEStop;
+
+        /// <summary>
+        /// An event fired whenever an authentication token had been verified to stop a charging process at the given EVSE.
+        /// </summary>
+        public event OnAuthorizeEVSEStoppedDelegate             OnAuthorizeEVSEStopped;
+
+        /// <summary>
+        /// An event fired whenever an authentication token will be verified to stop a charging process at the given charging station.
+        /// </summary>
+        public event OnAuthorizeChargingStationStopDelegate     OnAuthorizeChargingStationStop;
+
+        /// <summary>
+        /// An event fired whenever an authentication token had been verified to stop a charging process at the given charging station.
+        /// </summary>
+        public event OnAuthorizeChargingStationStoppedDelegate  OnAuthorizeChargingStationStopped;
+
+        #endregion
+
+        #region OnChargeDetailRecordSend/-Sent
+
+        /// <summary>
+        /// An event fired whenever a charge detail record will be send.
+        /// </summary>
+        public event OnChargeDetailRecordSendDelegate OnChargeDetailRecordSend;
+
+        /// <summary>
+        /// An event fired whenever a charge detail record had been sent.
+        /// </summary>
+        public event OnChargeDetailRecordSentDelegate OnChargeDetailRecordSent;
+
+        #endregion
+
+
+        // Server methods
+
+        #region OnRemoteStart/-Stop
+
+        /// <summary>
+        /// An event sent whenever a remote start command was received.
+        /// </summary>
+        public event OnRemoteStartEVSEDelegate  OnRemoteStart;
+
+        /// <summary>
+        /// An event sent whenever a remote stop command was received.
+        /// </summary>
+        public event OnRemoteStopEVSEDelegate   OnRemoteStop;
 
         #endregion
 
@@ -293,49 +361,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             this._EVSE2EVSEDataRecord       = EVSE2EVSEDataRecord;
             this._EVSEDataRecord2XML        = EVSEDataRecord2XML;
 
-            #region Link RemoteStart/-Stop events
-
-            this._CPORoaming.OnRemoteStart += (Timestamp,
-                                               Sender,
-                                               CancellationToken,
-                                               EventTrackingId,
-                                               EVSEId,
-                                               ChargingProductId,
-                                               SessionId,
-                                               PartnerSessionId,
-                                               ProviderId,
-                                               eMAId,
-                                               QueryTimeout)  => _RoamingNetwork.RemoteStart(Timestamp,
-                                                                                             //Sender,
-                                                                                             CancellationToken,
-                                                                                             EventTrackingId,
-                                                                                             EVSEId,
-                                                                                             ChargingProductId,
-                                                                                             null,
-                                                                                             SessionId,
-                                                                                             //PartnerSessionId,
-                                                                                             ProviderId,
-                                                                                             eMAId,
-                                                                                             QueryTimeout);
-
-            this._CPORoaming.OnRemoteStop += (Timestamp,
-                                              Sender,
-                                              CancellationToken,
-                                              EventTrackingId,
-                                              EVSEId,
-                                              SessionId,
-                                              PartnerSessionId,
-                                              ProviderId,
-                                              QueryTimeout)  => _RoamingNetwork.RemoteStop(Timestamp,
-                                                                                           CancellationToken,
-                                                                                           EventTrackingId,
-                                                                                           EVSEId,
-                                                                                           SessionId,
-                                                                                           ReservationHandling.Close,
-                                                                                           ProviderId,
-                                                                                           QueryTimeout);
-
-            #endregion
+            // Link RemoteStart/-Stop events
+            this._CPORoaming.OnRemoteStart += SendRemoteStart;
+            this._CPORoaming.OnRemoteStop  += SendRemoteStop;
 
         }
 
@@ -437,6 +465,87 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         { }
 
         #endregion
+
+        #endregion
+
+
+        #region (private) SendRemoteStart(...)
+
+        private async Task<RemoteStartEVSEResult>
+
+            SendRemoteStart(DateTime            Timestamp,
+                            CPOServer           Sender,
+                            CancellationToken   CancellationToken,
+                            EventTracking_Id    EventTrackingId,
+                            EVSE_Id             EVSEId,
+                            ChargingProduct_Id  ChargingProductId,
+                            ChargingSession_Id  SessionId,
+                            ChargingSession_Id  PartnerSessionId,
+                            EVSP_Id             ProviderId,
+                            eMA_Id              eMAId,
+                            TimeSpan?           QueryTimeout = null)
+
+        {
+
+            var OnRemoteStartLocal = OnRemoteStart;
+            if (OnRemoteStartLocal != null)
+            {
+
+                return await OnRemoteStartLocal(Timestamp,
+                                                CancellationToken,
+                                                EventTrackingId,
+                                                EVSEId,
+                                                ChargingProductId,
+                                                null,
+                                                SessionId,
+                                                ProviderId,
+                                                eMAId,
+                                                QueryTimeout);
+
+            }
+
+            else
+                return RemoteStartEVSEResult.OutOfService;
+
+        }
+
+        #endregion
+
+        #region (private) SendRemoteStop(...)
+
+        private async Task<RemoteStopEVSEResult>
+
+            SendRemoteStop(DateTime            Timestamp,
+                           CPOServer           Sender,
+                           CancellationToken   CancellationToken,
+                           EventTracking_Id    EventTrackingId,
+                           EVSE_Id             EVSEId,
+                           ChargingSession_Id  SessionId,
+                           ChargingSession_Id  PartnerSessionId,
+                           EVSP_Id             ProviderId,
+                           TimeSpan?           QueryTimeout = null)
+
+        {
+
+            var OnRemoteStopLocal = OnRemoteStop;
+            if (OnRemoteStopLocal != null)
+            {
+
+                return await OnRemoteStopLocal(Timestamp,
+                                               CancellationToken,
+                                               EventTrackingId,
+                                               ReservationHandling.Close,
+                                               SessionId,
+                                               ProviderId,
+                                               EVSEId,
+                                               QueryTimeout);
+
+            }
+
+            else
+                return RemoteStopEVSEResult.OutOfService(SessionId);
+
+        }
 
         #endregion
 
@@ -1449,8 +1558,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 var OnAuthorizeStartLocal = OnAuthorizeStart;
                 if (OnAuthorizeStartLocal != null)
-                    OnAuthorizeStartLocal(this,
-                                          Timestamp,
+                    OnAuthorizeStartLocal(Timestamp,
+                                          this,
                                           EventTrackingId,
                                           RoamingNetworkId,
                                           OperatorId,
@@ -1462,7 +1571,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log("CPORoamingWWCP.OnAuthorizeStart");
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeStart));
             }
 
             #endregion
@@ -1499,8 +1608,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 var OnAuthorizeStartedLocal = OnAuthorizeStarted;
                 if (OnAuthorizeStartedLocal != null)
-                    OnAuthorizeStartedLocal(this,
-                                            Timestamp,
+                    OnAuthorizeStartedLocal(Timestamp,
+                                            this,
                                             EventTrackingId,
                                             RoamingNetworkId,
                                             OperatorId,
@@ -1513,7 +1622,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log("CPORoamingWWCP.OnAuthorizeStarted");
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeStarted));
             }
 
             #endregion
@@ -1572,8 +1681,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 var OnAuthorizeEVSEStartLocal = OnAuthorizeEVSEStart;
                 if (OnAuthorizeEVSEStartLocal != null)
-                    OnAuthorizeEVSEStartLocal(this,
-                                              Timestamp,
+                    OnAuthorizeEVSEStartLocal(Timestamp,
+                                              this,
                                               EventTrackingId,
                                               RoamingNetworkId,
                                               OperatorId,
@@ -1586,7 +1695,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log("CPORoamingWWCP.OnAuthorizeEVSEStart");
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeEVSEStart));
             }
 
             #endregion
@@ -1624,8 +1733,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 var OnAuthorizeEVSEStartedLocal = OnAuthorizeEVSEStarted;
                 if (OnAuthorizeEVSEStartedLocal != null)
-                    OnAuthorizeEVSEStartedLocal(this,
-                                                Timestamp,
+                    OnAuthorizeEVSEStartedLocal(Timestamp,
+                                                this,
                                                 EventTrackingId,
                                                 RoamingNetworkId,
                                                 OperatorId,
@@ -1639,7 +1748,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log("CPORoamingWWCP.OnAuthorizeEVSEStarted");
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeEVSEStarted));
             }
 
             #endregion
@@ -1698,8 +1807,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 var OnAuthorizeChargingStationStartLocal = OnAuthorizeChargingStationStart;
                 if (OnAuthorizeChargingStationStartLocal != null)
-                    OnAuthorizeChargingStationStartLocal(this,
-                                                         Timestamp,
+                    OnAuthorizeChargingStationStartLocal(Timestamp,
+                                                         this,
                                                          EventTrackingId,
                                                          RoamingNetworkId,
                                                          OperatorId,
@@ -1712,7 +1821,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log("CPORoamingWWCP.OnAuthorizeChargingStationStart");
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeChargingStationStart));
             }
 
             #endregion
@@ -1729,8 +1838,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 var OnAuthorizeChargingStationStartedLocal = OnAuthorizeChargingStationStarted;
                 if (OnAuthorizeChargingStationStartedLocal != null)
-                    OnAuthorizeChargingStationStartedLocal(this,
-                                                           Timestamp,
+                    OnAuthorizeChargingStationStartedLocal(Timestamp,
+                                                           this,
                                                            EventTrackingId,
                                                            RoamingNetworkId,
                                                            OperatorId,
@@ -1744,7 +1853,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log("CPORoamingWWCP.OnAuthorizeChargingStationStarted");
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeChargingStationStarted));
             }
 
             #endregion
@@ -1783,21 +1892,78 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           TimeSpan?           QueryTimeout  = null)
         {
 
-            var result  = await _CPORoaming.AuthorizeStop(OperatorId,
-                                                          SessionId,
-                                                          AuthToken,
-                                                          QueryTimeout: QueryTimeout);
+            #region Send OnAuthorizeStop event
 
-            if (result.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                return AuthStopResult.Authorized(_AuthorizatorId,
-                                                 result.ProviderId,
-                                                 result.StatusCode.Description,
-                                                 result.StatusCode.AdditionalInfo);
+            try
+            {
 
-            return AuthStopResult.NotAuthorized(_AuthorizatorId,
-                                                result.ProviderId,
-                                                result.StatusCode.Description,
-                                                result.StatusCode.AdditionalInfo);
+                var OnAuthorizeStopLocal = OnAuthorizeStop;
+                if (OnAuthorizeStopLocal != null)
+                    OnAuthorizeStopLocal(Timestamp,
+                                         this,
+                                         EventTrackingId,
+                                         RoamingNetworkId,
+                                         OperatorId,
+                                         SessionId,
+                                         AuthToken,
+                                         QueryTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeStop));
+            }
+
+            #endregion
+
+
+            var response  = await _CPORoaming.AuthorizeStop(OperatorId,
+                                                            SessionId,
+                                                            AuthToken,
+                                                            QueryTimeout: QueryTimeout);
+
+
+            AuthStopResult result = null;
+
+            if (response.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                result = AuthStopResult.Authorized(_AuthorizatorId,
+                                                   response.ProviderId,
+                                                   response.StatusCode.Description,
+                                                   response.StatusCode.AdditionalInfo);
+
+            else
+                result = AuthStopResult.NotAuthorized(_AuthorizatorId,
+                                                      response.ProviderId,
+                                                      response.StatusCode.Description,
+                                                      response.StatusCode.AdditionalInfo);
+
+
+            #region Send OnAuthorizeStopped event
+
+            try
+            {
+
+                var OnAuthorizeStoppedLocal = OnAuthorizeStopped;
+                if (OnAuthorizeStoppedLocal != null)
+                    OnAuthorizeStoppedLocal(Timestamp,
+                                            this,
+                                            EventTrackingId,
+                                            RoamingNetworkId,
+                                            OperatorId,
+                                            SessionId,
+                                            AuthToken,
+                                            QueryTimeout,
+                                            result);
+
+            }
+            catch (Exception e)
+            {
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeStopped));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1832,23 +1998,82 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           TimeSpan?           QueryTimeout  = null)
         {
 
-            var result  = await _CPORoaming.AuthorizeStop(OperatorId,
-                                                          SessionId,
-                                                          AuthToken,
-                                                          EVSEId,
-                                                          null,
-                                                          QueryTimeout);
+            #region Send OnAuthorizeEVSEStop event
 
-            if (result.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                return AuthStopEVSEResult.Authorized(_AuthorizatorId,
-                                                     result.ProviderId,
-                                                     result.StatusCode.Description,
-                                                     result.StatusCode.AdditionalInfo);
+            try
+            {
 
-            return AuthStopEVSEResult.NotAuthorized(_AuthorizatorId,
-                                                    result.ProviderId,
-                                                    result.StatusCode.Description,
-                                                    result.StatusCode.AdditionalInfo);
+                var OnAuthorizeEVSEStopLocal = OnAuthorizeEVSEStop;
+                if (OnAuthorizeEVSEStopLocal != null)
+                    OnAuthorizeEVSEStopLocal(Timestamp,
+                                             this,
+                                             EventTrackingId,
+                                             RoamingNetworkId,
+                                             OperatorId,
+                                             EVSEId,
+                                             SessionId,
+                                             AuthToken,
+                                             QueryTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeEVSEStop));
+            }
+
+            #endregion
+
+
+            var response  = await _CPORoaming.AuthorizeStop(OperatorId,
+                                                            SessionId,
+                                                            AuthToken,
+                                                            EVSEId,
+                                                            null,
+                                                            QueryTimeout);
+
+
+            AuthStopEVSEResult result = null;
+
+            if (response.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                result = AuthStopEVSEResult.Authorized(_AuthorizatorId,
+                                                       response.ProviderId,
+                                                       response.StatusCode.Description,
+                                                       response.StatusCode.AdditionalInfo);
+
+            else
+                result = AuthStopEVSEResult.NotAuthorized(_AuthorizatorId,
+                                                          response.ProviderId,
+                                                          response.StatusCode.Description,
+                                                          response.StatusCode.AdditionalInfo);
+
+
+            #region Send OnAuthorizeEVSEStopped event
+
+            try
+            {
+
+                var OnAuthorizeEVSEStoppedLocal = OnAuthorizeEVSEStopped;
+                if (OnAuthorizeEVSEStoppedLocal != null)
+                    OnAuthorizeEVSEStoppedLocal(Timestamp,
+                                                this,
+                                                EventTrackingId,
+                                                RoamingNetworkId,
+                                                OperatorId,
+                                                EVSEId,
+                                                SessionId,
+                                                AuthToken,
+                                                QueryTimeout,
+                                                result);
+
+            }
+            catch (Exception e)
+            {
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeEVSEStopped));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1883,17 +2108,72 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
 
             if (SessionId  == null)
-                throw new ArgumentNullException(nameof(SessionId),  "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
 
             if (AuthToken  == null)
-                throw new ArgumentNullException(nameof(AuthToken),  "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
 
             #endregion
 
-            return AuthStopChargingStationResult.Error(_AuthorizatorId);
+            #region Send OnAuthorizeChargingStationStop event
+
+            try
+            {
+
+                var OnAuthorizeChargingStationStopLocal = OnAuthorizeChargingStationStop;
+                if (OnAuthorizeChargingStationStopLocal != null)
+                    OnAuthorizeChargingStationStopLocal(Timestamp,
+                                                        this,
+                                                        EventTrackingId,
+                                                        RoamingNetworkId,
+                                                        OperatorId,
+                                                        ChargingStationId,
+                                                        SessionId,
+                                                        AuthToken,
+                                                        QueryTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeChargingStationStop));
+            }
+
+            #endregion
+
+
+            var result = AuthStopChargingStationResult.Error(_AuthorizatorId);
+
+
+            #region Send OnAuthorizeChargingStationStopped event
+
+            try
+            {
+
+                var OnAuthorizeChargingStationStoppedLocal = OnAuthorizeChargingStationStopped;
+                if (OnAuthorizeChargingStationStoppedLocal != null)
+                    OnAuthorizeChargingStationStoppedLocal(Timestamp,
+                                                           this,
+                                                           EventTrackingId,
+                                                           RoamingNetworkId,
+                                                           OperatorId,
+                                                           ChargingStationId,
+                                                           SessionId,
+                                                           AuthToken,
+                                                           QueryTimeout,
+                                                           result);
+
+            }
+            catch (Exception e)
+            {
+                e.Log("CPORoamingWWCP." + nameof(OnAuthorizeChargingStationStopped));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1930,29 +2210,81 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            var result = await _CPORoaming.SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
-                                                                  SessionId:             ChargeDetailRecord.SessionId,
-                                                                  PartnerProductId:      ChargeDetailRecord.ChargingProductId,
-                                                                  SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
-                                                                  SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
-                                                                  Identification:        new AuthorizationIdentification(ChargeDetailRecord.Identification),
-                                                                  //PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
-                                                                  ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new Nullable<DateTime>(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
-                                                                  ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ?                        ChargeDetailRecord.SessionTime.Value.EndTime    : null,
-                                                                  MeterValueStart:       ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeterValues.First().Value) : null,
-                                                                  MeterValueEnd:         ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeterValues.Last(). Value) : null,
-                                                                  MeterValuesInBetween:  ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? ChargeDetailRecord.EnergyMeterValues.Select(v => v.Value)       : null,
-                                                                  ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
-                                                                  MeteringSignature:     ChargeDetailRecord.MeteringSignature,
-                                                                  QueryTimeout:          QueryTimeout);
+            #region Send OnChargeDetailRecordSend event
+
+            try
+            {
+
+                var OnChargeDetailRecordSendLocal = OnChargeDetailRecordSend;
+                if (OnChargeDetailRecordSendLocal != null)
+                    OnChargeDetailRecordSendLocal(Timestamp,
+                                                  this,
+                                                  EventTrackingId,
+                                                  RoamingNetworkId,
+                                                  ChargeDetailRecord,
+                                                  QueryTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log("CPORoamingWWCP." + nameof(OnChargeDetailRecordSend));
+            }
+
+            #endregion
+
+
+            var response = await _CPORoaming.SendChargeDetailRecord(EVSEId:                ChargeDetailRecord.EVSEId,
+                                                                    SessionId:             ChargeDetailRecord.SessionId,
+                                                                    PartnerProductId:      ChargeDetailRecord.ChargingProductId,
+                                                                    SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
+                                                                    SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
+                                                                    Identification:        new AuthorizationIdentification(ChargeDetailRecord.Identification),
+                                                                    //PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
+                                                                    ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new Nullable<DateTime>(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
+                                                                    ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ?                        ChargeDetailRecord.SessionTime.Value.EndTime    : null,
+                                                                    MeterValueStart:       ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeterValues.First().Value) : null,
+                                                                    MeterValueEnd:         ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeterValues.Last(). Value) : null,
+                                                                    MeterValuesInBetween:  ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? ChargeDetailRecord.EnergyMeterValues.Select(v => v.Value)       : null,
+                                                                    ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
+                                                                    MeteringSignature:     ChargeDetailRecord.MeteringSignature,
+                                                                    QueryTimeout:          QueryTimeout);
+
+
+            SendCDRResult result = null;
 
             // true
-            if (result.Result)
-                return SendCDRResult.Forwarded(_AuthorizatorId);
+            if (response.Result)
+                result = SendCDRResult.Forwarded(_AuthorizatorId);
 
             // false
             else
-                return SendCDRResult.NotForwared(_AuthorizatorId);
+                result = SendCDRResult.NotForwared(_AuthorizatorId);
+
+
+            #region Send OnChargeDetailRecordSend event
+
+            try
+            {
+
+                var OnChargeDetailRecordSentLocal = OnChargeDetailRecordSent;
+                if (OnChargeDetailRecordSentLocal != null)
+                    OnChargeDetailRecordSentLocal(Timestamp,
+                                                  this,
+                                                  EventTrackingId,
+                                                  RoamingNetworkId,
+                                                  ChargeDetailRecord,
+                                                  QueryTimeout,
+                                                  result);
+
+            }
+            catch (Exception e)
+            {
+                e.Log("CPORoamingWWCP." + nameof(OnChargeDetailRecordSent));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -2002,32 +2334,37 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         {
 
-            var result = await _CPORoaming.SendChargeDetailRecord(EVSEId,
-                                                                  SessionId,
-                                                                  PartnerProductId,
-                                                                  SessionStart,
-                                                                  SessionEnd,
-                                                                  new AuthorizationIdentification(Identification),
-                                                                  null,
-                                                                  ChargingStart,
-                                                                  ChargingEnd,
-                                                                  MeterValueStart,
-                                                                  MeterValueEnd,
-                                                                  MeterValuesInBetween,
-                                                                  ConsumedEnergy,
-                                                                  MeteringSignature,
-                                                                  null,
-                                                                  null,
-                                                                  QueryTimeout);
+            var response = await _CPORoaming.SendChargeDetailRecord(EVSEId,
+                                                                    SessionId,
+                                                                    PartnerProductId,
+                                                                    SessionStart,
+                                                                    SessionEnd,
+                                                                    new AuthorizationIdentification(Identification),
+                                                                    null,
+                                                                    ChargingStart,
+                                                                    ChargingEnd,
+                                                                    MeterValueStart,
+                                                                    MeterValueEnd,
+                                                                    MeterValuesInBetween,
+                                                                    ConsumedEnergy,
+                                                                    MeteringSignature,
+                                                                    null,
+                                                                    null,
+                                                                    QueryTimeout);
 
+
+            SendCDRResult result = null;
 
             // true
-            if (result.Result)
-                return SendCDRResult.Forwarded(_AuthorizatorId);
+            if (response.Result)
+                result = SendCDRResult.Forwarded(_AuthorizatorId);
 
             // false
             else
-                return SendCDRResult.NotForwared(_AuthorizatorId);
+                result = SendCDRResult.NotForwared(_AuthorizatorId);
+
+
+            return result;
 
         }
 

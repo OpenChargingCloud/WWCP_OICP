@@ -141,7 +141,7 @@ namespace org.GraphDefined.WWCP
         /// Create a new OICP v2.0 service checker.
         /// </summary>
         /// <typeparam name="T">The type of the data returned by the service checker.</typeparam>
-        /// <param name="RoamingProvider">A roaming provider.</param>
+        /// <param name="CPORoamingProvider">A roaming provider.</param>
         /// <param name="ServiceChecker">A function to check the OICP v2.0 service regularly and providing some result.</param>
         /// <param name="OnFirstCheck">A delegate processing the first check result.</param>
         /// <param name="OnEveryCheck">A delegate processing a check result.</param>
@@ -149,7 +149,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="InitialDelay">Initial delay between startup and first check.</param>
         public static OICPv2_0.CPOServiceCheck<T>
 
-            CreateOICP_CPOServiceCheck<T>(this CPORoamingProvider              RoamingProvider,
+            CreateOICP_CPOServiceCheck<T>(this CPORoamingProvider              CPORoamingProvider,
                                           OICPv2_0.CPOServiceCheckDelegate<T>  ServiceChecker,
                                           Action<T>                            OnFirstCheck,
                                           Action<T>                            OnEveryCheck,
@@ -159,10 +159,13 @@ namespace org.GraphDefined.WWCP
 
             #region Initial checks
 
-            var _CPORoamingWWCP = (RoamingProvider.OperatorRoamingService as OICPv2_0.CPORoamingWWCP);
+            if (CPORoamingProvider == null)
+                throw new ArgumentNullException(nameof(CPORoamingProvider), "The given CPO roaming provider must not be null!");
+
+            var _CPORoamingWWCP = ((CPORoamingProvider as IOperatorRoamingService) as OICPv2_0.CPORoamingWWCP);
 
             if (_CPORoamingWWCP == null)
-                throw new ArgumentException("The given roaming provider is not an OICP v2.0 CPO roaming provider!", "RoamingProvider");
+                throw new ArgumentException("The given CPO roaming provider is not an OICP v2.0 CPO roaming provider!", nameof(CPORoamingProvider));
 
             #endregion
 

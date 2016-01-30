@@ -109,17 +109,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event sent whenever a remote start command was received.
         /// </summary>
-        public event RequestLogHandler OnLogRemoteStart;
+        public event RequestLogHandler      OnLogRemoteStart;
 
         /// <summary>
         /// An event sent whenever a remote start response was sent.
         /// </summary>
-        public event AccessLogHandler OnLogRemoteStarted;
+        public event AccessLogHandler       OnLogRemoteStarted;
 
         /// <summary>
         /// An event sent whenever a remote start command was received.
         /// </summary>
-        public event OnRemoteStartDelegate OnRemoteStart;
+        public event OnRemoteStartDelegate  OnRemoteStart;
 
         #endregion
 
@@ -128,12 +128,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event sent whenever a remote stop command was received.
         /// </summary>
-        public event RequestLogHandler OnLogRemoteStop;
+        public event RequestLogHandler     OnLogRemoteStop;
 
         /// <summary>
         /// An event sent whenever a remote stop response was sent.
         /// </summary>
-        public event AccessLogHandler OnLogRemoteStopped;
+        public event AccessLogHandler      OnLogRemoteStopped;
 
         /// <summary>
         /// An event sent whenever a remote stop command was received.
