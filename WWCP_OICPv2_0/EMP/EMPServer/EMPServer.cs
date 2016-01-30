@@ -549,6 +549,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     //         </cmn:RFIDmifarefamilyIdentification>
                     //       </tns:Identification>
                     //
+                    //       <tns:PartnerProductID>AC1</tns:PartnerProductID>
+                    // 
                     //     </tns:eRoamingAuthorizeStart>
                     //
                     //   </soapenv:Body>
@@ -1061,31 +1063,44 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Parse request parameters
 
-                    var CDR = eRoamingChargeDetailRecord.Parse(ChargeDetailRecordXML);
+                    SendCDRResult              response  = null;
+                    eRoamingChargeDetailRecord CDR       = null;
 
-                    Console.WriteLine("ChargeDetailRecordXML: " + ChargeDetailRecordXML.ToString());
+                    try
+                    {
+
+                        CDR = eRoamingChargeDetailRecord.Parse(ChargeDetailRecordXML);
+
+                    }
+                    catch (Exception e)
+                    {
+                        response = SendCDRResult.Error(_AuthorizatorId, e.Message);
+                    }
 
                     #endregion
 
 
                     #region Call async subscribers
 
-                    SendCDRResult response = null;
-
-                    var OnAuthorizeStopLocal = OnAuthorizeStop;
-                    if (OnAuthorizeStopLocal != null)
+                    if (response == null)
                     {
 
-                        var CTS = new CancellationTokenSource();
+                        var OnChargeDetailRecordLocal = OnChargeDetailRecord;
+                        if (OnChargeDetailRecordLocal != null)
+                        {
 
-                        var task = OnChargeDetailRecord(DateTime.Now,
-                                                        CTS.Token,
-                                                        EventTracking_Id.New,
-                                                        CDR,
-                                                        DefaultQueryTimeout);
+                            var CTS = new CancellationTokenSource();
 
-                        task.Wait();
-                        response = task.Result;
+                            var task = OnChargeDetailRecord(DateTime.Now,
+                                                            CTS.Token,
+                                                            EventTracking_Id.New,
+                                                            CDR,
+                                                            DefaultQueryTimeout);
+
+                            task.Wait();
+                            response = task.Result;
+
+                        }
 
                     }
 
@@ -1119,6 +1134,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                             case SendCDRResultType.UnknownEVSE:
                                 HubjectCode         = "603";
                                 HubjectDescription  = "Unknown EVSE identification!";
+                                break;
+
+                            case SendCDRResultType.Error:
+                                HubjectCode         = "022";
+                                HubjectDescription  = response.Description;
                                 break;
 
 

@@ -767,15 +767,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
 
             return new ChargeDetailRecord(ChargeDetailRecord.SessionId,
-                                          EVSEId:               ChargeDetailRecord.EVSEId,
-                                          ChargingProductId:    ChargeDetailRecord.PartnerProductId,
-                                          SessionTime:          new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
-                                          ChargingTime:         ChargeDetailRecord.ChargingStart != null ? new StartEndDateTime?(new StartEndDateTime(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.ChargingEnd)) : null,
-                                          EnergyMeterValues:    new List<Timestamped<Double>>() { new Timestamped<Double>(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.MeterValueStart.Value),
-                                                                                                  new Timestamped<Double>(ChargeDetailRecord.ChargingEnd.Value,   ChargeDetailRecord.MeterValueEnd.Value) },
+                                          EVSEId:             ChargeDetailRecord.EVSEId,
+                                          ChargingProductId:  ChargeDetailRecord.PartnerProductId,
+                                          SessionTime:        new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
+                                          EnergyMeterValues:  new List<Timestamped<Double>>() { new Timestamped<Double>(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.MeterValueStart.Value),
+                                                                                                new Timestamped<Double>(ChargeDetailRecord.ChargingEnd.Value,   ChargeDetailRecord.MeterValueEnd.Value) },
                                           //MeterValuesInBetween
                                           //ConsumedEnergy
-                                          MeteringSignature: ChargeDetailRecord.MeteringSignature);
+                                          MeteringSignature:  ChargeDetailRecord.MeteringSignature);
 
         }
 

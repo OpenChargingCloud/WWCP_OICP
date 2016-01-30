@@ -80,7 +80,7 @@ namespace org.GraphDefined.WWCP
                                                                     DNSClient                        DNSClient              = null,
 
                                                                     Action<OICPv2_0.EMPRoamingWWCP>  OICPConfigurator       = null,
-                                                                    Action<EMPRoamingProvider>          Configurator           = null)
+                                                                    Action<EMPRoamingProvider>       Configurator           = null)
 
         {
 

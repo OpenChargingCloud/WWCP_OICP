@@ -117,31 +117,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region AuthToken
+        #region Identification
 
-        private readonly Auth_Token _AuthToken;
+        private readonly AuthorizationIdentification _Identification;
 
         [Optional]
-        public Auth_Token AuthToken
+        public AuthorizationIdentification Identification
         {
             get
             {
-                return _AuthToken;
-            }
-        }
-
-        #endregion
-
-        #region eMAId
-
-        private readonly eMA_Id _eMAId;
-
-        [Optional]
-        public eMA_Id eMAId
-        {
-            get
-            {
-                return _eMAId;
+                return _Identification;
             }
         }
 
@@ -356,10 +341,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (SessionEnd       == null)
                 throw new ArgumentNullException("SessionEnd",        "The given parameter must not be null!");
 
-            if (AuthToken        == null &&
-                eMAId            == null)
-                throw new ArgumentNullException("AuthToken / eMAId", "At least one of the given parameters must not be null!");
-
             #endregion
 
             this._EVSEId                = EVSEId;
@@ -367,8 +348,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             this._PartnerProductId      = PartnerProductId;
             this._SessionStart          = SessionStart;
             this._SessionEnd            = SessionEnd;
-            this._AuthToken             = AuthToken;
-            this._eMAId                 = eMAId;
+            this._Identification        = Identification;
             this._PartnerSessionId      = PartnerSessionId;
             this._ChargingStart         = ChargingStart;
             this._ChargingEnd           = ChargingEnd;
@@ -500,7 +480,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return new eRoamingChargeDetailRecord(
 
-                eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionID",
+                eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "EvseID",
                                                                     EVSE_Id.Parse,
                                                                     "The EvseID is invalid!"),
 
@@ -573,12 +553,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
 
                 new XElement(OICPNS.Authorization + "Identification",
-                    (AuthToken != null)
+                    (_Identification.AuthToken != null)
                         ? new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                               new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString())
+                               new XElement(OICPNS.CommonTypes + "UID", _Identification.AuthToken.ToString())
                           )
                         : new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                               new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
+                               new XElement(OICPNS.CommonTypes + "EVCOID", _Identification.RemoteIdentification.ToString())
                           )
                 ),
 

@@ -2245,7 +2245,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                     MeterValueStart:       ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeterValues.First().Value) : null,
                                                                     MeterValueEnd:         ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeterValues.Last(). Value) : null,
                                                                     MeterValuesInBetween:  ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? ChargeDetailRecord.EnergyMeterValues.Select(v => v.Value)       : null,
-                                                                    ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
                                                                     MeteringSignature:     ChargeDetailRecord.MeteringSignature,
                                                                     QueryTimeout:          QueryTimeout);
 
