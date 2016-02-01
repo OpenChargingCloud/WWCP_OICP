@@ -92,7 +92,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                Action<String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toNetwork,
                                Action<String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toHTTPSSE)
 
-            : base(CPOServer.HTTPServer,
+            : base(CPOServer.SOAPServer,
 
                    LogHTTPRequest_toConsole,
                    LogHTTPRequest_toDisc,

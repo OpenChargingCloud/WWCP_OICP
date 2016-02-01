@@ -22,14 +22,12 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-
-using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -47,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML CPO Server API";
+        public const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML Server API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
@@ -63,15 +61,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Properties
 
-        #region HTTPServer
+        #region SOAPServer
 
-        private readonly HTTPServer _HTTPServer;
+        private readonly SOAPServer _SOAPServer;
 
-        public HTTPServer HTTPServer
+        /// <summary>
+        /// The SOAP server.
+        /// </summary>
+        public SOAPServer SOAPServer
         {
             get
             {
-                return _HTTPServer;
+                return _SOAPServer;
             }
         }
 
@@ -160,12 +161,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _HTTPServer.RequestLog += value;
+                _SOAPServer.RequestLog += value;
             }
 
             remove
             {
-                _HTTPServer.RequestLog -= value;
+                _SOAPServer.RequestLog -= value;
             }
 
         }
@@ -182,12 +183,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _HTTPServer.AccessLog += value;
+                _SOAPServer.AccessLog += value;
             }
 
             remove
             {
-                _HTTPServer.AccessLog -= value;
+                _SOAPServer.AccessLog -= value;
             }
 
         }
@@ -204,12 +205,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _HTTPServer.ErrorLog += value;
+                _SOAPServer.ErrorLog += value;
             }
 
             remove
             {
-                _HTTPServer.ErrorLog -= value;
+                _SOAPServer.ErrorLog -= value;
             }
 
         }
@@ -236,40 +237,48 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                          DNSClient DNSClient       = null,
                          Boolean   AutoStart       = false)
 
-            : this(new HTTPServer(TCPPort != null ? TCPPort : DefaultHTTPServerPort,
+            : this(new SOAPServer(TCPPort != null ? TCPPort : DefaultHTTPServerPort,
                                   DefaultServerName:  HTTPServerName,
                                   DNSClient:          DNSClient,
                                   Autostart:          AutoStart),
                    URIPrefix)
 
-        { }
+        {
+
+            if (AutoStart)
+                Start();
+
+        }
 
         #endregion
 
-        #region CPOServer(HTTPServer, URIPrefix = "")
+        #region CPOServer(SOAPServer, URIPrefix = "")
 
         /// <summary>
         /// Use the given HTTP server for the OICP HTTP/SOAP/XML CPO Server API using IPAddress.Any.
         /// </summary>
-        /// <param name="HTTPServer">A HTTP server.</param>
+        /// <param name="SOAPServer">A SOAP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
-        public CPOServer(HTTPServer  HTTPServer,
+        public CPOServer(SOAPServer  SOAPServer,
                          String      URIPrefix  = "")
         {
 
             #region Initial checks
 
-            if (HTTPServer == null)
+            if (SOAPServer == null)
                 throw new ArgumentNullException("HTTPServer", "The given parameter must not be null!");
+
+            if (URIPrefix == null)
+                URIPrefix = "";
 
             if (URIPrefix.Length > 0 && !URIPrefix.StartsWith("/"))
                 URIPrefix = "/" + URIPrefix;
 
             #endregion
 
-            this._HTTPServer  = HTTPServer;
+            this._SOAPServer  = SOAPServer;
             this._URIPrefix   = URIPrefix;
-            this._DNSClient   = HTTPServer.DNSClient;
+            this._DNSClient   = SOAPServer.DNSClient;
 
             RegisterURITemplates();
 
@@ -287,128 +296,43 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region / (HTTPRoot)
 
-            // HTML
-            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/",
-                                          HTTPContentType.HTML_UTF8,
-                                          HTTPDelegate: Request => {
-
-                                              return new HTTPResponseBuilder(Request) {
-                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                                  ContentType     = HTTPContentType.HTML_UTF8,
-                                                  Content         = (@"Please use ""/RemoteStartStop"" as a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                                  Connection      = "close"
-                                              };
-
-                                          },
-                                          AllowReplacement: URIReplacement.Allow);
-
-            // Text
-            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+            _SOAPServer.AddMethodCallback(HTTPMethod.GET,
                                           URIPrefix + "/",
                                           HTTPContentType.TEXT_UTF8,
                                           HTTPDelegate: Request => {
 
                                               return new HTTPResponseBuilder(Request) {
+
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                                  ContentType     = HTTPContentType.HTML_UTF8,
-                                                  Content         = (@"Please use ""/RemoteStartStop"" as a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  ContentType     = HTTPContentType.TEXT_UTF8,
+                                                  Content         = ("Welcome at " + DefaultHTTPServerName + Environment.NewLine +
+                                                                     "This is a HTTP/SOAP/XML endpoint!" + Environment.NewLine + Environment.NewLine +
+                                                                     "Defined endpoints: " + Environment.NewLine + Environment.NewLine +
+                                                                     _SOAPServer.
+                                                                         SOAPDispatchers.
+                                                                         Select(group => " - " + group.Key + Environment.NewLine +
+                                                                                         "   " + group.SelectMany(dispatcher => dispatcher.SOAPDispatches).
+                                                                                                       Select    (dispatch   => dispatch.  Description).
+                                                                                                       AggregateWith(", ")
+                                                                               ).AggregateWith(Environment.NewLine + Environment.NewLine)
+                                                                    ).ToUTF8Bytes(),
                                                   Connection      = "close"
+
                                               };
+
 
                                           },
                                           AllowReplacement: URIReplacement.Allow);
 
             #endregion
 
-            #region /RemoteStartStop
+            #region /Authorization - AuthorizeRemoteStart
 
-            #region Generic RemoteStartStopDelegate
+            _SOAPServer.RegisterSOAPDelegate("/Authorization",
+                                             "AuthorizeRemoteStart",
+                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart").FirstOrDefault(),
+                                             (Request, RemoteStartXML) => {
 
-            HTTPDelegate RemoteStartStopDelegate = Request => {
-
-                #region ParseXMLRequestBody... or fail!
-
-                var XMLRequest = Request.ParseXMLRequestBody();
-                if (XMLRequest.HasErrors)
-                {
-
-                    _HTTPServer.GetEventSource(Semantics.DebugLog).
-                        SubmitSubEvent("InvalidXMLRequest",
-                                       JSONObject.Create(
-                                           new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
-                                           new JProperty("XMLRequest",    Request.HTTPBody != null ? Request.HTTPBody.ToUTF8String() : "")
-                                       ).ToString().
-                                         Replace(Environment.NewLine, ""));
-
-                    return XMLRequest.Error;
-
-                }
-
-                #endregion
-
-                #region Get SOAP request...
-
-                IEnumerable<XElement> RemoteStartXMLs;
-                IEnumerable<XElement> RemoteStopXMLs;
-
-                try
-                {
-
-                    RemoteStartXMLs = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart");
-                    RemoteStopXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop");
-
-                    if (!RemoteStartXMLs.Any() && !RemoteStopXMLs.Any())
-                        throw new Exception("Must be either RemoteStart or RemoteStop XML request!");
-
-                    if (RemoteStartXMLs.Count() > 1)
-                        throw new Exception("Multiple RemoteStart XML tags within a single request are not supported!");
-
-                    if (RemoteStopXMLs. Count() > 1)
-                        throw new Exception("Multiple RemoteStop XML tags within a single request are not supported!");
-
-                }
-                catch (Exception e)
-                {
-
-                    _HTTPServer.GetEventSource(Semantics.DebugLog).
-                        SubmitSubEvent("InvalidXMLRequest",
-                                       JSONObject.Create(
-                                           new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
-                                           new JProperty("Exception",     e.Message),
-                                           new JProperty("XMLRequest",    XMLRequest.ToString())
-                                       ).ToString().
-                                         Replace(Environment.NewLine, ""));
-
-                    return new HTTPResponseBuilder(Request) {
-
-                        HTTPStatusCode = HTTPStatusCode.OK,
-                        ContentType    = HTTPContentType.XMLTEXT_UTF8,
-                        Content        = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-
-                                                                new XElement(OICPNS.CommonTypes + "Result", "false"),
-
-                                                                new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                    new XElement(OICPNS.CommonTypes + "Code",           "022"),
-                                                                    new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
-                                                                    new XElement(OICPNS.CommonTypes + "AdditionalInfo", e.Message)
-                                                                )
-
-                                                            )).ToString().ToUTF8Bytes()
-
-                    };
-
-                }
-
-                #endregion
-
-                #region Process an OICP RemoteStart HTTP/SOAP/XML call
-
-                var RemoteStartXML = RemoteStartXMLs.FirstOrDefault();
-                if (RemoteStartXML != null)
-                {
 
                     #region Documentation
 
@@ -479,7 +403,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         var OnLogRemoteStartLocal = OnLogRemoteStart;
                         if (OnLogRemoteStartLocal != null)
-                            OnLogRemoteStartLocal(DateTime.Now, this.HTTPServer, Request);
+                            OnLogRemoteStartLocal(DateTime.Now, this.SOAPServer, Request);
 
                     }
                     catch (Exception e)
@@ -700,7 +624,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
-                        Server          = HTTPServer.DefaultServerName,
+                        Server          = SOAPServer.DefaultServerName,
                         Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(
@@ -731,7 +655,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         var OnLogRemoteStartedLocal = OnLogRemoteStarted;
                         if (OnLogRemoteStartedLocal != null)
-                            OnLogRemoteStartedLocal(HTTPResponse.Timestamp, this.HTTPServer, Request, HTTPResponse);
+                            OnLogRemoteStartedLocal(HTTPResponse.Timestamp, this.SOAPServer, Request, HTTPResponse);
 
                     }
                     catch (Exception e)
@@ -743,15 +667,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     return HTTPResponse;
 
-                }
+            });
 
-                #endregion
+            #endregion
 
-                #region Process an OICP RemoteStop HTTP/SOAP/XML call
+            #region /Authorization - AuthorizeRemoteStop
 
-                var RemoteStopXML  = RemoteStopXMLs.FirstOrDefault();
-                if (RemoteStopXML != null)
-                {
+            _SOAPServer.RegisterSOAPDelegate("/Authorization",
+                                             "AuthorizeRemoteStop",
+                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop").FirstOrDefault(),
+                                             (Request, RemoteStopXML) => {
 
                     #region Documentation
 
@@ -786,7 +711,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         var OnLogRemoteStopLocal = OnLogRemoteStop;
                         if (OnLogRemoteStopLocal != null)
-                            OnLogRemoteStopLocal(DateTime.Now, this.HTTPServer, Request);
+                            OnLogRemoteStopLocal(DateTime.Now, this.SOAPServer, Request);
 
                     }
                     catch (Exception e)
@@ -965,7 +890,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
-                        Server          = HTTPServer.DefaultServerName,
+                        Server          = SOAPServer.DefaultServerName,
                         Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(
@@ -994,7 +919,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         var OnLogRemoteStoppedLocal = OnLogRemoteStopped;
                         if (OnLogRemoteStoppedLocal != null)
-                            OnLogRemoteStoppedLocal(HTTPResponse.Timestamp, this.HTTPServer, Request, HTTPResponse);
+                            OnLogRemoteStoppedLocal(HTTPResponse.Timestamp, this.SOAPServer, Request, HTTPResponse);
 
                     }
                     catch (Exception e)
@@ -1006,154 +931,87 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     return HTTPResponse;
 
-                }
-
-                #endregion
-
-                #region GetEVSEByIdRequest(EVSEId, QueryTimeout = null)
-
-                /// <summary>
-                /// Create a new task requesting the static EVSE data
-                /// for the given EVSE identification.
-                /// </summary>
-                /// <param name="EVSEId">The unique identification of the EVSE.</param>
-                /// <param name="QueryTimeout">An optional timeout for this query.</param>
-                //public Task<HTTPResponse<EVSEDataRecord>>
-
-                //    GetEVSEByIdRequest(EVSE_Id    EVSEId,
-                //                       TimeSpan?  QueryTimeout  = null)
-
-                //{
-
-                //    try
-                //    {
-
-                //        using (var _OICPClient = new SOAPClient(Hostname,
-                //                                                TCPPort,
-                //                                                HTTPVirtualHost,
-                //                                                "/ibis/ws/eRoamingEvseData_V2.0",
-                //                                                UserAgent,
-                //                                                DNSClient))
-                //        {
-
-                //            return _OICPClient.Query(EMP_XMLMethods.GetEVSEByIdRequestXML(EVSEId),
-                //                                     "eRoamingEvseById",
-                //                                     QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
-
-                //                                     OnSuccess: XMLData =>
-
-                //                                         #region Documentation
-
-                //                                         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-                //                                         //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-                //                                         //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                //                                         //   <soapenv:Header/>
-                //                                         //   <soapenv:Body>
-                //                                         //      <EVSEData:eRoamingEvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
-                //                                         //          [...]
-                //                                         //      </EVSEData:eRoamingEvseDataRecord>
-                //                                         //    </soapenv:Body>
-                //                                         // </soapenv:Envelope>
-
-                //                                         #endregion
-
-                //                                         new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
-                //                                                                          XMLMethods.ParseEVSEDataRecordXML(XMLData.Content)),
-
-                //                                     OnSOAPFault: Fault =>
-                //                                         new HTTPResponse<EVSEDataRecord>(
-                //                                             Fault.HttpResponse,
-                //                                             new Exception(Fault.Content.ToString())),
-
-                //                                     OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
-
-                //                                     OnException: (t, s, e) => SendOnException(t, s, e)
-
-                //                                    );
-
-                //        }
-
-                //    }
-
-                //    catch (Exception e)
-                //    {
-
-                //        SendOnException(DateTime.Now, this, e);
-
-                //        return new Task<HTTPResponse<EVSEDataRecord>>(
-                //            () => new HTTPResponse<EVSEDataRecord>(e));
-
-                //    }
-
-                //}
-
-                #endregion
-
-                return new HTTPResponseBuilder(Request) {
-                    HTTPStatusCode  = HTTPStatusCode.NotFound,
-                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                    Content         = "Error!".ToUTF8Bytes()
-                };
-
-            };
+            });
 
             #endregion
 
-            #region Register SOAP-XML Request via GET
 
-            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/RemoteStartStop",
-                                          HTTPContentType.XMLTEXT_UTF8,
-                                          HTTPDelegate: RemoteStartStopDelegate);
+            #region GetEVSEByIdRequest(EVSEId, QueryTimeout = null)
 
-            #endregion
+            /// <summary>
+            /// Create a new task requesting the static EVSE data
+            /// for the given EVSE identification.
+            /// </summary>
+            /// <param name="EVSEId">The unique identification of the EVSE.</param>
+            /// <param name="QueryTimeout">An optional timeout for this query.</param>
+            //public Task<HTTPResponse<EVSEDataRecord>>
 
-            #region Register SOAP-XML Request via POST
+            //    GetEVSEByIdRequest(EVSE_Id    EVSEId,
+            //                       TimeSpan?  QueryTimeout  = null)
 
-            _HTTPServer.AddMethodCallback(HTTPMethod.POST,
-                                          URIPrefix + "/RemoteStartStop",
-                                          HTTPContentType.XMLTEXT_UTF8,
-                                          HTTPDelegate: RemoteStartStopDelegate);
+            //{
 
-            #endregion
+            //    try
+            //    {
 
-            #region Register HTML+Plaintext ErrorResponse
+            //        using (var _OICPClient = new SOAPClient(Hostname,
+            //                                                TCPPort,
+            //                                                HTTPVirtualHost,
+            //                                                "/ibis/ws/eRoamingEvseData_V2.0",
+            //                                                UserAgent,
+            //                                                DNSClient))
+            //        {
 
-            // HTML
-            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/RemoteStartStop",
-                                          HTTPContentType.HTML_UTF8,
-                                          HTTPDelegate: Request => {
+            //            return _OICPClient.Query(EMP_XMLMethods.GetEVSEByIdRequestXML(EVSEId),
+            //                                     "eRoamingEvseById",
+            //                                     QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
+            //                                     OnSuccess: XMLData =>
 
-                                              return new HTTPResponseBuilder(Request) {
-                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                                  ContentType     = HTTPContentType.HTML_UTF8,
-                                                  Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                                  Connection      = "close"
-                                              };
+            //                                         #region Documentation
 
-                                          });
+            //                                         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                                         //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+            //                                         //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //                                         //   <soapenv:Header/>
+            //                                         //   <soapenv:Body>
+            //                                         //      <EVSEData:eRoamingEvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
+            //                                         //          [...]
+            //                                         //      </EVSEData:eRoamingEvseDataRecord>
+            //                                         //    </soapenv:Body>
+            //                                         // </soapenv:Envelope>
 
-            // Text
-            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/RemoteStartStop",
-                                          HTTPContentType.TEXT_UTF8,
-                                          HTTPDelegate: Request => {
+            //                                         #endregion
 
-                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
+            //                                         new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
+            //                                                                          XMLMethods.ParseEVSEDataRecordXML(XMLData.Content)),
 
-                                              return new HTTPResponseBuilder(Request) {
-                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                                  ContentType     = HTTPContentType.HTML_UTF8,
-                                                  Content         = ("/RNs/" + RoamingNetworkId + "/RemoteStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                                  Connection      = "close"
-                                              };
+            //                                     OnSOAPFault: Fault =>
+            //                                         new HTTPResponse<EVSEDataRecord>(
+            //                                             Fault.HttpResponse,
+            //                                             new Exception(Fault.Content.ToString())),
 
-                                          });
+            //                                     OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
 
-            #endregion
+            //                                     OnException: (t, s, e) => SendOnException(t, s, e)
+
+            //                                    );
+
+            //        }
+
+            //    }
+
+            //    catch (Exception e)
+            //    {
+
+            //        SendOnException(DateTime.Now, this, e);
+
+            //        return new Task<HTTPResponse<EVSEDataRecord>>(
+            //            () => new HTTPResponse<EVSEDataRecord>(e));
+
+            //    }
+
+            //}
 
             #endregion
 
@@ -1327,7 +1185,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         public void Start()
         {
-            _HTTPServer.Start();
+            _SOAPServer.Start();
         }
 
         #endregion
@@ -1336,11 +1194,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         public void Shutdown(String Message = null, Boolean Wait = true)
         {
-            _HTTPServer.Shutdown(Message, Wait);
+            _SOAPServer.Shutdown(Message, Wait);
         }
 
         #endregion
-
 
     }
 

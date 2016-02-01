@@ -18,16 +18,13 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
@@ -374,9 +371,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                  ServerTCPPort,
                                  ServerURIPrefix,
                                  DNSClient,
-                                 ServerAutoStart))
+                                 false))
 
-        { }
+        {
+
+            if (ServerAutoStart)
+                Start();
+
+        }
 
         #endregion
 
@@ -604,6 +606,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             //ToDo: Process the HTTP!
             return result.Content;
 
+        }
+
+        #endregion
+
+
+
+        #region Start()
+
+        public void Start()
+        {
+            _EMPServer.Start();
+        }
+
+        #endregion
+
+        #region Shutdown(Message = null, Wait = true)
+
+        public void Shutdown(String Message = null, Boolean Wait = true)
+        {
+            _EMPServer.Shutdown(Message, Wait);
         }
 
         #endregion

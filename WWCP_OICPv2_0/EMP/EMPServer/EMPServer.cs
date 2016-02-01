@@ -22,15 +22,12 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-
-using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Illias.ConsoleLog;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -48,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML EMP Server API";
+        public const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML Server API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
@@ -79,15 +76,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region HTTPServer
+        #region SOAPServer
 
-        private readonly HTTPServer _HTTPServer;
+        private readonly SOAPServer _SOAPServer;
 
-        public HTTPServer HTTPServer
+        /// <summary>
+        /// The SOAP server.
+        /// </summary>
+        public SOAPServer HTTPServer
         {
             get
             {
-                return _HTTPServer;
+                return _SOAPServer;
             }
         }
 
@@ -195,12 +195,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _HTTPServer.RequestLog += value;
+                _SOAPServer.RequestLog += value;
             }
 
             remove
             {
-                _HTTPServer.RequestLog -= value;
+                _SOAPServer.RequestLog -= value;
             }
 
         }
@@ -217,12 +217,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _HTTPServer.AccessLog += value;
+                _SOAPServer.AccessLog += value;
             }
 
             remove
             {
-                _HTTPServer.AccessLog -= value;
+                _SOAPServer.AccessLog -= value;
             }
 
         }
@@ -239,12 +239,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _HTTPServer.ErrorLog += value;
+                _SOAPServer.ErrorLog += value;
             }
 
             remove
             {
-                _HTTPServer.ErrorLog -= value;
+                _SOAPServer.ErrorLog -= value;
             }
 
         }
@@ -271,40 +271,48 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                          DNSClient DNSClient       = null,
                          Boolean   AutoStart       = false)
 
-            : this(new HTTPServer(TCPPort != null ? TCPPort : DefaultHTTPServerPort,
+            : this(new SOAPServer(TCPPort != null ? TCPPort : DefaultHTTPServerPort,
                                   DefaultServerName:  HTTPServerName,
                                   DNSClient:          DNSClient,
                                   Autostart:          AutoStart),
                    URIPrefix)
 
-        { }
+        {
+
+            if (AutoStart)
+                Start();
+
+        }
 
         #endregion
 
-        #region EMPServer(HTTPServer, URIPrefix = "")
+        #region EMPServer(SOAPServer, URIPrefix = "")
 
         /// <summary>
         /// Use the given HTTP server for the OICP HTTP/SOAP/XML EMP Server API using IPAddress.Any.
         /// </summary>
-        /// <param name="HTTPServer">A HTTP server.</param>
+        /// <param name="SOAPServer">A SOAP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
-        public EMPServer(HTTPServer  HTTPServer,
+        public EMPServer(SOAPServer  SOAPServer,
                          String      URIPrefix  = "")
         {
 
             #region Initial checks
 
-            if (HTTPServer == null)
+            if (SOAPServer == null)
                 throw new ArgumentNullException("HTTPServer", "The given parameter must not be null!");
+
+            if (URIPrefix == null)
+                URIPrefix = "";
 
             if (URIPrefix.Length > 0 && !URIPrefix.StartsWith("/"))
                 URIPrefix = "/" + URIPrefix;
 
             #endregion
 
-            this._HTTPServer  = HTTPServer;
+            this._SOAPServer  = SOAPServer;
             this._URIPrefix   = URIPrefix;
-            this._DNSClient   = HTTPServer.DNSClient;
+            this._DNSClient   = SOAPServer.DNSClient;
 
             RegisterURITemplates();
 
@@ -322,479 +330,385 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region / (HTTPRoot)
 
-            // HTML
-            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/",
-                                          HTTPContentType.HTML_UTF8,
-                                          HTTPDelegate: Request => {
-
-                                              return new HTTPResponseBuilder(Request) {
-                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                                  ContentType     = HTTPContentType.HTML_UTF8,
-                                                  Content         = (@"Please use ""/AuthorizeStartStop"" as a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                                  Connection      = "close"
-                                              };
-
-                                          },
-                                          AllowReplacement: URIReplacement.Allow);
-
-            // Text
-            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
+            _SOAPServer.AddMethodCallback(HTTPMethod.GET,
                                           URIPrefix + "/",
                                           HTTPContentType.TEXT_UTF8,
                                           HTTPDelegate: Request => {
 
                                               return new HTTPResponseBuilder(Request) {
+
                                                   HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                                  ContentType     = HTTPContentType.HTML_UTF8,
-                                                  Content         = (@"Please use ""/AuthorizeStartStop"" as a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
+                                                  ContentType     = HTTPContentType.TEXT_UTF8,
+                                                  Content         = ("Welcome at " + DefaultHTTPServerName + Environment.NewLine +
+                                                                     "This is a HTTP/SOAP/XML endpoint!" + Environment.NewLine + Environment.NewLine +
+                                                                     "Defined endpoints: " + Environment.NewLine + Environment.NewLine +
+                                                                     _SOAPServer.
+                                                                         SOAPDispatchers.
+                                                                         Select(group => " - " + group.Key + Environment.NewLine +
+                                                                                         "   " + group.SelectMany(dispatcher => dispatcher.SOAPDispatches).
+                                                                                                       Select    (dispatch   => dispatch.  Description).
+                                                                                                       AggregateWith(", ")
+                                                                               ).AggregateWith(Environment.NewLine + Environment.NewLine)
+                                                                    ).ToUTF8Bytes(),
                                                   Connection      = "close"
+
                                               };
+
 
                                           },
                                           AllowReplacement: URIReplacement.Allow);
 
             #endregion
 
-            #region /AuthorizeStartStop
+            #region /Authorization - AuthorizeStart
 
-            #region Generic AuthorizeStartStopDelegate
+            _SOAPServer.RegisterSOAPDelegate("/Authorization",
+                                             "AuthorizeStart",
+                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart").FirstOrDefault(),
+                                             (Request, AuthorizeStartXML) => {
 
-            HTTPDelegate AuthorizeStartStopDelegate = Request => {
+                #region Documentation
 
-                Console.WriteLine("Incoming eRoamingAuthorizeAuthorizeStart, eRoamingAuthorizeAuthorizeStop or eRoamingChargeDetailRecord!!!");
+                // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+                //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+                //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                //
+                //    <soapenv:Header/>
+                //
+                //    <soapenv:Body>
+                //       <Authorization:eRoamingAuthorizeAuthorizeStart>
+                // 
+                //          <!--Optional:-->
+                //          <Authorization:SessionID>?</Authorization:SessionID>
+                // 
+                //          <!--Optional:-->
+                //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+                // 
+                //          <Authorization:ProviderID>?</Authorization:ProviderID>
+                //          <Authorization:EVSEID>?</Authorization:EVSEID>
+                // 
+                //          <Authorization:Identification>
+                //             <!--You have a CHOICE of the next 4 items at this level-->
+                //
+                //             <CommonTypes:RFIDmifarefamilyIdentification>
+                //                <CommonTypes:UID>?</CommonTypes:UID>
+                //             </CommonTypes:RFIDmifarefamilyIdentification>
+                // 
+                //             <CommonTypes:QRCodeIdentification>
+                // 
+                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                // 
+                //                <!--You have a CHOICE of the next 2 items at this level-->
+                //                <CommonTypes:PIN>?</CommonTypes:PIN>
+                // 
+                //                <CommonTypes:HashedPIN>
+                //                   <CommonTypes:Value>?</CommonTypes:Value>
+                //                   <CommonTypes:Function>?</CommonTypes:Function>
+                //                   <CommonTypes:Salt>?</CommonTypes:Salt>
+                //                </CommonTypes:HashedPIN>
+                // 
+                //             </CommonTypes:QRCodeIdentification>
+                // 
+                //             <CommonTypes:PlugAndChargeIdentification>
+                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                //             </CommonTypes:PlugAndChargeIdentification>
+                // 
+                //             <CommonTypes:RemoteIdentification>
+                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                //             </CommonTypes:RemoteIdentification>
+                // 
+                //          </Authorization:Identification>
+                // 
+                //          <!--Optional:-->
+                //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
+                // 
+                //       </Authorization:eRoamingAuthorizeAuthorizeStart>
+                //    </soapenv:Body>
+                //
+                // </soapenv:Envelope>
 
-                #region ParseXMLRequestBody... or fail!
 
-                var XMLRequest = Request.ParseXMLRequestBody();
-                if (XMLRequest.HasErrors)
-                {
-
-                    _HTTPServer.GetEventSource(Semantics.DebugLog).
-                        SubmitSubEvent("InvalidXMLRequest",
-                                       JSONObject.Create(
-                                           new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
-                                           new JProperty("XMLRequest",    Request.HTTPBody != null ? Request.HTTPBody.ToUTF8String() : "")
-                                       ).ToString().
-                                         Replace(Environment.NewLine, ""));
-
-                    return XMLRequest.Error;
-
-                }
+                // POST /RemoteStartStop HTTP/1.1
+                // Content-type: text/xml;charset=utf-8
+                // Soapaction: ""
+                // Accept: text/xml, multipart/related
+                // User-Agent: JAX-WS RI 2.2-hudson-752-
+                // Cache-Control: no-cache
+                // Pragma: no-cache
+                // Host: 5.9.142.73:7001
+                // Connection: keep-alive
+                // Content-Length: 822
+                // 
+                // <?xml version='1.0' encoding='UTF-8'?>
+                // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v2.0"
+                //                   xmlns:fn      = "http://www.w3.org/2005/xpath-functions"
+                //                   xmlns:isns    = "http://schemas.xmlsoap.org/soap/envelope/"
+                //                   xmlns:sbp     = "http://www.inubit.com/eMobility/SBP"
+                //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
+                //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v2.0">
+                // 
+                //   <soapenv:Body>
+                // 
+                //     <tns:eRoamingAuthorizeStart>
+                //
+                //       <tns:SessionID>88efb713-0a88-1296-5c83-2e66786be68b</tns:SessionID>
+                //       <tns:OperatorID>+49*822</tns:OperatorID>
+                //       <tns:EVSEID>+49*822*028630243*1</tns:EVSEID>
+                //
+                //       <tns:Identification>
+                //         <cmn:RFIDmifarefamilyIdentification>
+                //           <cmn:UID>AA3634527A2280</cmn:UID>
+                //         </cmn:RFIDmifarefamilyIdentification>
+                //       </tns:Identification>
+                //
+                //       <tns:PartnerProductID>AC1</tns:PartnerProductID>
+                // 
+                //     </tns:eRoamingAuthorizeStart>
+                //
+                //   </soapenv:Body>
+                //
+                // </soapenv:Envelope>
 
                 #endregion
 
-                #region Get SOAP request...
-
-                IEnumerable<XElement> AuthorizeStartXMLs;
-                IEnumerable<XElement> AuthorizeStopXMLs;
-                IEnumerable<XElement> ChargeDetailRecordXMLs;
+                #region Send OnLogAuthorizeStart event
 
                 try
                 {
 
-                    AuthorizeStartXMLs     = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart");
-                    AuthorizeStopXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop");
-                    ChargeDetailRecordXMLs = XMLRequest.Data.Root.Descendants(OICPNS.Authorization + "eRoamingChargeDetailRecord");
-
-
-                    if (!AuthorizeStartXMLs.Any() && !AuthorizeStopXMLs.Any() && !ChargeDetailRecordXMLs.Any())
-                        throw new Exception("Must be either AuthorizeStart, AuthorizeStop or ChargeDetailRecord XML request!");
-
-                    if (AuthorizeStartXMLs.    Count() > 1)
-                        throw new Exception("Multiple AuthorizeStart XML tags within a single request are not supported!");
-
-                    if (AuthorizeStopXMLs.     Count() > 1)
-                        throw new Exception("Multiple AuthorizeStop XML tags within a single request are not supported!");
-
-                    if (ChargeDetailRecordXMLs.Count() > 1)
-                        throw new Exception("Multiple ChargeDetailRecord XML tags within a single request are not supported!");
+                    var OnLogAuthorizeStartLocal = OnLogAuthorizeStart;
+                    if (OnLogAuthorizeStartLocal != null)
+                        OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, Request);
 
                 }
                 catch (Exception e)
                 {
+                    e.Log("EMPServer.OnLogAuthorizeStart");
+                }
 
-                    Log.WriteLine("Invalid XML request!");
+                #endregion
 
-                    _HTTPServer.GetEventSource(Semantics.DebugLog).
-                        SubmitSubEvent("InvalidXMLRequest",
-                                       JSONObject.Create(
-                                           new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
-                                           new JProperty("Exception",     e.Message),
-                                           new JProperty("XMLRequest",    XMLRequest.ToString())
-                                       ).ToString().
-                                         Replace(Environment.NewLine, ""));
 
-                    return new HTTPResponseBuilder(Request) {
+                #region Parse request parameters
 
-                        HTTPStatusCode = HTTPStatusCode.OK,
-                        ContentType    = HTTPContentType.XMLTEXT_UTF8,
-                        Content        = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                XElement            SessionIdXML;
+                XElement            PartnerSessionIdXML;
+                XElement            EVSEIdXML;
+                XElement            IdentificationXML;
+                XElement            ChargingProductIdXML;
 
-                                                                new XElement(OICPNS.CommonTypes + "Result", "false"),
+                ChargingSession_Id  SessionId           = null;
+                ChargingSession_Id  PartnerSessionId    = null;
+                EVSEOperator_Id     OperatorId          = null;
+                EVSE_Id             EVSEId              = null;
+                eMA_Id              eMAId               = null;
+                ChargingProduct_Id  ChargingProductId   = null;
+                Auth_Token          AuthToken           = null;
 
-                                                                new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                    new XElement(OICPNS.CommonTypes + "Code",           "022"),
-                                                                    new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
-                                                                    new XElement(OICPNS.CommonTypes + "AdditionalInfo", e.Message)
-                                                                )
+                SessionIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "SessionID");
+                if (SessionIdXML != null)
+                    SessionId            = ChargingSession_Id.Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",   null));
 
-                                                            )).ToString().ToUTF8Bytes()
+                PartnerSessionIdXML      = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
+                if (PartnerSessionIdXML != null)
+                    PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                    };
+                OperatorId               = EVSEOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
+
+                EVSEIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "EVSEID");
+                if (EVSEIdXML != null)
+                    EVSEId               = EVSE_Id.           Parse(EVSEIdXML.Value);
+
+                IdentificationXML = AuthorizeStartXML.Element(OICPNS.Authorization + "Identification");
+                if (IdentificationXML != null)
+                {
+
+                    var RFIDmifarefamilyIdentificationXML = IdentificationXML.Element(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification");
+                    if (RFIDmifarefamilyIdentificationXML != null)
+                    {
+
+                        var UIDXML = RFIDmifarefamilyIdentificationXML.Element(OICPNS.CommonTypes + "UID");
+
+                        if (UIDXML != null)
+                            AuthToken = Auth_Token.Parse(UIDXML.Value);
+
+                    }
+
+                }
+                else
+                    throw new Exception("Missing 'Identification'-XML tag!");
+
+                ChargingProductIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerProductID");
+                if (ChargingProductIdXML != null)
+                    ChargingProductId = ChargingProduct_Id.Parse(ChargingProductIdXML.Value);
+
+                #endregion
+
+                #region Call async subscribers
+
+                AuthStartEVSEResult result = null;
+
+                var OnAuthorizeStartLocal = OnAuthorizeStart;
+                if (OnAuthorizeStartLocal != null)
+                {
+
+                    var CTS = new CancellationTokenSource();
+
+                    var task = OnAuthorizeStartLocal(DateTime.Now,
+                                                     this,
+                                                     CTS.Token,
+                                                     EventTracking_Id.New,
+                                                     OperatorId,
+                                                     AuthToken,
+                                                     EVSEId,
+                                                     SessionId,
+                                                     ChargingProductId,
+                                                     PartnerSessionId,
+                                                     DefaultQueryTimeout);
+
+                    task.Wait();
+                    result = task.Result;
 
                 }
 
                 #endregion
 
-                #region Process an OICP AuthorizeStart      HTTP/SOAP/XML call
 
-                var AuthorizeStartXML = AuthorizeStartXMLs.FirstOrDefault();
-                if (AuthorizeStartXML != null)
+                #region Map result
+
+                var HubjectCode            = "";
+                var HubjectDescription     = "";
+                var HubjectAdditionalInfo  = "";
+
+                if (result != null)
+                    switch (result.Result)
+                    {
+
+                        case AuthStartEVSEResultType.Authorized:
+                            HubjectCode         = "000";
+                            HubjectDescription  = "Ready to charge!";
+                            break;
+
+                        case AuthStartEVSEResultType.NotAuthorized:
+                            HubjectCode         = "102";
+                            HubjectDescription  = "RFID Authentication failed - invalid UID";
+                            break;
+
+                        case AuthStartEVSEResultType.InvalidSessionId:
+                            HubjectCode         = "400";
+                            HubjectDescription  = "Session is invalid";
+                            break;
+
+                        case AuthStartEVSEResultType.EVSECommunicationTimeout:
+                            HubjectCode         = "501";
+                            HubjectDescription  = "Communication to EVSE failed!";
+                            break;
+
+                        case AuthStartEVSEResultType.StartChargingTimeout:
+                            HubjectCode         = "510";
+                            HubjectDescription  = "No EV connected to EVSE!";
+                            break;
+
+                        case AuthStartEVSEResultType.Reserved:
+                            HubjectCode         = "601";
+                            HubjectDescription  = "EVSE reserved!";
+                            break;
+
+                        //Note: Can not happen, or?
+                        //case AuthStartEVSEResultType.AlreadyInUse:
+                        //    HubjectCode         = "602";
+                        //    HubjectDescription  = "EVSE is already in use!";
+                        //    break;
+
+                        case AuthStartEVSEResultType.UnknownEVSE:
+                            HubjectCode         = "603";
+                            HubjectDescription  = "Unknown EVSE ID!";
+                            break;
+
+                        case AuthStartEVSEResultType.OutOfService:
+                            HubjectCode         = "700";
+                            HubjectDescription  = "EVSE out of service!";
+                            break;
+
+
+                        default:
+                            HubjectCode         = "320";
+                            HubjectDescription  = "Service not available!";
+                            break;
+
+                    }
+
+                #endregion
+
+
+                var HTTPResponse = new HTTPResponseBuilder(Request) {
+                    HTTPStatusCode  = HTTPStatusCode.OK,
+                    Server          = HTTPServer.DefaultServerName,
+                    Date            = DateTime.Now,
+                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                    Content         = SOAP.Encapsulation(
+                                          new XElement(OICPNS.Authorization + "eRoamingAuthorizationStart",
+
+                                              SessionId != null
+                                                  ? new XElement(OICPNS.Authorization + "SessionID",         result.SessionId.ToString())
+                                                  : null,
+
+                                              PartnerSessionId != null
+                                                  ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                                                  : null,
+
+                                              result.ProviderId != null
+                                                  ? new XElement(OICPNS.Authorization + "ProviderID",        result.ProviderId.ToString())
+                                                  : null,
+
+                                              new XElement(OICPNS.Authorization + "AuthorizationStatus", result.Result == AuthStartEVSEResultType.Authorized ? "Authorized" : "NotAuthorized"),
+
+                                              new XElement(OICPNS.Authorization + "StatusCode",
+
+                                                  new XElement(OICPNS.CommonTypes +       "Code",            HubjectCode),
+
+                                                  HubjectDescription.IsNotNullOrEmpty()
+                                                      ? new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription)
+                                                      : null,
+
+                                                  HubjectAdditionalInfo.IsNotNullOrEmpty()
+                                                      ? new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
+                                                      : null
+
+                                              )
+
+                                         )).ToUTF8Bytes()
+                };
+
+                #region Send OnLogAuthorizeStarted event
+
+                                                 try
                 {
 
-                    #region Documentation
-
-                    // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-                    //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                    //
-                    //    <soapenv:Header/>
-                    //
-                    //    <soapenv:Body>
-                    //       <Authorization:eRoamingAuthorizeAuthorizeStart>
-                    // 
-                    //          <!--Optional:-->
-                    //          <Authorization:SessionID>?</Authorization:SessionID>
-                    // 
-                    //          <!--Optional:-->
-                    //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
-                    // 
-                    //          <Authorization:ProviderID>?</Authorization:ProviderID>
-                    //          <Authorization:EVSEID>?</Authorization:EVSEID>
-                    // 
-                    //          <Authorization:Identification>
-                    //             <!--You have a CHOICE of the next 4 items at this level-->
-                    //
-                    //             <CommonTypes:RFIDmifarefamilyIdentification>
-                    //                <CommonTypes:UID>?</CommonTypes:UID>
-                    //             </CommonTypes:RFIDmifarefamilyIdentification>
-                    // 
-                    //             <CommonTypes:QRCodeIdentification>
-                    // 
-                    //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-                    // 
-                    //                <!--You have a CHOICE of the next 2 items at this level-->
-                    //                <CommonTypes:PIN>?</CommonTypes:PIN>
-                    // 
-                    //                <CommonTypes:HashedPIN>
-                    //                   <CommonTypes:Value>?</CommonTypes:Value>
-                    //                   <CommonTypes:Function>?</CommonTypes:Function>
-                    //                   <CommonTypes:Salt>?</CommonTypes:Salt>
-                    //                </CommonTypes:HashedPIN>
-                    // 
-                    //             </CommonTypes:QRCodeIdentification>
-                    // 
-                    //             <CommonTypes:PlugAndChargeIdentification>
-                    //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-                    //             </CommonTypes:PlugAndChargeIdentification>
-                    // 
-                    //             <CommonTypes:RemoteIdentification>
-                    //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-                    //             </CommonTypes:RemoteIdentification>
-                    // 
-                    //          </Authorization:Identification>
-                    // 
-                    //          <!--Optional:-->
-                    //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
-                    // 
-                    //       </Authorization:eRoamingAuthorizeAuthorizeStart>
-                    //    </soapenv:Body>
-                    //
-                    // </soapenv:Envelope>
-
-
-                    // POST /RemoteStartStop HTTP/1.1
-                    // Content-type: text/xml;charset=utf-8
-                    // Soapaction: ""
-                    // Accept: text/xml, multipart/related
-                    // User-Agent: JAX-WS RI 2.2-hudson-752-
-                    // Cache-Control: no-cache
-                    // Pragma: no-cache
-                    // Host: 5.9.142.73:7001
-                    // Connection: keep-alive
-                    // Content-Length: 822
-                    // 
-                    // <?xml version='1.0' encoding='UTF-8'?>
-                    // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v2.0"
-                    //                   xmlns:fn      = "http://www.w3.org/2005/xpath-functions"
-                    //                   xmlns:isns    = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                   xmlns:sbp     = "http://www.inubit.com/eMobility/SBP"
-                    //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                    //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v2.0">
-                    // 
-                    //   <soapenv:Body>
-                    // 
-                    //     <tns:eRoamingAuthorizeStart>
-                    //
-                    //       <tns:SessionID>88efb713-0a88-1296-5c83-2e66786be68b</tns:SessionID>
-                    //       <tns:OperatorID>+49*822</tns:OperatorID>
-                    //       <tns:EVSEID>+49*822*028630243*1</tns:EVSEID>
-                    //
-                    //       <tns:Identification>
-                    //         <cmn:RFIDmifarefamilyIdentification>
-                    //           <cmn:UID>AA3634527A2280</cmn:UID>
-                    //         </cmn:RFIDmifarefamilyIdentification>
-                    //       </tns:Identification>
-                    //
-                    //       <tns:PartnerProductID>AC1</tns:PartnerProductID>
-                    // 
-                    //     </tns:eRoamingAuthorizeStart>
-                    //
-                    //   </soapenv:Body>
-                    //
-                    // </soapenv:Envelope>
-
-                    #endregion
-
-                    #region Send OnLogAuthorizeStart event
-
-                    try
-                    {
-
-                        var OnLogAuthorizeStartLocal = OnLogAuthorizeStart;
-                        if (OnLogAuthorizeStartLocal != null)
-                            OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, Request);
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.Log("EMPServer.OnLogAuthorizeStart");
-                    }
-
-                    #endregion
-
-
-                    #region Parse request parameters
-
-                    XElement            SessionIdXML;
-                    XElement            IdentificationXML;
-                    XElement            PartnerSessionIdXML;
-                    XElement            ChargingProductIdXML;
-
-                    ChargingSession_Id  SessionId           = null;
-                    ChargingSession_Id  PartnerSessionId    = null;
-                    EVSEOperator_Id     OperatorId          = null;
-                    EVSE_Id             EVSEId              = null;
-                    eMA_Id              eMAId               = null;
-                    ChargingProduct_Id  ChargingProductId   = null;
-                    Auth_Token          AuthToken           = null;
-
-                    SessionIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "SessionID");
-                    if (SessionIdXML != null)
-                        SessionId            = ChargingSession_Id.Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",   null));
-
-                    PartnerSessionIdXML      = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
-                    if (PartnerSessionIdXML != null)
-                        PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
-
-                    OperatorId               = EVSEOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
-                    EVSEId                   = EVSE_Id.           Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "EVSEID",      "No EVSEID XML tag provided!"));
-
-                    IdentificationXML = AuthorizeStartXML.Element(OICPNS.Authorization + "Identification");
-                    if (IdentificationXML != null)
-                    {
-
-
-                        var RFIDmifarefamilyIdentificationXML = IdentificationXML.Element(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification");
-                        if (RFIDmifarefamilyIdentificationXML != null)
-                        {
-
-                            var UIDXML = RFIDmifarefamilyIdentificationXML.Element(OICPNS.CommonTypes + "UID");
-
-                            if (UIDXML != null)
-                                AuthToken = Auth_Token.Parse(UIDXML.Value);
-
-                        }
-
-                    }
-
-                    ChargingProductIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerProductID");
-                    if (ChargingProductIdXML != null)
-                        ChargingProductId = ChargingProduct_Id.Parse(ChargingProductIdXML.Value);
-
-                    #endregion
-
-                    #region Call async subscribers
-
-                    AuthStartEVSEResult result = null;
-
-                    var OnAuthorizeStartLocal = OnAuthorizeStart;
-                    if (OnAuthorizeStartLocal != null)
-                    {
-
-                        var CTS = new CancellationTokenSource();
-
-                        var task = OnAuthorizeStartLocal(DateTime.Now,
-                                                         this,
-                                                         CTS.Token,
-                                                         EventTracking_Id.New,
-                                                         OperatorId,
-                                                         AuthToken,
-                                                         EVSEId,
-                                                         SessionId,
-                                                         ChargingProductId,
-                                                         PartnerSessionId,
-                                                         DefaultQueryTimeout);
-
-                        task.Wait();
-                        result = task.Result;
-
-                    }
-
-                    #endregion
-
-
-                    #region Map result
-
-                    var HubjectCode            = "";
-                    var HubjectDescription     = "";
-                    var HubjectAdditionalInfo  = "";
-
-                    if (result != null)
-                        switch (result.Result)
-                        {
-
-                            case AuthStartEVSEResultType.Authorized:
-                                HubjectCode         = "000";
-                                HubjectDescription  = "Ready to charge!";
-                                break;
-
-                            case AuthStartEVSEResultType.NotAuthorized:
-                                HubjectCode         = "102";
-                                HubjectDescription  = "RFID Authentication failed - invalid UID";
-                                break;
-
-                            case AuthStartEVSEResultType.InvalidSessionId:
-                                HubjectCode         = "400";
-                                HubjectDescription  = "Session is invalid";
-                                break;
-
-                            case AuthStartEVSEResultType.EVSECommunicationTimeout:
-                                HubjectCode         = "501";
-                                HubjectDescription  = "Communication to EVSE failed!";
-                                break;
-
-                            case AuthStartEVSEResultType.StartChargingTimeout:
-                                HubjectCode         = "510";
-                                HubjectDescription  = "No EV connected to EVSE!";
-                                break;
-
-                            case AuthStartEVSEResultType.Reserved:
-                                HubjectCode         = "601";
-                                HubjectDescription  = "EVSE reserved!";
-                                break;
-
-                            //Note: Can not happen, or?
-                            //case AuthStartEVSEResultType.AlreadyInUse:
-                            //    HubjectCode         = "602";
-                            //    HubjectDescription  = "EVSE is already in use!";
-                            //    break;
-
-                            case AuthStartEVSEResultType.UnknownEVSE:
-                                HubjectCode         = "603";
-                                HubjectDescription  = "Unknown EVSE ID!";
-                                break;
-
-                            case AuthStartEVSEResultType.OutOfService:
-                                HubjectCode         = "700";
-                                HubjectDescription  = "EVSE out of service!";
-                                break;
-
-
-                            default:
-                                HubjectCode         = "320";
-                                HubjectDescription  = "Service not available!";
-                                break;
-
-                        }
-
-                    #endregion
-
-
-                    var HTTPResponse = new HTTPResponseBuilder(Request) {
-                        HTTPStatusCode  = HTTPStatusCode.OK,
-                        Server          = HTTPServer.DefaultServerName,
-                        Date            = DateTime.Now,
-                        ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(
-                                              new XElement(OICPNS.Authorization + "eRoamingAuthorizationStart",
-
-                                                  SessionId != null
-                                                      ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.ToString())
-                                                      : null,
-
-                                                  PartnerSessionId != null
-                                                      ? new XElement(OICPNS.Authorization + "PartnerSessionID",  SessionId.ToString())
-                                                      : null,
-
-                                                  result.ProviderId != null
-                                                      ? new XElement(OICPNS.Authorization + "ProviderID",        result.ProviderId.ToString())
-                                                      : null,
-
-                                                  new XElement(OICPNS.Authorization + "AuthorizationStatus", result.Result == AuthStartEVSEResultType.Authorized ? "Authorized" : "NotAuthorized"),
-
-                                                  new XElement(OICPNS.Authorization + "StatusCode",
-
-                                                      new XElement(OICPNS.CommonTypes +       "Code",            HubjectCode),
-
-                                                      HubjectDescription.IsNotNullOrEmpty()
-                                                          ? new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription)
-                                                          : null,
-
-                                                      HubjectAdditionalInfo.IsNotNullOrEmpty()
-                                                          ? new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
-                                                          : null
-
-                                                  )
-
-                                             )).ToUTF8Bytes()
-                    };
-
-
-                    #region Send OnLogAuthorizeStarted event
-
-                    try
-                    {
-
-                        var OnLogAuthorizeStartedLocal = OnLogAuthorizeStarted;
-                        if (OnLogAuthorizeStartedLocal != null)
-                            OnLogAuthorizeStartedLocal(HTTPResponse.Timestamp, this.HTTPServer, Request, HTTPResponse);
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.Log("EMPServer.OnLogAuthorizeStarted");
-                    }
-
-                    #endregion
-
-                    return HTTPResponse;
-
+                    var OnLogAuthorizeStartedLocal = OnLogAuthorizeStarted;
+                    if (OnLogAuthorizeStartedLocal != null)
+                        OnLogAuthorizeStartedLocal(HTTPResponse.Timestamp, this.HTTPServer, Request, HTTPResponse);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log("EMPServer.OnLogAuthorizeStarted");
                 }
 
                 #endregion
 
-                #region Process an OICP AuthorizeStop       HTTP/SOAP/XML call
+                return HTTPResponse;
 
-                var AuthorizeStopXML  = AuthorizeStopXMLs.FirstOrDefault();
-                if (AuthorizeStopXML != null)
-                {
+            });
 
-                    Console.WriteLine("AuthorizeStopXML: " + AuthorizeStopXML.ToString());
+            #endregion
 
+            #region /Authorization - AuthorizeStop
+
+            _SOAPServer.RegisterSOAPDelegate("/Authorization",
+                                             "AuthorizeStop",
+                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop").FirstOrDefault(),
+                                             (Request, AuthorizeStopXML) => {
 
                     #region Documentation
 
@@ -885,7 +799,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     catch (Exception e)
                     {
 
-                        Log.Timestamp("Invalid AuthorizeStopXML: " + e.Message);
+                        DebugX.LogT("Invalid AuthorizeStopXML: " + e.Message);
 
                         return new HTTPResponseBuilder(Request) {
 
@@ -1033,15 +947,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     return HTTPResponse;
 
-                }
+            });
 
-                #endregion
+            #endregion
 
-                #region Process an OICP ChargeDetailRecord  HTTP/SOAP/XML call
+            #region /Authorization - ChargeDetailRecord
 
-                var ChargeDetailRecordXML = ChargeDetailRecordXMLs.FirstOrDefault();
-                if (ChargeDetailRecordXML != null)
-                {
+            _SOAPServer.RegisterSOAPDelegate("/Authorization",
+                                             "ChargeDetailRecord",
+                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingChargeDetailRecord").FirstOrDefault(),
+                                             (Request, ChargeDetailRecordXML) => {
 
                     #region Send OnLogChargeDetailRecordSend event
 
@@ -1194,161 +1109,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     return HTTPResponse;
 
-                }
-
-                #endregion
-
-
-                #region GetEVSEByIdRequest(EVSEId, QueryTimeout = null)
-
-                /// <summary>
-                /// Create a new task requesting the static EVSE data
-                /// for the given EVSE identification.
-                /// </summary>
-                /// <param name="EVSEId">The unique identification of the EVSE.</param>
-                /// <param name="QueryTimeout">An optional timeout for this query.</param>
-                //public Task<HTTPResponse<EVSEDataRecord>>
-
-                //    GetEVSEByIdRequest(EVSE_Id    EVSEId,
-                //                       TimeSpan?  QueryTimeout  = null)
-
-                //{
-
-                //    try
-                //    {
-
-                //        using (var _OICPClient = new SOAPClient(Hostname,
-                //                                                TCPPort,
-                //                                                HTTPVirtualHost,
-                //                                                "/ibis/ws/eRoamingEvseData_V2.0",
-                //                                                UserAgent,
-                //                                                DNSClient))
-                //        {
-
-                //            return _OICPClient.Query(EMP_XMLMethods.GetEVSEByIdRequestXML(EVSEId),
-                //                                     "eRoamingEvseById",
-                //                                     QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
-
-                //                                     OnSuccess: XMLData =>
-
-                //                                         #region Documentation
-
-                //                                         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-                //                                         //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-                //                                         //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                //                                         //   <soapenv:Header/>
-                //                                         //   <soapenv:Body>
-                //                                         //      <EVSEData:eRoamingEvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
-                //                                         //          [...]
-                //                                         //      </EVSEData:eRoamingEvseDataRecord>
-                //                                         //    </soapenv:Body>
-                //                                         // </soapenv:Envelope>
-
-                //                                         #endregion
-
-                //                                         new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
-                //                                                                          XMLMethods.ParseEVSEDataRecordXML(XMLData.Content)),
-
-                //                                     OnSOAPFault: Fault =>
-                //                                         new HTTPResponse<EVSEDataRecord>(
-                //                                             Fault.HttpResponse,
-                //                                             new Exception(Fault.Content.ToString())),
-
-                //                                     OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
-
-                //                                     OnException: (t, s, e) => SendOnException(t, s, e)
-
-                //                                    );
-
-                //        }
-
-                //    }
-
-                //    catch (Exception e)
-                //    {
-
-                //        SendOnException(DateTime.Now, this, e);
-
-                //        return new Task<HTTPResponse<EVSEDataRecord>>(
-                //            () => new HTTPResponse<EVSEDataRecord>(e));
-
-                //    }
-
-                //}
-
-                #endregion
-
-
-                return new HTTPResponseBuilder(Request) {
-                    HTTPStatusCode  = HTTPStatusCode.NotFound,
-                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                    Content         = "Error!".ToUTF8Bytes()
-                };
-
-            };
-
-            #endregion
-
-            #region Register SOAP-XML Request via GET
-
-            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/AuthorizeStartStop",
-                                          HTTPContentType.XMLTEXT_UTF8,
-                                          HTTPDelegate: AuthorizeStartStopDelegate);
-
-            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/RemoteStartStop",
-                                          HTTPContentType.XMLTEXT_UTF8,
-                                          HTTPDelegate: AuthorizeStartStopDelegate);
-
-            #endregion
-
-            #region Register SOAP-XML Request via POST
-
-            _HTTPServer.AddMethodCallback(HTTPMethod.POST,
-                                          URIPrefix + "/RemoteStartStop",
-                                          HTTPContentType.XMLTEXT_UTF8,
-                                          HTTPDelegate: AuthorizeStartStopDelegate);
-
-            #endregion
-
-            #region Register HTML+Plaintext ErrorResponse
-
-            // HTML
-            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/AuthorizeStartStop",
-                                          HTTPContentType.HTML_UTF8,
-                                          HTTPDelegate: Request => {
-
-                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
-
-                                              return new HTTPResponseBuilder(Request) {
-                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                                  ContentType     = HTTPContentType.HTML_UTF8,
-                                                  Content         = ("/RNs/" + RoamingNetworkId + "/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                                  Connection      = "close"
-                                              };
-
-                                          });
-
-            // Text
-            _HTTPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/AuthorizeStartStop",
-                                          HTTPContentType.TEXT_UTF8,
-                                          HTTPDelegate: Request => {
-
-                                              var RoamingNetworkId = Request.ParsedURIParameters[0];
-
-                                              return new HTTPResponseBuilder(Request) {
-                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                                  ContentType     = HTTPContentType.HTML_UTF8,
-                                                  Content         = ("/RNs/" + RoamingNetworkId + "/AuthorizeStartStop is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                                  Connection      = "close"
-                                              };
-
-                                          });
-
-            #endregion
+            });
 
             #endregion
 
@@ -1450,7 +1211,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         public void Start()
         {
-            _HTTPServer.Start();
+            _SOAPServer.Start();
         }
 
         #endregion
@@ -1459,7 +1220,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         public void Shutdown(String Message = null, Boolean Wait = true)
         {
-            _HTTPServer.Shutdown(Message, Wait);
+            _SOAPServer.Shutdown(Message, Wait);
         }
 
         #endregion

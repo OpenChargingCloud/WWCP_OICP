@@ -19,11 +19,9 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
@@ -333,9 +331,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                  ServerTCPPort,
                                  ServerURIPrefix,
                                  DNSClient,
-                                 ServerAutoStart))
+                                 false))
 
-        { }
+        {
+
+            if (ServerAutoStart)
+                Start();
+
+        }
 
         #endregion
 
@@ -899,6 +902,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             //ToDo: Process the HTTP!
             return result.Content;
 
+        }
+
+        #endregion
+
+
+
+        #region Start()
+
+        public void Start()
+        {
+            _CPOServer.Start();
+        }
+
+        #endregion
+
+        #region Shutdown(Message = null, Wait = true)
+
+        public void Shutdown(String Message = null, Boolean Wait = true)
+        {
+            _CPOServer.Shutdown(Message, Wait);
         }
 
         #endregion

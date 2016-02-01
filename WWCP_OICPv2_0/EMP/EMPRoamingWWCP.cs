@@ -428,22 +428,22 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public EMPRoamingWWCP(RoamingProvider_Id           Id,
-                              I18NString                   Name,
-                              RoamingNetwork               RoamingNetwork,
+        public EMPRoamingWWCP(RoamingProvider_Id  Id,
+                              I18NString          Name,
+                              RoamingNetwork      RoamingNetwork,
 
-                              String                       RemoteHostname,
-                              IPPort                       RemoteTCPPort          = null,
-                              String                       RemoteHTTPVirtualHost  = null,
-                              String                       HTTPUserAgent          = EMPClient.DefaultHTTPUserAgent,
-                              TimeSpan?                    QueryTimeout           = null,
+                              String              RemoteHostname,
+                              IPPort              RemoteTCPPort          = null,
+                              String              RemoteHTTPVirtualHost  = null,
+                              String              HTTPUserAgent          = EMPClient.DefaultHTTPUserAgent,
+                              TimeSpan?           QueryTimeout           = null,
 
-                              String                       ServerName             = EMPServer.DefaultHTTPServerName,
-                              IPPort                       ServerTCPPort          = null,
-                              String                       ServerURIPrefix        = "",
-                              Boolean                      ServerAutoStart        = false,
+                              String              ServerName             = EMPServer.DefaultHTTPServerName,
+                              IPPort              ServerTCPPort          = null,
+                              String              ServerURIPrefix        = "",
+                              Boolean             ServerAutoStart        = false,
 
-                              DNSClient                    DNSClient              = null)
+                              DNSClient           DNSClient              = null)
 
             : this(Id,
                    Name,
@@ -799,6 +799,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             //ToDo: Process the HTTP!
             return result;
 
+        }
+
+        #endregion
+
+
+
+        #region Start()
+
+        public void Start()
+        {
+            _EMPRoaming.Start();
+        }
+
+        #endregion
+
+        #region Shutdown(Message = null, Wait = true)
+
+        public void Shutdown(String Message = null, Boolean Wait = true)
+        {
+            _EMPRoaming.Shutdown(Message, Wait);
         }
 
         #endregion
