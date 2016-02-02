@@ -19,14 +19,14 @@
 
 using System;
 using System.Linq;
+using System.Threading;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using System.Threading;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -1553,6 +1553,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnAuthorizeStart event
 
+            var Runtime = Stopwatch.StartNew();
+
             try
             {
 
@@ -1603,6 +1605,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnAuthorizeStarted event
 
+            Runtime.Stop();
+
             try
             {
 
@@ -1617,7 +1621,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                             ChargingProductId,
                                             SessionId,
                                             QueryTimeout,
-                                            result);
+                                            result,
+                                            Runtime.Elapsed);
 
             }
             catch (Exception e)
@@ -1676,6 +1681,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnAuthorizeEVSEStart event
 
+            var Runtime = Stopwatch.StartNew();
+
             try
             {
 
@@ -1728,6 +1735,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnAuthorizeEVSEStarted event
 
+            Runtime.Stop();
+
             try
             {
 
@@ -1743,7 +1752,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                 ChargingProductId,
                                                 SessionId,
                                                 QueryTimeout,
-                                                result);
+                                                result,
+                                                Runtime.Elapsed);
 
             }
             catch (Exception e)
@@ -1802,6 +1812,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnAuthorizeChargingStationStart event
 
+            var Runtime = Stopwatch.StartNew();
+
             try
             {
 
@@ -1833,6 +1845,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnAuthorizeChargingStationStarted event
 
+            Runtime.Stop();
+
             try
             {
 
@@ -1848,7 +1862,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                            ChargingProductId,
                                                            SessionId,
                                                            QueryTimeout,
-                                                           result);
+                                                           result,
+                                                           Runtime.Elapsed);
 
             }
             catch (Exception e)
