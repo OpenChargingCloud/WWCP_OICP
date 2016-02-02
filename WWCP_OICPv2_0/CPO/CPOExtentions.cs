@@ -257,7 +257,7 @@ namespace org.GraphDefined.WWCP
             if (CPORoamingProvider == null)
                 throw new ArgumentNullException(nameof(CPORoamingProvider), "The given CPO roaming provider must not be null!");
 
-            var _CPORoamingWWCP = ((CPORoamingProvider as IOperatorRoamingService) as OICPv2_0.CPORoamingWWCP);
+            var _CPORoamingWWCP = ((CPORoamingProvider.OperatorRoamingService as IOperatorRoamingService) as OICPv2_0.CPORoamingWWCP);
 
             if (_CPORoamingWWCP == null)
                 throw new ArgumentException("The given CPO roaming provider is not an OICP v2.0 CPO roaming provider!", nameof(CPORoamingProvider));
