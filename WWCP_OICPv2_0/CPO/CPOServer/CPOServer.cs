@@ -328,7 +328,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region /Authorization - AuthorizeRemoteStart
 
-            _SOAPServer.RegisterSOAPDelegate("/Authorization",
+            _SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
                                              "AuthorizeRemoteStart",
                                              XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart").FirstOrDefault(),
                                              (Request, RemoteStartXML) => {
@@ -673,7 +673,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region /Authorization - AuthorizeRemoteStop
 
-            _SOAPServer.RegisterSOAPDelegate("/Authorization",
+            _SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
                                              "AuthorizeRemoteStop",
                                              XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop").FirstOrDefault(),
                                              (Request, RemoteStopXML) => {
@@ -726,28 +726,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     XElement PartnerSessionIdXML;
 
-                    ChargingSession_Id  SessionId;
-                    ChargingSession_Id  PartnerSessionId        = null;
-                    EVSP_Id             ProviderId;
-                    EVSE_Id             EVSEId;
+                    ChargingSession_Id  SessionId         = null;
+                    ChargingSession_Id  PartnerSessionId  = null;
+                    EVSP_Id             ProviderId        = null;
+                    EVSE_Id             EVSEId            = null;
 
                     try
                     {
 
-                        SessionId         = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "SessionID",        "No SessionID XML tag provided!"));
+                        SessionId         = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
 
                         PartnerSessionIdXML = RemoteStopXML.Element(OICPNS.Authorization + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
                             PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId        = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID",       "No ProviderID XML tag provided!"));
-                        EVSEId            = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",           "No EVSEID XML tag provided!"));
+                        ProviderId        = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId            = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                     }
                     catch (Exception e)
                     {
-
-                        //Log.Timestamp("Invalid RemoteStopXML: " + e.Message);
 
                         return new HTTPResponseBuilder(Request) {
 

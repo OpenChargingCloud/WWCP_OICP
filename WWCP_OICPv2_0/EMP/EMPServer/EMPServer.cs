@@ -362,7 +362,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region /Authorization - AuthorizeStart
 
-            _SOAPServer.RegisterSOAPDelegate("/Authorization",
+            _SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
                                              "AuthorizeStart",
                                              XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart").FirstOrDefault(),
                                              (Request, AuthorizeStartXML) => {
@@ -705,7 +705,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region /Authorization - AuthorizeStop
 
-            _SOAPServer.RegisterSOAPDelegate("/Authorization",
+            _SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
                                              "AuthorizeStop",
                                              XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop").FirstOrDefault(),
                                              (Request, AuthorizeStopXML) => {
@@ -953,7 +953,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region /Authorization - ChargeDetailRecord
 
-            _SOAPServer.RegisterSOAPDelegate("/Authorization",
+            _SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
                                              "ChargeDetailRecord",
                                              XML => XML.Descendants(OICPNS.Authorization + "eRoamingChargeDetailRecord").FirstOrDefault(),
                                              (Request, ChargeDetailRecordXML) => {
