@@ -27,6 +27,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using System.Threading;
 
 #endregion
 
@@ -45,6 +46,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The default HTTP user agent string.
         /// </summary>
         public const String DefaultHTTPUserAgent = "GraphDefined OICP v2.0 CPOClient";
+
+        private readonly Random _Random;
 
         #endregion
 
@@ -193,7 +196,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                    QueryTimeout,
                    DNSClient)
 
-        { }
+        {
+
+            this._Random = new Random(DateTime.Now.Millisecond);
+
+        }
 
         #endregion
 
@@ -533,6 +540,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
+
+            // Wait a random number of milliseconds, as Hubject
+            // does not allow parallel requests.
+            Thread.Sleep(_Random.Next(5000));
 
             if (NumberOfEVSEStatusRecords > 0)
             {
