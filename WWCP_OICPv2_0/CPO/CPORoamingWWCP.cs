@@ -2387,6 +2387,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
+        public void RemoveChargingStations(DateTime                      Timestamp,
+                                           IEnumerable<ChargingStation>  ChargingStations)
+        {
+
+            foreach (var ChargingStation in ChargingStations)
+                foreach (var EVSE in ChargingStation)
+                    Console.WriteLine(DateTime.Now + " CPORoamingWWCP says: " + EVSE.Id + " was removed!");
+
+        }
+
     }
 
 }
