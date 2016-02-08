@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Net.Security;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -50,6 +51,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
+        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// 
@@ -62,25 +64,26 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static EMPRoamingProvider CreateOICP_EMPRoamingProvider(this RoamingNetwork              RoamingNetwork,
-                                                                       RoamingProvider_Id               Id,
-                                                                       I18NString                       Name,
+        public static EMPRoamingProvider CreateOICP_EMPRoamingProvider(this RoamingNetwork                  RoamingNetwork,
+                                                                       RoamingProvider_Id                   Id,
+                                                                       I18NString                           Name,
 
-                                                                       String                           RemoteHostname,
-                                                                       IPPort                           RemoteTCPPort          = null,
-                                                                       String                           RemoteHTTPVirtualHost  = null,
-                                                                       String                           HTTPUserAgent          = OICPv2_0.EMPClient.DefaultHTTPUserAgent,
-                                                                       TimeSpan?                        QueryTimeout           = null,
+                                                                       String                               RemoteHostname,
+                                                                       IPPort                               RemoteTCPPort               = null,
+                                                                       String                               RemoteHTTPVirtualHost       = null,
+                                                                       RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                                                                       String                               HTTPUserAgent               = OICPv2_0.EMPClient.DefaultHTTPUserAgent,
+                                                                       TimeSpan?                            QueryTimeout                = null,
 
-                                                                       String                           ServerName             = OICPv2_0.EMPServer.DefaultHTTPServerName,
-                                                                       IPPort                           ServerTCPPort          = null,
-                                                                       String                           ServerURIPrefix        = "",
-                                                                       Boolean                          ServerAutoStart        = true,
+                                                                       String                               ServerName                  = OICPv2_0.EMPServer.DefaultHTTPServerName,
+                                                                       IPPort                               ServerTCPPort               = null,
+                                                                       String                               ServerURIPrefix             = "",
+                                                                       Boolean                              ServerAutoStart             = true,
 
-                                                                       DNSClient                        DNSClient              = null,
+                                                                       DNSClient                            DNSClient                   = null,
 
-                                                                       Action<OICPv2_0.EMPRoamingWWCP>  OICPConfigurator       = null,
-                                                                       Action<EMPRoamingProvider>       Configurator           = null)
+                                                                       Action<OICPv2_0.EMPRoamingWWCP>      OICPConfigurator            = null,
+                                                                       Action<EMPRoamingProvider>           Configurator                = null)
 
         {
 
@@ -107,6 +110,7 @@ namespace org.GraphDefined.WWCP
                                                                  RemoteHostname,
                                                                  RemoteTCPPort,
                                                                  RemoteHTTPVirtualHost,
+                                                                 RemoteCertificateValidator,
                                                                  HTTPUserAgent,
                                                                  QueryTimeout,
 
@@ -145,6 +149,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
+        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// 
@@ -152,23 +157,24 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static EMPRoamingProvider CreateOICP_EMPRoamingProvider(this RoamingNetwork              RoamingNetwork,
-                                                                       RoamingProvider_Id               Id,
-                                                                       I18NString                       Name,
-                                                                       SOAPServer                       SOAPServer,
+        public static EMPRoamingProvider CreateOICP_EMPRoamingProvider(this RoamingNetwork                  RoamingNetwork,
+                                                                       RoamingProvider_Id                   Id,
+                                                                       I18NString                           Name,
+                                                                       SOAPServer                           SOAPServer,
 
-                                                                       String                           RemoteHostname,
-                                                                       IPPort                           RemoteTCPPort          = null,
-                                                                       String                           RemoteHTTPVirtualHost  = null,
-                                                                       String                           HTTPUserAgent          = OICPv2_0.EMPClient.DefaultHTTPUserAgent,
-                                                                       TimeSpan?                        QueryTimeout           = null,
+                                                                       String                               RemoteHostname,
+                                                                       IPPort                               RemoteTCPPort               = null,
+                                                                       String                               RemoteHTTPVirtualHost       = null,
+                                                                       RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                                                                       String                               HTTPUserAgent               = OICPv2_0.EMPClient.DefaultHTTPUserAgent,
+                                                                       TimeSpan?                            QueryTimeout                = null,
 
-                                                                       String                           ServerURIPrefix        = null,
+                                                                       String                               ServerURIPrefix             = null,
 
-                                                                       DNSClient                        DNSClient              = null,
+                                                                       DNSClient                            DNSClient                   = null,
 
-                                                                       Action<OICPv2_0.EMPRoamingWWCP>  OICPConfigurator       = null,
-                                                                       Action<EMPRoamingProvider>       Configurator           = null)
+                                                                       Action<OICPv2_0.EMPRoamingWWCP>      OICPConfigurator            = null,
+                                                                       Action<EMPRoamingProvider>           Configurator                = null)
 
         {
 
@@ -200,6 +206,7 @@ namespace org.GraphDefined.WWCP
                                                                                         RemoteHostname,
                                                                                         RemoteTCPPort,
                                                                                         RemoteHTTPVirtualHost,
+                                                                                        RemoteCertificateValidator,
                                                                                         HTTPUserAgent,
                                                                                         QueryTimeout,
                                                                                         DNSClient),

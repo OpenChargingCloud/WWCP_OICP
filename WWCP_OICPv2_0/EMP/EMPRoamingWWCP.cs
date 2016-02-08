@@ -18,15 +18,15 @@
 #region Usings
 
 using System;
-using System.Linq;
+using System.Threading;
+using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using System.Threading;
-using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
@@ -419,6 +419,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
+        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// 
@@ -428,22 +429,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public EMPRoamingWWCP(RoamingProvider_Id  Id,
-                              I18NString          Name,
-                              RoamingNetwork      RoamingNetwork,
+        public EMPRoamingWWCP(RoamingProvider_Id                   Id,
+                              I18NString                           Name,
+                              RoamingNetwork                       RoamingNetwork,
 
-                              String              RemoteHostname,
-                              IPPort              RemoteTCPPort          = null,
-                              String              RemoteHTTPVirtualHost  = null,
-                              String              HTTPUserAgent          = EMPClient.DefaultHTTPUserAgent,
-                              TimeSpan?           QueryTimeout           = null,
+                              String                               RemoteHostname,
+                              IPPort                               RemoteTCPPort               = null,
+                              String                               RemoteHTTPVirtualHost       = null,
+                              RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                              String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
+                              TimeSpan?                            QueryTimeout                = null,
 
-                              String              ServerName             = EMPServer.DefaultHTTPServerName,
-                              IPPort              ServerTCPPort          = null,
-                              String              ServerURIPrefix        = "",
-                              Boolean             ServerAutoStart        = false,
+                              String                               ServerName                  = EMPServer.DefaultHTTPServerName,
+                              IPPort                               ServerTCPPort               = null,
+                              String                               ServerURIPrefix             = "",
+                              Boolean                              ServerAutoStart             = false,
 
-                              DNSClient           DNSClient              = null)
+                              DNSClient                            DNSClient                   = null)
 
             : this(Id,
                    Name,
@@ -452,6 +454,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                   RemoteHostname,
                                   RemoteTCPPort,
                                   RemoteHTTPVirtualHost,
+                                  RemoteCertificateValidator,
                                   HTTPUserAgent,
                                   QueryTimeout,
 

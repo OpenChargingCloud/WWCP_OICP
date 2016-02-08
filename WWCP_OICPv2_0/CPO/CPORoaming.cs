@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using System.Net.Security;
 
 #endregion
 
@@ -296,6 +297,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
+        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// 
@@ -305,24 +307,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public CPORoaming(String    ClientId,
-                          String    RemoteHostname,
-                          IPPort    RemoteTCPPort          = null,
-                          String    RemoteHTTPVirtualHost  = null,
-                          String    HTTPUserAgent          = CPOClient.DefaultHTTPUserAgent,
-                          TimeSpan? QueryTimeout           = null,
+        public CPORoaming(String                               ClientId,
+                          String                               RemoteHostname,
+                          IPPort                               RemoteTCPPort               = null,
+                          String                               RemoteHTTPVirtualHost       = null,
+                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                          String                               HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
+                          TimeSpan?                            QueryTimeout                = null,
 
-                          String    ServerName             = CPOServer.DefaultHTTPServerName,
-                          IPPort    ServerTCPPort          = null,
-                          String    ServerURIPrefix        = "",
-                          Boolean   ServerAutoStart        = false,
+                          String                               ServerName                  = CPOServer.DefaultHTTPServerName,
+                          IPPort                               ServerTCPPort               = null,
+                          String                               ServerURIPrefix             = "",
+                          Boolean                              ServerAutoStart             = false,
 
-                          DNSClient DNSClient              = null)
+                          DNSClient                            DNSClient                   = null)
 
             : this(new CPOClient(ClientId,
                                  RemoteHostname,
                                  RemoteTCPPort,
                                  RemoteHTTPVirtualHost,
+                                 RemoteCertificateValidator,
                                  HTTPUserAgent,
                                  QueryTimeout,
                                  DNSClient),

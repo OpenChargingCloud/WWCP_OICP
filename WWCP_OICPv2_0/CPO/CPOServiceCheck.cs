@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using System.Net.Security;
 
 #endregion
 
@@ -91,30 +92,32 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region CPOServiceCheck(ClientId, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, RemoteHostname, RemoteTCPPort, ...)
 
-        public CPOServiceCheck(String                            ClientId,
-                               CPOServiceCheckDelegate<TResult>  ServiceChecker,
-                               Action<TResult>                   OnFirstCheck,
-                               Action<TResult>                   OnEveryCheck,
-                               TimeSpan                          CheckEvery,
+        public CPOServiceCheck(String                               ClientId,
+                               CPOServiceCheckDelegate<TResult>     ServiceChecker,
+                               Action<TResult>                      OnFirstCheck,
+                               Action<TResult>                      OnEveryCheck,
+                               TimeSpan                             CheckEvery,
 
-                               String                            RemoteHostname,
-                               IPPort                            RemoteTCPPort          = null,
-                               String                            RemoteHTTPVirtualHost  = null,
-                               String                            HTTPUserAgent          = DefaultHTTPUserAgent,
-                               TimeSpan?                         QueryTimeout           = null,
+                               String                               RemoteHostname,
+                               IPPort                               RemoteTCPPort               = null,
+                               String                               RemoteHTTPVirtualHost       = null,
+                               RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                               String                               HTTPUserAgent               = DefaultHTTPUserAgent,
+                               TimeSpan?                            QueryTimeout                = null,
 
-                               String                            ServerName             = CPOServer.DefaultHTTPServerName,
-                               IPPort                            ServerTCPPort          = null,
-                               String                            ServerURIPrefix        = "",
-                               Boolean                           ServerAutoStart        = false,
+                               String                               ServerName                  = CPOServer.DefaultHTTPServerName,
+                               IPPort                               ServerTCPPort               = null,
+                               String                               ServerURIPrefix             = "",
+                               Boolean                              ServerAutoStart             = false,
 
-                               TimeSpan?                         InitialDelay           = null,
-                               DNSClient                         DNSClient              = null)
+                               TimeSpan?                            InitialDelay                = null,
+                               DNSClient                            DNSClient                   = null)
 
             : this(new CPORoaming(ClientId,
                                   RemoteHostname,
                                   RemoteTCPPort,
                                   RemoteHTTPVirtualHost,
+                                  RemoteCertificateValidator,
                                   HTTPUserAgent,
                                   QueryTimeout,
 

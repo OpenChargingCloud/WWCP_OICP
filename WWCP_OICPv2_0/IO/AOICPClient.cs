@@ -160,7 +160,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         public X509Certificate2 ServerCert { get; set; }
 
-        public RemoteCertificateValidationCallback RemoteCertificateValidator { get; set; }
+        #region RemoteCertificateValidator
+
+        protected readonly RemoteCertificateValidationCallback _RemoteCertificateValidator;
+
+        public RemoteCertificateValidationCallback RemoteCertificateValidator
+        {
+            get
+            {
+                return _RemoteCertificateValidator;
+            }
+        }
+
+        #endregion
+
         public LocalCertificateSelectionCallback ClientCertificateSelector { get; set; }
 
         public Boolean UseTLS { get; set; }
@@ -217,16 +230,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Hostname">The OICP hostname to connect to.</param>
         /// <param name="TCPPort">The OICP TCP port to connect to.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
+        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="UserAgent">An optional HTTP user agent to use.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
-        internal AOICPClient(String     ClientId,
-                             String     Hostname,
-                             IPPort     TCPPort,
-                             String     HTTPVirtualHost  = null,
-                             String     UserAgent        = "GraphDefined OICP Gateway",
-                             TimeSpan?  QueryTimeout     = null,
-                             DNSClient  DNSClient        = null)
+        internal AOICPClient(String                               ClientId,
+                             String                               Hostname,
+                             IPPort                               TCPPort,
+                             String                               HTTPVirtualHost             = null,
+                             RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                             String                               UserAgent                   = "GraphDefined OICP Gateway",
+                             TimeSpan?                            QueryTimeout                = null,
+                             DNSClient                            DNSClient                   = null)
         {
 
             #region Initial checks
@@ -245,6 +260,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             this._HTTPVirtualHost  = (HTTPVirtualHost != null)
                                          ? HTTPVirtualHost
                                          : Hostname;
+
+            this._RemoteCertificateValidator = RemoteCertificateValidator;
 
             this._UserAgent        = UserAgent;
 

@@ -19,6 +19,8 @@
 
 using System;
 using System.Linq;
+using System.Threading;
+using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -27,7 +29,6 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using System.Threading;
 
 #endregion
 
@@ -177,21 +178,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Hostname">The hostname of the remote OICP service.</param>
         /// <param name="TCPPort">An optional TCP port of the remote OICP service.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
+        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public CPOClient(String    ClientId,
-                         String    Hostname,
-                         IPPort    TCPPort          = null,
-                         String    HTTPVirtualHost  = null,
-                         String    HTTPUserAgent    = DefaultHTTPUserAgent,
-                         TimeSpan? QueryTimeout     = null,
-                         DNSClient DNSClient        = null)
+        public CPOClient(String                               ClientId,
+                         String                               Hostname,
+                         IPPort                               TCPPort                     = null,
+                         String                               HTTPVirtualHost             = null,
+                         RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                         String                               HTTPUserAgent               = DefaultHTTPUserAgent,
+                         TimeSpan?                            QueryTimeout                = null,
+                         DNSClient                            DNSClient                   = null)
 
             : base(ClientId,
                    Hostname,
                    TCPPort,
                    HTTPVirtualHost,
+                   RemoteCertificateValidator,
                    HTTPUserAgent,
                    QueryTimeout,
                    DNSClient)
@@ -261,7 +265,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         _HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingEvseData_V2.0",
                                                         _UserAgent,
-                                                        false,
+                                                        _RemoteCertificateValidator,
                                                         _DNSClient))
                 {
 
@@ -561,7 +565,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         _HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                         _UserAgent,
-                                                        false,
+                                                        _RemoteCertificateValidator,
                                                         _DNSClient))
                 {
 
@@ -854,6 +858,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
                                                     _UserAgent,
+                                                    _RemoteCertificateValidator,
                                                     DNSClient: _DNSClient))
             {
 
@@ -956,6 +961,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
                                                     _UserAgent,
+                                                    _RemoteCertificateValidator,
                                                     DNSClient: _DNSClient))
             {
 
@@ -1043,6 +1049,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthenticationData_V2.0",
                                                     _UserAgent,
+                                                    _RemoteCertificateValidator,
                                                     DNSClient: _DNSClient))
             {
 
@@ -1122,6 +1129,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
                                                     _UserAgent,
+                                                    _RemoteCertificateValidator,
                                                     DNSClient: _DNSClient))
             {
 
@@ -1237,6 +1245,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
                                                     _UserAgent,
+                                                    _RemoteCertificateValidator,
                                                     DNSClient: _DNSClient))
             {
 
