@@ -1350,9 +1350,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     ? new XElement(OICPNS.EVSEData + "MaxCapacity", _MaxCapacity_kWh)
                     : null,
 
-                new XElement(OICPNS.EVSEData + "PaymentOptions",
-                    _PaymentOptions.          Select(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      OICPMapper.AsString(PaymentOption)))
-                ),
+                _PaymentOptions.NotNullAny()
+                    ? new XElement(OICPNS.EVSEData + "PaymentOptions",
+                          _PaymentOptions.    Select(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      OICPMapper.AsString(PaymentOption)))
+                      )
+                    : null,
 
                 new XElement(OICPNS.EVSEData + "Accessibility",     _Accessibility.ToString().Replace("_", " ")),
                 new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(_HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
