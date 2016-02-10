@@ -40,15 +40,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region EMPServerLogger(EMPServer)
+        #region EMPServerLogger(EMPServer, Context = "")
 
         /// <summary>
         /// Create a new OICP v2.0 EMP server logger using the default logging delegates.
         /// </summary>
         /// <param name="EMPServer">A OICP v2.0 EMP server.</param>
-        public EMPServerLogger(EMPServer EMPServer)
+        /// <param name="Context">A context of this API.</param>
+        public EMPServerLogger(EMPServer  EMPServer,
+                               String     Context = "")
 
             : this(EMPServer,
+                   Context,
 
                    Default_LogHTTPRequest_toConsole,
                    Default_LogHTTPRequest_toDisc,
@@ -64,12 +67,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region EMPServerLogger(EMPServer, ... Logging delegates ...)
+        #region EMPServerLogger(EMPServer, Context, ... Logging delegates ...)
 
         /// <summary>
         /// Create a new OICP v2.0 EMP server logger using the given logging delegates.
         /// </summary>
         /// <param name="EMPServer">A OICP v2.0 EMP server.</param>
+        /// <param name="Context">A context of this API.</param>
         /// 
         /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
         /// <param name="LogHTTPRequest_toDisc">A delegate to log incoming HTTP requests to disc.</param>
@@ -80,19 +84,21 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="LogHTTPResponse_toDisc">A delegate to log HTTP requests/responses to disc.</param>
         /// <param name="LogHTTPResponse_toNetwork">A delegate to log HTTP requests/responses to a network target.</param>
         /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP server sent events source.</param>
-        public EMPServerLogger(EMPServer                                  EMPServer,
+        public EMPServerLogger(EMPServer                                          EMPServer,
+                               String                                             Context,
 
-                               Action<String, HTTPRequest>                LogHTTPRequest_toConsole,
-                               Action<String, HTTPRequest>                LogHTTPRequest_toDisc,
-                               Action<String, HTTPRequest>                LogHTTPRequest_toNetwork,
-                               Action<String, HTTPRequest>                LogHTTPRequest_toHTTPSSE,
+                               Action<String, String, HTTPRequest>                LogHTTPRequest_toConsole,
+                               Action<String, String, HTTPRequest>                LogHTTPRequest_toDisc,
+                               Action<String, String, HTTPRequest>                LogHTTPRequest_toNetwork,
+                               Action<String, String, HTTPRequest>                LogHTTPRequest_toHTTPSSE,
 
-                               Action<String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toConsole,
-                               Action<String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toDisc,
-                               Action<String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toNetwork,
-                               Action<String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toHTTPSSE)
+                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toConsole,
+                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toDisc,
+                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toNetwork,
+                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toHTTPSSE)
 
             : base(EMPServer.HTTPServer,
+                   Context,
 
                    LogHTTPRequest_toConsole,
                    LogHTTPRequest_toDisc,
