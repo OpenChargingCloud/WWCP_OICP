@@ -72,20 +72,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             switch (ChargingFacility.Trim())
             {
 
-                case "100 - 120V, 1-Phase ≤ 10A":   return ChargingFacilities.CF_100_120V_1Phase_less10A;
-                case "100 - 120V, 1-Phase ≤ 16A":   return ChargingFacilities.CF_100_120V_1Phase_less16A;
-                case "100 - 120V, 1-Phase ≤ 32A":   return ChargingFacilities.CF_100_120V_1Phase_less32A;
-                case "200 - 240V, 1-Phase ≤ 10A":   return ChargingFacilities.CF_200_240V_1Phase_less10A;
-                case "200 - 240V, 1-Phase ≤ 16A":   return ChargingFacilities.CF_200_240V_1Phase_less16A;
-                case "200 - 240V, 1-Phase ≤ 32A":   return ChargingFacilities.CF_200_240V_1Phase_less32A;
-                case "200 - 240V, 1-Phase > 32A":   return ChargingFacilities.CF_200_240V_1Phase_over32A;
-                case "380 - 480V, 3-Phase ≤ 16A":   return ChargingFacilities.CF_380_480V_3Phase_less16A;
-                case "380 - 480V, 3-Phase ≤ 32A":   return ChargingFacilities.CF_380_480V_3Phase_less32A;
-                case "380 - 480V, 3-Phase ≤ 63A":   return ChargingFacilities.CF_380_480V_3Phase_less63A;
+                case "100 - 120V, 1-Phase ≤ 10A":   return ChargingFacilities.CF_100_120V_1Phase_lessOrEquals10A;
+                case "100 - 120V, 1-Phase ≤ 16A":   return ChargingFacilities.CF_100_120V_1Phase_lessOrEquals16A;
+                case "100 - 120V, 1-Phase ≤ 32A":   return ChargingFacilities.CF_100_120V_1Phase_lessOrEquals32A;
+                case "200 - 240V, 1-Phase ≤ 10A":   return ChargingFacilities.CF_200_240V_1Phase_lessOrEquals10A;
+                case "200 - 240V, 1-Phase ≤ 16A":   return ChargingFacilities.CF_200_240V_1Phase_lessOrEquals16A;
+                case "200 - 240V, 1-Phase ≤ 32A":   return ChargingFacilities.CF_200_240V_1Phase_lessOrEquals32A;
+                case "200 - 240V, 1-Phase > 32A":   return ChargingFacilities.CF_200_240V_1Phase_moreThan32A;
+                case "380 - 480V, 3-Phase ≤ 16A":   return ChargingFacilities.CF_380_480V_3Phase_lessOrEquals16A;
+                case "380 - 480V, 3-Phase ≤ 32A":   return ChargingFacilities.CF_380_480V_3Phase_lessOrEquals32A;
+                case "380 - 480V, 3-Phase ≤ 63A":   return ChargingFacilities.CF_380_480V_3Phase_lessOrEquals63A;
                 case "Battery exchange":            return ChargingFacilities.Battery_exchange;
-                case "DC Charging ≤ 20kW":          return ChargingFacilities.DCCharging_less20kW;
-                case "DC Charging ≤ 50kW":          return ChargingFacilities.DCCharging_less50kW;
-                case "DC Charging > 50kW":          return ChargingFacilities.DCCharging_over50kW;
+                case "DC Charging ≤ 20kW":          return ChargingFacilities.DCCharging_lessOrEquals20kW;
+                case "DC Charging ≤ 50kW":          return ChargingFacilities.DCCharging_lessOrEquals50kW;
+                case "DC Charging > 50kW":          return ChargingFacilities.DCCharging_moreThan50kW;
 
                 default: return ChargingFacilities.Unspecified;
 
@@ -250,46 +250,46 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             switch (ChargingFacility)
             {
 
-                case ChargingFacilities.CF_100_120V_1Phase_less10A:
+                case ChargingFacilities.CF_100_120V_1Phase_lessOrEquals10A:
                     return "100 - 120V, 1-Phase ≤ 10A";
 
-                case ChargingFacilities.CF_100_120V_1Phase_less16A:
+                case ChargingFacilities.CF_100_120V_1Phase_lessOrEquals16A:
                     return "100 - 120V, 1-Phase ≤ 16A";
 
-                case ChargingFacilities.CF_100_120V_1Phase_less32A:
+                case ChargingFacilities.CF_100_120V_1Phase_lessOrEquals32A:
                     return "100 - 120V, 1-Phase ≤ 32A";
 
-                case ChargingFacilities.CF_200_240V_1Phase_less10A:
+                case ChargingFacilities.CF_200_240V_1Phase_lessOrEquals10A:
                     return "200 - 240V, 1-Phase ≤ 10A";
 
-                case ChargingFacilities.CF_200_240V_1Phase_less16A:
+                case ChargingFacilities.CF_200_240V_1Phase_lessOrEquals16A:
                     return "200 - 240V, 1-Phase ≤ 16A";
 
-                case ChargingFacilities.CF_200_240V_1Phase_less32A:
+                case ChargingFacilities.CF_200_240V_1Phase_lessOrEquals32A:
                     return "200 - 240V, 1-Phase ≤ 32A";
 
-                case ChargingFacilities.CF_200_240V_1Phase_over32A:
+                case ChargingFacilities.CF_200_240V_1Phase_moreThan32A:
                     return "200 - 240V, 1-Phase > 32A";
 
-                case ChargingFacilities.CF_380_480V_3Phase_less16A:
+                case ChargingFacilities.CF_380_480V_3Phase_lessOrEquals16A:
                     return "380 - 480V, 3-Phase ≤ 16A";
 
-                case ChargingFacilities.CF_380_480V_3Phase_less32A:
+                case ChargingFacilities.CF_380_480V_3Phase_lessOrEquals32A:
                     return "380 - 480V, 3-Phase ≤ 32A";
 
-                case ChargingFacilities.CF_380_480V_3Phase_less63A:
+                case ChargingFacilities.CF_380_480V_3Phase_lessOrEquals63A:
                     return "380 - 480V, 3-Phase ≤ 63A";
 
                 case ChargingFacilities.Battery_exchange:
                     return "Battery exchange";
 
-                case ChargingFacilities.DCCharging_less20kW:
+                case ChargingFacilities.DCCharging_lessOrEquals20kW:
                     return "DC Charging ≤ 20kW";
 
-                case ChargingFacilities.DCCharging_less50kW:
+                case ChargingFacilities.DCCharging_lessOrEquals50kW:
                     return "DC Charging ≤ 50kW";
 
-                case ChargingFacilities.DCCharging_over50kW:
+                case ChargingFacilities.DCCharging_moreThan50kW:
                     return "DC Charging > 50kW";
 
 
