@@ -770,7 +770,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                           EVSEId:             ChargeDetailRecord.EVSEId,
                                           ChargingProductId:  ChargeDetailRecord.PartnerProductId,
                                           SessionTime:        new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
-                                          EnergyMeterValues:  new List<Timestamped<Double>>() { new Timestamped<Double>(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.MeterValueStart.Value),
+                                          EnergyMeteringValues:  new List<Timestamped<Double>>() { new Timestamped<Double>(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.MeterValueStart.Value),
                                                                                                 new Timestamped<Double>(ChargeDetailRecord.ChargingEnd.Value,   ChargeDetailRecord.MeterValueEnd.Value) },
                                           //MeterValuesInBetween
                                           //ConsumedEnergy
