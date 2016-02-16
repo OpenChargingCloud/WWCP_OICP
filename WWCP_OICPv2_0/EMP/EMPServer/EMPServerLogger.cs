@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region EMPServerLogger(EMPServer, Context = "")
+        #region EMPServerLogger(EMPServer, Context = "OICP_EMPServer")
 
         /// <summary>
         /// Create a new OICP v2.0 EMP server logger using the default logging delegates.
@@ -48,20 +48,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="EMPServer">A OICP v2.0 EMP server.</param>
         /// <param name="Context">A context of this API.</param>
         public EMPServerLogger(EMPServer  EMPServer,
-                               String     Context = "")
+                               String     Context = "OICP_EMPServer")
 
             : this(EMPServer,
                    Context,
 
                    Default_LogHTTPRequest_toConsole,
-                   Default_LogHTTPRequest_toDisc,
-                   null,
-                   null,
-
                    Default_LogHTTPResponse_toConsole,
-                   Default_LogHTTPResponse_toDisc,
-                   null,
-                   null)
+                   Default_LogHTTPRequest_toDisc,
+                   Default_LogHTTPResponse_toDisc)
 
         { }
 
@@ -76,39 +71,45 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Context">A context of this API.</param>
         /// 
         /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
-        /// <param name="LogHTTPRequest_toDisc">A delegate to log incoming HTTP requests to disc.</param>
-        /// <param name="LogHTTPRequest_toNetwork">A delegate to log incoming HTTP requests to a network target.</param>
-        /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP server sent events source.</param>
-        /// 
         /// <param name="LogHTTPResponse_toConsole">A delegate to log HTTP requests/responses to console.</param>
+        /// <param name="LogHTTPRequest_toDisc">A delegate to log incoming HTTP requests to disc.</param>
         /// <param name="LogHTTPResponse_toDisc">A delegate to log HTTP requests/responses to disc.</param>
+        /// 
+        /// <param name="LogHTTPRequest_toNetwork">A delegate to log incoming HTTP requests to a network target.</param>
         /// <param name="LogHTTPResponse_toNetwork">A delegate to log HTTP requests/responses to a network target.</param>
+        /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP server sent events source.</param>
         /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP server sent events source.</param>
+        /// 
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPServerLogger(EMPServer                                          EMPServer,
                                String                                             Context,
 
                                Action<String, String, HTTPRequest>                LogHTTPRequest_toConsole,
-                               Action<String, String, HTTPRequest>                LogHTTPRequest_toDisc,
-                               Action<String, String, HTTPRequest>                LogHTTPRequest_toNetwork,
-                               Action<String, String, HTTPRequest>                LogHTTPRequest_toHTTPSSE,
-
                                Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toConsole,
+                               Action<String, String, HTTPRequest>                LogHTTPRequest_toDisc,
                                Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toDisc,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toNetwork,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toHTTPSSE)
+
+                               Action<String, String, HTTPRequest>                LogHTTPRequest_toNetwork   = null,
+                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toNetwork  = null,
+                               Action<String, String, HTTPRequest>                LogHTTPRequest_toHTTPSSE   = null,
+                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toHTTPSSE  = null,
+
+                               Func<String, String, String>                       LogFileCreator             = null)
 
             : base(EMPServer.HTTPServer,
                    Context,
 
                    LogHTTPRequest_toConsole,
-                   LogHTTPRequest_toDisc,
-                   LogHTTPRequest_toNetwork,
-                   LogHTTPRequest_toHTTPSSE,
-
                    LogHTTPResponse_toConsole,
+                   LogHTTPRequest_toDisc,
                    LogHTTPResponse_toDisc,
+
+                   LogHTTPRequest_toNetwork,
                    LogHTTPResponse_toNetwork,
-                   LogHTTPResponse_toHTTPSSE)
+                   LogHTTPRequest_toHTTPSSE,
+                   LogHTTPResponse_toHTTPSSE,
+
+                   LogFileCreator)
 
         {
 
