@@ -2257,7 +2257,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                     PartnerProductId:      ChargeDetailRecord.ChargingProductId,
                                                                     SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
                                                                     SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
-                                                                    Identification:        new AuthorizationIdentification(ChargeDetailRecord.Identification),
+                                                                    Identification:        new AuthorizationIdentification(ChargeDetailRecord.IdentificationStart),
                                                                     //PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
                                                                     ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new Nullable<DateTime>(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
                                                                     ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ?                        ChargeDetailRecord.SessionTime.Value.EndTime    : null,
