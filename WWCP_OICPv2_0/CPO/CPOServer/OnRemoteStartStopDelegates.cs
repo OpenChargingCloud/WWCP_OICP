@@ -75,7 +75,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                     EVSE_Id              EVSEId,
                                                                     ChargingSession_Id   SessionId,
                                                                     ChargingSession_Id   PartnerSessionId,
-                                                                    EVSP_Id              ProviderId,
+                                                                    EVSP_Id              ProviderId    = null,
                                                                     TimeSpan?            QueryTimeout  = null);
 
 

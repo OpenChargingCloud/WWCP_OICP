@@ -526,8 +526,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                            EVSE_Id             EVSEId,
                            ChargingSession_Id  SessionId,
                            ChargingSession_Id  PartnerSessionId,
-                           EVSP_Id             ProviderId,
-                           TimeSpan?           QueryTimeout = null)
+                           EVSP_Id             ProviderId    = null,
+                           TimeSpan?           QueryTimeout  = null)
 
         {
 
@@ -541,6 +541,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                ReservationHandling.Close,
                                                SessionId,
                                                ProviderId,
+                                               null,
                                                EVSEId,
                                                QueryTimeout);
 
