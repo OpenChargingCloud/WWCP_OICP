@@ -2262,9 +2262,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                     //PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
                                                                     ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new Nullable<DateTime>(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
                                                                     ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ?                        ChargeDetailRecord.SessionTime.Value.EndTime    : null,
-                                                                    MeterValueStart:       ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeterValues.First().Value) : null,
-                                                                    MeterValueEnd:         ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeterValues.Last(). Value) : null,
-                                                                    MeterValuesInBetween:  ChargeDetailRecord.EnergyMeterValues != null && ChargeDetailRecord.EnergyMeterValues.Any() ? ChargeDetailRecord.EnergyMeterValues.Select(v => v.Value)       : null,
+                                                                    MeterValueStart:       ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeteringValues.First().Value) : null,
+                                                                    MeterValueEnd:         ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeteringValues.Last(). Value) : null,
+                                                                    MeterValuesInBetween:  ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Select(v => v.Value)       : null,
                                                                     MeteringSignature:     ChargeDetailRecord.MeteringSignature,
                                                                     QueryTimeout:          QueryTimeout);
 
