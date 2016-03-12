@@ -350,7 +350,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 throw new ArgumentNullException(nameof(RoamingNetwork),  "The given roaming network must not be null!");
 
             if (CPORoaming     == null)
-                throw new ArgumentNullException("CPORoaming",      "The given OICP CPO Roaming object must not be null!");
+                throw new ArgumentNullException(nameof(CPORoaming),      "The given OICP CPO Roaming object must not be null!");
 
             #endregion
 
@@ -580,7 +580,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (GroupedEVSEs == null)
-                throw new ArgumentNullException("GroupedEVSEs", "The given lookup of EVSEs must not be null!");
+                throw new ArgumentNullException(nameof(GroupedEVSEs), "The given lookup of EVSEs must not be null!");
 
             #endregion
 
@@ -668,7 +668,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (EVSE == null)
-                throw new ArgumentNullException("EVSE", "The given EVSE must not be null!");
+                throw new ArgumentNullException(nameof(EVSE), "The given EVSE must not be null!");
 
             #endregion
 
@@ -712,7 +712,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (EVSEs == null)
-                throw new ArgumentNullException("EVSEs", "The given enumeration of EVSEs must not be null!");
+                throw new ArgumentNullException(nameof(EVSEs), "The given enumeration of EVSEs must not be null!");
 
             if (IncludeEVSEs == null)
                 IncludeEVSEs = EVSE => true;
@@ -767,7 +767,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ChargingStation == null)
-                throw new ArgumentNullException("ChargingStation", "The given charging station must not be null!");
+                throw new ArgumentNullException(nameof(ChargingStation), "The given charging station must not be null!");
 
             #endregion
 
@@ -807,7 +807,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ChargingStations == null)
-                throw new ArgumentNullException("ChargingStations", "The given enumeration of charging stations must not be null!");
+                throw new ArgumentNullException(nameof(ChargingStations), "The given enumeration of charging stations must not be null!");
 
             #endregion
 
@@ -847,7 +847,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ChargingPool == null)
-                throw new ArgumentNullException("ChargingPool", "The given charging pool must not be null!");
+                throw new ArgumentNullException(nameof(ChargingPool), "The given charging pool must not be null!");
 
             #endregion
 
@@ -887,7 +887,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ChargingPools == null)
-                throw new ArgumentNullException("ChargingPools", "The given enumeration of charging pools must not be null!");
+                throw new ArgumentNullException(nameof(ChargingPools), "The given enumeration of charging pools must not be null!");
 
             #endregion
 
@@ -928,7 +928,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (EVSEOperator == null)
-                throw new ArgumentNullException("EVSEOperator", "The given EVSE operator must not be null!");
+                throw new ArgumentNullException(nameof(EVSEOperator), "The given EVSE operator must not be null!");
 
             #endregion
 
@@ -969,7 +969,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (EVSEOperators == null)
-                throw new ArgumentNullException("EVSEOperators",  "The given enumeration of EVSE operators must not be null!");
+                throw new ArgumentNullException(nameof(EVSEOperators),  "The given enumeration of EVSE operators must not be null!");
 
             #endregion
 
@@ -1030,30 +1030,30 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region PushEVSEStatus...
 
-        #region PushEVSEStatus(GroupedEVSEs,     ActionType = update, OperatorId = null, OperatorName = null,                      QueryTimeout = null)
+        #region PushEVSEStatus(GroupedEVSEStatus, ActionType = update, OperatorId = null, OperatorName = null,                      QueryTimeout = null)
 
         /// <summary>
         /// Upload the EVSE status of the given lookup of EVSE status types grouped by their EVSE operator.
         /// </summary>
-        /// <param name="GroupedEVSEs">A lookup of EVSEs grouped by their EVSE operator.</param>
+        /// <param name="GroupedEVSEStatus">A lookup of EVSEs grouped by their EVSE operator.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public async Task<Acknowledgement>
 
-            PushEVSEStatus(ILookup<EVSEOperator, EVSE>  GroupedEVSEs,
-                           WWCP.ActionType              ActionType    = WWCP.ActionType.update,
-                           EVSEOperator_Id              OperatorId    = null,
-                           String                       OperatorName  = null,
-                           TimeSpan?                    QueryTimeout  = null)
+            PushEVSEStatus(ILookup<EVSEOperator_Id, EVSEStatus>  GroupedEVSEStatus,
+                           WWCP.ActionType                       ActionType    = WWCP.ActionType.update,
+                           EVSEOperator_Id                       OperatorId    = null,
+                           String                                OperatorName  = null,
+                           TimeSpan?                             QueryTimeout  = null)
 
         {
 
             #region Initial checks
 
-            if (GroupedEVSEs == null)
-                throw new ArgumentNullException("GroupedEVSEStatusTypes", "The given lookup of EVSE status types must not be null!");
+            if (GroupedEVSEStatus == null)
+                throw new ArgumentNullException(nameof(GroupedEVSEStatus), "The given lookup of EVSE status must not be null!");
 
             #endregion
 
@@ -1061,30 +1061,40 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             Acknowledgement Acknowledgement = null;
 
-            var NumberOfEVSEStatus = GroupedEVSEs.
-                                         Select(group => group.Count()).
-                                         Sum();
+            // OICP does not support timestamped EVSE status information,
+            //   therefore use always the latest evse status!
+            var _GroupedEVSEStatus = GroupedEVSEStatus.
+                                         Select    (operatorgroup => operatorgroup.
+                                                                         GroupBy(evsestatus => evsestatus.Id).
+                                                                         Select (evsegroup  => evsegroup.OrderByDescending(status => status.Timestamp).
+                                                                                                         First())).
+                                         SelectMany(evsestatus    => evsestatus).
+                                         ToLookup  (evsestatus    => evsestatus.Id.OperatorId,
+                                                    evsestatus    => evsestatus);
+
+            var _NumberOfEVSEStatus  = _GroupedEVSEStatus.
+                                           Select(group => group.Count()).
+                                           Sum();
 
             var StartTime = DateTime.Now;
 
             #endregion
 
 
-            if (NumberOfEVSEStatus > 0)
+            if (_NumberOfEVSEStatus > 0)
             {
 
                 #region Send OnEVSEStatusPush event
 
                 var OnEVSEStatusPushLocal = OnEVSEStatusPush;
                 if (OnEVSEStatusPushLocal != null)
-                    OnEVSEStatusPushLocal(StartTime, this, this.Id.ToString(), this.RoamingNetworkId, ActionType, GroupedEVSEs, (UInt32) NumberOfEVSEStatus);
+                    OnEVSEStatusPushLocal(StartTime, this, this.Id.ToString(), this.RoamingNetworkId, ActionType, _GroupedEVSEStatus, (UInt32) _NumberOfEVSEStatus);
 
                 #endregion
 
-                var result = await _CPORoaming.PushEVSEStatus(GroupedEVSEs.
-                                                                  SelectMany(group => group).
-                                                                  ToLookup  (evse  => evse.Operator.Id,
-                                                                             evse  => new EVSEStatusRecord(evse.Id, evse.Status.Value.AsOICPEVSEStatus())),
+                var result = await _CPORoaming.PushEVSEStatus(_GroupedEVSEStatus.
+                                                                  SelectMany(group      => group).
+                                                                  Select    (evsestatus => new EVSEStatusRecord(evsestatus.Id, evsestatus.Status.AsOICPEVSEStatus())),
                                                               ActionType.AsOICPActionType(),
                                                               OperatorId,
                                                               OperatorName,
@@ -1098,21 +1108,22 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                  Environment.NewLine +
                                                                  result.StatusCode.AdditionalInfo);
 
+
+                #region Send OnEVSEStatusPushed event
+
+                var EndTime = DateTime.Now;
+
+                var OnEVSEStatusPushedLocal = OnEVSEStatusPushed;
+                if (OnEVSEStatusPushedLocal != null)
+                    OnEVSEStatusPushedLocal(EndTime, this, this.Id.ToString(), this.RoamingNetworkId, ActionType, _GroupedEVSEStatus, (UInt32) _NumberOfEVSEStatus, Acknowledgement, EndTime - StartTime);
+
+                #endregion
+
             }
 
             else
                 Acknowledgement = new Acknowledgement(true);
 
-
-            #region Send OnEVSEStatusPushed event
-
-            var EndTime = DateTime.Now;
-
-            var OnEVSEStatusPushedLocal = OnEVSEStatusPushed;
-            if (OnEVSEStatusPushedLocal != null)
-                OnEVSEStatusPushedLocal(EndTime, this, this.Id.ToString(), this.RoamingNetworkId, ActionType, GroupedEVSEs, (UInt32) NumberOfEVSEStatus, Acknowledgement, EndTime - StartTime);
-
-            #endregion
 
             return Acknowledgement;
 
@@ -1120,88 +1131,76 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushEVSEStatus(EVSE,             ActionType = update, OperatorId = null, OperatorName = null,                      QueryTimeout = null)
+        #region PushEVSEStatus(EVSEStatus,        ActionType = update, OperatorId = null, OperatorName = null,                      QueryTimeout = null)
 
         /// <summary>
-        /// Upload the given EVSE.
+        /// Upload the given EVSE status.
         /// </summary>
-        /// <param name="EVSE">An EVSE.</param>
+        /// <param name="EVSEStatus">An EVSE status.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public async Task<Acknowledgement>
 
-            PushEVSEStatus(EVSE                 EVSE,
-                           WWCP.ActionType      ActionType    = WWCP.ActionType.update,
-                           EVSEOperator_Id      OperatorId    = null,
-                           String               OperatorName  = null,
-                           TimeSpan?            QueryTimeout  = null)
+            PushEVSEStatus(EVSEStatus       EVSEStatus,
+                           WWCP.ActionType  ActionType    = WWCP.ActionType.update,
+                           EVSEOperator_Id  OperatorId    = null,
+                           String           OperatorName  = null,
+                           TimeSpan?        QueryTimeout  = null)
 
         {
 
             #region Initial checks
 
-            if (EVSE == null)
-                throw new ArgumentNullException("EVSE", "The given EVSE must not be null!");
+            if (EVSEStatus == null)
+                throw new ArgumentNullException(nameof(EVSEStatus), "The given EVSE status must not be null!");
 
             #endregion
 
-            return await PushEVSEStatus(new EVSE[] { EVSE },
+            return await PushEVSEStatus(new EVSEStatus[] { EVSEStatus },
                                         ActionType,
                                         OperatorId,
                                         OperatorName,
-                                        null,
                                         QueryTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(EVSEs,            ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(EVSEStatus,        ActionType = update, OperatorId = null, OperatorName = null,                      QueryTimeout = null)
 
         /// <summary>
-        /// Upload the status of the given enumeration of EVSEs.
+        /// Upload the status of the given enumeration of EVSE status.
         /// </summary>
-        /// <param name="EVSEs">An enumeration of EVSEs.</param>
+        /// <param name="EVSEStatus">An enumeration of EVSE status.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
-        /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
         /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public async Task<Acknowledgement>
 
-            PushEVSEStatus(IEnumerable<EVSE>    EVSEs,
-                           WWCP.ActionType      ActionType    = WWCP.ActionType.update,
-                           EVSEOperator_Id      OperatorId    = null,
-                           String               OperatorName  = null,
-                           Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                           TimeSpan?            QueryTimeout  = null)
+            PushEVSEStatus(IEnumerable<EVSEStatus>  EVSEStatus,
+                           WWCP.ActionType          ActionType    = WWCP.ActionType.update,
+                           EVSEOperator_Id          OperatorId    = null,
+                           String                   OperatorName  = null,
+                           TimeSpan?                QueryTimeout  = null)
 
         {
 
             #region Initial checks
 
-            if (EVSEs == null)
-                throw new ArgumentNullException("EVSEs", "The given enumeration of EVSEs must not be null!");
+            if (EVSEStatus == null)
+                throw new ArgumentNullException(nameof(EVSEStatus), "The given enumeration of EVSE status must not be null!");
 
-            if (IncludeEVSEs == null)
-                IncludeEVSEs = EVSE => true;
-
-            #endregion
-
-            #region Get effective number of EVSE status to upload
-
-            var _EVSEs = EVSEs.
-                             Where(evse => IncludeEVSEs(evse)).
-                             ToArray();
+            var _EVSEStatus = EVSEStatus.ToArray();
 
             #endregion
 
 
-            if (_EVSEs.Any())
-                return await PushEVSEStatus(_EVSEs.ToLookup(evse => evse.Operator,
-                                                            evse => evse),
+            if (_EVSEStatus.Any())
+                return await PushEVSEStatus(_EVSEStatus.ToLookup(evsestatus => evsestatus.Id.OperatorId,
+                                                                 evsestatus => evsestatus),
                                             ActionType,
                                             OperatorId,
                                             OperatorName,
@@ -1213,10 +1212,99 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushEVSEStatus(ChargingStation,  ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(EVSE,              ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         /// <summary>
-        /// Upload the EVSE status of the given charging station.
+        /// Upload the EVSE status of the given EVSE.
+        /// </summary>
+        /// <param name="EVSE">An EVSE.</param>
+        /// <param name="ActionType">The server-side data management operation.</param>
+        /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
+        /// <param name="OperatorName">The optional name of the EVSE operator.</param>
+        /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
+        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        public async Task<Acknowledgement>
+
+            PushEVSEStatus(EVSE                 EVSE,
+                           WWCP.ActionType      ActionType    = WWCP.ActionType.update,
+                           EVSEOperator_Id      OperatorId    = null,
+                           String               OperatorName  = null,
+                           Func<EVSE, Boolean>  IncludeEVSEs  = null,
+                           TimeSpan?            QueryTimeout  = null)
+
+        {
+
+            #region Initial checks
+
+            if (EVSE == null)
+                throw new ArgumentNullException(nameof(EVSE), "The given charging station must not be null!");
+
+            #endregion
+
+            if (IncludeEVSEs != null && !IncludeEVSEs(EVSE))
+                return new Acknowledgement(true);
+
+            return await PushEVSEStatus(EVSEStatus.Snapshot(EVSE),
+                                        ActionType,
+                                        OperatorId,
+                                        OperatorName,
+                                        QueryTimeout);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatus(EVSEs,             ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Upload all EVSE status of the given enumeration of charging stations.
+        /// </summary>
+        /// <param name="EVSEs">An enumeration of charging stations.</param>
+        /// <param name="ActionType">The server-side data management operation.</param>
+        /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
+        /// <param name="OperatorName">The optional name of the EVSE operator.</param>
+        /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
+        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        public async Task<Acknowledgement>
+
+            PushEVSEStatus(IEnumerable<EVSE>  EVSEs,
+                           WWCP.ActionType               ActionType    = WWCP.ActionType.update,
+                           EVSEOperator_Id               OperatorId    = null,
+                           String                        OperatorName  = null,
+                           Func<EVSE, Boolean>           IncludeEVSEs  = null,
+                           TimeSpan?                     QueryTimeout  = null)
+
+        {
+
+            #region Initial checks
+
+            if (EVSEs == null)
+                throw new ArgumentNullException(nameof(EVSEs), "The given enumeration of charging stations must not be null!");
+
+            var _EVSEs = IncludeEVSEs != null
+                             ? EVSEs.Where(IncludeEVSEs).ToArray()
+                             : EVSEs.ToArray();
+
+            #endregion
+
+            if (_EVSEs.Any())
+                return await PushEVSEStatus(EVSEs.Select(evse => EVSEStatus.Snapshot(evse)),
+                                            ActionType,
+                                            OperatorId,
+                                            OperatorName,
+                                            QueryTimeout);
+
+            else
+                return new Acknowledgement(true);
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatus(ChargingStation,   ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Upload all EVSE status of the given charging station.
         /// </summary>
         /// <param name="ChargingStation">A charging station.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
@@ -1238,25 +1326,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ChargingStation == null)
-                throw new ArgumentNullException("ChargingStation", "The given charging station must not be null!");
+                throw new ArgumentNullException(nameof(ChargingStation), "The given charging station must not be null!");
 
             #endregion
 
-            return await PushEVSEStatus(ChargingStation.EVSEs,
+            return await PushEVSEStatus(IncludeEVSEs != null
+                                            ? ChargingStation.EVSEs.Where(IncludeEVSEs).Select(evse => EVSEStatus.Snapshot(evse))
+                                            : ChargingStation.EVSEs.                    Select(evse => EVSEStatus.Snapshot(evse)),
                                         ActionType,
                                         OperatorId   != null ? OperatorId   : ChargingStation.ChargingPool.Operator.Id,
                                         OperatorName != null ? OperatorName : ChargingStation.ChargingPool.Operator.Name.FirstText,
-                                        IncludeEVSEs,
                                         QueryTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(ChargingStations, ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(ChargingStations,  ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         /// <summary>
-        /// Upload the EVSE status of the given charging stations.
+        /// Upload all EVSE status of the given enumeration of charging stations.
         /// </summary>
         /// <param name="ChargingStations">An enumeration of charging stations.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
@@ -1278,25 +1367,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ChargingStations == null)
-                throw new ArgumentNullException("ChargingStations", "The given enumeration of charging stations must not be null!");
+                throw new ArgumentNullException(nameof(ChargingStations), "The given enumeration of charging stations must not be null!");
 
             #endregion
 
-            return await PushEVSEStatus(ChargingStations.SelectMany(station => station.EVSEs),
+            return await PushEVSEStatus(IncludeEVSEs != null
+                                            ? ChargingStations.SelectMany(station => station.EVSEs.Where(IncludeEVSEs).Select(evse => EVSEStatus.Snapshot(evse)))
+                                            : ChargingStations.SelectMany(station => station.EVSEs.                    Select(evse => EVSEStatus.Snapshot(evse))),
                                         ActionType,
                                         OperatorId,
                                         OperatorName,
-                                        IncludeEVSEs,
                                         QueryTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(ChargingPool,     ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(ChargingPool,      ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         /// <summary>
-        /// Upload the EVSE status of the given charging pool.
+        /// Upload all EVSE status of the given charging pool.
         /// </summary>
         /// <param name="ChargingPool">A charging pool.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
@@ -1318,25 +1408,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ChargingPool == null)
-                throw new ArgumentNullException("ChargingPool", "The given charging pool must not be null!");
+                throw new ArgumentNullException(nameof(ChargingPool), "The given charging pool must not be null!");
 
             #endregion
 
-            return await PushEVSEStatus(ChargingPool.EVSEs,
+            return await PushEVSEStatus(IncludeEVSEs != null
+                                            ? ChargingPool.EVSEs.Where(IncludeEVSEs).Select(evse => EVSEStatus.Snapshot(evse))
+                                            : ChargingPool.EVSEs.                    Select(evse => EVSEStatus.Snapshot(evse)),
                                         ActionType,
                                         OperatorId   != null ? OperatorId   : ChargingPool.Operator.Id,
                                         OperatorName != null ? OperatorName : ChargingPool.Operator.Name.FirstText,
-                                        IncludeEVSEs,
                                         QueryTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(ChargingPools,    ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(ChargingPools,     ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         /// <summary>
-        /// Upload the EVSE status of the given charging pools.
+        /// Upload all EVSE status of the given enumeration of charging pools.
         /// </summary>
         /// <param name="ChargingPools">An enumeration of charging pools.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
@@ -1358,26 +1449,29 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ChargingPools == null)
-                throw new ArgumentNullException("ChargingPools", "The given enumeration of charging pools must not be null!");
+                throw new ArgumentNullException(nameof(ChargingPools), "The given enumeration of charging pools must not be null!");
 
             #endregion
 
-            return await PushEVSEStatus(ChargingPools.SelectMany(pool    => pool.ChargingStations).
-                                                      SelectMany(station => station.EVSEs),
+            return await PushEVSEStatus(IncludeEVSEs != null
+                                            ? ChargingPools.SelectMany(pool    => pool.ChargingStations).
+                                                            SelectMany(station => station.EVSEs.Where (IncludeEVSEs).
+                                                                                                Select(evse => EVSEStatus.Snapshot(evse)))
+                                            : ChargingPools.SelectMany(pool    => pool.ChargingStations).
+                                                            SelectMany(station => station.EVSEs.Select(evse => EVSEStatus.Snapshot(evse))),
                                         ActionType,
                                         OperatorId,
                                         OperatorName,
-                                        IncludeEVSEs,
                                         QueryTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(EVSEOperator,     ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(EVSEOperator,      ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         /// <summary>
-        /// Upload the EVSE status of the given EVSE operator.
+        /// Upload all EVSE status of the given EVSE operator.
         /// </summary>
         /// <param name="EVSEOperator">An EVSE operator.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
@@ -1399,27 +1493,28 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (EVSEOperator == null)
-                throw new ArgumentNullException("EVSEOperator", "The given EVSE operator must not be null!");
+                throw new ArgumentNullException(nameof(EVSEOperator), "The given EVSE operator must not be null!");
 
             #endregion
 
-            return await PushEVSEStatus(EVSEOperator.EVSEs,
+            return await PushEVSEStatus(IncludeEVSEs != null
+                                            ? EVSEOperator.EVSEs.Where(IncludeEVSEs).Select(evse => EVSEStatus.Snapshot(evse))
+                                            : EVSEOperator.EVSEs.                    Select(evse => EVSEStatus.Snapshot(evse)),
                                         ActionType,
                                         EVSEOperator.Id,
                                         OperatorName.IsNotNullOrEmpty()
                                             ? OperatorName
                                             : EVSEOperator.Name.FirstText,
-                                        IncludeEVSEs,
                                         QueryTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(EVSEOperators,    ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(EVSEOperators,     ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         /// <summary>
-        /// Upload the EVSE status of the given EVSE operators.
+        /// Upload all EVSE status of the given enumeration of EVSE operators.
         /// </summary>
         /// <param name="EVSEOperators">An enumeration of EVSES operators.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
@@ -1441,27 +1536,31 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (EVSEOperators == null)
-                throw new ArgumentNullException("EVSEOperator", "The given enumeration of EVSE operators must not be null!");
+                throw new ArgumentNullException(nameof(EVSEOperator), "The given enumeration of EVSE operators must not be null!");
 
             #endregion
 
-            return await PushEVSEStatus(EVSEOperators.SelectMany(evseoperator => evseoperator.ChargingPools).
-                                                      SelectMany(pool         => pool.ChargingStations).
-                                                      SelectMany(station      => station.EVSEs),
+            return await PushEVSEStatus(IncludeEVSEs != null
+                                            ? EVSEOperators.SelectMany(evseoperator => evseoperator.ChargingPools).
+                                                            SelectMany(pool         => pool.ChargingStations).
+                                                            SelectMany(station      => station.EVSEs.Where (IncludeEVSEs).
+                                                                                                     Select(evse => EVSEStatus.Snapshot(evse)))
+                                            : EVSEOperators.SelectMany(evseoperator => evseoperator.ChargingPools).
+                                                            SelectMany(pool         => pool.ChargingStations).
+                                                            SelectMany(station      => station.EVSEs.Select(evse => EVSEStatus.Snapshot(evse))),
                                         ActionType,
                                         OperatorId,
                                         OperatorName,
-                                        IncludeEVSEs,
                                         QueryTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(RoamingNetwork,   ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(RoamingNetwork,    ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
 
         /// <summary>
-        /// Upload the EVSE status of the given roaming network.
+        /// Upload all EVSE status of the given roaming network.
         /// </summary>
         /// <param name="RoamingNetwork">A roaming network.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
@@ -1487,11 +1586,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            return await PushEVSEStatus(RoamingNetwork.EVSEs,
+            return await PushEVSEStatus(IncludeEVSEs != null
+                                            ? RoamingNetwork.EVSEs.Where(IncludeEVSEs).Select(evse => EVSEStatus.Snapshot(evse))
+                                            : RoamingNetwork.EVSEs.                    Select(evse => EVSEStatus.Snapshot(evse)),
                                         ActionType,
                                         OperatorId,
                                         OperatorName,
-                                        IncludeEVSEs,
                                         QueryTimeout);
 
         }
@@ -1811,7 +1911,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 throw new ArgumentNullException(nameof(AuthToken),          "The given authentication token must not be null!");
 
             if (ChargingStationId == null)
-                throw new ArgumentNullException("ChargingStationId",  "The given charging station identification must not be null!");
+                throw new ArgumentNullException(nameof(ChargingStationId),  "The given charging station identification must not be null!");
 
             #endregion
 
@@ -2226,7 +2326,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ChargeDetailRecord == null)
-                throw new ArgumentNullException("ChargeDetailRecord", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(ChargeDetailRecord), "The given parameter must not be null!");
 
             #endregion
 

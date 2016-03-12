@@ -19,6 +19,7 @@
 
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 #endregion
 
@@ -52,24 +53,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// A delegate called whenever new EVSE status will be send upstream.
     /// </summary>
-    public delegate void OnEVSEStatusPushDelegate(DateTime                                    Timestamp,
-                                                  Object                                      Sender,
-                                                  String                                      SenderId,
-                                                  ActionType                                  ActionType,
-                                                  ILookup<EVSEOperator_Id, EVSEStatusRecord>  EVSEStatusRecords,
-                                                  UInt32                                      NumberOfEVSEs);
+    public delegate void OnEVSEStatusPushDelegate(DateTime                       Timestamp,
+                                                  Object                         Sender,
+                                                  String                         SenderId,
+                                                  ActionType                     ActionType,
+                                                  IEnumerable<EVSEStatusRecord>  EVSEStatusRecords,
+                                                  UInt32                         NumberOfEVSEs);
 
 
     /// <summary>
     /// A delegate called whenever new EVSE status had been send upstream.
     /// </summary>
-    public delegate void OnEVSEStatusPushedDelegate(DateTime                                    Timestamp,
-                                                    Object                                      Sender,
-                                                    String                                      SenderId,
-                                                    ActionType                                  ActionType,
-                                                    ILookup<EVSEOperator_Id, EVSEStatusRecord>  EVSEStatusRecords,
-                                                    UInt32                                      NumberOfEVSEs,
-                                                    eRoamingAcknowledgement                     Result,
-                                                    TimeSpan                                    Duration);
+    public delegate void OnEVSEStatusPushedDelegate(DateTime                       Timestamp,
+                                                    Object                         Sender,
+                                                    String                         SenderId,
+                                                    ActionType                     ActionType,
+                                                    IEnumerable<EVSEStatusRecord>  EVSEStatusRecords,
+                                                    UInt32                         NumberOfEVSEs,
+                                                    eRoamingAcknowledgement        Result,
+                                                    TimeSpan                       Duration);
 
 }

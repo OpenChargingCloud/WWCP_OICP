@@ -67,7 +67,7 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static CPORoamingProvider
+        public static EVSEOperatorRoamingProvider
 
             CreateOICP_CPORoamingProvider(this RoamingNetwork                   RoamingNetwork,
                                           RoamingProvider_Id                    Id,
@@ -90,8 +90,11 @@ namespace org.GraphDefined.WWCP
                                           OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord         = null,
                                           OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML          = null,
 
+                                          Func<EVSE, Boolean>                   IncludeEVSEs                = null,
+                                          TimeSpan?                             ServiceCheckEvery           = null,
+                                          Boolean                               DisableAutoUploads          = false,
                                           Action<OICPv2_0.CPORoamingWWCP>       OICPConfigurator            = null,
-                                          Action<CPORoamingProvider>            Configurator                = null)
+                                          Action<EVSEOperatorRoamingProvider>   Configurator                = null)
 
         {
 
@@ -136,6 +139,9 @@ namespace org.GraphDefined.WWCP
                 ConfiguratorLocal(NewRoamingProvider);
 
             return RoamingNetwork.CreateNewRoamingProvider(NewRoamingProvider,
+                                                           IncludeEVSEs,
+                                                           ServiceCheckEvery,
+                                                           DisableAutoUploads,
                                                            Configurator);
 
         }
@@ -167,24 +173,27 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static CPORoamingProvider CreateOICP_CPORoamingProvider(this RoamingNetwork                  RoamingNetwork,
-                                                                       RoamingProvider_Id                   Id,
-                                                                       I18NString                           Name,
-                                                                       SOAPServer                           SOAPServer,
+        public static EVSEOperatorRoamingProvider CreateOICP_CPORoamingProvider(this RoamingNetwork                  RoamingNetwork,
+                                                                                RoamingProvider_Id                   Id,
+                                                                                I18NString                           Name,
+                                                                                SOAPServer                           SOAPServer,
 
-                                                                       String                               RemoteHostname,
-                                                                       IPPort                               RemoteTCPPort               = null,
-                                                                       String                               RemoteHTTPVirtualHost       = null,
-                                                                       RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                                                                       String                               HTTPUserAgent               = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
-                                                                       TimeSpan?                            QueryTimeout                = null,
+                                                                                String                               RemoteHostname,
+                                                                                IPPort                               RemoteTCPPort               = null,
+                                                                                String                               RemoteHTTPVirtualHost       = null,
+                                                                                RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                                                                                String                               HTTPUserAgent               = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
+                                                                                TimeSpan?                            QueryTimeout                = null,
 
-                                                                       String                               ServerURIPrefix             = null,
+                                                                                String                               ServerURIPrefix             = null,
 
-                                                                       DNSClient                            DNSClient                   = null,
+                                                                                DNSClient                            DNSClient                   = null,
 
-                                                                       Action<OICPv2_0.CPORoamingWWCP>      OICPConfigurator            = null,
-                                                                       Action<CPORoamingProvider>           Configurator                = null)
+                                                                                Func<EVSE, Boolean>                  IncludeEVSEs                = null,
+                                                                                TimeSpan?                            ServiceCheckEvery           = null,
+                                                                                Boolean                              DisableAutoUploads          = false,
+                                                                                Action<OICPv2_0.CPORoamingWWCP>      OICPConfigurator            = null,
+                                                                                Action<EVSEOperatorRoamingProvider>  Configurator                = null)
 
         {
 
@@ -229,6 +238,9 @@ namespace org.GraphDefined.WWCP
                 ConfiguratorLocal(NewRoamingProvider);
 
             return RoamingNetwork.CreateNewRoamingProvider(NewRoamingProvider,
+                                                           IncludeEVSEs,
+                                                           ServiceCheckEvery,
+                                                           DisableAutoUploads,
                                                            Configurator);
 
         }
@@ -250,7 +262,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="InitialDelay">Initial delay between startup and first check.</param>
         public static OICPv2_0.CPOServiceCheck<T>
 
-            CreateOICP_CPOServiceCheck<T>(this CPORoamingProvider              CPORoamingProvider,
+            CreateOICP_CPOServiceCheck<T>(this EVSEOperatorRoamingProvider              CPORoamingProvider,
                                           OICPv2_0.CPOServiceCheckDelegate<T>  ServiceChecker,
                                           Action<T>                            OnFirstCheck,
                                           Action<T>                            OnEveryCheck,

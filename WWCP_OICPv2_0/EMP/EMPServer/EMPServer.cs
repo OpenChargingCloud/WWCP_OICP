@@ -331,7 +331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region / (HTTPRoot)
 
             _SOAPServer.AddMethodCallback(HTTPMethod.GET,
-                                          URIPrefix + "/",
+                                          new String[] { "/", URIPrefix + "/" },
                                           HTTPContentType.TEXT_UTF8,
                                           HTTPDelegate: Request => {
 

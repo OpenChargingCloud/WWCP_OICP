@@ -80,6 +80,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP server sent events source.</param>
         /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP server sent events source.</param>
         /// 
+        /// <param name="LogHTTPError_toConsole">A delegate to log HTTP errors to console.</param>
+        /// <param name="LogHTTPError_toDisc">A delegate to log HTTP errors to disc.</param>
+        /// <param name="LogHTTPError_toNetwork">A delegate to log HTTP errors to a network target.</param>
+        /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP server sent events source.</param>
+        /// 
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPServerLogger(EMPServer                                          EMPServer,
                                String                                             Context,
@@ -93,6 +98,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toNetwork  = null,
                                Action<String, String, HTTPRequest>                LogHTTPRequest_toHTTPSSE   = null,
                                Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toHTTPSSE  = null,
+
+                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toConsole     = null,
+                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toDisc        = null,
+                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toNetwork     = null,
+                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toHTTPSSE     = null,
 
                                Func<String, String, String>                       LogFileCreator             = null)
 
@@ -109,6 +119,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                    LogHTTPRequest_toHTTPSSE,
                    LogHTTPResponse_toHTTPSSE,
 
+                   LogHTTPError_toConsole,
+                   LogHTTPError_toDisc,
+                   LogHTTPError_toNetwork,
+                   LogHTTPError_toHTTPSSE,
+
                    LogFileCreator)
 
         {
@@ -116,7 +131,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (EMPServer == null)
-                throw new ArgumentNullException("EMPServer", "The given OICP v2.0 EMP server must not be null!");
+                throw new ArgumentNullException(nameof(EMPServer), "The given EMP server must not be null!");
 
             #endregion
 

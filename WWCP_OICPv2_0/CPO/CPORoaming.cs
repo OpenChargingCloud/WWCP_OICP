@@ -547,58 +547,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region PushEVSEStatus(GroupedEVSEStatusRecords, OICPAction = fullLoad, OperatorId = null, OperatorName = null,                                  QueryTimeout = null)
+        #region PushEVSEStatus(EVSEStatusRecords,  OICPAction = fullLoad, OperatorId = null, OperatorName = null,                                  QueryTimeout = null)
 
         /// <summary>
-        /// Upload the given lookup of EVSE status records grouped by their EVSE operator identification.
+        /// Upload the given enumeration of EVSE status records.
         /// </summary>
-        /// <param name="GroupedEVSEStatusRecords">A lookup of EVSE status records grouped by their EVSE operator identification.</param>
+        /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
         /// <param name="OICPAction">The server-side data management operation.</param>
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public async Task<eRoamingAcknowledgement>
 
-            PushEVSEStatus(ILookup<EVSEOperator_Id, EVSEStatusRecord>  GroupedEVSEStatusRecords,
-                           ActionType                                  OICPAction    = ActionType.fullLoad,
-                           EVSEOperator_Id                             OperatorId    = null,
-                           String                                      OperatorName  = null,
-                           TimeSpan?                                   QueryTimeout  = null)
-
-        {
-
-            var result = await _CPOClient.PushEVSEStatus(GroupedEVSEStatusRecords,
-                                                         OICPAction,
-                                                         OperatorId,
-                                                         OperatorName,
-                                                         QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
-
-        #endregion
-
-        #region PushEVSEStatus(EVSEStatusRecords,        OICPAction = update,   OperatorId = null, OperatorName = null, IncludeEVSEStatusRecords = null, QueryTimeout = null)
-
-        /// <summary>
-        /// Upload the given enumeration of EVSE status records.
-        /// </summary>
-        /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
-        /// <param name="OperatorId">An optional EVSE operator Id to use. Otherwise it will be taken from the EVSE data records.</param>
-        /// <param name="OperatorName">An optional EVSE operator name.</param>
-        /// <param name="IncludeEVSEStatusRecords">An optional delegate for filtering EVSE status records before pushing them to the server.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingAcknowledgement>
-
-            PushEVSEStatus(IEnumerable<EVSEStatusRecord>    EVSEStatusRecords,
-                           ActionType                       OICPAction                = ActionType.update,
-                           EVSEOperator_Id                  OperatorId                = null,
-                           String                           OperatorName              = null,
-                           Func<EVSEStatusRecord, Boolean>  IncludeEVSEStatusRecords  = null,
-                           TimeSpan?                        QueryTimeout              = null)
+            PushEVSEStatus(IEnumerable<EVSEStatusRecord>  EVSEStatusRecords,
+                           ActionType                     OICPAction    = ActionType.fullLoad,
+                           EVSEOperator_Id                OperatorId    = null,
+                           String                         OperatorName  = null,
+                           TimeSpan?                      QueryTimeout  = null)
 
         {
 
@@ -606,7 +571,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          OICPAction,
                                                          OperatorId,
                                                          OperatorName,
-                                                         IncludeEVSEStatusRecords,
                                                          QueryTimeout);
 
             //ToDo: Process the HTTP!
@@ -616,7 +580,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushEVSEStatus(KeyValuePairs<...>,       OICPAction = update,   OperatorId = null, OperatorName = null,                                  QueryTimeout = null)
+        #region PushEVSEStatus(KeyValuePairs<...>, OICPAction = update,   OperatorId = null, OperatorName = null, IncludeEVSEStatusRecords = null, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task pushing EVSE status key-value-pairs onto the OICP server.
@@ -625,14 +589,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="OICPAction">An optional OICP action.</param>
         /// <param name="OperatorId">An optional EVSE operator identification to use. Otherwise it will be taken from the EVSE data records.</param>
         /// <param name="OperatorName">An optional EVSE operator name.</param>
+        /// <param name="IncludeEVSEStatusRecords">An optional delegate for filtering EVSE status records before pushing them to the server.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<eRoamingAcknowledgement>
 
             PushEVSEStatus(IEnumerable<KeyValuePair<EVSE_Id, EVSEStatusType>>  EVSEStatus,
-                           ActionType                                          OICPAction    = ActionType.update,
-                           EVSEOperator_Id                                     OperatorId    = null,
-                           String                                              OperatorName  = null,
-                           TimeSpan?                                           QueryTimeout  = null)
+                           ActionType                                          OICPAction                = ActionType.update,
+                           EVSEOperator_Id                                     OperatorId                = null,
+                           String                                              OperatorName              = null,
+                           Func<EVSEStatusRecord, Boolean>                     IncludeEVSEStatusRecords  = null,
+                           TimeSpan?                                           QueryTimeout              = null)
 
         {
 
@@ -640,6 +606,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          OICPAction,
                                                          OperatorId,
                                                          OperatorName,
+                                                         IncludeEVSEStatusRecords,
                                                          QueryTimeout);
 
             //ToDo: Process the HTTP!
