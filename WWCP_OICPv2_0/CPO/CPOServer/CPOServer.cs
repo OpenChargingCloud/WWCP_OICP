@@ -884,7 +884,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    #region Return SOAPResponse
+                    #region Create SOAP response
 
                     var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
