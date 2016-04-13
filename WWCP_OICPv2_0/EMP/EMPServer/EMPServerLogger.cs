@@ -40,15 +40,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region EMPServerLogger(EMPServer, Context = "OICP_EMPServer")
+        #region EMPServerLogger(EMPServer, Context = "OICP_EMPServer", LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP v2.0 EMP server logger using the default logging delegates.
         /// </summary>
         /// <param name="EMPServer">A OICP v2.0 EMP server.</param>
         /// <param name="Context">A context of this API.</param>
-        public EMPServerLogger(EMPServer  EMPServer,
-                               String     Context = "OICP_EMPServer")
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        public EMPServerLogger(EMPServer                     EMPServer,
+                               String                        Context         = "OICP_EMPServer",
+                               Func<String, String, String>  LogFileCreator  = null)
 
             : this(EMPServer,
                    Context,
@@ -56,7 +58,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                    Default_LogHTTPRequest_toConsole,
                    Default_LogHTTPResponse_toConsole,
                    Default_LogHTTPRequest_toDisc,
-                   Default_LogHTTPResponse_toDisc)
+                   Default_LogHTTPResponse_toDisc,
+
+                   LogFileCreator: LogFileCreator)
 
         { }
 

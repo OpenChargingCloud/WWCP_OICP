@@ -85,6 +85,9 @@ namespace org.GraphDefined.WWCP
                                           String                                ServerURIPrefix             = "",
                                           Boolean                               ServerAutoStart             = true,
 
+                                          String                                Context                     = "OICP_CPOServer",
+                                          Func<String, String, String>          LogFileCreator              = null,
+
                                           DNSClient                             DNSClient                   = null,
 
                                           OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord         = null,
@@ -129,6 +132,9 @@ namespace org.GraphDefined.WWCP
                                                                  ServerTCPPort,
                                                                  ServerURIPrefix,
                                                                  ServerAutoStart,
+
+                                                                 Context,
+                                                                 LogFileCreator,
 
                                                                  EVSE2EVSEDataRecord,
                                                                  EVSEDataRecord2XML,
@@ -187,6 +193,8 @@ namespace org.GraphDefined.WWCP
 
                                                                                 String                               ServerURIPrefix             = null,
 
+                                                                                String                               Context                     = "OICP_CPOServer",
+                                                                                Func<String, String, String>         LogFileCreator              = null,
                                                                                 DNSClient                            DNSClient                   = null,
 
                                                                                 Func<EVSE, Boolean>                  IncludeEVSEs                = null,
@@ -231,11 +239,16 @@ namespace org.GraphDefined.WWCP
                                                                                         DNSClient),
 
                                                                  new OICPv2_0.CPOServer(SOAPServer,
-                                                                                        ServerURIPrefix));
+                                                                                        ServerURIPrefix),
 
-            var ConfiguratorLocal = OICPConfigurator;
-            if (ConfiguratorLocal != null)
-                ConfiguratorLocal(NewRoamingProvider);
+                                                                 Context,
+                                                                 LogFileCreator);
+
+            //var ConfiguratorLocal = OICPConfigurator;
+            //if (ConfiguratorLocal != null)
+            //    ConfiguratorLocal(NewRoamingProvider);
+
+            OICPConfigurator?.Invoke(NewRoamingProvider);
 
             return RoamingNetwork.CreateNewRoamingProvider(NewRoamingProvider,
                                                            IncludeEVSEs,
@@ -262,7 +275,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="InitialDelay">Initial delay between startup and first check.</param>
         public static OICPv2_0.CPOServiceCheck<T>
 
-            CreateOICP_CPOServiceCheck<T>(this EVSEOperatorRoamingProvider              CPORoamingProvider,
+            CreateOICP_CPOServiceCheck<T>(this EVSEOperatorRoamingProvider     CPORoamingProvider,
                                           OICPv2_0.CPOServiceCheckDelegate<T>  ServiceChecker,
                                           Action<T>                            OnFirstCheck,
                                           Action<T>                            OnEveryCheck,

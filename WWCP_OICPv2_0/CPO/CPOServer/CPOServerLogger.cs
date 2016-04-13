@@ -40,15 +40,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region CPOServerLogger(CPOServer, Context = "OICP_CPOServer")
+        #region CPOServerLogger(CPOServer, Context = "OICP_CPOServer", LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP v2.0 CPO server logger using the default logging delegates.
         /// </summary>
         /// <param name="CPOServer">A OICP v2.0 CPO server.</param>
         /// <param name="Context">A context of this API.</param>
-        public CPOServerLogger(CPOServer  CPOServer,
-                               String     Context = "OICP_CPOServer")
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        public CPOServerLogger(CPOServer                    CPOServer,
+                               String                       Context         = "OICP_CPOServer",
+                               Func<String, String, String> LogFileCreator  = null)
 
             : this(CPOServer,
                    Context,
@@ -56,7 +58,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                    Default_LogHTTPRequest_toConsole,
                    Default_LogHTTPResponse_toConsole,
                    Default_LogHTTPRequest_toDisc,
-                   Default_LogHTTPResponse_toDisc)
+                   Default_LogHTTPResponse_toDisc,
+
+                   LogFileCreator: LogFileCreator)
 
         { }
 

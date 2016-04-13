@@ -380,21 +380,33 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
         /// <param name="CPOClient">An OICP CPO client.</param>
         /// <param name="CPOServer">An OICP CPO sever.</param>
+        /// 
+        /// <param name="Context">A context of this API.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// 
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
-        public CPORoamingWWCP(RoamingProvider_Id           Id,
-                              I18NString                   Name,
-                              RoamingNetwork               RoamingNetwork,
-                              CPOClient                    CPOClient,
-                              CPOServer                    CPOServer,
-                              EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord  = null,
-                              EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML   = null)
+        public CPORoamingWWCP(RoamingProvider_Id            Id,
+                              I18NString                    Name,
+                              RoamingNetwork                RoamingNetwork,
+                              CPOClient                     CPOClient,
+                              CPOServer                     CPOServer,
+
+                              String                        Context              = "OICP_CPOServer",
+                              Func<String, String, String>  LogFileCreator       = null,
+
+                              EVSE2EVSEDataRecordDelegate   EVSE2EVSEDataRecord  = null,
+                              EVSEDataRecord2XMLDelegate    EVSEDataRecord2XML   = null)
 
             : this(Id,
                    Name,
                    RoamingNetwork,
+
                    new CPORoaming(CPOClient,
-                                  CPOServer),
+                                  CPOServer,
+                                  Context,
+                                  LogFileCreator),
+
                    EVSE2EVSEDataRecord,
                    EVSEDataRecord2XML)
 
@@ -423,6 +435,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
+        /// <param name="Context">A context of this API.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// 
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
@@ -442,6 +457,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               String                               ServerURIPrefix             = "",
                               Boolean                              ServerAutoStart             = false,
 
+                              String                               Context                     = "OICP_CPOServer",
+                              Func<String, String, String>         LogFileCreator              = null,
+
                               EVSE2EVSEDataRecordDelegate          EVSE2EVSEDataRecord         = null,
                               EVSEDataRecord2XMLDelegate           EVSEDataRecord2XML          = null,
                               DNSClient                            DNSClient                   = null)
@@ -449,6 +467,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             : this(Id,
                    Name,
                    RoamingNetwork,
+
                    new CPORoaming(Id.ToString(),
                                   RemoteHostname,
                                   RemoteTCPPort,
@@ -462,7 +481,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                   ServerURIPrefix,
                                   ServerAutoStart,
 
+                                  Context,
+                                  LogFileCreator,
+
                                   DNSClient),
+
                    EVSE2EVSEDataRecord,
                    EVSEDataRecord2XML)
 

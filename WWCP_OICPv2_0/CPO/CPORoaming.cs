@@ -269,20 +269,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region CPORoaming(CPOClient, CPOServer)
+        #region CPORoaming(CPOClient, CPOServer, Context = "OICP_CPOServer", LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP roaming client for CPOs.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
         /// <param name="CPOServer">A CPO sever.</param>
-        public CPORoaming(CPOClient  CPOClient,
-                          CPOServer  CPOServer)
+        /// <param name="Context">A context of this API.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        public CPORoaming(CPOClient                    CPOClient,
+                          CPOServer                    CPOServer,
+                          String                       Context         = "OICP_CPOServer",
+                          Func<String, String, String> LogFileCreator  = null)
         {
 
             this._CPOClient        = CPOClient;
             this._CPOServer        = CPOServer;
-            this._CPOServerLogger  = new CPOServerLogger(this._CPOServer);
+            this._CPOServerLogger  = new CPOServerLogger(this._CPOServer, Context, LogFileCreator);
 
         }
 
@@ -306,6 +310,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
+        /// <param name="Context">A context of this API.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CPORoaming(String                               ClientId,
                           String                               RemoteHostname,
@@ -319,6 +326,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           IPPort                               ServerTCPPort               = null,
                           String                               ServerURIPrefix             = "",
                           Boolean                              ServerAutoStart             = false,
+
+                          String                               Context                     = "OICP_CPOServer",
+                          Func<String, String, String>         LogFileCreator              = null,
 
                           DNSClient                            DNSClient                   = null)
 
@@ -335,7 +345,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                  ServerTCPPort,
                                  ServerURIPrefix,
                                  DNSClient,
-                                 false))
+                                 false),
+
+                   Context,
+                   LogFileCreator)
 
         {
 
