@@ -34,576 +34,129 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
     public class OICPTests
     {
 
-        public async Task TestPushEVSEData(CPOClient HubjectCPO)
+        #region TestAuthStart(HubjectCPO, AuthToken)
+
+        public async Task TestAuthStart(CPOClient   HubjectCPO,
+                                        Auth_Token  AuthToken)
         {
 
-            var RN = new RoamingNetwork(RoamingNetwork_Id.Parse("TEST"));
+            var result = await HubjectCPO.
+                                   AuthorizeStart(EVSEOperator_Id.Parse("DE*GEF"),
+                                                  AuthToken,
+                                                  EVSE_Id.        Parse("DE*GEF*E123456789*1"));
 
-            var EVSEDataRecords = Enumeration.Create(
-
-                new EVSEDataRecord(
-                    EVSEOperator:         RN.CreateNewEVSEOperator(EVSEOperator_Id.Parse("TEST"), I18NString.Create(Languages.de, "TEST")),
-                    EVSEId:               EVSE_Id.Parse("DE*GEF*E123456789*2"),
-                    ChargingStationId:    ChargingStation_Id.Parse("DE*GEF*S123456789").ToString(),
-                    ChargingStationName:  I18NString.Create(Languages.de, "Testbox 1").
-                                                        Add(Languages.en, "Testbox One"),
-
-                    Address:              Address.Create(
-                                              Country.Germany,
-                                              "07749", I18NString.Create(Languages.de, "Jena"),
-                                              "Biberweg", "18"
-                                          ),
-
-                    GeoCoordinate:        GeoCoordinate.Create(
-                                              Latitude.Parse(49.731102),
-                                              Longitude.Parse(10.142530)
-                                          ),
-
-                    Plugs:                Enumeration.Create(
-                                              PlugTypes.TypeFSchuko,
-                                              PlugTypes.Type2Outlet
-                                          ),
-
-                    AuthenticationModes:  Enumeration.Create(
-                                              AuthenticationModes.NFC_RFID_Classic,
-                                              AuthenticationModes.NFC_RFID_DESFire,
-                                              AuthenticationModes.REMOTE
-                                          ),
-
-                    PaymentOptions:       Enumeration.Create(
-                                              PaymentOptions.Contract,
-                                              PaymentOptions.Direct
-                                          ),
-
-                    Accessibility:        AccessibilityTypes.Paying_publicly_accessible,
-
-                    HotlinePhoneNumber:   "+4955512345678",
-
-                    IsHubjectCompatible:  true,
-                    DynamicInfoAvailable: true,
-                    IsOpen24Hours:        true
-
-                )
-
-            );
-
-            var req1 = HubjectCPO.
-
-                          PushEVSEData(EVSEDataRecords,
-                                       ActionType.insert,
-                                       IncludeEVSEDataRecords: evse => evse.EVSEId.ToString().StartsWith("DE")).
-
-                          ContinueWith(task =>
-                          {
-
-                              var Acknowledgement = task.Result.Content;
-
-                              if (Acknowledgement.Result)
-                                  Console.WriteLine("success!");
-
-                              else
-                              {
-                                  Console.WriteLine(task.Result.Content.StatusCode.Code);
-                                  Console.WriteLine(task.Result.Content.StatusCode.Description);
-                                  Console.WriteLine(task.Result.Content.StatusCode.AdditionalInfo);
-                              }
-
-                          });
+            ConsoleX.WriteLines("AuthStart result:",
+                                result.Content.AuthorizationStatus,
+                                result.Content.StatusCode.Code,
+                                result.Content.StatusCode.Description,
+                                result.Content.StatusCode.AdditionalInfo);
 
         }
 
-        public async Task TestPullEVSEData(EMPClient HubjectEMP)
+        #endregion
+
+        #region TestAuthStop(HubjectCPO, SessionId, AuthToken)
+
+        public async Task TestAuthStop(CPOClient           HubjectCPO,
+                                       ChargingSession_Id  SessionId,
+                                       Auth_Token          AuthToken)
         {
 
-            var req2 = HubjectEMP.
+            var result = await HubjectCPO.
+                                   AuthorizeStop(EVSEOperator_Id.Parse("DE*GEF"),
+                                                 SessionId,
+                                                 AuthToken,
+                                                 EVSE_Id.        Parse("DE*GEF*E123456789*1"));
 
-                          PullEVSEData(ProviderId:    EVSP_Id.Parse("DE*GDF"),
-                                       SearchCenter:  new GeoCoordinate(Latitude. Parse(49.731102),
-                                                                        Longitude.Parse(10.142533)),
-                                       DistanceKM:    100,
-                                       QueryTimeout:  TimeSpan.FromSeconds(120)).
-
-                          ContinueWith(task =>
-                          {
-
-                              var eRoamingEVSEData = task.Result.Content;
-
-                              if (eRoamingEVSEData.StatusCode.HasResult)
-                              {
-
-                                  Console.WriteLine(eRoamingEVSEData.
-                                                        OperatorEVSEData.
-                                                        Select(evsedata => "'" + evsedata.OperatorName +
-                                                                           "' has " +
-                                                                           evsedata.EVSEDataRecords.Count() +
-                                                                           " EVSEs").
-                                                        AggregateWith(Environment.NewLine) +
-                                                        Environment.NewLine);
-
-                              }
-                              else
-                              {
-                                  Console.WriteLine(eRoamingEVSEData.StatusCode.Code);
-                                  Console.WriteLine(eRoamingEVSEData.StatusCode.Description);
-                                  Console.WriteLine(eRoamingEVSEData.StatusCode.AdditionalInfo);
-                              }
-
-                          });
+            ConsoleX.WriteLines("AuthStop result:",
+                                result.Content.AuthorizationStatus,
+                                result.Content.StatusCode.Code,
+                                result.Content.StatusCode.Description,
+                                result.Content.StatusCode.AdditionalInfo);
 
         }
 
-        public async Task TestPushEVSEStatus(CPOClient HubjectCPO)
-        {
+        #endregion
 
-            var EVSEStatus = new Dictionary<EVSE_Id, EVSEStatusType>();
-            EVSEStatus.Add(EVSE_Id.Parse("DE*GEF*E123456789*1"), EVSEStatusType.Available);
-            EVSEStatus.Add(EVSE_Id.Parse("DE*GEF*E123456789*2"), EVSEStatusType.Occupied);
+        #region TestChargeDetailRecord(HubjectCPO)
 
-            var req3 = HubjectCPO.
-
-                          PushEVSEStatus(EVSEStatus,
-                                         ActionType.insert,
-                                         OperatorId: EVSEOperator_Id.Parse("DE*GEF"),
-                                         OperatorName: "Test CPO 1",
-                                         QueryTimeout: TimeSpan.FromSeconds(120)).
-
-                          ContinueWith(task =>
-                          {
-
-                              var Acknowledgement = task.Result.Content;
-
-                              if (Acknowledgement.Result)
-                                  Console.WriteLine("success!");
-
-                              else
-                              {
-                                  Console.WriteLine(Acknowledgement.StatusCode.Code);
-                                  Console.WriteLine(Acknowledgement.StatusCode.Description);
-                                  Console.WriteLine(Acknowledgement.StatusCode.AdditionalInfo);
-                              }
-
-                          });
-
-        }
-
-        public async Task TestPullEVSEStatus(EMPClient HubjectEMP)
-        {
-
-            var req4 = HubjectEMP.
-
-                          PullEVSEStatus(ProviderId:        EVSP_Id.Parse("DE*GDF"),
-                                         SearchCenter:      new GeoCoordinate(Latitude. Parse(49.731102),
-                                                                              Longitude.Parse(10.142533)),
-                                         DistanceKM:        100,
-                                         EVSEStatusFilter:  EVSEStatusType.Available,
-                                         QueryTimeout:      TimeSpan.FromSeconds(120)).
-
-                          ContinueWith(task =>
-                          {
-
-                              var eRoamingEVSEStatus = task.Result.Content;
-
-                              if (eRoamingEVSEStatus.StatusCode.HasResult)
-                              {
-
-                                  Console.WriteLine(eRoamingEVSEStatus.
-                                                        OperatorEVSEStatus.
-                                                        Select(evsestatusrecord => "'" + evsestatusrecord.OperatorName +
-                                                                                   "' has " +
-                                                                                   evsestatusrecord.EVSEStatusRecords.Count() +
-                                                                                   " available EVSEs").
-                                                        AggregateWith(Environment.NewLine) +
-                                                        Environment.NewLine);
-
-                              }
-                              else
-                              {
-                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.Code);
-                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.Description);
-                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.AdditionalInfo);
-                              }
-
-                          });
-
-        }
-
-        public async Task TestPullEVSEStatusById(EMPClient HubjectEMP)
-        {
-
-            var req5 = HubjectEMP.
-                PullEVSEStatusById(ProviderId:    EVSP_Id.Parse("DE*GDF"),
-                                   EVSEIds:       Enumeration.Create(EVSE_Id.Parse("DE*GEF*E123456789*1"),
-                                                                     EVSE_Id.Parse("+49*822*083431571*1")),
-                                   QueryTimeout:  TimeSpan.FromSeconds(120)).
-
-                ContinueWith(task =>
-                {
-
-                    var eRoamingEVSEStatusById = task.Result.Content;
-
-                    if (eRoamingEVSEStatusById.StatusCode.HasResult)
-                    {
-
-                        Console.WriteLine(eRoamingEVSEStatusById.
-                                              EVSEStatusRecords.
-                                              Select(evsestatusrecord => "EVSE '" + evsestatusrecord.Id +
-                                                                         "' has status '" +
-                                                                         evsestatusrecord.Status.ToString() +
-                                                                         "'").
-                                              AggregateWith(Environment.NewLine) +
-                                              Environment.NewLine);
-
-                    }
-                    else
-                    {
-                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.Code);
-                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.Description);
-                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.AdditionalInfo);
-                    }
-
-                });
-
-        }
-
-        public async Task TestSearchEVSE(EMPClient HubjectEMP)
-        {
-
-            Task.Factory.StartNew(async () => {
-
-                var result = await HubjectEMP.
-                    SearchEVSE(EVSP_Id.Parse("DE*GDF"),
-                               SearchCenter:  new GeoCoordinate(Latitude. Parse(49.731102),
-                                                                Longitude.Parse(10.142533)),
-                               DistanceKM:    100,
-                               Plug:          PlugTypes.Type2Outlet,
-                               QueryTimeout:  TimeSpan.FromSeconds(120));
-
-                if (result.Content.HasResults())
-                    Console.WriteLine(result.Content.
-                                          EVSEMatches.
-                                          Select(match => "'" + match.EVSEDataRecord.ChargingStationName.FirstText  + " / " +
-                                                                match.EVSEDataRecord.EVSEId.             ToString() + "' in " +
-                                                                match.Distance + " km").
-                                          AggregateWith(Environment.NewLine) +
-                                          Environment.NewLine);
-
-            }).
-
-            // Wait for the task to complete...
-            Wait();
-
-        }
-
-
-        public void TestPushAuthenticationData(EMPClient HubjectEMP)
-        {
-
-            Task.Factory.StartNew(async () => {
-
-                var result = await HubjectEMP.
-                    PushAuthenticationData(Enumeration.Create(  // ([A-Za-z]{2} \-? [A-Za-z0-9]{3} \-? C[A-Za-z0-9]{8}[\*|\-]?[\d|X])
-
-                                               AuthorizationIdentification.FromAuthToken
-                                                   (Auth_Token.Parse("08152305")),
-
-                                               AuthorizationIdentification.FromQRCodeIdentification
-                                                   (eMA_Id.Parse("DE-GDF-C123ABC56-X"),
-                                                    "1234") //DE**GDF*CAETE4*3"), "1234") //
-
-                                           ),
-                                           ProviderId:   EVSP_Id.   Parse("DE*GDF"),
-                                           OICPAction:   ActionType.fullLoad,
-                                           QueryTimeout: TimeSpan.  FromSeconds(120));
-
-
-                if (result.Content.Result)
-                    Console.WriteLine("success!");
-                else
-                {
-                    ConsoleX.WriteLines("PushAuthenticationData result:",
-                                        result.Content.StatusCode.Code,
-                                        result.Content.StatusCode.Description,
-                                        result.Content.StatusCode.AdditionalInfo);
-                }
-
-            }).
-
-            // Wait for the task to complete...
-            Wait();
-
-        }
-
-        public async Task TestPullAuthenticationData(CPOClient HubjectCPO)
-        {
-
-            Task.Factory.StartNew(async () => {
-
-                var result = await HubjectCPO.
-                    PullAuthenticationData(EVSEOperator_Id.Parse("DE*GEF"),
-                                           QueryTimeout: TimeSpan.FromSeconds(120));
-
-
-                if (result.Content.StatusCode.HasResult)
-                    Console.WriteLine(result.Content.
-                                          ProviderAuthenticationDataRecords.
-                                          Select(authdata => "Provider '" + authdata.ProviderId.ToString() +
-                                                             "' has " +
-                                                             authdata.AuthorizationIdentifications.Count() +
-                                                             " credentials").
-                                          AggregateWith(Environment.NewLine) +
-                                          Environment.NewLine);
-
-            }).
-
-            // Wait for the task to complete...
-            Wait();
-
-        }
-
-
-        public void TestAuthStart(CPOClient   HubjectCPO,
-                                  Auth_Token  AuthToken)
-        {
-
-            Task.Factory.StartNew(async () => {
-
-                var AuthStartResult = await HubjectCPO.AuthorizeStart(EVSEOperator_Id.Parse("DE*GEF"),
-                                                                      AuthToken,
-                                                                      EVSE_Id.        Parse("DE*GEF*E123456789*1"));
-
-                ConsoleX.WriteLines("AuthStart result:",
-                                    AuthStartResult.Content.AuthorizationStatus,
-                                    AuthStartResult.Content.StatusCode.Code,
-                                    AuthStartResult.Content.StatusCode.Description,
-                                    AuthStartResult.Content.StatusCode.AdditionalInfo);
-
-            }).
-
-            // Wait for the task to complete...
-            Wait();
-
-        }
-
-
-        public void TestAuthStop(CPOClient           HubjectCPO,
-                                 ChargingSession_Id  SessionId,
-                                 Auth_Token          AuthToken)
-        {
-
-            Task.Factory.StartNew(async () => {
-
-                var AuthStopResult = await HubjectCPO.
-                    AuthorizeStop(EVSEOperator_Id.Parse("DE*GEF"),
-                                  SessionId,
-                                  AuthToken,
-                                  EVSE_Id.        Parse("DE*GEF*E123456789*1"));
-
-                ConsoleX.WriteLines("AuthStop result:",
-                                    AuthStopResult.Content.AuthorizationStatus,
-                                    AuthStopResult.Content.StatusCode.Code,
-                                    AuthStopResult.Content.StatusCode.Description,
-                                    AuthStopResult.Content.StatusCode.AdditionalInfo);
-
-            }).
-
-            // Wait for the task to complete...
-            Wait();
-
-        }
-
-        public async Task TestMobileAuth(MobileClient  HubjectMobile,
-                                         eMAIdWithPIN  eMAIdWithPin)
-        {
-
-            var req = HubjectMobile.
-
-                MobileAuthorizeStart(EVSE_Id.Parse("+49*822*285808576*1"),
-                                     eMAIdWithPin,
-                                     QueryTimeout: TimeSpan.FromSeconds(120)).
-
-                ContinueWith(task =>
-                {
-
-                    var MobileAuthorizationStart = task.Result.Content;
-
-                    if (MobileAuthorizationStart.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                    {
-
-                        Console.WriteLine("Ready to charge at charging station: " +
-                                          MobileAuthorizationStart.ChargingStationName[Languages.de] +
-                                          Environment.NewLine +
-                                          MobileAuthorizationStart.AdditionalInfo[Languages.de]);
-
-                        return MobileAuthorizationStart.SessionId;
-
-                    }
-
-                    else
-                    {
-                        Console.WriteLine(MobileAuthorizationStart.StatusCode.Code);
-                        Console.WriteLine(MobileAuthorizationStart.StatusCode.Description);
-                        Console.WriteLine(MobileAuthorizationStart.StatusCode.AdditionalInfo);
-                        return null;
-                    }
-
-                }).
-
-                ContinueWith(task =>
-                {
-
-                    var SessionId = task.Result;
-                    if (SessionId == null)
-                        return;
-
-                    Thread.Sleep(1000);
-
-                    HubjectMobile.
-                        MobileRemoteStart(SessionId,
-                                          QueryTimeout: TimeSpan.FromSeconds(240)).
-
-                        ContinueWith(task2 =>
-                        {
-
-                            var Acknowledgement = task2.Result.Content;
-
-                            if (Acknowledgement.Result)
-                            {
-                                Console.WriteLine("Charging session started!");
-                                return SessionId;
-                            }
-
-                            else
-                            {
-                                Console.WriteLine(Acknowledgement.StatusCode.Code);
-                                Console.WriteLine(Acknowledgement.StatusCode.Description);
-                                Console.WriteLine(Acknowledgement.StatusCode.AdditionalInfo);
-                                return null;
-                            }
-
-                        }).
-
-                        ContinueWith(task3 =>
-                        {
-
-                            var SessionId2 = task3.Result;
-                            if (SessionId2 == null)
-                                return;
-
-                            Thread.Sleep(2000);
-
-                            HubjectMobile.
-                                MobileRemoteStop(SessionId2,
-                                                 QueryTimeout: TimeSpan.FromSeconds(120)).
-
-                                ContinueWith(task2 =>
-                                {
-
-                                    var Acknowledgement = task2.Result.Content;
-
-                                    if (Acknowledgement.Result)
-                                        Console.WriteLine("Charging session stopped!");
-
-                                    else
-                                    {
-                                        Console.WriteLine(Acknowledgement.StatusCode.Code);
-                                        Console.WriteLine(Acknowledgement.StatusCode.Description);
-                                        Console.WriteLine(Acknowledgement.StatusCode.AdditionalInfo);
-                                    }
-
-                                });
-
-                        });
-
-                });
-
-        }
-
-
-        public void TestChargeDetailRecord(CPOClient HubjectCPO)
+        public async Task TestChargeDetailRecord(CPOClient HubjectCPO)
         {
 
             var EVSEOperatorId  = EVSEOperator_Id.Parse("DE*GEF");
             var EVSEId          = EVSE_Id.        Parse("DE*GEF*E123456789*1");
             var AuthToken       = Auth_Token.     Parse("08152305");
 
-            Task.Factory.StartNew(async () => {
 
-                var AuthStartResult = await HubjectCPO.
-                    AuthorizeStart(EVSEOperatorId,
-                                   AuthToken,
-                                   EVSEId);
+            var AuthStartResult = await HubjectCPO.
+                                            AuthorizeStart(EVSEOperatorId,
+                                                           AuthToken,
+                                                           EVSEId);
 
-                ConsoleX.WriteLines("AuthStart result:",
-                                    AuthStartResult.Content.AuthorizationStatus,
-                                    AuthStartResult.Content.StatusCode.Code,
-                                    AuthStartResult.Content.StatusCode.Description);
+            ConsoleX.WriteLines("AuthStart result:",
+                                AuthStartResult.Content.AuthorizationStatus,
+                                AuthStartResult.Content.StatusCode.Code,
+                                AuthStartResult.Content.StatusCode.Description);
 
-                await Task.Delay(1000);
-
-
-                var AuthStopResult = await HubjectCPO.
-                    AuthorizeStop(EVSEOperatorId,
-                                  AuthStartResult.Content.SessionId,
-                                  AuthToken,
-                                  EVSEId);
-
-                ConsoleX.WriteLines("AuthStop result:",
-                                    AuthStopResult.Content.AuthorizationStatus,
-                                    AuthStopResult.Content.StatusCode.Code,
-                                    AuthStopResult.Content.StatusCode.Description,
-                                    AuthStopResult.Content.StatusCode.AdditionalInfo);
-
-                await Task.Delay(1000);
+            await Task.Delay(1000);
 
 
-                var SendCDRResult = await HubjectCPO.
-                    SendChargeDetailRecord(EVSEId:                EVSEId,
-                                           SessionId:             AuthStartResult.Content.SessionId,
-                                           PartnerProductId:      ChargingProduct_Id.Parse("AC1"),
-                                           SessionStart:          DateTime.Now,
-                                           SessionEnd:            DateTime.Now - TimeSpan.FromHours(3),
-                                           Identification:        AuthorizationIdentification.FromAuthToken(AuthToken),
-                                           PartnerSessionId:      ChargingSession_Id.Parse("0815"),
-                                           ChargingStart:         DateTime.Now,
-                                           ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),
-                                           MeterValueStart:       123.456,
-                                           MeterValueEnd:         234.567,
-                                           MeterValuesInBetween:  Enumeration.Create(123.456, 189.768, 223.312, 234.560, 234.567),
-                                           ConsumedEnergy:        111.111,
-                                           QueryTimeout:          TimeSpan.FromSeconds(120));
+            var AuthStopResult = await HubjectCPO.
+                                           AuthorizeStop(EVSEOperatorId,
+                                                         AuthStartResult.Content.SessionId,
+                                                         AuthToken,
+                                                         EVSEId);
 
-                ConsoleX.WriteLines("SendCDR result:",
-                                    SendCDRResult.Content.Result,
-                                    SendCDRResult.Content.StatusCode.Code,
-                                    SendCDRResult.Content.StatusCode.Description,
-                                    SendCDRResult.Content.StatusCode.AdditionalInfo);
+            ConsoleX.WriteLines("AuthStop result:",
+                                AuthStopResult.Content.AuthorizationStatus,
+                                AuthStopResult.Content.StatusCode.Code,
+                                AuthStopResult.Content.StatusCode.Description,
+                                AuthStopResult.Content.StatusCode.AdditionalInfo);
 
-            }).
+            await Task.Delay(1000);
 
-            // Wait for the task to complete...
-            Wait();
+
+            var SendCDRResult = await HubjectCPO.
+                                          SendChargeDetailRecord(EVSEId:                EVSEId,
+                                                                 SessionId:             AuthStartResult.Content.SessionId,
+                                                                 PartnerProductId:      ChargingProduct_Id.Parse("AC1"),
+                                                                 SessionStart:          DateTime.Now,
+                                                                 SessionEnd:            DateTime.Now - TimeSpan.FromHours(3),
+                                                                 Identification:        AuthorizationIdentification.FromAuthToken(AuthToken),
+                                                                 PartnerSessionId:      ChargingSession_Id.Parse("0815"),
+                                                                 ChargingStart:         DateTime.Now,
+                                                                 ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),
+                                                                 MeterValueStart:       123.456,
+                                                                 MeterValueEnd:         234.567,
+                                                                 MeterValuesInBetween:  Enumeration.Create(123.456, 189.768, 223.312, 234.560, 234.567),
+                                                                 ConsumedEnergy:        111.111,
+                                                                 QueryTimeout:          TimeSpan.FromSeconds(120));
+
+            ConsoleX.WriteLines("SendCDR result:",
+                                SendCDRResult.Content.Result,
+                                SendCDRResult.Content.StatusCode.Code,
+                                SendCDRResult.Content.StatusCode.Description,
+                                SendCDRResult.Content.StatusCode.AdditionalInfo);
 
         }
 
-        public void TestGetChargeDetailRecords(EMPClient HubjectEMP)
+        #endregion
+
+        #region TestGetChargeDetailRecords(HubjectEMP)
+
+        public async Task TestGetChargeDetailRecords(EMPClient HubjectEMP)
         {
 
-            Task.Factory.StartNew(async () => {
+            var result = await HubjectEMP.
+                                   GetChargeDetailRecords(EVSP_Id.Parse("DE*GDF"),
+                                                          new DateTime(2015, 10,  1),
+                                                          new DateTime(2015, 10, 31));
 
-                var result = await HubjectEMP.
-                    GetChargeDetailRecords(EVSP_Id.Parse("DE*GDF"),
-                                           new DateTime(2015, 10,  1),
-                                           new DateTime(2015, 10, 31));
-
-                Console.WriteLine(result.Content.Count() + " charge detail records found!");
-
-            }).
-
-            // Wait for the task to complete...
-            Wait();
+            Console.WriteLine(result.Content.Count() + " charge detail records found!");
 
         }
 
+        #endregion
 
     }
 
