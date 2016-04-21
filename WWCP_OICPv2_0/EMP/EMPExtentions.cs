@@ -60,30 +60,37 @@ namespace org.GraphDefined.WWCP
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
+        /// <param name="Context">A context of this API.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static EMPRoamingProvider CreateOICP_EMPRoamingProvider(this RoamingNetwork                  RoamingNetwork,
-                                                                       RoamingProvider_Id                   Id,
-                                                                       I18NString                           Name,
+        public static EMPRoamingProvider
 
-                                                                       String                               RemoteHostname,
-                                                                       IPPort                               RemoteTCPPort               = null,
-                                                                       String                               RemoteHTTPVirtualHost       = null,
-                                                                       RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                                                                       String                               HTTPUserAgent               = OICPv2_0.EMPClient.DefaultHTTPUserAgent,
-                                                                       TimeSpan?                            QueryTimeout                = null,
+            CreateOICP_EMPRoamingProvider(this RoamingNetwork                  RoamingNetwork,
+                                          RoamingProvider_Id                   Id,
+                                          I18NString                           Name,
 
-                                                                       String                               ServerName                  = OICPv2_0.EMPServer.DefaultHTTPServerName,
-                                                                       IPPort                               ServerTCPPort               = null,
-                                                                       String                               ServerURIPrefix             = "",
-                                                                       Boolean                              ServerAutoStart             = true,
+                                          String                               RemoteHostname,
+                                          IPPort                               RemoteTCPPort               = null,
+                                          String                               RemoteHTTPVirtualHost       = null,
+                                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                                          String                               HTTPUserAgent               = OICPv2_0.EMPClient.DefaultHTTPUserAgent,
+                                          TimeSpan?                            QueryTimeout                = null,
 
-                                                                       DNSClient                            DNSClient                   = null,
+                                          String                               ServerName                  = OICPv2_0.EMPServer.DefaultHTTPServerName,
+                                          IPPort                               ServerTCPPort               = null,
+                                          String                               ServerURIPrefix             = "",
+                                          Boolean                              ServerAutoStart             = true,
 
-                                                                       Action<OICPv2_0.EMPRoamingWWCP>      OICPConfigurator            = null,
-                                                                       Action<EMPRoamingProvider>           Configurator                = null)
+                                          String                               Context                     = OICPv2_0.EMPRoaming.DefaultLoggingContext,
+                                          Func<String, String, String>         LogFileCreator              = null,
+
+                                          DNSClient                            DNSClient                   = null,
+
+                                          Action<OICPv2_0.EMPRoamingWWCP>      OICPConfigurator            = null,
+                                          Action<EMPRoamingProvider>           Configurator                = null)
 
         {
 
@@ -119,14 +126,17 @@ namespace org.GraphDefined.WWCP
                                                                  ServerURIPrefix,
                                                                  ServerAutoStart,
 
+                                                                 Context,
+                                                                 LogFileCreator,
+
                                                                  DNSClient);
 
-            var ConfiguratorLocal = OICPConfigurator;
-            if (ConfiguratorLocal != null)
-                ConfiguratorLocal(NewRoamingProvider);
 
-            return RoamingNetwork.CreateNewRoamingProvider(NewRoamingProvider,
-                                                           Configurator);
+            OICPConfigurator?.Invoke(NewRoamingProvider);
+
+            return RoamingNetwork.
+                       CreateNewRoamingProvider(NewRoamingProvider,
+                                                Configurator);
 
         }
 
@@ -153,28 +163,34 @@ namespace org.GraphDefined.WWCP
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// 
+        /// <param name="Context">A context of this API.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static EMPRoamingProvider CreateOICP_EMPRoamingProvider(this RoamingNetwork                  RoamingNetwork,
-                                                                       RoamingProvider_Id                   Id,
-                                                                       I18NString                           Name,
-                                                                       SOAPServer                           SOAPServer,
+        public static EMPRoamingProvider
 
-                                                                       String                               RemoteHostname,
-                                                                       IPPort                               RemoteTCPPort               = null,
-                                                                       String                               RemoteHTTPVirtualHost       = null,
-                                                                       RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                                                                       String                               HTTPUserAgent               = OICPv2_0.EMPClient.DefaultHTTPUserAgent,
-                                                                       TimeSpan?                            QueryTimeout                = null,
+            CreateOICP_EMPRoamingProvider(this RoamingNetwork                  RoamingNetwork,
+                                          RoamingProvider_Id                   Id,
+                                          I18NString                           Name,
+                                          SOAPServer                           SOAPServer,
 
-                                                                       String                               ServerURIPrefix             = null,
+                                          String                               RemoteHostname,
+                                          IPPort                               RemoteTCPPort               = null,
+                                          String                               RemoteHTTPVirtualHost       = null,
+                                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                                          String                               HTTPUserAgent               = OICPv2_0.EMPClient.DefaultHTTPUserAgent,
+                                          TimeSpan?                            QueryTimeout                = null,
 
-                                                                       DNSClient                            DNSClient                   = null,
+                                          String                               ServerURIPrefix             = null,
 
-                                                                       Action<OICPv2_0.EMPRoamingWWCP>      OICPConfigurator            = null,
-                                                                       Action<EMPRoamingProvider>           Configurator                = null)
+                                          String                               Context                     = OICPv2_0.EMPRoaming.DefaultLoggingContext,
+                                          Func<String, String, String>         LogFileCreator              = null,
+                                          DNSClient                            DNSClient                   = null,
+
+                                          Action<OICPv2_0.EMPRoamingWWCP>      OICPConfigurator            = null,
+                                          Action<EMPRoamingProvider>           Configurator                = null)
 
         {
 
@@ -212,14 +228,17 @@ namespace org.GraphDefined.WWCP
                                                                                         DNSClient),
 
                                                                  new OICPv2_0.EMPServer(SOAPServer,
-                                                                                        ServerURIPrefix));
+                                                                                        ServerURIPrefix),
 
-            var ConfiguratorLocal = OICPConfigurator;
-            if (ConfiguratorLocal != null)
-                ConfiguratorLocal(NewRoamingProvider);
+                                                                 Context,
+                                                                 LogFileCreator);
 
-            return RoamingNetwork.CreateNewRoamingProvider(NewRoamingProvider,
-                                                           Configurator);
+
+            OICPConfigurator?.Invoke(NewRoamingProvider);
+
+            return RoamingNetwork.
+                       CreateNewRoamingProvider(NewRoamingProvider,
+                                                Configurator);
 
         }
 

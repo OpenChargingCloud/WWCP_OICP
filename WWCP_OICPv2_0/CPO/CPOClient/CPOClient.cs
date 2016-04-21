@@ -549,9 +549,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 #region Send OnEVSEStatusPush event
 
-                var OnEVSEStatusPushLocal = OnEVSEStatusPush;
-                if (OnEVSEStatusPushLocal != null)
-                    OnEVSEStatusPushLocal(StartTime, this, ClientId, OICPAction, _EVSEStatusRecords, (UInt32) NumberOfEVSEStatusRecords);
+                OnEVSEStatusPush?.Invoke(StartTime,
+                                         this,
+                                         ClientId,
+                                         OICPAction,
+                                         _EVSEStatusRecords,
+                                         (UInt32) NumberOfEVSEStatusRecords);
 
                 #endregion
 
@@ -635,9 +638,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             var EndTime = DateTime.Now;
 
-            var OnEVSEStatusPushedLocal = OnEVSEStatusPushed;
-            if (OnEVSEStatusPushedLocal != null)
-                OnEVSEStatusPushedLocal(EndTime, this, ClientId, OICPAction, _EVSEStatusRecords, (UInt32) NumberOfEVSEStatusRecords, _result.Content, EndTime - StartTime);
+            OnEVSEStatusPushed?.Invoke(EndTime,
+                                       this,
+                                       ClientId,
+                                       OICPAction,
+                                       _EVSEStatusRecords,
+                                       (UInt32) NumberOfEVSEStatusRecords,
+                                       _result.Content,
+                                       EndTime - StartTime);
 
             #endregion
 
@@ -703,14 +711,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (EVSEStatusDiff.NewStatus.Count() > 0)
             {
 
-                var NewEVSEStatus  = EVSEStatusDiff.
-                                         NewStatus.
-                                         Select(v => new EVSEStatusRecord(v.Key, v.Value.AsOICPEVSEStatus())).
-                                         ToArray();
+                var NewEVSEStatus = EVSEStatusDiff.
+                                        NewStatus.
+                                        Select(v => new EVSEStatusRecord(v.Key, v.Value.AsOICPEVSEStatus())).
+                                        ToArray();
 
-                var OnNewEVSEStatusSendingLocal = OnNewEVSEStatusSending;
-                if (OnNewEVSEStatusSendingLocal != null)
-                    OnNewEVSEStatusSendingLocal(DateTime.Now, NewEVSEStatus, _HTTPVirtualHost, TrackingId);
+                OnNewEVSEStatusSending?.Invoke(DateTime.Now,
+                                               NewEVSEStatus,
+                                               _HTTPVirtualHost,
+                                               TrackingId);
 
                 var result = await PushEVSEStatus(NewEVSEStatus,
                                                   ActionType.insert,
@@ -732,9 +741,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                             Select(v => new EVSEStatusRecord(v.Key, v.Value.AsOICPEVSEStatus())).
                                             ToArray();
 
-                var OnChangedEVSEStatusSendingLocal = OnChangedEVSEStatusSending;
-                if (OnChangedEVSEStatusSendingLocal != null)
-                    OnChangedEVSEStatusSendingLocal(DateTime.Now, ChangedEVSEStatus, _HTTPVirtualHost, TrackingId);
+                OnChangedEVSEStatusSending?.Invoke(DateTime.Now,
+                                                   ChangedEVSEStatus,
+                                                   _HTTPVirtualHost,
+                                                   TrackingId);
 
                 var result = await PushEVSEStatus(ChangedEVSEStatus,
                                                   ActionType.update,
@@ -755,9 +765,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                             RemovedIds.
                                             ToArray();
 
-                var OnRemovedEVSEStatusSendingLocal = OnRemovedEVSEStatusSending;
-                if (OnRemovedEVSEStatusSendingLocal != null)
-                    OnRemovedEVSEStatusSendingLocal(DateTime.Now, RemovedEVSEStatus, _HTTPVirtualHost, TrackingId);
+                OnRemovedEVSEStatusSending?.Invoke(DateTime.Now,
+                                                   RemovedEVSEStatus,
+                                                   _HTTPVirtualHost,
+                                                   TrackingId);
 
                 var result = await PushEVSEStatus(RemovedEVSEStatus.Select(EVSEId => new EVSEStatusRecord(EVSEId, EVSEStatusType.OutOfService)),
                                                   ActionType.delete,

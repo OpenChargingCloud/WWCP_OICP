@@ -392,7 +392,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               CPOClient                     CPOClient,
                               CPOServer                     CPOServer,
 
-                              String                        Context              = "OICP_CPOServer",
+                              String                        Context              = CPORoaming.DefaultLoggingContext,
                               Func<String, String, String>  LogFileCreator       = null,
 
                               EVSE2EVSEDataRecordDelegate   EVSE2EVSEDataRecord  = null,
@@ -457,7 +457,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               String                               ServerURIPrefix             = "",
                               Boolean                              ServerAutoStart             = false,
 
-                              String                               Context                     = "OICP_CPOServer",
+                              String                               Context                     = CPORoaming.DefaultLoggingContext,
                               Func<String, String, String>         LogFileCreator              = null,
 
                               EVSE2EVSEDataRecordDelegate          EVSE2EVSEDataRecord         = null,

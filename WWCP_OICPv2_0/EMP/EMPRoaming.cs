@@ -38,6 +38,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public class EMPRoaming
     {
 
+        #region Data
+
+        /// <summary>
+        /// The default logging context.
+        /// </summary>
+        public const String DefaultLoggingContext = "OICP_EMPServer";
+
+        #endregion
+
         #region Properties
 
         #region AuthorizatorId
@@ -309,20 +318,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region EMPRoaming(EMPClient, EMPServer)
+        #region EMPRoaming(EMPClient, EMPServer, Context = DefaultLoggingContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP roaming client for EMPs.
         /// </summary>
         /// <param name="EMPClient">A EMP client.</param>
         /// <param name="EMPServer">A EMP sever.</param>
-        public EMPRoaming(EMPClient  EMPClient,
-                          EMPServer  EMPServer)
+        /// <param name="Context">A context of this API.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        public EMPRoaming(EMPClient                     EMPClient,
+                          EMPServer                     EMPServer,
+                          String                        Context         = DefaultLoggingContext,
+                          Func<String, String, String>  LogFileCreator  = null)
         {
 
             this._EMPClient        = EMPClient;
             this._EMPServer        = EMPServer;
-            this._EMPServerLogger  = new EMPServerLogger(this._EMPServer);
+            this._EMPServerLogger  = new EMPServerLogger(_EMPServer, Context, LogFileCreator);
 
         }
 
@@ -346,6 +359,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
+        /// <param name="Context">A context of this API.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public EMPRoaming(String                               ClientId,
                           String                               RemoteHostname,
@@ -359,6 +375,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           IPPort                               ServerTCPPort               = null,
                           String                               ServerURIPrefix             = "",
                           Boolean                              ServerAutoStart             = false,
+
+                          String                               Context                     = DefaultLoggingContext,
+                          Func<String, String, String>         LogFileCreator              = null,
 
                           DNSClient                            DNSClient                   = null)
 
@@ -375,7 +394,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                  ServerTCPPort,
                                  ServerURIPrefix,
                                  DNSClient,
-                                 false))
+                                 false),
+
+                   Context,
+                   LogFileCreator)
 
         {
 
