@@ -380,7 +380,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region EMPRoamingWWCP(Id, Name, RoamingNetwork, EMPClient, EMPServer)
+        #region EMPRoamingWWCP(Id, Name, RoamingNetwork, EMPClient, EMPServer, Context = EMPRoaming.DefaultLoggingContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for e-mobility providers/EMPs.
@@ -390,17 +390,25 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
         /// <param name="EMPClient">An OICP EMP client.</param>
         /// <param name="EMPServer">An OICP EMP sever.</param>
-        public EMPRoamingWWCP(RoamingProvider_Id  Id,
-                              I18NString          Name,
-                              RoamingNetwork      RoamingNetwork,
-                              EMPClient           EMPClient,
-                              EMPServer           EMPServer)
+        /// 
+        /// <param name="Context">A context of this API.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        public EMPRoamingWWCP(RoamingProvider_Id            Id,
+                              I18NString                    Name,
+                              RoamingNetwork                RoamingNetwork,
+                              EMPClient                     EMPClient,
+                              EMPServer                     EMPServer,
+
+                              String                        Context         = EMPRoaming.DefaultLoggingContext,
+                              Func<String, String, String>  LogFileCreator  = null)
 
             : this(Id,
                    Name,
                    RoamingNetwork,
                    new EMPRoaming(EMPClient,
-                                  EMPServer)
+                                  EMPServer,
+                                  Context,
+                                  LogFileCreator)
                   )
 
         { }
@@ -428,6 +436,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
+        /// <param name="Context">A context of this API.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public EMPRoamingWWCP(RoamingProvider_Id                   Id,
                               I18NString                           Name,
@@ -444,6 +455,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               IPPort                               ServerTCPPort               = null,
                               String                               ServerURIPrefix             = "",
                               Boolean                              ServerAutoStart             = false,
+
+                              String                               Context                     = EMPRoaming.DefaultLoggingContext,
+                              Func<String, String, String>         LogFileCreator              = null,
 
                               DNSClient                            DNSClient                   = null)
 
@@ -462,6 +476,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                   ServerTCPPort,
                                   ServerURIPrefix,
                                   ServerAutoStart,
+
+                                  Context,
+                                  LogFileCreator,
 
                                   DNSClient)
                   )

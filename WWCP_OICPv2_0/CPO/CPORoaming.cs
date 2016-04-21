@@ -38,6 +38,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public class CPORoaming
     {
 
+        #region Data
+
+        /// <summary>
+        /// The default logging context.
+        /// </summary>
+        public const String DefaultLoggingContext = "OICP_CPOServer";
+
+        #endregion
+
         #region Properties
 
         #region CPOClient
@@ -269,7 +278,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region CPORoaming(CPOClient, CPOServer, Context = "OICP_CPOServer", LogFileCreator = null)
+        #region CPORoaming(CPOClient, CPOServer, Context = DefaultLoggingContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP roaming client for CPOs.
@@ -280,13 +289,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public CPORoaming(CPOClient                    CPOClient,
                           CPOServer                    CPOServer,
-                          String                       Context         = "OICP_CPOServer",
+                          String                       Context         = DefaultLoggingContext,
                           Func<String, String, String> LogFileCreator  = null)
         {
 
             this._CPOClient        = CPOClient;
             this._CPOServer        = CPOServer;
-            this._CPOServerLogger  = new CPOServerLogger(this._CPOServer, Context, LogFileCreator);
+            this._CPOServerLogger  = new CPOServerLogger(_CPOServer, Context, LogFileCreator);
 
         }
 
@@ -327,7 +336,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           String                               ServerURIPrefix             = "",
                           Boolean                              ServerAutoStart             = false,
 
-                          String                               Context                     = "OICP_CPOServer",
+                          String                               Context                     = DefaultLoggingContext,
                           Func<String, String, String>         LogFileCreator              = null,
 
                           DNSClient                            DNSClient                   = null)

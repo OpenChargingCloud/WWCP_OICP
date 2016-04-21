@@ -35,9 +35,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// OICP v2.0 HTTP/SOAP server.
+    /// OICP v2.0 HTTP/SOAP central server.
     /// </summary>
-    public class OICPServer : HTTPServer
+    public class CentralServer : HTTPServer
     {
 
         #region Data
@@ -81,18 +81,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region Constructor(s)
 
         /// <summary>
-        /// Initialize the OICP v2.0 HTTP/SOAP server using IPAddress.Any.
+        /// Initialize the OICP v2.0 HTTP/SOAP central server using IPAddress.Any.
         /// </summary>
         /// <param name="RoamingNetwork">The roaming network to use.</param>
         /// <param name="IPPort">The TCP listing port of the HTTP/SOAP server.</param>
         /// <param name="URIPrefix">The URI prefix for the  HTTP/SOAP server.</param>
         /// <param name="RegisterHTTPRootService">Whether to register a simple webpage for '/', or not.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public OICPServer(RoamingNetwork  RoamingNetwork,
-                          IPPort          IPPort,
-                          String          URIPrefix                = "",
-                          Boolean         RegisterHTTPRootService  = true,
-                          DNSClient       DNSClient                = null)
+        public CentralServer(RoamingNetwork  RoamingNetwork,
+                             IPPort          IPPort,
+                             String          URIPrefix                = "",
+                             Boolean         RegisterHTTPRootService  = true,
+                             DNSClient       DNSClient                = null)
 
             : base(//IPPort, //Note: Use AttachTCPPort(...) instead!
                    DNSClient: DNSClient)

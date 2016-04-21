@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML Server API";
+        public const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML CPO Server API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
@@ -66,7 +66,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         private readonly SOAPServer _SOAPServer;
 
         /// <summary>
-        /// The SOAP server.
+        /// The HTTP/SOAP server.
         /// </summary>
         public SOAPServer SOAPServer
         {
@@ -82,6 +82,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         private readonly String _URIPrefix;
 
+        /// <summary>
+        /// The common URI prefix for this HTTP/SOAP service.
+        /// </summary>
         public String URIPrefix
         {
             get
@@ -96,6 +99,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         private readonly DNSClient _DNSClient;
 
+        /// <summary>
+        /// The DNS client used by this server.
+        /// </summary>
         public DNSClient DNSClient
         {
             get
@@ -266,7 +272,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (SOAPServer == null)
-                throw new ArgumentNullException("HTTPServer", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(SOAPServer),  "The given SOAP server must not be null!");
 
             if (URIPrefix == null)
                 URIPrefix = "";
