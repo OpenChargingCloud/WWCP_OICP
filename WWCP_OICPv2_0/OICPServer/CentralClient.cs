@@ -97,17 +97,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ClientId">A unqiue identification of this client.</param>
         /// <param name="Hostname">The hostname of the remote OICP service.</param>
         /// <param name="TCPPort">An optional TCP port of the remote OICP service.</param>
-        /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
+        /// <param name="URIPrefix">An optional common prefix of all URIs.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CentralClient(String                               ClientId,
                              String                               Hostname,
                              IPPort                               TCPPort                     = null,
-                             String                               HTTPVirtualHost             = null,
                              RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                             String                               URIPrefix                   = "/ibis/ws/eRoamingAuthorization_V2.0",
+                             String                               HTTPVirtualHost             = null,
+                             String                               URIPrefix                   = "/Authorization",
                              String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                              TimeSpan?                            QueryTimeout                = null,
                              DNSClient                            DNSClient                   = null)
@@ -125,34 +126,34 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             this._Random     = new Random(DateTime.Now.Millisecond);
 
-            this._URIPrefix  = URIPrefix.IsNotNullOrEmpty() ? URIPrefix : "/ibis/ws/eRoamingAuthorization_V2.0";
+            this._URIPrefix  = URIPrefix.IsNotNullOrEmpty() ? URIPrefix : "/Authorization";
 
         }
 
         #endregion
 
 
-        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeRemoteStart(SessionId, ProviderId, EVSEId, eMAId, ChargingProductId = null, PartnerSessionId = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP v2.0 authorize start request.
+        /// Create an OICP v2.0 authorize remote start request.
         /// </summary>
-        /// <param name="OperatorId">An EVSE operator identification.</param>
-        /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="PartnerProductId">An optional partner product identification.</param>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="EVSEId">An optional EVSE identification.</param>
+        /// <param name="eMAId">An e-mobility account indentification.</param>
+        /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAuthorizationStart>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             AuthorizeRemoteStart(ChargingSession_Id  SessionId,
                                  EVSP_Id             ProviderId,
                                  EVSE_Id             EVSEId,
-                                 eMAIdWithPIN        eMAIdWithPIN,
-                                 ChargingProduct_Id  ProductId         = null,
-                                 ChargingSession_Id  PartnerSessionId  = null,
-                                 TimeSpan?           QueryTimeout      = null)
+                                 eMA_Id              eMAId,
+                                 ChargingProduct_Id  ChargingProductId  = null,
+                                 ChargingSession_Id  PartnerSessionId   = null,
+                                 TimeSpan?           QueryTimeout       = null)
 
         {
 
@@ -241,7 +242,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                              new XElement(OICPNS.Authorization + "Identification",
                                                  new XElement(OICPNS.CommonTypes + "QRCodeIdentification",
-                                                     new XElement(OICPNS.CommonTypes + "EVCOID", eMAIdWithPIN.eMAId.ToString())
+                                                     new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
                                                  )
                                              )
 
@@ -256,7 +257,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                #region OnSuccess
 
                                                OnSuccess: XMLResponse => {
-                                                   return XMLResponse.Parse(eRoamingAuthorizationStart.Parse);
+                                                   return XMLResponse.Parse(eRoamingAcknowledgement.Parse);
                                                },
 
                                                #endregion
@@ -267,11 +268,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                    SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
-                                                                                                       new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
-                                                                                                                                      StatusCode: new StatusCode(-1,
-                                                                                                                                                                 Description: httpresponse.Content.ToString())),
-                                                                                                       IsFault: true);
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
 
                                                },
 
@@ -283,12 +285,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                    SendHTTPError(timestamp, this, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
-                                                                                                       new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
-                                                                                                                                      StatusCode: new StatusCode(-1,
-                                                                                                                                                                 Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                                 AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
-                                                                                                       IsFault: true);
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
 
                                                },
 
@@ -314,52 +316,86 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region AuthorizeStop (OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, QueryTimeout = null)
-
-        // UID => Not everybody can stop any session, but maybe another
-        //        UID than the UID which started the session!
-        //        (e.g. car sharing)
+        #region AuthorizeRemoteStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP v2.0 authorize stop request.
+        /// Create an OICP v2.0 remote authorize stop request.
         /// </summary>
-        /// <param name="OperatorId">An EVSE Operator identification.</param>
-        /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="SessionId">An optional session identification.</param>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAuthorizationStop>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            AuthorizeStop(EVSEOperator_Id      OperatorId,
-                          ChargingSession_Id   SessionId,
-                          Auth_Token           AuthToken,
-                          EVSE_Id              EVSEId            = null,
-                          ChargingSession_Id   PartnerSessionId  = null,   // [maxlength: 50]
-                          TimeSpan?            QueryTimeout      = null)
+            AuthorizeRemoteStop(ChargingSession_Id  SessionId,
+                                EVSP_Id             ProviderId,
+                                EVSE_Id             EVSEId,
+                                ChargingSession_Id  PartnerSessionId   = null,
+                                TimeSpan?           QueryTimeout       = null)
 
         {
 
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    _URIPrefix,
                                                     _UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient: _DNSClient))
             {
 
-                return await _OICPClient.Query(CPOClient_XMLMethods.AuthorizeStopXML(OperatorId,
-                                                                                     SessionId,
-                                                                                     AuthToken,
-                                                                                     EVSEId,
-                                                                                     PartnerSessionId),
-                                               "eRoamingAuthorizeStop",
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0">
+            //
+            //    <soapenv:Header/>
+            //
+            //    <soapenv:Body>
+            //       <Authorization:eRoamingAuthorizeRemoteStop>
+            // 
+            //          <Authorization:SessionID>?</Authorization:SessionID>
+            // 
+            //          <!--Optional:-->
+            //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+            // 
+            //          <Authorization:ProviderID>?</Authorization:ProviderID>
+            // 
+            //          <Authorization:EVSEID>?</Authorization:EVSEID>
+            // 
+            //       </Authorization:eRoamingAuthorizeRemoteStop>
+            //    </soapenv:Body>
+            //
+            // </soapenv:Envelope>
+
+            #endregion
+
+            var XML = SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop",
+
+                                             new XElement(OICPNS.Authorization + "SessionID", SessionId.ToString()),
+
+                                             PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+
+                                             new XElement(OICPNS.Authorization + "ProviderID", ProviderId.ToString()),
+
+                                             EVSEId != null
+                                                 ? new XElement(OICPNS.Authorization + "EVSEID", EVSEId.OriginId)
+                                                 : null
+
+                                         ));
+
+
+                return await _OICPClient.Query(XML,
+                                               "AuthorizeRemoteStop",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                               HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
 
                                                #region OnSuccess
 
-                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthorizationStop.Parse),
+                                               OnSuccess: XMLResponse => {
+                                                   return XMLResponse.Parse(eRoamingAcknowledgement.Parse);
+                                               },
 
                                                #endregion
 
@@ -369,11 +405,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                    SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAuthorizationStop>(httpresponse,
-                                                                                                      new eRoamingAuthorizationStop(AuthorizationStatusType.NotAuthorized,
-                                                                                                                                    StatusCode: new StatusCode(-1,
-                                                                                                                                                               Description: httpresponse.Content.ToString())),
-                                                                                                      IsFault: true);
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
 
                                                },
 
@@ -385,12 +422,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                    SendHTTPError(timestamp, this, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingAuthorizationStop>(httpresponse,
-                                                                                                      new eRoamingAuthorizationStop(AuthorizationStatusType.NotAuthorized,
-                                                                                                                                    StatusCode: new StatusCode(-1,
-                                                                                                                                                               Description: httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                               AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
-                                                                                                      IsFault: true);
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
 
                                                },
 
@@ -412,11 +449,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             }
 
-        }
-
-        public Task AuthorizeRemoteStart(object p)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion
