@@ -54,11 +54,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             : this(CPOServer,
                    Context,
-
-                   Default_LogHTTPRequest_toConsole,
-                   Default_LogHTTPResponse_toConsole,
-                   Default_LogHTTPRequest_toDisc,
-                   Default_LogHTTPResponse_toDisc,
+                   null,
+                   null,
+                   null,
+                   null,
 
                    LogFileCreator: LogFileCreator)
 
@@ -147,29 +146,29 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           handler => _CPOServer.OnLogRemoteStart += handler,
                           handler => _CPOServer.OnLogRemoteStart -= handler,
                           "Remote", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("RemoteStarted",
                           handler => _CPOServer.OnLogRemoteStarted += handler,
                           handler => _CPOServer.OnLogRemoteStarted -= handler,
                           "Remote", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("RemoteStop",
                           handler => _CPOServer.OnLogRemoteStop += handler,
                           handler => _CPOServer.OnLogRemoteStop -= handler,
                           "Remote", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("RemoteStopped",
                           handler => _CPOServer.OnLogRemoteStopped += handler,
                           handler => _CPOServer.OnLogRemoteStopped -= handler,
                           "Remote", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             #endregion
 

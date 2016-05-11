@@ -19,13 +19,13 @@
 
 using System;
 using System.Linq;
+using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.Net.Security;
 
 #endregion
 
@@ -287,10 +287,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="CPOServer">A CPO sever.</param>
         /// <param name="Context">A context of this API.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public CPORoaming(CPOClient                    CPOClient,
-                          CPOServer                    CPOServer,
-                          String                       Context         = DefaultLoggingContext,
-                          Func<String, String, String> LogFileCreator  = null)
+        public CPORoaming(CPOClient                     CPOClient,
+                          CPOServer                     CPOServer,
+                          String                        Context         = DefaultLoggingContext,
+                          Func<String, String, String>  LogFileCreator  = null)
         {
 
             this._CPOClient        = CPOClient;

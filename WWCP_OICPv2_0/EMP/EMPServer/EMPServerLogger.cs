@@ -54,12 +54,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             : this(EMPServer,
                    Context,
-
-                   Default_LogHTTPRequest_toConsole,
-                   Default_LogHTTPResponse_toConsole,
-                   Default_LogHTTPRequest_toDisc,
-                   Default_LogHTTPResponse_toDisc,
-
+                   null,
+                   null,
+                   null,
+                   null,
                    LogFileCreator: LogFileCreator)
 
         { }
@@ -147,43 +145,43 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           handler => _EMPServer.OnLogAuthorizeStart += handler,
                           handler => _EMPServer.OnLogAuthorizeStart -= handler,
                           "Authorize", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStarted",
                           handler => _EMPServer.OnLogAuthorizeStarted += handler,
                           handler => _EMPServer.OnLogAuthorizeStarted -= handler,
                           "Authorize", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStop",
                           handler => _EMPServer.OnLogAuthorizeStop += handler,
                           handler => _EMPServer.OnLogAuthorizeStop -= handler,
                           "Authorize", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStopped",
                           handler => _EMPServer.OnLogAuthorizeStopped += handler,
                           handler => _EMPServer.OnLogAuthorizeStopped -= handler,
                           "Authorize", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("ChargeDetailRecordSend",
                           handler => _EMPServer.OnLogChargeDetailRecordSend += handler,
                           handler => _EMPServer.OnLogChargeDetailRecordSend -= handler,
                           "CDR", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("ChargeDetailRecordSent",
                           handler => _EMPServer.OnLogChargeDetailRecordSent += handler,
                           handler => _EMPServer.OnLogChargeDetailRecordSent -= handler,
                           "CDR", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             #endregion
 
