@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CPO\CPOClient\CPOClientDelegates.cs" />
+    <Compile Include="CPO\CPOClient\CPOClientLogger.cs" />
     <Compile Include="CPO\CPODelegates.cs" />
     <Compile Include="CPO\CPOExtentions.cs" />
     <Compile Include="CPO\CPORoamingWWCP.cs" />

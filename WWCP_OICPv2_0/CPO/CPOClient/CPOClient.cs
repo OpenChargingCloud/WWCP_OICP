@@ -57,26 +57,46 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region OnEVSEDataPush/-Pushed
 
         /// <summary>
-        /// An event fired whenever new EVSE data record will be send upstream.
+        /// An event fired whenever EVSE data records will be send upstream.
         /// </summary>
-        public event OnEVSEDataPushDelegate   OnEVSEDataPush;
+        public event OnEVSEDataPushDelegate    OnEVSEDataPush;
 
         /// <summary>
-        /// An event fired whenever new EVSE data record had been sent upstream.
+        /// An event fired whenever a SOAP request with EVSE data records will be send.
         /// </summary>
-        public event OnEVSEDataPushedDelegate OnEVSEDataPushed;
+        public event ClientRequestLogHandler   OnEVSEDataPushRequest;
+
+        /// <summary>
+        /// An event fired whenever a SOAP request with EVSE data records had been sent upstream.
+        /// </summary>
+        public event ClientResponseLogHandler  OnEVSEDataPushResponse;
+
+        /// <summary>
+        /// An event fired whenever EVSE data records had been sent upstream.
+        /// </summary>
+        public event OnEVSEDataPushedDelegate  OnEVSEDataPushed;
 
         #endregion
 
         #region OnEVSEStatusPush/-Pushed
 
         /// <summary>
-        /// An event fired whenever new EVSE status will be send upstream.
+        /// An event fired whenever EVSE status records will be send upstream.
         /// </summary>
-        public event OnEVSEStatusPushDelegate OnEVSEStatusPush;
+        public event OnEVSEStatusPushDelegate   OnEVSEStatusPush;
 
         /// <summary>
-        /// An event fired whenever new EVSE status had been sent upstream.
+        /// An event fired whenever a SOAP request with EVSE status records will be send.
+        /// </summary>
+        public event ClientRequestLogHandler    OnEVSEStatusPushRequest;
+
+        /// <summary>
+        /// An event fired whenever a SOAP request with EVSE status records had been sent upstream.
+        /// </summary>
+        public event ClientResponseLogHandler   OnEVSEStatusPushResponse;
+
+        /// <summary>
+        /// An event fired whenever EVSE status records had been sent upstream.
         /// </summary>
         public event OnEVSEStatusPushedDelegate OnEVSEStatusPushed;
 
@@ -254,9 +274,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 #region Send OnEVSEDataPush event
 
-                var OnEVSEDataPushLocal = OnEVSEDataPush;
-                if (OnEVSEDataPushLocal != null)
-                    OnEVSEDataPushLocal(StartTime, this, ClientId, OICPAction, GroupedEVSEDataRecords, (UInt32) NumberOfEVSEDataRecords);
+                OnEVSEDataPush?.Invoke(StartTime,
+                                       this,
+                                       ClientId,
+                                       OICPAction,
+                                       GroupedEVSEDataRecords,
+                                       (UInt32) NumberOfEVSEDataRecords);
 
                 #endregion
 
@@ -274,7 +297,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                                            OperatorId,
                                                                                            OperatorName),
                                                       "eRoamingPushEvseData",
-                                                      QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                      RequestLogDelegate:   OnEVSEDataPushRequest,
+                                                      ResponseLogDelegate:  OnEVSEDataPushResponse,
+                                                      QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                       #region OnSuccess
 
@@ -340,9 +365,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             var EndTime = DateTime.Now;
 
-            var OnEVSEDataPushedLocal = OnEVSEDataPushed;
-            if (OnEVSEDataPushedLocal != null)
-                OnEVSEDataPushedLocal(EndTime, this, ClientId, OICPAction, GroupedEVSEDataRecords, (UInt32) NumberOfEVSEDataRecords, _result.Content, EndTime - StartTime);
+            OnEVSEDataPushed?.Invoke(EndTime,
+                                     this,
+                                     ClientId,
+                                     OICPAction,
+                                     GroupedEVSEDataRecords,
+                                     (UInt32) NumberOfEVSEDataRecords,
+                                     _result.Content,
+                                     EndTime - StartTime);
 
             #endregion
 
@@ -572,7 +602,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                                              OperatorId,
                                                                                              OperatorName),
                                                       "eRoamingPushEvseStatus",
-                                                      QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                      RequestLogDelegate:   OnEVSEStatusPushRequest,
+                                                      ResponseLogDelegate:  OnEVSEStatusPushResponse,
+                                                      QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                       #region OnSuccess
 
