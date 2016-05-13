@@ -38,15 +38,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public class EMPRoaming
     {
 
-        #region Data
-
-        /// <summary>
-        /// The default logging context.
-        /// </summary>
-        public const String DefaultLoggingContext = "OICP_EMPServer";
-
-        #endregion
-
         #region Properties
 
         #region AuthorizatorId
@@ -93,6 +84,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             get
             {
                 return _EMPServer;
+            }
+        }
+
+        #endregion
+
+        #region EMPClientLogger
+
+        private readonly EMPClientLogger _EMPClientLogger;
+
+        /// <summary>
+        /// The EMP client logger.
+        /// </summary>
+        public EMPClientLogger EMPClientLogger
+        {
+            get
+            {
+                return _EMPClientLogger;
             }
         }
 
@@ -318,24 +326,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region EMPRoaming(EMPClient, EMPServer, Context = DefaultLoggingContext, LogFileCreator = null)
+        #region EMPRoaming(EMPClient, EMPServer, ClientLoggingContext = EMPClientLogger.DefaultContext, ServerLoggingContext = EMPServerLogger.DefaultContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP roaming client for EMPs.
         /// </summary>
         /// <param name="EMPClient">A EMP client.</param>
         /// <param name="EMPServer">A EMP sever.</param>
-        /// <param name="Context">A context of this API.</param>
+        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
+        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPRoaming(EMPClient                     EMPClient,
                           EMPServer                     EMPServer,
-                          String                        Context         = DefaultLoggingContext,
+                          String                        ClientLoggingContext   = EMPClientLogger.DefaultContext,
+                          String                        ServerLoggingContext   = EMPServerLogger.DefaultContext,
                           Func<String, String, String>  LogFileCreator  = null)
         {
 
             this._EMPClient        = EMPClient;
             this._EMPServer        = EMPServer;
-            this._EMPServerLogger  = new EMPServerLogger(_EMPServer, Context, LogFileCreator);
+            this._EMPClientLogger  = new EMPClientLogger(_EMPClient, ClientLoggingContext, LogFileCreator);
+            this._EMPServerLogger  = new EMPServerLogger(_EMPServer, ServerLoggingContext, LogFileCreator);
 
         }
 
@@ -359,7 +370,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
-        /// <param name="Context">A context of this API.</param>
+        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
+        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
@@ -376,7 +388,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           String                               ServerURIPrefix             = "",
                           Boolean                              ServerAutoStart             = false,
 
-                          String                               Context                     = DefaultLoggingContext,
+                          String                               ClientLoggingContext        = EMPClientLogger.DefaultContext,
+                          String                               ServerLoggingContext        = EMPServerLogger.DefaultContext,
                           Func<String, String, String>         LogFileCreator              = null,
 
                           DNSClient                            DNSClient                   = null)
@@ -396,7 +409,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                  DNSClient,
                                  false),
 
-                   Context,
+                   ClientLoggingContext,
+                   ServerLoggingContext,
                    LogFileCreator)
 
         {

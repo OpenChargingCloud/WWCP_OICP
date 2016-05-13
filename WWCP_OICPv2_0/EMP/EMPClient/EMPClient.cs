@@ -116,7 +116,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     DNSClient))
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.PullEVSEDataRequestXML(ProviderId,
+                return await _OICPClient.Query(EMPClientXMLMethods.PullEVSEDataRequestXML(ProviderId,
                                                                                            SearchCenter,
                                                                                            DistanceKM,
                                                                                            LastCall),
@@ -213,7 +213,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                // _OICPClient.RemoteCertificateValidator = this.RemoteCertificateValidator;
                // _OICPClient.ClientCertificateSelector  = this.ClientCertificateSelector;
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.PullEVSEStatusRequestXML(ProviderId,
+                return await _OICPClient.Query(EMPClientXMLMethods.PullEVSEStatusRequestXML(ProviderId,
                                                                                              SearchCenter,
                                                                                              DistanceKM,
                                                                                              EVSEStatusFilter),
@@ -301,7 +301,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.PullEVSEStatusByIdRequestXML(ProviderId,
+                return await _OICPClient.Query(EMPClientXMLMethods.PullEVSEStatusByIdRequestXML(ProviderId,
                                                                                                  EVSEIds),
                                                "eRoamingPullEvseStatusById",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
@@ -396,7 +396,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.SearchEvseRequestXML(ProviderId,
+                return await _OICPClient.Query(EMPClientXMLMethods.SearchEvseRequestXML(ProviderId,
                                                                                          SearchCenter,
                                                                                          DistanceKM,
                                                                                          Address,
@@ -492,7 +492,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.PushAuthenticationData(ProviderAuthenticationDataRecords,
+                return await _OICPClient.Query(EMPClientXMLMethods.PushAuthenticationData(ProviderAuthenticationDataRecords,
                                                                                            OICPAction),
                                                "eRoamingPushAuthenticationData",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
@@ -584,7 +584,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.PushAuthenticationData(AuthorizationIdentifications,
+                return await _OICPClient.Query(EMPClientXMLMethods.PushAuthenticationData(AuthorizationIdentifications,
                                                                                            ProviderId,
                                                                                            OICPAction),
                                                "eRoamingPushAuthenticationData",
@@ -678,7 +678,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.GetChargeDetailRecords(ProviderId,
+                return await _OICPClient.Query(EMPClientXMLMethods.GetChargeDetailRecords(ProviderId,
                                                                                            From,
                                                                                            To),
                                                "eRoamingGetChargeDetailRecords",

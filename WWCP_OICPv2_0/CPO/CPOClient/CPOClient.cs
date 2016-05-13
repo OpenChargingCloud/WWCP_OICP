@@ -19,7 +19,6 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -62,12 +61,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public event OnEVSEDataPushDelegate    OnEVSEDataPush;
 
         /// <summary>
-        /// An event fired whenever a SOAP request with EVSE data records will be send.
+        /// An event fired whenever a request pushing EVSE data records will be send.
         /// </summary>
         public event ClientRequestLogHandler   OnEVSEDataPushRequest;
 
         /// <summary>
-        /// An event fired whenever a SOAP request with EVSE data records had been sent upstream.
+        /// An event fired whenever a response to a push EVSE data records request had been received.
         /// </summary>
         public event ClientResponseLogHandler  OnEVSEDataPushResponse;
 
@@ -86,12 +85,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public event OnEVSEStatusPushDelegate   OnEVSEStatusPush;
 
         /// <summary>
-        /// An event fired whenever a SOAP request with EVSE status records will be send.
+        /// An event fired whenever a request pushing EVSE status records will be send.
         /// </summary>
         public event ClientRequestLogHandler    OnEVSEStatusPushRequest;
 
         /// <summary>
-        /// An event fired whenever a SOAP request with EVSE status records had been sent upstream.
+        /// An event fired whenever a response to a push EVSE status records request had been received.
         /// </summary>
         public event ClientResponseLogHandler   OnEVSEStatusPushResponse;
 
@@ -102,88 +101,59 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-
-        #region OnNewEVSEStatusSending
-
-        /// <summary>
-        /// A delegate called whenever new EVSE status will be send upstream.
-        /// </summary>
-        public delegate void OnNewEVSEStatusSendingDelegate(DateTime Timestamp, IEnumerable<EVSEStatusRecord> EVSEStatus, String Hostinfo, String TrackingId);
+        #region OnAuthorizeStartRequest/-Response
 
         /// <summary>
-        /// An event fired whenever new EVSE status will be send upstream.
+        /// An event fired whenever an authorize start request will be send.
         /// </summary>
-        public event OnNewEVSEStatusSendingDelegate OnNewEVSEStatusSending;
+        public event ClientRequestLogHandler    OnAuthorizeStartRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to an authorize start request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler   OnAuthorizeStartResponse;
 
         #endregion
 
-        #region OnNewEVSEStatusSent
+        #region OnAuthorizeStopRequest/-Response
 
         /// <summary>
-        /// A delegate called whenever new EVSE status had been send upstream.
+        /// An event fired whenever an authorize stop request will be send.
         /// </summary>
-        public delegate void OnNewEVSEStatusSentDelegate(DateTime Timestamp, String TrackingId, eRoamingAcknowledgement Result, String Description = null);
+        public event ClientRequestLogHandler    OnAuthorizeStopRequest;
 
         /// <summary>
-        /// An event fired whenever new EVSE status had been send upstream.
+        /// An event fired whenever a response to an authorize stop request had been received.
         /// </summary>
-        public event OnNewEVSEStatusSentDelegate OnNewEVSEStatusSent;
+        public event ClientResponseLogHandler   OnAuthorizeStopResponse;
 
         #endregion
 
-        #region OnChangedEVSEStatusSending
+        #region OnPullAuthenticationDataRequest/-Response
 
         /// <summary>
-        /// A delegate called whenever changed EVSE status will be send upstream.
+        /// An event fired whenever a request pulling authentication data will be send.
         /// </summary>
-        public delegate void OnChangedEVSEStatusSendingDelegate(DateTime Timestamp, IEnumerable<EVSEStatusRecord> EVSEStatus, String Hostinfo, String TrackingId);
+        public event ClientRequestLogHandler    OnPullAuthenticationDataRequest;
 
         /// <summary>
-        /// An event fired whenever changed EVSE status will be send upstream.
+        /// An event fired whenever a response to a pull authentication data request had been received.
         /// </summary>
-        public event OnChangedEVSEStatusSendingDelegate OnChangedEVSEStatusSending;
+        public event ClientResponseLogHandler   OnPullAuthenticationDataResponse;
 
         #endregion
 
-        #region OnChangedEVSEStatusSent
+        #region OnSendChargeDetailRecordRequest/-Response
 
         /// <summary>
-        /// A delegate called whenever changed EVSE status had been send upstream.
+        /// An event fired whenever a charge detail record will be send.
         /// </summary>
-        public delegate void OnChangedEVSEStatusSentDelegate(DateTime Timestamp, String TrackingId, eRoamingAcknowledgement Result, String Description = null);
+        public event ClientRequestLogHandler    OnSendChargeDetailRecordRequest;
 
         /// <summary>
-        /// An event fired whenever changed EVSE status had been send upstream.
+        /// An event fired whenever a response to a sent charge detail record had been received.
         /// </summary>
-        public event OnChangedEVSEStatusSentDelegate OnChangedEVSEStatusSent;
-
-        #endregion
-
-        #region OnRemovedEVSEStatusSending
-
-        /// <summary>
-        /// A delegate called whenever removed EVSE status will be send upstream.
-        /// </summary>
-        public delegate void OnRemovedEVSEStatusSendingDelegate(DateTime Timestamp, IEnumerable<EVSE_Id> EVSEIds, String Hostinfo, String TrackingId);
-
-        /// <summary>
-        /// An event fired whenever removed EVSE status will be send upstream.
-        /// </summary>
-        public event OnRemovedEVSEStatusSendingDelegate OnRemovedEVSEStatusSending;
-
-        #endregion
-
-        #region OnRemovedEVSEStatusSent
-
-        /// <summary>
-        /// A delegate called whenever removed EVSE status had been send upstream.
-        /// </summary>
-        public delegate void OnRemovedEVSEStatusSentDelegate(DateTime Timestamp, String TrackingId, eRoamingAcknowledgement Result, String Description = null);
-
-        /// <summary>
-        /// An event fired whenever removed EVSE status had been send upstream.
-        /// </summary>
-        public event OnRemovedEVSEStatusSentDelegate OnRemovedEVSEStatusSent;
+        public event ClientResponseLogHandler   OnSendChargeDetailRecordResponse;
 
         #endregion
 
@@ -292,7 +262,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         _DNSClient))
                 {
 
-                    _result = await _OICPClient.Query(CPOClient_XMLMethods.PushEVSEDataXML(GroupedEVSEDataRecords,
+                    _result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEDataXML(GroupedEVSEDataRecords,
                                                                                            OICPAction,
                                                                                            OperatorId,
                                                                                            OperatorName),
@@ -597,7 +567,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         _DNSClient))
                 {
 
-                    _result = await _OICPClient.Query(CPOClient_XMLMethods.PushEVSEStatusXML(_EVSEStatusRecords,
+                    _result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEStatusXML(_EVSEStatusRecords,
                                                                                              OICPAction,
                                                                                              OperatorId,
                                                                                              OperatorName),
@@ -721,101 +691,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushEVSEStatus(EVSEStatusDiff, QueryTimeout = null)
-
-        /// <summary>
-        /// Send EVSE status updates upstream.
-        /// </summary>
-        /// <param name="EVSEStatusDiff">An EVSE status diff.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task PushEVSEStatus(EVSEStatusDiff  EVSEStatusDiff,
-                                         TimeSpan?       QueryTimeout  = null)
-
-        {
-
-            if (EVSEStatusDiff == null)
-                return;
-
-            var TrackingId = Guid.NewGuid().ToString();
-
-            #region Insert new EVSEs...
-
-            if (EVSEStatusDiff.NewStatus.Count() > 0)
-            {
-
-                var NewEVSEStatus = EVSEStatusDiff.
-                                        NewStatus.
-                                        Select(v => new EVSEStatusRecord(v.Key, v.Value.AsOICPEVSEStatus())).
-                                        ToArray();
-
-                OnNewEVSEStatusSending?.Invoke(DateTime.Now,
-                                               NewEVSEStatus,
-                                               _HTTPVirtualHost,
-                                               TrackingId);
-
-                var result = await PushEVSEStatus(NewEVSEStatus,
-                                                  ActionType.insert,
-                                                  EVSEStatusDiff.EVSEOperatorId,
-                                                  null,
-                                                  QueryTimeout);
-
-            }
-
-            #endregion
-
-            #region Upload EVSE changes...
-
-            if (EVSEStatusDiff.ChangedStatus.Count() > 0)
-            {
-
-                var ChangedEVSEStatus = EVSEStatusDiff.
-                                            ChangedStatus.
-                                            Select(v => new EVSEStatusRecord(v.Key, v.Value.AsOICPEVSEStatus())).
-                                            ToArray();
-
-                OnChangedEVSEStatusSending?.Invoke(DateTime.Now,
-                                                   ChangedEVSEStatus,
-                                                   _HTTPVirtualHost,
-                                                   TrackingId);
-
-                var result = await PushEVSEStatus(ChangedEVSEStatus,
-                                                  ActionType.update,
-                                                  EVSEStatusDiff.EVSEOperatorId,
-                                                  null,
-                                                  QueryTimeout);
-
-            }
-
-            #endregion
-
-            #region Remove outdated EVSEs...
-
-            if (EVSEStatusDiff.RemovedIds.Count() > 0)
-            {
-
-                var RemovedEVSEStatus = EVSEStatusDiff.
-                                            RemovedIds.
-                                            ToArray();
-
-                OnRemovedEVSEStatusSending?.Invoke(DateTime.Now,
-                                                   RemovedEVSEStatus,
-                                                   _HTTPVirtualHost,
-                                                   TrackingId);
-
-                var result = await PushEVSEStatus(RemovedEVSEStatus.Select(EVSEId => new EVSEStatusRecord(EVSEId, EVSEStatusType.OutOfService)),
-                                                  ActionType.delete,
-                                                  EVSEStatusDiff.EVSEOperatorId,
-                                                  null,
-                                                  QueryTimeout);
-
-            }
-
-            #endregion
-
-        }
-
-        #endregion
-
 
         #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
 
@@ -850,13 +725,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     DNSClient: _DNSClient))
             {
 
-                return await _OICPClient.Query(CPOClient_XMLMethods.AuthorizeStartXML(OperatorId,
+                return await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStartXML(OperatorId,
                                                                                       AuthToken,
                                                                                       EVSEId,
                                                                                       PartnerProductId,
                                                                                       SessionId,
                                                                                       PartnerSessionId),
                                                "eRoamingAuthorizeStart",
+                                               RequestLogDelegate:   OnAuthorizeStartRequest,
+                                               ResponseLogDelegate:  OnAuthorizeStartResponse,
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                #region OnSuccess
@@ -953,12 +830,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     DNSClient: _DNSClient))
             {
 
-                return await _OICPClient.Query(CPOClient_XMLMethods.AuthorizeStopXML(OperatorId,
+                return await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStopXML(OperatorId,
                                                                                      SessionId,
                                                                                      AuthToken,
                                                                                      EVSEId,
                                                                                      PartnerSessionId),
                                                "eRoamingAuthorizeStop",
+                                               RequestLogDelegate:   OnAuthorizeStopRequest,
+                                               ResponseLogDelegate:  OnAuthorizeStopResponse,
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                #region OnSuccess
@@ -1041,7 +920,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     DNSClient: _DNSClient))
             {
 
-                return await _OICPClient.Query(CPOClient_XMLMethods.PullAuthenticationDataXML(OperatorId),
+                return await _OICPClient.Query(CPOClientXMLMethods.PullAuthenticationDataXML(OperatorId),
                                                "eRoamingPullAuthenticationData",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -1121,7 +1000,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     DNSClient: _DNSClient))
             {
 
-                return await _OICPClient.Query(CPOClient_XMLMethods.SendChargeDetailRecordXML(ChargeDetailRecord),
+                return await _OICPClient.Query(CPOClientXMLMethods.SendChargeDetailRecordXML(ChargeDetailRecord),
                                                "eRoamingChargeDetailRecord",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -1237,7 +1116,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     DNSClient: _DNSClient))
             {
 
-                return await _OICPClient.Query(CPOClient_XMLMethods.SendChargeDetailRecordXML(EVSEId,
+                return await _OICPClient.Query(CPOClientXMLMethods.SendChargeDetailRecordXML(EVSEId,
                                                                                               SessionId,
                                                                                               PartnerProductId,
                                                                                               SessionStart,

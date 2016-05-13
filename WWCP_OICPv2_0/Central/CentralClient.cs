@@ -349,7 +349,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     DNSClient: _DNSClient))
             {
 
-                return await _OICPClient.Query(CPOClient_XMLMethods.AuthorizeStopXML(OperatorId,
+                return await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStopXML(OperatorId,
                                                                                      SessionId,
                                                                                      AuthToken,
                                                                                      EVSEId,

@@ -34,7 +34,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// OICP v2.0 EMP client XML methods.
     /// </summary>
-    public static class EMPClient_XMLMethods
+    public static class EMPClientXMLMethods
     {
 
         #region GetEVSEByIdRequestXML(EVSEId) // <- Note!

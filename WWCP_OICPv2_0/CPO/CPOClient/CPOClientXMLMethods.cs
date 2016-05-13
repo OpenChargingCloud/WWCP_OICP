@@ -32,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// OICP v2.0 CPO client XML methods.
     /// </summary>
-    public static class CPOClient_XMLMethods
+    public static class CPOClientXMLMethods
     {
 
         #region PushEVSEDataXML  (GroupedEVSEs,      OICPAction = fullLoad, OperatorId = null, OperatorName = null)

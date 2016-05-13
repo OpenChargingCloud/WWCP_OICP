@@ -28,9 +28,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 CPO client logger.
+    /// A OICP v2.0 EMP client logger.
     /// </summary>
-    public class CPOClientLogger : HTTPLogger
+    public class EMPClientLogger : HTTPLogger
     {
 
         #region Data
@@ -38,24 +38,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default context for this logger.
         /// </summary>
-        public const String DefaultContext = "OICP_CPOClient";
+        public const String DefaultContext = "OICP_EMPClient";
 
         #endregion
 
         #region Properties
 
-        #region CPOClient
+        #region EMPClient
 
-        private readonly CPOClient _CPOClient;
+        private readonly EMPClient _EMPClient;
 
         /// <summary>
-        /// The linked OICP v2.0 CPO client.
+        /// The linked OICP v2.0 EMP client.
         /// </summary>
-        public CPOClient CPOClient
+        public EMPClient EMPClient
         {
             get
             {
-                return _CPOClient;
+                return _EMPClient;
             }
         }
 
@@ -65,19 +65,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region CPOClientLogger(CPOClient, Context = DefaultContext, LogFileCreator = null)
+        #region EMPClientLogger(EMPClient, Context = DefaultContext, LogFileCreator = null)
 
         /// <summary>
-        /// Create a new OICP v2.0 CPO client logger using the default logging delegates.
+        /// Create a new OICP v2.0 EMP client logger using the default logging delegates.
         /// </summary>
-        /// <param name="CPOClient">A OICP v2.0 CPO client.</param>
+        /// <param name="EMPClient">A OICP v2.0 EMP client.</param>
         /// <param name="Context">A context of this API.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public CPOClientLogger(CPOClient                    CPOClient,
+        public EMPClientLogger(EMPClient                    EMPClient,
                                String                       Context         = DefaultContext,
                                Func<String, String, String> LogFileCreator  = null)
 
-            : this(CPOClient,
+            : this(EMPClient,
                    Context.IsNotNullOrEmpty() ? Context : DefaultContext,
                    null,
                    null,
@@ -90,12 +90,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region CPOClientLogger(CPOClient, Context, ... Logging delegates ...)
+        #region EMPClientLogger(EMPClient, Context, ... Logging delegates ...)
 
         /// <summary>
-        /// Create a new OICP v2.0 CPO client logger using the given logging delegates.
+        /// Create a new OICP v2.0 EMP client logger using the given logging delegates.
         /// </summary>
-        /// <param name="CPOClient">A OICP v2.0 CPO client.</param>
+        /// <param name="EMPClient">A OICP v2.0 EMP client.</param>
         /// <param name="Context">A context of this API.</param>
         /// 
         /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
@@ -114,7 +114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
         /// 
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public CPOClientLogger(CPOClient                     CPOClient,
+        public EMPClientLogger(EMPClient                     EMPClient,
                                String                        Context,
 
                                HTTPRequestLoggerDelegate     LogHTTPRequest_toConsole,
@@ -157,42 +157,42 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Initial checks
 
-            if (CPOClient == null)
-                throw new ArgumentNullException(nameof(CPOClient), "The given CPO client must not be null!");
+            if (EMPClient == null)
+                throw new ArgumentNullException(nameof(EMPClient), "The given EMP client must not be null!");
 
-            this._CPOClient = CPOClient;
+            this._EMPClient = EMPClient;
 
             #endregion
 
             #region Register EVSE data/status push log events
 
-            RegisterEvent("EVSEDataPush",
-                          handler => _CPOClient.OnEVSEDataPushRequest    += handler,
-                          handler => _CPOClient.OnEVSEDataPushRequest    -= handler,
-                          "EVSE", "EVSEData", "Request", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+            //RegisterEvent("EVSEDataPush",
+            //              handler => _EMPClient.OnEVSEDataPushRequest    += handler,
+            //              handler => _EMPClient.OnEVSEDataPushRequest    -= handler,
+            //              "EVSE", "EVSEData", "Request", "All").
+            //    RegisterDefaultConsoleLogTarget(this).
+            //    RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("EVSEDataPushed",
-                          handler => _CPOClient.OnEVSEDataPushResponse   += handler,
-                          handler => _CPOClient.OnEVSEDataPushResponse   -= handler,
-                          "EVSE", "EVSEData", "Response", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+            //RegisterEvent("EVSEDataPushed",
+            //              handler => _EMPClient.OnEVSEDataPushResponse   += handler,
+            //              handler => _EMPClient.OnEVSEDataPushResponse   -= handler,
+            //              "EVSE", "EVSEData", "Response", "All").
+            //    RegisterDefaultConsoleLogTarget(this).
+            //    RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("EVSEStatusPush",
-                          handler => _CPOClient.OnEVSEStatusPushRequest  += handler,
-                          handler => _CPOClient.OnEVSEStatusPushRequest  -= handler,
-                          "EVSE", "EVSEStatus", "Request", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+            //RegisterEvent("EVSEStatusPush",
+            //              handler => _EMPClient.OnEVSEStatusPushRequest  += handler,
+            //              handler => _EMPClient.OnEVSEStatusPushRequest  -= handler,
+            //              "EVSE", "EVSEStatus", "Request", "All").
+            //    RegisterDefaultConsoleLogTarget(this).
+            //    RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("EVSEStatusPushed",
-                          handler => _CPOClient.OnEVSEStatusPushResponse += handler,
-                          handler => _CPOClient.OnEVSEStatusPushResponse -= handler,
-                          "EVSE", "EVSEStatus", "Response", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+            //RegisterEvent("EVSEStatusPushed",
+            //              handler => _EMPClient.OnEVSEStatusPushResponse += handler,
+            //              handler => _EMPClient.OnEVSEStatusPushResponse -= handler,
+            //              "EVSE", "EVSEStatus", "Response", "All").
+            //    RegisterDefaultConsoleLogTarget(this).
+            //    RegisterDefaultDiscLogTarget(this);
 
             #endregion
 

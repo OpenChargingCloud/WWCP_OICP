@@ -19,6 +19,7 @@
 
 using System;
 
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
@@ -34,13 +35,37 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Data
 
+        /// <summary>
+        /// The default context for this logger.
+        /// </summary>
+        public const String DefaultContext = "OICP_CPOServer";
+
+        #endregion
+
+        #region Properties
+
+        #region CPOServer
+
         private readonly CPOServer _CPOServer;
+
+        /// <summary>
+        /// The linked OICP v2.0 CPO server.
+        /// </summary>
+        public CPOServer CPOServer
+        {
+            get
+            {
+                return _CPOServer;
+            }
+        }
+
+        #endregion
 
         #endregion
 
         #region Constructor(s)
 
-        #region CPOServerLogger(CPOServer, Context = "OICP_CPOServer", LogFileCreator = null)
+        #region CPOServerLogger(CPOServer, Context = DefaultContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP v2.0 CPO server logger using the default logging delegates.
@@ -49,11 +74,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Context">A context of this API.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public CPOServerLogger(CPOServer                    CPOServer,
-                               String                       Context         = "OICP_CPOServer",
+                               String                       Context         = DefaultContext,
                                Func<String, String, String> LogFileCreator  = null)
 
             : this(CPOServer,
-                   Context,
+                   Context.IsNotNullOrEmpty() ? Context : DefaultContext,
                    null,
                    null,
                    null,
@@ -89,28 +114,28 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP server sent events source.</param>
         /// 
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public CPOServerLogger(CPOServer                                          CPOServer,
-                               String                                             Context,
+        public CPOServerLogger(CPOServer                     CPOServer,
+                               String                        Context,
 
-                               Action<String, String, HTTPRequest>                LogHTTPRequest_toConsole,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toConsole,
-                               Action<String, String, HTTPRequest>                LogHTTPRequest_toDisc,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toDisc,
+                               HTTPRequestLoggerDelegate     LogHTTPRequest_toConsole,
+                               HTTPResponseLoggerDelegate    LogHTTPResponse_toConsole,
+                               HTTPRequestLoggerDelegate     LogHTTPRequest_toDisc,
+                               HTTPResponseLoggerDelegate    LogHTTPResponse_toDisc,
 
-                               Action<String, String, HTTPRequest>                LogHTTPRequest_toNetwork   = null,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toNetwork  = null,
-                               Action<String, String, HTTPRequest>                LogHTTPRequest_toHTTPSSE   = null,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toHTTPSSE  = null,
+                               HTTPRequestLoggerDelegate     LogHTTPRequest_toNetwork   = null,
+                               HTTPResponseLoggerDelegate    LogHTTPResponse_toNetwork  = null,
+                               HTTPRequestLoggerDelegate     LogHTTPRequest_toHTTPSSE   = null,
+                               HTTPResponseLoggerDelegate    LogHTTPResponse_toHTTPSSE  = null,
 
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toConsole     = null,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toDisc        = null,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toNetwork     = null,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toHTTPSSE     = null,
+                               HTTPResponseLoggerDelegate    LogHTTPError_toConsole     = null,
+                               HTTPResponseLoggerDelegate    LogHTTPError_toDisc        = null,
+                               HTTPResponseLoggerDelegate    LogHTTPError_toNetwork     = null,
+                               HTTPResponseLoggerDelegate    LogHTTPError_toHTTPSSE     = null,
 
-                               Func<String, String, String>                       LogFileCreator             = null)
+                               Func<String, String, String>  LogFileCreator             = null)
 
             : base(CPOServer.SOAPServer,
-                   Context,
+                   Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
                    LogHTTPRequest_toConsole,
                    LogHTTPResponse_toConsole,
@@ -136,9 +161,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (CPOServer == null)
                 throw new ArgumentNullException(nameof(CPOServer), "The given CPO server must not be null!");
 
-            #endregion
-
             this._CPOServer = CPOServer;
+
+            #endregion
 
             #region Register remote start/stop log events
 

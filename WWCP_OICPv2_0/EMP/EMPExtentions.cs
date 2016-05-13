@@ -60,7 +60,8 @@ namespace org.GraphDefined.WWCP
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
-        /// <param name="Context">A context of this API.</param>
+        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
+        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// 
@@ -84,7 +85,8 @@ namespace org.GraphDefined.WWCP
                                           String                               ServerURIPrefix             = "",
                                           Boolean                              ServerAutoStart             = true,
 
-                                          String                               Context                     = OICPv2_0.EMPRoaming.DefaultLoggingContext,
+                                          String                               ClientLoggingContext        = OICPv2_0.EMPClientLogger.DefaultContext,
+                                          String                               ServerLoggingContext        = OICPv2_0.EMPServerLogger.DefaultContext,
                                           Func<String, String, String>         LogFileCreator              = null,
 
                                           DNSClient                            DNSClient                   = null,
@@ -126,7 +128,8 @@ namespace org.GraphDefined.WWCP
                                                                  ServerURIPrefix,
                                                                  ServerAutoStart,
 
-                                                                 Context,
+                                                                 ClientLoggingContext,
+                                                                 ServerLoggingContext,
                                                                  LogFileCreator,
 
                                                                  DNSClient);
@@ -163,7 +166,8 @@ namespace org.GraphDefined.WWCP
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// 
-        /// <param name="Context">A context of this API.</param>
+        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
+        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// 
@@ -185,7 +189,8 @@ namespace org.GraphDefined.WWCP
 
                                           String                               ServerURIPrefix             = null,
 
-                                          String                               Context                     = OICPv2_0.EMPRoaming.DefaultLoggingContext,
+                                          String                               ClientLoggingContext        = OICPv2_0.EMPClientLogger.DefaultContext,
+                                          String                               ServerLoggingContext        = OICPv2_0.EMPServerLogger.DefaultContext,
                                           Func<String, String, String>         LogFileCreator              = null,
                                           DNSClient                            DNSClient                   = null,
 
@@ -230,7 +235,8 @@ namespace org.GraphDefined.WWCP
                                                                  new OICPv2_0.EMPServer(SOAPServer,
                                                                                         ServerURIPrefix),
 
-                                                                 Context,
+                                                                 ClientLoggingContext,
+                                                                 ServerLoggingContext,
                                                                  LogFileCreator);
 
 

@@ -130,7 +130,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
             get
             {
-                return _CPORoaming.CPOClient;
+                return _CPORoaming?.CPOClient;
             }
         }
 
@@ -145,7 +145,22 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
             get
             {
-                return _CPORoaming.CPOServer;
+                return _CPORoaming?.CPOServer;
+            }
+        }
+
+        #endregion
+
+        #region CPOClientLogger
+
+        /// <summary>
+        /// The CPO client logger.
+        /// </summary>
+        public CPOClientLogger CPOClientLogger
+        {
+            get
+            {
+                return _CPORoaming?.CPOClientLogger;
             }
         }
 
@@ -160,11 +175,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
             get
             {
-                return _CPORoaming.CPOServerLogger;
+                return _CPORoaming?.CPOServerLogger;
             }
         }
 
         #endregion
+
 
         #region DNSClient
 
@@ -380,8 +396,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
         /// <param name="CPOClient">An OICP CPO client.</param>
         /// <param name="CPOServer">An OICP CPO sever.</param>
-        /// 
-        /// <param name="Context">A context of this API.</param>
+        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
+        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
@@ -392,11 +408,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               CPOClient                     CPOClient,
                               CPOServer                     CPOServer,
 
-                              String                        Context              = CPORoaming.DefaultLoggingContext,
-                              Func<String, String, String>  LogFileCreator       = null,
+                              String                        ClientLoggingContext  = CPOClientLogger.DefaultContext,
+                              String                        ServerLoggingContext  = CPOServerLogger.DefaultContext,
+                              Func<String, String, String>  LogFileCreator        = null,
 
-                              EVSE2EVSEDataRecordDelegate   EVSE2EVSEDataRecord  = null,
-                              EVSEDataRecord2XMLDelegate    EVSEDataRecord2XML   = null)
+                              EVSE2EVSEDataRecordDelegate   EVSE2EVSEDataRecord   = null,
+                              EVSEDataRecord2XMLDelegate    EVSEDataRecord2XML    = null)
 
             : this(Id,
                    Name,
@@ -404,7 +421,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                    new CPORoaming(CPOClient,
                                   CPOServer,
-                                  Context,
+                                  ClientLoggingContext,
+                                  ServerLoggingContext,
                                   LogFileCreator),
 
                    EVSE2EVSEDataRecord,
@@ -435,7 +453,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
-        /// <param name="Context">A context of this API.</param>
+        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
+        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
@@ -457,7 +476,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               String                               ServerURIPrefix             = "",
                               Boolean                              ServerAutoStart             = false,
 
-                              String                               Context                     = CPORoaming.DefaultLoggingContext,
+                              String                               ClientLoggingContext        = CPOClientLogger.DefaultContext,
+                              String                               ServerLoggingContext        = CPOServerLogger.DefaultContext,
                               Func<String, String, String>         LogFileCreator              = null,
 
                               EVSE2EVSEDataRecordDelegate          EVSE2EVSEDataRecord         = null,
@@ -481,7 +501,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                   ServerURIPrefix,
                                   ServerAutoStart,
 
-                                  Context,
+                                  ClientLoggingContext,
+                                  ServerLoggingContext,
                                   LogFileCreator,
 
                                   DNSClient),
@@ -679,6 +700,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         #endregion
+
 
         #region PushEVSEData(EVSE,             ActionType = insert,   OperatorId = null, OperatorName = null,                      QueryTimeout = null)
 
@@ -1176,6 +1198,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
+
         #region PushEVSEStatus(EVSEStatus,        ActionType = update, OperatorId = null, OperatorName = null,                      QueryTimeout = null)
 
         /// <summary>
@@ -1643,6 +1666,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
+
         #region PushEVSEStatus(EVSEStatusDiff, QueryTimeout = null)
 
         /// <summary>
@@ -1655,8 +1679,84 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         {
 
-            await _CPORoaming.PushEVSEStatus(EVSEStatusDiff,
-                                             QueryTimeout);
+            if (EVSEStatusDiff == null)
+                return;
+
+            var TrackingId = Guid.NewGuid().ToString();
+
+            #region Insert new EVSEs...
+
+            if (EVSEStatusDiff.NewStatus.Count() > 0)
+            {
+
+                var NewEVSEStatus = EVSEStatusDiff.
+                                        NewStatus.
+                                        Select(v => new EVSEStatusRecord(v.Key, v.Value.AsOICPEVSEStatus())).
+                                        ToArray();
+
+                //OnNewEVSEStatusSending?.Invoke(DateTime.Now,
+                //                               NewEVSEStatus,
+                //                               _HTTPVirtualHost,
+                //                               TrackingId);
+
+                var result = await _CPORoaming.PushEVSEStatus(NewEVSEStatus,
+                                                              ActionType.insert,
+                                                              EVSEStatusDiff.EVSEOperatorId,
+                                                              null,
+                                                              QueryTimeout);
+
+            }
+
+            #endregion
+
+            #region Upload EVSE changes...
+
+            if (EVSEStatusDiff.ChangedStatus.Count() > 0)
+            {
+
+                var ChangedEVSEStatus = EVSEStatusDiff.
+                                            ChangedStatus.
+                                            Select(v => new EVSEStatusRecord(v.Key, v.Value.AsOICPEVSEStatus())).
+                                            ToArray();
+
+                //OnChangedEVSEStatusSending?.Invoke(DateTime.Now,
+                //                                   ChangedEVSEStatus,
+                //                                   _HTTPVirtualHost,
+                //                                   TrackingId);
+
+                var result = await _CPORoaming.PushEVSEStatus(ChangedEVSEStatus,
+                                                              ActionType.update,
+                                                              EVSEStatusDiff.EVSEOperatorId,
+                                                              null,
+                                                              QueryTimeout);
+
+            }
+
+            #endregion
+
+            #region Remove outdated EVSEs...
+
+            if (EVSEStatusDiff.RemovedIds.Count() > 0)
+            {
+
+                var RemovedEVSEStatus = EVSEStatusDiff.
+                                            RemovedIds.
+                                            ToArray();
+
+                //OnRemovedEVSEStatusSending?.Invoke(DateTime.Now,
+                //                                   RemovedEVSEStatus,
+                //                                   _HTTPVirtualHost,
+                //                                   TrackingId);
+
+                var result = await _CPORoaming.PushEVSEStatus(RemovedEVSEStatus.Select(EVSEId => new EVSEStatusRecord(EVSEId, EVSEStatusType.OutOfService)),
+                                                              ActionType.delete,
+                                                              EVSEStatusDiff.EVSEOperatorId,
+                                                              null,
+                                                              QueryTimeout);
+
+            }
+
+            #endregion
 
         }
 

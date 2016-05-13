@@ -19,6 +19,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 #endregion
@@ -29,8 +30,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// A delegate called whenever new EVSE data record will be send upstream.
     /// </summary>
-    public delegate void OnEVSEDataPushDelegate(DateTime                               Timestamp,
-                                                Object                                 Sender,
+    public delegate Task OnEVSEDataPushDelegate(DateTime                               Timestamp,
+                                                CPOClient                              Sender,
                                                 String                                 SenderId,
                                                 ActionType                             ActionType,
                                                 ILookup<EVSEOperator, EVSEDataRecord>  EVSEData,
@@ -40,8 +41,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// A delegate called whenever new EVSE data record had been send upstream.
     /// </summary>
-    public delegate void OnEVSEDataPushedDelegate(DateTime                               Timestamp,
-                                                  Object                                 Sender,
+    public delegate Task OnEVSEDataPushedDelegate(DateTime                               Timestamp,
+                                                  CPOClient                              Sender,
                                                   String                                 SenderId,
                                                   ActionType                             ActionType,
                                                   ILookup<EVSEOperator, EVSEDataRecord>  EVSEData,
@@ -53,8 +54,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// A delegate called whenever new EVSE status will be send upstream.
     /// </summary>
-    public delegate void OnEVSEStatusPushDelegate(DateTime                       Timestamp,
-                                                  Object                         Sender,
+    public delegate Task OnEVSEStatusPushDelegate(DateTime                       Timestamp,
+                                                  CPOClient                      Sender,
                                                   String                         SenderId,
                                                   ActionType                     ActionType,
                                                   IEnumerable<EVSEStatusRecord>  EVSEStatusRecords,
@@ -64,8 +65,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// A delegate called whenever new EVSE status had been send upstream.
     /// </summary>
-    public delegate void OnEVSEStatusPushedDelegate(DateTime                       Timestamp,
-                                                    Object                         Sender,
+    public delegate Task OnEVSEStatusPushedDelegate(DateTime                       Timestamp,
+                                                    CPOClient                      Sender,
                                                     String                         SenderId,
                                                     ActionType                     ActionType,
                                                     IEnumerable<EVSEStatusRecord>  EVSEStatusRecords,
