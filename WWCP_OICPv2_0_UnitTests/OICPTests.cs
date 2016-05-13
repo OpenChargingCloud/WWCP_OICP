@@ -117,20 +117,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
 
             var SendCDRResult = await HubjectCPO.
-                                          SendChargeDetailRecord(EVSEId:                EVSEId,
-                                                                 SessionId:             AuthStartResult.Content.SessionId,
-                                                                 PartnerProductId:      ChargingProduct_Id.Parse("AC1"),
-                                                                 SessionStart:          DateTime.Now,
-                                                                 SessionEnd:            DateTime.Now - TimeSpan.FromHours(3),
-                                                                 Identification:        AuthorizationIdentification.FromAuthToken(AuthToken),
-                                                                 PartnerSessionId:      ChargingSession_Id.Parse("0815"),
-                                                                 ChargingStart:         DateTime.Now,
-                                                                 ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),
-                                                                 MeterValueStart:       123.456,
-                                                                 MeterValueEnd:         234.567,
-                                                                 MeterValuesInBetween:  Enumeration.Create(123.456, 189.768, 223.312, 234.560, 234.567),
-                                                                 ConsumedEnergy:        111.111,
-                                                                 QueryTimeout:          TimeSpan.FromSeconds(120));
+                                          SendChargeDetailRecord(
+                                               new eRoamingChargeDetailRecord(
+                                                   EVSEId:                EVSEId,
+                                                   SessionId:             AuthStartResult.Content.SessionId,
+                                                   PartnerProductId:      ChargingProduct_Id.Parse("AC1"),
+                                                   SessionStart:          DateTime.Now,
+                                                   SessionEnd:            DateTime.Now - TimeSpan.FromHours(3),
+                                                   Identification:        AuthorizationIdentification.FromAuthToken(AuthToken),
+                                                   PartnerSessionId:      ChargingSession_Id.Parse("0815"),
+                                                   ChargingStart:         DateTime.Now,
+                                                   ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),
+                                                   MeterValueStart:       123.456,
+                                                   MeterValueEnd:         234.567,
+                                                   MeterValuesInBetween:  Enumeration.Create(123.456, 189.768, 223.312, 234.560, 234.567),
+                                                   ConsumedEnergy:        111.111),
+                                               QueryTimeout:          TimeSpan.FromSeconds(120)
+                                           );
 
             ConsoleX.WriteLines("SendCDR result:",
                                 SendCDRResult.Content.Result,

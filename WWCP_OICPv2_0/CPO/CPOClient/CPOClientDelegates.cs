@@ -74,4 +74,99 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     eRoamingAcknowledgement        Result,
                                                     TimeSpan                       Duration);
 
+
+    /// <summary>
+    /// A delegate called whenever an authorize start request will be send.
+    /// </summary>
+    public delegate Task OnAuthorizeStartHandler(DateTime                       Timestamp,
+                                                 CPOClient                      Sender,
+                                                 String                         SenderId,
+                                                 EVSEOperator_Id                OperatorId,
+                                                 Auth_Token                     AuthToken,
+                                                 EVSE_Id                        EVSEId,
+                                                 ChargingSession_Id             SessionId,
+                                                 ChargingProduct_Id             PartnerProductId,
+                                                 ChargingSession_Id             PartnerSessionId,
+                                                 TimeSpan?                      QueryTimeout);
+
+    /// <summary>
+    /// A delegate called whenever an authorize start request was sent.
+    /// </summary>
+    public delegate Task OnAuthorizeStartedHandler(DateTime                       Timestamp,
+                                                   CPOClient                      Sender,
+                                                   String                         SenderId,
+                                                   EVSEOperator_Id                OperatorId,
+                                                   Auth_Token                     AuthToken,
+                                                   EVSE_Id                        EVSEId,
+                                                   ChargingSession_Id             SessionId,
+                                                   ChargingProduct_Id             PartnerProductId,
+                                                   ChargingSession_Id             PartnerSessionId,
+                                                   TimeSpan?                      QueryTimeout,
+                                                   eRoamingAuthorizationStart     Result,
+                                                   TimeSpan                       Duration);
+
+
+    /// <summary>
+    /// A delegate called whenever an authorize stop request will be send.
+    /// </summary>
+    public delegate Task OnAuthorizeStopHandler(DateTime                       Timestamp,
+                                                CPOClient                      Sender,
+                                                String                         SenderId,
+                                                EVSEOperator_Id                OperatorId,
+                                                ChargingSession_Id             SessionId,
+                                                Auth_Token                     AuthToken,
+                                                EVSE_Id                        EVSEId,
+                                                ChargingSession_Id             PartnerSessionId,
+                                                TimeSpan?                      QueryTimeout);
+
+    /// <summary>
+    /// A delegate called whenever an authorize stop request was sent.
+    /// </summary>
+    public delegate Task OnAuthorizeStoppedHandler(DateTime                       Timestamp,
+                                                   CPOClient                      Sender,
+                                                   String                         SenderId,
+                                                   EVSEOperator_Id                OperatorId,
+                                                   ChargingSession_Id             SessionId,
+                                                   Auth_Token                     AuthToken,
+                                                   EVSE_Id                        EVSEId,
+                                                   ChargingSession_Id             PartnerSessionId,
+                                                   TimeSpan?                      QueryTimeout,
+                                                   eRoamingAuthorizationStop      Result,
+                                                   TimeSpan                       Duration);
+
+
+    public delegate Task OnPullAuthenticationDataHandler(DateTime                       Timestamp,
+                                                         CPOClient                      Sender,
+                                                         String                         SenderId,
+                                                         EVSEOperator_Id                OperatorId,
+                                                         TimeSpan?                      QueryTimeout);
+
+
+    public delegate Task OnAuthenticationDataPulledHandler(DateTime                       Timestamp,
+                                                           CPOClient                      Sender,
+                                                           String                         SenderId,
+                                                           EVSEOperator_Id                OperatorId,
+                                                           TimeSpan?                      QueryTimeout,
+                                                           eRoamingAuthenticationData     Result,
+                                                           TimeSpan                       Duration);
+
+
+    
+    public delegate Task OnSendChargeDetailRecordHandler(DateTime                       Timestamp,
+                                                         CPOClient                      Sender,
+                                                         String                         SenderId,
+                                                         eRoamingChargeDetailRecord     ChargeDetailRecord,
+                                                         TimeSpan?                      QueryTimeout);
+
+    public delegate Task OnChargeDetailRecordSentHandler(DateTime                       Timestamp,
+                                                         CPOClient                      Sender,
+                                                         String                         SenderId,
+                                                         eRoamingChargeDetailRecord     ChargeDetailRecord,
+                                                         TimeSpan?                      QueryTimeout,
+                                                         eRoamingAcknowledgement        Result,
+                                                         TimeSpan                       Duration);
+
+
+
+
 }
