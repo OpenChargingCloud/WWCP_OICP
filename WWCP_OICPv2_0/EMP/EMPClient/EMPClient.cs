@@ -37,7 +37,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// A OICP v2.0 EMP client.
     /// </summary>
-    public class EMPClient : AOICPClient
+    public class EMPClient : ASOAPClient
     {
 
         #region Data
@@ -397,11 +397,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             {
 
                 return await _OICPClient.Query(EMPClientXMLMethods.SearchEvseRequestXML(ProviderId,
-                                                                                         SearchCenter,
-                                                                                         DistanceKM,
-                                                                                         Address,
-                                                                                         Plug,
-                                                                                         ChargingFacility),
+                                                                                        SearchCenter,
+                                                                                        DistanceKM,
+                                                                                        Address,
+                                                                                        Plug,
+                                                                                        ChargingFacility),
                                                "eRoamingSearchEvse",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -410,7 +410,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                OnSuccess: XMLResponse => {
 
                                                    OICPException _OICPException = null;
-                                                   if (IsHubjectError(XMLResponse.Content, out _OICPException, SendException))
+                                                   if (OICPClientHelper.IsHubjectError(XMLResponse.Content, out _OICPException, SendException))
                                                        return new HTTPResponse<eRoamingEvseSearchResult>(XMLResponse.HTTPRequest, _OICPException);
 
                                                    return XMLResponse.Parse(eRoamingEvseSearchResult.Parse);

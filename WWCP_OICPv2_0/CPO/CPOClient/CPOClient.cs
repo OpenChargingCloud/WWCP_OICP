@@ -38,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// A OICP v2.0 CPO client.
     /// </summary>
-    public class CPOClient : AOICPClient
+    public class CPOClient : ASOAPClient
     {
 
         #region Data
@@ -1334,6 +1334,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         #endregion
+
 
     }
 
