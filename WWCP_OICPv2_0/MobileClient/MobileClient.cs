@@ -33,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 Mobile client.
+    /// An OICP v2.0 Mobile client.
     /// </summary>
     public class MobileClient : ASOAPClient
     {

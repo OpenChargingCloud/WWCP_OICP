@@ -36,16 +36,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Encapsulate the given XML within a XML SOAP frame.
         /// </summary>
-        /// <param name="XML">The internal XML.</param>
+        /// <param name="SOAPBody">The internal XML for the SOAP body.</param>
         /// <param name="XMLNamespaces">An optional delegate to process the XML namespaces.</param>
-        public static XElement Encapsulation(XElement               XML,
-                                             XMLNamespacesDelegate  XMLNamespaces = null)
+        public static XElement Encapsulation(XElement                      SOAPBody,
+                                             SOAPNS.XMLNamespacesDelegate  XMLNamespaces = null)
         {
 
             #region Initial checks
 
-            if (XML == null)
-                throw new ArgumentNullException("XML", "The given XML must not be null!");
+            if (SOAPBody == null)
+                throw new ArgumentNullException(nameof(SOAPBody), "The given XML must not be null!");
 
             if (XMLNamespaces == null)
                 XMLNamespaces = xml => xml;
@@ -53,18 +53,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
             return XMLNamespaces(
-                       new XElement(SOAPNS.NS.SOAPEnvelope + "Envelope",
-                           new XAttribute(XNamespace.Xmlns + "SOAP",                SOAPNS.NS.SOAPEnvelope.    NamespaceName),
-                           new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.        NamespaceName),
-                           new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.           NamespaceName),
-                           new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.         NamespaceName),
-                           new XAttribute(XNamespace.Xmlns + "MobileAuthorization", OICPNS.MobileAuthorization.NamespaceName),
-                           new XAttribute(XNamespace.Xmlns + "Authorization",       OICPNS.Authorization.      NamespaceName),
-                           new XAttribute(XNamespace.Xmlns + "AuthenticationData",  OICPNS.AuthenticationData. NamespaceName),
-                           new XAttribute(XNamespace.Xmlns + "EVSESearch",          OICPNS.EVSESearch.         NamespaceName),
+                new XElement(SOAPNS.NS.SOAPEnvelope + "Envelope",
+                    new XAttribute(XNamespace.Xmlns + "SOAP",                SOAPNS.NS.SOAPEnvelope.    NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.        NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.           NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.         NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "MobileAuthorization", OICPNS.MobileAuthorization.NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "Authorization",       OICPNS.Authorization.      NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "AuthenticationData",  OICPNS.AuthenticationData. NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "EVSESearch",          OICPNS.EVSESearch.         NamespaceName),
 
-                           new XElement(SOAPNS.NS.SOAPEnvelope + "Header"),
-                           new XElement(SOAPNS.NS.SOAPEnvelope + "Body", XML)));
+                    new XElement(SOAPNS.NS.SOAPEnvelope + "Header"),
+                    new XElement(SOAPNS.NS.SOAPEnvelope + "Body",  SOAPBody)
+                )
+            );
 
         }
 

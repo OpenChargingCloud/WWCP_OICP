@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 EMP server logger.
+    /// An OICP v2.0 EMP server logger.
     /// </summary>
     public class EMPServerLogger : HTTPLogger
     {
@@ -133,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                Func<String, String, String>  LogFileCreator             = null)
 
-            : base(EMPServer.HTTPServer,
+            : base(EMPServer.SOAPServer,
                    Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
                    LogHTTPRequest_toConsole,

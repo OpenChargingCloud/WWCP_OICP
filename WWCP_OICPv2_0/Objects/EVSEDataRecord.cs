@@ -32,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 Electric Vehicle Supply Equipment (EVSE).
+    /// An OICP v2.0 Electric Vehicle Supply Equipment (EVSE).
     /// This is meant to be one electrical circuit which can charge a electric vehicle.
     /// </summary>
     public class EVSEDataRecord

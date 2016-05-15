@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 CPO client logger.
+    /// An OICP v2.0 CPO client logger.
     /// </summary>
     public class CPOClientLogger : HTTPLogger
     {

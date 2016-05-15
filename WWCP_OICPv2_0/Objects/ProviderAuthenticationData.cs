@@ -33,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 provider authentication data record.
+    /// An OICP v2.0 provider authentication data record.
     /// </summary>
     public class ProviderAuthenticationData
     {

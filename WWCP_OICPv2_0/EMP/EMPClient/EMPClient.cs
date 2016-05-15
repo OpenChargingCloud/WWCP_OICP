@@ -35,7 +35,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 EMP client.
+    /// An OICP v2.0 EMP client.
     /// </summary>
     public class EMPClient : ASOAPClient
     {

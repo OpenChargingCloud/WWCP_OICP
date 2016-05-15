@@ -33,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 roaming client for CPOs.
+    /// An OICP v2.0 roaming client for CPOs.
     /// </summary>
     public class CPORoaming
     {
