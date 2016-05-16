@@ -156,8 +156,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                          DNSClient DNSClient       = null,
                          Boolean   AutoStart       = false)
 
-            : base(HTTPServerName,
-                   TCPPort,
+            : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
+                   TCPPort != null                   ? TCPPort        : DefaultHTTPServerPort,
                    URIPrefix,
                    DNSClient,
                    AutoStart: false)
@@ -221,7 +221,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                  Connection      = "close"
 
                                              };
-
 
                                          },
                                          AllowReplacement: URIReplacement.Allow);
