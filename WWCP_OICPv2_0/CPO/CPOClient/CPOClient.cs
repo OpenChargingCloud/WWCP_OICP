@@ -704,7 +704,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    ClientId,
                                                    OICPAction,
                                                    _EVSEStatusRecords,
-                                                   (UInt32)NumberOfEVSEStatusRecords,
+                                                   (UInt32) NumberOfEVSEStatusRecords,
                                                    result.Content,
                                                    Runtime.Elapsed);
 

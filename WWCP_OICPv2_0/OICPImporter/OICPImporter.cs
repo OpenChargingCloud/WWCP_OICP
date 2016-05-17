@@ -902,7 +902,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                             var XML               = XDocument.Parse(_LoadStaticDataFromStream(_LoadStaticDataCounter++).ReadToEnd()).Root;
 
-                            var SOAPXML           = XML.Element(org.GraphDefined.Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope + "Body").
+                            var SOAPXML           = XML.Element(org.GraphDefined.Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope_v1_1 + "Body").
                                                         Descendants().
                                                         FirstOrDefault();
 
@@ -1107,7 +1107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                             var XML         = XDocument.Parse(_LoadDynamicDataFromStream(_LoadDynamicDataCounter++).ReadToEnd()).Root;
 
-                            var SOAPXML     = XML.Element(org.GraphDefined.Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope + "Body").
+                            var SOAPXML     = XML.Element(org.GraphDefined.Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope_v1_1 + "Body").
                                                   Descendants().
                                                   FirstOrDefault();
 

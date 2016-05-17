@@ -53,8 +53,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
             return XMLNamespaces(
-                new XElement(SOAPNS.NS.SOAPEnvelope + "Envelope",
-                    new XAttribute(XNamespace.Xmlns + "SOAP",                SOAPNS.NS.SOAPEnvelope.    NamespaceName),
+                new XElement(SOAPNS.NS.SOAPEnvelope_v1_1 + "Envelope",
+                    new XAttribute(XNamespace.Xmlns + "SOAP",                SOAPNS.NS.SOAPEnvelope_v1_1.    NamespaceName),
                     new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.        NamespaceName),
                     new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.           NamespaceName),
                     new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.         NamespaceName),
@@ -63,8 +63,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     new XAttribute(XNamespace.Xmlns + "AuthenticationData",  OICPNS.AuthenticationData. NamespaceName),
                     new XAttribute(XNamespace.Xmlns + "EVSESearch",          OICPNS.EVSESearch.         NamespaceName),
 
-                    new XElement(SOAPNS.NS.SOAPEnvelope + "Header"),
-                    new XElement(SOAPNS.NS.SOAPEnvelope + "Body",  SOAPBody)
+                    new XElement(SOAPNS.NS.SOAPEnvelope_v1_1 + "Header"),
+                    new XElement(SOAPNS.NS.SOAPEnvelope_v1_1 + "Body",  SOAPBody)
                 )
             );
 

@@ -159,6 +159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    TCPPort != null                   ? TCPPort        : DefaultHTTPServerPort,
                    URIPrefix,
+                   HTTPContentType.XMLTEXT_UTF8,
                    DNSClient,
                    AutoStart: false)
 
