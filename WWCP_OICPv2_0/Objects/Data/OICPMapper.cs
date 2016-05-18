@@ -524,10 +524,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      EVSE.ChargingStation.Name,
                                                      EVSE.ChargingStation.Address,
                                                      EVSE.ChargingStation.GeoLocation,
-                                                     EVSE.SocketOutlets.Select(socketoutlet => socketoutlet.Plug),
+                                                     EVSE.SocketOutlets?.Select(socketoutlet => socketoutlet.Plug),
                                                      EVSE.ChargingFacilities,
                                                      EVSE.ChargingModes,
-                                                     EVSE.ChargingStation.AuthenticationModes.
+                                                     EVSE.ChargingStation.AuthenticationModes?.
                                                                               SelectMany(mode => OICPMapper.AsOICPAuthenticationMode(mode)).
                                                                               Where     (mode => mode != AuthenticationModes.Unkown),
                                                      EVSE.MaxCapacity_kWh.HasValue ? (Int32) EVSE.MaxCapacity_kWh : new Int32?(),
@@ -536,7 +536,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      EVSE.ChargingStation.HotlinePhoneNumber,
                                                      EVSE.ChargingStation.Description, // AdditionalInfo
                                                      EVSE.ChargingStation.ChargingPool.EntranceLocation,
-                                                     EVSE.ChargingStation.OpeningTimes.IsOpen24Hours,
+                                                     EVSE.ChargingStation.OpeningTimes?.IsOpen24Hours,
                                                      EVSE.ChargingStation.OpeningTimes,
                                                      null, // HubOperatorId
                                                      null, // ClearingHouseId
