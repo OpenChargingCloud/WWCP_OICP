@@ -155,13 +155,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public delegate Task OnSendChargeDetailRecordHandler(DateTime                       Timestamp,
                                                          CPOClient                      Sender,
                                                          String                         SenderId,
-                                                         eRoamingChargeDetailRecord     ChargeDetailRecord,
+                                                         ChargeDetailRecord     ChargeDetailRecord,
                                                          TimeSpan?                      QueryTimeout);
 
     public delegate Task OnChargeDetailRecordSentHandler(DateTime                       Timestamp,
                                                          CPOClient                      Sender,
                                                          String                         SenderId,
-                                                         eRoamingChargeDetailRecord     ChargeDetailRecord,
+                                                         ChargeDetailRecord     ChargeDetailRecord,
                                                          TimeSpan?                      QueryTimeout,
                                                          eRoamingAcknowledgement        Result,
                                                          TimeSpan                       Duration);

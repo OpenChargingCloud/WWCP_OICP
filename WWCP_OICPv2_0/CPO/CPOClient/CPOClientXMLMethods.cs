@@ -466,7 +466,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// Create an OICP v2.0 SendChargeDetailRecord XML request.
         /// </summary>
         /// <param name="ChargeDetailRecord">The charge detail record.</param>
-        public static XElement SendChargeDetailRecordXML(eRoamingChargeDetailRecord  ChargeDetailRecord)
+        public static XElement SendChargeDetailRecordXML(ChargeDetailRecord  ChargeDetailRecord)
         {
 
             #region Initial checks

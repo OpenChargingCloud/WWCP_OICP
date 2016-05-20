@@ -32,9 +32,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// An OICP v2.0 charge detail record.
     /// </summary>
-    public class eRoamingChargeDetailRecord : IEquatable <eRoamingChargeDetailRecord>,
-                                              IComparable<eRoamingChargeDetailRecord>,
-                                              IComparable
+    public class ChargeDetailRecord : IEquatable <ChargeDetailRecord>,
+                                      IComparable<ChargeDetailRecord>,
+                                      IComparable
     {
 
         #region Properties
@@ -305,22 +305,22 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="MeteringSignature">An optional signature for the metering values.</param>
         /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
-        public eRoamingChargeDetailRecord(EVSE_Id                      EVSEId,
-                                          ChargingSession_Id           SessionId,
-                                          ChargingProduct_Id           PartnerProductId,
-                                          DateTime                     SessionStart,
-                                          DateTime                     SessionEnd,
-                                          AuthorizationIdentification  Identification,
-                                          ChargingSession_Id           PartnerSessionId      = null,
-                                          DateTime?                    ChargingStart         = null,
-                                          DateTime?                    ChargingEnd           = null,
-                                          Double?                      MeterValueStart       = null,
-                                          Double?                      MeterValueEnd         = null,
-                                          IEnumerable<Double>          MeterValuesInBetween  = null,
-                                          Double?                      ConsumedEnergy        = null,
-                                          String                       MeteringSignature     = null,
-                                          HubOperator_Id               HubOperatorId         = null,
-                                          EVSP_Id                      HubProviderId         = null)
+        public ChargeDetailRecord(EVSE_Id                      EVSEId,
+                                  ChargingSession_Id           SessionId,
+                                  ChargingProduct_Id           PartnerProductId,
+                                  DateTime                     SessionStart,
+                                  DateTime                     SessionEnd,
+                                  AuthorizationIdentification  Identification,
+                                  ChargingSession_Id           PartnerSessionId      = null,
+                                  DateTime?                    ChargingStart         = null,
+                                  DateTime?                    ChargingEnd           = null,
+                                  Double?                      MeterValueStart       = null,
+                                  Double?                      MeterValueEnd         = null,
+                                  IEnumerable<Double>          MeterValuesInBetween  = null,
+                                  Double?                      ConsumedEnergy        = null,
+                                  String                       MeteringSignature     = null,
+                                  HubOperator_Id               HubOperatorId         = null,
+                                  EVSP_Id                      HubProviderId         = null)
 
         {
 
@@ -367,7 +367,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region (static) Parse(eRoamingChargeDetailRecordXML, OnException = null)
 
-        public static eRoamingChargeDetailRecord Parse(XElement             eRoamingChargeDetailRecordXML,
+        public static ChargeDetailRecord Parse(XElement             eRoamingChargeDetailRecordXML,
                                                        OnExceptionDelegate  OnException  = null)
         {
 
@@ -478,7 +478,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                                 OnException);
 
 
-            return new eRoamingChargeDetailRecord(
+            return new ChargeDetailRecord(
 
                 eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "EvseID",
                                                                     EVSE_Id.Parse,
@@ -607,7 +607,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 throw new ArgumentNullException("The given object must not be null!");
 
             // Check if the given object is a charge detail record.
-            var OICPChargeDetailRecord = Object as eRoamingChargeDetailRecord;
+            var OICPChargeDetailRecord = Object as ChargeDetailRecord;
             if ((Object) OICPChargeDetailRecord == null)
                 throw new ArgumentException("The given object is not a charge detail record!");
 
@@ -623,7 +623,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="OICPChargeDetailRecord">A charge detail record object to compare with.</param>
-        public Int32 CompareTo(eRoamingChargeDetailRecord OICPChargeDetailRecord)
+        public Int32 CompareTo(ChargeDetailRecord OICPChargeDetailRecord)
         {
 
             if ((Object) OICPChargeDetailRecord == null)
@@ -653,7 +653,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 return false;
 
             // Check if the given object is a charge detail record.
-            var OICPChargeDetailRecord = Object as eRoamingChargeDetailRecord;
+            var OICPChargeDetailRecord = Object as ChargeDetailRecord;
             if ((Object) OICPChargeDetailRecord == null)
                 return false;
 
@@ -670,7 +670,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         /// <param name="OICPChargeDetailRecord">A charge detail record to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(eRoamingChargeDetailRecord OICPChargeDetailRecord)
+        public Boolean Equals(ChargeDetailRecord OICPChargeDetailRecord)
         {
 
             if ((Object) OICPChargeDetailRecord == null)

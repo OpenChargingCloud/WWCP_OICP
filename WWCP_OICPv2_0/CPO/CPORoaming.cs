@@ -781,7 +781,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<eRoamingAcknowledgement>
 
-            SendChargeDetailRecord(eRoamingChargeDetailRecord  ChargeDetailRecord,
+            SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?                   QueryTimeout  = null)
 
         {
@@ -870,7 +870,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
             var result = await _CPOClient.SendChargeDetailRecord(
-                                              new eRoamingChargeDetailRecord(
+                                              new ChargeDetailRecord(
                                                   EVSEId,
                                                   SessionId,
                                                   PartnerProductId,

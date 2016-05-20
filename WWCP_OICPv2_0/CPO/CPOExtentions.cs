@@ -36,7 +36,7 @@ namespace org.GraphDefined.WWCP
     public static class CPOExtentions
     {
 
-        #region CreateOICP_CPORoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ... , Action = null)
+        #region CreateOICPv2_0_CPORoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ... , Action = null)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -72,36 +72,36 @@ namespace org.GraphDefined.WWCP
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         public static EVSEOperatorRoamingProvider
 
-            CreateOICP_CPORoamingProvider(this RoamingNetwork                   RoamingNetwork,
-                                          RoamingProvider_Id                    Id,
-                                          I18NString                            Name,
+            CreateOICPv2_0_CPORoamingProvider(this RoamingNetwork                   RoamingNetwork,
+                                              RoamingProvider_Id                    Id,
+                                              I18NString                            Name,
 
-                                          String                                RemoteHostname,
-                                          IPPort                                RemoteTCPPort               = null,
-                                          String                                RemoteHTTPVirtualHost       = null,
-                                          RemoteCertificateValidationCallback   RemoteCertificateValidator  = null,
-                                          String                                HTTPUserAgent               = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
-                                          TimeSpan?                             QueryTimeout                = null,
+                                              String                                RemoteHostname,
+                                              IPPort                                RemoteTCPPort               = null,
+                                              String                                RemoteHTTPVirtualHost       = null,
+                                              RemoteCertificateValidationCallback   RemoteCertificateValidator  = null,
+                                              String                                HTTPUserAgent               = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
+                                              TimeSpan?                             QueryTimeout                = null,
 
-                                          String                                ServerName                  = OICPv2_0.CPOServer.DefaultHTTPServerName,
-                                          IPPort                                ServerTCPPort               = null,
-                                          String                                ServerURIPrefix             = "",
-                                          Boolean                               ServerAutoStart             = true,
+                                              String                                ServerName                  = OICPv2_0.CPOServer.DefaultHTTPServerName,
+                                              IPPort                                ServerTCPPort               = null,
+                                              String                                ServerURIPrefix             = "",
+                                              Boolean                               ServerAutoStart             = true,
 
-                                          String                                ClientLoggingContext        = OICPv2_0.CPOClientLogger.DefaultContext,
-                                          String                                ServerLoggingContext        = OICPv2_0.CPOServerLogger.DefaultContext,
-                                          Func<String, String, String>          LogFileCreator              = null,
+                                              String                                ClientLoggingContext        = OICPv2_0.CPOClientLogger.DefaultContext,
+                                              String                                ServerLoggingContext        = OICPv2_0.CPOServerLogger.DefaultContext,
+                                              Func<String, String, String>          LogFileCreator              = null,
 
-                                          DNSClient                             DNSClient                   = null,
+                                              DNSClient                             DNSClient                   = null,
 
-                                          OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord         = null,
-                                          OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML          = null,
+                                              OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord         = null,
+                                              OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML          = null,
 
-                                          Func<EVSE, Boolean>                   IncludeEVSEs                = null,
-                                          TimeSpan?                             ServiceCheckEvery           = null,
-                                          Boolean                               DisableAutoUploads          = false,
-                                          Action<OICPv2_0.CPORoamingWWCP>       OICPConfigurator            = null,
-                                          Action<EVSEOperatorRoamingProvider>   Configurator                = null)
+                                              Func<EVSE, Boolean>                   IncludeEVSEs                = null,
+                                              TimeSpan?                             ServiceCheckEvery           = null,
+                                              Boolean                               DisableAutoUploads          = false,
+                                              Action<OICPv2_0.CPORoamingWWCP>       OICPConfigurator            = null,
+                                              Action<EVSEOperatorRoamingProvider>   Configurator                = null)
 
         {
 
@@ -159,7 +159,7 @@ namespace org.GraphDefined.WWCP
 
         #endregion
 
-        #region CreateOICP_CPORoamingProvider(this RoamingNetwork, Id, Name, SOAPServer, RemoteHostname, ...)
+        #region CreateOICPv2_0_CPORoamingProvider(this RoamingNetwork, Id, Name, SOAPServer, RemoteHostname, ...)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -189,30 +189,30 @@ namespace org.GraphDefined.WWCP
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         public static EVSEOperatorRoamingProvider
 
-            CreateOICP_CPORoamingProvider(this RoamingNetwork                  RoamingNetwork,
-                                          RoamingProvider_Id                   Id,
-                                          I18NString                           Name,
-                                          SOAPServer                           SOAPServer,
+            CreateOICPv2_0_CPORoamingProvider(this RoamingNetwork                  RoamingNetwork,
+                                              RoamingProvider_Id                   Id,
+                                              I18NString                           Name,
+                                              SOAPServer                           SOAPServer,
 
-                                          String                               RemoteHostname,
-                                          IPPort                               RemoteTCPPort               = null,
-                                          String                               RemoteHTTPVirtualHost       = null,
-                                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                                          String                               HTTPUserAgent               = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
-                                          TimeSpan?                            QueryTimeout                = null,
+                                              String                               RemoteHostname,
+                                              IPPort                               RemoteTCPPort               = null,
+                                              String                               RemoteHTTPVirtualHost       = null,
+                                              RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                                              String                               HTTPUserAgent               = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
+                                              TimeSpan?                            QueryTimeout                = null,
 
-                                          String                               ServerURIPrefix             = null,
+                                              String                               ServerURIPrefix             = null,
 
-                                          String                               ClientLoggingContext        = OICPv2_0.CPOClientLogger.DefaultContext,
-                                          String                               ServerLoggingContext        = OICPv2_0.CPOServerLogger.DefaultContext,
-                                          Func<String, String, String>         LogFileCreator              = null,
-                                          DNSClient                            DNSClient                   = null,
+                                              String                               ClientLoggingContext        = OICPv2_0.CPOClientLogger.DefaultContext,
+                                              String                               ServerLoggingContext        = OICPv2_0.CPOServerLogger.DefaultContext,
+                                              Func<String, String, String>         LogFileCreator              = null,
+                                              DNSClient                            DNSClient                   = null,
 
-                                          Func<EVSE, Boolean>                  IncludeEVSEs                = null,
-                                          TimeSpan?                            ServiceCheckEvery           = null,
-                                          Boolean                              DisableAutoUploads          = false,
-                                          Action<OICPv2_0.CPORoamingWWCP>      OICPConfigurator            = null,
-                                          Action<EVSEOperatorRoamingProvider>  Configurator                = null)
+                                              Func<EVSE, Boolean>                  IncludeEVSEs                = null,
+                                              TimeSpan?                            ServiceCheckEvery           = null,
+                                              Boolean                              DisableAutoUploads          = false,
+                                              Action<OICPv2_0.CPORoamingWWCP>      OICPConfigurator            = null,
+                                              Action<EVSEOperatorRoamingProvider>  Configurator                = null)
 
         {
 
@@ -271,7 +271,7 @@ namespace org.GraphDefined.WWCP
         #endregion
 
 
-        #region CreateOICP_CPOServiceCheck(this RoamingProvider, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, InitialDelay = null)
+        #region CreateOICPv2_0_CPOServiceCheck(this RoamingProvider, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, InitialDelay = null)
 
         /// <summary>
         /// Create a new OICP v2.0 service checker.
@@ -285,12 +285,12 @@ namespace org.GraphDefined.WWCP
         /// <param name="InitialDelay">Initial delay between startup and first check.</param>
         public static OICPv2_0.CPOServiceCheck<T>
 
-            CreateOICP_CPOServiceCheck<T>(this EVSEOperatorRoamingProvider     CPORoamingProvider,
-                                          OICPv2_0.CPOServiceCheckDelegate<T>  ServiceChecker,
-                                          Action<T>                            OnFirstCheck,
-                                          Action<T>                            OnEveryCheck,
-                                          TimeSpan                             CheckEvery,
-                                          TimeSpan?                            InitialDelay = null)
+            CreateOICPv2_0_CPOServiceCheck<T>(this EVSEOperatorRoamingProvider     CPORoamingProvider,
+                                              OICPv2_0.CPOServiceCheckDelegate<T>  ServiceChecker,
+                                              Action<T>                            OnFirstCheck,
+                                              Action<T>                            OnEveryCheck,
+                                              TimeSpan                             CheckEvery,
+                                              TimeSpan?                            InitialDelay = null)
         {
 
             #region Initial checks

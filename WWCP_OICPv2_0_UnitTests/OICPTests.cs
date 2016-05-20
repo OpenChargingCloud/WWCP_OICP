@@ -118,7 +118,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
             var SendCDRResult = await HubjectCPO.
                                           SendChargeDetailRecord(
-                                               new eRoamingChargeDetailRecord(
+                                               new ChargeDetailRecord(
                                                    EVSEId:                EVSEId,
                                                    SessionId:             AuthStartResult.Content.SessionId,
                                                    PartnerProductId:      ChargingProduct_Id.Parse("AC1"),

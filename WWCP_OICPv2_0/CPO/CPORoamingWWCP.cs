@@ -2463,7 +2463,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             SendChargeDetailRecord(DateTime            Timestamp,
                                    CancellationToken   CancellationToken,
                                    EventTracking_Id    EventTrackingId,
-                                   ChargeDetailRecord  ChargeDetailRecord,
+                                   WWCP.ChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?           QueryTimeout  = null)
 
         {
@@ -2505,11 +2505,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                     SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
                                                                     Identification:        new AuthorizationIdentification(ChargeDetailRecord.IdentificationStart),
                                                                     //PartnerSessionId:      ChargeDetailRecord.PartnerSessionId,
-                                                                    ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new Nullable<DateTime>(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
+                                                                    ChargingStart:         ChargeDetailRecord.SessionTime.HasValue ? new DateTime?(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
                                                                     ChargingEnd:           ChargeDetailRecord.SessionTime.HasValue ?                        ChargeDetailRecord.SessionTime.Value.EndTime    : null,
                                                                     MeterValueStart:       ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeteringValues.First().Value) : null,
                                                                     MeterValueEnd:         ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeteringValues.Last(). Value) : null,
-                                                                    MeterValuesInBetween:  ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Select(v => v.Value)       : null,
+                                                                    MeterValuesInBetween:  ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<double> v) => v.Value)       : null,
                                                                     MeteringSignature:     ChargeDetailRecord.MeteringSignature,
                                                                     QueryTimeout:          QueryTimeout);
 

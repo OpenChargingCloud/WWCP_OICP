@@ -847,12 +847,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     #region Parse request parameters
 
                     SendCDRResult              response  = null;
-                    eRoamingChargeDetailRecord CDR       = null;
+                    ChargeDetailRecord CDR       = null;
 
                     try
                     {
 
-                        CDR = eRoamingChargeDetailRecord.Parse(ChargeDetailRecordXML);
+                        CDR = ChargeDetailRecord.Parse(ChargeDetailRecordXML);
 
                     }
                     catch (Exception e)

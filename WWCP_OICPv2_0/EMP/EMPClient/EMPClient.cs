@@ -659,7 +659,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="From">The starting time.</param>
         /// <param name="To">The end time.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>>
+        public async Task<HTTPResponse<IEnumerable<ChargeDetailRecord>>>
 
             GetChargeDetailRecords(EVSP_Id    ProviderId,
                                    DateTime   From,
@@ -696,8 +696,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                    SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                   return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(httpresponse,
-                                                                                                                    new eRoamingChargeDetailRecord[0],
+                                                   return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
+                                                                                                                    new ChargeDetailRecord[0],
                                                                                                                     IsFault: true);
 
                                                },
@@ -710,8 +710,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                    SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                   return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(httpresponse,
-                                                                                                                    new eRoamingChargeDetailRecord[0],
+                                                   return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
+                                                                                                                    new ChargeDetailRecord[0],
                                                                                                                     IsFault: true);
 
                                                },

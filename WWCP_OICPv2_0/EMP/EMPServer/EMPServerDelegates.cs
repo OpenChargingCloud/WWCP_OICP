@@ -91,7 +91,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public delegate Task<SendCDRResult> OnChargeDetailRecordDelegate(DateTime                    Timestamp,
                                                                      CancellationToken           CancellationToken,
                                                                      EventTracking_Id            EventTrackingId,
-                                                                     eRoamingChargeDetailRecord  ChargeDetailRecord,
+                                                                     ChargeDetailRecord  ChargeDetailRecord,
                                                                      TimeSpan?                   QueryTimeout  = null);
 
 }

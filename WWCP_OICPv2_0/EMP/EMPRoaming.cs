@@ -629,7 +629,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="From">The starting time.</param>
         /// <param name="To">The end time.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<IEnumerable<eRoamingChargeDetailRecord>>
+        public async Task<IEnumerable<ChargeDetailRecord>>
 
             GetChargeDetailRecords(EVSP_Id    ProviderId,
                                    DateTime   From,

@@ -38,12 +38,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region ChargeDetailRecords
 
-        private readonly IEnumerable<eRoamingChargeDetailRecord> _ChargeDetailRecords;
+        private readonly IEnumerable<ChargeDetailRecord> _ChargeDetailRecords;
 
         /// <summary>
         /// An enumeration of charge detail records.
         /// </summary>
-        public IEnumerable<eRoamingChargeDetailRecord> ChargeDetailRecords
+        public IEnumerable<ChargeDetailRecord> ChargeDetailRecords
         {
             get
             {
@@ -61,7 +61,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// Create a new group of OICP v2.0 charge detail records.
         /// </summary>
         /// <param name="ChargeDetailRecords">An enumeration of charge detail records.</param>
-        public eRoamingChargeDetailRecords(IEnumerable<eRoamingChargeDetailRecord>  ChargeDetailRecords)
+        public eRoamingChargeDetailRecords(IEnumerable<ChargeDetailRecord>  ChargeDetailRecords)
         {
 
             #region Initial checks
@@ -80,7 +80,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region (static) ParseXML(eRoamingChargeDetailRecordsXML, OnException = null)
 
-        public static IEnumerable<eRoamingChargeDetailRecord> ParseXML(XElement             eRoamingChargeDetailRecordsXML,
+        public static IEnumerable<ChargeDetailRecord> ParseXML(XElement             eRoamingChargeDetailRecordsXML,
                                                                    OnExceptionDelegate  OnException  = null)
         {
 
@@ -112,7 +112,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 throw new Exception("Invalid eRoamingChargeDetailRecords XML!");
 
             return eRoamingChargeDetailRecordsXML.MapElements(OICPNS.Authorization + "eRoamingChargeDetailRecord",
-                                                             (XML, e) => eRoamingChargeDetailRecord.Parse(XML, e),
+                                                             (XML, e) => ChargeDetailRecord.Parse(XML, e),
                                                              OnException);
 
         }
