@@ -33,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.0 roaming client for EMPs.
+    /// An OICP v2.1 roaming client for EMPs.
     /// </summary>
     public class EMPRoaming
     {

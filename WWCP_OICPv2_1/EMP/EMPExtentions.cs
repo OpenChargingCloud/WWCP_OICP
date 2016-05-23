@@ -31,7 +31,7 @@ namespace org.GraphDefined.WWCP
 {
 
     /// <summary>
-    /// Extentions methods for the WWCP wrapper for OICP v2.0 roaming clients for e-mobility providers/EMPs.
+    /// Extentions methods for the WWCP wrapper for OICP v2.1 roaming clients for e-mobility providers/EMPs.
     /// </summary>
     public static class EMPExtentions
     {

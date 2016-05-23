@@ -31,7 +31,7 @@ namespace org.GraphDefined.WWCP
 {
 
     /// <summary>
-    /// Extentions methods for the WWCP wrapper for OICP v2.0 roaming clients for EVSE operators/CPOs.
+    /// Extentions methods for the WWCP wrapper for OICP v2.1 roaming clients for EVSE operators/CPOs.
     /// </summary>
     public static class CPOExtentions
     {

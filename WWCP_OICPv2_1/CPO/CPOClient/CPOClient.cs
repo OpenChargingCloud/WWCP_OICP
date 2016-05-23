@@ -36,7 +36,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.0 CPO client.
+    /// An OICP v2.1 CPO client.
     /// </summary>
     public class CPOClient : ASOAPClient
     {

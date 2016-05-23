@@ -18,11 +18,11 @@
 #region Usings
 
 using System;
+using System.Net.Security;
 using System.Threading.Tasks;
 
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using System.Net.Security;
 
 #endregion
 
@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// Check any OICP v2.0 CPO service.
+    /// Check any OICP v2.1 CPO service.
     /// </summary>
     /// <typeparam name="TResult">The type of data which will be processed on every update run.</typeparam>
     public class CPOServiceCheck<TResult> : AServiceCheck<TResult>
@@ -176,8 +176,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             //                                         (Timestamp,
             //                                          this,
             //                                          ch)));
-
-
 
         }
 
