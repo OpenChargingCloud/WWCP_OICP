@@ -349,7 +349,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/HubjectMobileAuthorization_V2.0",
+                                                    "/ibis/ws/eRoamingMobileAuthorization_V2.0",
                                                     UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient))
