@@ -842,7 +842,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             {
 
-                return await _OICPClient.Query(MobileClient_XMLMethods.MobileAuthorizeStartXML(EVSEId,
+                return await _OICPClient.Query(EMPClientXMLMethods.MobileAuthorizeStartXML(EVSEId,
                                                                                                eMAIdWithPIN,
                                                                                                ProductId,
                                                                                                GetNewSession),
@@ -930,7 +930,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             {
 
-                return await _OICPClient.Query(MobileClient_XMLMethods.MobileRemoteStartXML(SessionId),
+                return await _OICPClient.Query(EMPClientXMLMethods.MobileRemoteStartXML(SessionId),
                                                "eRoamingMobileRemoteStart",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -1017,7 +1017,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             {
 
-                return await _OICPClient.Query(MobileClient_XMLMethods.MobileRemoteStopXML(SessionId),
+                return await _OICPClient.Query(EMPClientXMLMethods.MobileRemoteStopXML(SessionId),
                                                "eRoamingMobileRemoteStop",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
