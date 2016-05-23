@@ -25,7 +25,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_0
+namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
@@ -79,6 +79,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                      Auth_Token          AuthToken,
                                                                      TimeSpan?           QueryTimeout  = null);
 
+
+    /// <summary>
+    /// Send a charge detail record.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="CancellationToken">A token to cancel this task.</param>
+    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+    /// <param name="ChargeDetailRecord">A charge detail record.</param>
+    /// <param name="QueryTimeout">An optional timeout for this request.</param>
+    public delegate Task<SendCDRResult> OnChargeDetailRecordDelegate(DateTime                    Timestamp,
+                                                                     CancellationToken           CancellationToken,
+                                                                     EventTracking_Id            EventTrackingId,
+                                                                     ChargeDetailRecord  ChargeDetailRecord,
+                                                                     TimeSpan?                   QueryTimeout  = null);
+
 }
-
-

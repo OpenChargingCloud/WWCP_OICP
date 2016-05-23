@@ -138,7 +138,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
             get
             {
-                return _EMPRoaming.EMPClient;
+                return _EMPRoaming?.EMPClient;
             }
         }
 
@@ -153,7 +153,22 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
             get
             {
-                return _EMPRoaming.EMPServer;
+                return _EMPRoaming?.EMPServer;
+            }
+        }
+
+        #endregion
+
+        #region EMPClientLogger
+
+        /// <summary>
+        /// The EMP client logger.
+        /// </summary>
+        public EMPClientLogger EMPClientLogger
+        {
+            get
+            {
+                return _EMPRoaming?.EMPClientLogger;
             }
         }
 
@@ -168,11 +183,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
             get
             {
-                return _EMPRoaming.EMPServerLogger;
+                return _EMPRoaming?.EMPServerLogger;
             }
         }
 
         #endregion
+
 
         #region DNSClient
 
@@ -390,8 +406,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
         /// <param name="EMPClient">An OICP EMP client.</param>
         /// <param name="EMPServer">An OICP EMP sever.</param>
-        /// 
-        /// <param name="Context">A context of this API.</param>
+        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
+        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPRoamingWWCP(RoamingProvider_Id            Id,
                               I18NString                    Name,
@@ -399,15 +415,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               EMPClient                     EMPClient,
                               EMPServer                     EMPServer,
 
-                              String                        Context         = EMPRoaming.DefaultLoggingContext,
-                              Func<String, String, String>  LogFileCreator  = null)
+                              String                        ClientLoggingContext  = EMPClientLogger.DefaultContext,
+                              String                        ServerLoggingContext  = EMPServerLogger.DefaultContext,
+                              Func<String, String, String>  LogFileCreator        = null)
 
             : this(Id,
                    Name,
                    RoamingNetwork,
                    new EMPRoaming(EMPClient,
                                   EMPServer,
-                                  Context,
+                                  ClientLoggingContext,
+                                  ServerLoggingContext,
                                   LogFileCreator)
                   )
 
@@ -436,7 +454,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
-        /// <param name="Context">A context of this API.</param>
+        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
+        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
@@ -456,7 +475,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               String                               ServerURIPrefix             = "",
                               Boolean                              ServerAutoStart             = false,
 
-                              String                               Context                     = EMPRoaming.DefaultLoggingContext,
+                              String                               ClientLoggingContext        = EMPClientLogger.DefaultContext,
+                              String                               ServerLoggingContext        = EMPServerLogger.DefaultContext,
                               Func<String, String, String>         LogFileCreator              = null,
 
                               DNSClient                            DNSClient                   = null)
@@ -477,7 +497,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                   ServerURIPrefix,
                                   ServerAutoStart,
 
-                                  Context,
+                                  ClientLoggingContext,
+                                  ServerLoggingContext,
                                   LogFileCreator,
 
                                   DNSClient)
@@ -577,7 +598,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             SendChargeDetailRecord(DateTime                    Timestamp,
                                    CancellationToken           CancellationToken,
                                    EventTracking_Id            EventTrackingId,
-                                   eRoamingChargeDetailRecord  ChargeDetailRecord,
+                                   ChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?                   QueryTimeout = null)
 
         {
@@ -802,7 +823,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="From">The starting time.</param>
         /// <param name="To">The end time.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<IEnumerable<eRoamingChargeDetailRecord>>
+        public async Task<IEnumerable<ChargeDetailRecord>>
 
             GetChargeDetailRecords(EVSP_Id    ProviderId,
                                    DateTime   From,

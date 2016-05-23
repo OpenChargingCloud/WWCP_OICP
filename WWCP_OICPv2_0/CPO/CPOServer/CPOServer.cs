@@ -35,9 +35,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 CPO HTTP/SOAP/XML Server API.
+    /// An OICP v2.0 CPO HTTP/SOAP/XML Server API.
     /// </summary>
-    public class CPOServer
+    public class CPOServer : ASOAPServer
     {
 
         #region Data
@@ -45,72 +45,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML CPO Server API";
+        public new const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML CPO Server API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
         /// </summary>
-        public static readonly IPPort    DefaultHTTPServerPort  = new IPPort(2002);
+        public new static readonly IPPort    DefaultHTTPServerPort  = new IPPort(2002);
 
         /// <summary>
         /// The default query timeout.
         /// </summary>
-        public static readonly TimeSpan  DefaultQueryTimeout    = TimeSpan.FromMinutes(1);
-
-        #endregion
-
-        #region Properties
-
-        #region SOAPServer
-
-        private readonly SOAPServer _SOAPServer;
-
-        /// <summary>
-        /// The HTTP/SOAP server.
-        /// </summary>
-        public SOAPServer SOAPServer
-        {
-            get
-            {
-                return _SOAPServer;
-            }
-        }
-
-        #endregion
-
-        #region URIPrefix
-
-        private readonly String _URIPrefix;
-
-        /// <summary>
-        /// The common URI prefix for this HTTP/SOAP service.
-        /// </summary>
-        public String URIPrefix
-        {
-            get
-            {
-                return _URIPrefix;
-            }
-        }
-
-        #endregion
-
-        #region DNSClient
-
-        private readonly DNSClient _DNSClient;
-
-        /// <summary>
-        /// The DNS client used by this server.
-        /// </summary>
-        public DNSClient DNSClient
-        {
-            get
-            {
-                return _DNSClient;
-            }
-        }
-
-        #endregion
+        public new static readonly TimeSpan  DefaultQueryTimeout    = TimeSpan.FromMinutes(1);
 
         #endregion
 
@@ -154,75 +99,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-
-        // Generic HTTP events...
-
-        #region RequestLog
-
-        /// <summary>
-        /// An event called whenever a request came in.
-        /// </summary>
-        public event RequestLogHandler RequestLog
-        {
-
-            add
-            {
-                _SOAPServer.RequestLog += value;
-            }
-
-            remove
-            {
-                _SOAPServer.RequestLog -= value;
-            }
-
-        }
-
-        #endregion
-
-        #region AccessLog
-
-        /// <summary>
-        /// An event called whenever a request could successfully be processed.
-        /// </summary>
-        public event AccessLogHandler AccessLog
-        {
-
-            add
-            {
-                _SOAPServer.AccessLog += value;
-            }
-
-            remove
-            {
-                _SOAPServer.AccessLog -= value;
-            }
-
-        }
-
-        #endregion
-
-        #region ErrorLog
-
-        /// <summary>
-        /// An event called whenever a request resulted in an error.
-        /// </summary>
-        public event ErrorLogHandler ErrorLog
-        {
-
-            add
-            {
-                _SOAPServer.ErrorLog += value;
-            }
-
-            remove
-            {
-                _SOAPServer.ErrorLog -= value;
-            }
-
-        }
-
-        #endregion
-
         #endregion
 
         #region Constructor(s)
@@ -243,11 +119,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                          DNSClient DNSClient       = null,
                          Boolean   AutoStart       = false)
 
-            : this(new SOAPServer(TCPPort != null ? TCPPort : DefaultHTTPServerPort,
-                                  DefaultServerName:  HTTPServerName,
-                                  DNSClient:          DNSClient,
-                                  Autostart:          AutoStart),
-                   URIPrefix)
+            : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
+                   TCPPort != null                   ? TCPPort        : DefaultHTTPServerPort,
+                   URIPrefix,
+                   HTTPContentType.XMLTEXT_UTF8,
+                   DNSClient,
+                   AutoStart: false)
 
         {
 
@@ -267,77 +144,59 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
         public CPOServer(SOAPServer  SOAPServer,
                          String      URIPrefix  = "")
-        {
 
-            #region Initial checks
+            : base(SOAPServer,
+                   URIPrefix)
 
-            if (SOAPServer == null)
-                throw new ArgumentNullException(nameof(SOAPServer),  "The given SOAP server must not be null!");
-
-            if (URIPrefix == null)
-                URIPrefix = "";
-
-            if (URIPrefix.Length > 0 && !URIPrefix.StartsWith("/"))
-                URIPrefix = "/" + URIPrefix;
-
-            #endregion
-
-            this._SOAPServer  = SOAPServer;
-            this._URIPrefix   = URIPrefix;
-            this._DNSClient   = SOAPServer.DNSClient;
-
-            RegisterURITemplates();
-
-        }
+        { }
 
         #endregion
 
         #endregion
 
 
-        #region (private) RegisterURITemplates()
+        #region (override) RegisterURITemplates()
 
-        private void RegisterURITemplates()
+        protected override void RegisterURITemplates()
         {
 
             #region / (HTTPRoot)
 
-            _SOAPServer.AddMethodCallback(HTTPMethod.GET,
-                                          new String[] { "/", URIPrefix + "/" },
-                                          HTTPContentType.TEXT_UTF8,
-                                          HTTPDelegate: Request => {
+            SOAPServer.AddMethodCallback(HTTPMethod.GET,
+                                         new String[] { "/", URIPrefix + "/" },
+                                         HTTPContentType.TEXT_UTF8,
+                                         HTTPDelegate: Request => {
 
-                                              return new HTTPResponseBuilder(Request) {
+                                             return new HTTPResponseBuilder(Request) {
 
-                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                                  ContentType     = HTTPContentType.TEXT_UTF8,
-                                                  Content         = ("Welcome at " + DefaultHTTPServerName + Environment.NewLine +
-                                                                     "This is a HTTP/SOAP/XML endpoint!" + Environment.NewLine + Environment.NewLine +
-                                                                     "Defined endpoints: " + Environment.NewLine + Environment.NewLine +
-                                                                     _SOAPServer.
-                                                                         SOAPDispatchers.
-                                                                         Select(group => " - " + group.Key + Environment.NewLine +
-                                                                                         "   " + group.SelectMany(dispatcher => dispatcher.SOAPDispatches).
-                                                                                                       Select    (dispatch   => dispatch.  Description).
-                                                                                                       AggregateWith(", ")
-                                                                               ).AggregateWith(Environment.NewLine + Environment.NewLine)
-                                                                    ).ToUTF8Bytes(),
-                                                  Connection      = "close"
+                                                 HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                                 ContentType     = HTTPContentType.TEXT_UTF8,
+                                                 Content         = ("Welcome at " + DefaultHTTPServerName + Environment.NewLine +
+                                                                    "This is a HTTP/SOAP/XML endpoint!" + Environment.NewLine + Environment.NewLine +
+                                                                    "Defined endpoints: " + Environment.NewLine + Environment.NewLine +
+                                                                    SOAPServer.
+                                                                        SOAPDispatchers.
+                                                                        Select(group => " - " + group.Key + Environment.NewLine +
+                                                                                        "   " + group.SelectMany(dispatcher => dispatcher.SOAPDispatches).
+                                                                                                      Select    (dispatch   => dispatch.  Description).
+                                                                                                      AggregateWith(", ")
+                                                                              ).AggregateWith(Environment.NewLine + Environment.NewLine)
+                                                                   ).ToUTF8Bytes(),
+                                                 Connection      = "close"
 
-                                              };
+                                             };
 
-
-                                          },
-                                          AllowReplacement: URIReplacement.Allow);
+                                         },
+                                         AllowReplacement: URIReplacement.Allow);
 
             #endregion
 
             #region /Authorization - AuthorizeRemoteStart
 
-            _SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
-                                             "AuthorizeRemoteStart",
-                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart").FirstOrDefault(),
-                                             (Request, RemoteStartXML) => {
+            SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
+                                            "AuthorizeRemoteStart",
+                                            XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart").FirstOrDefault(),
+                                            (Request, RemoteStartXML) => {
 
 
                     #region Documentation
@@ -679,10 +538,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region /Authorization - AuthorizeRemoteStop
 
-            _SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
-                                             "AuthorizeRemoteStop",
-                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop").FirstOrDefault(),
-                                             (Request, RemoteStopXML) => {
+            SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
+                                            "AuthorizeRemoteStop",
+                                            XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop").FirstOrDefault(),
+                                            (Request, RemoteStopXML) => {
 
                     #region Documentation
 
@@ -1104,104 +963,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-
-        #region GetEVSEByIdRequest(EVSEId, QueryTimeout = null) // <- Note!
-
-        ///// <summary>
-        ///// Create a new task requesting the static EVSE data
-        ///// for the given EVSE identification.
-        ///// </summary>
-        ///// <param name="EVSEId">The unique identification of the EVSE.</param>
-        ///// <param name="QueryTimeout">An optional timeout for this query.</param>
-        //public Task<HTTPResponse<EVSEDataRecord>>
-
-        //    GetEVSEByIdRequest(EVSE_Id    EVSEId,
-        //                       TimeSpan?  QueryTimeout  = null)
-
-        //{
-
-        //    try
-        //    {
-
-        //        using (var _OICPClient = new SOAPClient(Hostname,
-        //                                                TCPPort,
-        //                                                HTTPVirtualHost,
-        //                                                "/ibis/ws/eRoamingEvseData_V2.0",
-        //                                                UserAgent,
-        //                                                DNSClient))
-        //        {
-
-        //            return _OICPClient.Query(EMP_XMLMethods.GetEVSEByIdRequestXML(EVSEId),
-        //                                     "eRoamingEvseById",
-        //                                     QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
-
-        //                                     OnSuccess: XMLData =>
-
-        //                                         #region Documentation
-
-        //                                         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                                         //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-        //                                         //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //                                         //   <soapenv:Header/>
-        //                                         //   <soapenv:Body>
-        //                                         //      <EVSEData:eRoamingEvseDataRecord deltaType="?" lastUpdate="?">
-        //                                         //          [...]
-        //                                         //      </EVSEData:eRoamingEvseDataRecord>
-        //                                         //    </soapenv:Body>
-        //                                         // </soapenv:Envelope>
-
-        //                                         #endregion
-
-        //                                         new HTTPResponse<EVSEDataRecord>(XMLData.HttpResponse,
-        //                                                                          XMLMethods.ParseEVSEDataRecordXML(XMLData.Content)),
-
-        //                                     OnSOAPFault: Fault =>
-        //                                         new HTTPResponse<EVSEDataRecord>(
-        //                                             Fault.HttpResponse,
-        //                                             new Exception(Fault.Content.ToString())),
-
-        //                                     OnHTTPError: (t, s, e) => SendOnHTTPError(t, s, e),
-
-        //                                     OnException: (t, s, e) => SendOnException(t, s, e)
-
-        //                                    );
-
-        //        }
-
-        //    }
-
-        //    catch (Exception e)
-        //    {
-
-        //        SendOnException(DateTime.Now, this, e);
-
-        //        return new Task<HTTPResponse<EVSEDataRecord>>(
-        //            () => new HTTPResponse<EVSEDataRecord>(e));
-
-        //    }
-
-        //}
-
-        #endregion
-
-
-        #region Start()
-
-        public void Start()
-        {
-            _SOAPServer.Start();
-        }
-
-        #endregion
-
-        #region Shutdown(Message = null, Wait = true)
-
-        public void Shutdown(String Message = null, Boolean Wait = true)
-        {
-            _SOAPServer.Shutdown(Message, Wait);
-        }
-
-        #endregion
 
     }
 

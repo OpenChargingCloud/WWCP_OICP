@@ -524,10 +524,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      EVSE.ChargingStation.Name,
                                                      EVSE.ChargingStation.Address,
                                                      EVSE.ChargingStation.GeoLocation,
-                                                     EVSE.SocketOutlets.Select(socketoutlet => socketoutlet.Plug),
+                                                     EVSE.SocketOutlets?.Select(socketoutlet => socketoutlet.Plug),
                                                      EVSE.ChargingFacilities,
                                                      EVSE.ChargingModes,
-                                                     EVSE.ChargingStation.AuthenticationModes.
+                                                     EVSE.ChargingStation.AuthenticationModes?.
                                                                               SelectMany(mode => OICPMapper.AsOICPAuthenticationMode(mode)).
                                                                               Where     (mode => mode != AuthenticationModes.Unkown),
                                                      EVSE.MaxCapacity_kWh.HasValue ? (Int32) EVSE.MaxCapacity_kWh : new Int32?(),
@@ -536,7 +536,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      EVSE.ChargingStation.HotlinePhoneNumber,
                                                      EVSE.ChargingStation.Description, // AdditionalInfo
                                                      EVSE.ChargingStation.ChargingPool.EntranceLocation,
-                                                     EVSE.ChargingStation.OpeningTimes.IsOpen24Hours,
+                                                     EVSE.ChargingStation.OpeningTimes?.IsOpen24Hours,
                                                      EVSE.ChargingStation.OpeningTimes,
                                                      null, // HubOperatorId
                                                      null, // ClearingHouseId
@@ -559,25 +559,25 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         /// <param name="EVSEStatus">An OICP v2.0 EVSE status.</param>
         /// <returns>The corresponding WWCP EVSE status.</returns>
-        public static WWCP.EVSEStatusType AsWWCPEVSEStatus(this OICPv2_0.EVSEStatusType EVSEStatus)
+        public static WWCP.EVSEStatusType AsWWCPEVSEStatus(this EVSEStatusType EVSEStatus)
         {
 
             switch (EVSEStatus)
             {
 
-                case OICPv2_0.EVSEStatusType.Available:
+                case EVSEStatusType.Available:
                     return WWCP.EVSEStatusType.Available;
 
-                case OICPv2_0.EVSEStatusType.Reserved:
+                case EVSEStatusType.Reserved:
                     return WWCP.EVSEStatusType.Reserved;
 
-                case OICPv2_0.EVSEStatusType.Occupied:
+                case EVSEStatusType.Occupied:
                     return WWCP.EVSEStatusType.Charging;
 
-                case OICPv2_0.EVSEStatusType.OutOfService:
+                case EVSEStatusType.OutOfService:
                     return WWCP.EVSEStatusType.OutOfService;
 
-                case OICPv2_0.EVSEStatusType.EvseNotFound:
+                case EVSEStatusType.EvseNotFound:
                     return WWCP.EVSEStatusType.UnknownEVSE;
 
                 default:
@@ -596,29 +596,29 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         /// <param name="EVSEStatus">An WWCP EVSE status.</param>
         /// <returns>The corresponding OICP v2.0 EVSE status.</returns>
-        public static OICPv2_0.EVSEStatusType AsOICPEVSEStatus(this WWCP.EVSEStatusType EVSEStatus)
+        public static EVSEStatusType AsOICPEVSEStatus(this WWCP.EVSEStatusType EVSEStatus)
         {
 
             switch (EVSEStatus)
             {
 
                 case WWCP.EVSEStatusType.Available:
-                    return OICPv2_0.EVSEStatusType.Available;
+                    return EVSEStatusType.Available;
 
                 case WWCP.EVSEStatusType.Reserved:
-                    return OICPv2_0.EVSEStatusType.Reserved;
+                    return EVSEStatusType.Reserved;
 
                 case WWCP.EVSEStatusType.Charging:
-                    return OICPv2_0.EVSEStatusType.Occupied;
+                    return EVSEStatusType.Occupied;
 
                 case WWCP.EVSEStatusType.OutOfService:
-                    return OICPv2_0.EVSEStatusType.OutOfService;
+                    return EVSEStatusType.OutOfService;
 
                 case WWCP.EVSEStatusType.UnknownEVSE:
-                    return OICPv2_0.EVSEStatusType.EvseNotFound;
+                    return EVSEStatusType.EvseNotFound;
 
                 default:
-                    return OICPv2_0.EVSEStatusType.Unknown;
+                    return EVSEStatusType.Unknown;
 
             }
 
@@ -634,22 +634,22 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         /// <param name="ActionType">An OICP v2.0 action type.</param>
         /// <returns>The corresponding WWCP action type.</returns>
-        public static WWCP.ActionType AsWWCPActionType(this OICPv2_0.ActionType ActionType)
+        public static WWCP.ActionType AsWWCPActionType(this ActionType ActionType)
         {
 
             switch (ActionType)
             {
 
-                case OICPv2_0.ActionType.fullLoad:
+                case ActionType.fullLoad:
                     return WWCP.ActionType.fullLoad;
 
-                case OICPv2_0.ActionType.update:
+                case ActionType.update:
                     return WWCP.ActionType.update;
 
-                case OICPv2_0.ActionType.insert:
+                case ActionType.insert:
                     return WWCP.ActionType.insert;
 
-                case OICPv2_0.ActionType.delete:
+                case ActionType.delete:
                     return WWCP.ActionType.delete;
 
                 default:
@@ -668,7 +668,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         /// <param name="ActionType">An WWCP action type.</param>
         /// <returns>The corresponding OICP v2.0 action type.</returns>
-        public static OICPv2_0.ActionType AsOICPActionType(this WWCP.ActionType ActionType)
+        public static ActionType AsOICPActionType(this WWCP.ActionType ActionType)
         {
 
             switch (ActionType)
@@ -763,15 +763,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         /// <param name="ChargeDetailRecord">An OICP v2.0 charge detail record.</param>
         /// <returns>The corresponding WWCP EVSE status.</returns>
-        public static WWCP.ChargeDetailRecord AsWWCPChargeDetailRecord(this OICPv2_0.eRoamingChargeDetailRecord ChargeDetailRecord)
+        public static WWCP.ChargeDetailRecord AsWWCPChargeDetailRecord(this ChargeDetailRecord ChargeDetailRecord)
         {
 
-            return new ChargeDetailRecord(ChargeDetailRecord.SessionId,
+            return new WWCP.ChargeDetailRecord(ChargeDetailRecord.SessionId,
                                           EVSEId:             ChargeDetailRecord.EVSEId,
                                           ChargingProductId:  ChargeDetailRecord.PartnerProductId,
                                           SessionTime:        new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
-                                          EnergyMeteringValues:  new List<Timestamped<Double>>() { new Timestamped<Double>(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.MeterValueStart.Value),
-                                                                                                new Timestamped<Double>(ChargeDetailRecord.ChargingEnd.Value,   ChargeDetailRecord.MeterValueEnd.Value) },
+                                          EnergyMeteringValues:  new List<Timestamped<double>>() { new Timestamped<double>(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.MeterValueStart.Value),
+                                                                                                new Timestamped<double>(ChargeDetailRecord.ChargingEnd.Value,   ChargeDetailRecord.MeterValueEnd.Value) },
                                           //MeterValuesInBetween
                                           //ConsumedEnergy
                                           MeteringSignature:  ChargeDetailRecord.MeteringSignature);

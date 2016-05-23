@@ -37,9 +37,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 CPO client.
+    /// An OICP v2.0 CPO client.
     /// </summary>
-    public class CentralClient : AOICPClient
+    public class CentralClient : ASOAPClient
     {
 
         #region Data
@@ -166,87 +166,87 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     DNSClient: _DNSClient))
             {
 
-            #region Documentation
+                #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            //
-            //    <soapenv:Header/>
-            //
-            //    <soapenv:Body>
-            //       <Authorization:eRoamingAuthorizeRemoteStart>
-            // 
-            //          <!--Optional:-->
-            //          <Authorization:SessionID>?</Authorization:SessionID>
-            // 
-            //          <!--Optional:-->
-            //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
-            // 
-            //          <Authorization:ProviderID>?</Authorization:ProviderID>
-            //          <Authorization:EVSEID>?</Authorization:EVSEID>
-            // 
-            //          <Authorization:Identification>
-            //             <!--You have a CHOICE of the next 4 items at this level-->
-            //
-            //             <CommonTypes:RFIDmifarefamilyIdentification>
-            //                <CommonTypes:UID>?</CommonTypes:UID>
-            //             </CommonTypes:RFIDmifarefamilyIdentification>
-            // 
-            //             <CommonTypes:QRCodeIdentification>
-            // 
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            // 
-            //                <!--You have a CHOICE of the next 2 items at this level-->
-            //                <CommonTypes:PIN>?</CommonTypes:PIN>
-            // 
-            //                <CommonTypes:HashedPIN>
-            //                   <CommonTypes:Value>?</CommonTypes:Value>
-            //                   <CommonTypes:Function>?</CommonTypes:Function>
-            //                   <CommonTypes:Salt>?</CommonTypes:Salt>
-            //                </CommonTypes:HashedPIN>
-            // 
-            //             </CommonTypes:QRCodeIdentification>
-            // 
-            //             <CommonTypes:PlugAndChargeIdentification>
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            //             </CommonTypes:PlugAndChargeIdentification>
-            // 
-            //             <CommonTypes:RemoteIdentification>
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            //             </CommonTypes:RemoteIdentification>
-            // 
-            //          </Authorization:Identification>
-            // 
-            //          <!--Optional:-->
-            //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
-            // 
-            //       </Authorization:eRoamingAuthorizeRemoteStart>
-            //    </soapenv:Body>
-            //
-            // </soapenv:Envelope>
+                // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+                //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+                //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                //
+                //    <soapenv:Header/>
+                //
+                //    <soapenv:Body>
+                //       <Authorization:eRoamingAuthorizeRemoteStart>
+                // 
+                //          <!--Optional:-->
+                //          <Authorization:SessionID>?</Authorization:SessionID>
+                // 
+                //          <!--Optional:-->
+                //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+                // 
+                //          <Authorization:ProviderID>?</Authorization:ProviderID>
+                //          <Authorization:EVSEID>?</Authorization:EVSEID>
+                // 
+                //          <Authorization:Identification>
+                //             <!--You have a CHOICE of the next 4 items at this level-->
+                //
+                //             <CommonTypes:RFIDmifarefamilyIdentification>
+                //                <CommonTypes:UID>?</CommonTypes:UID>
+                //             </CommonTypes:RFIDmifarefamilyIdentification>
+                // 
+                //             <CommonTypes:QRCodeIdentification>
+                // 
+                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                // 
+                //                <!--You have a CHOICE of the next 2 items at this level-->
+                //                <CommonTypes:PIN>?</CommonTypes:PIN>
+                // 
+                //                <CommonTypes:HashedPIN>
+                //                   <CommonTypes:Value>?</CommonTypes:Value>
+                //                   <CommonTypes:Function>?</CommonTypes:Function>
+                //                   <CommonTypes:Salt>?</CommonTypes:Salt>
+                //                </CommonTypes:HashedPIN>
+                // 
+                //             </CommonTypes:QRCodeIdentification>
+                // 
+                //             <CommonTypes:PlugAndChargeIdentification>
+                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                //             </CommonTypes:PlugAndChargeIdentification>
+                // 
+                //             <CommonTypes:RemoteIdentification>
+                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                //             </CommonTypes:RemoteIdentification>
+                // 
+                //          </Authorization:Identification>
+                // 
+                //          <!--Optional:-->
+                //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
+                // 
+                //       </Authorization:eRoamingAuthorizeRemoteStart>
+                //    </soapenv:Body>
+                //
+                // </soapenv:Envelope>
 
-            #endregion
+                #endregion
 
-            var XML = SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart",
+                var XML = SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart",
 
-                                             new XElement(OICPNS.Authorization + "SessionID", SessionId.ToString()),
+                                                 new XElement(OICPNS.Authorization + "SessionID", SessionId.ToString()),
 
-                                             PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+                                                 PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
 
-                                             new XElement(OICPNS.Authorization + "ProviderID", ProviderId.ToString()),
+                                                 new XElement(OICPNS.Authorization + "ProviderID", ProviderId.ToString()),
 
-                                             EVSEId != null
-                                                 ? new XElement(OICPNS.Authorization + "EVSEID", EVSEId.OriginId)
-                                                 : null,
+                                                 EVSEId != null
+                                                     ? new XElement(OICPNS.Authorization + "EVSEID", EVSEId.OriginId)
+                                                     : null,
 
-                                             new XElement(OICPNS.Authorization + "Identification",
-                                                 new XElement(OICPNS.CommonTypes + "QRCodeIdentification",
-                                                     new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
+                                                 new XElement(OICPNS.Authorization + "Identification",
+                                                     new XElement(OICPNS.CommonTypes + "QRCodeIdentification",
+                                                         new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
+                                                     )
                                                  )
-                                             )
 
-                                         ));
+                                             ));
 
 
                 return await _OICPClient.Query(XML,
@@ -345,45 +345,45 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     DNSClient: _DNSClient))
             {
 
-            #region Documentation
+                #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0">
-            //
-            //    <soapenv:Header/>
-            //
-            //    <soapenv:Body>
-            //       <Authorization:eRoamingAuthorizeRemoteStop>
-            // 
-            //          <Authorization:SessionID>?</Authorization:SessionID>
-            // 
-            //          <!--Optional:-->
-            //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
-            // 
-            //          <Authorization:ProviderID>?</Authorization:ProviderID>
-            // 
-            //          <Authorization:EVSEID>?</Authorization:EVSEID>
-            // 
-            //       </Authorization:eRoamingAuthorizeRemoteStop>
-            //    </soapenv:Body>
-            //
-            // </soapenv:Envelope>
+                // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+                //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0">
+                //
+                //    <soapenv:Header/>
+                //
+                //    <soapenv:Body>
+                //       <Authorization:eRoamingAuthorizeRemoteStop>
+                // 
+                //          <Authorization:SessionID>?</Authorization:SessionID>
+                // 
+                //          <!--Optional:-->
+                //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+                // 
+                //          <Authorization:ProviderID>?</Authorization:ProviderID>
+                // 
+                //          <Authorization:EVSEID>?</Authorization:EVSEID>
+                // 
+                //       </Authorization:eRoamingAuthorizeRemoteStop>
+                //    </soapenv:Body>
+                //
+                // </soapenv:Envelope>
 
-            #endregion
+                #endregion
 
-            var XML = SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop",
+                var XML = SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop",
 
-                                             new XElement(OICPNS.Authorization + "SessionID", SessionId.ToString()),
+                                                 new XElement(OICPNS.Authorization + "SessionID", SessionId.ToString()),
 
-                                             PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+                                                 PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
 
-                                             new XElement(OICPNS.Authorization + "ProviderID", ProviderId.ToString()),
+                                                 new XElement(OICPNS.Authorization + "ProviderID", ProviderId.ToString()),
 
-                                             EVSEId != null
-                                                 ? new XElement(OICPNS.Authorization + "EVSEID", EVSEId.OriginId)
-                                                 : null
+                                                 EVSEId != null
+                                                     ? new XElement(OICPNS.Authorization + "EVSEID", EVSEId.OriginId)
+                                                     : null
 
-                                         ));
+                                             ));
 
 
                 return await _OICPClient.Query(XML,

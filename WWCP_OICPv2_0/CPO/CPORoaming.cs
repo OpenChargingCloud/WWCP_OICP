@@ -19,13 +19,13 @@
 
 using System;
 using System.Linq;
+using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.Net.Security;
 
 #endregion
 
@@ -33,19 +33,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 roaming client for CPOs.
+    /// An OICP v2.0 roaming client for CPOs.
     /// </summary>
     public class CPORoaming
     {
-
-        #region Data
-
-        /// <summary>
-        /// The default logging context.
-        /// </summary>
-        public const String DefaultLoggingContext = "OICP_CPOServer";
-
-        #endregion
 
         #region Properties
 
@@ -78,6 +69,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             get
             {
                 return _CPOServer;
+            }
+        }
+
+        #endregion
+
+        #region CPOClientLogger
+
+        private readonly CPOClientLogger _CPOClientLogger;
+
+        /// <summary>
+        /// The CPO client logger.
+        /// </summary>
+        public CPOClientLogger CPOClientLogger
+        {
+            get
+            {
+                return _CPOClientLogger;
             }
         }
 
@@ -278,24 +286,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region CPORoaming(CPOClient, CPOServer, Context = DefaultLoggingContext, LogFileCreator = null)
+        #region CPORoaming(CPOClient, CPOServer, ClientLoggingContext = CPOClientLogger.DefaultContext, ServerLoggingContext = CPOServerLogger.DefaultContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP roaming client for CPOs.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
         /// <param name="CPOServer">A CPO sever.</param>
-        /// <param name="Context">A context of this API.</param>
+        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
+        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public CPORoaming(CPOClient                    CPOClient,
-                          CPOServer                    CPOServer,
-                          String                       Context         = DefaultLoggingContext,
-                          Func<String, String, String> LogFileCreator  = null)
+        public CPORoaming(CPOClient                     CPOClient,
+                          CPOServer                     CPOServer,
+                          String                        ClientLoggingContext  = CPOClientLogger.DefaultContext,
+                          String                        ServerLoggingContext  = CPOServerLogger.DefaultContext,
+                          Func<String, String, String>  LogFileCreator        = null)
         {
 
             this._CPOClient        = CPOClient;
             this._CPOServer        = CPOServer;
-            this._CPOServerLogger  = new CPOServerLogger(_CPOServer, Context, LogFileCreator);
+            this._CPOClientLogger  = new CPOClientLogger(_CPOClient, ClientLoggingContext, LogFileCreator);
+            this._CPOServerLogger  = new CPOServerLogger(_CPOServer, ServerLoggingContext, LogFileCreator);
 
         }
 
@@ -319,7 +330,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
-        /// <param name="Context">A context of this API.</param>
+        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
+        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
@@ -336,7 +348,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           String                               ServerURIPrefix             = "",
                           Boolean                              ServerAutoStart             = false,
 
-                          String                               Context                     = DefaultLoggingContext,
+                          String                               ClientLoggingContext        = CPOClientLogger.DefaultContext,
+                          String                               ServerLoggingContext        = CPOServerLogger.DefaultContext,
                           Func<String, String, String>         LogFileCreator              = null,
 
                           DNSClient                            DNSClient                   = null)
@@ -356,7 +369,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                  DNSClient,
                                  false),
 
-                   Context,
+                   ClientLoggingContext,
+                   ServerLoggingContext,
                    LogFileCreator)
 
         {
@@ -638,25 +652,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushEVSEStatus(EVSEStatusDiff, QueryTimeout = null)
-
-        /// <summary>
-        /// Send EVSE status updates upstream.
-        /// </summary>
-        /// <param name="EVSEStatusDiff">An EVSE status diff.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task PushEVSEStatus(EVSEStatusDiff  EVSEStatusDiff,
-                                         TimeSpan?       QueryTimeout  = null)
-
-        {
-
-            await _CPOClient.PushEVSEStatus(EVSEStatusDiff,
-                                            QueryTimeout);
-
-        }
-
-        #endregion
-
 
         #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
 
@@ -786,7 +781,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<eRoamingAcknowledgement>
 
-            SendChargeDetailRecord(eRoamingChargeDetailRecord  ChargeDetailRecord,
+            SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?                   QueryTimeout  = null)
 
         {
@@ -874,23 +869,25 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            var result = await _CPOClient.SendChargeDetailRecord(EVSEId,
-                                                                 SessionId,
-                                                                 PartnerProductId,
-                                                                 SessionStart,
-                                                                 SessionEnd,
-                                                                 Identification,
-                                                                 PartnerSessionId,
-                                                                 ChargingStart,
-                                                                 ChargingEnd,
-                                                                 MeterValueStart,
-                                                                 MeterValueEnd,
-                                                                 MeterValuesInBetween,
-                                                                 ConsumedEnergy,
-                                                                 MeteringSignature,
-                                                                 HubOperatorId,
-                                                                 HubProviderId,
-                                                                 QueryTimeout);
+            var result = await _CPOClient.SendChargeDetailRecord(
+                                              new ChargeDetailRecord(
+                                                  EVSEId,
+                                                  SessionId,
+                                                  PartnerProductId,
+                                                  SessionStart,
+                                                  SessionEnd,
+                                                  Identification,
+                                                  PartnerSessionId,
+                                                  ChargingStart,
+                                                  ChargingEnd,
+                                                  MeterValueStart,
+                                                  MeterValueEnd,
+                                                  MeterValuesInBetween,
+                                                  ConsumedEnergy,
+                                                  MeteringSignature,
+                                                  HubOperatorId,
+                                                  HubProviderId),
+                                              QueryTimeout);
 
             //ToDo: Process the HTTP!
             return result.Content;

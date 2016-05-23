@@ -32,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 Electric Vehicle Supply Equipment (EVSE).
+    /// An OICP v2.0 Electric Vehicle Supply Equipment (EVSE).
     /// This is meant to be one electrical circuit which can charge a electric vehicle.
     /// </summary>
     public class EVSEDataRecord
@@ -1104,7 +1104,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 var OpeningTimeXML = EVSEDataRecordXML.Element(OICPNS.EVSEData + "OpeningTime");
                 if (OpeningTimeXML != null)
                 {
-                    EVSEDataRecord.OpeningTime = OpeningTimes.FreeText(OpeningTimeXML.Value.Trim());
+                    EVSEDataRecord.OpeningTime = OpeningTimes.FromFreeText(OpeningTimeXML.Value.Trim());
                 }
 
             }
@@ -1380,7 +1380,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 _OpeningTime.IsOpen24Hours
                     ? null
-                    : new XElement(OICPNS.EVSEData + "OpeningTime",     _OpeningTime.Text),
+                    : new XElement(OICPNS.EVSEData + "OpeningTime",     _OpeningTime.FreeText),
 
                 _HubOperatorId != null
                     ? new XElement(OICPNS.EVSEData + "HubOperatorID",   _HubOperatorId.ToString())

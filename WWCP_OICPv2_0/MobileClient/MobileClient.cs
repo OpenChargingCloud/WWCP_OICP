@@ -33,9 +33,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 Mobile client.
+    /// An OICP v2.0 Mobile client.
     /// </summary>
-    public class MobileClient : AOICPClient
+    public class MobileClient : ASOAPClient
     {
 
         #region Data

@@ -26,13 +26,13 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_0
+namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
     /// OICP v2.0 CPO client XML methods.
     /// </summary>
-    public static class CPOClient_XMLMethods
+    public static class CPOClientXMLMethods
     {
 
         #region PushEVSEDataXML  (GroupedEVSEs,      OICPAction = fullLoad, OperatorId = null, OperatorName = null)
@@ -466,7 +466,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// Create an OICP v2.0 SendChargeDetailRecord XML request.
         /// </summary>
         /// <param name="ChargeDetailRecord">The charge detail record.</param>
-        public static XElement SendChargeDetailRecordXML(eRoamingChargeDetailRecord  ChargeDetailRecord)
+        public static XElement SendChargeDetailRecordXML(ChargeDetailRecord  ChargeDetailRecord)
         {
 
             #region Initial checks

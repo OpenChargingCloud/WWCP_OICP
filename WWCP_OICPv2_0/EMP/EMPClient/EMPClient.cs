@@ -35,9 +35,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 EMP client.
+    /// An OICP v2.0 EMP client.
     /// </summary>
-    public class EMPClient : AOICPClient
+    public class EMPClient : ASOAPClient
     {
 
         #region Data
@@ -116,7 +116,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     DNSClient))
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.PullEVSEDataRequestXML(ProviderId,
+                return await _OICPClient.Query(EMPClientXMLMethods.PullEVSEDataRequestXML(ProviderId,
                                                                                            SearchCenter,
                                                                                            DistanceKM,
                                                                                            LastCall),
@@ -213,7 +213,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                // _OICPClient.RemoteCertificateValidator = this.RemoteCertificateValidator;
                // _OICPClient.ClientCertificateSelector  = this.ClientCertificateSelector;
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.PullEVSEStatusRequestXML(ProviderId,
+                return await _OICPClient.Query(EMPClientXMLMethods.PullEVSEStatusRequestXML(ProviderId,
                                                                                              SearchCenter,
                                                                                              DistanceKM,
                                                                                              EVSEStatusFilter),
@@ -301,7 +301,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.PullEVSEStatusByIdRequestXML(ProviderId,
+                return await _OICPClient.Query(EMPClientXMLMethods.PullEVSEStatusByIdRequestXML(ProviderId,
                                                                                                  EVSEIds),
                                                "eRoamingPullEvseStatusById",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
@@ -396,12 +396,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.SearchEvseRequestXML(ProviderId,
-                                                                                         SearchCenter,
-                                                                                         DistanceKM,
-                                                                                         Address,
-                                                                                         Plug,
-                                                                                         ChargingFacility),
+                return await _OICPClient.Query(EMPClientXMLMethods.SearchEvseRequestXML(ProviderId,
+                                                                                        SearchCenter,
+                                                                                        DistanceKM,
+                                                                                        Address,
+                                                                                        Plug,
+                                                                                        ChargingFacility),
                                                "eRoamingSearchEvse",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -410,7 +410,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                OnSuccess: XMLResponse => {
 
                                                    OICPException _OICPException = null;
-                                                   if (IsHubjectError(XMLResponse.Content, out _OICPException, SendException))
+                                                   if (OICPClientHelper.IsHubjectError(XMLResponse.Content, out _OICPException, SendException))
                                                        return new HTTPResponse<eRoamingEvseSearchResult>(XMLResponse.HTTPRequest, _OICPException);
 
                                                    return XMLResponse.Parse(eRoamingEvseSearchResult.Parse);
@@ -492,7 +492,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.PushAuthenticationData(ProviderAuthenticationDataRecords,
+                return await _OICPClient.Query(EMPClientXMLMethods.PushAuthenticationData(ProviderAuthenticationDataRecords,
                                                                                            OICPAction),
                                                "eRoamingPushAuthenticationData",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
@@ -584,7 +584,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.PushAuthenticationData(AuthorizationIdentifications,
+                return await _OICPClient.Query(EMPClientXMLMethods.PushAuthenticationData(AuthorizationIdentifications,
                                                                                            ProviderId,
                                                                                            OICPAction),
                                                "eRoamingPushAuthenticationData",
@@ -659,7 +659,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="From">The starting time.</param>
         /// <param name="To">The end time.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>>
+        public async Task<HTTPResponse<IEnumerable<ChargeDetailRecord>>>
 
             GetChargeDetailRecords(EVSP_Id    ProviderId,
                                    DateTime   From,
@@ -678,7 +678,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             {
 
-                return await _OICPClient.Query(EMPClient_XMLMethods.GetChargeDetailRecords(ProviderId,
+                return await _OICPClient.Query(EMPClientXMLMethods.GetChargeDetailRecords(ProviderId,
                                                                                            From,
                                                                                            To),
                                                "eRoamingGetChargeDetailRecords",
@@ -696,8 +696,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                    SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                   return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(httpresponse,
-                                                                                                                    new eRoamingChargeDetailRecord[0],
+                                                   return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
+                                                                                                                    new ChargeDetailRecord[0],
                                                                                                                     IsFault: true);
 
                                                },
@@ -710,8 +710,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                    SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                   return new HTTPResponse<IEnumerable<eRoamingChargeDetailRecord>>(httpresponse,
-                                                                                                                    new eRoamingChargeDetailRecord[0],
+                                                   return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
+                                                                                                                    new ChargeDetailRecord[0],
                                                                                                                     IsFault: true);
 
                                                },

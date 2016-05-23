@@ -35,9 +35,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 EMP HTTP/SOAP/XML server.
+    /// An OICP v2.0 EMP HTTP/SOAP/XML server.
     /// </summary>
-    public class EMPServer
+    public class EMPServer : ASOAPServer
     {
 
         #region Data
@@ -45,17 +45,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML EMP Server API";
+        public new const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML EMP Server API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
         /// </summary>
-        public static readonly IPPort    DefaultHTTPServerPort  = new IPPort(2003);
+        public new static readonly IPPort    DefaultHTTPServerPort  = new IPPort(2003);
 
         /// <summary>
         /// The default query timeout.
         /// </summary>
-        public static readonly TimeSpan  DefaultQueryTimeout    = TimeSpan.FromMinutes(1);
+        public new static readonly TimeSpan  DefaultQueryTimeout    = TimeSpan.FromMinutes(1);
 
         #endregion
 
@@ -75,58 +75,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-
-        #region SOAPServer
-
-        private readonly SOAPServer _SOAPServer;
-
-        /// <summary>
-        /// The HTTP/SOAP server.
-        /// </summary>
-        public SOAPServer HTTPServer
-        {
-            get
-            {
-                return _SOAPServer;
-            }
-        }
-
-        #endregion
-
-        #region URIPrefix
-
-        private readonly String _URIPrefix;
-
-        /// <summary>
-        /// The common URI prefix for this HTTP/SOAP service.
-        /// </summary>
-        public String URIPrefix
-        {
-            get
-            {
-                return _URIPrefix;
-            }
-        }
-
-        #endregion
-
-        #region DNSClient
-
-        private readonly DNSClient _DNSClient;
-
-        /// <summary>
-        /// The DNS client used by this server.
-        /// </summary>
-        public DNSClient DNSClient
-        {
-            get
-            {
-                return _DNSClient;
-            }
-        }
-
-        #endregion
-
         #endregion
 
         #region Events
@@ -136,17 +84,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event sent whenever a authorize start command was received.
         /// </summary>
-        public event RequestLogHandler OnLogAuthorizeStart;
+        public event RequestLogHandler         OnLogAuthorizeStart;
 
         /// <summary>
         /// An event sent whenever a authorize start response was sent.
         /// </summary>
-        public event AccessLogHandler OnLogAuthorizeStarted;
+        public event AccessLogHandler          OnLogAuthorizeStarted;
 
         /// <summary>
         /// An event sent whenever a authorize start command was received.
         /// </summary>
-        public event OnAuthorizeStartDelegate OnAuthorizeStart;
+        public event OnAuthorizeStartDelegate  OnAuthorizeStart;
 
         #endregion
 
@@ -155,17 +103,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event sent whenever a authorize start command was received.
         /// </summary>
-        public event RequestLogHandler OnLogAuthorizeStop;
+        public event RequestLogHandler         OnLogAuthorizeStop;
 
         /// <summary>
         /// An event sent whenever a authorize start response was sent.
         /// </summary>
-        public event AccessLogHandler OnLogAuthorizeStopped;
+        public event AccessLogHandler          OnLogAuthorizeStopped;
 
         /// <summary>
         /// An event sent whenever a authorize start command was received.
         /// </summary>
-        public event OnAuthorizeStopDelegate  OnAuthorizeStop;
+        public event OnAuthorizeStopDelegate   OnAuthorizeStop;
 
         #endregion
 
@@ -174,86 +122,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event sent whenever a charge detail record was received.
         /// </summary>
-        public event RequestLogHandler OnLogChargeDetailRecordSend;
+        public event RequestLogHandler             OnLogChargeDetailRecordSend;
 
         /// <summary>
         /// An event sent whenever a charge detail record response was sent.
         /// </summary>
-        public event AccessLogHandler OnLogChargeDetailRecordSent;
+        public event AccessLogHandler              OnLogChargeDetailRecordSent;
 
         /// <summary>
         /// An event sent whenever a charge detail record was received.
         /// </summary>
-        public event OnChargeDetailRecordDelegate OnChargeDetailRecord;
-
-        #endregion
-
-
-        // Generic HTTP events...
-
-        #region RequestLog
-
-        /// <summary>
-        /// An event called whenever a request came in.
-        /// </summary>
-        public event RequestLogHandler RequestLog
-        {
-
-            add
-            {
-                _SOAPServer.RequestLog += value;
-            }
-
-            remove
-            {
-                _SOAPServer.RequestLog -= value;
-            }
-
-        }
-
-        #endregion
-
-        #region AccessLog
-
-        /// <summary>
-        /// An event called whenever a request could successfully be processed.
-        /// </summary>
-        public event AccessLogHandler AccessLog
-        {
-
-            add
-            {
-                _SOAPServer.AccessLog += value;
-            }
-
-            remove
-            {
-                _SOAPServer.AccessLog -= value;
-            }
-
-        }
-
-        #endregion
-
-        #region ErrorLog
-
-        /// <summary>
-        /// An event called whenever a request resulted in an error.
-        /// </summary>
-        public event ErrorLogHandler ErrorLog
-        {
-
-            add
-            {
-                _SOAPServer.ErrorLog += value;
-            }
-
-            remove
-            {
-                _SOAPServer.ErrorLog -= value;
-            }
-
-        }
+        public event OnChargeDetailRecordDelegate  OnChargeDetailRecord;
 
         #endregion
 
@@ -277,11 +156,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                          DNSClient DNSClient       = null,
                          Boolean   AutoStart       = false)
 
-            : this(new SOAPServer(TCPPort != null ? TCPPort : DefaultHTTPServerPort,
-                                  DefaultServerName:  HTTPServerName,
-                                  DNSClient:          DNSClient,
-                                  Autostart:          AutoStart),
-                   URIPrefix)
+            : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
+                   TCPPort != null                   ? TCPPort        : DefaultHTTPServerPort,
+                   URIPrefix,
+                   HTTPContentType.XMLTEXT_UTF8,
+                   DNSClient,
+                   AutoStart: false)
 
         {
 
@@ -301,77 +181,59 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
         public EMPServer(SOAPServer  SOAPServer,
                          String      URIPrefix  = "")
-        {
 
-            #region Initial checks
+            : base(SOAPServer,
+                   URIPrefix)
 
-            if (SOAPServer == null)
-                throw new ArgumentNullException(nameof(SOAPServer),  "The given SOAP server must not be null!");
-
-            if (URIPrefix == null)
-                URIPrefix = "";
-
-            if (URIPrefix.Length > 0 && !URIPrefix.StartsWith("/"))
-                URIPrefix = "/" + URIPrefix;
-
-            #endregion
-
-            this._SOAPServer  = SOAPServer;
-            this._URIPrefix   = URIPrefix;
-            this._DNSClient   = SOAPServer.DNSClient;
-
-            RegisterURITemplates();
-
-        }
+        { }
 
         #endregion
 
         #endregion
 
 
-        #region (private) RegisterURITemplates()
+        #region (override) RegisterURITemplates()
 
-        private void RegisterURITemplates()
+        protected override void RegisterURITemplates()
         {
 
             #region / (HTTPRoot)
 
-            _SOAPServer.AddMethodCallback(HTTPMethod.GET,
-                                          new String[] { "/", URIPrefix + "/" },
-                                          HTTPContentType.TEXT_UTF8,
-                                          HTTPDelegate: Request => {
+            SOAPServer.AddMethodCallback(HTTPMethod.GET,
+                                         new String[] { "/", URIPrefix + "/" },
+                                         HTTPContentType.TEXT_UTF8,
+                                         HTTPDelegate: Request => {
 
-                                              return new HTTPResponseBuilder(Request) {
+                                             return new HTTPResponseBuilder(Request) {
 
-                                                  HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                                  ContentType     = HTTPContentType.TEXT_UTF8,
-                                                  Content         = ("Welcome at " + DefaultHTTPServerName + Environment.NewLine +
-                                                                     "This is a HTTP/SOAP/XML endpoint!" + Environment.NewLine + Environment.NewLine +
-                                                                     "Defined endpoints: " + Environment.NewLine + Environment.NewLine +
-                                                                     _SOAPServer.
-                                                                         SOAPDispatchers.
-                                                                         Select(group => " - " + group.Key + Environment.NewLine +
-                                                                                         "   " + group.SelectMany(dispatcher => dispatcher.SOAPDispatches).
-                                                                                                       Select    (dispatch   => dispatch.  Description).
-                                                                                                       AggregateWith(", ")
-                                                                               ).AggregateWith(Environment.NewLine + Environment.NewLine)
-                                                                    ).ToUTF8Bytes(),
-                                                  Connection      = "close"
+                                                 HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                                 ContentType     = HTTPContentType.TEXT_UTF8,
+                                                 Content         = ("Welcome at " + DefaultHTTPServerName + Environment.NewLine +
+                                                                    "This is a HTTP/SOAP/XML endpoint!" + Environment.NewLine + Environment.NewLine +
+                                                                    "Defined endpoints: " + Environment.NewLine + Environment.NewLine +
+                                                                    SOAPServer.
+                                                                        SOAPDispatchers.
+                                                                        Select(group => " - " + group.Key + Environment.NewLine +
+                                                                                        "   " + group.SelectMany(dispatcher => dispatcher.SOAPDispatches).
+                                                                                                      Select    (dispatch   => dispatch.  Description).
+                                                                                                      AggregateWith(", ")
+                                                                              ).AggregateWith(Environment.NewLine + Environment.NewLine)
+                                                                   ).ToUTF8Bytes(),
+                                                 Connection      = "close"
 
-                                              };
+                                             };
 
-
-                                          },
-                                          AllowReplacement: URIReplacement.Allow);
+                                         },
+                                         AllowReplacement: URIReplacement.Allow);
 
             #endregion
 
             #region /Authorization - AuthorizeStart
 
-            _SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
-                                             "AuthorizeStart",
-                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart").FirstOrDefault(),
-                                             (Request, AuthorizeStartXML) => {
+            SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
+                                            "AuthorizeStart",
+                                            XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart").FirstOrDefault(),
+                                            (Request, AuthorizeStartXML) => {
 
                 #region Documentation
 
@@ -484,7 +346,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var OnLogAuthorizeStartLocal = OnLogAuthorizeStart;
                     if (OnLogAuthorizeStartLocal != null)
-                        OnLogAuthorizeStartLocal(DateTime.Now, this.HTTPServer, Request);
+                        OnLogAuthorizeStartLocal(DateTime.Now, this.SOAPServer, Request);
 
                 }
                 catch (Exception e)
@@ -649,7 +511,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 var HTTPResponse = new HTTPResponseBuilder(Request) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
-                    Server          = HTTPServer.DefaultServerName,
+                    Server          = SOAPServer.DefaultServerName,
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(
@@ -693,7 +555,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var OnLogAuthorizeStartedLocal = OnLogAuthorizeStarted;
                     if (OnLogAuthorizeStartedLocal != null)
-                        OnLogAuthorizeStartedLocal(HTTPResponse.Timestamp, this.HTTPServer, Request, HTTPResponse);
+                        OnLogAuthorizeStartedLocal(HTTPResponse.Timestamp, this.SOAPServer, Request, HTTPResponse);
 
                 }
                 catch (Exception e)
@@ -711,10 +573,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region /Authorization - AuthorizeStop
 
-            _SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
-                                             "AuthorizeStop",
-                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop").FirstOrDefault(),
-                                             (Request, AuthorizeStopXML) => {
+            SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
+                                            "AuthorizeStop",
+                                            XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop").FirstOrDefault(),
+                                            (Request, AuthorizeStopXML) => {
 
                     #region Documentation
 
@@ -749,7 +611,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         var OnLogAuthorizeStopLocal = OnLogAuthorizeStop;
                         if (OnLogAuthorizeStopLocal != null)
-                            OnLogAuthorizeStopLocal(DateTime.Now, this.HTTPServer, Request);
+                            OnLogAuthorizeStopLocal(DateTime.Now, this.SOAPServer, Request);
 
                     }
                     catch (Exception e)
@@ -912,7 +774,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
-                        Server          = HTTPServer.DefaultServerName,
+                        Server          = SOAPServer.DefaultServerName,
                         Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(
@@ -941,7 +803,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         var OnLogAuthorizeStoppedLocal = OnLogAuthorizeStopped;
                         if (OnLogAuthorizeStoppedLocal != null)
-                            OnLogAuthorizeStoppedLocal(HTTPResponse.Timestamp, this.HTTPServer, Request, HTTPResponse);
+                            OnLogAuthorizeStoppedLocal(HTTPResponse.Timestamp, this.SOAPServer, Request, HTTPResponse);
 
                     }
                     catch (Exception e)
@@ -959,10 +821,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region /Authorization - ChargeDetailRecord
 
-            _SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
-                                             "ChargeDetailRecord",
-                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingChargeDetailRecord").FirstOrDefault(),
-                                             (Request, ChargeDetailRecordXML) => {
+            SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
+                                            "ChargeDetailRecord",
+                                            XML => XML.Descendants(OICPNS.Authorization + "eRoamingChargeDetailRecord").FirstOrDefault(),
+                                            (Request, ChargeDetailRecordXML) => {
 
                     #region Send OnLogChargeDetailRecordSend event
 
@@ -971,7 +833,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         var OnLogChargeDetailRecordSendLocal = OnLogChargeDetailRecordSend;
                         if (OnLogChargeDetailRecordSendLocal != null)
-                            OnLogChargeDetailRecordSendLocal(DateTime.Now, this.HTTPServer, Request);
+                            OnLogChargeDetailRecordSendLocal(DateTime.Now, this.SOAPServer, Request);
 
                     }
                     catch (Exception e)
@@ -985,12 +847,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     #region Parse request parameters
 
                     SendCDRResult              response  = null;
-                    eRoamingChargeDetailRecord CDR       = null;
+                    ChargeDetailRecord CDR       = null;
 
                     try
                     {
 
-                        CDR = eRoamingChargeDetailRecord.Parse(ChargeDetailRecordXML);
+                        CDR = ChargeDetailRecord.Parse(ChargeDetailRecordXML);
 
                     }
                     catch (Exception e)
@@ -1076,7 +938,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
-                        Server          = HTTPServer.DefaultServerName,
+                        Server          = SOAPServer.DefaultServerName,
                         Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(
@@ -1103,7 +965,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                         var OnLogChargeDetailRecordSentLocal = OnLogChargeDetailRecordSent;
                         if (OnLogChargeDetailRecordSentLocal != null)
-                            OnLogChargeDetailRecordSentLocal(HTTPResponse.Timestamp, this.HTTPServer, Request, HTTPResponse);
+                            OnLogChargeDetailRecordSentLocal(HTTPResponse.Timestamp, this.SOAPServer, Request, HTTPResponse);
 
                     }
                     catch (Exception e)
@@ -1212,24 +1074,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-
-        #region Start()
-
-        public void Start()
-        {
-            _SOAPServer.Start();
-        }
-
-        #endregion
-
-        #region Shutdown(Message = null, Wait = true)
-
-        public void Shutdown(String Message = null, Boolean Wait = true)
-        {
-            _SOAPServer.Shutdown(Message, Wait);
-        }
-
-        #endregion
 
     }
 

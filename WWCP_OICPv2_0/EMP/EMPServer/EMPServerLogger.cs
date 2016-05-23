@@ -19,6 +19,7 @@
 
 using System;
 
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
@@ -27,20 +28,44 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A OICP v2.0 EMP server logger.
+    /// An OICP v2.0 EMP server logger.
     /// </summary>
     public class EMPServerLogger : HTTPLogger
     {
 
         #region Data
 
+        /// <summary>
+        /// The default context for this logger.
+        /// </summary>
+        public const String DefaultContext = "OICP_EMPServer";
+
+        #endregion
+
+        #region Properties
+
+        #region EMPServer
+
         private readonly EMPServer _EMPServer;
+
+        /// <summary>
+        /// The linked OICP v2.0 EMP client.
+        /// </summary>
+        public EMPServer EMPServer
+        {
+            get
+            {
+                return _EMPServer;
+            }
+        }
+
+        #endregion
 
         #endregion
 
         #region Constructor(s)
 
-        #region EMPServerLogger(EMPServer, Context = "OICP_EMPServer", LogFileCreator = null)
+        #region EMPServerLogger(EMPServer, Context = DefaultContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP v2.0 EMP server logger using the default logging delegates.
@@ -49,17 +74,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Context">A context of this API.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPServerLogger(EMPServer                     EMPServer,
-                               String                        Context         = "OICP_EMPServer",
+                               String                        Context         = DefaultContext,
                                Func<String, String, String>  LogFileCreator  = null)
 
             : this(EMPServer,
-                   Context,
-
-                   Default_LogHTTPRequest_toConsole,
-                   Default_LogHTTPResponse_toConsole,
-                   Default_LogHTTPRequest_toDisc,
-                   Default_LogHTTPResponse_toDisc,
-
+                   Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+                   null,
+                   null,
+                   null,
+                   null,
                    LogFileCreator: LogFileCreator)
 
         { }
@@ -90,28 +113,28 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP server sent events source.</param>
         /// 
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public EMPServerLogger(EMPServer                                          EMPServer,
-                               String                                             Context,
+        public EMPServerLogger(EMPServer                     EMPServer,
+                               String                        Context,
 
-                               Action<String, String, HTTPRequest>                LogHTTPRequest_toConsole,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toConsole,
-                               Action<String, String, HTTPRequest>                LogHTTPRequest_toDisc,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toDisc,
+                               HTTPRequestLoggerDelegate     LogHTTPRequest_toConsole,
+                               HTTPResponseLoggerDelegate    LogHTTPResponse_toConsole,
+                               HTTPRequestLoggerDelegate     LogHTTPRequest_toDisc,
+                               HTTPResponseLoggerDelegate    LogHTTPResponse_toDisc,
 
-                               Action<String, String, HTTPRequest>                LogHTTPRequest_toNetwork   = null,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toNetwork  = null,
-                               Action<String, String, HTTPRequest>                LogHTTPRequest_toHTTPSSE   = null,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPResponse_toHTTPSSE  = null,
+                               HTTPRequestLoggerDelegate     LogHTTPRequest_toNetwork   = null,
+                               HTTPResponseLoggerDelegate    LogHTTPResponse_toNetwork  = null,
+                               HTTPRequestLoggerDelegate     LogHTTPRequest_toHTTPSSE   = null,
+                               HTTPResponseLoggerDelegate    LogHTTPResponse_toHTTPSSE  = null,
 
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toConsole     = null,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toDisc        = null,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toNetwork     = null,
-                               Action<String, String, HTTPRequest, HTTPResponse>  LogHTTPError_toHTTPSSE     = null,
+                               HTTPResponseLoggerDelegate    LogHTTPError_toConsole     = null,
+                               HTTPResponseLoggerDelegate    LogHTTPError_toDisc        = null,
+                               HTTPResponseLoggerDelegate    LogHTTPError_toNetwork     = null,
+                               HTTPResponseLoggerDelegate    LogHTTPError_toHTTPSSE     = null,
 
-                               Func<String, String, String>                       LogFileCreator             = null)
+                               Func<String, String, String>  LogFileCreator             = null)
 
-            : base(EMPServer.HTTPServer,
-                   Context,
+            : base(EMPServer.SOAPServer,
+                   Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
                    LogHTTPRequest_toConsole,
                    LogHTTPResponse_toConsole,
@@ -137,9 +160,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (EMPServer == null)
                 throw new ArgumentNullException(nameof(EMPServer), "The given EMP server must not be null!");
 
-            #endregion
-
             this._EMPServer = EMPServer;
+
+            #endregion
 
             #region Register authorize start/stop log events
 
@@ -147,43 +170,43 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           handler => _EMPServer.OnLogAuthorizeStart += handler,
                           handler => _EMPServer.OnLogAuthorizeStart -= handler,
                           "Authorize", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStarted",
                           handler => _EMPServer.OnLogAuthorizeStarted += handler,
                           handler => _EMPServer.OnLogAuthorizeStarted -= handler,
                           "Authorize", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStop",
                           handler => _EMPServer.OnLogAuthorizeStop += handler,
                           handler => _EMPServer.OnLogAuthorizeStop -= handler,
                           "Authorize", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStopped",
                           handler => _EMPServer.OnLogAuthorizeStopped += handler,
                           handler => _EMPServer.OnLogAuthorizeStopped -= handler,
                           "Authorize", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("ChargeDetailRecordSend",
                           handler => _EMPServer.OnLogChargeDetailRecordSend += handler,
                           handler => _EMPServer.OnLogChargeDetailRecordSend -= handler,
                           "CDR", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("ChargeDetailRecordSent",
                           handler => _EMPServer.OnLogChargeDetailRecordSent += handler,
                           handler => _EMPServer.OnLogChargeDetailRecordSent -= handler,
                           "CDR", "All").
-                RegisterDefaultConsoleLogTarget().
-                RegisterDefaultDiscLogTarget();
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             #endregion
 

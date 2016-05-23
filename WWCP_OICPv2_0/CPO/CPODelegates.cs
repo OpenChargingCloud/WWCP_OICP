@@ -26,8 +26,6 @@ using System.Threading.Tasks;
 namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
-    public delegate XElement       XMLNamespacesDelegate        (XElement XML);
-
     public delegate EVSEDataRecord EVSE2EVSEDataRecordDelegate  (EVSE EVSE, EVSEDataRecord EVSEDataRecord);
 
     public delegate XElement       EVSEDataRecord2XMLDelegate   (EVSEDataRecord EVSEDataRecord, XElement XML);
