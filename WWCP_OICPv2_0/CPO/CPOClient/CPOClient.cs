@@ -150,30 +150,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region OnPullAuthenticationDataRequest/-Response
-
-        /// <summary>
-        /// An event fired whenever a request pulling authentication data will be send.
-        /// </summary>
-        public event OnPullAuthenticationDataHandler    OnPullAuthenticationData;
-
-        /// <summary>
-        /// An event fired whenever a SOAP request pulling authentication data will be send.
-        /// </summary>
-        public event ClientRequestLogHandler            OnPullAuthenticationDataRequest;
-
-        /// <summary>
-        /// An event fired whenever a response to a pull authentication data SOAP request had been received.
-        /// </summary>
-        public event ClientResponseLogHandler           OnPullAuthenticationDataResponse;
-
-        /// <summary>
-        /// An event fired whenever a response to a pull authentication data request was received.
-        /// </summary>
-        public event OnAuthenticationDataPulledHandler  OnAuthenticationDataPulled;
-
-        #endregion
-
         #region OnSendChargeDetailRecordRequest/-Response
 
         /// <summary>
@@ -195,6 +171,30 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// An event fired whenever a response to a sent charge detail record had been received.
         /// </summary>
         public event OnChargeDetailRecordSentHandler  OnChargeDetailRecordSent;
+
+        #endregion
+
+        #region OnPullAuthenticationDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a request pulling authentication data will be send.
+        /// </summary>
+        public event OnPullAuthenticationDataHandler    OnPullAuthenticationData;
+
+        /// <summary>
+        /// An event fired whenever a SOAP request pulling authentication data will be send.
+        /// </summary>
+        public event ClientRequestLogHandler            OnPullAuthenticationDataRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a pull authentication data SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler           OnPullAuthenticationDataResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a pull authentication data request was received.
+        /// </summary>
+        public event OnAuthenticationDataPulledHandler  OnAuthenticationDataPulled;
 
         #endregion
 
@@ -1126,7 +1126,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 var result = await OICPClient.Query(CPOClientXMLMethods.SendChargeDetailRecordXML(ChargeDetailRecord),
                                                     "eRoamingChargeDetailRecord",
-                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                    RequestLogDelegate:   OnSendChargeDetailRecordRequest,
+                                                    ResponseLogDelegate:  OnSendChargeDetailRecordResponse,
+                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                     #region OnSuccess
 
@@ -1255,54 +1257,56 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             {
 
                 var result = await OICPClient.Query(CPOClientXMLMethods.PullAuthenticationDataXML(OperatorId),
-                                               "eRoamingPullAuthenticationData",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                    "eRoamingPullAuthenticationData",
+                                                    RequestLogDelegate:   OnPullAuthenticationDataRequest,
+                                                    ResponseLogDelegate:  OnPullAuthenticationDataResponse,
+                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               #region OnSuccess
+                                                    #region OnSuccess
 
-                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthenticationData.Parse),
+                                                    OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthenticationData.Parse),
 
-                                               #endregion
+                                                    #endregion
 
-                                               #region OnSOAPFault
+                                                    #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                    OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendSOAPError(timestamp, this, httpresponse.Content);
+                                                        SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
-                                                                                                       IsFault: true);
+                                                        return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
+                                                                                                            IsFault: true);
 
-                                               },
+                                                    },
 
-                                               #endregion
+                                                    #endregion
 
-                                               #region OnHTTPError
+                                                    #region OnHTTPError
 
-                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                    OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendHTTPError(timestamp, this, httpresponse);
+                                                        SendHTTPError(timestamp, this, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
-                                                                                                       IsFault: true);
+                                                        return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
+                                                                                                            IsFault: true);
 
-                                               },
+                                                    },
 
-                                               #endregion
+                                                    #endregion
 
-                                               #region OnException
+                                                    #region OnException
 
-                                               OnException: (timestamp, sender, exception) => {
+                                                    OnException: (timestamp, sender, exception) => {
 
-                                                   SendException(timestamp, sender, exception);
+                                                        SendException(timestamp, sender, exception);
 
-                                                   return null;
+                                                        return null;
 
-                                               }
+                                                    }
 
-                                               #endregion
+                                                    #endregion
 
-                                              );
+                                                   );
 
                 #region Send OnAuthenticationDataPulled event
 
