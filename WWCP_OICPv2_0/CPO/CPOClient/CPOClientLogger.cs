@@ -180,6 +180,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
+
             RegisterEvent("EVSEStatusPush",
                           handler => _CPOClient.OnEVSEStatusPushRequest  += handler,
                           handler => _CPOClient.OnEVSEStatusPushRequest  -= handler,
@@ -191,6 +192,68 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           handler => _CPOClient.OnEVSEStatusPushResponse += handler,
                           handler => _CPOClient.OnEVSEStatusPushResponse -= handler,
                           "EVSE", "EVSEStatus", "Response", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+
+
+            RegisterEvent("AuthorizeStart",
+                          handler => _CPOClient.OnAuthorizeStartRequest += handler,
+                          handler => _CPOClient.OnAuthorizeStartRequest -= handler,
+                          "Authorize", "Request", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+            RegisterEvent("AuthorizeStarted",
+                          handler => _CPOClient.OnAuthorizeStartResponse += handler,
+                          handler => _CPOClient.OnAuthorizeStartResponse -= handler,
+                          "Authorize", "Response", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+
+            RegisterEvent("AuthorizeStop",
+                          handler => _CPOClient.OnAuthorizeStopRequest += handler,
+                          handler => _CPOClient.OnAuthorizeStopRequest -= handler,
+                          "Authorize", "Request", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+            RegisterEvent("AuthorizeStopped",
+                          handler => _CPOClient.OnAuthorizeStopResponse += handler,
+                          handler => _CPOClient.OnAuthorizeStopResponse -= handler,
+                          "Authorize", "Response", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+
+
+            RegisterEvent("SendChargeDetailRecord",
+                          handler => _CPOClient.OnSendChargeDetailRecordRequest += handler,
+                          handler => _CPOClient.OnSendChargeDetailRecordRequest -= handler,
+                          "ChargeDetailRecord", "CDR", "Request", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+            RegisterEvent("ChargeDetailRecordSent",
+                          handler => _CPOClient.OnSendChargeDetailRecordResponse += handler,
+                          handler => _CPOClient.OnSendChargeDetailRecordResponse -= handler,
+                          "ChargeDetailRecord", "CDR", "Response", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+
+            RegisterEvent("PullAuthenticationData",
+                          handler => _CPOClient.OnPullAuthenticationDataRequest += handler,
+                          handler => _CPOClient.OnPullAuthenticationDataRequest -= handler,
+                          "AuthenticationData", "Request", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+            RegisterEvent("AuthenticationDataPulled",
+                          handler => _CPOClient.OnPullAuthenticationDataResponse += handler,
+                          handler => _CPOClient.OnPullAuthenticationDataResponse -= handler,
+                          "AuthenticationData", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
