@@ -322,13 +322,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                               {
 
                                                                   // Update via events!
-                                                                  _EVSE.Description         = EvseDataRecord.AdditionalInfo;
-                                                                  _EVSE.ChargingModes       = new ReactiveSet<ChargingModes>     (EvseDataRecord.ChargingModes);
-                                                                  _EVSE.ChargingFacilities  = new ReactiveSet<ChargingFacilities>(EvseDataRecord.ChargingFacilities);
-                                                                  //_EVSE.MaxPower            = 
-                                                                  //_EVSE.AverageVoltage      = 
-                                                                  _EVSE.MaxCapacity_kWh     = EvseDataRecord.MaxCapacity;
-                                                                  _EVSE.SocketOutlets       = new ReactiveSet<SocketOutlet>(EvseDataRecord.Plugs.Select(Plug => new SocketOutlet(Plug)));
+                                                                  _EVSE.Description     = EvseDataRecord.AdditionalInfo;
+                                                                  _EVSE.ChargingModes   = new ReactiveSet<ChargingModes>     (EvseDataRecord.ChargingModes);
+                                                                  OICPMapper.ApplyChargingFacilities(_EVSE, EvseDataRecord.ChargingFacilities);
+                                                                  _EVSE.MaxCapacity     = EvseDataRecord.MaxCapacity;
+                                                                  _EVSE.SocketOutlets   = new ReactiveSet<SocketOutlet>(EvseDataRecord.Plugs.Select(Plug => new SocketOutlet(Plug)));
 
                                                               }
 
@@ -337,12 +335,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                                                                  Configurator: evse => {
 
-                                                                                                     evse.Description         = EvseDataRecord.AdditionalInfo;
-                                                                                                     evse.ChargingModes       = new ReactiveSet<ChargingModes>     (EvseDataRecord.ChargingModes);
-                                                                                                     evse.ChargingFacilities  = new ReactiveSet<ChargingFacilities>(EvseDataRecord.ChargingFacilities);
-                                                                                                     //evse.AverageVoltage      = 
-                                                                                                     evse.MaxCapacity_kWh     = EvseDataRecord.MaxCapacity;
-                                                                                                     evse.SocketOutlets       = new ReactiveSet<SocketOutlet>(EvseDataRecord.Plugs.Select(Plug => new SocketOutlet(Plug)));
+                                                                                                     evse.Description     = EvseDataRecord.AdditionalInfo;
+                                                                                                     evse.ChargingModes   = new ReactiveSet<ChargingModes>     (EvseDataRecord.ChargingModes);
+                                                                                                     OICPMapper.ApplyChargingFacilities(_EVSE, EvseDataRecord.ChargingFacilities);
+                                                                                                     evse.MaxCapacity     = EvseDataRecord.MaxCapacity;
+                                                                                                     evse.SocketOutlets   = new ReactiveSet<SocketOutlet>(EvseDataRecord.Plugs.Select(Plug => new SocketOutlet(Plug)));
 
                                                                                                  }
                                                                                                 );

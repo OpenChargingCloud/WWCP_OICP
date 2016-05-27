@@ -74,6 +74,7 @@
     <Compile Include="IO\OICPNS.cs" />
     <Compile Include="IO\SOAP.cs" />
     <Compile Include="Objects\Data\ActionType.cs" />
+    <Compile Include="Objects\Data\ChargingFacilities.cs" />
     <Compile Include="Objects\Data\ValueAddedServices.cs" />
     <Compile Include="Objects\Data\AuthenticationModes.cs" />
     <Compile Include="Objects\Data\AuthorizationIdentification.cs" />

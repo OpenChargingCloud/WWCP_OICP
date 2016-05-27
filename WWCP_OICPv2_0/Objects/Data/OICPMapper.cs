@@ -60,16 +60,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region AsChargingFacility(ChargingFacility)
+        #region AsChargingFacility(Text)
 
         /// <summary>
         /// Maps an OICP charging facility to a WWCP charging facility.
         /// </summary>
-        /// <param name="ChargingFacility">A charging facility.</param>
-        public static ChargingFacilities AsChargingFacility(String ChargingFacility)
+        /// <param name="Text">A charging facility.</param>
+        public static ChargingFacilities AsChargingFacility(String Text)
         {
 
-            switch (ChargingFacility.Trim())
+            switch (Text.Trim())
             {
 
                 case "100 - 120V, 1-Phase ≤10A":   return ChargingFacilities.CF_100_120V_1Phase_lessOrEquals10A;
@@ -90,6 +90,110 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 default: return ChargingFacilities.Unspecified;
 
             }
+
+        }
+
+        #endregion
+
+        #region AsChargingFacilities(WWCP.EVSE)
+
+        /// <summary>
+        /// Maps a WWCP EVSE to an OICP charging facility.
+        /// </summary>
+        /// <param name="EVSE">An WWCP EVSE.</param>
+        public static IEnumerable<ChargingFacilities> AsChargingFacilities(WWCP.EVSE EVSE)
+        {
+
+            var _ChargingFacilities = new List<ChargingFacilities>();
+
+            #region AC, 1 phase
+
+            if (EVSE.CurrentType == CurrentTypes.AC_OnePhase)
+            {
+
+                if (EVSE.AverageVoltage >= 100.0 &&
+                    EVSE.AverageVoltage <= 120.0)
+                {
+
+                    if (EVSE.MaxCurrent <= 10)
+                        _ChargingFacilities.Add(ChargingFacilities.CF_100_120V_1Phase_lessOrEquals10A);
+
+                    else if (EVSE.MaxCurrent <= 16)
+                        _ChargingFacilities.Add(ChargingFacilities.CF_100_120V_1Phase_lessOrEquals16A);
+
+                    else if (EVSE.MaxCurrent <= 32)
+                        _ChargingFacilities.Add(ChargingFacilities.CF_100_120V_1Phase_lessOrEquals32A);
+
+                }
+
+                if (EVSE.AverageVoltage >= 200.0 &&
+                    EVSE.AverageVoltage <= 240.0)
+                {
+
+                    if (EVSE.MaxCurrent <= 10)
+                        _ChargingFacilities.Add(ChargingFacilities.CF_200_240V_1Phase_lessOrEquals10A);
+
+                    else if (EVSE.MaxCurrent <= 16)
+                        _ChargingFacilities.Add(ChargingFacilities.CF_200_240V_1Phase_lessOrEquals16A);
+
+                    else if (EVSE.MaxCurrent <= 32)
+                        _ChargingFacilities.Add(ChargingFacilities.CF_200_240V_1Phase_lessOrEquals32A);
+
+                    else if (EVSE.MaxCurrent > 32)
+                        _ChargingFacilities.Add(ChargingFacilities.CF_200_240V_1Phase_moreThan32A);
+
+                }
+
+            }
+
+            #endregion
+
+            #region AC, 3 phases
+
+            else if (EVSE.CurrentType == CurrentTypes.AC_ThreePhases)
+            {
+
+                if (EVSE.AverageVoltage >= 380.0 &&
+                    EVSE.AverageVoltage <= 480.0)
+                {
+
+                    if (EVSE.MaxCurrent <= 16)
+                        _ChargingFacilities.Add(ChargingFacilities.CF_380_480V_3Phase_lessOrEquals16A);
+
+                    else if (EVSE.MaxCurrent <= 32)
+                        _ChargingFacilities.Add(ChargingFacilities.CF_380_480V_3Phase_lessOrEquals32A);
+
+                    else if (EVSE.MaxCurrent <= 63)
+                        _ChargingFacilities.Add(ChargingFacilities.CF_380_480V_3Phase_lessOrEquals63A);
+
+                }
+
+            }
+
+            #endregion
+
+            #region DC
+
+            else if (EVSE.CurrentType == CurrentTypes.DC)
+            {
+
+                if (EVSE.MaxPower > 50000)
+                    _ChargingFacilities.Add(ChargingFacilities.DCCharging_moreThan50kW);
+
+                else if (EVSE.MaxPower <= 20000)
+                    _ChargingFacilities.Add(ChargingFacilities.DCCharging_lessOrEquals20kW);
+
+                else if (EVSE.MaxPower <= 50000)
+                    _ChargingFacilities.Add(ChargingFacilities.DCCharging_lessOrEquals20kW);
+
+            }
+
+            #endregion
+
+            if (!_ChargingFacilities.Any())
+                _ChargingFacilities.Add(ChargingFacilities.Unspecified);
+
+            return _ChargingFacilities;
 
         }
 
@@ -525,12 +629,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      EVSE.ChargingStation.Address,
                                                      EVSE.ChargingStation.GeoLocation,
                                                      EVSE.SocketOutlets?.Select(socketoutlet => socketoutlet.Plug),
-                                                     EVSE.ChargingFacilities,
+                                                     OICPMapper.AsChargingFacilities(EVSE),
                                                      EVSE.ChargingModes,
                                                      EVSE.ChargingStation.AuthenticationModes?.
                                                                               SelectMany(mode => OICPMapper.AsOICPAuthenticationMode(mode)).
                                                                               Where     (mode => mode != AuthenticationModes.Unkown),
-                                                     EVSE.MaxCapacity_kWh.HasValue ? (Int32) EVSE.MaxCapacity_kWh : new Int32?(),
+                                                     null, // MaxCapacity [kWh]
                                                      EVSE.ChargingStation.PaymentOptions,
                                                      EVSE.ChargingStation.Accessibility,
                                                      EVSE.ChargingStation.HotlinePhoneNumber,
@@ -767,14 +871,201 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
 
             return new WWCP.ChargeDetailRecord(ChargeDetailRecord.SessionId,
-                                          EVSEId:             ChargeDetailRecord.EVSEId,
-                                          ChargingProductId:  ChargeDetailRecord.PartnerProductId,
-                                          SessionTime:        new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
-                                          EnergyMeteringValues:  new List<Timestamped<double>>() { new Timestamped<double>(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.MeterValueStart.Value),
-                                                                                                new Timestamped<double>(ChargeDetailRecord.ChargingEnd.Value,   ChargeDetailRecord.MeterValueEnd.Value) },
-                                          //MeterValuesInBetween
-                                          //ConsumedEnergy
-                                          MeteringSignature:  ChargeDetailRecord.MeteringSignature);
+                                               EVSEId:             ChargeDetailRecord.EVSEId,
+                                               ChargingProductId:  ChargeDetailRecord.PartnerProductId,
+                                               SessionTime:        new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
+                                               EnergyMeteringValues:  new List<Timestamped<double>>() { new Timestamped<double>(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.MeterValueStart.Value),
+                                                                                                     new Timestamped<double>(ChargeDetailRecord.ChargingEnd.Value,   ChargeDetailRecord.MeterValueEnd.Value) },
+                                               //MeterValuesInBetween
+                                               //ConsumedEnergy
+                                               MeteringSignature:  ChargeDetailRecord.MeteringSignature);
+
+        }
+
+        #endregion
+
+
+        #region ApplyChargingFacilities
+
+        public static void ApplyChargingFacilities(WWCP.EVSE EVSE,
+                                                   IEnumerable<ChargingFacilities> ChargingFacilities)
+        {
+
+            foreach (var ChargingFacility in ChargingFacilities)
+            {
+
+                switch (ChargingFacility)
+                {
+
+                    case OICPv2_0.ChargingFacilities.CF_100_120V_1Phase_lessOrEquals10A:
+
+                        if (EVSE.AverageVoltage < 110.0)
+                            EVSE.AverageVoltage = 110;
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+
+                        if (EVSE.MaxCurrent < 10.0)
+                            EVSE.MaxCurrent = 10.0;
+
+                        break;
+
+                    case OICPv2_0.ChargingFacilities.CF_100_120V_1Phase_lessOrEquals16A:
+
+                        if (EVSE.AverageVoltage < 110.0)
+                            EVSE.AverageVoltage = 110;
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+
+                        if (EVSE.MaxCurrent < 16.0)
+                            EVSE.MaxCurrent = 16.0;
+
+                        break;
+
+
+                    case OICPv2_0.ChargingFacilities.CF_100_120V_1Phase_lessOrEquals32A:
+
+                        if (EVSE.AverageVoltage < 110.0)
+                            EVSE.AverageVoltage = 110;
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+
+                        if (EVSE.MaxCurrent < 32.0)
+                            EVSE.MaxCurrent = 32.0;
+
+                        break;
+
+
+
+                    case OICPv2_0.ChargingFacilities.CF_200_240V_1Phase_lessOrEquals10A:
+
+                        if (EVSE.AverageVoltage < 230.0)
+                            EVSE.AverageVoltage = 230;
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+
+                        if (EVSE.MaxCurrent < 10.0)
+                            EVSE.MaxCurrent = 10.0;
+
+                        break;
+
+                    case OICPv2_0.ChargingFacilities.CF_200_240V_1Phase_lessOrEquals16A:
+
+                        if (EVSE.AverageVoltage < 230.0)
+                            EVSE.AverageVoltage = 230;
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+
+                        if (EVSE.MaxCurrent < 16.0)
+                            EVSE.MaxCurrent = 16.0;
+
+                        break;
+
+                    case OICPv2_0.ChargingFacilities.CF_200_240V_1Phase_lessOrEquals32A:
+
+                        if (EVSE.AverageVoltage < 230.0)
+                            EVSE.AverageVoltage = 230;
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+
+                        if (EVSE.MaxCurrent < 32.0)
+                            EVSE.MaxCurrent = 32.0;
+
+                        break;
+
+                    case OICPv2_0.ChargingFacilities.CF_200_240V_1Phase_moreThan32A:
+
+                        if (EVSE.AverageVoltage < 230.0)
+                            EVSE.AverageVoltage = 230;
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+
+                        if (EVSE.MaxCurrent < 32.0)
+                            EVSE.MaxCurrent = 32.0;
+
+                        break;
+
+
+                    case OICPv2_0.ChargingFacilities.CF_380_480V_3Phase_lessOrEquals16A:
+
+                        if (EVSE.AverageVoltage < 400.0)
+                            EVSE.AverageVoltage = 400;
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
+
+                        if (EVSE.MaxCurrent < 16.0)
+                            EVSE.MaxCurrent = 16.0;
+
+                        break;
+
+                    case OICPv2_0.ChargingFacilities.CF_380_480V_3Phase_lessOrEquals32A:
+
+                        if (EVSE.AverageVoltage < 400.0)
+                            EVSE.AverageVoltage = 400;
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
+
+                        if (EVSE.MaxCurrent < 32.0)
+                            EVSE.MaxCurrent = 32.0;
+
+                        break;
+
+                    case OICPv2_0.ChargingFacilities.CF_380_480V_3Phase_lessOrEquals63A:
+
+                        if (EVSE.AverageVoltage < 400.0)
+                            EVSE.AverageVoltage = 400;
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
+
+                        if (EVSE.MaxCurrent < 63.0)
+                            EVSE.MaxCurrent = 63.0;
+
+                        break;
+
+
+
+                    case OICPv2_0.ChargingFacilities.DCCharging_lessOrEquals20kW:
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.DC;
+
+                        if (EVSE.MaxPower < 20000.0)
+                            EVSE.MaxPower = 20000.0;
+
+                        break;
+
+                    case OICPv2_0.ChargingFacilities.DCCharging_lessOrEquals50kW:
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.DC;
+
+                        if (EVSE.MaxPower < 50000.0)
+                            EVSE.MaxPower = 50000.0;
+
+                        break;
+
+                    case OICPv2_0.ChargingFacilities.DCCharging_moreThan50kW:
+
+                        if (EVSE.CurrentType == CurrentTypes.Undefined)
+                            EVSE.CurrentType = CurrentTypes.DC;
+
+                        if (EVSE.MaxPower < 50000.0)
+                            EVSE.MaxPower = 50000.0;
+
+                        break;
+
+                }
+
+            }
 
         }
 

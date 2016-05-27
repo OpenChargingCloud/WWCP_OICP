@@ -790,7 +790,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                            EVSE.Description.                         ToJSON("Description"),
 
                            EVSE.SocketOutlets.Count > 0 ? new JProperty("SocketOutlets",      new JArray(EVSE.SocketOutlets.ToJSON()))         : null,
-                           EVSE.GuranteedMinPower   > 0 ? new JProperty("GuranteedMinPower",  EVSE.GuranteedMinPower)                          : null,
+        //                   EVSE.GuranteedMinPower   > 0 ? new JProperty("GuranteedMinPower",  EVSE.GuranteedMinPower)                          : null,
                            EVSE.MaxPower            > 0 ? new JProperty("MaxPower",           EVSE.MaxPower)                                   : null
                        );
 
@@ -811,7 +811,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                    EVSE.ChargingStation.OpeningTimes.ToJSON("OpeningTimes"),
 
                            EVSE.SocketOutlets.Count > 0 ? new JProperty("SocketOutlets",      new JArray(EVSE.SocketOutlets.ToJSON()))         : null,
-                           EVSE.GuranteedMinPower   > 0 ? new JProperty("GuranteedMinPower",  EVSE.GuranteedMinPower)                          : null,
+        //                   EVSE.GuranteedMinPower   > 0 ? new JProperty("GuranteedMinPower",  EVSE.GuranteedMinPower)                          : null,
                            EVSE.MaxPower            > 0 ? new JProperty("MaxPower",           EVSE.MaxPower)                                   : null
                        );
 

@@ -1001,7 +1001,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                         MapValuesOrDefault(OICPNS.EVSEData + "ChargingFacilities",
                                                                                                            OICPNS.EVSEData + "ChargingFacility",
                                                                                                            OICPMapper.AsChargingFacility,
-                                                                                                           org.GraphDefined.WWCP.ChargingFacilities.Unspecified));
+                                                                                                           OICPv2_1.ChargingFacilities.Unspecified));
 
             #endregion
 
@@ -1011,7 +1011,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                               MapValuesOrDefault(OICPNS.EVSEData + "ChargingModes",
                                                                                                  OICPNS.EVSEData + "ChargingMode",
                                                                                                  OICPMapper.AsChargingMode,
-                                                                                                 org.GraphDefined.WWCP.ChargingModes.Unspecified));
+                                                                                                 WWCP.ChargingModes.Unspecified));
 
             #endregion
 
