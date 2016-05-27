@@ -184,7 +184,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     _ChargingFacilities.Add(ChargingFacilities.DCCharging_lessOrEquals20kW);
 
                 else if (EVSE.MaxPower <= 50000)
-                    _ChargingFacilities.Add(ChargingFacilities.DCCharging_lessOrEquals20kW);
+                    _ChargingFacilities.Add(ChargingFacilities.DCCharging_lessOrEquals50kW);
 
             }
 
