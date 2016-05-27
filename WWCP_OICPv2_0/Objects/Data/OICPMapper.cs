@@ -228,7 +228,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 case "IEC 60309 Three Phase":               return PlugTypes.IEC60309ThreePhase;
                 case "CCS Combo 2 Plug (Cable Attached)":   return PlugTypes.CCSCombo2Plug_CableAttached;
                 case "CCS Combo 1 Plug (Cable Attached)":   return PlugTypes.CCSCombo1Plug_CableAttached;
-                case "CHAdeMO DC CHAdeMO Connector":        return PlugTypes.CHAdeMO_DC_CHAdeMOConnector;
+                case "CHAdeMO":                             return PlugTypes.CHAdeMO;
 
                 default:                                    return PlugTypes.Unspecified;
 
@@ -465,8 +465,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 case PlugTypes.CCSCombo1Plug_CableAttached:
                     return "CCS Combo 1 Plug (Cable Attached)";
 
-                case PlugTypes.CHAdeMO_DC_CHAdeMOConnector:
-                    return "CHAdeMO DC CHAdeMO Connector";
+                case PlugTypes.CHAdeMO:
+                    return "CHAdeMO";
 
 
                 default:
@@ -531,7 +531,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 case PlugTypes.Type2Connector_CableAttached: return "Type 2 Connector (Cable Attached)";
 
                 // CHAdeMO, DC CHAdeMO Connector
-                case PlugTypes.CHAdeMO_DC_CHAdeMOConnector: return "CHAdeMO";
+                case PlugTypes.CHAdeMO: return "CHAdeMO";
 
                 // Small Paddle Inductive
                 // Large Paddle Inductive
