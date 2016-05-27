@@ -36,7 +36,7 @@ namespace org.GraphDefined.WWCP
     public static class EMPExtentions
     {
 
-        #region CreateOICP_EMPRoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ...)
+        #region CreateOICPv2_1_EMPRoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ...)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -69,30 +69,30 @@ namespace org.GraphDefined.WWCP
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         public static EMPRoamingProvider
 
-            CreateOICP_EMPRoamingProvider(this RoamingNetwork                  RoamingNetwork,
-                                          RoamingProvider_Id                   Id,
-                                          I18NString                           Name,
+            CreateOICPv2_1_EMPRoamingProvider(this RoamingNetwork                  RoamingNetwork,
+                                              RoamingProvider_Id                   Id,
+                                              I18NString                           Name,
 
-                                          String                               RemoteHostname,
-                                          IPPort                               RemoteTCPPort               = null,
-                                          String                               RemoteHTTPVirtualHost       = null,
-                                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                                          String                               HTTPUserAgent               = OICPv2_1.EMPClient.DefaultHTTPUserAgent,
-                                          TimeSpan?                            QueryTimeout                = null,
+                                              String                               RemoteHostname,
+                                              IPPort                               RemoteTCPPort               = null,
+                                              String                               RemoteHTTPVirtualHost       = null,
+                                              RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                                              String                               HTTPUserAgent               = OICPv2_1.EMPClient.DefaultHTTPUserAgent,
+                                              TimeSpan?                            QueryTimeout                = null,
 
-                                          String                               ServerName                  = OICPv2_1.EMPServer.DefaultHTTPServerName,
-                                          IPPort                               ServerTCPPort               = null,
-                                          String                               ServerURIPrefix             = "",
-                                          Boolean                              ServerAutoStart             = true,
+                                              String                               ServerName                  = OICPv2_1.EMPServer.DefaultHTTPServerName,
+                                              IPPort                               ServerTCPPort               = null,
+                                              String                               ServerURIPrefix             = "",
+                                              Boolean                              ServerAutoStart             = true,
 
-                                          String                               ClientLoggingContext        = OICPv2_1.EMPClientLogger.DefaultContext,
-                                          String                               ServerLoggingContext        = OICPv2_1.EMPServerLogger.DefaultContext,
-                                          Func<String, String, String>         LogFileCreator              = null,
+                                              String                               ClientLoggingContext        = OICPv2_1.EMPClientLogger.DefaultContext,
+                                              String                               ServerLoggingContext        = OICPv2_1.EMPServerLogger.DefaultContext,
+                                              Func<String, String, String>         LogFileCreator              = null,
 
-                                          DNSClient                            DNSClient                   = null,
+                                              DNSClient                            DNSClient                   = null,
 
-                                          Action<OICPv2_1.EMPRoamingWWCP>      OICPConfigurator            = null,
-                                          Action<EMPRoamingProvider>           Configurator                = null)
+                                              Action<OICPv2_1.EMPRoamingWWCP>      OICPConfigurator            = null,
+                                              Action<EMPRoamingProvider>           Configurator                = null)
 
         {
 
@@ -145,7 +145,7 @@ namespace org.GraphDefined.WWCP
 
         #endregion
 
-        #region CreateOICP_EMPRoamingProvider(this RoamingNetwork, Id, Name, SOAPServer, RemoteHostname, ...)
+        #region CreateOICPv2_1_EMPRoamingProvider(this RoamingNetwork, Id, Name, SOAPServer, RemoteHostname, ...)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -175,27 +175,27 @@ namespace org.GraphDefined.WWCP
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         public static EMPRoamingProvider
 
-            CreateOICP_EMPRoamingProvider(this RoamingNetwork                  RoamingNetwork,
-                                          RoamingProvider_Id                   Id,
-                                          I18NString                           Name,
-                                          SOAPServer                           SOAPServer,
+            CreateOICPv2_1_EMPRoamingProvider(this RoamingNetwork                  RoamingNetwork,
+                                              RoamingProvider_Id                   Id,
+                                              I18NString                           Name,
+                                              SOAPServer                           SOAPServer,
 
-                                          String                               RemoteHostname,
-                                          IPPort                               RemoteTCPPort               = null,
-                                          String                               RemoteHTTPVirtualHost       = null,
-                                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                                          String                               HTTPUserAgent               = OICPv2_1.EMPClient.DefaultHTTPUserAgent,
-                                          TimeSpan?                            QueryTimeout                = null,
+                                              String                               RemoteHostname,
+                                              IPPort                               RemoteTCPPort               = null,
+                                              String                               RemoteHTTPVirtualHost       = null,
+                                              RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                                              String                               HTTPUserAgent               = OICPv2_1.EMPClient.DefaultHTTPUserAgent,
+                                              TimeSpan?                            QueryTimeout                = null,
 
-                                          String                               ServerURIPrefix             = null,
+                                              String                               ServerURIPrefix             = null,
 
-                                          String                               ClientLoggingContext        = OICPv2_1.EMPClientLogger.DefaultContext,
-                                          String                               ServerLoggingContext        = OICPv2_1.EMPServerLogger.DefaultContext,
-                                          Func<String, String, String>         LogFileCreator              = null,
-                                          DNSClient                            DNSClient                   = null,
+                                              String                               ClientLoggingContext        = OICPv2_1.EMPClientLogger.DefaultContext,
+                                              String                               ServerLoggingContext        = OICPv2_1.EMPServerLogger.DefaultContext,
+                                              Func<String, String, String>         LogFileCreator              = null,
+                                              DNSClient                            DNSClient                   = null,
 
-                                          Action<OICPv2_1.EMPRoamingWWCP>      OICPConfigurator            = null,
-                                          Action<EMPRoamingProvider>           Configurator                = null)
+                                              Action<OICPv2_1.EMPRoamingWWCP>      OICPConfigurator            = null,
+                                              Action<EMPRoamingProvider>           Configurator                = null)
 
         {
 

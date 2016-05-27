@@ -151,12 +151,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region CPOClientLogger
+        #region ClientLogger
 
         /// <summary>
         /// The CPO client logger.
         /// </summary>
-        public CPOClientLogger CPOClientLogger
+        public CPOClientLogger ClientLogger
         {
             get
             {
@@ -166,12 +166,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region CPOServerLogger
+        #region ServerLogger
 
         /// <summary>
         /// The CPO server logger.
         /// </summary>
-        public CPOServerLogger CPOServerLogger
+        public CPOServerLogger ServerLogger
         {
             get
             {

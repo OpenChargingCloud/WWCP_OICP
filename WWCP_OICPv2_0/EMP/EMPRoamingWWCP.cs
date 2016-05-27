@@ -159,12 +159,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region EMPClientLogger
+        #region ClientLogger
 
         /// <summary>
         /// The EMP client logger.
         /// </summary>
-        public EMPClientLogger EMPClientLogger
+        public EMPClientLogger ClientLogger
         {
             get
             {
@@ -174,12 +174,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region EMPServerLogger
+        #region ServerLogger
 
         /// <summary>
         /// The EMP server logger.
         /// </summary>
-        public EMPServerLogger EMPServerLogger
+        public EMPServerLogger ServerLogger
         {
             get
             {
