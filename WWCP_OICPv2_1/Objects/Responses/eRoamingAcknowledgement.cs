@@ -220,11 +220,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
+                // The eRoamingAcknowledgement might be top-level or nested!
                 var AcknowledgementXML  = XML.Descendants(OICPNS.CommonTypes + "eRoamingAcknowledgement").
                                               FirstOrDefault();
 
-                //if (AcknowledgementXML == null && XML.Name == OICPNS.CommonTypes + "eRoamingAcknowledgement")
-                //    AcknowledgementXML = XML;
+                if (AcknowledgementXML == null && XML.Name == OICPNS.CommonTypes + "eRoamingAcknowledgement")
+                    AcknowledgementXML = XML;
 
                 if (AcknowledgementXML == null)
                     return false;

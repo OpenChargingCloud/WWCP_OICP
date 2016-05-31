@@ -963,7 +963,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             {
 
                 if (result.Content != null && result.Content.Result)
-                    return RemoteStartEVSEResult.Success();
+                    return RemoteStartEVSEResult.Success(result.Content.SessionId != null
+                                                             ? new ChargingSession(result.Content.SessionId)
+                                                             : null);
 
             }
 
