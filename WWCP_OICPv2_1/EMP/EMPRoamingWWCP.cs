@@ -933,6 +933,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ReservationId">The unique charging reservation identification.</param>
         /// <param name="Reason">A reason for this cancellation.</param>
+        /// <param name="ProviderId">An optional unique identification of e-Mobility service provider.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
         public async Task<CancelReservationResult>
 
