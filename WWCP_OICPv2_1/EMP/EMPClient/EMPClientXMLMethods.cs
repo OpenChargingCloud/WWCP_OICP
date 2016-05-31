@@ -777,7 +777,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingAuthorizeRemoteReservationStart",
+            return SOAP.Encapsulation(new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart",
 
                                           SessionId != null
                                               ? new XElement(OICPNS.Reservation + "SessionID",         SessionId.         ToString())

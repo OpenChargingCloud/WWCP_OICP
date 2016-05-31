@@ -53,7 +53,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The namespace for the Reservation within the Open Intercharge Protocol (OICP) Version 1.0.
         /// </summary>
-        public static readonly XNamespace Reservation          = "http://www.hubject.com/b2b/services/authorization/v1.0";
+        public static readonly XNamespace Reservation          = "http://www.hubject.com/b2b/services/reservation/v1.0";
 
         /// <summary>
         /// The namespace for the Authentication Data within the Open Intercharge Protocol (OICP) Version 2.0.

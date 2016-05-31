@@ -893,7 +893,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                  EVSEId,
                                                                  ProviderId,
                                                                  eMAId,
-                                                                 ChargingSession_Id.Parse(ReservationId.ToString()),
+                                                                 ReservationId != null ? ChargingSession_Id.Parse(ReservationId.ToString()) : null,
                                                                  null,
                                                                  ChargingProductId,
                                                                  QueryTimeout);

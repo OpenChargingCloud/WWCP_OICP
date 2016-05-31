@@ -780,12 +780,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             {
 
-                return await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteStartXML(ProviderId,
-                                                                                           EVSEId,
-                                                                                           eMAId,
-                                                                                           SessionId,
-                                                                                           PartnerSessionId,
-                                                                                           PartnerProductId),
+                return await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteReservationStartXML(ProviderId,
+                                                                                                      EVSEId,
+                                                                                                      eMAId,
+                                                                                                      SessionId,
+                                                                                                      PartnerSessionId,
+                                                                                                      PartnerProductId),
                                                "eRoamingAuthorizeRemoteReservationStart",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
@@ -883,10 +883,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             {
 
-                return await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteStopXML(SessionId,
-                                                                                          ProviderId,
-                                                                                          EVSEId,
-                                                                                          PartnerSessionId),
+                return await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteReservationStopXML(SessionId,
+                                                                                                     ProviderId,
+                                                                                                     EVSEId,
+                                                                                                     PartnerSessionId),
                                                "eRoamingAuthorizeRemoteReservationStop",
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
