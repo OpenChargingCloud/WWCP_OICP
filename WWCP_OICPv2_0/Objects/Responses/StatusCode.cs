@@ -36,18 +36,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Code
 
-        private readonly Int16 _Code;
+        private readonly Int32 _Code;
 
         /// <summary>
         /// The result code of the operation.
         /// </summary>
-        public Int16 Code
-        {
-            get
-            {
-                return _Code;
-            }
-        }
+        public Int32 Code => _Code;
 
         #endregion
 
@@ -56,13 +50,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Whether the operation was successful and returned a valid result.
         /// </summary>
-        public Boolean HasResult
-        {
-            get
-            {
-                return _Code == 0;
-            }
-        }
+        public Boolean HasResult => _Code == 0;
 
         #endregion
 
@@ -73,13 +61,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The description of the result code.
         /// </summary>
-        public String Description
-        {
-            get
-            {
-                return _Description;
-            }
-        }
+        public String Description => _Description;
 
         #endregion
 
@@ -90,13 +72,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Additional information.
         /// </summary>
-        public String AdditionalInfo
-        {
-            get
-            {
-                return _AdditionalInfo;
-            }
-        }
+        public String AdditionalInfo => _AdditionalInfo;
 
         #endregion
 
@@ -110,7 +86,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Code">The result code of the operation.</param>
         /// <param name="Description">The description of the result code.</param>
         /// <param name="AdditionalInfo">Additional information.</param>
-        public StatusCode(Int16   Code,
+        public StatusCode(Int32   Code,
                           String  Description     = null,
                           String  AdditionalInfo  = null)
         {
@@ -216,6 +192,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
+
+        #region ToXML
+
+        /// <summary>
+        /// Return a XML-representation of this object.
+        /// </summary>
+        public XElement ToXML => new XElement(OICPNS.CommonTypes + "StatusCode",
+                                     new XElement(OICPNS.CommonTypes + "Code",            Code.ToString("D3")),
+                                     new XElement(OICPNS.CommonTypes + "Description",     Description),
+                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  AdditionalInfo)
+                                 );
+
+        #endregion
 
         #region (override) ToString()
 

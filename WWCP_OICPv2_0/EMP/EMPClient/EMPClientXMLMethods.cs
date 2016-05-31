@@ -765,14 +765,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Initial checks
 
-            if (SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId),  "The given session identification must not be null!");
+            if (ProviderId == null)
+                throw new ArgumentNullException(nameof(ProviderId),  "The given eMobility provider identification must not be null!");
 
-            if (eMAId     == null)
-                throw new ArgumentNullException(nameof(eMAId),      "The given eMobility account identification must not be null!");
+            if (eMAId      == null)
+                throw new ArgumentNullException(nameof(eMAId),       "The given eMobility account identification must not be null!");
 
-            if (EVSEId    == null)
-                throw new ArgumentNullException(nameof(EVSEId),     "The given EVSE identification must not be null!");
+            if (EVSEId     == null)
+                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
 
             #endregion
 

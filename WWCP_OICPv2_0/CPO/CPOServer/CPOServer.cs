@@ -191,6 +191,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
+
             #region /Authorization - AuthorizeRemoteStart
 
             SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
@@ -266,9 +267,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     try
                     {
 
-                        var OnLogRemoteStartLocal = OnLogRemoteStart;
-                        if (OnLogRemoteStartLocal != null)
-                            OnLogRemoteStartLocal(DateTime.Now, this.SOAPServer, Request);
+                        OnLogRemoteStart?.Invoke(DateTime.Now, this.SOAPServer, Request);
 
                     }
                     catch (Exception e)
@@ -281,7 +280,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Parse request parameters
 
-                    XElement IdentificationXML;
+                    XElement            IdentificationXML;
                     XElement            QRCodeIdentificationXML;
                     XElement            PnCIdentificationXML;
                     XElement            RemoteIdentificationXML;
@@ -337,21 +336,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         //Log.Timestamp("Invalid RemoteStartXML: " + e.Message);
 
                         return new HTTPResponseBuilder(Request) {
-
-                                HTTPStatusCode  = HTTPStatusCode.OK,
-                                ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                                Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-
-                                                                         new XElement(OICPNS.CommonTypes + "Result", "false"),
-
-                                                                         new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                             new XElement(OICPNS.CommonTypes + "Code",           "022"),
-                                                                             new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
-                                                                             new XElement(OICPNS.CommonTypes + "AdditionalInfo",  e.Message)
-                                                                         )
-
-                                                                     )).ToString().ToUTF8Bytes()
-
+                            HTTPStatusCode  = HTTPStatusCode.OK,
+                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                            Content         = SOAP.Encapsulation(
+                                                  new eRoamingAcknowledgement(false,
+                                                                              22,
+                                                                              "Request led to an exception!",
+                                                                              e.Message).ToXML).ToUTF8Bytes()
                         };
 
                     }
@@ -427,7 +418,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Map result
 
-                    var HubjectCode            = "320";
+                    var HubjectCode            = 320;
                     var HubjectDescription     = "Service not available!";
                     var HubjectAdditionalInfo  = "";
 
@@ -436,48 +427,48 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         {
 
                             case RemoteStartEVSEResultType.Success:
-                                HubjectCode         = "000";
+                                HubjectCode         = 0;
                                 HubjectDescription  = "Ready to charge!";
                                 break;
 
                             case RemoteStartEVSEResultType.InvalidSessionId:
-                                HubjectCode         = "400";
+                                HubjectCode         = 400;
                                 HubjectDescription  = "Session is invalid";
                                 break;
 
                             case RemoteStartEVSEResultType.Offline:
-                                HubjectCode         = "501";
+                                HubjectCode         = 501;
                                 HubjectDescription  = "Communication to EVSE failed!";
                                 break;
 
                             case RemoteStartEVSEResultType.Timeout:
-                                HubjectCode         = "510";
+                                HubjectCode         = 510;
                                 HubjectDescription  = "No EV connected to EVSE!";
                                 break;
 
                             case RemoteStartEVSEResultType.Reserved:
-                                HubjectCode         = "601";
+                                HubjectCode         = 601;
                                 HubjectDescription  = "EVSE reserved!";
                                 break;
 
                             case RemoteStartEVSEResultType.AlreadyInUse:
-                                HubjectCode         = "602";
+                                HubjectCode         = 602;
                                 HubjectDescription  = "EVSE is already in use!";
                                 break;
 
                             case RemoteStartEVSEResultType.UnknownEVSE:
-                                HubjectCode         = "603";
+                                HubjectCode         = 603;
                                 HubjectDescription  = "Unknown EVSE ID!";
                                 break;
 
                             case RemoteStartEVSEResultType.OutOfService:
-                                HubjectCode         = "700";
+                                HubjectCode         = 700;
                                 HubjectDescription  = "EVSE out of service!";
                                 break;
 
 
                             default:
-                                HubjectCode         = "320";
+                                HubjectCode         = 320;
                                 HubjectDescription  = "Service not available!";
                                 break;
 
@@ -493,20 +484,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(
-                                              new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-
-                                                  new XElement(OICPNS.CommonTypes + "Result", response != null && response.Result == RemoteStartEVSEResultType.Success ? "true" : "false"),
-
-                                                  new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                      new XElement(OICPNS.CommonTypes + "Code",            HubjectCode),
-                                                      new XElement(OICPNS.CommonTypes + "Description",     HubjectDescription),
-                                                      new XElement(OICPNS.CommonTypes + "AdditionalInfo",  HubjectAdditionalInfo)
-                                                  ),
-
-                                                  new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-                                                  //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
-
-                                             )).ToUTF8Bytes()
+                                              new eRoamingAcknowledgement(response != null && response.Result == RemoteStartEVSEResultType.Success,
+                                                                          HubjectCode,
+                                                                          HubjectDescription,
+                                                                          HubjectAdditionalInfo,
+                                                                          SessionId).ToXML).ToUTF8Bytes()
                     };
 
 
@@ -518,9 +500,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     try
                     {
 
-                        var OnLogRemoteStartedLocal = OnLogRemoteStarted;
-                        if (OnLogRemoteStartedLocal != null)
-                            OnLogRemoteStartedLocal(HTTPResponse.Timestamp, this.SOAPServer, Request, HTTPResponse);
+                        OnLogRemoteStarted?.Invoke(HTTPResponse.Timestamp,
+                                                   this.SOAPServer,
+                                                   Request,
+                                                   HTTPResponse);
 
                     }
                     catch (Exception e)
@@ -574,9 +557,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     try
                     {
 
-                        var OnLogRemoteStopLocal = OnLogRemoteStop;
-                        if (OnLogRemoteStopLocal != null)
-                            OnLogRemoteStopLocal(DateTime.Now, this.SOAPServer, Request);
+                        OnLogRemoteStop?.Invoke(DateTime.Now,
+                                                this.SOAPServer,
+                                                Request);
 
                     }
                     catch (Exception e)
@@ -589,7 +572,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Parse request parameters
 
-                    XElement PartnerSessionIdXML;
+                    XElement            PartnerSessionIdXML;
 
                     ChargingSession_Id  SessionId         = null;
                     ChargingSession_Id  PartnerSessionId  = null;
@@ -613,21 +596,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     {
 
                         return new HTTPResponseBuilder(Request) {
-
-                                HTTPStatusCode  = HTTPStatusCode.OK,
-                                ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                                Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-
-                                                                         new XElement(OICPNS.CommonTypes + "Result", "false"),
-
-                                                                         new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                             new XElement(OICPNS.CommonTypes + "Code",           "022"),
-                                                                             new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
-                                                                             new XElement(OICPNS.CommonTypes + "AdditionalInfo", e.Message)
-                                                                         )
-
-                                                                     )).ToString().ToUTF8Bytes()
-
+                            HTTPStatusCode  = HTTPStatusCode.OK,
+                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                            Content         = SOAP.Encapsulation(
+                                                  new eRoamingAcknowledgement(false,
+                                                                              22,
+                                                                              "Request led to an exception!",
+                                                                              e.Message).ToXML).ToUTF8Bytes()
                         };
 
                     }
@@ -701,7 +676,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #region Map result
 
-                    var HubjectCode            = "320";
+                    var HubjectCode            = 320;
                     var HubjectDescription     = "Service not available!";
                     var HubjectAdditionalInfo  = "";
 
@@ -710,38 +685,38 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         {
 
                             case RemoteStopEVSEResultType.Success:
-                                HubjectCode         = "000";
+                                HubjectCode         = 000;
                                 HubjectDescription  = "Ready to stop charging!";
                                 break;
 
                             case RemoteStopEVSEResultType.InvalidSessionId:
-                                HubjectCode         = "400";
+                                HubjectCode         = 400;
                                 HubjectDescription  = "Session is invalid";
                                 break;
 
                             case RemoteStopEVSEResultType.Offline:
-                                HubjectCode         = "501";
+                                HubjectCode         = 501;
                                 HubjectDescription  = "Communication to EVSE failed!";
                                 break;
 
                             case RemoteStopEVSEResultType.Timeout:
-                                HubjectCode         = "510";
+                                HubjectCode         = 510;
                                 HubjectDescription  = "No EV connected to EVSE!";
                                 break;
 
                             case RemoteStopEVSEResultType.UnknownEVSE:
-                                HubjectCode         = "603";
+                                HubjectCode         = 603;
                                 HubjectDescription  = "Unknown EVSE ID!";
                                 break;
 
                             case RemoteStopEVSEResultType.OutOfService:
-                                HubjectCode         = "700";
+                                HubjectCode         = 700;
                                 HubjectDescription  = "EVSE out of service!";
                                 break;
 
 
                             default:
-                                HubjectCode         = "320";
+                                HubjectCode         = 320;
                                 HubjectDescription  = "Service not available!";
                                 break;
 
@@ -757,19 +732,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(
-                                              new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
-
-                                                  new XElement(OICPNS.CommonTypes + "Result", response != null && response.Result == RemoteStopEVSEResultType.Success ? "true" : "false"),
-
-                                                  new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                      new XElement(OICPNS.CommonTypes + "Code",           HubjectCode),
-                                                      new XElement(OICPNS.CommonTypes + "Description",    HubjectDescription),
-                                                      new XElement(OICPNS.CommonTypes + "AdditionalInfo", HubjectAdditionalInfo)
-                                                  ),
-
-                                                  new XElement(OICPNS.CommonTypes + "SessionID", SessionId)
-
-                                              )).ToUTF8Bytes()
+                                              new eRoamingAcknowledgement(response != null && response.Result == RemoteStopEVSEResultType.Success,
+                                                                          HubjectCode,
+                                                                          HubjectDescription,
+                                                                          HubjectAdditionalInfo,
+                                                                          SessionId).ToXML).ToUTF8Bytes()
                     };
 
                     #endregion
@@ -780,9 +747,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     try
                     {
 
-                        var OnLogRemoteStoppedLocal = OnLogRemoteStopped;
-                        if (OnLogRemoteStoppedLocal != null)
-                            OnLogRemoteStoppedLocal(HTTPResponse.Timestamp, this.SOAPServer, Request, HTTPResponse);
+                        OnLogRemoteStopped?.Invoke(HTTPResponse.Timestamp,
+                                                   this.SOAPServer,
+                                                   Request,
+                                                   HTTPResponse);
 
                     }
                     catch (Exception e)
