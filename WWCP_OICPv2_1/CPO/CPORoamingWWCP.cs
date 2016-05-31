@@ -330,9 +330,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this._EVSE2EVSEDataRecord       = EVSE2EVSEDataRecord;
             this._EVSEDataRecord2XML        = EVSEDataRecord2XML;
 
-            // Link RemoteStart/-Stop events
-            this._CPORoaming.OnRemoteStart += SendRemoteStart;
-            this._CPORoaming.OnRemoteStop  += SendRemoteStop;
+            // Link events...
+            this._CPORoaming.OnRemoteReservationStart += SendRemoteReservationStart;
+            this._CPORoaming.OnRemoteReservationStop  += SendRemoteReservationStop;
+            this._CPORoaming.OnRemoteStart            += SendRemoteStart;
+            this._CPORoaming.OnRemoteStop             += SendRemoteStop;
 
         }
 
@@ -468,6 +470,66 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+
+        #region (private) SendRemoteReservationStart(...)
+
+        private async Task<ReservationResult>
+
+            SendRemoteReservationStart(DateTime            Timestamp,
+                                       CPOServer           Sender,
+                                       CancellationToken   CancellationToken,
+                                       EventTracking_Id    EventTrackingId,
+                                       EVSE_Id             EVSEId,
+                                       ChargingProduct_Id  ChargingProductId,
+                                       ChargingSession_Id  SessionId,
+                                       ChargingSession_Id  PartnerSessionId,
+                                       EVSP_Id             ProviderId,
+                                       eMA_Id              eMAId,
+                                       TimeSpan?           QueryTimeout = null)
+
+        {
+
+            return await _RoamingNetwork.Reserve(Timestamp,
+                                                 CancellationToken,
+                                                 EventTrackingId,
+                                                 EVSEId,
+                                                 ReservationId: SessionId != null ? ChargingReservation_Id.Parse(SessionId.ToString()) : null,
+                                                 ProviderId: ProviderId,
+                                                 eMAId:  eMAId,
+                                                 ChargingProductId: ChargingProductId,
+                                                 QueryTimeout: QueryTimeout);
+
+        }
+
+        #endregion
+
+        #region (private) SendRemoteReservationStop(...)
+
+        private async Task<CancelReservationResult>
+
+            SendRemoteReservationStop(DateTime            Timestamp,
+                                      CPOServer           Sender,
+                                      CancellationToken   CancellationToken,
+                                      EventTracking_Id    EventTrackingId,
+                                      EVSE_Id             EVSEId,
+                                      ChargingSession_Id  SessionId,
+                                      ChargingSession_Id  PartnerSessionId,
+                                      EVSP_Id             ProviderId    = null,
+                                      TimeSpan?           QueryTimeout  = null)
+
+        {
+
+            return await _RoamingNetwork.CancelReservation(Timestamp,
+                                                           CancellationToken,
+                                                           EventTrackingId,
+                                                           ChargingReservation_Id.Parse(SessionId.ToString()),
+                                                           ChargingReservationCancellationReason.Deleted,
+                                                           ProviderId,
+                                                           QueryTimeout: QueryTimeout);
+
+        }
+
+        #endregion
 
         #region (private) SendRemoteStart(...)
 

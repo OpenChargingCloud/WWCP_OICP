@@ -299,14 +299,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #endregion
 
-                    #region Send OnLogChargeDetailRecordSend event
+                    #region Send OnLogRemoteReservationStart event
 
                     try
                     {
 
-                        OnLogRemoteStart?.Invoke(DateTime.Now,
-                                                 this.SOAPServer,
-                                                 Request);
+                        OnLogRemoteReservationStart?.Invoke(DateTime.Now,
+                                                            this.SOAPServer,
+                                                            Request);
 
                     }
                     catch (Exception e)
@@ -534,15 +534,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     #endregion
 
 
-                    #region Send OnLogRemoteStarted event
+                    #region Send OnLogRemoteReservationStarted event
 
                     try
                     {
 
-                        OnLogRemoteStarted?.Invoke(HTTPResponse.Timestamp,
-                                                   this.SOAPServer,
-                                                   Request,
-                                                   HTTPResponse);
+                        OnLogRemoteReservationStarted?.Invoke(HTTPResponse.Timestamp,
+                                                              this.SOAPServer,
+                                                              Request,
+                                                              HTTPResponse);
 
                     }
                     catch (Exception e)
@@ -590,14 +590,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #endregion
 
-                    #region Send OnLogChargeDetailRecordSend event
+                    #region Send OnLogRemoteReservationStop event
 
                     try
                     {
 
-                        OnLogRemoteStop?.Invoke(DateTime.Now,
-                                                this.SOAPServer,
-                                                Request);
+                        OnLogRemoteReservationStop?.Invoke(DateTime.Now,
+                                                           this.SOAPServer,
+                                                           Request);
 
                     }
                     catch (Exception e)
@@ -780,15 +780,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     #endregion
 
 
-                    #region Send OnLogRemoteStopped event
+                    #region Send OnLogRemoteReservationStopped event
 
                     try
                     {
 
-                        OnLogRemoteStopped?.Invoke(HTTPResponse.Timestamp,
-                                                   this.SOAPServer,
-                                                   Request,
-                                                   HTTPResponse);
+                        OnLogRemoteReservationStopped?.Invoke(HTTPResponse.Timestamp,
+                                                              this.SOAPServer,
+                                                              Request,
+                                                              HTTPResponse);
 
                     }
                     catch (Exception e)
@@ -875,7 +875,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #endregion
 
-                    #region Send OnLogChargeDetailRecordSend event
+                    #region Send OnLogRemoteStart event
 
                     try
                     {
@@ -1165,7 +1165,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #endregion
 
-                    #region Send OnLogChargeDetailRecordSend event
+                    #region Send OnLogRemoteStop event
 
                     try
                     {

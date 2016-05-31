@@ -262,7 +262,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    #region Send OnLogChargeDetailRecordSend event
+                    #region Send OnLogRemoteStart event
 
                     try
                     {
@@ -552,7 +552,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                     #endregion
 
-                    #region Send OnLogChargeDetailRecordSend event
+                    #region Send OnLogRemoteStop event
 
                     try
                     {
