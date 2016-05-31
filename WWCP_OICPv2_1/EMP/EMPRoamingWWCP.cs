@@ -44,8 +44,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         private readonly RoamingNetwork  _RoamingNetwork;
 
-        private readonly Dictionary<ChargingReservation_Id, EVSE_Id> _EVSEReservations;
-
         #endregion
 
         #region Properties
@@ -388,8 +386,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this._RoamingNetwork    = RoamingNetwork;
             this._EMPRoaming        = EMPRoaming;
             this._AuthorizatorId    = Authorizator_Id.Parse(Id.ToString());
-
-            this._EVSEReservations  = new Dictionary<ChargingReservation_Id, EVSE_Id>();
 
             // Link AuthorizeStart/-Stop and CDR events
             this._EMPRoaming.OnAuthorizeStart     += SendAuthorizeStart;
@@ -904,8 +900,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (result.Content != null && result.Content.Result)
                 {
 
-                    _EVSEReservations.Add(ReservationId, EVSEId);
-
                     return ReservationResult.Success();
 
                 }
@@ -923,7 +917,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region CancelReservation(...ReservationId, Reason, ...)
+        #region CancelReservation(...ReservationId, Reason, ProviderId = null, EVSEId = null, ...)
 
         /// <summary>
         /// Try to remove the given charging reservation.
@@ -934,6 +928,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ReservationId">The unique charging reservation identification.</param>
         /// <param name="Reason">A reason for this cancellation.</param>
         /// <param name="ProviderId">An optional unique identification of e-Mobility service provider.</param>
+        /// <param name="EVSEId">An optional identification of the EVSE.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
         public async Task<CancelReservationResult>
 
@@ -943,18 +938,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               ChargingReservation_Id                 ReservationId,
                               ChargingReservationCancellationReason  Reason,
                               EVSP_Id                                ProviderId    = null,
+                              EVSE_Id                                EVSEId        = null,
                               TimeSpan?                              QueryTimeout  = null)
 
         {
-
-            #region Verify ReservationId and get EVSEId for it...
-
-            EVSE_Id EVSEId = null;
-
-            if (!_EVSEReservations.TryGetValue(ReservationId, out EVSEId))
-                return CancelReservationResult.UnknownReservationId(ReservationId);
-
-            #endregion
 
             var result = await this._EMPRoaming.ReservationStop(Timestamp,
                                                                 CancellationToken,

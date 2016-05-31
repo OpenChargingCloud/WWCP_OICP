@@ -889,7 +889,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region CancelReservation(...ReservationId, Reason, ...)
+        #region CancelReservation(...ReservationId, Reason, ProviderId = null, EVSEId = null, ...)
 
         /// <summary>
         /// Try to remove the given charging reservation.
@@ -900,6 +900,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ReservationId">The unique charging reservation identification.</param>
         /// <param name="Reason">A reason for this cancellation.</param>
         /// <param name="ProviderId">An optional unique identification of e-Mobility service provider.</param>
+        /// <param name="EVSEId">An optional identification of the EVSE.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
         public async Task<CancelReservationResult>
 
@@ -909,6 +910,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               ChargingReservation_Id                 ReservationId,
                               ChargingReservationCancellationReason  Reason,
                               EVSP_Id                                ProviderId    = null,
+                              EVSE_Id                                EVSEId        = null,
                               TimeSpan?                              QueryTimeout  = null)
 
         {
@@ -918,7 +920,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         #endregion
-
 
 
         #region RemoteStart(...EVSEId, ChargingProductId = null, ReservationId = null, SessionId = null, ProviderId = null, eMAId = null, ...)
