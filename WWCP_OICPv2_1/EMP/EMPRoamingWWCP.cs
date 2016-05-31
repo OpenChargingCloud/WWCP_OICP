@@ -37,12 +37,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// A WWCP wrapper for the OICP v2.1 roaming client for e-mobility providers/EMPs.
     /// </summary>
-    public class EMPRoamingWWCP : IeMobilityRoamingService
+    public class EMPRoamingWWCP : IEMPRoamingService
     {
 
         #region Data
 
         private readonly RoamingNetwork  _RoamingNetwork;
+
+        private readonly Dictionary<ChargingReservation_Id, EVSE_Id> _EVSEReservations;
 
         #endregion
 
@@ -381,11 +383,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            this._Id              = Id;
-            this._Name            = Name;
-            this._RoamingNetwork  = RoamingNetwork;
-            this._EMPRoaming      = EMPRoaming;
-            this._AuthorizatorId  = Authorizator_Id.Parse(Id.ToString());
+            this._Id                = Id;
+            this._Name              = Name;
+            this._RoamingNetwork    = RoamingNetwork;
+            this._EMPRoaming        = EMPRoaming;
+            this._AuthorizatorId    = Authorizator_Id.Parse(Id.ToString());
+
+            this._EVSEReservations  = new Dictionary<ChargingReservation_Id, EVSE_Id>();
 
             // Link AuthorizeStart/-Stop and CDR events
             this._EMPRoaming.OnAuthorizeStart     += SendAuthorizeStart;
@@ -845,6 +849,254 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
+        #region ReservationStart(...EVSEId, ChargingProductId = null, ReservationId = null, SessionId = null, ProviderId = null, eMAId = null, ...)
+
+        /// <summary>
+        /// Reserve the possibility to charge at the given EVSE.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of this request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        /// <param name="EVSEId">The unique identification of the EVSE to be reserved.</param>
+        /// <param name="StartTime">The starting time of the reservation.</param>
+        /// <param name="Duration">The duration of the reservation.</param>
+        /// <param name="ReservationId">An optional unique identification of the reservation. Mandatory for updates.</param>
+        /// <param name="ProviderId">An optional unique identification of e-Mobility service provider.</param>
+        /// <param name="eMAId">An optional unique identification of e-Mobility account/customer requesting this reservation.</param>
+        /// <param name="ChargingProductId">An optional unique identification of the charging product to be reserved.</param>
+        /// <param name="AuthTokens">A list of authentication tokens, who can use this reservation.</param>
+        /// <param name="eMAIds">A list of eMobility account identifications, who can use this reservation.</param>
+        /// <param name="PINs">A list of PINs, who can be entered into a pinpad to use this reservation.</param>
+        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        public async Task<ReservationResult>
+
+            Reserve(DateTime                 Timestamp,
+                    CancellationToken        CancellationToken,
+                    EventTracking_Id         EventTrackingId,
+                    EVSE_Id                  EVSEId,
+                    DateTime?                StartTime          = null,
+                    TimeSpan?                Duration           = null,
+                    ChargingReservation_Id   ReservationId      = null,
+                    EVSP_Id                  ProviderId         = null,
+                    eMA_Id                   eMAId              = null,
+                    ChargingProduct_Id       ChargingProductId  = null,
+                    IEnumerable<Auth_Token>  AuthTokens         = null,
+                    IEnumerable<eMA_Id>      eMAIds             = null,
+                    IEnumerable<UInt32>      PINs               = null,
+                    TimeSpan?                QueryTimeout       = null)
+
+        {
+
+            var result = await this._EMPRoaming.ReservationStart(Timestamp,
+                                                                 CancellationToken,
+                                                                 EventTrackingId,
+                                                                 EVSEId,
+                                                                 ProviderId,
+                                                                 eMAId,
+                                                                 ChargingSession_Id.Parse(ReservationId.ToString()),
+                                                                 null,
+                                                                 ChargingProductId,
+                                                                 QueryTimeout);
+
+            if (result.HTTPStatusCode == HTTPStatusCode.OK)
+            {
+
+                if (result.Content != null && result.Content.Result)
+                {
+
+                    _EVSEReservations.Add(ReservationId, EVSEId);
+
+                    return ReservationResult.Success();
+
+                }
+
+            }
+
+            else
+            {
+                return ReservationResult.Error();
+            }
+
+            return ReservationResult.Error();
+
+        }
+
+        #endregion
+
+        #region CancelReservation(...ReservationId, Reason, ...)
+
+        /// <summary>
+        /// Try to remove the given charging reservation.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of this request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        /// <param name="ReservationId">The unique charging reservation identification.</param>
+        /// <param name="Reason">A reason for this cancellation.</param>
+        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        public async Task<CancelReservationResult>
+
+            CancelReservation(DateTime                               Timestamp,
+                              CancellationToken                      CancellationToken,
+                              EventTracking_Id                       EventTrackingId,
+                              ChargingReservation_Id                 ReservationId,
+                              ChargingReservationCancellationReason  Reason,
+                              EVSP_Id                                ProviderId    = null,
+                              TimeSpan?                              QueryTimeout  = null)
+
+        {
+
+            #region Verify ReservationId and get EVSEId for it...
+
+            EVSE_Id EVSEId = null;
+
+            if (!_EVSEReservations.TryGetValue(ReservationId, out EVSEId))
+                return CancelReservationResult.UnknownReservationId(ReservationId);
+
+            #endregion
+
+            var result = await this._EMPRoaming.ReservationStop(Timestamp,
+                                                                CancellationToken,
+                                                                EventTrackingId,
+                                                                ChargingSession_Id.Parse(ReservationId.ToString()),
+                                                                ProviderId,
+                                                                EVSEId,
+                                                                null,
+                                                                QueryTimeout);
+
+            if (result.HTTPStatusCode == HTTPStatusCode.OK)
+            {
+
+                if (result.Content != null && result.Content.Result)
+                    return CancelReservationResult.Success(ReservationId);
+
+            }
+
+            else
+            {
+                return CancelReservationResult.Error();
+            }
+
+            return CancelReservationResult.Error();
+
+        }
+
+        #endregion
+
+
+        #region RemoteStart(...EVSEId, ChargingProductId = null, ReservationId = null, SessionId = null, ProviderId = null, eMAId = null, ...)
+
+        /// <summary>
+        /// Start a charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
+        /// <param name="ChargingProductId">The unique identification of the choosen charging product.</param>
+        /// <param name="ReservationId">The unique identification for a charging reservation.</param>
+        /// <param name="SessionId">The unique identification for this charging session.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
+        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        public async Task<RemoteStartEVSEResult> RemoteStart(DateTime                Timestamp,
+                                                             CancellationToken       CancellationToken,
+                                                             EventTracking_Id        EventTrackingId,
+                                                             EVSE_Id                 EVSEId,
+                                                             ChargingProduct_Id      ChargingProductId  = null,
+                                                             ChargingReservation_Id  ReservationId      = null,
+                                                             ChargingSession_Id      SessionId          = null,
+                                                             EVSP_Id                 ProviderId         = null,
+                                                             eMA_Id                  eMAId              = null,
+                                                             TimeSpan?               QueryTimeout       = default(TimeSpan?))
+        {
+
+            var result = await this._EMPRoaming.RemoteStart(Timestamp,
+                                                            CancellationToken,
+                                                            EventTrackingId,
+                                                            EVSEId,
+                                                            ProviderId,
+                                                            eMAId,
+                                                            SessionId,
+                                                            null,
+                                                            ChargingProductId,
+                                                            QueryTimeout);
+
+            if (result.HTTPStatusCode == HTTPStatusCode.OK)
+            {
+
+                if (result.Content != null && result.Content.Result)
+                    return RemoteStartEVSEResult.Success();
+
+            }
+
+            else
+            {
+                return RemoteStartEVSEResult.Error();
+            }
+
+            return RemoteStartEVSEResult.Error();
+
+        }
+
+        #endregion
+
+        #region RemoteStop(...EVSEId, SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
+
+        /// <summary>
+        /// Stop the given charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
+        /// <param name="SessionId">The unique identification for this charging session.</param>
+        /// <param name="ReservationHandling">Wether to remove the reservation after session end, or to keep it open for some more time.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
+        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        public async Task<RemoteStopEVSEResult>
+
+            RemoteStop(DateTime             Timestamp,
+                       CancellationToken    CancellationToken,
+                       EventTracking_Id     EventTrackingId,
+                       EVSE_Id              EVSEId,
+                       ChargingSession_Id   SessionId,
+                       ReservationHandling  ReservationHandling,
+                       EVSP_Id              ProviderId    = null,
+                       eMA_Id               eMAId         = null,
+                       TimeSpan?            QueryTimeout  = null)
+
+        {
+
+            var result = await this._EMPRoaming.RemoteStop(Timestamp,
+                                                           CancellationToken,
+                                                           EventTrackingId,
+                                                           SessionId,
+                                                           ProviderId,
+                                                           EVSEId,
+                                                           null,
+                                                           QueryTimeout);
+
+            if (result.HTTPStatusCode == HTTPStatusCode.OK)
+            {
+
+                if (result.Content != null && result.Content.Result)
+                    return RemoteStopEVSEResult.Success(SessionId);
+
+            }
+
+            else
+            {
+                return RemoteStopEVSEResult.Error(SessionId);
+            }
+
+            return RemoteStopEVSEResult.Error(SessionId);
+
+        }
+
+        #endregion
+
 
         #region Start()
 
@@ -863,7 +1115,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
-
 
     }
 

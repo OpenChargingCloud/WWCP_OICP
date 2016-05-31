@@ -28,7 +28,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    /// <summary>
+/// <summary>
     /// Initiate a remote start of the given charging session at the given EVSE
     /// and for the given Provider/eMAId.
     /// </summary>
@@ -43,19 +43,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="eMAId">The unique identification of the e-mobility account.</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
-    public delegate Task<ReservationResult> OnReservationStartDelegate(DateTime            Timestamp,
-                                                                       CPOServer           Sender,
-                                                                       CancellationToken   CancellationToken,
-                                                                       EventTracking_Id    EventTrackingId,
-
-                                                                       ChargingSession_Id  SessionId,           // optional
-                                                                       ChargingSession_Id  PartnerSessionId,    // optional
-                                                                       EVSP_Id             ProviderId,
-                                                                       EVSE_Id             EVSEId,
-                                                                       eMA_Id              eMAId,
-                                                                       ChargingProduct_Id  ChargingProductId,   // optional
-
-                                                                       TimeSpan?           QueryTimeout  = null);
+    public delegate Task<ReservationResult> OnRemoteReservationStartDelegate(DateTime            Timestamp,
+                                                                             CPOServer           Sender,
+                                                                             CancellationToken   CancellationToken,
+                                                                             EventTracking_Id    EventTrackingId,
+                                                                             EVSE_Id             EVSEId,
+                                                                             ChargingProduct_Id  ChargingProductId,
+                                                                             ChargingSession_Id  SessionId,
+                                                                             ChargingSession_Id  PartnerSessionId,
+                                                                             EVSP_Id             ProviderId,
+                                                                             eMA_Id              eMAId,
+                                                                             TimeSpan?           QueryTimeout  = null);
 
 
     /// <summary>
@@ -70,17 +68,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="PartnerSessionId">The unique identification for this charging session on the partner side.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender..</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
-    public delegate Task<CancelReservationResult> OnReservationStopDelegate(DateTime             Timestamp,
-                                                                            CPOServer            Sender,
-                                                                            CancellationToken    CancellationToken,
-                                                                            EventTracking_Id     EventTrackingId,
-
-                                                                            ChargingSession_Id   SessionId,
-                                                                            ChargingSession_Id   PartnerSessionId,     // optional
-                                                                            EVSP_Id              ProviderId,
-                                                                            EVSE_Id              EVSEId,
-
-                                                                            TimeSpan?            QueryTimeout  = null);
+    public delegate Task<CancelReservationResult> OnRemoteReservationStopDelegate(DateTime             Timestamp,
+                                                                                  CPOServer            Sender,
+                                                                                  CancellationToken    CancellationToken,
+                                                                                  EventTracking_Id     EventTrackingId,
+                                                                                  EVSE_Id              EVSEId,
+                                                                                  ChargingSession_Id   SessionId,
+                                                                                  ChargingSession_Id   PartnerSessionId,
+                                                                                  EVSP_Id              ProviderId    = null,
+                                                                                  TimeSpan?            QueryTimeout  = null);
 
     /// <summary>
     /// Initiate a remote start of the given charging session at the given EVSE

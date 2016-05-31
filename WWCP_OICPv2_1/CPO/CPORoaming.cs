@@ -174,6 +174,47 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         // Server methods
 
+        #region OnRemoteReservationStart/-Stop
+
+        /// <summary>
+        /// An event sent whenever a remote reservation start command was received.
+        /// </summary>
+        public event OnRemoteReservationStartDelegate OnRemoteReservationStart
+        {
+
+            add
+            {
+                _CPOServer.OnRemoteReservationStart += value;
+            }
+
+            remove
+            {
+                _CPOServer.OnRemoteReservationStart -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event sent whenever a remote reservation stop command was received.
+        /// </summary>
+        public event OnRemoteReservationStopDelegate OnRemoteReservationStop
+
+        {
+
+            add
+            {
+                _CPOServer.OnRemoteReservationStop += value;
+            }
+
+            remove
+            {
+                _CPOServer.OnRemoteReservationStop -= value;
+            }
+
+        }
+
+        #endregion
+
         #region OnRemoteStart/-Stop
 
         /// <summary>

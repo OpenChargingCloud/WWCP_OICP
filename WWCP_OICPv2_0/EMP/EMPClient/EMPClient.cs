@@ -28,6 +28,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using System.Threading;
 
 #endregion
 
@@ -738,6 +739,215 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
+
+        #region RemoteStart(...ProviderId, EVSEId, eMAId, SessionId = null, PartnerSessionId = null, PartnerProductId = null, ...)
+
+        /// <summary>
+        /// Start a charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
+        /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
+        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="SessionId">The unique identification for this charging session.</param>
+        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
+        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+
+            RemoteStart(DateTime                Timestamp,
+                        CancellationToken       CancellationToken,
+                        EventTracking_Id        EventTrackingId,
+                        EVSP_Id                 ProviderId,
+                        EVSE_Id                 EVSEId,
+                        eMA_Id                  eMAId,
+                        ChargingSession_Id      SessionId         = null,
+                        ChargingSession_Id      PartnerSessionId  = null,
+                        ChargingProduct_Id      PartnerProductId  = null,
+                        TimeSpan?               QueryTimeout      = default(TimeSpan?))
+
+        {
+
+            using (var _OICPClient = new SOAPClient(Hostname,
+                                                    TCPPort,
+                                                    HTTPVirtualHost,
+                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    _UserAgent,
+                                                    _RemoteCertificateValidator,
+                                                    DNSClient))
+
+            {
+
+                return await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteStartXML(ProviderId,
+                                                                                           EVSEId,
+                                                                                           eMAId,
+                                                                                           SessionId,
+                                                                                           PartnerSessionId,
+                                                                                           PartnerProductId),
+                                               "eRoamingAuthorizeRemoteStart",
+                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                                               #region OnSuccess
+
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
+
+                                               #endregion
+
+                                               #region OnSOAPFault
+
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+
+                                                   SendSOAPError(timestamp, soapclient, httpresponse.Content);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                Description: httpresponse.Content.ToString()),
+                                                                                                    IsFault: true);
+
+                                               },
+
+                                               #endregion
+
+                                               #region OnHTTPError
+
+                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                   SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
+
+                                               },
+
+                                               #endregion
+
+                                               #region OnException
+
+                                               OnException: (timestamp, sender, exception) => {
+
+                                                   SendException(timestamp, sender, exception);
+
+                                                   return null;
+
+                                               }
+
+                                               #endregion
+
+                                        );
+
+            }
+
+        }
+
+        #endregion
+
+        #region RemoteStop(...EVSEId, SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
+
+        /// <summary>
+        /// Stop the given charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
+        /// <param name="SessionId">The unique identification for this charging session.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
+        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+
+            RemoteStop(DateTime             Timestamp,
+                       CancellationToken    CancellationToken,
+                       EventTracking_Id     EventTrackingId,
+                       ChargingSession_Id   SessionId,
+                       EVSP_Id              ProviderId,
+                       EVSE_Id              EVSEId,
+                       ChargingSession_Id   PartnerSessionId  = null,
+                       TimeSpan?            QueryTimeout      = null)
+
+        {
+
+            using (var _OICPClient = new SOAPClient(Hostname,
+                                                    TCPPort,
+                                                    HTTPVirtualHost,
+                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    _UserAgent,
+                                                    _RemoteCertificateValidator,
+                                                    DNSClient))
+
+            {
+
+                return await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteStopXML(SessionId,
+                                                                                          ProviderId,
+                                                                                          EVSEId,
+                                                                                          PartnerSessionId),
+                                               "eRoamingAuthorizeRemoteStop",
+                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+
+                                               #region OnSuccess
+
+                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
+
+                                               #endregion
+
+                                               #region OnSOAPFault
+
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+
+                                                   SendSOAPError(timestamp, soapclient, httpresponse.Content);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                Description: httpresponse.Content.ToString()),
+                                                                                                    IsFault: true);
+
+                                               },
+
+                                               #endregion
+
+                                               #region OnHTTPError
+
+                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                   SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
+
+                                               },
+
+                                               #endregion
+
+                                               #region OnException
+
+                                               OnException: (timestamp, sender, exception) => {
+
+                                                   SendException(timestamp, sender, exception);
+
+                                                   return null;
+
+                                               }
+
+                                               #endregion
+
+                                        );
+
+            }
+
+        }
+
+        #endregion
 
     }
 

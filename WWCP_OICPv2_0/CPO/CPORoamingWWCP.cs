@@ -61,13 +61,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The unique identification of the roaming provider.
         /// </summary>
-        public RoamingProvider_Id Id
-        {
-            get
-            {
-                return _Id;
-            }
-        }
+        public RoamingProvider_Id Id => _Id;
 
         #endregion
 
@@ -78,13 +72,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The offical (multi-language) name of the roaming provider.
         /// </summary>
-        public I18NString Name
-        {
-            get
-            {
-                return _Name;
-            }
-        }
+        public I18NString Name => _Name;
 
         #endregion
 
@@ -93,13 +81,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The unique identification of the attached roaming network.
         /// </summary>
-        public RoamingNetwork_Id RoamingNetworkId
-        {
-            get
-            {
-                return _RoamingNetwork.Id;
-            }
-        }
+        public RoamingNetwork_Id RoamingNetworkId => _RoamingNetwork.Id;
 
         #endregion
 
@@ -111,13 +93,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The wrapped CPO roaming object.
         /// </summary>
-        public CPORoaming CPORoaming
-        {
-            get
-            {
-                return _CPORoaming;
-            }
-        }
+        public CPORoaming CPORoaming => _CPORoaming;
 
         #endregion
 
@@ -126,13 +102,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The CPO client.
         /// </summary>
-        public CPOClient CPOClient
-        {
-            get
-            {
-                return _CPORoaming?.CPOClient;
-            }
-        }
+        public CPOClient CPOClient => _CPORoaming?.CPOClient;
 
         #endregion
 
@@ -141,13 +111,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The CPO server.
         /// </summary>
-        public CPOServer CPOServer
-        {
-            get
-            {
-                return _CPORoaming?.CPOServer;
-            }
-        }
+        public CPOServer CPOServer => _CPORoaming?.CPOServer;
 
         #endregion
 
@@ -156,13 +120,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The CPO client logger.
         /// </summary>
-        public CPOClientLogger ClientLogger
-        {
-            get
-            {
-                return _CPORoaming?.CPOClientLogger;
-            }
-        }
+        public CPOClientLogger ClientLogger => _CPORoaming?.CPOClientLogger;
 
         #endregion
 
@@ -171,13 +129,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The CPO server logger.
         /// </summary>
-        public CPOServerLogger ServerLogger
-        {
-            get
-            {
-                return _CPORoaming?.CPOServerLogger;
-            }
-        }
+        public CPOServerLogger ServerLogger => _CPORoaming?.CPOServerLogger;
 
         #endregion
 
