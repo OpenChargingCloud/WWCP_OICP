@@ -132,34 +132,354 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
+
+        #region AuthorizeRemoteReservationStart(SessionId, ProviderId, EVSEId, eMAId, ChargingProductId = null, PartnerSessionId = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP v2.0 authorize start request.
+        /// Create an OICP v2.0 authorize remote start request.
         /// </summary>
-        /// <param name="OperatorId">An EVSE operator identification.</param>
-        /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="PartnerProductId">An optional partner product identification.</param>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="EVSEId">An optional EVSE identification.</param>
+        /// <param name="eMAId">An e-mobility account indentification.</param>
+        /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAuthorizationStart>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            AuthorizeRemoteStart(ChargingSession_Id  SessionId,
-                                 EVSP_Id             ProviderId,
-                                 EVSE_Id             EVSEId,
-                                 eMAIdWithPIN        eMAIdWithPIN,
-                                 ChargingProduct_Id  ProductId         = null,
-                                 ChargingSession_Id  PartnerSessionId  = null,
-                                 TimeSpan?           QueryTimeout      = null)
+            AuthorizeRemoteReservationStart(ChargingSession_Id  SessionId,
+                                            EVSP_Id             ProviderId,
+                                            EVSE_Id             EVSEId,
+                                            eMA_Id              eMAId,
+                                            ChargingProduct_Id  ChargingProductId  = null,
+                                            ChargingSession_Id  PartnerSessionId   = null,
+                                            TimeSpan?           QueryTimeout       = null)
 
         {
 
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
-                                                    _URIPrefix,
+                                                    _URIPrefix + "/Reservation",
+                                                    _UserAgent,
+                                                    _RemoteCertificateValidator,
+                                                    DNSClient: _DNSClient))
+            {
+
+                #region Documentation
+
+                // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
+                //                   xmlns:Reservation  = "http://www.hubject.com/b2b/services/reservation/v1.0"
+                //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+                //
+                //    <soapenv:Header/>
+                //
+                //    <soapenv:Body>
+                //       <Reservation:eRoamingAuthorizeRemoteReservationStart>
+                //
+                //          <!--Optional:-->
+                //          <Reservation:SessionID>?</Reservation:SessionID>
+                //
+                //          <!--Optional:-->
+                //          <Reservation:PartnerSessionID>?</Reservation:PartnerSessionID>
+                //
+                //          <Reservation:ProviderID>?</Reservation:ProviderID>
+                //          <Reservation:EVSEID>?</Reservation:EVSEID>
+                //
+                //          <Reservation:Identification>
+                //
+                //             <!--You have a CHOICE of the next 4 items at this level-->
+                //             <CommonTypes:RFIDmifarefamilyIdentification>
+                //                <CommonTypes:UID>?</CommonTypes:UID>
+                //             </CommonTypes:RFIDmifarefamilyIdentification>
+                //
+                //             <CommonTypes:QRCodeIdentification>
+                //
+                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                //
+                //                <!--You have a CHOICE of the next 2 items at this level-->
+                //                <CommonTypes:PIN>?</CommonTypes:PIN>
+                //
+                //                <CommonTypes:HashedPIN>
+                //                   <CommonTypes:Value>?</CommonTypes:Value>
+                //                   <CommonTypes:Function>?</CommonTypes:Function>
+                //                   <CommonTypes:Salt>?</CommonTypes:Salt>
+                //                </CommonTypes:HashedPIN>
+                //
+                //             </CommonTypes:QRCodeIdentification>
+                //
+                //             <CommonTypes:PlugAndChargeIdentification>
+                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                //             </CommonTypes:PlugAndChargeIdentification>
+                //
+                //             <CommonTypes:RemoteIdentification>
+                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+                //             </CommonTypes:RemoteIdentification>
+                //
+                //          </Reservation:Identification>
+                //
+                //          <!--Optional:-->
+                //          <Reservation:PartnerProductID>?</Reservation:PartnerProductID>
+                //
+                //       </Reservation:eRoamingAuthorizeRemoteReservationStart>
+                //    </soapenv:Body>
+                // </soapenv:Envelope>
+
+                #endregion
+
+                var XML = SOAP.Encapsulation(new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart",
+
+                                                 new XElement(OICPNS.Reservation + "SessionID", SessionId.ToString()),
+
+                                                 PartnerSessionId != null ? new XElement(OICPNS.Reservation + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+
+                                                 new XElement(OICPNS.Reservation + "ProviderID", ProviderId.ToString()),
+
+                                                 EVSEId != null
+                                                     ? new XElement(OICPNS.Reservation + "EVSEID", EVSEId.OriginId)
+                                                     : null,
+
+                                                 new XElement(OICPNS.Reservation + "Identification",
+                                                     new XElement(OICPNS.CommonTypes + "RemoteIdentification",
+                                                         new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
+                                                     )
+                                                 )
+
+                                             ));
+
+
+                return await _OICPClient.Query(XML,
+                                               "AuthorizeRemoteReservationStart",
+                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                               HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
+
+                                               #region OnSuccess
+
+                                               OnSuccess: XMLResponse => {
+                                                   return XMLResponse.Parse(eRoamingAcknowledgement.Parse);
+                                               },
+
+                                               #endregion
+
+                                               #region OnSOAPFault
+
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+
+                                                   SendSOAPError(timestamp, this, httpresponse.Content);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
+
+                                               },
+
+                                               #endregion
+
+                                               #region OnHTTPError
+
+                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                   SendHTTPError(timestamp, this, httpresponse);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
+
+                                               },
+
+                                               #endregion
+
+                                               #region OnException
+
+                                               OnException: (timestamp, sender, exception) => {
+
+                                                   SendException(timestamp, sender, exception);
+
+                                                   return null;
+
+                                               }
+
+                                               #endregion
+
+                                              );
+
+            }
+
+        }
+
+        #endregion
+
+        #region AuthorizeRemoteReservationStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Create an OICP v2.0 remote authorize stop request.
+        /// </summary>
+        /// <param name="SessionId">An optional session identification.</param>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="EVSEId">An optional EVSE identification.</param>
+        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+
+            AuthorizeRemoteReservationStop(ChargingSession_Id  SessionId,
+                                           EVSP_Id             ProviderId,
+                                           EVSE_Id             EVSEId,
+                                           ChargingSession_Id  PartnerSessionId   = null,
+                                           TimeSpan?           QueryTimeout       = null)
+
+        {
+
+            using (var _OICPClient = new SOAPClient(Hostname,
+                                                    TCPPort,
+                                                    HTTPVirtualHost,
+                                                    _URIPrefix + "/Reservation",
+                                                    _UserAgent,
+                                                    _RemoteCertificateValidator,
+                                                    DNSClient: _DNSClient))
+            {
+
+                #region Documentation
+
+                // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
+                //                   xmlns:Reservation  = "http://www.hubject.com/b2b/services/reservation/v1.0">
+                //
+                //    <soapenv:Header/>
+                //
+                //    <soapenv:Body>
+                //       <Reservation:eRoamingAuthorizeRemoteReservationStop>
+                //
+                //          <Reservation:SessionID>?</Authorization:SessionID>
+                //
+                //          <!--Optional:-->
+                //          <Reservation:PartnerSessionID>?</Authorization:PartnerSessionID>
+                //
+                //          <Reservation:ProviderID>?</Authorization:ProviderID>
+                //          <Reservation:EVSEID>?</Authorization:EVSEID>
+                //
+                //       </Reservation:eRoamingAuthorizeRemoteReservationStop>
+                //    </soapenv:Body>
+                //
+                // </soapenv:Envelope>
+
+                #endregion
+
+                var XML = SOAP.Encapsulation(new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStop",
+
+                                                 new XElement(OICPNS.Reservation + "SessionID", SessionId.ToString()),
+
+                                                 PartnerSessionId != null ? new XElement(OICPNS.Reservation + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+
+                                                 new XElement(OICPNS.Reservation + "ProviderID", ProviderId.ToString()),
+
+                                                 EVSEId != null
+                                                     ? new XElement(OICPNS.Reservation + "EVSEID", EVSEId.OriginId)
+                                                     : null
+
+                                             ));
+
+
+                return await _OICPClient.Query(XML,
+                                               "AuthorizeRemoteReservationStop",
+                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                               HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
+
+                                               #region OnSuccess
+
+                                               OnSuccess: XMLResponse => {
+                                                   return XMLResponse.Parse(eRoamingAcknowledgement.Parse);
+                                               },
+
+                                               #endregion
+
+                                               #region OnSOAPFault
+
+                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+
+                                                   SendSOAPError(timestamp, this, httpresponse.Content);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
+
+                                               },
+
+                                               #endregion
+
+                                               #region OnHTTPError
+
+                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                   SendHTTPError(timestamp, this, httpresponse);
+
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
+
+                                               },
+
+                                               #endregion
+
+                                               #region OnException
+
+                                               OnException: (timestamp, sender, exception) => {
+
+                                                   SendException(timestamp, sender, exception);
+
+                                                   return null;
+
+                                               }
+
+                                               #endregion
+
+                                              );
+
+            }
+
+        }
+
+        #endregion
+
+
+        #region AuthorizeRemoteStart(SessionId, ProviderId, EVSEId, eMAId, ChargingProductId = null, PartnerSessionId = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Create an OICP v2.1 authorize remote start request.
+        /// </summary>
+        /// <param name="SessionId">An optional session identification.</param>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="EVSEId">An optional EVSE identification.</param>
+        /// <param name="eMAId">An e-mobility account indentification.</param>
+        /// <param name="ChargingProductId">An optional charging product identification.</param>
+        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+
+            AuthorizeRemoteStart(ChargingSession_Id  SessionId,
+                                 EVSP_Id             ProviderId,
+                                 EVSE_Id             EVSEId,
+                                 eMA_Id              eMAId,
+                                 ChargingProduct_Id  ChargingProductId  = null,
+                                 ChargingSession_Id  PartnerSessionId   = null,
+                                 TimeSpan?           QueryTimeout       = null)
+
+        {
+
+            using (var _OICPClient = new SOAPClient(Hostname,
+                                                    TCPPort,
+                                                    HTTPVirtualHost,
+                                                    _URIPrefix + "/Authorization",
                                                     _UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient: _DNSClient))
@@ -241,7 +561,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                  new XElement(OICPNS.Authorization + "Identification",
                                                      new XElement(OICPNS.CommonTypes + "QRCodeIdentification",
-                                                         new XElement(OICPNS.CommonTypes + "EVCOID", eMAIdWithPIN.eMAId.ToString())
+                                                         new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
                                                      )
                                                  )
 
@@ -256,7 +576,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                #region OnSuccess
 
                                                OnSuccess: XMLResponse => {
-                                                   return XMLResponse.Parse(eRoamingAuthorizationStart.Parse);
+                                                   return XMLResponse.Parse(eRoamingAcknowledgement.Parse);
                                                },
 
                                                #endregion
@@ -267,11 +587,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                    SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
-                                                                                                       new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
-                                                                                                                                      StatusCode: new StatusCode(-1,
-                                                                                                                                                                 Description: httpresponse.Content.ToString())),
-                                                                                                       IsFault: true);
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
 
                                                },
 
@@ -283,12 +604,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                    SendHTTPError(timestamp, this, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
-                                                                                                       new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
-                                                                                                                                      StatusCode: new StatusCode(-1,
-                                                                                                                                                                 Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                                 AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
-                                                                                                       IsFault: true);
+                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                    new eRoamingAcknowledgement(false,
+                                                                                                                                -1,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    IsFault: true);
 
                                                },
 
@@ -337,7 +658,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
-                                                    _URIPrefix,
+                                                    _URIPrefix + "/Authorization",
                                                     _UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient: _DNSClient))
