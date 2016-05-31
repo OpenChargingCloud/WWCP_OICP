@@ -1115,6 +1115,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+            await Task.Delay(TimeSpan.FromSeconds(30));
+
             using (var OICPClient = new SOAPClient(Hostname,
                                                    TCPPort,
                                                    HTTPVirtualHost,
