@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2016 GraphDefined GmbH
- * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
+ * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// OICP v2.0 CPO client XML methods.
+    /// OICP v2.0 CPO Client XML methods.
     /// </summary>
     public static class CPOClientXMLMethods
     {
@@ -279,7 +279,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeStart",
 
-                                          PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())                 : null,
+                                          SessionId        != null ? new XElement(OICPNS.Authorization + "SessionID",        SessionId.       ToString()) : null,
+                                          PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
 
                                           new XElement(OICPNS.Authorization + "OperatorID", OperatorId.OriginId),
 
@@ -459,219 +460,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-
-        #region SendChargeDetailRecordXML(ChargeDetailRecord)
-
-        /// <summary>
-        /// Create an OICP v2.0 SendChargeDetailRecord XML request.
-        /// </summary>
-        /// <param name="ChargeDetailRecord">The charge detail record.</param>
-        public static XElement SendChargeDetailRecordXML(ChargeDetailRecord  ChargeDetailRecord)
-        {
-
-            #region Initial checks
-
-            if (ChargeDetailRecord == null)
-                throw new ArgumentNullException(nameof(ChargeDetailRecord),  "The given parameter must not be null!");
-
-            #endregion
-
-            return SOAP.Encapsulation(ChargeDetailRecord.ToXML());
-
-        }
-
-        #endregion
-
-        #region SendChargeDetailRecordXML(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, AuthToken = null, eMAId = null, PartnerSessionId = null, ..., QueryTimeout = null)
-
-        /// <summary>
-        /// Create an OICP v2.0 SendChargeDetailRecord XML request.
-        /// </summary>
-        /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="PartnerProductId">The ev charging product identification.</param>
-        /// <param name="SessionStart">The session start timestamp.</param>
-        /// <param name="SessionEnd">The session end timestamp.</param>
-        /// <param name="Identification">An identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="ChargingStart">An optional charging start timestamp.</param>
-        /// <param name="ChargingEnd">An optional charging end timestamp.</param>
-        /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
-        /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
-        /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
-        /// <param name="ConsumedEnergy">The optional amount of consumed energy.</param>
-        /// <param name="MeteringSignature">An optional signature for the metering values.</param>
-        /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
-        /// <param name="HubProviderId">An optional identification of the hub provider.</param>
-        public static XElement SendChargeDetailRecordXML(EVSE_Id                      EVSEId,
-                                                         ChargingSession_Id           SessionId,
-                                                         ChargingProduct_Id           PartnerProductId,
-                                                         DateTime                     SessionStart,
-                                                         DateTime                     SessionEnd,
-                                                         AuthorizationIdentification  Identification,
-                                                         ChargingSession_Id           PartnerSessionId      = null,
-                                                         DateTime?                    ChargingStart         = null,
-                                                         DateTime?                    ChargingEnd           = null,
-                                                         Double?                      MeterValueStart       = null,
-                                                         Double?                      MeterValueEnd         = null,
-                                                         IEnumerable<Double>          MeterValuesInBetween  = null,
-                                                         Double?                      ConsumedEnergy        = null,
-                                                         String                       MeteringSignature     = null,
-                                                         HubOperator_Id               HubOperatorId         = null,
-                                                         EVSP_Id                      HubProviderId         = null)
-        {
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/EVSEData.0"
-            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
-            //
-            //    <soapenv:Header/>
-            //
-            //    <soapenv:Body>
-            //       <Authorization:eRoamingChargeDetailRecord>
-            // 
-            //          <Authorization:SessionID>?</Authorization:SessionID>
-            // 
-            //          <!--Optional:-->
-            //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
-            // 
-            //          <!--Optional:-->
-            //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
-            // 
-            //          <Authorization:EvseID>?</Authorization:EvseID>
-            // 
-            //          <Authorization:Identification>
-            // 
-            //             <!--You have a CHOICE of the next 4 items at this level-->
-            //             <CommonTypes:RFIDmifarefamilyIdentification>
-            //                <CommonTypes:UID>?</CommonTypes:UID>
-            //             </CommonTypes:RFIDmifarefamilyIdentification>
-            // 
-            //             <CommonTypes:QRCodeIdentification>
-            // 
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            // 
-            //                <!--You have a CHOICE of the next 2 items at this level-->
-            //                <CommonTypes:PIN>?</CommonTypes:PIN>
-            // 
-            //                <CommonTypes:HashedPIN>
-            //                   <CommonTypes:Value>?</CommonTypes:Value>
-            //                   <CommonTypes:Function>?</CommonTypes:Function>
-            //                   <CommonTypes:Salt>?</CommonTypes:Salt>
-            //                </CommonTypes:HashedPIN>
-            // 
-            //             </CommonTypes:QRCodeIdentification>
-            // 
-            //             <CommonTypes:PlugAndChargeIdentification>
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            //             </CommonTypes:PlugAndChargeIdentification>
-            // 
-            //             <CommonTypes:RemoteIdentification>
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            //             </CommonTypes:RemoteIdentification>
-            // 
-            //          </Authorization:Identification>
-            // 
-            //          <!--Optional:-->
-            //          <Authorization:ChargingStart>?</Authorization:ChargingStart>
-            //          <!--Optional:-->
-            //          <Authorization:ChargingEnd>?</Authorization:ChargingEnd>
-            //          <Authorization:SessionStart>?</Authorization:SessionStart>
-            //          <Authorization:SessionEnd>?</Authorization:SessionEnd>
-            //
-            //          <!--Optional:-->
-            //          <Authorization:MeterValueStart>?</Authorization:MeterValueStart>
-            //          <!--Optional:-->
-            //          <Authorization:MeterValueEnd>?</Authorization:MeterValueEnd>
-            //
-            //          <!--Optional:-->
-            //          <Authorization:MeterValueInBetween>
-            //             <!--1 or more repetitions:-->
-            //             <Authorization:MeterValue>?</Authorization:MeterValue>
-            //          </Authorization:MeterValueInBetween>
-            //
-            //          <!--Optional:-->
-            //          <Authorization:ConsumedEnergy>?</Authorization:ConsumedEnergy>
-            //          <!--Optional:-->
-            //          <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
-            //
-            //          <!--Optional:-->
-            //          <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
-            //          <!--Optional:-->
-            //          <Authorization:HubProviderID>?</Authorization:HubProviderID>
-            // 
-            //       </Authorization:eRoamingChargeDetailRecord>
-            //    </soapenv:Body>
-            //
-            // </soapenv:Envelope>
-
-            #endregion
-
-            #region Initial checks
-
-            if (EVSEId           == null)
-                throw new ArgumentNullException(nameof(EVSEId),            "The given parameter must not be null!");
-
-            if (SessionId        == null)
-                throw new ArgumentNullException(nameof(SessionId),         "The given parameter must not be null!");
-
-            if (PartnerProductId == null)
-                throw new ArgumentNullException(nameof(PartnerProductId),  "The given parameter must not be null!");
-
-            if (SessionStart     == null)
-                throw new ArgumentNullException(nameof(SessionStart),      "The given parameter must not be null!");
-
-            if (SessionEnd       == null)
-                throw new ArgumentNullException(nameof(SessionEnd),        "The given parameter must not be null!");
-
-            if (Identification   == null)
-                throw new ArgumentNullException(nameof(Identification),    "The given parameter must not be null!");
-
-            #endregion
-
-
-            return SOAP.Encapsulation(
-
-                       new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
-
-                           new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
-                           new XElement(OICPNS.Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
-                           new XElement(OICPNS.Authorization + "PartnerProductID", (PartnerProductId != null) ? PartnerProductId.ToString() : ""),
-                           new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
-
-                           Identification.ToXML(OICPNS.Authorization),
-
-                           (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
-                           (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
-
-                           new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
-                           new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
-
-                           (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
-                           (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", ".")) : null,
-
-                           MeterValuesInBetween != null
-                               ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
-                                     MeterValuesInBetween.
-                                         SafeSelect(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
-                                         ToArray()
-                                 )
-                               : null,
-
-                           ConsumedEnergy    != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", ".")) : null,
-                           MeteringSignature != null ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)        : null,
-
-                           HubOperatorId     != null ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString()) : null,
-                           HubProviderId     != null ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString()) : null
-
-                       )
-                   );
-
-        }
-
-        #endregion
 
     }
 

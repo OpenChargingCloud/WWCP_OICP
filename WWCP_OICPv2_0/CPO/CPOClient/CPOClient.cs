@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2016 GraphDefined GmbH
- * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
+ * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// An OICP v2.0 CPO client.
+    /// An OICP v2.0 CPO Client.
     /// </summary>
     public class CPOClient : ASOAPClient
     {
@@ -46,9 +46,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default HTTP user agent string.
         /// </summary>
-        public const String DefaultHTTPUserAgent = "GraphDefined OICP v2.0 CPOClient";
-
-        private readonly Random _Random;
+        public const String DefaultHTTPUserAgent = "GraphDefined OICP v2.0 CPO Client";
 
         #endregion
 
@@ -231,11 +229,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                    QueryTimeout,
                    DNSClient)
 
-        {
-
-            this._Random = new Random(DateTime.Now.Millisecond);
-
-        }
+        { }
 
         #endregion
 
@@ -1080,6 +1074,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
+
         #region SendChargeDetailRecord(ChargeDetailRecord, QueryTimeout = null)
 
         /// <summary>
@@ -1093,6 +1088,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                    TimeSpan?           QueryTimeout  = null)
 
         {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            //
+            //    <soapenv:Header/>
+            //
+            //    <soapenv:Body>
+            //       <Authorization:eRoamingChargeDetailRecord>
+            // 
+            //          [...]
+            // 
+            //       </Authorization:eRoamingChargeDetailRecord>
+            //    </soapenv:Body>
+            //
+            // </soapenv:Envelope>
+
+            #endregion
 
             #region Send OnSendChargeDetailRecord event
 
@@ -1115,7 +1130,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            await Task.Delay(TimeSpan.FromSeconds(30));
 
             using (var OICPClient = new SOAPClient(Hostname,
                                                    TCPPort,
@@ -1126,7 +1140,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    DNSClient: _DNSClient))
             {
 
-                var result = await OICPClient.Query(CPOClientXMLMethods.SendChargeDetailRecordXML(ChargeDetailRecord),
+                var result = await OICPClient.Query(ChargeDetailRecord.ToXML(),
                                                     "eRoamingChargeDetailRecord",
                                                     RequestLogDelegate:   OnSendChargeDetailRecordRequest,
                                                     ResponseLogDelegate:  OnSendChargeDetailRecordResponse,
