@@ -1140,7 +1140,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    DNSClient: _DNSClient))
             {
 
-                var result = await OICPClient.Query(ChargeDetailRecord.ToXML(),
+                var result = await OICPClient.Query(SOAP.Encapsulation(ChargeDetailRecord.ToXML()),
                                                     "eRoamingChargeDetailRecord",
                                                     RequestLogDelegate:   OnSendChargeDetailRecordRequest,
                                                     ResponseLogDelegate:  OnSendChargeDetailRecordResponse,
