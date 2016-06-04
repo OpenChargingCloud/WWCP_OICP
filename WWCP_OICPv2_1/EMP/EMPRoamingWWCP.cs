@@ -900,7 +900,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (result.Content != null && result.Content.Result)
                 {
 
-                    return ReservationResult.Success();
+                    return ReservationResult.Success(result.Content.SessionId != null
+                                                         ? new ChargingReservation(ReservationId:           ChargingReservation_Id.Parse(result.Content.SessionId.ToString()),
+                                                                                   Timestamp:               DateTime.Now,
+                                                                                   StartTime:               DateTime.Now,
+                                                                                   Duration:                TimeSpan.FromMinutes(15),
+                                                                                   EndTime:                 DateTime.Now + TimeSpan.FromMinutes(15),
+                                                                                   ConsumedReservationTime: TimeSpan.FromSeconds(0),
+                                                                                   ReservationLevel:        ChargingReservationLevel.EVSE,
+                                                                                   ProviderId:              null,
+                                                                                   eMAId:                   null,
+                                                                                   RoamingNetwork:          _RoamingNetwork,
+                                                                                   ChargingPoolId:          null,
+                                                                                   ChargingStationId:       null,
+                                                                                   EVSEId:                  EVSEId,
+                                                                                   ChargingProductId:       ChargingProductId,
+                                                                                   AuthTokens:              null,
+                                                                                   eMAIds:                  null,
+                                                                                   PINs:                    null)
+                                                         : null);
 
                 }
 
