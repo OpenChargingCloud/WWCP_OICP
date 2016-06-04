@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2016 GraphDefined GmbH
- * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
+ * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,6 +99,7 @@ namespace org.GraphDefined.WWCP
 
                                               Func<EVSE, Boolean>                   IncludeEVSEs                = null,
                                               TimeSpan?                             ServiceCheckEvery           = null,
+                                              TimeSpan?                             StatusCheckEvery            = null,
                                               Boolean                               DisableAutoUploads          = false,
                                               Action<OICPv2_1.CPORoamingWWCP>       OICPConfigurator            = null,
                                               Action<EVSEOperatorRoamingProvider>   Configurator                = null)
@@ -152,6 +153,7 @@ namespace org.GraphDefined.WWCP
                        CreateNewRoamingProvider(NewRoamingProvider,
                                                 IncludeEVSEs,
                                                 ServiceCheckEvery,
+                                                StatusCheckEvery,
                                                 DisableAutoUploads,
                                                 Configurator);
 
@@ -210,6 +212,7 @@ namespace org.GraphDefined.WWCP
 
                                               Func<EVSE, Boolean>                  IncludeEVSEs                = null,
                                               TimeSpan?                            ServiceCheckEvery           = null,
+                                              TimeSpan?                            StatusCheckEvery            = null,
                                               Boolean                              DisableAutoUploads          = false,
                                               Action<OICPv2_1.CPORoamingWWCP>      OICPConfigurator            = null,
                                               Action<EVSEOperatorRoamingProvider>  Configurator                = null)
@@ -263,6 +266,7 @@ namespace org.GraphDefined.WWCP
                        CreateNewRoamingProvider(NewRoamingProvider,
                                                 IncludeEVSEs,
                                                 ServiceCheckEvery,
+                                                StatusCheckEvery,
                                                 DisableAutoUploads,
                                                 Configurator);
 
@@ -274,11 +278,11 @@ namespace org.GraphDefined.WWCP
         #region CreateOICPv2_1_CPOServiceCheck(this RoamingProvider, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, InitialDelay = null)
 
         /// <summary>
-        /// Create a new OICP v2.0 service checker.
+        /// Create a new OICP v2.1 service checker.
         /// </summary>
         /// <typeparam name="T">The type of the data returned by the service checker.</typeparam>
         /// <param name="CPORoamingProvider">A roaming provider.</param>
-        /// <param name="ServiceChecker">A function to check the OICP v2.0 service regularly and providing some result.</param>
+        /// <param name="ServiceChecker">A function to check the OICP v2.1 service regularly and providing some result.</param>
         /// <param name="OnFirstCheck">A delegate processing the first check result.</param>
         /// <param name="OnEveryCheck">A delegate processing a check result.</param>
         /// <param name="CheckEvery">The time span between two consecutive service checks.</param>
@@ -301,7 +305,7 @@ namespace org.GraphDefined.WWCP
             var _CPORoamingWWCP = ((CPORoamingProvider.OperatorRoamingService as IOperatorRoamingService) as OICPv2_1.CPORoamingWWCP);
 
             if (_CPORoamingWWCP == null)
-                throw new ArgumentException("The given CPO roaming provider is not an OICP v2.0 CPO roaming provider!", nameof(CPORoamingProvider));
+                throw new ArgumentException("The given CPO roaming provider is not an OICP v2.1 CPO roaming provider!", nameof(CPORoamingProvider));
 
             #endregion
 
@@ -309,7 +313,8 @@ namespace org.GraphDefined.WWCP
                                                    ServiceChecker,
                                                    OnFirstCheck,
                                                    OnEveryCheck,
-                                                   CheckEvery);
+                                                   CheckEvery,
+                                                   InitialDelay);
 
         }
 

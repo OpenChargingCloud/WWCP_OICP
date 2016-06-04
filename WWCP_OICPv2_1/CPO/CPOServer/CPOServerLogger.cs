@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2016 GraphDefined GmbH
- * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
+ * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.0 CPO server logger.
+    /// An OICP v2.0 CPO Server logger.
     /// </summary>
     public class CPOServerLogger : HTTPLogger
     {
@@ -167,9 +167,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Register remote start/stop log events
 
+            RegisterEvent("RemoteReservationStart",
+                          handler => _CPOServer.OnLogRemoteReservationStart   += handler,
+                          handler => _CPOServer.OnLogRemoteReservationStart   -= handler,
+                          "Reservation", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+            RegisterEvent("RemoteReservationStarted",
+                          handler => _CPOServer.OnLogRemoteReservationStarted += handler,
+                          handler => _CPOServer.OnLogRemoteReservationStarted -= handler,
+                          "Reservation", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+            RegisterEvent("RemoteReservationStop",
+                          handler => _CPOServer.OnLogRemoteReservationStop    += handler,
+                          handler => _CPOServer.OnLogRemoteReservationStop    -= handler,
+                          "Reservation", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+            RegisterEvent("RemoteReservationStopped",
+                          handler => _CPOServer.OnLogRemoteReservationStopped += handler,
+                          handler => _CPOServer.OnLogRemoteReservationStopped -= handler,
+                          "Reservation", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
+
+
             RegisterEvent("RemoteStart",
-                          handler => _CPOServer.OnLogRemoteStart += handler,
-                          handler => _CPOServer.OnLogRemoteStart -= handler,
+                          handler => _CPOServer.OnLogRemoteStart   += handler,
+                          handler => _CPOServer.OnLogRemoteStart   -= handler,
                           "Remote", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
@@ -182,8 +211,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("RemoteStop",
-                          handler => _CPOServer.OnLogRemoteStop += handler,
-                          handler => _CPOServer.OnLogRemoteStop -= handler,
+                          handler => _CPOServer.OnLogRemoteStop    += handler,
+                          handler => _CPOServer.OnLogRemoteStop    -= handler,
                           "Remote", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);

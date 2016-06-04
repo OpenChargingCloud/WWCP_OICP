@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2016 GraphDefined GmbH
- * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
+ * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.0 charge detail record.
+    /// An OICP v2.1 charge detail record.
     /// </summary>
     public class ChargeDetailRecord : IEquatable <ChargeDetailRecord>,
                                       IComparable<ChargeDetailRecord>,
@@ -333,13 +333,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 throw new ArgumentNullException(nameof(SessionId),         "The given parameter must not be null!");
 
             if (PartnerProductId == null)
-                throw new ArgumentNullException("PartnerProductId",  "The given parameter must not be null!");
-
-            if (SessionStart     == null)
-                throw new ArgumentNullException("SessionStart",      "The given parameter must not be null!");
-
-            if (SessionEnd       == null)
-                throw new ArgumentNullException("SessionEnd",        "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(PartnerProductId),  "The given parameter must not be null!");
 
             #endregion
 
@@ -542,6 +536,86 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region ToXML()
 
+        #region Documentation
+
+        // [...]
+        // <Authorization:eRoamingChargeDetailRecord>
+        // 
+        //    <Authorization:SessionID>?</Authorization:SessionID>
+        // 
+        //    <!--Optional:-->
+        //    <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+        // 
+        //    <!--Optional:-->
+        //    <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
+        // 
+        //    <Authorization:EvseID>?</Authorization:EvseID>
+        // 
+        //    <Authorization:Identification>
+        // 
+        //       <!--You have a CHOICE of the next 4 items at this level-->
+        //       <CommonTypes:RFIDmifarefamilyIdentification>
+        //          <CommonTypes:UID>?</CommonTypes:UID>
+        //       </CommonTypes:RFIDmifarefamilyIdentification>
+        // 
+        //       <CommonTypes:QRCodeIdentification>
+        // 
+        //          <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        // 
+        //          <!--You have a CHOICE of the next 2 items at this level-->
+        //          <CommonTypes:PIN>?</CommonTypes:PIN>
+        // 
+        //          <CommonTypes:HashedPIN>
+        //             <CommonTypes:Value>?</CommonTypes:Value>
+        //             <CommonTypes:Function>?</CommonTypes:Function>
+        //             <CommonTypes:Salt>?</CommonTypes:Salt>
+        //          </CommonTypes:HashedPIN>
+        // 
+        //       </CommonTypes:QRCodeIdentification>
+        // 
+        //       <CommonTypes:PlugAndChargeIdentification>
+        //          <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //       </CommonTypes:PlugAndChargeIdentification>
+        // 
+        //       <CommonTypes:RemoteIdentification>
+        //          <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //       </CommonTypes:RemoteIdentification>
+        // 
+        //    </Authorization:Identification>
+        // 
+        //    <!--Optional:-->
+        //    <Authorization:ChargingStart>?</Authorization:ChargingStart>
+        //    <!--Optional:-->
+        //    <Authorization:ChargingEnd>?</Authorization:ChargingEnd>
+        //    <Authorization:SessionStart>?</Authorization:SessionStart>
+        //    <Authorization:SessionEnd>?</Authorization:SessionEnd>
+        //
+        //    <!--Optional:-->
+        //    <Authorization:MeterValueStart>?</Authorization:MeterValueStart>
+        //    <!--Optional:-->
+        //    <Authorization:MeterValueEnd>?</Authorization:MeterValueEnd>
+        //
+        //    <!--Optional:-->
+        //    <Authorization:MeterValueInBetween>
+        //       <!--1 or more repetitions:-->
+        //       <Authorization:MeterValue>?</Authorization:MeterValue>
+        //    </Authorization:MeterValueInBetween>
+        //
+        //    <!--Optional:-->
+        //    <Authorization:ConsumedEnergy>?</Authorization:ConsumedEnergy>
+        //    <!--Optional:-->
+        //    <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
+        //
+        //    <!--Optional:-->
+        //    <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
+        //    <!--Optional:-->
+        //    <Authorization:HubProviderID>?</Authorization:HubProviderID>
+        // 
+        // </Authorization:eRoamingChargeDetailRecord>
+        // [...]
+
+        #endregion
+
         public XElement ToXML()
         {
 
@@ -552,15 +626,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 new XElement(OICPNS.Authorization + "PartnerProductID", (PartnerProductId != null) ? PartnerProductId.ToString() : ""),
                 new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
 
-                new XElement(OICPNS.Authorization + "Identification",
-                    (_Identification.AuthToken != null)
-                        ? new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                               new XElement(OICPNS.CommonTypes + "UID", _Identification.AuthToken.ToString())
-                          )
-                        : new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                               new XElement(OICPNS.CommonTypes + "EVCOID", _Identification.RemoteIdentification.ToString())
-                          )
-                ),
+                Identification.ToXML(OICPNS.Authorization),
 
                 (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
                 (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,

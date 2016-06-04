@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2016 GraphDefined GmbH
- * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
+ * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -272,7 +272,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        e.Log("CPOServer.OnLogRemoteStart");
+                        e.Log(nameof(CPOServer) + "." + nameof(OnLogRemoteStart));
                     }
 
                     #endregion
@@ -508,7 +508,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        e.Log("CPOServer.OnLogRemoteStarted");
+                        e.Log(nameof(CPOServer) + "." + nameof(OnLogRemoteStarted));
                     }
 
                     #endregion
@@ -564,7 +564,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        e.Log("CPOServer.OnLogRemoteStop");
+                        e.Log(nameof(CPOServer) + "." + nameof(OnLogRemoteStop));
                     }
 
                     #endregion
@@ -755,7 +755,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        e.Log("CPOServer.OnLogRemoteStopped");
+                        e.Log(nameof(CPOServer) + "." + nameof(OnLogRemoteStopped));
                     }
 
                     #endregion

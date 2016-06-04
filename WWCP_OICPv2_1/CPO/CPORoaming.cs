@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright (c) 2014-2016 GraphDefined GmbH
- * This file is part of WWCP OICP <https://github.com/GraphDefined/WWCP_OICP>
+ * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.1 roaming client for CPOs.
+    /// An OICP v2.1 roaming client for CPOs which combines the CPO client
+    /// and server and adds additional logging for both.
     /// </summary>
     public class CPORoaming
     {
@@ -132,9 +133,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region OnEVSEDataPush/-Pushed
 
         /// <summary>
-        /// An event fired whenever new EVSE data record will be send upstream.
+        /// An event fired whenever a request pushing EVSE data records will be send.
         /// </summary>
-        public event OnEVSEDataPushDelegate OnEVSEDataPush
+        public event OnEVSEDataPushDelegate    OnEVSEDataPush
         {
 
             add
@@ -144,15 +145,51 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             remove
             {
-                 _CPOClient.OnEVSEDataPush -= value;
+                _CPOClient.OnEVSEDataPush -= value;
             }
 
         }
 
         /// <summary>
-        /// An event fired whenever new EVSE data record had been sent upstream.
+        /// An event fired whenever a SOAP request pushing EVSE data records will be send.
         /// </summary>
-        public event OnEVSEDataPushedDelegate OnEVSEDataPushed
+        public event ClientRequestLogHandler   OnEVSEDataPushRequest
+        {
+
+            add
+            {
+                _CPOClient.OnEVSEDataPushRequest += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnEVSEDataPushRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a push EVSE data records SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler  OnEVSEDataPushResponse
+        {
+
+            add
+            {
+                _CPOClient.OnEVSEDataPushResponse += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnEVSEDataPushResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever EVSE data records had been sent upstream.
+        /// </summary>
+        public event OnEVSEDataPushedDelegate  OnEVSEDataPushed
         {
 
             add
@@ -169,10 +206,388 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        //ToDo: Add more CPOClient methods!
+        #region OnEVSEStatusPush/-Pushed
+
+        /// <summary>
+        /// An event fired whenever a request pushing EVSE status records will be send.
+        /// </summary>
+        public event OnEVSEStatusPushDelegate   OnEVSEStatusPush
+        {
+
+            add
+            {
+                _CPOClient.OnEVSEStatusPush += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnEVSEStatusPush -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a SOAP request pushing EVSE status records will be send.
+        /// </summary>
+        public event ClientRequestLogHandler    OnEVSEStatusPushRequest
+        {
+
+            add
+            {
+                _CPOClient.OnEVSEStatusPushRequest += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnEVSEStatusPushRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a push EVSE status records SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler   OnEVSEStatusPushResponse
+        {
+
+            add
+            {
+                _CPOClient.OnEVSEStatusPushResponse += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnEVSEStatusPushResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever EVSE status records had been sent upstream.
+        /// </summary>
+        public event OnEVSEStatusPushedDelegate OnEVSEStatusPushed
+        {
+
+            add
+            {
+                _CPOClient.OnEVSEStatusPushed += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnEVSEStatusPushed -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnAuthorizeStartRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an authorize start request will be send.
+        /// </summary>
+        public event OnAuthorizeStartHandler    OnAuthorizeStart
+        {
+
+            add
+            {
+                _CPOClient.OnAuthorizeStart += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnAuthorizeStart -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize start SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler    OnAuthorizeStartRequest
+        {
+
+            add
+            {
+                _CPOClient.OnAuthorizeStartRequest += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnAuthorizeStartRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to an authorize start SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler   OnAuthorizeStartResponse
+        {
+
+            add
+            {
+                _CPOClient.OnAuthorizeStartResponse += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnAuthorizeStartResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize start request was sent.
+        /// </summary>
+        public event OnAuthorizeStartedHandler  OnAuthorizeStarted
+        {
+
+            add
+            {
+                _CPOClient.OnAuthorizeStarted += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnAuthorizeStarted -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnAuthorizeStopRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an authorize stop request will be send.
+        /// </summary>
+        public event OnAuthorizeStopHandler     OnAuthorizeStop
+        {
+
+            add
+            {
+                _CPOClient.OnAuthorizeStop += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnAuthorizeStop -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize stop SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler    OnAuthorizeStopRequest
+        {
+
+            add
+            {
+                _CPOClient.OnAuthorizeStopRequest += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnAuthorizeStopRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to an authorize stop SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler   OnAuthorizeStopResponse
+        {
+
+            add
+            {
+                _CPOClient.OnAuthorizeStopResponse += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnAuthorizeStopResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize start request was sent.
+        /// </summary>
+        public event OnAuthorizeStoppedHandler  OnAuthorizeStopped
+        {
+
+            add
+            {
+                _CPOClient.OnAuthorizeStopped += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnAuthorizeStopped -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnSendChargeDetailRecordRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a charge detail record will be send.
+        /// </summary>
+        public event OnSendChargeDetailRecordHandler  OnSendChargeDetailRecord
+        {
+
+            add
+            {
+                _CPOClient.OnSendChargeDetailRecord += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnSendChargeDetailRecord -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a charge detail record will be send via SOAP.
+        /// </summary>
+        public event ClientRequestLogHandler          OnSendChargeDetailRecordRequest
+        {
+
+            add
+            {
+                _CPOClient.OnSendChargeDetailRecordRequest += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnSendChargeDetailRecordRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a SOAP response to a sent charge detail record had been received.
+        /// </summary>
+        public event ClientResponseLogHandler         OnSendChargeDetailRecordResponse
+        {
+
+            add
+            {
+                _CPOClient.OnSendChargeDetailRecordResponse += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnSendChargeDetailRecordResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a sent charge detail record had been received.
+        /// </summary>
+        public event OnChargeDetailRecordSentHandler  OnChargeDetailRecordSent
+        {
+
+            add
+            {
+                _CPOClient.OnChargeDetailRecordSent += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnChargeDetailRecordSent -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnPullAuthenticationDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a request pulling authentication data will be send.
+        /// </summary>
+        public event OnPullAuthenticationDataHandler    OnPullAuthenticationData
+        {
+
+            add
+            {
+                _CPOClient.OnPullAuthenticationData += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnPullAuthenticationData -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a SOAP request pulling authentication data will be send.
+        /// </summary>
+        public event ClientRequestLogHandler            OnPullAuthenticationDataRequest
+        {
+
+            add
+            {
+                _CPOClient.OnPullAuthenticationDataRequest += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnPullAuthenticationDataRequest -= value;
+            }
+
+        }
+        
+        /// <summary>
+        /// An event fired whenever a response to a pull authentication data SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler           OnPullAuthenticationDataResponse
+        {
+
+            add
+            {
+                _CPOClient.OnPullAuthenticationDataResponse += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnPullAuthenticationDataResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a pull authentication data request was received.
+        /// </summary>
+        public event OnAuthenticationDataPulledHandler  OnAuthenticationDataPulled
+        {
+
+            add
+            {
+                _CPOClient.OnAuthenticationDataPulled += value;
+            }
+
+            remove
+            {
+                _CPOClient.OnAuthenticationDataPulled -= value;
+            }
+
+        }
+
+        #endregion
 
 
-        // Server methods
+        // Server methods via events
 
         #region OnRemoteReservationStart/-Stop
 
@@ -256,6 +671,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+
+        // Generic HTTP/SOAP server logging
 
         #region RequestLog
 
@@ -697,7 +1114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP v2.0 authorize start request.
+        /// Create an OICP v2.1 authorize start request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
@@ -740,7 +1157,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         //        (e.g. car sharing)
 
         /// <summary>
-        /// Create an OICP v2.0 authorize stop request.
+        /// Create an OICP v2.1 authorize stop request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
@@ -784,10 +1201,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
+        #region SendChargeDetailRecord(ChargeDetailRecord, QueryTimeout = null)
+
+        /// <summary>
+        /// Create an OICP SendChargeDetailRecord request.
+        /// </summary>
+        /// <param name="ChargeDetailRecord">A charge detail record.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<eRoamingAcknowledgement>
+
+            SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
+                                   TimeSpan?           QueryTimeout  = null)
+
+        {
+
+            #region Initial checks
+
+            if (ChargeDetailRecord == null)
+                throw new ArgumentNullException(nameof(ChargeDetailRecord), "The given charge detail record must not be null!");
+
+            #endregion
+
+            var result = await _CPOClient.SendChargeDetailRecord(ChargeDetailRecord,
+                                                                 QueryTimeout);
+
+            //ToDo: Process the HTTP!
+            return result.Content;
+
+        }
+
+        #endregion
+
+
         #region PullAuthenticationData(OperatorId, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP v2.0 PullAuthenticationData request.
+        /// Create an OICP v2.1 PullAuthenticationData request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
@@ -804,131 +1253,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             var result = await _CPOClient.PullAuthenticationData(OperatorId,
                                                                  QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
-
-        #endregion
-
-
-        #region SendChargeDetailRecord(ChargeDetailRecord, QueryTimeout = null)
-
-        /// <summary>
-        /// Create an OICP SendChargeDetailRecord request.
-        /// </summary>
-        /// <param name="ChargeDetailRecord">A charge detail record.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingAcknowledgement>
-
-            SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
-                                   TimeSpan?                   QueryTimeout  = null)
-
-        {
-
-            #region Initial checks
-
-            if (ChargeDetailRecord == null)
-                throw new ArgumentNullException("ChargeDetailRecord", "The given parameter must not be null!");
-
-            #endregion
-
-            var result = await _CPOClient.SendChargeDetailRecord(ChargeDetailRecord,
-                                                                 QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
-
-        #endregion
-
-        #region SendChargeDetailRecord(EVSEId, SessionId, PartnerProductId, SessionStart, SessionEnd, Identification, PartnerSessionId = null, ..., QueryTimeout = null)
-
-        /// <summary>
-        /// Create an OICP v2.0 SendChargeDetailRecord request.
-        /// </summary>
-        /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="SessionId">The OICP session identification from the Authorize Start request.</param>
-        /// <param name="PartnerProductId"></param>
-        /// <param name="SessionStart">The timestamp of the session start.</param>
-        /// <param name="SessionEnd">The timestamp of the session end.</param>
-        /// <param name="Identification">An ev customer identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="ChargingStart">An optional charging start timestamp.</param>
-        /// <param name="ChargingEnd">An optional charging end timestamp.</param>
-        /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
-        /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
-        /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
-        /// <param name="ConsumedEnergy">The optional amount of consumed energy.</param>
-        /// <param name="MeteringSignature">An optional signature for the metering values.</param>
-        /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
-        /// <param name="HubProviderId">An optional identification of the hub provider.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingAcknowledgement>
-
-            SendChargeDetailRecord(EVSE_Id                      EVSEId,
-                                   ChargingSession_Id           SessionId,
-                                   ChargingProduct_Id           PartnerProductId,
-                                   DateTime                     SessionStart,
-                                   DateTime                     SessionEnd,
-                                   AuthorizationIdentification  Identification,
-                                   ChargingSession_Id           PartnerSessionId      = null,
-                                   DateTime?                    ChargingStart         = null,
-                                   DateTime?                    ChargingEnd           = null,
-                                   Double?                      MeterValueStart       = null,
-                                   Double?                      MeterValueEnd         = null,
-                                   IEnumerable<Double>          MeterValuesInBetween  = null,
-                                   Double?                      ConsumedEnergy        = null,
-                                   String                       MeteringSignature     = null,
-                                   HubOperator_Id               HubOperatorId         = null,
-                                   EVSP_Id                      HubProviderId         = null,
-                                   TimeSpan?                    QueryTimeout          = null)
-
-        {
-
-            #region Initial checks
-
-            if (EVSEId           == null)
-                throw new ArgumentNullException(nameof(EVSEId),            "The given parameter must not be null!");
-
-            if (SessionId        == null)
-                throw new ArgumentNullException(nameof(SessionId),         "The given parameter must not be null!");
-
-            if (PartnerProductId == null)
-                throw new ArgumentNullException("PartnerProductId",  "The given parameter must not be null!");
-
-            if (SessionStart     == null)
-                throw new ArgumentNullException("SessionStart",      "The given parameter must not be null!");
-
-            if (SessionEnd       == null)
-                throw new ArgumentNullException("SessionEnd",        "The given parameter must not be null!");
-
-            if (Identification   == null)
-                throw new ArgumentNullException("Identification",    "The given parameter must not be null!");
-
-            #endregion
-
-            var result = await _CPOClient.SendChargeDetailRecord(
-                                              new ChargeDetailRecord(
-                                                  EVSEId,
-                                                  SessionId,
-                                                  PartnerProductId,
-                                                  SessionStart,
-                                                  SessionEnd,
-                                                  Identification,
-                                                  PartnerSessionId,
-                                                  ChargingStart,
-                                                  ChargingEnd,
-                                                  MeterValueStart,
-                                                  MeterValueEnd,
-                                                  MeterValuesInBetween,
-                                                  ConsumedEnergy,
-                                                  MeteringSignature,
-                                                  HubOperatorId,
-                                                  HubProviderId),
-                                              QueryTimeout);
 
             //ToDo: Process the HTTP!
             return result.Content;
