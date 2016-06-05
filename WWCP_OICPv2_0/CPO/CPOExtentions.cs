@@ -63,14 +63,19 @@ namespace org.GraphDefined.WWCP
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        /// <param name="DNSClient">An optional DNS client to use.</param>
         /// 
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
+        /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
+        /// <param name="ServiceCheckEvery">The service check intervall.</param>
+        /// <param name="StatusCheckEvery">The status check intervall.</param>
+        /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
+        /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static EVSEOperatorRoamingProvider
+        /// <param name="DNSClient">An optional DNS client to use.</param>
+        public static AEVSEOperatorRoamingProvider
 
             CreateOICPv2_0_CPORoamingProvider(this RoamingNetwork                   RoamingNetwork,
                                               RoamingProvider_Id                    Id,
@@ -92,8 +97,6 @@ namespace org.GraphDefined.WWCP
                                               String                                ServerLoggingContext        = OICPv2_0.CPOServerLogger.DefaultContext,
                                               Func<String, String, String>          LogFileCreator              = null,
 
-                                              DNSClient                             DNSClient                   = null,
-
                                               OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord         = null,
                                               OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML          = null,
 
@@ -101,8 +104,10 @@ namespace org.GraphDefined.WWCP
                                               TimeSpan?                             ServiceCheckEvery           = null,
                                               TimeSpan?                             StatusCheckEvery            = null,
                                               Boolean                               DisableAutoUploads          = false,
+
                                               Action<OICPv2_0.CPORoamingWWCP>       OICPConfigurator            = null,
-                                              Action<EVSEOperatorRoamingProvider>   Configurator                = null)
+                                              Action<AEVSEOperatorRoamingProvider>  Configurator                = null,
+                                              DNSClient                             DNSClient                   = null)
 
         {
 
@@ -144,6 +149,12 @@ namespace org.GraphDefined.WWCP
 
                                                                  EVSE2EVSEDataRecord,
                                                                  EVSEDataRecord2XML,
+
+                                                                 IncludeEVSEs,
+                                                                 ServiceCheckEvery,
+                                                                 StatusCheckEvery,
+                                                                 DisableAutoUploads,
+
                                                                  DNSClient);
 
 
@@ -151,10 +162,6 @@ namespace org.GraphDefined.WWCP
 
             return RoamingNetwork.
                        CreateNewRoamingProvider(NewRoamingProvider,
-                                                IncludeEVSEs,
-                                                ServiceCheckEvery,
-                                                StatusCheckEvery,
-                                                DisableAutoUploads,
                                                 Configurator);
 
         }
@@ -185,37 +192,49 @@ namespace org.GraphDefined.WWCP
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        /// <param name="DNSClient">An optional DNS client to use.</param>
+        /// 
+        /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
+        /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
+        /// 
+        /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
+        /// <param name="ServiceCheckEvery">The service check intervall.</param>
+        /// <param name="StatusCheckEvery">The status check intervall.</param>
+        /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static EVSEOperatorRoamingProvider
+        /// <param name="DNSClient">An optional DNS client to use.</param>
+        public static AEVSEOperatorRoamingProvider
 
-            CreateOICPv2_0_CPORoamingProvider(this RoamingNetwork                  RoamingNetwork,
-                                              RoamingProvider_Id                   Id,
-                                              I18NString                           Name,
-                                              SOAPServer                           SOAPServer,
+            CreateOICPv2_0_CPORoamingProvider(this RoamingNetwork                   RoamingNetwork,
+                                              RoamingProvider_Id                    Id,
+                                              I18NString                            Name,
+                                              SOAPServer                            SOAPServer,
 
-                                              String                               RemoteHostname,
-                                              IPPort                               RemoteTCPPort               = null,
-                                              String                               RemoteHTTPVirtualHost       = null,
-                                              RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                                              String                               HTTPUserAgent               = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                            QueryTimeout                = null,
+                                              String                                RemoteHostname,
+                                              IPPort                                RemoteTCPPort               = null,
+                                              String                                RemoteHTTPVirtualHost       = null,
+                                              RemoteCertificateValidationCallback   RemoteCertificateValidator  = null,
+                                              String                                HTTPUserAgent               = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
+                                              TimeSpan?                             QueryTimeout                = null,
 
-                                              String                               ServerURIPrefix             = null,
+                                              String                                ServerURIPrefix             = null,
 
-                                              String                               ClientLoggingContext        = OICPv2_0.CPOClientLogger.DefaultContext,
-                                              String                               ServerLoggingContext        = OICPv2_0.CPOServerLogger.DefaultContext,
-                                              Func<String, String, String>         LogFileCreator              = null,
-                                              DNSClient                            DNSClient                   = null,
+                                              String                                ClientLoggingContext        = OICPv2_0.CPOClientLogger.DefaultContext,
+                                              String                                ServerLoggingContext        = OICPv2_0.CPOServerLogger.DefaultContext,
+                                              Func<String, String, String>          LogFileCreator              = null,
 
-                                              Func<EVSE, Boolean>                  IncludeEVSEs                = null,
-                                              TimeSpan?                            ServiceCheckEvery           = null,
-                                              TimeSpan?                            StatusCheckEvery            = null,
-                                              Boolean                              DisableAutoUploads          = false,
-                                              Action<OICPv2_0.CPORoamingWWCP>      OICPConfigurator            = null,
-                                              Action<EVSEOperatorRoamingProvider>  Configurator                = null)
+                                              OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord         = null,
+                                              OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML          = null,
+
+                                              Func<EVSE, Boolean>                   IncludeEVSEs                = null,
+                                              TimeSpan?                             ServiceCheckEvery           = null,
+                                              TimeSpan?                             StatusCheckEvery            = null,
+                                              Boolean                               DisableAutoUploads          = false,
+
+                                              Action<OICPv2_0.CPORoamingWWCP>       OICPConfigurator            = null,
+                                              Action<AEVSEOperatorRoamingProvider>  Configurator                = null,
+                                              DNSClient                             DNSClient                   = null)
 
         {
 
@@ -257,17 +276,21 @@ namespace org.GraphDefined.WWCP
 
                                                                  ClientLoggingContext,
                                                                  ServerLoggingContext,
-                                                                 LogFileCreator);
+                                                                 LogFileCreator,
+
+                                                                 EVSE2EVSEDataRecord,
+                                                                 EVSEDataRecord2XML,
+
+                                                                 IncludeEVSEs,
+                                                                 ServiceCheckEvery,
+                                                                 StatusCheckEvery,
+                                                                 DisableAutoUploads);
 
 
             OICPConfigurator?.Invoke(NewRoamingProvider);
 
             return RoamingNetwork.
                        CreateNewRoamingProvider(NewRoamingProvider,
-                                                IncludeEVSEs,
-                                                ServiceCheckEvery,
-                                                StatusCheckEvery,
-                                                DisableAutoUploads,
                                                 Configurator);
 
         }
@@ -289,7 +312,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="InitialDelay">Initial delay between startup and first check.</param>
         public static OICPv2_0.CPOServiceCheck<T>
 
-            CreateOICPv2_0_CPOServiceCheck<T>(this EVSEOperatorRoamingProvider     CPORoamingProvider,
+            CreateOICPv2_0_CPOServiceCheck<T>(this AEVSEOperatorRoamingProvider    CPORoamingProvider,
                                               OICPv2_0.CPOServiceCheckDelegate<T>  ServiceChecker,
                                               Action<T>                            OnFirstCheck,
                                               Action<T>                            OnEveryCheck,
@@ -302,7 +325,7 @@ namespace org.GraphDefined.WWCP
             if (CPORoamingProvider == null)
                 throw new ArgumentNullException(nameof(CPORoamingProvider), "The given CPO roaming provider must not be null!");
 
-            var _CPORoamingWWCP = ((CPORoamingProvider.OperatorRoamingService as IOperatorRoamingService) as OICPv2_0.CPORoamingWWCP);
+            var _CPORoamingWWCP = (CPORoamingProvider as OICPv2_0.CPORoamingWWCP);
 
             if (_CPORoamingWWCP == null)
                 throw new ArgumentException("The given CPO roaming provider is not an OICP v2.0 CPO roaming provider!", nameof(CPORoamingProvider));
