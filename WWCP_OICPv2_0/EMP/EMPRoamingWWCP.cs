@@ -35,82 +35,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A WWCP wrapper for the OICP v2.0 roaming client for e-mobility providers/EMPs.
+    /// A WWCP wrapper for the OICP v2.1 EMP Roaming Client which maps
+    /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class EMPRoamingWWCP : IEMPRoamingService
+    public class EMPRoamingWWCP : AEMPRoamingProvider
     {
 
         #region Data
 
-        private readonly RoamingNetwork  _RoamingNetwork;
+        private readonly EVSEDataRecord2EVSEDelegate _EVSEDataRecord2EVSE;
 
         #endregion
 
         #region Properties
-
-        #region AuthorizatorId
-
-        private readonly Authorizator_Id _AuthorizatorId;
-
-        public Authorizator_Id AuthorizatorId
-        {
-            get
-            {
-                return _AuthorizatorId;
-            }
-        }
-
-        #endregion
-
-        #region Id
-
-        private readonly RoamingProvider_Id _Id;
-
-        /// <summary>
-        /// The unique identification of the roaming provider.
-        /// </summary>
-        public RoamingProvider_Id Id
-        {
-            get
-            {
-                return _Id;
-            }
-        }
-
-        #endregion
-
-        #region Name
-
-        private readonly I18NString _Name;
-
-        /// <summary>
-        /// The offical (multi-language) name of the roaming provider.
-        /// </summary>
-        public I18NString Name
-        {
-            get
-            {
-                return _Name;
-            }
-        }
-
-        #endregion
-
-        #region RoamingNetworkId
-
-        /// <summary>
-        /// The unique identification of the attached roaming network.
-        /// </summary>
-        public RoamingNetwork_Id RoamingNetworkId
-        {
-            get
-            {
-                return _RoamingNetwork.Id;
-            }
-        }
-
-        #endregion
-
 
         #region EMPRoaming
 
@@ -120,12 +57,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The wrapped EMP roaming object.
         /// </summary>
         public EMPRoaming EMPRoaming
-        {
-            get
-            {
-                return _EMPRoaming;
-            }
-        }
+            => _EMPRoaming;
 
         #endregion
 
@@ -135,12 +67,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The EMP client.
         /// </summary>
         public EMPClient EMPClient
-        {
-            get
-            {
-                return _EMPRoaming?.EMPClient;
-            }
-        }
+            => _EMPRoaming?.EMPClient;
 
         #endregion
 
@@ -150,12 +77,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The EMP server.
         /// </summary>
         public EMPServer EMPServer
-        {
-            get
-            {
-                return _EMPRoaming?.EMPServer;
-            }
-        }
+            => _EMPRoaming?.EMPServer;
 
         #endregion
 
@@ -165,12 +87,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The EMP client logger.
         /// </summary>
         public EMPClientLogger ClientLogger
-        {
-            get
-            {
-                return _EMPRoaming?.EMPClientLogger;
-            }
-        }
+            => _EMPRoaming?.EMPClientLogger;
 
         #endregion
 
@@ -180,15 +97,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The EMP server logger.
         /// </summary>
         public EMPServerLogger ServerLogger
-        {
-            get
-            {
-                return _EMPRoaming?.EMPServerLogger;
-            }
-        }
+            => _EMPRoaming?.EMPServerLogger;
 
         #endregion
-
 
         #region DNSClient
 
@@ -196,12 +107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The DNSc server.
         /// </summary>
         public DNSClient DNSClient
-        {
-            get
-            {
-                return _EMPRoaming.DNSClient;
-            }
-        }
+            => _EMPRoaming?.DNSClient;
 
         #endregion
 
@@ -250,7 +156,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event sent whenever a authorize start command was received.
         /// </summary>
-        public event OnAuthorizeStartEVSEDelegate OnAuthorizeStartEVSE;
+        public override event OnAuthorizeStartEVSEDelegate OnAuthorizeStartEVSE;
 
         #endregion
 
@@ -295,7 +201,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event sent whenever a authorize stop command was received.
         /// </summary>
-        public event OnAuthorizeStopEVSEDelegate OnAuthorizeStopEVSE;
+        public override event OnAuthorizeStopEVSEDelegate OnAuthorizeStopEVSE;
 
         #endregion
 
@@ -340,7 +246,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event sent whenever a charge detail record was received.
         /// </summary>
-        public event WWCP.OnChargeDetailRecordDelegate OnChargeDetailRecord;
+        public override event WWCP.OnChargeDetailRecordDelegate OnChargeDetailRecord;
 
         #endregion
 
@@ -348,7 +254,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region EMPRoamingWWCP(Id, Name, RoamingNetwork, EMPRoaming)
+        #region EMPRoamingWWCP(Id, Name, RoamingNetwork, EMPRoaming, EVSEDataRecord2EVSE = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for e-mobility providers/EMPs.
@@ -356,12 +262,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Id">The unique identification of the roaming provider.</param>
         /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
+        /// 
         /// <param name="EMPRoaming">A OICP EMP roaming object to be mapped to WWCP.</param>
-        public EMPRoamingWWCP(RoamingProvider_Id  Id,
-                              I18NString          Name,
-                              RoamingNetwork      RoamingNetwork,
-                              EMPRoaming          EMPRoaming)
+        /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
+        public EMPRoamingWWCP(RoamingProvider_Id           Id,
+                              I18NString                   Name,
+                              RoamingNetwork               RoamingNetwork,
 
+                              EMPRoaming                   EMPRoaming,
+                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE = null)
+
+            : base(Id,
+                   Name,
+                   RoamingNetwork)
 
         {
 
@@ -381,11 +294,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            this._Id              = Id;
-            this._Name            = Name;
-            this._RoamingNetwork  = RoamingNetwork;
-            this._EMPRoaming      = EMPRoaming;
-            this._AuthorizatorId  = Authorizator_Id.Parse(Id.ToString());
+            this._EMPRoaming           = EMPRoaming;
+            this._EVSEDataRecord2EVSE  = EVSEDataRecord2EVSE;
 
             // Link AuthorizeStart/-Stop and CDR events
             this._EMPRoaming.OnAuthorizeStart     += SendAuthorizeStart;
@@ -404,30 +314,37 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Id">The unique identification of the roaming provider.</param>
         /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
+        /// 
         /// <param name="EMPClient">An OICP EMP client.</param>
         /// <param name="EMPServer">An OICP EMP sever.</param>
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// 
+        /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
         public EMPRoamingWWCP(RoamingProvider_Id            Id,
                               I18NString                    Name,
                               RoamingNetwork                RoamingNetwork,
+
                               EMPClient                     EMPClient,
                               EMPServer                     EMPServer,
-
                               String                        ClientLoggingContext  = EMPClientLogger.DefaultContext,
                               String                        ServerLoggingContext  = EMPServerLogger.DefaultContext,
-                              Func<String, String, String>  LogFileCreator        = null)
+                              Func<String, String, String>  LogFileCreator        = null,
+
+                              EVSEDataRecord2EVSEDelegate   EVSEDataRecord2EVSE   = null)
 
             : this(Id,
                    Name,
                    RoamingNetwork,
+
                    new EMPRoaming(EMPClient,
                                   EMPServer,
                                   ClientLoggingContext,
                                   ServerLoggingContext,
-                                  LogFileCreator)
-                  )
+                                  LogFileCreator),
+
+                   EVSEDataRecord2EVSE)
 
         { }
 
@@ -458,6 +375,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
+        /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
+        /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public EMPRoamingWWCP(RoamingProvider_Id                   Id,
                               I18NString                           Name,
@@ -479,11 +398,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               String                               ServerLoggingContext        = EMPServerLogger.DefaultContext,
                               Func<String, String, String>         LogFileCreator              = null,
 
+                              EVSEDataRecord2EVSEDelegate          EVSEDataRecord2EVSE         = null,
+
                               DNSClient                            DNSClient                   = null)
 
             : this(Id,
                    Name,
                    RoamingNetwork,
+
                    new EMPRoaming(Id.ToString(),
                                   RemoteHostname,
                                   RemoteTCPPort,
@@ -501,8 +423,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                   ServerLoggingContext,
                                   LogFileCreator,
 
-                                  DNSClient)
-                  )
+                                  DNSClient),
+
+                   EVSEDataRecord2EVSE)
 
         { }
 
@@ -546,7 +469,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
 
             else
-                return AuthStartEVSEResult.OutOfService(_AuthorizatorId);
+                return AuthStartEVSEResult.OutOfService(AuthorizatorId);
 
         }
 
@@ -585,7 +508,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
 
             else
-                return AuthStopEVSEResult.OutOfService(_AuthorizatorId);
+                return AuthStopEVSEResult.OutOfService(AuthorizatorId);
 
         }
 
@@ -616,7 +539,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
 
             else
-                return SendCDRResult.OutOfService(_AuthorizatorId);
+                return SendCDRResult.OutOfService(AuthorizatorId);
         }
 
         #endregion
@@ -864,7 +787,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="eMAIds">A list of eMobility account identifications, who can use this reservation.</param>
         /// <param name="PINs">A list of PINs, who can be entered into a pinpad to use this reservation.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
-        public async Task<ReservationResult>
+        public override async Task<ReservationResult>
 
             Reserve(DateTime                 Timestamp,
                     CancellationToken        CancellationToken,
@@ -902,7 +825,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ProviderId">An optional unique identification of e-Mobility service provider.</param>
         /// <param name="EVSEId">An optional identification of the EVSE.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
-        public async Task<CancelReservationResult>
+        public override async Task<CancelReservationResult>
 
             CancelReservation(DateTime                               Timestamp,
                               CancellationToken                      CancellationToken,
@@ -937,16 +860,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
         /// <param name="eMAId">The unique identification of the e-mobility account.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
-        public async Task<RemoteStartEVSEResult> RemoteStart(DateTime                Timestamp,
-                                                             CancellationToken       CancellationToken,
-                                                             EventTracking_Id        EventTrackingId,
-                                                             EVSE_Id                 EVSEId,
-                                                             ChargingProduct_Id      ChargingProductId  = null,
-                                                             ChargingReservation_Id  ReservationId      = null,
-                                                             ChargingSession_Id      SessionId          = null,
-                                                             EVSP_Id                 ProviderId         = null,
-                                                             eMA_Id                  eMAId              = null,
-                                                             TimeSpan?               QueryTimeout       = default(TimeSpan?))
+        public override async Task<RemoteStartEVSEResult>
+
+            RemoteStart(DateTime                Timestamp,
+                        CancellationToken       CancellationToken,
+                        EventTracking_Id        EventTrackingId,
+                        EVSE_Id                 EVSEId,
+                        ChargingProduct_Id      ChargingProductId  = null,
+                        ChargingReservation_Id  ReservationId      = null,
+                        ChargingSession_Id      SessionId          = null,
+                        EVSP_Id                 ProviderId         = null,
+                        eMA_Id                  eMAId              = null,
+                        TimeSpan?               QueryTimeout       = default(TimeSpan?))
+
         {
 
             var result = await this._EMPRoaming.RemoteStart(Timestamp,
@@ -995,7 +921,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
         /// <param name="eMAId">The unique identification of the e-mobility account.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
-        public async Task<RemoteStopEVSEResult>
+        public override async Task<RemoteStopEVSEResult>
 
             RemoteStop(DateTime             Timestamp,
                        CancellationToken    CancellationToken,
@@ -1033,26 +959,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return RemoteStopEVSEResult.Error(SessionId);
 
-        }
-
-        #endregion
-
-
-
-        #region Start()
-
-        public void Start()
-        {
-            _EMPRoaming.Start();
-        }
-
-        #endregion
-
-        #region Shutdown(Message = null, Wait = true)
-
-        public void Shutdown(String Message = null, Boolean Wait = true)
-        {
-            _EMPRoaming.Shutdown(Message, Wait);
         }
 
         #endregion

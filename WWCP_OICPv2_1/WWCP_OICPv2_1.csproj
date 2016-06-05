@@ -63,6 +63,7 @@
     <Compile Include="EMP\EMPClient\EMPClient.cs" />
     <Compile Include="EMP\EMPClient\EMPClientLogger.cs" />
     <Compile Include="EMP\EMPClient\EMPClientXMLMethods.cs" />
+    <Compile Include="EMP\EMPDelegates.cs" />
     <Compile Include="EMP\EMPExtentions.cs" />
     <Compile Include="EMP\EMPRoaming.cs" />
     <Compile Include="EMP\EMPRoamingWWCP.cs" />

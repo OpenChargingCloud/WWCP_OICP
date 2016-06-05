@@ -35,15 +35,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// A WWCP wrapper for the OICP v2.1 roaming client which maps
+    /// A WWCP wrapper for the OICP v2.1 CPO Roaming Client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
     public class CPORoamingWWCP : AEVSEOperatorRoamingProvider
     {
 
         #region Data
-
-        private readonly Authorizator_Id              _AuthorizatorId;
 
         private readonly EVSE2EVSEDataRecordDelegate  _EVSE2EVSEDataRecord;
 
@@ -53,40 +51,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region Id
-
-        private readonly RoamingProvider_Id _Id;
-
-        /// <summary>
-        /// The unique identification of the roaming provider.
-        /// </summary>
-        public RoamingProvider_Id Id => _Id;
-
-        #endregion
-
-        #region Name
-
-        private readonly I18NString _Name;
-
-        /// <summary>
-        /// The offical (multi-language) name of the roaming provider.
-        /// </summary>
-        public I18NString Name => _Name;
-
-        #endregion
-
-        #region RoamingNetwork
-
-        private readonly RoamingNetwork _RoamingNetwork;
-
-        /// <summary>
-        /// The attached roaming network.
-        /// </summary>
-        public RoamingNetwork RoamingNetwork => _RoamingNetwork;
-
-        #endregion
-
-
         #region CPORoaming
 
         private readonly CPORoaming _CPORoaming;
@@ -94,7 +58,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The wrapped CPO roaming object.
         /// </summary>
-        public CPORoaming CPORoaming => _CPORoaming;
+        public CPORoaming CPORoaming
+            => _CPORoaming;
 
         #endregion
 
@@ -103,7 +68,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The CPO client.
         /// </summary>
-        public CPOClient CPOClient => _CPORoaming?.CPOClient;
+        public CPOClient CPOClient
+            => _CPORoaming?.CPOClient;
 
         #endregion
 
@@ -112,7 +78,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The CPO server.
         /// </summary>
-        public CPOServer CPOServer => _CPORoaming?.CPOServer;
+        public CPOServer CPOServer
+            => _CPORoaming?.CPOServer;
 
         #endregion
 
@@ -121,7 +88,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The CPO client logger.
         /// </summary>
-        public CPOClientLogger ClientLogger => _CPORoaming?.CPOClientLogger;
+        public CPOClientLogger ClientLogger
+            => _CPORoaming?.CPOClientLogger;
 
         #endregion
 
@@ -130,23 +98,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The CPO server logger.
         /// </summary>
-        public CPOServerLogger ServerLogger => _CPORoaming?.CPOServerLogger;
+        public CPOServerLogger ServerLogger
+            => _CPORoaming?.CPOServerLogger;
 
         #endregion
-
 
         #region DNSClient
 
         /// <summary>
-        /// The DNSc server.
+        /// The attached DNS server.
         /// </summary>
         public DNSClient DNSClient
-        {
-            get
-            {
-                return _CPORoaming.DNSClient;
-            }
-        }
+            => _CPORoaming.DNSClient;
 
         #endregion
 
@@ -303,6 +266,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             : base(Id,
                    Name,
                    RoamingNetwork,
+
                    IncludeEVSEs,
                    ServiceCheckEvery,
                    StatusCheckEvery,
@@ -312,27 +276,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
-            if (Id             == null)
-                throw new ArgumentNullException(nameof(Id),              "The given unique roaming provider identification must not be null or empty!");
-
-            if (Name.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Name),            "The given roaming provider name must not be null or empty!");
-
-            if (RoamingNetwork == null)
-                throw new ArgumentNullException(nameof(RoamingNetwork),  "The given roaming network must not be null!");
-
-            if (CPORoaming     == null)
-                throw new ArgumentNullException(nameof(CPORoaming),      "The given OICP CPO Roaming object must not be null!");
+            if (CPORoaming == null)
+                throw new ArgumentNullException(nameof(CPORoaming),  "The given OICP CPO Roaming object must not be null!");
 
             #endregion
 
-            this._Id                        = Id;
-            this._Name                      = Name;
-            this._RoamingNetwork            = RoamingNetwork;
-            this._CPORoaming                = CPORoaming;
-            this._AuthorizatorId            = Authorizator_Id.Parse(Id.ToString());
-            this._EVSE2EVSEDataRecord       = EVSE2EVSEDataRecord;
-            this._EVSEDataRecord2XML        = EVSEDataRecord2XML;
+            this._CPORoaming           = CPORoaming;
+            this._EVSE2EVSEDataRecord  = EVSE2EVSEDataRecord;
+            this._EVSEDataRecord2XML   = EVSEDataRecord2XML;
 
             // Link events...
             this._CPORoaming.OnRemoteReservationStart += SendRemoteReservationStart;
@@ -1877,14 +1828,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             AuthStartResult result = null;
 
             if (response.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                result = AuthStartResult.Authorized(_AuthorizatorId,
+                result = AuthStartResult.Authorized(AuthorizatorId,
                                                     response.SessionId,
                                                     response.ProviderId,
                                                     response.StatusCode.Description,
                                                     response.StatusCode.AdditionalInfo);
 
             else
-                result = AuthStartResult.NotAuthorized(_AuthorizatorId,
+                result = AuthStartResult.NotAuthorized(AuthorizatorId,
                                                        response.ProviderId,
                                                        response.StatusCode.Description,
                                                        response.StatusCode.AdditionalInfo);
@@ -1992,25 +1943,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
             var response  = await _CPORoaming.AuthorizeStart(OperatorId,
-                                                           AuthToken,
-                                                           EVSEId,
-                                                           SessionId,
-                                                           ChargingProductId,
-                                                           null,
-                                                           QueryTimeout);
+                                                             AuthToken,
+                                                             EVSEId,
+                                                             SessionId,
+                                                             ChargingProductId,
+                                                             null,
+                                                             QueryTimeout);
 
 
             AuthStartEVSEResult result = null;
 
             if (response.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                result = AuthStartEVSEResult.Authorized(_AuthorizatorId,
+                result = AuthStartEVSEResult.Authorized(AuthorizatorId,
                                                         response.SessionId,
                                                         response.ProviderId,
                                                         response.StatusCode.Description,
                                                         response.StatusCode.AdditionalInfo);
 
             else
-                result = AuthStartEVSEResult.NotAuthorized(_AuthorizatorId,
+                result = AuthStartEVSEResult.NotAuthorized(AuthorizatorId,
                                                            response.ProviderId,
                                                            response.StatusCode.Description,
                                                            response.StatusCode.AdditionalInfo);
@@ -2119,7 +2070,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
             //ToDo: Implement AuthorizeStart(...ChargingStationId...)
-            var result = AuthStartChargingStationResult.Error(_AuthorizatorId, "Not implemented!");
+            var result = AuthStartChargingStationResult.Error(AuthorizatorId, "Not implemented!");
 
 
             #region Send OnAuthorizeChargingStationStarted event
@@ -2216,13 +2167,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             AuthStopResult result = null;
 
             if (response.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                result = AuthStopResult.Authorized(_AuthorizatorId,
+                result = AuthStopResult.Authorized(AuthorizatorId,
                                                    response.ProviderId,
                                                    response.StatusCode.Description,
                                                    response.StatusCode.AdditionalInfo);
 
             else
-                result = AuthStopResult.NotAuthorized(_AuthorizatorId,
+                result = AuthStopResult.NotAuthorized(AuthorizatorId,
                                                       response.ProviderId,
                                                       response.StatusCode.Description,
                                                       response.StatusCode.AdditionalInfo);
@@ -2321,13 +2272,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             AuthStopEVSEResult result = null;
 
             if (response.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                result = AuthStopEVSEResult.Authorized(_AuthorizatorId,
+                result = AuthStopEVSEResult.Authorized(AuthorizatorId,
                                                        response.ProviderId,
                                                        response.StatusCode.Description,
                                                        response.StatusCode.AdditionalInfo);
 
             else
-                result = AuthStopEVSEResult.NotAuthorized(_AuthorizatorId,
+                result = AuthStopEVSEResult.NotAuthorized(AuthorizatorId,
                                                           response.ProviderId,
                                                           response.StatusCode.Description,
                                                           response.StatusCode.AdditionalInfo);
@@ -2426,7 +2377,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var result = AuthStopChargingStationResult.Error(_AuthorizatorId);
+            var result = AuthStopChargingStationResult.Error(AuthorizatorId);
 
 
             #region Send OnAuthorizeChargingStationStopped event
@@ -2532,11 +2483,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             // true
             if (response.Result)
-                result = SendCDRResult.Forwarded(_AuthorizatorId);
+                result = SendCDRResult.Forwarded(AuthorizatorId);
 
             // false
             else
-                result = SendCDRResult.NotForwared(_AuthorizatorId);
+                result = SendCDRResult.NotForwared(AuthorizatorId);
 
 
             #region Send OnChargeDetailRecordSend event
