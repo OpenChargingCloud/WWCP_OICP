@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.0 EMP server logger.
+    /// An OICP v2.1 EMP server logger.
     /// </summary>
     public class EMPServerLogger : HTTPLogger
     {
@@ -49,7 +49,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         private readonly EMPServer _EMPServer;
 
         /// <summary>
-        /// The linked OICP v2.0 EMP client.
+        /// The linked OICP v2.1 EMP client.
         /// </summary>
         public EMPServer EMPServer
         {
@@ -68,9 +68,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region EMPServerLogger(EMPServer, Context = DefaultContext, LogFileCreator = null)
 
         /// <summary>
-        /// Create a new OICP v2.0 EMP server logger using the default logging delegates.
+        /// Create a new OICP v2.1 EMP server logger using the default logging delegates.
         /// </summary>
-        /// <param name="EMPServer">A OICP v2.0 EMP server.</param>
+        /// <param name="EMPServer">A OICP v2.1 EMP server.</param>
         /// <param name="Context">A context of this API.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPServerLogger(EMPServer                     EMPServer,
@@ -92,9 +92,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region EMPServerLogger(EMPServer, Context, ... Logging delegates ...)
 
         /// <summary>
-        /// Create a new OICP v2.0 EMP server logger using the given logging delegates.
+        /// Create a new OICP v2.1 EMP server logger using the given logging delegates.
         /// </summary>
-        /// <param name="EMPServer">A OICP v2.0 EMP server.</param>
+        /// <param name="EMPServer">A OICP v2.1 EMP server.</param>
         /// <param name="Context">A context of this API.</param>
         /// 
         /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
@@ -164,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            #region Register authorize start/stop log events
+            #region Register AuthorizeStart/Stop and SendCDR log events
 
             RegisterEvent("AuthorizeStart",
                           handler => _EMPServer.OnLogAuthorizeStart += handler,
@@ -180,6 +180,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
+
             RegisterEvent("AuthorizeStop",
                           handler => _EMPServer.OnLogAuthorizeStop += handler,
                           handler => _EMPServer.OnLogAuthorizeStop -= handler,
@@ -193,6 +194,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           "Authorize", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
+
 
             RegisterEvent("ChargeDetailRecordSend",
                           handler => _EMPServer.OnLogChargeDetailRecordSend += handler,

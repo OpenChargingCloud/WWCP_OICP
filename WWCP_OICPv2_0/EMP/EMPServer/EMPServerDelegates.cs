@@ -88,10 +88,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="ChargeDetailRecord">A charge detail record.</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
-    public delegate Task<SendCDRResult> OnChargeDetailRecordDelegate(DateTime                    Timestamp,
-                                                                     CancellationToken           CancellationToken,
-                                                                     EventTracking_Id            EventTrackingId,
+    public delegate Task<SendCDRResult> OnChargeDetailRecordDelegate(DateTime            Timestamp,
+                                                                     CancellationToken   CancellationToken,
+                                                                     EventTracking_Id    EventTrackingId,
                                                                      ChargeDetailRecord  ChargeDetailRecord,
-                                                                     TimeSpan?                   QueryTimeout  = null);
+                                                                     TimeSpan?           QueryTimeout  = null);
 
 }

@@ -164,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            #region Register authorize start/stop log events
+            #region Register AuthorizeStart/Stop and SendCDR log events
 
             RegisterEvent("AuthorizeStart",
                           handler => _EMPServer.OnLogAuthorizeStart += handler,
@@ -180,6 +180,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
+
             RegisterEvent("AuthorizeStop",
                           handler => _EMPServer.OnLogAuthorizeStop += handler,
                           handler => _EMPServer.OnLogAuthorizeStop -= handler,
@@ -193,6 +194,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           "Authorize", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
+
 
             RegisterEvent("ChargeDetailRecordSend",
                           handler => _EMPServer.OnLogChargeDetailRecordSend += handler,

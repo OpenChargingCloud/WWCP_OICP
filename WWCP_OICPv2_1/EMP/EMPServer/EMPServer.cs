@@ -351,7 +351,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 }
                 catch (Exception e)
                 {
-                    e.Log("EMPServer.OnLogAuthorizeStart");
+                    e.Log(nameof(EMPServer) + ".OnLogAuthorizeStart");
                 }
 
                 #endregion
@@ -560,7 +560,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 }
                 catch (Exception e)
                 {
-                    e.Log("EMPServer.OnLogAuthorizeStarted");
+                    e.Log(nameof(EMPServer) + ".OnLogAuthorizeStarted");
                 }
 
                 #endregion
@@ -616,7 +616,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     }
                     catch (Exception e)
                     {
-                        e.Log("EMPServer.OnLogAuthorizeStart");
+                        e.Log(nameof(EMPServer) + ".OnLogAuthorizeStart");
                     }
 
                     #endregion
@@ -808,7 +808,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     }
                     catch (Exception e)
                     {
-                        e.Log("EMPServer.OnLogAuthorizeStopped");
+                        e.Log(nameof(EMPServer) + ".OnLogAuthorizeStopped");
                     }
 
                     #endregion
@@ -831,14 +831,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     try
                     {
 
-                        var OnLogChargeDetailRecordSendLocal = OnLogChargeDetailRecordSend;
-                        if (OnLogChargeDetailRecordSendLocal != null)
-                            OnLogChargeDetailRecordSendLocal(DateTime.Now, this.SOAPServer, Request);
+                        OnLogChargeDetailRecordSend?.Invoke(DateTime.Now,
+                                                            this.SOAPServer,
+                                                            Request);
 
                     }
                     catch (Exception e)
                     {
-                        e.Log("EMPServer.OnLogChargeDetailRecordSend");
+                        e.Log(nameof(EMPServer) + "." + nameof(OnLogChargeDetailRecordSend));
                     }
 
                     #endregion
@@ -846,8 +846,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    SendCDRResult              response  = null;
-                    ChargeDetailRecord CDR       = null;
+                    SendCDRResult       response  = null;
+                    ChargeDetailRecord  CDR       = null;
 
                     try
                     {
@@ -963,15 +963,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     try
                     {
 
-                        var OnLogChargeDetailRecordSentLocal = OnLogChargeDetailRecordSent;
-                        if (OnLogChargeDetailRecordSentLocal != null)
-                            OnLogChargeDetailRecordSentLocal(HTTPResponse.Timestamp, this.SOAPServer, Request, HTTPResponse);
+                        OnLogChargeDetailRecordSent?.Invoke(HTTPResponse.Timestamp,
+                                                            this.SOAPServer,
+                                                            Request,
+                                                            HTTPResponse);
 
                     }
                     catch (Exception e)
                     {
-                        e.Log("EMPServer.OnLogChargeDetailRecordSent");
+                        e.Log(nameof(EMPServer) + "." + nameof(OnLogChargeDetailRecordSent));
                     }
+
 
                     #endregion
 
@@ -1025,49 +1027,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return results.
                        Where(result => result.Result != AuthStartEVSEResultType.Unspecified).
-                       First();
-
-        }
-
-        #endregion
-
-        #region (internal) SendAuthorizeStop(...)
-
-        internal async Task<AuthStopEVSEResult>
-
-            SendAuthorizeStop(DateTime            Timestamp,
-                              CancellationToken   CancellationToken,
-                              EventTracking_Id    EventTrackingId,
-                              RoamingNetwork_Id   RoamingNetworkId,
-                              ChargingSession_Id  SessionId,
-                              ChargingSession_Id  PartnerSessionId,
-                              EVSEOperator_Id     OperatorId,
-                              EVSE_Id             EVSEId,
-                              Auth_Token          AuthToken,
-                              TimeSpan?           QueryTimeout  = null)
-
-        {
-
-            var OnAuthorizeStopLocal = OnAuthorizeStop;
-            if (OnAuthorizeStopLocal == null)
-                return AuthStopEVSEResult.Error(_AuthorizatorId);
-
-            var results = await Task.WhenAll(OnAuthorizeStopLocal.
-                                                 GetInvocationList().
-                                                 Select(subscriber => (subscriber as OnAuthorizeStopDelegate)
-                                                     (Timestamp,
-                                                      this,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      SessionId,
-                                                      PartnerSessionId,
-                                                      OperatorId,
-                                                      EVSEId,
-                                                      AuthToken,
-                                                      QueryTimeout)));
-
-            return results.
-                       Where(result => result.Result != AuthStopEVSEResultType.Unspecified).
                        First();
 
         }
