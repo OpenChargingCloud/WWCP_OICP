@@ -46,7 +46,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The default HTTP user agent string.
         /// </summary>
-        public const String DefaultHTTPUserAgent = "GraphDefined OICP v2.0 EMPClient";
+        public const String DefaultHTTPUserAgent = "GraphDefined OICP v2.1 EMP Client";
 
         #endregion
 

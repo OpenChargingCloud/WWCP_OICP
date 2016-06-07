@@ -234,7 +234,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             }
 
-            var RemoteIdentificationXML = AuthorizationIdentificationXML.Element(OICPNS.CommonTypes + "PlugAndChargeIdentification");
+            var RemoteIdentificationXML = AuthorizationIdentificationXML.Element(OICPNS.CommonTypes + "RemoteIdentification");
             if (RemoteIdentificationXML != null)
             {
 

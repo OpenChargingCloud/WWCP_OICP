@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public new const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.0 HTTP/SOAP/XML EMP Server API";
+        public new const           String    DefaultHTTPServerName  = "GraphDefined OICP v2.1 HTTP/SOAP/XML EMP Server API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
