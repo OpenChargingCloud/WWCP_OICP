@@ -94,7 +94,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                              Boolean         RegisterHTTPRootService  = true,
                              DNSClient       DNSClient                = null)
 
-            : base(//IPPort, //Note: Use AttachTCPPort(...) instead!
+            : base(IPPort,
                    DNSClient: DNSClient)
 
         {
@@ -103,7 +103,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this._URIPrefix        = URIPrefix;
             this._EVSEDataRecords  = new Dictionary<EVSE_Id, EVSEDataRecord>();
 
-            this.AttachTCPPort(IPPort);
             this.Start();
 
             #region / (HTTPRoot), if RegisterHTTPRootService == true
