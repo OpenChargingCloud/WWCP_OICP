@@ -157,7 +157,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          Boolean   AutoStart       = false)
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
-                   TCPPort != null                   ? TCPPort        : DefaultHTTPServerPort,
+                   TCPPort ?? DefaultHTTPServerPort,
                    URIPrefix,
                    HTTPContentType.XMLTEXT_UTF8,
                    DNSClient,
@@ -344,14 +344,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 try
                 {
 
-                    var OnLogAuthorizeStartLocal = OnLogAuthorizeStart;
-                    if (OnLogAuthorizeStartLocal != null)
-                        OnLogAuthorizeStartLocal(DateTime.Now, this.SOAPServer, Request);
+                    OnLogAuthorizeStart?.Invoke(DateTime.Now,
+                                                this.SOAPServer,
+                                                Request);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + ".OnLogAuthorizeStart");
+                    e.Log(nameof(EMPServer)  + "." + nameof(OnLogAuthorizeStart));
                 }
 
                 #endregion
@@ -508,6 +508,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #endregion
 
+                #region Send SOAPResponse
 
                 var HTTPResponse = new HTTPResponseBuilder(Request) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
@@ -517,9 +518,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     Content         = SOAP.Encapsulation(
                                           new XElement(OICPNS.Authorization + "eRoamingAuthorizationStart",
 
-                                              SessionId != null
+                                              result.SessionId != null
                                                   ? new XElement(OICPNS.Authorization + "SessionID",         result.SessionId.ToString())
-                                                  : null,
+                                                  : SessionId != null
+                                                        ? new XElement(OICPNS.Authorization + "SessionID",   SessionId.ToString())
+                                                        : null,
 
                                               PartnerSessionId != null
                                                   ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
@@ -548,19 +551,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                          )).ToUTF8Bytes()
                 };
 
+                #endregion
+
+
                 #region Send OnLogAuthorizeStarted event
 
-                                                 try
+                try
                 {
 
-                    var OnLogAuthorizeStartedLocal = OnLogAuthorizeStarted;
-                    if (OnLogAuthorizeStartedLocal != null)
-                        OnLogAuthorizeStartedLocal(HTTPResponse.Timestamp, this.SOAPServer, Request, HTTPResponse);
+                    OnLogAuthorizeStarted?.Invoke(HTTPResponse.Timestamp,
+                                                  this.SOAPServer,
+                                                  Request,
+                                                  HTTPResponse);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + ".OnLogAuthorizeStarted");
+                    e.Log(nameof(EMPServer) + "." + nameof(OnLogAuthorizeStarted));
                 }
 
                 #endregion
@@ -609,14 +616,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     try
                     {
 
-                        var OnLogAuthorizeStopLocal = OnLogAuthorizeStop;
-                        if (OnLogAuthorizeStopLocal != null)
-                            OnLogAuthorizeStopLocal(DateTime.Now, this.SOAPServer, Request);
+                        OnLogAuthorizeStop?.Invoke(DateTime.Now,
+                                                   this.SOAPServer,
+                                                   Request);
 
                     }
                     catch (Exception e)
                     {
-                        e.Log(nameof(EMPServer) + ".OnLogAuthorizeStart");
+                        e.Log(nameof(EMPServer)  + "." + nameof(OnLogAuthorizeStart));
                     }
 
                     #endregion
@@ -801,14 +808,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     try
                     {
 
-                        var OnLogAuthorizeStoppedLocal = OnLogAuthorizeStopped;
-                        if (OnLogAuthorizeStoppedLocal != null)
-                            OnLogAuthorizeStoppedLocal(HTTPResponse.Timestamp, this.SOAPServer, Request, HTTPResponse);
+                        OnLogAuthorizeStopped?.Invoke(HTTPResponse.Timestamp,
+                                                      this.SOAPServer,
+                                                      Request,
+                                                      HTTPResponse);
 
                     }
                     catch (Exception e)
                     {
-                        e.Log(nameof(EMPServer) + ".OnLogAuthorizeStopped");
+                        e.Log(nameof(EMPServer)  + "." + nameof(OnLogAuthorizeStopped));
                     }
 
                     #endregion
@@ -974,7 +982,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         e.Log(nameof(EMPServer) + "." + nameof(OnLogChargeDetailRecordSent));
                     }
 
-
                     #endregion
 
                     return HTTPResponse;
@@ -1026,8 +1033,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                       QueryTimeout      = null)));
 
             return results.
-                       Where(result => result.Result != AuthStartEVSEResultType.Unspecified).
-                       First();
+                       First(result => result.Result != AuthStartEVSEResultType.Unspecified);
 
         }
 

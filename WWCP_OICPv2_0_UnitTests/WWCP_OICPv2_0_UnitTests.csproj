@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EMPServerTests.cs" />
     <Compile Include="MobileTests.cs" />
     <Compile Include="DataTests.cs" />
     <Compile Include="OICPTests.cs" />
