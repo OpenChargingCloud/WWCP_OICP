@@ -243,7 +243,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      new XElement(OICPNS.CommonTypes + "RemoteIdentification",
                                                          new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
                                                      )
-                                                 )
+                                                 ),
+
+                                                 ChargingProductId != null
+                                                     ? new XElement(OICPNS.Reservation + "PartnerProductID", ChargingProductId.ToString())
+                                                     : null
 
                                              ));
 
@@ -563,7 +567,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      new XElement(OICPNS.CommonTypes + "QRCodeIdentification",
                                                          new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
                                                      )
-                                                 )
+                                                 ),
+
+                                                 ChargingProductId != null
+                                                     ? new XElement(OICPNS.Authorization + "PartnerProductID", ChargingProductId.ToString())
+                                                     : null
 
                                              ));
 
