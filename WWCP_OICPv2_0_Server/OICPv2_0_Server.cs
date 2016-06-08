@@ -337,7 +337,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
 
             #region / (HTTPRoot)
 
-            HTTPServer.RegisterResourcesFolder(URIPrefix + "/",
+            HTTPServer.RegisterResourcesFolder(HTTPHostname.Any,
+                                               URIPrefix + "/",
                                                "org.GraphDefined.WWCP.OICPv2_0.Server.HTTPRoot",
                                                DefaultFilename: "index.html");
 
@@ -349,7 +350,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
             // ---------------------------------------------------------------------------------------------
             // curl -v -H "Accept: application/json" http://127.0.0.1:3004/RNs/Prod/ext/OICPPlusv2.0/EVSEs
             // ---------------------------------------------------------------------------------------------
-            HTTPServer.AddMethodCallback(HTTPMethod.GET,
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.GET,
                                          "/RNs/{RoamingNetworkId}" + _URIPrefix + "/EVSEs",
                                          HTTPContentType.XML_UTF8,
                                          HTTPDelegate: Request => {
@@ -417,7 +419,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
             // ----------------------------------------------------------------------------------------------
             // curl -v -H "Accept: application/json" http://127.0.0.1:3004/ext/OICPv2.0/RNs/Prod/EVSEStatus
             // ----------------------------------------------------------------------------------------------
-            HTTPServer.AddMethodCallback(HTTPMethod.GET,
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.GET,
                                          "/RNs/{RoamingNetworkId}" + _URIPrefix + "/EVSEStatus",
                                          HTTPContentType.XML_UTF8,
                                          HTTPDelegate: Request => {
