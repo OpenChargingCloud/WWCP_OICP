@@ -479,10 +479,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         {
 
+            TimeSpan? Duration = null;
+
+            var Elements = ChargingProductId.ToString().Split(';').ToArray();
+
+            if (Elements.Length > 0)
+            {
+
+                var DurationText = Elements.FirstOrDefault(element => element.StartsWith("D=", StringComparison.InvariantCulture));
+                if (DurationText != null)
+                    Duration = TimeSpan.FromSeconds(UInt32.Parse(DurationText));
+
+                if (DurationText != null)
+                    DebugX.Log("Reservation Duration = " + Duration.Value);
+
+            }
+
             return await _RoamingNetwork.Reserve(Timestamp,
                                                  CancellationToken,
                                                  EventTrackingId,
                                                  EVSEId,
+                                                 Duration:           Duration,
                                                  ReservationId:      SessionId != null ? ChargingReservation_Id.Parse(SessionId.ToString()) : null,
                                                  ProviderId:         ProviderId,
                                                  eMAId:              eMAId,
@@ -539,12 +556,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         {
 
+            ChargingReservation_Id ReservationId = null;
+
+            var Elements = ChargingProductId.ToString().Split(';').ToArray();
+
+            if (Elements.Length > 0)
+            {
+
+                var ChargingReservationIdText = Elements.FirstOrDefault(element => element.StartsWith("I=", StringComparison.InvariantCulture));
+                if (ChargingReservationIdText != null)
+                    ReservationId = ChargingReservation_Id.Parse(ChargingReservationIdText);
+
+            }
+
             return await _RoamingNetwork.RemoteStart(Timestamp,
                                                      CancellationToken,
                                                      EventTrackingId,
                                                      EVSEId,
                                                      ChargingProductId,
-                                                     null,
+                                                     ReservationId,
                                                      SessionId,
                                                      ProviderId,
                                                      eMAId,
