@@ -558,14 +558,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             ChargingReservation_Id ReservationId = null;
 
-            var Elements = ChargingProductId.ToString().Split(';').ToArray();
-
-            if (Elements.Length > 0)
+            if (ChargingProductId.ToString().IsNotNullOrEmpty())
             {
 
-                var ChargingReservationIdText = Elements.FirstOrDefault(element => element.StartsWith("I=", StringComparison.InvariantCulture));
-                if (ChargingReservationIdText != null)
-                    ReservationId = ChargingReservation_Id.Parse(ChargingReservationIdText);
+                var Elements = ChargingProductId.ToString().Split(';').ToArray();
+
+                if (Elements.Length > 0)
+                {
+
+                    var ChargingReservationIdText = Elements.FirstOrDefault(element => element.StartsWith("I=", StringComparison.InvariantCulture));
+                    if (ChargingReservationIdText.IsNotNullOrEmpty())
+                        ReservationId = ChargingReservation_Id.Parse(ChargingReservationIdText);
+
+                }
 
             }
 
