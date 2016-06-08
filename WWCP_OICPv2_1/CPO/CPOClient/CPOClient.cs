@@ -1158,6 +1158,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
+                                                        DebugX.Log("e:" + httpresponse.EntirePDU);
+
                                                         SendSOAPError(timestamp, this, httpresponse.Content);
 
                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
@@ -1173,6 +1175,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     #region OnHTTPError
 
                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                        DebugX.Log("e:" + httpresponse.EntirePDU);
 
                                                         SendHTTPError(timestamp, this, httpresponse);
 
@@ -1190,6 +1194,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     #region OnException
 
                                                     OnException: (timestamp, sender, exception) => {
+
+                                                        DebugX.Log("e:" + exception.Message);
 
                                                         SendException(timestamp, sender, exception);
 
