@@ -200,7 +200,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region / (HTTPRoot)
 
-            SOAPServer.AddMethodCallback(HTTPMethod.GET,
+            SOAPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.GET,
                                          new String[] { "/", URIPrefix + "/" },
                                          HTTPContentType.TEXT_UTF8,
                                          HTTPDelegate: Request => {
@@ -232,7 +233,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region /Reservation - AuthorizeRemoteReservationStart
 
-            SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Reservation",
+            SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
+                                            URIPrefix + "/Reservation",
                                             "AuthorizeRemoteReservationStart",
                                             XML => XML.Descendants(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart").FirstOrDefault(),
                                             (Request, RemoteStartXML) => {
@@ -560,7 +562,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region /Reservation - AuthorizeRemoteReservationStop
 
-            SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Reservation",
+            SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
+                                            URIPrefix + "/Reservation",
                                             "AuthorizeRemoteReservationStop",
                                             XML => XML.Descendants(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStop").FirstOrDefault(),
                                             (Request, RemoteStopXML) => {
@@ -807,7 +810,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region /Authorization - AuthorizeRemoteStart
 
-            SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
+            SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
+                                            URIPrefix + "/Authorization",
                                             "AuthorizeRemoteStart",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart").FirstOrDefault(),
                                             (Request, RemoteStartXML) => {
@@ -1134,7 +1138,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region /Authorization - AuthorizeRemoteStop
 
-            SOAPServer.RegisterSOAPDelegate(URIPrefix + "/Authorization",
+            SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
+                                            URIPrefix + "/Authorization",
                                             "AuthorizeRemoteStop",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop").FirstOrDefault(),
                                             (Request, RemoteStopXML) => {

@@ -111,7 +111,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             {
 
                 // HTML
-                this.AddMethodCallback(HTTPMethod.GET,
+                this.AddMethodCallback(HTTPHostname.Any,
+                                       HTTPMethod.GET,
                                        "/",
                                        HTTPContentType.HTML_UTF8,
                                        HTTPDelegate: Request => {
@@ -128,7 +129,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        });
 
                 // Text
-                this.AddMethodCallback(HTTPMethod.GET,
+                this.AddMethodCallback(HTTPHostname.Any,
+                                       HTTPMethod.GET,
                                        "/",
                                        HTTPContentType.TEXT_UTF8,
                                        HTTPDelegate: Request => {
@@ -455,12 +457,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Register SOAP-XML Request via GET
 
-            this.AddMethodCallback(HTTPMethod.GET,
+            this.AddMethodCallback(HTTPHostname.Any,
+                                   HTTPMethod.GET,
                                    _URIPrefix + "/RNs/{RoamingNetworkId}",
                                    HTTPContentType.XMLTEXT_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 
-            this.AddMethodCallback(HTTPMethod.GET,
+            this.AddMethodCallback(HTTPHostname.Any,
+                                   HTTPMethod.GET,
                                    _URIPrefix + "/RNs/{RoamingNetworkId}",
                                    HTTPContentType.XML_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
@@ -469,12 +473,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Register SOAP-XML Request via POST
 
-            this.AddMethodCallback(HTTPMethod.POST,
+            this.AddMethodCallback(HTTPHostname.Any,
+                                   HTTPMethod.POST,
                                    _URIPrefix + "/RNs/{RoamingNetwork}",
                                    HTTPContentType.XMLTEXT_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 
-            this.AddMethodCallback(HTTPMethod.POST,
+            this.AddMethodCallback(HTTPHostname.Any,
+                                   HTTPMethod.POST,
                                    _URIPrefix + "/RNs/{RoamingNetwork}",
                                    HTTPContentType.XML_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
@@ -484,7 +490,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Register HTML+Plaintext ErrorResponse
 
             // HTML
-            this.AddMethodCallback(HTTPMethod.GET,
+            this.AddMethodCallback(HTTPHostname.Any,
+                                   HTTPMethod.GET,
                                    "/RNs/{RoamingNetwork}",
                                    HTTPContentType.HTML_UTF8,
                                    HTTPDelegate: Request => {
@@ -501,7 +508,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                    });
 
             // Text
-            this.AddMethodCallback(HTTPMethod.GET,
+            this.AddMethodCallback(HTTPHostname.Any,
+                                   HTTPMethod.GET,
                                    "/RNs/{RoamingNetwork}",
                                    HTTPContentType.TEXT_UTF8,
                                    HTTPDelegate: Request => {
