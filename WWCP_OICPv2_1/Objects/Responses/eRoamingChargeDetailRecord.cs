@@ -622,8 +622,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             return new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
 
                 new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
-                new XElement(OICPNS.Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
-                new XElement(OICPNS.Authorization + "PartnerProductID", (PartnerProductId != null) ? PartnerProductId.ToString() : ""),
+                (PartnerSessionId != null) ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+                (PartnerProductId != null) ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString()) : null,
                 new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
 
                 Identification.ToXML(OICPNS.Authorization),

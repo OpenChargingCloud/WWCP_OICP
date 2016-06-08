@@ -627,21 +627,21 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
 
-                new XElement(OICPNS.Authorization + "SessionID", SessionId.ToString()),
-                new XElement(OICPNS.Authorization + "PartnerSessionID", (PartnerSessionId != null) ? PartnerSessionId.ToString() : ""),
-                new XElement(OICPNS.Authorization + "PartnerProductID", (PartnerProductId != null) ? PartnerProductId.ToString() : ""),
-                new XElement(OICPNS.Authorization + "EvseID", EVSEId.OriginId),
+                new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
+                (PartnerSessionId != null) ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+                (PartnerProductId != null) ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString()) : null,
+                new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
 
                 Identification.ToXML(OICPNS.Authorization),
 
-                (ChargingStart.HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart", ChargingStart.Value.ToIso8601()) : null,
-                (ChargingEnd.HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd", ChargingEnd.Value.ToIso8601()) : null,
+                (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
+                (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
 
                 new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
-                new XElement(OICPNS.Authorization + "SessionEnd", SessionEnd.ToIso8601()),
+                new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
 
-                (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart", String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
-                (MeterValueEnd.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd", String.Format("{0:0.###}", MeterValueEnd).Replace(",", ".")) : null,
+                (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
+                (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", ".")) : null,
 
                 MeterValuesInBetween != null
                     ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
@@ -651,11 +651,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                       )
                     : null,
 
-                ConsumedEnergy != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy", String.Format("{0:0.}", ConsumedEnergy).Replace(",", ".")) : null,
-                MeteringSignature != null ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature) : null,
+                ConsumedEnergy    != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", ".")) : null,
+                MeteringSignature != null ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)        : null,
 
-                HubOperatorId != null ? new XElement(OICPNS.Authorization + "HubOperatorID", HubOperatorId.ToString()) : null,
-                HubProviderId != null ? new XElement(OICPNS.Authorization + "HubProviderID", HubProviderId.ToString()) : null
+                HubOperatorId     != null ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString()) : null,
+                HubProviderId     != null ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString()) : null
 
             );
 
