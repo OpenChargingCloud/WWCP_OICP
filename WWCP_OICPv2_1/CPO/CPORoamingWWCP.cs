@@ -516,6 +516,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                  ProviderId:         ProviderId,
                                                  eMAId:              eMAId,
                                                  ChargingProductId:  ChargingProductId,
+                                                 eMAIds:             new eMA_Id[] { eMAId },
                                                  QueryTimeout:       QueryTimeout);
 
         }
