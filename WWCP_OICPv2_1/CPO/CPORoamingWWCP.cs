@@ -578,7 +578,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 if (Elements.Length > 0)
                 {
-                    var ChargingReservationIdText = Elements.FirstOrDefault(element => element.StartsWith("I=", StringComparison.InvariantCulture));
+                    var ChargingReservationIdText = Elements.FirstOrDefault(element => element.StartsWith("R=", StringComparison.InvariantCulture));
                     if (ChargingReservationIdText.IsNotNullOrEmpty())
                         ReservationId = ChargingReservation_Id.Parse(ChargingReservationIdText.Substring(2));
                 }
