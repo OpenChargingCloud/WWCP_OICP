@@ -1131,6 +1131,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
+            DebugX.Log(ChargeDetailRecord.ToXML().ToString());
+
             using (var OICPClient = new SOAPClient(Hostname,
                                                    TCPPort,
                                                    HTTPVirtualHost,
