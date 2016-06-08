@@ -481,17 +481,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             TimeSpan? Duration = null;
 
-            var Elements = ChargingProductId.ToString().Split(';').ToArray();
-
-            if (Elements.Length > 0)
+            if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
             {
 
-                var DurationText = Elements.FirstOrDefault(element => element.StartsWith("D=", StringComparison.InvariantCulture));
-                if (DurationText != null)
-                    Duration = TimeSpan.FromSeconds(UInt32.Parse(DurationText));
+                var Elements = ChargingProductId.ToString().Split(';').ToArray();
 
-                if (DurationText != null)
-                    DebugX.Log("Reservation Duration = " + Duration.Value);
+                if (Elements.Length > 0)
+                {
+
+                    var DurationText = Elements.FirstOrDefault(element => element.StartsWith("D=", StringComparison.InvariantCulture));
+                    if (DurationText != null)
+                    {
+
+                        DurationText = DurationText.Substring(2);
+
+                        if (DurationText.EndsWith("sec", StringComparison.InvariantCulture))
+                            Duration = TimeSpan.FromSeconds(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+
+                        if (DurationText.EndsWith("min", StringComparison.InvariantCulture))
+                            Duration = TimeSpan.FromMinutes(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+
+                    }
+
+                }
 
             }
 
@@ -558,14 +570,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             ChargingReservation_Id ReservationId = null;
 
-            var Elements = ChargingProductId.ToString().Split(';').ToArray();
-
-            if (Elements.Length > 0)
+            if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
             {
 
-                var ChargingReservationIdText = Elements.FirstOrDefault(element => element.StartsWith("I=", StringComparison.InvariantCulture));
-                if (ChargingReservationIdText != null)
-                    ReservationId = ChargingReservation_Id.Parse(ChargingReservationIdText);
+                var Elements = ChargingProductId.ToString().Split(';').ToArray();
+
+                if (Elements.Length > 0)
+                {
+                    var ChargingReservationIdText = Elements.FirstOrDefault(element => element.StartsWith("I=", StringComparison.InvariantCulture));
+                    if (ChargingReservationIdText.IsNotNullOrEmpty())
+                        ReservationId = ChargingReservation_Id.Parse(ChargingReservationIdText.Substring(2));
+                }
 
             }
 
