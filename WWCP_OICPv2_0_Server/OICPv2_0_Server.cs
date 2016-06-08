@@ -337,7 +337,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
 
             #region / (HTTPRoot)
 
-            HTTPServer.RegisterResourcesFolder(URIPrefix + "/",
+            HTTPServer.RegisterResourcesFolder(HTTPHostname.Any,
+                                               URIPrefix + "/",
                                                "org.GraphDefined.WWCP.OICPv2_0.Server.HTTPRoot",
                                                DefaultFilename: "index.html");
 
