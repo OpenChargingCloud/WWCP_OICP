@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
@@ -806,16 +807,87 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         {
 
-            var result = await this._EMPRoaming.ReservationStart(Timestamp,
-                                                                 CancellationToken,
-                                                                 EventTrackingId,
-                                                                 EVSEId,
-                                                                 ProviderId,
-                                                                 eMAId,
-                                                                 ReservationId != null ? ChargingSession_Id.Parse(ReservationId.ToString()) : null,
-                                                                 null,
-                                                                 ChargingProductId,
-                                                                 QueryTimeout);
+            #region Check if the PartnerProductId has a special format like 'D=15min|P=AC1'
+
+            var PartnerProductIdElements = new Dictionary<String, String>();
+
+            if (ChargingProductId.ToString().IsNotNullOrEmpty() &&
+               !ChargingProductId.ToString().Contains('='))
+            {
+                PartnerProductIdElements.Add("P", ChargingProductId.ToString());
+                ChargingProductId = null;
+            }
+
+            if (ChargingProductId != null)
+                ChargingProductId.ToString().DoubleSplitInto('|', '=', PartnerProductIdElements);
+
+            #endregion
+
+            #region Copy the 'StartTime' value into the PartnerProductId
+
+            if (StartTime.HasValue)
+            {
+
+                if (!PartnerProductIdElements.ContainsKey("S"))
+                    PartnerProductIdElements.Add("S", StartTime.Value.ToIso8601());
+                else
+                    PartnerProductIdElements["S"] = StartTime.Value.ToIso8601();
+
+            }
+
+            #endregion
+
+            #region Copy the 'Duration' value into the PartnerProductId
+
+            if (Duration.HasValue && Duration.Value >= TimeSpan.FromSeconds(1))
+            {
+
+                if (Duration.Value.Minutes > 0 && Duration.Value.Seconds == 0)
+                {
+                    if (!PartnerProductIdElements.ContainsKey("D"))
+                        PartnerProductIdElements.Add("D", Duration.Value.TotalMinutes + "min");
+                    else
+                        PartnerProductIdElements["D"] = Duration.Value.TotalMinutes + "min";
+                }
+
+                else
+                {
+                    if (!PartnerProductIdElements.ContainsKey("D"))
+                        PartnerProductIdElements.Add("D", Duration.Value.TotalSeconds + "sec");
+                    else
+                        PartnerProductIdElements["D"] = Duration.Value.TotalSeconds + "sec";
+                }
+
+            }
+
+            #endregion
+
+            #region Add the eMAId to the list of valid eMAIds
+
+            if (eMAIds == null && eMAId != null)
+                eMAIds = new List<eMA_Id>() { eMAId };
+
+            if (eMAIds != null && !eMAIds.Contains(eMAId))
+            {
+                var _eMAIds = new List<eMA_Id>(eMAIds);
+                _eMAIds.Add(eMAId);
+                eMAIds = _eMAIds;
+            }
+
+            #endregion
+
+
+            var result = await this._EMPRoaming.ReservationStart(Timestamp:          Timestamp,
+                                                                 CancellationToken:  CancellationToken,
+                                                                 EventTrackingId:    EventTrackingId,
+                                                                 EVSEId:             EVSEId,
+                                                                 ProviderId:         ProviderId,
+                                                                 eMAId:              eMAId,
+                                                                 SessionId:          ReservationId != null ? ChargingSession_Id.Parse(ReservationId.ToString()) : null,
+                                                                 PartnerSessionId:   null,
+                                                                 PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.Select(kvp => kvp.Key + "=" + kvp.Value).AggregateWith("|")),
+                                                                 QueryTimeout:       QueryTimeout);
+
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK)
             {
@@ -935,6 +1007,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         EventTracking_Id        EventTrackingId,
                         EVSE_Id                 EVSEId,
                         ChargingProduct_Id      ChargingProductId  = null,
+//                      TimeSpan?               Duration           = null,
+//                      Double?                 MaxEnergy          = null,
                         ChargingReservation_Id  ReservationId      = null,
                         ChargingSession_Id      SessionId          = null,
                         EVSP_Id                 ProviderId         = null,
@@ -942,6 +1016,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         TimeSpan?               QueryTimeout       = default(TimeSpan?))
 
         {
+
+            #region Check if the PartnerProductId has a special format like 'R=12345-1234...|P=AC1'
+
+            var PartnerProductIdElements = new Dictionary<String, String>();
+
+            if (ChargingProductId.ToString().IsNotNullOrEmpty() &&
+               !ChargingProductId.ToString().Contains('='))
+            {
+                PartnerProductIdElements.Add("P", ChargingProductId.ToString());
+                ChargingProductId = null;
+            }
+
+            if (ChargingProductId != null)
+                ChargingProductId.ToString().DoubleSplitInto('|', '=', PartnerProductIdElements);
+
+            #endregion
+
+            #region Copy the 'ReservationId' value into the PartnerProductId
+
+            if (ReservationId != null)
+            {
+
+                if (!PartnerProductIdElements.ContainsKey("R"))
+                    PartnerProductIdElements.Add("R", ReservationId.ToString());
+                else
+                    PartnerProductIdElements["R"] = ReservationId.ToString();
+
+            }
+
+            #endregion
+
 
             var result = await this._EMPRoaming.RemoteStart(Timestamp,
                                                             CancellationToken,
