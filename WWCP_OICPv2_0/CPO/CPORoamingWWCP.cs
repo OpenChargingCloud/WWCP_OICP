@@ -2402,10 +2402,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                new ChargeDetailRecord(
                                    ChargeDetailRecord.EVSEId,
                                    ChargeDetailRecord.SessionId,
-                                   ChargeDetailRecord.ChargingProductId,
                                    ChargeDetailRecord.SessionTime.Value.StartTime,
                                    ChargeDetailRecord.SessionTime.Value.EndTime.Value,
                                    new AuthorizationIdentification(ChargeDetailRecord.IdentificationStart),
+                                   ChargeDetailRecord.ChargingProductId,
                                    null, // PartnerSessionId
                                    ChargeDetailRecord.SessionTime.HasValue ? new DateTime?(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
                                    ChargeDetailRecord.SessionTime.HasValue ?               ChargeDetailRecord.SessionTime.Value.EndTime    : null,

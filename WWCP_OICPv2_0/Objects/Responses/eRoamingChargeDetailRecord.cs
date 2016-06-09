@@ -291,10 +291,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         /// <param name="EVSEId">An EVSE identification.</param>
         /// <param name="SessionId">The charging session identification from the Authorize Start request.</param>
-        /// <param name="PartnerProductId">An unqiue identification for the consumed charging product.</param>
         /// <param name="SessionStart">The timestamp of the session start.</param>
         /// <param name="SessionEnd">The timestamp of the session end.</param>
         /// <param name="Identification">An identification.</param>
+        /// <param name="PartnerProductId">An unqiue identification for the consumed charging product.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="ChargingStart">An optional charging start timestamp.</param>
         /// <param name="ChargingEnd">An optional charging end timestamp.</param>
@@ -307,10 +307,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
         public ChargeDetailRecord(EVSE_Id                      EVSEId,
                                   ChargingSession_Id           SessionId,
-                                  ChargingProduct_Id           PartnerProductId,
                                   DateTime                     SessionStart,
                                   DateTime                     SessionEnd,
                                   AuthorizationIdentification  Identification,
+                                  ChargingProduct_Id           PartnerProductId      = null,
                                   ChargingSession_Id           PartnerSessionId      = null,
                                   DateTime?                    ChargingStart         = null,
                                   DateTime?                    ChargingEnd           = null,
@@ -326,29 +326,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Initial checks
 
-            if (EVSEId           == null)
-                throw new ArgumentNullException(nameof(EVSEId),            "The given parameter must not be null!");
+            if (EVSEId    == null)
+                throw new ArgumentNullException(nameof(EVSEId),     "The given EVSE identification must not be null!");
 
-            if (SessionId        == null)
-                throw new ArgumentNullException(nameof(SessionId),         "The given parameter must not be null!");
-
-            if (PartnerProductId == null)
-                throw new ArgumentNullException("PartnerProductId",  "The given parameter must not be null!");
-
-            if (SessionStart     == null)
-                throw new ArgumentNullException("SessionStart",      "The given parameter must not be null!");
-
-            if (SessionEnd       == null)
-                throw new ArgumentNullException("SessionEnd",        "The given parameter must not be null!");
+            if (SessionId == null)
+                throw new ArgumentNullException(nameof(SessionId),  "The given session identification must not be null!");
 
             #endregion
 
             this._EVSEId                = EVSEId;
             this._SessionId             = SessionId;
-            this._PartnerProductId      = PartnerProductId;
             this._SessionStart          = SessionStart;
             this._SessionEnd            = SessionEnd;
             this._Identification        = Identification;
+            this._PartnerProductId      = PartnerProductId;
             this._PartnerSessionId      = PartnerSessionId;
             this._ChargingStart         = ChargingStart;
             this._ChargingEnd           = ChargingEnd;
@@ -488,9 +479,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                     ChargingSession_Id.Parse,
                                                                     "The SessionID is invalid!"),
 
-                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerProductID",
-                                                                    ChargingProduct_Id.Parse),
-
                 eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionStart",
                                                                     DateTime.Parse,
                                                                     "The SessionStart is invalid!"),
@@ -498,7 +486,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionEnd",
                                                                     DateTime.Parse,
                                                                     "The SessionStart is invalid!"),
+
                 Identification,
+
+                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerProductID",
+                                                                    ChargingProduct_Id.Parse),
+
                 eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerSessionID",
                                                                     ChargingSession_Id.Parse),
 
