@@ -1131,7 +1131,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            DebugX.Log(ChargeDetailRecord.ToXML().ToString());
+            DebugX.Log(SOAP.Encapsulation(ChargeDetailRecord.ToXML()).ToString());
 
             using (var OICPClient = new SOAPClient(Hostname,
                                                    TCPPort,
