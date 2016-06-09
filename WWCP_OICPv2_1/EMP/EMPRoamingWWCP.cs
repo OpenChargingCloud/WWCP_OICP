@@ -896,40 +896,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             QueryTimeout:       QueryTimeout);
 
 
-            if (result.HTTPStatusCode == HTTPStatusCode.OK)
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null              &&
+                result.Content.Result)
             {
 
-                if (result.Content != null && result.Content.Result)
-                {
-
-                    return ReservationResult.Success(result.Content.SessionId != null
-                                                         ? new ChargingReservation(ReservationId:           ChargingReservation_Id.Parse(result.Content.SessionId.ToString()),
-                                                                                   Timestamp:               DateTime.Now,
-                                                                                   StartTime:               DateTime.Now,
-                                                                                   Duration:                Duration.HasValue ? Duration.Value : DefaultReservationTime,
-                                                                                   EndTime:                 DateTime.Now + (Duration.HasValue ? Duration.Value : DefaultReservationTime),
-                                                                                   ConsumedReservationTime: TimeSpan.FromSeconds(0),
-                                                                                   ReservationLevel:        ChargingReservationLevel.EVSE,
-                                                                                   ProviderId:              ProviderId,
-                                                                                   eMAId:                   eMAId,
-                                                                                   RoamingNetwork:          RoamingNetwork,
-                                                                                   ChargingPoolId:          null,
-                                                                                   ChargingStationId:       null,
-                                                                                   EVSEId:                  EVSEId,
-                                                                                   ChargingProductId:       ChargingProductId,
-                                                                                   AuthTokens:              AuthTokens,
-                                                                                   eMAIds:                  eMAIds,
-                                                                                   PINs:                    PINs)
-                                                         : null);
-
-                }
+                return ReservationResult.Success(result.Content.SessionId != null
+                                                     ? new ChargingReservation(ReservationId:            ChargingReservation_Id.Parse(result.Content.SessionId.ToString()),
+                                                                               Timestamp:                DateTime.Now,
+                                                                               StartTime:                DateTime.Now,
+                                                                               Duration:                 Duration.HasValue ? Duration.Value : DefaultReservationTime,
+                                                                               EndTime:                  DateTime.Now + (Duration.HasValue ? Duration.Value : DefaultReservationTime),
+                                                                               ConsumedReservationTime:  TimeSpan.FromSeconds(0),
+                                                                               ReservationLevel:         ChargingReservationLevel.EVSE,
+                                                                               ProviderId:               ProviderId,
+                                                                               eMAId:                    eMAId,
+                                                                               RoamingNetwork:           RoamingNetwork,
+                                                                               ChargingPoolId:           null,
+                                                                               ChargingStationId:        null,
+                                                                               EVSEId:                   EVSEId,
+                                                                               ChargingProductId:        ChargingProductId,
+                                                                               AuthTokens:               AuthTokens,
+                                                                               eMAIds:                   eMAIds,
+                                                                               PINs:                     PINs)
+                                                     : null);
 
             }
 
-            else
-            {
-                return ReservationResult.Error();
-            }
 
             return ReservationResult.Error();
 
@@ -972,17 +965,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            PartnerSessionId:   null,
                                                            QueryTimeout:       QueryTimeout);
 
-            if (result.HTTPStatusCode == HTTPStatusCode.OK)
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null              &&
+                result.Content.Result)
             {
 
-                if (result.Content != null && result.Content.Result)
-                    return CancelReservationResult.Success(ReservationId);
+                return CancelReservationResult.Success(ReservationId);
 
-            }
-
-            else
-            {
-                return CancelReservationResult.Error();
             }
 
             return CancelReservationResult.Error();
@@ -1120,22 +1109,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                                         AggregateWith("|")),
                                                        QueryTimeout:       QueryTimeout);
 
-            if (result.HTTPStatusCode == HTTPStatusCode.OK)
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null              &&
+                result.Content.Result)
             {
 
-                if (result.Content != null && result.Content.Result)
-                    return RemoteStartEVSEResult.Success(result.Content.SessionId != null
-                                                             ? new ChargingSession(result.Content.SessionId)
-                                                             : null);
+                return RemoteStartEVSEResult.Success(result.Content.SessionId != null
+                                                         ? new ChargingSession(result.Content.SessionId)
+                                                         : null);
 
             }
 
-            else
-            {
-                return RemoteStartEVSEResult.Error();
-            }
-
-            return RemoteStartEVSEResult.Error();
+            return RemoteStartEVSEResult.Error(result.HTTPStatusCode.ToString(),
+                                               result);
 
         }
 
@@ -1178,17 +1164,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                       PartnerSessionId:   null,
                                                       QueryTimeout:       QueryTimeout);
 
-            if (result.HTTPStatusCode == HTTPStatusCode.OK)
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null              &&
+                result.Content.Result)
             {
 
-                if (result.Content != null && result.Content.Result)
-                    return RemoteStopEVSEResult.Success(SessionId);
+                return RemoteStopEVSEResult.Success(SessionId);
 
-            }
-
-            else
-            {
-                return RemoteStopEVSEResult.Error(SessionId);
             }
 
             return RemoteStopEVSEResult.Error(SessionId);
@@ -1196,7 +1178,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
-
 
     }
 
