@@ -890,7 +890,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             eMAId:              eMAId,
                                                             SessionId:          ReservationId != null ? ChargingSession_Id.Parse(ReservationId.ToString()) : null,
                                                             PartnerSessionId:   null,
-                                                            PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.Select(kvp => kvp.Key + "=" + kvp.Value).AggregateWith("|")),
+                                                            PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.
+                                                                                                             Select(kvp => kvp.Key + "=" + kvp.Value).
+                                                                                                             AggregateWith("|")),
                                                             QueryTimeout:       QueryTimeout);
 
 
@@ -1113,7 +1115,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        eMAId:              eMAId,
                                                        SessionId:          SessionId,
                                                        PartnerSessionId:   null,
-                                                       PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.Select(kvp => kvp.Key + "=" + kvp.Value).AggregateWith("|")),
+                                                       PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.
+                                                                                                        Select(kvp => kvp.Key + "=" + kvp.Value).
+                                                                                                        AggregateWith("|")),
                                                        QueryTimeout:       QueryTimeout);
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK)
