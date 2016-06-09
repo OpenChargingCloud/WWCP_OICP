@@ -484,7 +484,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
             {
 
-                var Elements = ChargingProductId.ToString().Split(';').ToArray();
+                var Elements = ChargingProductId.ToString().Split('|').ToArray();
 
                 if (Elements.Length > 0)
                 {
@@ -574,7 +574,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
             {
 
-                var Elements = ChargingProductId.ToString().Split(';').ToArray();
+                var Elements = ChargingProductId.ToString().Split('|').ToArray();
 
                 if (Elements.Length > 0)
                 {
