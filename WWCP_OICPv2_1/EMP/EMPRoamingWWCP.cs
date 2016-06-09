@@ -994,11 +994,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">A token to cancel this request.</param>
         /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
-        /// <param name="ChargingProductId">The unique identification of the choosen charging product.</param>
-        /// <param name="ReservationId">The unique identification for a charging reservation.</param>
-        /// <param name="SessionId">The unique identification for this charging session.</param>
-        /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="ChargingProductId">An optional identification of the charging product to use.</param>
+        /// <param name="Duration">An optional maximum time span to charge. When it is reached, the charging process will stop automatically.</param>
+        /// <param name="MaxEnergy">An optional maximum amount of energy to charge. When it is reached, the charging process will stop automatically.</param>
+        /// <param name="ReservationId">An optional identification of a charging reservation.</param>
+        /// <param name="SessionId">An optional identification of this charging session.</param>
+        /// <param name="ProviderId">An optional identification of the e-mobility service provider, whenever this identification is different from the current message sender.</param>
+        /// <param name="eMAId">An optional identification of the e-mobility account who wants to charge.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
         public override async Task<RemoteStartEVSEResult>
 
@@ -1033,6 +1035,56 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+            #region Copy the 'Duration' value into the PartnerProductId
+
+            //if (Duration.HasValue && Duration.Value >= TimeSpan.FromSeconds(1))
+            //{
+            //
+            //    if (Duration.Value.Minutes > 0 && Duration.Value.Seconds == 0)
+            //    {
+            //        if (!PartnerProductIdElements.ContainsKey("D"))
+            //            PartnerProductIdElements.Add("D", Duration.Value.TotalMinutes + "min");
+            //        else
+            //            PartnerProductIdElements["D"] = Duration.Value.TotalMinutes + "min";
+            //    }
+            //
+            //    else
+            //    {
+            //        if (!PartnerProductIdElements.ContainsKey("D"))
+            //            PartnerProductIdElements.Add("D", Duration.Value.TotalSeconds + "sec");
+            //        else
+            //            PartnerProductIdElements["D"] = Duration.Value.TotalSeconds + "sec";
+            //    }
+            //
+            //}
+
+            #endregion
+
+            #region Copy the 'MaxEnergy' value into the PartnerProductId
+
+            //if (MaxEnergy.HasValue && MaxEnergy.Value > 0))
+            //{
+            //
+            //    if (Duration.Value.Minutes > 0 && Duration.Value.Seconds == 0)
+            //    {
+            //        if (!PartnerProductIdElements.ContainsKey("D"))
+            //            PartnerProductIdElements.Add("D", Duration.Value.TotalMinutes + "min");
+            //        else
+            //            PartnerProductIdElements["D"] = Duration.Value.TotalMinutes + "min";
+            //    }
+            //
+            //    else
+            //    {
+            //        if (!PartnerProductIdElements.ContainsKey("D"))
+            //            PartnerProductIdElements.Add("D", Duration.Value.TotalSeconds + "sec");
+            //        else
+            //            PartnerProductIdElements["D"] = Duration.Value.TotalSeconds + "sec";
+            //    }
+            //
+            //}
+
+            #endregion
+
             #region Copy the 'ReservationId' value into the PartnerProductId
 
             if (ReservationId != null)
@@ -1056,7 +1108,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             eMAId,
                                                             SessionId,
                                                             null,
-                                                            ChargingProductId,
+                                                            ChargingProduct_Id.Parse(PartnerProductIdElements.Select(kvp => kvp.Key + "=" + kvp.Value).AggregateWith("|")),
                                                             QueryTimeout);
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK)
