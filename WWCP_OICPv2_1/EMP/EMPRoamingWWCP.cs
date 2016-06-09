@@ -46,6 +46,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         private readonly EVSEDataRecord2EVSEDelegate _EVSEDataRecord2EVSE;
 
+        /// <summary>
+        ///  The default reservation time.
+        /// </summary>
+        public static readonly TimeSpan DefaultReservationTime = TimeSpan.FromMinutes(15);
+
         #endregion
 
         #region Properties
@@ -877,16 +882,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var result = await this._EMPRoaming.ReservationStart(Timestamp:          Timestamp,
-                                                                 CancellationToken:  CancellationToken,
-                                                                 EventTrackingId:    EventTrackingId,
-                                                                 EVSEId:             EVSEId,
-                                                                 ProviderId:         ProviderId,
-                                                                 eMAId:              eMAId,
-                                                                 SessionId:          ReservationId != null ? ChargingSession_Id.Parse(ReservationId.ToString()) : null,
-                                                                 PartnerSessionId:   null,
-                                                                 PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.Select(kvp => kvp.Key + "=" + kvp.Value).AggregateWith("|")),
-                                                                 QueryTimeout:       QueryTimeout);
+            var result = await _EMPRoaming.ReservationStart(Timestamp:          Timestamp,
+                                                            CancellationToken:  CancellationToken,
+                                                            EventTrackingId:    EventTrackingId,
+                                                            EVSEId:             EVSEId,
+                                                            ProviderId:         ProviderId,
+                                                            eMAId:              eMAId,
+                                                            SessionId:          ReservationId != null ? ChargingSession_Id.Parse(ReservationId.ToString()) : null,
+                                                            PartnerSessionId:   null,
+                                                            PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.Select(kvp => kvp.Key + "=" + kvp.Value).AggregateWith("|")),
+                                                            QueryTimeout:       QueryTimeout);
 
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK)
@@ -899,20 +904,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          ? new ChargingReservation(ReservationId:           ChargingReservation_Id.Parse(result.Content.SessionId.ToString()),
                                                                                    Timestamp:               DateTime.Now,
                                                                                    StartTime:               DateTime.Now,
-                                                                                   Duration:                TimeSpan.FromMinutes(15),
-                                                                                   EndTime:                 DateTime.Now + TimeSpan.FromMinutes(15),
+                                                                                   Duration:                Duration.HasValue ? Duration.Value : DefaultReservationTime,
+                                                                                   EndTime:                 DateTime.Now + (Duration.HasValue ? Duration.Value : DefaultReservationTime),
                                                                                    ConsumedReservationTime: TimeSpan.FromSeconds(0),
                                                                                    ReservationLevel:        ChargingReservationLevel.EVSE,
-                                                                                   ProviderId:              null,
-                                                                                   eMAId:                   null,
+                                                                                   ProviderId:              ProviderId,
+                                                                                   eMAId:                   eMAId,
                                                                                    RoamingNetwork:          RoamingNetwork,
                                                                                    ChargingPoolId:          null,
                                                                                    ChargingStationId:       null,
                                                                                    EVSEId:                  EVSEId,
                                                                                    ChargingProductId:       ChargingProductId,
-                                                                                   AuthTokens:              null,
-                                                                                   eMAIds:                  null,
-                                                                                   PINs:                    null)
+                                                                                   AuthTokens:              AuthTokens,
+                                                                                   eMAIds:                  eMAIds,
+                                                                                   PINs:                    PINs)
                                                          : null);
 
                 }
@@ -956,14 +961,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         {
 
-            var result = await this._EMPRoaming.ReservationStop(Timestamp,
-                                                                CancellationToken,
-                                                                EventTrackingId,
-                                                                ChargingSession_Id.Parse(ReservationId.ToString()),
-                                                                ProviderId,
-                                                                EVSEId,
-                                                                null,
-                                                                QueryTimeout);
+            var result = await _EMPRoaming.ReservationStop(Timestamp:          Timestamp,
+                                                           CancellationToken:  CancellationToken,
+                                                           EventTrackingId:    EventTrackingId,
+                                                           SessionId:          ChargingSession_Id.Parse(ReservationId.ToString()),
+                                                           ProviderId:         ProviderId,
+                                                           EVSEId:             EVSEId,
+                                                           PartnerSessionId:   null,
+                                                           QueryTimeout:       QueryTimeout);
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK)
             {
@@ -993,7 +998,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
         /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
+        /// <param name="EVSEId">The unique identification of the EVSE to be started remotely.</param>
         /// <param name="ChargingProductId">An optional identification of the charging product to use.</param>
         /// <param name="Duration">An optional maximum time span to charge. When it is reached, the charging process will stop automatically.</param>
         /// <param name="MaxEnergy">An optional maximum amount of energy to charge. When it is reached, the charging process will stop automatically.</param>
@@ -1100,16 +1105,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var result = await this._EMPRoaming.RemoteStart(Timestamp,
-                                                            CancellationToken,
-                                                            EventTrackingId,
-                                                            EVSEId,
-                                                            ProviderId,
-                                                            eMAId,
-                                                            SessionId,
-                                                            null,
-                                                            ChargingProduct_Id.Parse(PartnerProductIdElements.Select(kvp => kvp.Key + "=" + kvp.Value).AggregateWith("|")),
-                                                            QueryTimeout);
+            var result = await _EMPRoaming.RemoteStart(Timestamp:          Timestamp,
+                                                       CancellationToken:  CancellationToken,
+                                                       EventTrackingId:    EventTrackingId,
+                                                       EVSEId:             EVSEId,
+                                                       ProviderId:         ProviderId,
+                                                       eMAId:              eMAId,
+                                                       SessionId:          SessionId,
+                                                       PartnerSessionId:   null,
+                                                       PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.Select(kvp => kvp.Key + "=" + kvp.Value).AggregateWith("|")),
+                                                       QueryTimeout:       QueryTimeout);
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK)
             {
@@ -1160,14 +1165,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         {
 
-            var result = await this._EMPRoaming.RemoteStop(Timestamp,
-                                                           CancellationToken,
-                                                           EventTrackingId,
-                                                           SessionId,
-                                                           ProviderId,
-                                                           EVSEId,
-                                                           null,
-                                                           QueryTimeout);
+            var result = await _EMPRoaming.RemoteStop(Timestamp:          Timestamp,
+                                                      CancellationToken:  CancellationToken,
+                                                      EventTrackingId:    EventTrackingId,
+                                                      SessionId:          SessionId,
+                                                      ProviderId:         ProviderId,
+                                                      EVSEId:             EVSEId,
+                                                      PartnerSessionId:   null,
+                                                      QueryTimeout:       QueryTimeout);
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK)
             {
