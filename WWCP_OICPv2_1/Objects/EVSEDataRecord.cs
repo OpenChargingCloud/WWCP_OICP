@@ -32,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.0 Electric Vehicle Supply Equipment (EVSE).
+    /// An OICP Electric Vehicle Supply Equipment (EVSE).
     /// This is meant to be one electrical circuit which can charge a electric vehicle.
     /// </summary>
     public class EVSEDataRecord
@@ -40,440 +40,51 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Data
 
-        private static Regex HotlinePhoneNumberRegExpr = new Regex("\\+[^0-9]");
+        private static readonly Regex HotlinePhoneNumberRegExpr = new Regex("\\+[^0-9]");
 
         #endregion
 
         #region Properties
 
-        #region EVSE
-
-        private readonly EVSE _EVSE;
-
         /// <summary>
         /// The related the Electric Vehicle Supply Equipment (EVSE).
         /// </summary>
-        public EVSE EVSE
-        {
-            get
-            {
-                return _EVSE;
-            }
-        }
-
-        #endregion
-
-        #region EVSEId
-
-        private readonly EVSE_Id _EVSEId;
+        public EVSE EVSE { get; }
 
         /// <summary>
         /// The unique identification of the Electric Vehicle Supply Equipment (EVSE).
         /// </summary>
-        public EVSE_Id EVSEId
-        {
-            get
-            {
-                return _EVSEId;
-            }
-        }
-
-        #endregion
-
-        #region EVSEOperator
-
-        private readonly EVSEOperator _EVSEOperator;
+        public EVSE_Id EVSEId { get; }
 
         /// <summary>
         /// An EVSE operator.
         /// </summary>
-        public EVSEOperator EVSEOperator
-        {
-            get
-            {
-                return _EVSEOperator;
-            }
-        }
-
-        #endregion
-
-        #region DeltaType
-
-        private String _DeltaType;
-
-        public String DeltaType
-        {
-
-            get
-            {
-                return _DeltaType;
-            }
-
-            set
-            {
-                if (value != null)
-                    _DeltaType = value;
-            }
-
-        }
-
-        #endregion
-
-        #region LastUpdate
-
-        private DateTime? _LastUpdate;
-
-        public DateTime? LastUpdate
-        {
-
-            get
-            {
-                return _LastUpdate;
-            }
-
-            set
-            {
-                if (value != null)
-                    _LastUpdate = value;
-            }
-
-        }
-
-        #endregion
+        public EVSEOperator EVSEOperator { get; }
 
 
-        #region ChargingStationId
+        public String DeltaType { get; }
+        public DateTime? LastUpdate { get; }
 
-        private String _ChargingStationId;
-
-        public String ChargingStationId
-        {
-
-            get
-            {
-                return _ChargingStationId;
-            }
-
-            set
-            {
-                if (value != null)
-                    _ChargingStationId = value;
-            }
-
-        }
-
-        #endregion
-
-        #region ChargingStationName
-
-        private I18NString _ChargingStationName;
-
-        public I18NString ChargingStationName
-        {
-
-            get
-            {
-                return _ChargingStationName;
-            }
-
-            set
-            {
-                if (value != null)
-                    _ChargingStationName = value;
-            }
-
-        }
-
-        #endregion
-
-        #region Address
-
-        private Address _Address;
-
-        public Address Address
-        {
-
-            get
-            {
-                return _Address;
-            }
-
-            set
-            {
-                if (value != null)
-                    _Address = value;
-            }
-
-        }
-
-        #endregion
-
-        #region GeoCoordinate
-
-        private GeoCoordinate _GeoCoordinate;
-
-        public GeoCoordinate GeoCoordinate
-        {
-
-            get
-            {
-                return _GeoCoordinate;
-            }
-
-            set
-            {
-                if (value != null)
-                    _GeoCoordinate = value;
-            }
-
-        }
-
-        #endregion
-
-        #region Plugs
-
-        private IEnumerable<PlugTypes> _Plugs;
+        public String ChargingStationId { get; }
+        public I18NString ChargingStationName { get; }
+        public Address Address { get; }
+        public GeoCoordinate GeoCoordinate { get; }
 
         /// <summary>
         /// The types of the charging plugs.
         /// </summary>
-        public IEnumerable<PlugTypes> Plugs
-        {
-
-            get
-            {
-                return _Plugs;
-            }
-
-            set
-            {
-                if (value != null)
-                    _Plugs = value;
-            }
-
-        }
-
-        #endregion
-
-        #region ChargingFacilities
-
-        private IEnumerable<ChargingFacilities> _ChargingFacilities;
-
-        public IEnumerable<ChargingFacilities> ChargingFacilities
-        {
-
-            get
-            {
-                return _ChargingFacilities;
-            }
-
-            set
-            {
-                if (value != null)
-                    _ChargingFacilities = value;
-            }
-
-        }
-
-        #endregion
-
-        #region ChargingModes
-
-        private IEnumerable<ChargingModes> _ChargingModes;
-
-        public IEnumerable<ChargingModes> ChargingModes
-        {
-
-            get
-            {
-                return _ChargingModes;
-            }
-
-            set
-            {
-                if (value != null)
-                    _ChargingModes = value;
-            }
-
-        }
-
-        #endregion
-
-        #region AuthenticationModes
-
-        private IEnumerable<AuthenticationModes> _AuthenticationModes;
-
-        public IEnumerable<AuthenticationModes> AuthenticationModes
-        {
-
-            get
-            {
-                return _AuthenticationModes;
-            }
-
-            set
-            {
-                if (value != null)
-                    _AuthenticationModes = value;
-            }
-
-        }
-
-        #endregion
-
-        #region MaxCapacity
-
-        private Double? _MaxCapacity_kWh;
-
-        public Double? MaxCapacity
-        {
-
-            get
-            {
-                return _MaxCapacity_kWh;
-            }
-
-            set
-            {
-                if (value != null)
-                    _MaxCapacity_kWh = value;
-            }
-
-        }
-
-        #endregion
-
-        #region PaymentOptions
-
-        private IEnumerable<PaymentOptions> _PaymentOptions;
-
-        public IEnumerable<PaymentOptions> PaymentOptions
-        {
-
-            get
-            {
-                return _PaymentOptions;
-            }
-
-            set
-            {
-                if (value != null)
-                    _PaymentOptions = value;
-            }
-
-        }
-
-        #endregion
-
-        #region ValueAddedServices
-
-        private IEnumerable<ValueAddedServices> _ValueAddedServices;
-
-        public IEnumerable<ValueAddedServices> ValueAddedServices
-        {
-
-            get
-            {
-                return _ValueAddedServices;
-            }
-
-            set
-            {
-                if (value != null)
-                    _ValueAddedServices = value;
-            }
-
-        }
-
-        #endregion
-
-        #region Accessibility
-
-        private AccessibilityTypes _Accessibility;
-
-        public AccessibilityTypes Accessibility
-        {
-
-            get
-            {
-                return _Accessibility;
-            }
-
-            set
-            {
-                if (value != null)
-                    _Accessibility = value;
-            }
-
-        }
-
-        #endregion
-
-        #region HotlinePhoneNumber
-
-        private String _HotlinePhoneNumber;
-
-        public String HotlinePhoneNumber
-        {
-
-            get
-            {
-                return _HotlinePhoneNumber;
-            }
-
-            set
-            {
-                if (value != null)
-                    _HotlinePhoneNumber = value;
-            }
-
-        }
-
-        #endregion
-
-        #region AdditionalInfo
-
-        private I18NString _AdditionalInfo;
-
-        public I18NString AdditionalInfo
-        {
-
-            get
-            {
-                return _AdditionalInfo;
-            }
-
-            set
-            {
-                if (value != null)
-                    _AdditionalInfo = value;
-            }
-
-        }
-
-        #endregion
-
-        #region GeoChargingPointEntrance
-
-        private GeoCoordinate _GeoChargingPointEntrance;
-
-        public GeoCoordinate GeoChargingPointEntrance
-        {
-
-            get
-            {
-                return _GeoChargingPointEntrance;
-            }
-
-            set
-            {
-                if (value != null)
-                    _GeoChargingPointEntrance = value;
-            }
-
-        }
-
-        #endregion
+        public PlugTypes Plugs { get; }
+
+        public ChargingFacilities ChargingFacilities { get; }
+        public ChargingModes ChargingModes { get; }
+        public AuthenticationModes AuthenticationModes { get; }
+        public Double? MaxCapacity { get; }
+        public PaymentOptions PaymentOptions { get; }
+        public ValueAddedServices ValueAddedServices { get; }
+        public AccessibilityTypes Accessibility { get; }
+        public String HotlinePhoneNumber { get; }
+        public I18NString AdditionalInfo { get; }
+        public GeoCoordinate GeoChargingPointEntrance { get; }
 
         #region IsOpen24Hours
 
@@ -482,123 +93,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             get
             {
 
-                if (_OpeningTime == null)
+                if (OpeningTime == null)
                     return true;
 
-                return _OpeningTime.IsOpen24Hours;
+                return OpeningTime.IsOpen24Hours;
 
             }
         }
 
         #endregion
 
-        #region OpeningTime
 
-        private OpeningTimes _OpeningTime;
+        public OpeningTimes OpeningTime { get; }
 
-        public OpeningTimes OpeningTime
-        {
+        public HubOperator_Id HubOperatorId { get; }
 
-            get
-            {
-                return _OpeningTime;
-            }
-
-            set
-            {
-                if (value != null)
-                    _OpeningTime = value;
-            }
-
-        }
-
-        #endregion
-
-        #region HubOperatorId
-
-        private HubOperator_Id _HubOperatorId;
-
-        public HubOperator_Id HubOperatorId
-        {
-
-            get
-            {
-                return _HubOperatorId;
-            }
-
-            set
-            {
-                if (value != null)
-                    _HubOperatorId = value;
-            }
-
-        }
-
-        #endregion
-
-        #region ClearingHouseId
-
-        private RoamingProvider_Id _ClearingHouseId;
-
-        public RoamingProvider_Id ClearingHouseId
-        {
-
-            get
-            {
-                return _ClearingHouseId;
-            }
-
-            set
-            {
-                if (value != null)
-                    _ClearingHouseId = value;
-            }
-
-        }
-
-        #endregion
-
-        #region IsHubjectCompatible
-
-        private Boolean _IsHubjectCompatible;
-
-        public Boolean IsHubjectCompatible
-        {
-
-            get
-            {
-                return _IsHubjectCompatible;
-            }
-
-            set
-            {
-                _IsHubjectCompatible = value;
-            }
-
-        }
-
-        #endregion
-
-        #region DynamicInfoAvailable
-
-        private Boolean _DynamicInfoAvailable;
-
-        public Boolean DynamicInfoAvailable
-        {
-
-            get
-            {
-                return _DynamicInfoAvailable;
-            }
-
-            set
-            {
-                _DynamicInfoAvailable = value;
-            }
-
-        }
-
-        #endregion
+        public RoamingProvider_Id ClearingHouseId { get; }
+        public Boolean IsHubjectCompatible { get; }
+        public Boolean DynamicInfoAvailable { get; }
 
         #endregion
 
@@ -615,12 +127,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                 I18NString                        ChargingStationName         = null,
                                 Address                           Address                     = null,
                                 GeoCoordinate                     GeoCoordinate               = null,
-                                IEnumerable<PlugTypes>            Plugs                       = null,
-                                IEnumerable<ChargingFacilities>   ChargingFacilities          = null,
-                                IEnumerable<ChargingModes>        ChargingModes               = null,
-                                IEnumerable<AuthenticationModes>  AuthenticationModes         = null,
+                                PlugTypes                         Plugs                       = PlugTypes.Unspecified,
+                                ChargingFacilities                ChargingFacilities          = ChargingFacilities.Unspecified,
+                                ChargingModes                     ChargingModes               = ChargingModes.Unspecified,
+                                AuthenticationModes               AuthenticationModes         = AuthenticationModes.Unkown,
                                 Int32?                            MaxCapacity                 = null,
-                                IEnumerable<PaymentOptions>       PaymentOptions              = null,
+                                PaymentOptions                    PaymentOptions              = PaymentOptions.Unspecified,
+                                ValueAddedServices                ValueAddedServices          = ValueAddedServices.None,
                                 AccessibilityTypes                Accessibility               = AccessibilityTypes.Free_publicly_accessible,
                                 String                            HotlinePhoneNumber          = null,
                                 I18NString                        AdditionalInfo              = null,
@@ -633,6 +146,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                 Boolean                           DynamicInfoAvailable        = true)
 
             : this(EVSE.Id,
+                   "",
+                   DateTime.Now,
                    EVSE.Operator,
                    ChargingStationId,
                    ChargingStationName,
@@ -644,6 +159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    AuthenticationModes,
                    MaxCapacity,
                    PaymentOptions,
+                   ValueAddedServices,
                    Accessibility,
                    HotlinePhoneNumber,
                    AdditionalInfo,
@@ -657,7 +173,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         {
 
-            this._EVSE = EVSE;
+            this.EVSE = EVSE;
 
         }
 
@@ -676,21 +192,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
-            if (EVSEId       == null)
-                throw new ArgumentNullException(nameof(EVSEId),        "The given unique EVSE identification must not be null!");
-
-            //if (EVSEOperator == null)
-            //    throw new ArgumentNullException("EVSEOperator",  "The given EVSE operator must not be null!");
-
-            //if (EVSEId.OperatorId != EVSEOperator.Id)
-            //    throw new ArgumentException    ("Mismatch between EVSE identification prefix and EVSE Operator identification!", "EVSEId");
+            if (EVSEId == null)
+                throw new ArgumentNullException(nameof(EVSEId),  "The given unique EVSE identification must not be null!");
 
             #endregion
 
-            this._EVSEId               = EVSEId;
-            this._EVSEOperator         = EVSEOperator;
-            this._ChargingStationName  = new I18NString();
-            this._AdditionalInfo       = new I18NString();
+            this.EVSEId               = EVSEId;
+            this.EVSEOperator         = EVSEOperator;
+            this.ChargingStationName  = new I18NString();
+            this.AdditionalInfo       = new I18NString();
 
         }
 
@@ -704,17 +214,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSEId">A unique EVSE identification.</param>
         /// <param name="EVSEOperator">An EVSE operator.</param>
         public EVSEDataRecord(EVSE_Id                           EVSEId,
+                              String                            DeltaType,
+                              DateTime?                         LastUpdate,
                               EVSEOperator                      EVSEOperator,
                               String                            ChargingStationId           = null,
                               I18NString                        ChargingStationName         = null,
                               Address                           Address                     = null,
                               GeoCoordinate                     GeoCoordinate               = null,
-                              IEnumerable<PlugTypes>            Plugs                       = null,
-                              IEnumerable<ChargingFacilities>   ChargingFacilities          = null,
-                              IEnumerable<ChargingModes>        ChargingModes               = null,
-                              IEnumerable<AuthenticationModes>  AuthenticationModes         = null,
-                              Int32?                            MaxCapacity                 = null,
-                              IEnumerable<PaymentOptions>       PaymentOptions              = null,
+                              PlugTypes                         Plugs                       = PlugTypes.Unspecified,
+                              ChargingFacilities                ChargingFacilities          = ChargingFacilities.Unspecified,
+                              ChargingModes                     ChargingModes               = ChargingModes.Unspecified,
+                              AuthenticationModes               AuthenticationModes         = AuthenticationModes.Unkown,
+                              Double?                           MaxCapacity                 = null,
+                              PaymentOptions                    PaymentOptions              = PaymentOptions.Unspecified,
+                              ValueAddedServices                ValueAddedServices          = ValueAddedServices.None,
                               AccessibilityTypes                Accessibility               = AccessibilityTypes.Free_publicly_accessible,
                               String                            HotlinePhoneNumber          = null,
                               I18NString                        AdditionalInfo              = null,
@@ -733,56 +246,54 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (Address == null)
-                throw new ArgumentNullException("The given parameter for 'Address' must not be null!");
+                throw new ArgumentNullException(nameof(Address),              "The given address must not be null!");
 
             if (GeoCoordinate == null)
-                throw new ArgumentNullException("The given parameter for 'GeoCoordinates' must not be null!");
+                throw new ArgumentNullException(nameof(GeoCoordinate),        "The given geo coordinate must not be null!");
 
-            if (Plugs == null)
-                throw new ArgumentNullException("The given parameter for 'Plugs' must not be null!");
+            if (Plugs == PlugTypes.Unspecified)
+                throw new ArgumentNullException(nameof(Plugs),                "The given plugs must not be empty!");
 
-            if (Plugs.Count() < 1)
-                throw new ArgumentNullException("The given parameter for 'Plugs' must not be empty!");
-
-            if (AuthenticationModes == null)
-                throw new ArgumentNullException("The given parameter for 'AuthenticationModes' must not be null!");
-
-            if (AuthenticationModes.Count() < 1)
-                throw new ArgumentNullException("The given parameter for 'AuthenticationModes' must not be empty!");
+            if (AuthenticationModes == AuthenticationModes.Unkown)
+                throw new ArgumentNullException(nameof(AuthenticationModes),  "The given authentication modes must not be null or empty!");
 
             if (HotlinePhoneNumber == null || HotlinePhoneNumber.IsNullOrEmpty())
-                throw new ArgumentNullException("The given parameter for 'HotlinePhoneNumber' must not be null or empty!");
+                throw new ArgumentNullException(nameof(HotlinePhoneNumber),   "The given hotline phone number must not be null or empty!");
 
             #endregion
 
-            this._ChargingStationId         = ChargingStationId;
-            this._ChargingStationName       = ChargingStationName != null ? ChargingStationName : new I18NString();
-            this._Address                   = Address;
-            this._GeoCoordinate             = GeoCoordinate;
-            this._Plugs                     = Plugs;
-            this._ChargingModes             = ChargingModes;
-            this._ChargingFacilities        = ChargingFacilities;
-            this._AuthenticationModes       = AuthenticationModes;
-            this._MaxCapacity_kWh           = MaxCapacity;
-            this._PaymentOptions            = PaymentOptions;
-            this._Accessibility             = Accessibility;
-            this._HotlinePhoneNumber        = HotlinePhoneNumber;
-            this._AdditionalInfo            = AdditionalInfo      != null ? AdditionalInfo      : new I18NString();
-            this._GeoChargingPointEntrance  = GeoChargingPointEntrance;
-            this._HubOperatorId             = HubOperatorId;
-            this._ClearingHouseId           = ClearingHouseId;
-            this._IsHubjectCompatible       = IsHubjectCompatible;
-            this._DynamicInfoAvailable      = DynamicInfoAvailable;
+            this.DeltaType                 = DeltaType;
+            this.LastUpdate                = LastUpdate;
+
+            this.ChargingStationId         = ChargingStationId;
+            this.ChargingStationName       = ChargingStationName ?? new I18NString();
+            this.Address                   = Address;
+            this.GeoCoordinate             = GeoCoordinate;
+            this.Plugs                     = Plugs;
+            this.ChargingModes             = ChargingModes;
+            this.ChargingFacilities        = ChargingFacilities;
+            this.AuthenticationModes       = AuthenticationModes;
+            this.MaxCapacity               = MaxCapacity;
+            this.PaymentOptions            = PaymentOptions;
+            this.ValueAddedServices        = ValueAddedServices;
+            this.Accessibility             = Accessibility;
+            this.HotlinePhoneNumber        = HotlinePhoneNumber;
+            this.AdditionalInfo            = AdditionalInfo ?? new I18NString();
+            this.GeoChargingPointEntrance  = GeoChargingPointEntrance;
+            this.HubOperatorId             = HubOperatorId;
+            this.ClearingHouseId           = ClearingHouseId;
+            this.IsHubjectCompatible       = IsHubjectCompatible;
+            this.DynamicInfoAvailable      = DynamicInfoAvailable;
 
 
             if (IsOpen24Hours != null && IsOpen24Hours.HasValue && IsOpen24Hours.Value)
-                this._OpeningTime  = OpeningTimes.Open24Hours;
+                this.OpeningTime  = OpeningTimes.Open24Hours;
 
             if (OpeningTime != null)
-                this._OpeningTime  = OpeningTime;
+                this.OpeningTime  = OpeningTime;
 
             if (OpeningTime == null && (IsOpen24Hours == null || !IsOpen24Hours.HasValue))
-                this._OpeningTime = OpeningTimes.Open24Hours;
+                this.OpeningTime  = OpeningTimes.Open24Hours;
 
         }
 
@@ -799,160 +310,153 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:v2      = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-            //                   xmlns:v21     = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+            // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:EVSEData     = "http://www.hubject.com/b2b/services/evsedata/EVSEData/v2.1"
+            //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/EVSEData/v2.0">
 
-            // <v2:eRoamingEvseDataRecord deltaType="?" lastUpdate="?">
+            // <EVSEData:eRoamingEvseDataRecord deltaType="?" lastUpdate="?">
             //
-            //    <v2:EvseId>?</v2:EvseId>
+            //    <EVSEData:EvseId>?</EVSEData:EvseId>
             //
             //    <!--Optional:-->
-            //    <v2:ChargingStationId>?</v2:ChargingStationId>
+            //    <EVSEData:ChargingStationId>?</EVSEData:ChargingStationId>
             //    <!--Optional:-->
-            //    <v2:ChargingStationName>?</v2:ChargingStationName>
+            //    <EVSEData:ChargingStationName>?</EVSEData:ChargingStationName>
             //    <!--Optional:-->
-            //    <v2:EnChargingStationName>?</v2:EnChargingStationName>
+            //    <EVSEData:EnChargingStationName>?</EVSEData:EnChargingStationName>
             //
-            //    <v2:Address>
-            //       <v21:Country>?</v21:Country>
-            //       <v21:City>?</v21:City>
-            //       <v21:Street>?</v21:Street>
+            //    <EVSEData:Address>
+            //       <CommonTypes:Country>?</CommonTypes:Country>
+            //       <CommonTypes:City>?</CommonTypes:City>
+            //       <CommonTypes:Street>?</CommonTypes:Street>
             //       <!--Optional:-->
-            //       <v21:PostalCode>?</v21:PostalCode>
+            //       <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
             //       <!--Optional:-->
-            //       <v21:HouseNum>?</v21:HouseNum>
+            //       <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
             //       <!--Optional:-->
-            //       <v21:Floor>?</v21:Floor>
+            //       <CommonTypes:Floor>?</CommonTypes:Floor>
             //       <!--Optional:-->
-            //       <v21:Region>?</v21:Region>
+            //       <CommonTypes:Region>?</CommonTypes:Region>
             //       <!--Optional:-->
-            //       <v21:TimeZone>?</v21:TimeZone>
-            //    </v2:Address>
+            //       <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
+            //    </EVSEData:Address>
             //
-            //    <v2:GeoCoordinates>
+            //    <EVSEData:GeoCoordinates>
             //       <!--You have a CHOICE of the next 3 items at this level-->
-            //       <v21:Google>
-            //          <v21:Coordinates>?</v21:Coordinates>
-            //       </v21:Google>
-            //       <v21:DecimalDegree>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DecimalDegree>
-            //       <v21:DegreeMinuteSeconds>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DegreeMinuteSeconds>
-            //    </v2:GeoCoordinates>
+            //       <CommonTypes:Google>
+            //          <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+            //       </CommonTypes:Google>
+            //       <CommonTypes:DecimalDegree>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DecimalDegree>
+            //       <CommonTypes:DegreeMinuteSeconds>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DegreeMinuteSeconds>
+            //    </EVSEData:GeoCoordinates>
             //
-            //    <v2:Plugs>
+            //    <EVSEData:Plugs>
             //       <!--1 or more repetitions:-->
-            //       <v2:Plug>?</v2:Plug>
-            //    </v2:Plugs>
+            //       <EVSEData:Plug>?</EVSEData:Plug>
+            //    </EVSEData:Plugs>
             //
             //    <!--Optional:-->
-            //    <v2:ChargingFacilities>
+            //    <EVSEData:ChargingFacilities>
             //       <!--1 or more repetitions:-->
-            //       <v2:ChargingFacility>?</v2:ChargingFacility>
-            //    </v2:ChargingFacilities>
+            //       <EVSEData:ChargingFacility>?</EVSEData:ChargingFacility>
+            //    </EVSEData:ChargingFacilities>
             //
             //    <!--Optional:-->
-            //    <v2:ChargingModes>
+            //    <EVSEData:ChargingModes>
             //       <!--1 or more repetitions:-->
-            //       <v2:ChargingMode>?</v2:ChargingMode>
-            //    </v2:ChargingModes>
+            //       <EVSEData:ChargingMode>?</EVSEData:ChargingMode>
+            //    </EVSEData:ChargingModes>
             //
-            //    <v2:AuthenticationModes>
+            //    <EVSEData:AuthenticationModes>
             //       <!--1 or more repetitions:-->
-            //       <v2:AuthenticationMode>?</v2:AuthenticationMode>
-            //    </v2:AuthenticationModes>
+            //       <EVSEData:AuthenticationMode>?</EVSEData:AuthenticationMode>
+            //    </EVSEData:AuthenticationModes>
             //
             //    <!--Optional:-->
-            //    <v2:MaxCapacity>?</v2:MaxCapacity>
+            //    <EVSEData:MaxCapacity>?</EVSEData:MaxCapacity>
             //
             //    <!--Optional:-->
-            //    <v2:PaymentOptions>
+            //    <EVSEData:PaymentOptions>
             //       <!--1 or more repetitions:-->
-            //       <v2:PaymentOption>?</v2:PaymentOption>
-            //    </v2:PaymentOptions>
+            //       <EVSEData:PaymentOption>?</EVSEData:PaymentOption>
+            //    </EVSEData:PaymentOptions>
             //
-            //    <v2:Accessibility>?</v2:Accessibility>
-            //    <v2:HotlinePhoneNum>?</v2:HotlinePhoneNum>
-            //
-            //    <!--Optional:-->
-            //    <v2:AdditionalInfo>?</v2:AdditionalInfo>
-            //
-            //    <!--Optional:-->
-            //    <v2:EnAdditionalInfo>?</v2:EnAdditionalInfo>
+            //    <EVSEData:ValueAddedServices>
+            //       <!--1 or more repetitions:-->
+            //       <EVSEData:ValueAddedService>?</EVSEData:ValueAddedService>
+            //    </EVSEData:ValueAddedServices>            //
+            //    <EVSEData:Accessibility>?</EVSEData:Accessibility>
+            //    <EVSEData:HotlinePhoneNum>?</EVSEData:HotlinePhoneNum>
             //
             //    <!--Optional:-->
-            //    <v2:GeoChargingPointEntrance>
+            //    <EVSEData:AdditionalInfo>?</EVSEData:AdditionalInfo>
+            //
+            //    <!--Optional:-->
+            //    <EVSEData:EnAdditionalInfo>?</EVSEData:EnAdditionalInfo>
+            //
+            //    <!--Optional:-->
+            //    <EVSEData:GeoChargingPointEntrance>
             //       <!--You have a CHOICE of the next 3 items at this level-->
-            //       <v21:Google>
-            //          <v21:Coordinates>?</v21:Coordinates>
-            //       </v21:Google>
-            //       <v21:DecimalDegree>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DecimalDegree>
-            //       <v21:DegreeMinuteSeconds>
-            //          <v21:Longitude>?</v21:Longitude>
-            //          <v21:Latitude>?</v21:Latitude>
-            //       </v21:DegreeMinuteSeconds>
-            //    </v2:GeoChargingPointEntrance>
+            //       <CommonTypes:Google>
+            //          <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+            //       </CommonTypes:Google>
+            //       <CommonTypes:DecimalDegree>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DecimalDegree>
+            //       <CommonTypes:DegreeMinuteSeconds>
+            //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
+            //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
+            //       </CommonTypes:DegreeMinuteSeconds>
+            //    </EVSEData:GeoChargingPointEntrance>
             //
-            //    <v2:IsOpen24Hours>?</v2:IsOpen24Hours>
+            //    <EVSEData:IsOpen24Hours>?</EVSEData:IsOpen24Hours>
             //    <!--Optional:-->
-            //    <v2:OpeningTime>?</v2:OpeningTime>
-            //
-            //    <!--Optional:-->
-            //    <v2:HubOperatorID>?</v2:HubOperatorID>
+            //    <EVSEData:OpeningTime>?</EVSEData:OpeningTime>
             //
             //    <!--Optional:-->
-            //    <v2:ClearinghouseID>?</v2:ClearinghouseID>
-            //    <v2:IsHubjectCompatible>?</v2:IsHubjectCompatible>
-            //    <v2:DynamicInfoAvailable>?</v2:DynamicInfoAvailable>
+            //    <EVSEData:HubOperatorID>?</EVSEData:HubOperatorID>
             //
-            // </v2:eRoamingEvseDataRecord>
+            //    <!--Optional:-->
+            //    <EVSEData:ClearinghouseID>?</EVSEData:ClearinghouseID>
+            //    <EVSEData:IsHubjectCompatible>?</EVSEData:IsHubjectCompatible>
+            //    <EVSEData:DynamicInfoAvailable>?</EVSEData:DynamicInfoAvailable>
+            //
+            // </EVSEData:eRoamingEvseDataRecord>
 
             #endregion
 
-
-            var EVSEDataRecord = new EVSEDataRecord(EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!")));
-
-            #region XML Attribute: DeltaType
-
-            EVSEDataRecord.DeltaType  = EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"),  "");
-
-            #endregion
 
             #region XML Attribute: LastUpdate
 
             DateTime _LastUpdate;
-            if (DateTime.TryParse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), ""), out _LastUpdate))
-                EVSEDataRecord.LastUpdate = _LastUpdate;
+            DateTime.TryParse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), ""), out _LastUpdate);
 
             #endregion
 
+            #region ChargingStationName
 
-            #region ChargingStationId, ChargingStationName
-
-            EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "ChargingStationId",
-                                                 v => EVSEDataRecord.ChargingStationId = v);
+            var _ChargingStationName = new I18NString();
 
             EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "ChargingStationName",
-                                                 v => EVSEDataRecord.ChargingStationName.Add(Languages.de, v));
+                                                 v => _ChargingStationName.Add(Languages.de, v));
 
             EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "EnChargingStationName",
-                                                 v => EVSEDataRecord.ChargingStationName.Add(Languages.en, v));
+                                                 v => _ChargingStationName.Add(Languages.en, v));
 
             #endregion
 
             #region Address
 
-            var AddressXML   = EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "Address", "Missing 'Address'-XML tag!");
+            var AddressXML  = EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "Address", "Missing 'Address'-XML tag!");
 
-            var _CountryTXT  = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
+            var _CountryTXT = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
 
             Country _Country;
             if (!Country.TryParse(_CountryTXT, out _Country))
@@ -966,61 +470,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             }
 
-            EVSEDataRecord.Address = new Address(AddressXML.ElementValueOrFail   (OICPNS.CommonTypes + "Street",     "Missing 'Street'-XML tag!").Trim(),
-                                                 AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum",   "").Trim(),
-                                                 AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor",      "").Trim(),
-                                                 AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
-                                                 "",
-                                                 I18NString.Create(Languages.unknown, AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City", "Missing 'City'-XML tag!").Trim()),
-                                                 _Country);
-
             // Currently not used OICP address information!
             //var _Region       = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Region",     "").Trim();
             //var _Timezone     = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Timezone",   "").Trim();
-
-            #endregion
-
-            #region GeoCoordinate
-
-            EVSEDataRecord.GeoCoordinate = XMLMethods.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!"));
-
-            #endregion
-
-            #region Plugs
-
-            EVSEDataRecord.Plugs = new ReactiveSet<PlugTypes>(EVSEDataRecordXML.
-                                                                  MapValuesOrFail(OICPNS.EVSEData + "Plugs", "Missing 'Plugs'-XML tag!",
-                                                                                  OICPNS.EVSEData + "Plug",
-                                                                                  OICPMapper.AsPlugType));
-
-            #endregion
-
-            #region ChargingFacilities
-
-            EVSEDataRecord.ChargingFacilities = new ReactiveSet<ChargingFacilities>(EVSEDataRecordXML.
-                                                                                        MapValuesOrDefault(OICPNS.EVSEData + "ChargingFacilities",
-                                                                                                           OICPNS.EVSEData + "ChargingFacility",
-                                                                                                           OICPMapper.AsChargingFacility,
-                                                                                                           OICPv2_1.ChargingFacilities.Unspecified));
-
-            #endregion
-
-            #region ChargingModes
-
-            EVSEDataRecord.ChargingModes = new ReactiveSet<ChargingModes>(EVSEDataRecordXML.
-                                                                              MapValuesOrDefault(OICPNS.EVSEData + "ChargingModes",
-                                                                                                 OICPNS.EVSEData + "ChargingMode",
-                                                                                                 OICPMapper.AsChargingMode,
-                                                                                                 WWCP.ChargingModes.Unspecified));
-
-            #endregion
-
-            #region AuthenticationModes
-
-            EVSEDataRecord.AuthenticationModes = new ReactiveSet<AuthenticationModes>(EVSEDataRecordXML.
-                                                                                          MapValuesOrFail(OICPNS.EVSEData + "AuthenticationModes", "Missing 'AuthenticationModes'-XML tag!",
-                                                                                                          OICPNS.EVSEData + "AuthenticationMode",
-                                                                                                          OICPMapper.AsAuthenticationMode));
 
             #endregion
 
@@ -1030,43 +482,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        ElementValueOrDefault(OICPNS.EVSEData + "MaxCapacity", String.Empty).
                                        Trim();
 
-            Double _MaxCapacity;
+            Double _MaxCapacity = 0.0;
             if (_MaxCapacity_kWh.IsNotNullOrEmpty())
-                if (Double.TryParse(_MaxCapacity_kWh, out _MaxCapacity))
-                    EVSEDataRecord.MaxCapacity = _MaxCapacity;
-
-            #endregion
-
-            #region PaymentOptions
-
-            EVSEDataRecord.PaymentOptions = new ReactiveSet<PaymentOptions>(EVSEDataRecordXML.
-                                                                                MapValuesOrDefault(OICPNS.EVSEData + "PaymentOptions",
-                                                                                                   OICPNS.EVSEData + "PaymentOption",
-                                                                                                   OICPMapper.AsPaymetOption,
-                                                                                                   WWCP.PaymentOptions.Unspecified));
-
-            #endregion
-
-            #region Accessibility
-
-            EVSEDataRecord.Accessibility = OICPMapper.AsAccessibilityType(EVSEDataRecordXML.
-                                                                              ElementValueOrFail(OICPNS.EVSEData + "Accessibility", "Missing 'Accessibility'-XML tag!").
-                                                                              Trim());
-
-            #endregion
-
-            #region HotlinePhoneNum
-
-            EVSEDataRecord.HotlinePhoneNumber = EVSEDataRecordXML.
-                                                 ElementValueOrFail(OICPNS.EVSEData + "HotlinePhoneNum", "Missing 'HotlinePhoneNum '-XML tag!").
-                                                 Trim();
+                Double.TryParse(_MaxCapacity_kWh, out _MaxCapacity);
 
             #endregion
 
             #region AdditionalInfo
 
+            var _AdditionalInfo = new I18NString();
+
             EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "AdditionalInfo",
-                                                 v => EVSEDataRecord.AdditionalInfo.Add(Languages.de, v));
+                                                 v => _AdditionalInfo.Add(Languages.de, v));
 
             // EnAdditionalInfo not parsed as OICP v2.0 multi-language string!
             EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "EnAdditionalInfo",
@@ -1085,9 +512,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                              try
                                                              {
                                                                  if (I18NTokens.Length == 2)
-                                                                     EVSEDataRecord.AdditionalInfo.Add((Languages) Enum.Parse(typeof(Languages),
-                                                                                                                              Country.ParseAlpha3Code(I18NTokens[0]).Alpha2Code.ToLower()),
-                                                                                                       I18NTokens[1]);
+                                                                     _AdditionalInfo.Add((Languages) Enum.Parse(typeof(Languages),
+                                                                                                                Country.ParseAlpha3Code(I18NTokens[0]).Alpha2Code.ToLower()),
+                                                                                         I18NTokens[1]);
                                                              }
                                                              catch (Exception e)
                                                              {
@@ -1099,25 +526,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      }
 
                                                      else
-                                                         EVSEDataRecord.AdditionalInfo.Add(Languages.en, EnAdditionalInfo);
+                                                         _AdditionalInfo.Add(Languages.en, EnAdditionalInfo);
 
                                                  });
 
             #endregion
 
-            #region Get geo coordinate of the charging pool entrance...
-
-            var GeoChargingPointEntranceXML = EVSEDataRecordXML.Element(OICPNS.CommonTypes + "GeoChargingPointEntrance");
-            if (GeoChargingPointEntranceXML != null)
-                EVSEDataRecord.GeoChargingPointEntrance = XMLMethods.ParseGeoCoordinatesXML(GeoChargingPointEntranceXML);
-
-            #endregion
-
             #region IsOpen24Hours / OpeningTime
+
+            OpeningTimes _OpeningTime = null;
 
             if (EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsOpen24Hours", "Missing 'IsOpen24Hours'-XML tag!") == "true")
             {
-                EVSEDataRecord.OpeningTime = OpeningTimes.Open24Hours;
+                _OpeningTime = OpeningTimes.Open24Hours;
             }
 
             else
@@ -1126,58 +547,103 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 var OpeningTimeXML = EVSEDataRecordXML.Element(OICPNS.EVSEData + "OpeningTime");
                 if (OpeningTimeXML != null)
                 {
-                    EVSEDataRecord.OpeningTime = OpeningTimes.FromFreeText(OpeningTimeXML.Value.Trim());
+                    _OpeningTime = OpeningTimes.FromFreeText(OpeningTimeXML.Value.Trim());
                 }
 
             }
 
             #endregion
 
-            #region HubOperatorID
 
-            HubOperator_Id _HubOperatorId;
-            if (HubOperator_Id.TryParse(EVSEDataRecordXML.
-                                            ElementValueOrDefault(OICPNS.EVSEData + "HubOperatorID", String.Empty).
-                                            Trim(),
-                                        out _HubOperatorId))
-                EVSEDataRecord.HubOperatorId = _HubOperatorId;
+            return new EVSEDataRecord(
 
-            #endregion
+                EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!")),
 
-            #region ClearinghouseID
+                EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"), ""),
 
-            RoamingProvider_Id _ClearinghouseID;
-            if (RoamingProvider_Id.TryParse(EVSEDataRecordXML.
-                                                ElementValueOrDefault(OICPNS.EVSEData + "ClearinghouseID", String.Empty).
-                                                Trim(),
-                                                out _ClearinghouseID))
-                EVSEDataRecord.ClearingHouseId = _ClearinghouseID;
+                _LastUpdate,
 
-            #endregion
+                null,
 
-            #region IsHubjectCompatible
+                EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationId", ""),
+                _ChargingStationName,
 
-            EVSEDataRecord.IsHubjectCompatible  = EVSEDataRecordXML.
-                                                      ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible", "Missing 'IsHubjectCompatible '-XML tag!").
-                                                      Trim() == "true";
+                new Address(AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Street", "Missing 'Street'-XML tag!").Trim(),
+                                                 AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum", "").Trim(),
+                                                 AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor", "").Trim(),
+                                                 AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
+                                                 "",
+                                                 I18NString.Create(Languages.unknown, AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City", "Missing 'City'-XML tag!").Trim()),
+                                                 _Country),
 
-            #endregion
+                XMLMethods.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
 
-            #region DynamicInfoAvailable
+                EVSEDataRecordXML.MapValuesOrFail(OICPNS.EVSEData + "Plugs", "Missing 'Plugs'-XML tag!",
+                                                     OICPNS.EVSEData + "Plug",
+                                                     OICPMapper.AsPlugType,
+                                                     PlugTypes.Unspecified).
+                                                     Reduce(),
 
-            EVSEDataRecord.DynamicInfoAvailable  = EVSEDataRecordXML.
-                                                       ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable", "Missing 'DynamicInfoAvailable '-XML tag!").
-                                                       Trim() != "false";
+                EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ChargingFacilities",
+                                                     OICPNS.EVSEData + "ChargingFacility",
+                                                     OICPMapper.AsChargingFacility,
+                                                     ChargingFacilities.Unspecified).
+                                                     Reduce(),
 
-            #endregion
+                EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ChargingModes",
+                                                     OICPNS.EVSEData + "ChargingMode",
+                                                     OICPMapper.AsChargingMode,
+                                                     ChargingModes.Unspecified).
+                                                     Reduce(),
 
-            // Currently not used OICP address information!
-            //var _Region       = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Region",     "").Trim();
-            //var _Timezone     = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Timezone",   "").Trim();
+                EVSEDataRecordXML.MapValuesOrFail(OICPNS.EVSEData + "AuthenticationModes", "Missing 'AuthenticationModes'-XML tag!",
+                                                     OICPNS.EVSEData + "AuthenticationMode",
+                                                     OICPMapper.AsAuthenticationMode).
+                                                     Reduce(),
 
-            // EnAdditionalInfo not parsed as OICP v2.0 multi-language string!
+                _MaxCapacity,
 
-            return EVSEDataRecord;
+                EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "PaymentOptions",
+                                                     OICPNS.EVSEData + "PaymentOption",
+                                                     OICPMapper.AsPaymetOption,
+                                                     PaymentOptions.Unspecified).
+                                                     Reduce(),
+
+                EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ValueAddedServices",
+                                                     OICPNS.EVSEData + "ValueAddedService",
+                                                     OICPMapper.AsValueAddedService,
+                                                     ValueAddedServices.None).
+                                                     Reduce(),
+
+                OICPMapper.AsAccessibilityType(EVSEDataRecordXML.
+                                               ElementValueOrFail(OICPNS.EVSEData + "Accessibility", "Missing 'Accessibility'-XML tag!").
+                                               Trim()),
+
+                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "HotlinePhoneNum", "Missing 'HotlinePhoneNum '-XML tag!").
+                                  Trim(),
+
+                _AdditionalInfo,
+
+                EVSEDataRecordXML.MapElement(OICPNS.CommonTypes + "GeoChargingPointEntrance",
+                                             XMLMethods.ParseGeoCoordinatesXML),
+
+                _OpeningTime.IsOpen24Hours,
+                _OpeningTime,
+
+                EVSEDataRecordXML.MapValueOrNull(OICPNS.EVSEData + "HubOperatorID",
+                                                 HubOperator_Id.Parse),
+
+                EVSEDataRecordXML.MapValueOrNull(OICPNS.EVSEData + "ClearinghouseID",
+                                                 RoamingProvider_Id.Parse),
+
+                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible", "Missing 'IsHubjectCompatible '-XML tag!").
+                                  Trim() == "true",
+
+                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable", "Missing 'DynamicInfoAvailable '-XML tag!").
+                                  Trim() != "false"
+
+            );
+
 
         }
 
@@ -1311,26 +777,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return new XElement(OICPNS.EVSEData + "EvseDataRecord",
 
-                new XElement(OICPNS.EVSEData + "EvseId",                _EVSEId.OriginId),
-                new XElement(OICPNS.EVSEData + "ChargingStationId",     _ChargingStationId),
-                new XElement(OICPNS.EVSEData + "ChargingStationName",   _ChargingStationName[Languages.de].SubstringMax(50)),
-                new XElement(OICPNS.EVSEData + "EnChargingStationName", _ChargingStationName[Languages.en].SubstringMax(50)),
+                new XElement(OICPNS.EVSEData + "EvseId",                EVSEId.OriginId),
+                new XElement(OICPNS.EVSEData + "ChargingStationId",     ChargingStationId),
+                new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.de].SubstringMax(50)),
+                new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.en].SubstringMax(50)),
 
                 new XElement(OICPNS.EVSEData + "Address",
-                    new XElement(OICPNS.CommonTypes + "Country",        _Address.Country.Alpha3Code),
-                    new XElement(OICPNS.CommonTypes + "City",           _Address.City.FirstText),
-                    new XElement(OICPNS.CommonTypes + "Street",         _Address.Street), // OICPEVSEData.0 requires at least 5 characters!
+                    new XElement(OICPNS.CommonTypes + "Country",        Address.Country.Alpha3Code),
+                    new XElement(OICPNS.CommonTypes + "City",           Address.City.FirstText),
+                    new XElement(OICPNS.CommonTypes + "Street",         Address.Street), // OICPEVSEData.0 requires at least 5 characters!
 
-                    _Address.PostalCode. IsNotNullOrEmpty()
-                        ? new XElement(OICPNS.CommonTypes + "PostalCode", _Address.PostalCode)
+                    Address.PostalCode. IsNotNullOrEmpty()
+                        ? new XElement(OICPNS.CommonTypes + "PostalCode", Address.PostalCode)
                         : null,
 
-                    _Address.HouseNumber.IsNotNullOrEmpty()
-                        ? new XElement(OICPNS.CommonTypes + "HouseNum",   _Address.HouseNumber)
+                    Address.HouseNumber.IsNotNullOrEmpty()
+                        ? new XElement(OICPNS.CommonTypes + "HouseNum",   Address.HouseNumber)
                         : null,
 
-                    _Address.FloorLevel. IsNotNullOrEmpty()
-                        ? new XElement(OICPNS.CommonTypes + "Floor",      _Address.FloorLevel)
+                    Address.FloorLevel. IsNotNullOrEmpty()
+                        ? new XElement(OICPNS.CommonTypes + "Floor",      Address.FloorLevel)
                         : null
 
                     // <!--Optional:-->
@@ -1343,83 +809,84 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 new XElement(OICPNS.EVSEData + "GeoCoordinates",
                     new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                        new XElement(OICPNS.CommonTypes + "Longitude",  _GeoCoordinate.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-                        new XElement(OICPNS.CommonTypes + "Latitude",   _GeoCoordinate.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                        new XElement(OICPNS.CommonTypes + "Longitude",  GeoCoordinate.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                        new XElement(OICPNS.CommonTypes + "Latitude",   GeoCoordinate.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
                     )
                 ),
 
                 new XElement(OICPNS.EVSEData + "Plugs",
-                    _Plugs.                   Select(Plug               => new XElement(OICPNS.EVSEData + "Plug",               OICPMapper.AsString(Plug)))
+                    Plugs.ToEnumeration().SafeSelect(Plug               => new XElement(OICPNS.EVSEData + "Plug",               OICPMapper.AsString(Plug)))
                 ),
 
-                _ChargingFacilities.NotNullAny()
+                ChargingFacilities.ToEnumeration().NotNullAny()
                     ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
-                          _ChargingFacilities.Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   OICPMapper.AsString(ChargingFacility))))
+                          ChargingFacilities.ToEnumeration().Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   OICPMapper.AsString(ChargingFacility))))
                     : null,
 
-                _ChargingModes.NotNullAny()
+                ChargingModes.ToEnumeration().NotNullAny()
                     ? new XElement(OICPNS.EVSEData + "ChargingModes",
-                          _ChargingModes.     Select(ChargingMode       => new XElement(OICPNS.EVSEData + "ChargingMode",       OICPMapper.AsString(ChargingMode))))
+                          ChargingModes.ToEnumeration().Select(ChargingMode => new XElement(OICPNS.EVSEData + "ChargingMode", OICPMapper.AsString(ChargingMode))))
                     : null,
 
                 new XElement(OICPNS.EVSEData + "AuthenticationModes",
-                    _AuthenticationModes.     Select(AuthenticationMode => OICPMapper.AsString(AuthenticationMode)).
-                                              Where (AuthenticationMode => AuthenticationMode != "Unknown").
-                                              Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode))
+                    AuthenticationModes.     ToEnumeration().
+                                             Select(AuthenticationMode => OICPMapper.AsString(AuthenticationMode)).
+                                             Where (AuthenticationMode => AuthenticationMode != "Unknown").
+                                             Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode))
                 ),
 
-                _MaxCapacity_kWh.HasValue
-                    ? new XElement(OICPNS.EVSEData + "MaxCapacity", _MaxCapacity_kWh)
+                MaxCapacity.HasValue
+                    ? new XElement(OICPNS.EVSEData + "MaxCapacity", MaxCapacity)
                     : null,
 
-                _PaymentOptions.NotNullAny()
+                PaymentOptions.ToEnumeration().NotNullAny()
                     ? new XElement(OICPNS.EVSEData + "PaymentOptions",
-                          _PaymentOptions.    Select(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      OICPMapper.AsString(PaymentOption)))
+                          PaymentOptions.ToEnumeration().SafeSelect(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      OICPMapper.AsString(PaymentOption)))
                       )
                     : null,
 
-                _ValueAddedServices.NotNullAny()
+                ValueAddedServices.ToEnumeration().NotNullAny()
                     ? new XElement(OICPNS.EVSEData + "ValueAddedServices",
-                          _ValueAddedServices.Select(ValueAddedService => new XElement(OICPNS.EVSEData + "ValueAddedService", OICPMapper.AsString(ValueAddedService)))
+                          ValueAddedServices.ToEnumeration().SafeSelect(ValueAddedService => new XElement(OICPNS.EVSEData + "ValueAddedService", OICPMapper.AsString(ValueAddedService)))
                       )
                     : new XElement(OICPNS.EVSEData + "ValueAddedServices", new XElement(OICPNS.EVSEData + "ValueAddedService", "None")),
 
-                new XElement(OICPNS.EVSEData + "Accessibility",     _Accessibility.ToString().Replace("_", " ")),
-                new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(_HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
+                new XElement(OICPNS.EVSEData + "Accessibility",     Accessibility.ToString().Replace("_", " ")),
+                new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
 
-                _AdditionalInfo.has(Languages.de)
-                    ? new XElement(OICPNS.EVSEData + "AdditionalInfo", _AdditionalInfo[Languages.de])
+                AdditionalInfo.has(Languages.de)
+                    ? new XElement(OICPNS.EVSEData + "AdditionalInfo", AdditionalInfo[Languages.de])
                     : null,
 
-                _AdditionalInfo.has(Languages.en)
-                    ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", _AdditionalInfo[Languages.en])
+                AdditionalInfo.has(Languages.en)
+                    ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", AdditionalInfo[Languages.en])
                     : null,
 
-                _GeoChargingPointEntrance != null
+                GeoChargingPointEntrance != null
                     ? new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
                         new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                            new XElement(OICPNS.CommonTypes + "Longitude", _GeoChargingPointEntrance.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-                            new XElement(OICPNS.CommonTypes + "Latitude",  _GeoChargingPointEntrance.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                            new XElement(OICPNS.CommonTypes + "Longitude", GeoChargingPointEntrance.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                            new XElement(OICPNS.CommonTypes + "Latitude",  GeoChargingPointEntrance.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
                         )
                     )
                     : null,
 
-                new XElement(OICPNS.EVSEData + "IsOpen24Hours",         _OpeningTime.IsOpen24Hours ? "true" : "false"),
+                new XElement(OICPNS.EVSEData + "IsOpen24Hours",         OpeningTime.IsOpen24Hours ? "true" : "false"),
 
-                _OpeningTime.IsOpen24Hours
+                OpeningTime.IsOpen24Hours
                     ? null
-                    : new XElement(OICPNS.EVSEData + "OpeningTime",     _OpeningTime.FreeText),
+                    : new XElement(OICPNS.EVSEData + "OpeningTime",     OpeningTime.FreeText),
 
-                _HubOperatorId != null
-                    ? new XElement(OICPNS.EVSEData + "HubOperatorID",   _HubOperatorId.ToString())
+                HubOperatorId != null
+                    ? new XElement(OICPNS.EVSEData + "HubOperatorID",   HubOperatorId.ToString())
                     : null,
 
-                _ClearingHouseId != null
-                    ? new XElement(OICPNS.EVSEData + "ClearinghouseID", _ClearingHouseId.ToString())
+                ClearingHouseId != null
+                    ? new XElement(OICPNS.EVSEData + "ClearinghouseID", ClearingHouseId.ToString())
                     : null,
 
-                new XElement(OICPNS.EVSEData + "IsHubjectCompatible",   _IsHubjectCompatible  ? "true" : "false"),
-                new XElement(OICPNS.EVSEData + "DynamicInfoAvailable",  _DynamicInfoAvailable ? "true" : "false")
+                new XElement(OICPNS.EVSEData + "IsHubjectCompatible",   IsHubjectCompatible  ? "true" : "false"),
+                new XElement(OICPNS.EVSEData + "DynamicInfoAvailable",  DynamicInfoAvailable ? "true" : "false")
 
             );
 

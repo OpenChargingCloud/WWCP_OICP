@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
@@ -51,13 +52,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region EMPRoaming
 
-        private readonly EMPRoaming _EMPRoaming;
-
         /// <summary>
         /// The wrapped EMP roaming object.
         /// </summary>
-        public EMPRoaming EMPRoaming
-            => _EMPRoaming;
+        public EMPRoaming EMPRoaming { get; }
 
         #endregion
 
@@ -67,7 +65,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The EMP client.
         /// </summary>
         public EMPClient EMPClient
-            => _EMPRoaming?.EMPClient;
+            => EMPRoaming?.EMPClient;
 
         #endregion
 
@@ -77,7 +75,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The EMP server.
         /// </summary>
         public EMPServer EMPServer
-            => _EMPRoaming?.EMPServer;
+            => EMPRoaming?.EMPServer;
 
         #endregion
 
@@ -87,7 +85,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The EMP client logger.
         /// </summary>
         public EMPClientLogger ClientLogger
-            => _EMPRoaming?.EMPClientLogger;
+            => EMPRoaming?.EMPClientLogger;
 
         #endregion
 
@@ -97,7 +95,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The EMP server logger.
         /// </summary>
         public EMPServerLogger ServerLogger
-            => _EMPRoaming?.EMPServerLogger;
+            => EMPRoaming?.EMPServerLogger;
 
         #endregion
 
@@ -107,7 +105,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The DNSc server.
         /// </summary>
         public DNSClient DNSClient
-            => _EMPRoaming?.DNSClient;
+            => EMPRoaming?.DNSClient;
 
         #endregion
 
@@ -125,12 +123,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _EMPRoaming.OnLogAuthorizeStart += value;
+                EMPRoaming.OnLogAuthorizeStart += value;
             }
 
             remove
             {
-                _EMPRoaming.OnLogAuthorizeStart -= value;
+                EMPRoaming.OnLogAuthorizeStart -= value;
             }
 
         }
@@ -143,12 +141,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _EMPRoaming.OnLogAuthorizeStarted += value;
+                EMPRoaming.OnLogAuthorizeStarted += value;
             }
 
             remove
             {
-                _EMPRoaming.OnLogAuthorizeStarted -= value;
+                EMPRoaming.OnLogAuthorizeStarted -= value;
             }
 
         }
@@ -170,12 +168,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _EMPRoaming.OnLogAuthorizeStop += value;
+                EMPRoaming.OnLogAuthorizeStop += value;
             }
 
             remove
             {
-                _EMPRoaming.OnLogAuthorizeStop -= value;
+                EMPRoaming.OnLogAuthorizeStop -= value;
             }
 
         }
@@ -188,12 +186,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _EMPRoaming.OnLogAuthorizeStopped += value;
+                EMPRoaming.OnLogAuthorizeStopped += value;
             }
 
             remove
             {
-                _EMPRoaming.OnLogAuthorizeStopped -= value;
+                EMPRoaming.OnLogAuthorizeStopped -= value;
             }
 
         }
@@ -215,12 +213,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _EMPRoaming.OnLogChargeDetailRecordSend += value;
+                EMPRoaming.OnLogChargeDetailRecordSend += value;
             }
 
             remove
             {
-                _EMPRoaming.OnLogChargeDetailRecordSend -= value;
+                EMPRoaming.OnLogChargeDetailRecordSend -= value;
             }
 
         }
@@ -233,12 +231,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _EMPRoaming.OnLogChargeDetailRecordSent += value;
+                EMPRoaming.OnLogChargeDetailRecordSent += value;
             }
 
             remove
             {
-                _EMPRoaming.OnLogChargeDetailRecordSent -= value;
+                EMPRoaming.OnLogChargeDetailRecordSent -= value;
             }
 
         }
@@ -290,17 +288,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 throw new ArgumentNullException(nameof(RoamingNetwork),  "The given roaming network must not be null!");
 
             if (EMPRoaming     == null)
-                throw new ArgumentNullException("EMPRoaming",      "The given OICP EMP Roaming object must not be null!");
+                throw new ArgumentNullException(nameof(EMPRoaming),      "The given OICP EMP Roaming object must not be null!");
 
             #endregion
 
-            this._EMPRoaming           = EMPRoaming;
+            this.EMPRoaming            = EMPRoaming;
             this._EVSEDataRecord2EVSE  = EVSEDataRecord2EVSE;
 
             // Link AuthorizeStart/-Stop and CDR events
-            this._EMPRoaming.OnAuthorizeStart     += SendAuthorizeStart;
-            this._EMPRoaming.OnAuthorizeStop      += SendAuthorizeStop;
-            this._EMPRoaming.OnChargeDetailRecord += SendChargeDetailRecord;
+            this.EMPRoaming.OnAuthorizeStart     += SendAuthorizeStart;
+            this.EMPRoaming.OnAuthorizeStop      += SendAuthorizeStop;
+            this.EMPRoaming.OnChargeDetailRecord += SendChargeDetailRecord;
 
         }
 
@@ -545,99 +543,303 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, QueryTimeout = null, OnException = null)
+        #region PullEVSEData(RoamingNetwork, SearchCenter = null, DistanceKM = 0.0, LastCall = null, ProviderId = null, ...)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
         /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
         /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="RoamingNetwork">A roaming network to store the downloaded EVSE data.</param>
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
+        /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingEVSEData>
+        public async Task
 
-            PullEVSEData(EVSP_Id           ProviderId,
+            PullEVSEData(RoamingNetwork    RoamingNetwork,
                          GeoCoordinate     SearchCenter  = null,
                          Double            DistanceKM    = 0.0,
                          DateTime?         LastCall      = null,
+                         EVSP_Id           ProviderId    = null,
                          TimeSpan?         QueryTimeout  = null)
 
         {
 
-            return await _EMPRoaming.PullEVSEData(ProviderId,
-                                                        SearchCenter,
-                                                        DistanceKM,
-                                                        LastCall,
-                                                        QueryTimeout);
+            var result = await EMPRoaming.PullEVSEData(ProviderId,
+                                                       SearchCenter,
+                                                       DistanceKM,
+                                                       LastCall,
+                                                       QueryTimeout);
+
+
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null)
+            {
+
+                #region Data
+
+                EVSEOperator     _EVSEOperator                  = null;
+                CPInfoList       _CPInfoList                    = null;
+                EVSEIdLookup     _EVSEIdLookup                  = null;
+                EVSEInfo         _EVSEInfo                      = null;
+                Languages        LocationLanguage;
+                Languages        LocalChargingStationLanguage;
+                I18NString       AdditionalInfo                 = null;
+                ChargingPool     _ChargingPool                  = null;
+                ChargingStation  _ChargingStation               = null;
+                EVSE             _EVSE                          = null;
+
+                #endregion
+
+                result.Content.OperatorEVSEData.ForEach(operatorevsedata => {
+
+                    try
+                    {
+
+                        #region Find EVSE operator, or create a new one...
+
+                        if (!RoamingNetwork.TryGetEVSEOperatorbyId(operatorevsedata.OperatorId, out _EVSEOperator))
+                            _EVSEOperator = RoamingNetwork.CreateNewEVSEOperator(operatorevsedata.OperatorId, operatorevsedata.OperatorName);
+
+                        else
+                        {
+
+                            // Update via events!
+                            _EVSEOperator.Name = operatorevsedata.OperatorName;
+
+                        }
+
+                        #endregion
+
+                        #region Generate a list of all charging pools/stations/EVSEs
+
+                        _CPInfoList = new CPInfoList(_EVSEOperator.Id);
+
+                        #region Create EVSEIdLookup
+
+                        foreach (var evsedatarecord in operatorevsedata.EVSEDataRecords)
+                        {
+
+                            try
+                            {
+
+                                _CPInfoList.AddOrUpdateCPInfo(ChargingPool_Id.Generate(operatorevsedata.OperatorId,
+                                                                                       evsedatarecord.  Address,
+                                                                                       evsedatarecord.  GeoCoordinate),
+                                                              evsedatarecord.Address,
+                                                              evsedatarecord.GeoCoordinate,
+                                                              evsedatarecord.ChargingStationId,
+                                                              evsedatarecord.EVSEId);
+
+                                _EVSEIdLookup = _CPInfoList.AnalyseAndGenerateLookUp();
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                // Processing the EVSEDataRecords for the EVSEIdLookup failed!
+
+                            }
+
+                        }
+
+                        #endregion
+
+                        #region Process EVSEDataRecords
+
+                        foreach (var evsedatarecord in operatorevsedata.EVSEDataRecords)
+                        {
+
+                            try
+                            {
+
+                                _EVSEInfo = _EVSEIdLookup[evsedatarecord.EVSEId];
+
+                                // Set derived WWCP properties
+
+                                #region Set LocationLanguage
+
+                                switch (_EVSEInfo.PoolAddress.Country.Alpha2Code.ToLower())
+                                {
+
+                                    case "de": LocationLanguage = Languages.de; break;
+                                    case "fr": LocationLanguage = Languages.fr; break;
+                                    case "dk": LocationLanguage = Languages.dk; break;
+                                    case "no": LocationLanguage = Languages.no; break;
+                                    case "fi": LocationLanguage = Languages.fi; break;
+                                    case "se": LocationLanguage = Languages.se; break;
+
+                                    case "sk": LocationLanguage = Languages.sk; break;
+                                    //case "be": LocationLanguage = Languages.; break;
+                                    case "us": LocationLanguage = Languages.en; break;
+                                    case "nl": LocationLanguage = Languages.nl; break;
+                                    //case "fo": LocationLanguage = Languages.; break;
+                                    case "at": LocationLanguage = Languages.de; break;
+                                    case "ru": LocationLanguage = Languages.ru; break;
+                                    //case "ch": LocationLanguage = Languages.; break;
+
+                                    default: LocationLanguage = Languages.unknown; break;
+
+                                }
+
+                                if (_EVSEInfo.PoolAddress.Country == Country.Germany)
+                                    LocalChargingStationLanguage = Languages.de;
+
+                                else if (_EVSEInfo.PoolAddress.Country == Country.Denmark)
+                                    LocalChargingStationLanguage = Languages.dk;
+
+                                else if (_EVSEInfo.PoolAddress.Country == Country.France)
+                                    LocalChargingStationLanguage = Languages.fr;
+
+                                else
+                                    LocalChargingStationLanguage = Languages.unknown;
+
+                                #endregion
+
+                                #region Update a matching charging pool... or create a new one!
+
+                                if (_EVSEOperator.TryGetChargingPoolbyId(_EVSEInfo.PoolId, out _ChargingPool))
+                                {
+
+                                    // External update via events!
+                                    _ChargingPool.Description          = evsedatarecord.AdditionalInfo;
+                                    _ChargingPool.LocationLanguage     = LocationLanguage;
+                                    _ChargingPool.EntranceLocation     = evsedatarecord.GeoChargingPointEntrance;
+                                    _ChargingPool.OpeningTimes         = evsedatarecord.OpeningTime;
+                                    _ChargingPool.AuthenticationModes  = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
+                                    _ChargingPool.PaymentOptions       = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
+                                    _ChargingPool.Accessibility        = evsedatarecord.Accessibility;
+                                    _ChargingPool.HotlinePhoneNumber   = evsedatarecord.HotlinePhoneNumber;
+
+                                }
+
+                                else
+
+                                    _ChargingPool = _EVSEOperator.CreateNewChargingPool(
+
+                                                                      _EVSEInfo.PoolId,
+
+                                                                      Configurator: pool => {
+                                                                          pool.Description          = evsedatarecord.AdditionalInfo;
+                                                                          pool.Address              = _EVSEInfo.PoolAddress;
+                                                                          pool.GeoLocation          = _EVSEInfo.PoolLocation;
+                                                                          pool.LocationLanguage     = LocationLanguage;
+                                                                          pool.EntranceLocation     = evsedatarecord.GeoChargingPointEntrance;
+                                                                          pool.OpeningTimes         = evsedatarecord.OpeningTime;
+                                                                          pool.AuthenticationModes  = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
+                                                                          pool.PaymentOptions       = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
+                                                                          pool.Accessibility        = evsedatarecord.Accessibility;
+                                                                          pool.HotlinePhoneNumber   = evsedatarecord.HotlinePhoneNumber;
+                                                                      }
+
+                                );
+
+                                #endregion
+
+                                #region Update a matching charging station... or create a new one!
+
+                                if (_ChargingPool.TryGetChargingStationbyId(_EVSEInfo.StationId, out _ChargingStation))
+                                {
+
+                                    // Update via events!
+                                    _ChargingStation.Name                  = evsedatarecord.ChargingStationName;
+                                    _ChargingStation.HubjectStationId      = evsedatarecord.ChargingStationId;
+                                    _ChargingStation.AuthenticationModes   = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
+                                    _ChargingStation.PaymentOptions        = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
+                                    _ChargingStation.Accessibility         = evsedatarecord.Accessibility;
+                                    _ChargingStation.HotlinePhoneNumber    = evsedatarecord.HotlinePhoneNumber;
+                                    _ChargingStation.Description           = evsedatarecord.AdditionalInfo;
+                                    _ChargingStation.IsHubjectCompatible   = evsedatarecord.IsHubjectCompatible;
+                                    _ChargingStation.DynamicInfoAvailable  = evsedatarecord.DynamicInfoAvailable;
+
+                                }
+
+                                else
+                                    _ChargingStation = _ChargingPool.CreateNewStation(
+
+                                                                         _EVSEInfo.StationId,
+
+                                                                         Configurator: station => {
+                                                                             station.Name                  = evsedatarecord.ChargingStationName;
+                                                                             station.HubjectStationId      = evsedatarecord.ChargingStationId;
+                                                                             station.AuthenticationModes   = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
+                                                                             station.PaymentOptions        = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
+                                                                             station.Accessibility         = evsedatarecord.Accessibility;
+                                                                             station.HotlinePhoneNumber    = evsedatarecord.HotlinePhoneNumber;
+                                                                             station.Description           = evsedatarecord.AdditionalInfo;
+                                                                             station.IsHubjectCompatible   = evsedatarecord.IsHubjectCompatible;
+                                                                             station.DynamicInfoAvailable  = evsedatarecord.DynamicInfoAvailable;
+                                                                         }
+
+                                                       );
+
+                                #endregion
+
+                                #region Update matching EVSE... or create a new one!
+
+                                if (_ChargingStation.TryGetEVSEbyId(evsedatarecord.EVSEId, out _EVSE))
+                                {
+
+                                    // Update via events!
+                                    _EVSE.Description         = evsedatarecord.AdditionalInfo;
+                                    _EVSE.ChargingModes       = new ReactiveSet<WWCP.ChargingModes>(evsedatarecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
+                                    //_EVSE.ChargingFacilities  = evsedatarecord.ChargingFacilities;
+                                    //_EVSE.MaxPower            = 
+                                    //_EVSE.AverageVoltage      = 
+                                    //_EVSE.MaxCapacity_kWh     = evsedatarecord.MaxCapacity_kWh;
+                                    _EVSE.SocketOutlets       = new ReactiveSet<SocketOutlet>(evsedatarecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
+
+                                }
+
+                                else
+                                    _ChargingStation.CreateNewEVSE(evsedatarecord.EVSEId,
+
+                                                                   Configurator: evse => {
+                                                                       evse.Description         = evsedatarecord.AdditionalInfo;
+                                                                       evse.ChargingModes       = new ReactiveSet<WWCP.ChargingModes>(evsedatarecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
+                                                                       //evse.ChargingFacilities  = evsedatarecord.ChargingFacilities;
+                                                                       //evse.MaxPower            = 
+                                                                       //evse.AverageVoltage      = 
+                                                                       //evse.MaxCapacity_kWh     = 
+                                                                       evse.SocketOutlets       = new ReactiveSet<SocketOutlet>(evsedatarecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
+                                                                   }
+
+                                                                  );
+
+                                #endregion
+
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                // Processing the EVSEDataRecords failed!
+
+                            }
+
+                        }
+
+                        #endregion
+
+                        #endregion
+
+                    }
+                    catch (Exception e)
+                    {
+
+                        // Processing the OperatorEvseData failed!
+
+                    }
+
+                });
+
+            }
 
         }
 
         #endregion
-
-
-        #region PullEVSEStatus(ProviderId, SearchCenter = null, DistanceKM = 0.0, EVSEStatusFilter = null, QueryTimeout = null)
-
-        /// <summary>
-        /// Create a new task requesting the current status of all EVSEs (within an optional search radius and status).
-        /// </summary>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
-        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
-        /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingEVSEStatus>
-
-            PullEVSEStatus(EVSP_Id          ProviderId,
-                           GeoCoordinate    SearchCenter      = null,
-                           Double           DistanceKM        = 0.0,
-                           EVSEStatusType?  EVSEStatusFilter  = null,
-                           TimeSpan?        QueryTimeout      = null)
-
-        {
-
-            var result = await _EMPRoaming.PullEVSEStatus(ProviderId,
-                                                         SearchCenter,
-                                                         DistanceKM,
-                                                         EVSEStatusFilter,
-                                                         QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result;
-
-        }
-
-        #endregion
-
-        #region PullEVSEStatusById(ProviderId, EVSEIds, QueryTimeout = null)
-
-        /// <summary>
-        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
-        /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingEVSEStatusById>
-
-            PullEVSEStatusById(EVSP_Id               ProviderId,
-                               IEnumerable<EVSE_Id>  EVSEIds,
-                               TimeSpan?             QueryTimeout = null)
-
-        {
-
-            var result = await _EMPRoaming.PullEVSEStatusById(ProviderId,
-                                                             EVSEIds,
-                                                             QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result;
-
-        }
-
-        #endregion
-
 
         #region SearchEVSE(ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null, QueryTimeout = null)
 
@@ -663,7 +865,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         {
 
-            var result = await _EMPRoaming.SearchEVSE(ProviderId,
+            var result = await EMPRoaming.SearchEVSE(ProviderId,
                                                      SearchCenter,
                                                      DistanceKM,
                                                      Address,
@@ -671,8 +873,108 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ChargingFacility,
                                                      QueryTimeout);
 
-            //ToDo: Process the HTTP!
-            return result;
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null)
+            {
+
+                return result.Content;
+
+            }
+
+            return result.Content;
+
+        }
+
+        #endregion
+
+
+        #region PullEVSEStatus(SearchCenter = null, DistanceKM = 0.0, EVSEStatusFilter = null, ProviderId = null, ...)
+
+        /// <summary>
+        /// Create a new task requesting the current status of all EVSEs (within an optional search radius and status).
+        /// </summary>
+        /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
+        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
+        /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>
+        /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<IEnumerable<EVSEStatus>>
+
+            PullEVSEStatus(GeoCoordinate    SearchCenter      = null,
+                           Double           DistanceKM        = 0.0,
+                           EVSEStatusType?  EVSEStatusFilter  = null,
+                           EVSP_Id          ProviderId        = null,
+                           TimeSpan?        QueryTimeout      = null)
+
+        {
+
+            var result = await EMPRoaming.PullEVSEStatus(ProviderId,
+                                                         SearchCenter,
+                                                         DistanceKM,
+                                                         EVSEStatusFilter,
+                                                         QueryTimeout);
+
+
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null)
+            {
+
+                return result.Content.OperatorEVSEStatus.
+                           SelectMany(operatorevsestatus => operatorevsestatus.EVSEStatusRecords).
+                           SafeSelect(evsestatusrecord   => new EVSEStatus(evsestatusrecord.Id,
+                                                                           OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
+                                                                           result.Timestamp));
+
+            }
+
+            return new EVSEStatus[0];
+
+        }
+
+        #endregion
+
+        #region PullEVSEStatusById(EVSEIds, ProviderId = null, ...)
+
+        /// <summary>
+        /// Check the current status of the given EVSE Ids.
+        /// </summary>
+        /// <param name="EVSEIds">An enumeration of EVSE Ids.</param>
+        /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<IEnumerable<EVSEStatus>>
+
+            PullEVSEStatusById(IEnumerable<EVSE_Id>  EVSEIds,
+                               EVSP_Id               ProviderId    = null,
+                               TimeSpan?             QueryTimeout  = null)
+
+        {
+
+            var _EVSEStatus = new List<EVSEStatus>();
+
+            // Hubject has a limit of 100 EVSEIds per request!
+            // Do not make concurrent requests!
+            foreach (var evsepart in EVSEIds.ToPartitions(100))
+            {
+
+                var result = await EMPRoaming.PullEVSEStatusById(ProviderId,
+                                                                 evsepart,
+                                                                 QueryTimeout);
+
+
+                if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                    result.Content != null)
+                {
+
+                    _EVSEStatus.AddRange(result.Content.EVSEStatusRecords.
+                                                SafeSelect(evsestatusrecord => new EVSEStatus(evsestatusrecord.Id,
+                                                                                              OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
+                                                                                              result.Timestamp)));
+
+                }
+
+            }
+
+            return _EVSEStatus;
 
         }
 
@@ -695,73 +997,56 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         {
 
-            var result = await _EMPRoaming.PushAuthenticationData(ProviderAuthenticationDataRecords,
+            var result = await EMPRoaming.PushAuthenticationData(ProviderAuthenticationDataRecords,
                                                                  OICPAction,
                                                                  QueryTimeout);
 
-            //ToDo: Process the HTTP!
-            return result;
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null)
+            {
+
+                return result.Content;
+
+            }
+
+            return result.Content;
 
         }
 
         #endregion
 
-        #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad, QueryTimeout = null)
+        #region PushAuthenticationData(AuthorizationIdentifications, OICPAction = fullLoad, ProviderId = null, QueryTimeout = null)
 
         /// <summary>
         /// Create a new task pushing authorization identifications onto the OICP server.
         /// </summary>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<eRoamingAcknowledgement>
 
             PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
-                                   EVSP_Id                                   ProviderId,
                                    ActionType                                OICPAction    = ActionType.fullLoad,
+                                   EVSP_Id                                   ProviderId    = null,
                                    TimeSpan?                                 QueryTimeout  = null)
 
         {
 
-            var result = await _EMPRoaming.PushAuthenticationData(AuthorizationIdentifications,
+            var result = await EMPRoaming.PushAuthenticationData(AuthorizationIdentifications,
                                                                  ProviderId,
                                                                  OICPAction,
                                                                  QueryTimeout);
 
-            //ToDo: Process the HTTP!
-            return result;
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null)
+            {
 
-        }
+                return result.Content;
 
-        #endregion
+            }
 
-
-        #region GetChargeDetailRecords(ProviderId, From, To, QueryTimeout = null)
-
-        /// <summary>
-        /// Create a new task querying charge detail records from the OICP server.
-        /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="From">The starting time.</param>
-        /// <param name="To">The end time.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<IEnumerable<ChargeDetailRecord>>
-
-            GetChargeDetailRecords(EVSP_Id    ProviderId,
-                                   DateTime   From,
-                                   DateTime   To,
-                                   TimeSpan?  QueryTimeout  = null)
-
-        {
-
-            var result = await _EMPRoaming.GetChargeDetailRecords(ProviderId,
-                                                                 From,
-                                                                 To,
-                                                                 QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result;
+            return result.Content;
 
         }
 
@@ -780,14 +1065,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="StartTime">The starting time of the reservation.</param>
         /// <param name="Duration">The duration of the reservation.</param>
         /// <param name="ReservationId">An optional unique identification of the reservation. Mandatory for updates.</param>
-        /// <param name="ProviderId">An optional unique identification of e-Mobility service provider.</param>
+        /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
         /// <param name="eMAId">An optional unique identification of e-Mobility account/customer requesting this reservation.</param>
         /// <param name="ChargingProductId">An optional unique identification of the charging product to be reserved.</param>
         /// <param name="AuthTokens">A list of authentication tokens, who can use this reservation.</param>
         /// <param name="eMAIds">A list of eMobility account identifications, who can use this reservation.</param>
         /// <param name="PINs">A list of PINs, who can be entered into a pinpad to use this reservation.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
-        public override async Task<ReservationResult>
+        public override Task<ReservationResult>
 
             Reserve(DateTime                 Timestamp,
                     CancellationToken        CancellationToken,
@@ -804,11 +1089,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     IEnumerable<UInt32>      PINs               = null,
                     TimeSpan?                QueryTimeout       = null)
 
-        {
-
-            return ReservationResult.Error();
-
-        }
+            => Task.FromResult(ReservationResult.Error("OICPv2.0 does not support reservations!"));
 
         #endregion
 
@@ -822,10 +1103,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ReservationId">The unique charging reservation identification.</param>
         /// <param name="Reason">A reason for this cancellation.</param>
-        /// <param name="ProviderId">An optional unique identification of e-Mobility service provider.</param>
+        /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
         /// <param name="EVSEId">An optional identification of the EVSE.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
-        public override async Task<CancelReservationResult>
+        public override Task<CancelReservationResult>
 
             CancelReservation(DateTime                               Timestamp,
                               CancellationToken                      CancellationToken,
@@ -836,11 +1117,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               EVSE_Id                                EVSEId        = null,
                               TimeSpan?                              QueryTimeout  = null)
 
-        {
-
-            return CancelReservationResult.Error();
-
-        }
+            => Task.FromResult(CancelReservationResult.Error("OICPv2.0 does not support reservations!"));
 
         #endregion
 
@@ -853,12 +1130,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
         /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
-        /// <param name="ChargingProductId">The unique identification of the choosen charging product.</param>
-        /// <param name="ReservationId">The unique identification for a charging reservation.</param>
-        /// <param name="SessionId">The unique identification for this charging session.</param>
-        /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="EVSEId">The unique identification of the EVSE to be started remotely.</param>
+        /// <param name="ChargingProductId">An optional identification of the charging product to use.</param>
+        /// <param name="Duration">An optional maximum time span to charge. When it is reached, the charging process will stop automatically.</param>
+        /// <param name="MaxEnergy">An optional maximum amount of energy to charge. When it is reached, the charging process will stop automatically.</param>
+        /// <param name="ReservationId">An optional identification of a charging reservation.</param>
+        /// <param name="SessionId">An optional identification of this charging session.</param>
+        /// <param name="ProviderId">An optional identification of the e-mobility service provider, whenever this identification is different from the current message sender.</param>
+        /// <param name="eMAId">An optional identification of the e-mobility account who wants to charge.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
         public override async Task<RemoteStartEVSEResult>
 
@@ -867,6 +1146,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                         EventTracking_Id        EventTrackingId,
                         EVSE_Id                 EVSEId,
                         ChargingProduct_Id      ChargingProductId  = null,
+//                      TimeSpan?               Duration           = null,
+//                      Double?                 MaxEnergy          = null,
                         ChargingReservation_Id  ReservationId      = null,
                         ChargingSession_Id      SessionId          = null,
                         EVSP_Id                 ProviderId         = null,
@@ -875,33 +1156,30 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         {
 
-            var result = await this._EMPRoaming.RemoteStart(Timestamp,
-                                                            CancellationToken,
-                                                            EventTrackingId,
-                                                            EVSEId,
-                                                            ProviderId,
-                                                            eMAId,
-                                                            SessionId,
-                                                            null,
-                                                            ChargingProductId,
-                                                            QueryTimeout);
+            var result = await EMPRoaming.RemoteStart(Timestamp:          Timestamp,
+                                                      CancellationToken:  CancellationToken,
+                                                      EventTrackingId:    EventTrackingId,
+                                                      EVSEId:             EVSEId,
+                                                      ProviderId:         ProviderId,
+                                                      eMAId:              eMAId,
+                                                      SessionId:          SessionId,
+                                                      PartnerSessionId:   null,
+                                                      PartnerProductId:   ChargingProductId,
+                                                      QueryTimeout:       QueryTimeout);
 
-            if (result.HTTPStatusCode == HTTPStatusCode.OK)
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null              &&
+                result.Content.Result)
             {
 
-                if (result.Content != null && result.Content.Result)
-                    return RemoteStartEVSEResult.Success(result.Content.SessionId != null
-                                                             ? new ChargingSession(result.Content.SessionId)
-                                                             : null);
+                return RemoteStartEVSEResult.Success(result.Content.SessionId != null
+                                                         ? new ChargingSession(result.Content.SessionId)
+                                                         : null);
 
             }
 
-            else
-            {
-                return RemoteStartEVSEResult.Error();
-            }
-
-            return RemoteStartEVSEResult.Error();
+            return RemoteStartEVSEResult.Error(result.HTTPStatusCode.ToString(),
+                                               result);
 
         }
 
@@ -915,11 +1193,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
         /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
-        /// <param name="SessionId">The unique identification for this charging session.</param>
+        /// <param name="EVSEId">The unique identification of the EVSE to be stopped remotely.</param>
+        /// <param name="SessionId">An optional identification of this charging session.</param>
         /// <param name="ReservationHandling">Wether to remove the reservation after session end, or to keep it open for some more time.</param>
-        /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
-        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="ProviderId">An optional identification of the e-mobility service provider, whenever this identification is different from the current message sender.</param>
+        /// <param name="eMAId">An optional identification of the e-mobility account who wants to stop charging.</param>
         /// <param name="QueryTimeout">An optional timeout for this request.</param>
         public override async Task<RemoteStopEVSEResult>
 
@@ -928,36 +1206,72 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                        EventTracking_Id     EventTrackingId,
                        EVSE_Id              EVSEId,
                        ChargingSession_Id   SessionId,
-                       ReservationHandling  ReservationHandling,
-                       EVSP_Id              ProviderId    = null,
-                       eMA_Id               eMAId         = null,
-                       TimeSpan?            QueryTimeout  = null)
+                       ReservationHandling  ReservationHandling  = null,
+                       EVSP_Id              ProviderId           = null,
+                       eMA_Id               eMAId                = null,
+                       TimeSpan?            QueryTimeout         = null)
 
         {
 
-            var result = await this._EMPRoaming.RemoteStop(Timestamp,
-                                                           CancellationToken,
-                                                           EventTrackingId,
-                                                           SessionId,
-                                                           ProviderId,
-                                                           EVSEId,
-                                                           null,
-                                                           QueryTimeout);
+            var result = await EMPRoaming.RemoteStop(Timestamp:          Timestamp,
+                                                     CancellationToken:  CancellationToken,
+                                                     EventTrackingId:    EventTrackingId,
+                                                     SessionId:          SessionId,
+                                                     ProviderId:         ProviderId,
+                                                     EVSEId:             EVSEId,
+                                                     PartnerSessionId:   null,
+                                                     QueryTimeout:       QueryTimeout);
 
-            if (result.HTTPStatusCode == HTTPStatusCode.OK)
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null              &&
+                result.Content.Result)
             {
 
-                if (result.Content != null && result.Content.Result)
-                    return RemoteStopEVSEResult.Success(SessionId);
+                return RemoteStopEVSEResult.Success(SessionId);
 
             }
 
-            else
+            return RemoteStopEVSEResult.Error(SessionId,
+                                              result.HTTPStatusCode.ToString(),
+                                              result);
+
+        }
+
+        #endregion
+
+
+        #region GetChargeDetailRecords(From, To, ProviderId = null, QueryTimeout = null)
+
+        /// <summary>
+        /// Download all charge detail records from the OICP server.
+        /// </summary>
+        /// <param name="From">The starting time.</param>
+        /// <param name="To">The end time.</param>
+        /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public override async Task<IEnumerable<WWCP.ChargeDetailRecord>>
+
+            GetChargeDetailRecords(DateTime   From,
+                                   DateTime   To,
+                                   EVSP_Id    ProviderId    = null,
+                                   TimeSpan?  QueryTimeout  = null)
+
+        {
+
+            var result = await EMPRoaming.GetChargeDetailRecords(ProviderId,
+                                                                 From,
+                                                                 To,
+                                                                 QueryTimeout);
+
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null)
             {
-                return RemoteStopEVSEResult.Error(SessionId);
+
+                return result.Content.SafeSelect(cdr => OICPMapper.AsWWCPChargeDetailRecord(cdr));
+
             }
 
-            return RemoteStopEVSEResult.Error(SessionId);
+            return new WWCP.ChargeDetailRecord[0];
 
         }
 

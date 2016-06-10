@@ -17,10 +17,11 @@
 
 #region Usings
 
-using org.GraphDefined.Vanaheimr.Illias;
 using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Collections.Generic;
+
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -28,46 +29,22 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A group of OICP v2.0 operator EVSE data records or a status code.
+    /// A group of OICP operator EVSE data records or a status code.
     /// </summary>
     public class eRoamingEVSEData
     {
 
         #region Properties
 
-        #region OperatorEVSEData
-
-        private readonly IEnumerable<OperatorEVSEData> _OperatorEVSEData;
-
         /// <summary>
         /// An enumeration of EVSE data records grouped by their operators.
         /// </summary>
-        public IEnumerable<OperatorEVSEData> OperatorEVSEData
-        {
-            get
-            {
-                return _OperatorEVSEData;
-            }
-        }
-
-        #endregion
-
-        #region StatusCode
-
-        private readonly StatusCode _StatusCode;
+        public IEnumerable<OperatorEVSEData>  OperatorEVSEData  { get; }
 
         /// <summary>
         /// The status code for this request.
         /// </summary>
-        public StatusCode StatusCode
-        {
-            get
-            {
-                return _StatusCode;
-            }
-        }
-
-        #endregion
+        public StatusCode                     StatusCode        { get; }
 
         #endregion
 
@@ -76,7 +53,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region eRoamingEVSEData(OperatorEVSEData, StatusCode  = null)
 
         /// <summary>
-        /// Create a new group of OICP v2.0 operator EVSE data records or a status code.
+        /// Create a new group of OICP operator EVSE data records or a status code.
         /// </summary>
         /// <param name="OperatorEVSEData">An enumeration of EVSE data records grouped by their operators.</param>
         /// <param name="StatusCode">An optional status code for this request.</param>
@@ -91,8 +68,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            this._OperatorEVSEData  = OperatorEVSEData;
-            this._StatusCode        = StatusCode != null ? StatusCode : new StatusCode(0);
+            this.OperatorEVSEData  = OperatorEVSEData;
+            this.StatusCode        = StatusCode != null ? StatusCode : new StatusCode(0);
 
         }
 
@@ -101,14 +78,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region eRoamingEVSEData(StatusCode)
 
         /// <summary>
-        /// Create a new group of OICP v2.0 operator EVSE data records or a status code.
+        /// Create a new group of OICP operator EVSE data records or a status code.
         /// </summary>
         /// <pparam name="StatusCode">The status code for this request.</pparam>
         public eRoamingEVSEData(StatusCode  StatusCode)
         {
 
-            this._OperatorEVSEData  = new OperatorEVSEData[0];
-            this._StatusCode        = StatusCode != null ? StatusCode : new StatusCode(-1);
+            this.OperatorEVSEData  = new OperatorEVSEData[0];
+            this.StatusCode        = StatusCode != null ? StatusCode : new StatusCode(-1);
 
         }
 
@@ -193,7 +170,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         #endregion
-
 
     }
 

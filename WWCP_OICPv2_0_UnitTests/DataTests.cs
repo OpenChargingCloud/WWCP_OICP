@@ -42,8 +42,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
             var EVSEDataRecords = Enumeration.Create(
 
                 new EVSEDataRecord(
+                    EVSE_Id.Parse("DE*GEF*E123456789*2"),
+                    "",
+                    DateTime.Now,
                     EVSEOperator:         RN.CreateNewEVSEOperator(EVSEOperator_Id.Parse("TEST"), I18NString.Create(Languages.de, "TEST")),
-                    EVSEId:               EVSE_Id.Parse("DE*GEF*E123456789*2"),
                     ChargingStationId:    ChargingStation_Id.Parse("DE*GEF*S123456789").ToString(),
                     ChargingStationName:  I18NString.Create(Languages.de, "Testbox 1").
                                                         Add(Languages.en, "Testbox One"),
@@ -55,25 +57,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
                                           ),
 
                     GeoCoordinate:        GeoCoordinate.Create(
-                                              Latitude.Parse(49.731102),
+                                              Latitude. Parse(49.731102),
                                               Longitude.Parse(10.142530)
                                           ),
 
-                    Plugs:                Enumeration.Create(
-                                              PlugTypes.TypeFSchuko,
-                                              PlugTypes.Type2Outlet
-                                          ),
+                    Plugs:                PlugTypes.TypeFSchuko|
+                                          PlugTypes.Type2Outlet,
 
-                    AuthenticationModes:  Enumeration.Create(
-                                              AuthenticationModes.NFC_RFID_Classic,
-                                              AuthenticationModes.NFC_RFID_DESFire,
-                                              AuthenticationModes.REMOTE
-                                          ),
+                    AuthenticationModes:  AuthenticationModes.NFC_RFID_Classic|
+                                          AuthenticationModes.NFC_RFID_DESFire|
+                                          AuthenticationModes.REMOTE,
 
-                    PaymentOptions:       Enumeration.Create(
-                                              PaymentOptions.Contract,
-                                              PaymentOptions.Direct
-                                          ),
+                    PaymentOptions:       PaymentOptions.Contract|
+                                          PaymentOptions.Direct,
 
                     Accessibility:        AccessibilityTypes.Paying_publicly_accessible,
 

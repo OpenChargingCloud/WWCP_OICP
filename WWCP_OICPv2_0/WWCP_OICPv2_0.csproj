@@ -72,6 +72,9 @@
     <Compile Include="MobileClient\MobileClient.cs" />
     <Compile Include="Objects\Data\AuthenticationModes.cs" />
     <Compile Include="Objects\Data\ChargingFacilities.cs" />
+    <Compile Include="Objects\Data\ChargingModes.cs" />
+    <Compile Include="Objects\Data\PaymentOptions.cs" />
+    <Compile Include="Objects\Data\PlugTypes.cs" />
     <Compile Include="Objects\EVSEStatusRecord.cs" />
     <Compile Include="Objects\Data\AuthorizationIdentification.cs" />
     <Compile Include="Objects\Data\eMAIdWithPIN.cs" />

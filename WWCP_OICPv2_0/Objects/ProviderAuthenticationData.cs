@@ -18,13 +18,10 @@
 #region Usings
 
 using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-
 using System.Linq;
-using System.Globalization;
+using System.Xml.Linq;
+using System.Collections.Generic;
 
-using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -40,39 +37,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Properties
 
-        #region ProviderId
-
-        private readonly EVSP_Id _ProviderId;
-
         /// <summary>
         /// The unique identification of an Electric Vehicle Service Provider.
         /// </summary>
-        public EVSP_Id ProviderId
-        {
-            get
-            {
-                return _ProviderId;
-            }
-        }
-
-        #endregion
-
-        #region AuthorizationIdentifications
-
-        private readonly IEnumerable<AuthorizationIdentification> _AuthorizationIdentifications;
+        public EVSP_Id                                   ProviderId                    { get; }
 
         /// <summary>
         /// An enumeration of authorization identifications records.
         /// </summary>
-        public IEnumerable<AuthorizationIdentification> AuthorizationIdentifications
-        {
-            get
-            {
-                return _AuthorizationIdentifications;
-            }
-        }
-
-        #endregion
+        public IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications  { get; }
 
         #endregion
 
@@ -90,12 +63,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ProviderId == null)
-                throw new ArgumentNullException("ProviderId", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(ProviderId),  "The given provider identification must not be null!");
 
             #endregion
 
-            this._ProviderId                    = ProviderId;
-            this._AuthorizationIdentifications  = AuthorizationIdentifications != null ? AuthorizationIdentifications : new AuthorizationIdentification[0];
+            this.ProviderId                    = ProviderId;
+            this.AuthorizationIdentifications  = AuthorizationIdentifications != null ? AuthorizationIdentifications : new AuthorizationIdentification[0];
 
         }
 

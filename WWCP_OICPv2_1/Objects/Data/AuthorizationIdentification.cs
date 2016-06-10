@@ -33,61 +33,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region AuthToken
+        /// <summary>
+        /// An authentication token.
+        /// </summary>
+        public Auth_Token    AuthToken                    { get; }
 
-        private readonly Auth_Token _AuthToken;
+        /// <summary>
+        /// An e-mobility account identification and its PIN.
+        /// </summary>
+        public eMAIdWithPIN  QRCodeIdentification         { get; }
 
-        public Auth_Token AuthToken
-        {
-            get
-            {
-                return _AuthToken;
-            }
-        }
+        /// <summary>
+        /// An e-mobility account identification (PnC).
+        /// </summary>
+        public eMA_Id        PlugAndChargeIdentification  { get; }
 
-        #endregion
-
-        #region QRCodeIdentification
-
-        private readonly eMAIdWithPIN _QRCodeIdentification;
-
-        public eMAIdWithPIN QRCodeIdentification
-        {
-            get
-            {
-                return _QRCodeIdentification;
-            }
-        }
-
-        #endregion
-
-        #region PlugAndChargeIdentification
-
-        private readonly eMA_Id _PlugAndChargeIdentification;
-
-        public eMA_Id PlugAndChargeIdentification
-        {
-            get
-            {
-                return _PlugAndChargeIdentification;
-            }
-        }
-
-        #endregion
-
-        #region RemoteIdentification
-
-        private readonly eMA_Id _RemoteIdentification;
-
-        public eMA_Id RemoteIdentification
-        {
-            get
-            {
-                return _RemoteIdentification;
-            }
-        }
-
-        #endregion
+        /// <summary>
+        /// An e-mobility account identification.
+        /// </summary>
+        public eMA_Id        RemoteIdentification         { get; }
 
         #endregion
 
@@ -97,7 +61,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         private AuthorizationIdentification(Auth_Token  AuthToken)
         {
-            this._AuthToken                     = AuthToken;
+            this.AuthToken                     = AuthToken;
         }
 
         #endregion
@@ -106,7 +70,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         private AuthorizationIdentification(eMAIdWithPIN QRCodeIdentification)
         {
-            this._QRCodeIdentification = QRCodeIdentification;
+            this.QRCodeIdentification = QRCodeIdentification;
         }
 
         #endregion
@@ -116,7 +80,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         private AuthorizationIdentification(eMA_Id PlugAndChargeIdentification,
                                            Boolean IsPnC)
         {
-            this._PlugAndChargeIdentification   = PlugAndChargeIdentification;
+            this.PlugAndChargeIdentification   = PlugAndChargeIdentification;
         }
 
         #endregion
@@ -125,7 +89,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         private AuthorizationIdentification(eMA_Id RemoteIdentification)
         {
-            this._RemoteIdentification          = RemoteIdentification;
+            this.RemoteIdentification          = RemoteIdentification;
         }
 
         #endregion
@@ -136,15 +100,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public AuthorizationIdentification(AuthInfo AuthInfo)
         {
 
-            this._AuthToken                    = AuthInfo.AuthToken;
-            this._QRCodeIdentification         = AuthInfo.QRCodeIdentification != null
-                                                     ? new eMAIdWithPIN(AuthInfo.QRCodeIdentification.eMAId,
-                                                                        AuthInfo.QRCodeIdentification.PIN,
-                                                                        AuthInfo.QRCodeIdentification.Function,
-                                                                        AuthInfo.QRCodeIdentification.Salt)
-                                                     : null;
-            this._PlugAndChargeIdentification  = AuthInfo.PlugAndChargeIdentification;
-            this._RemoteIdentification         = AuthInfo.RemoteIdentification;
+            this.AuthToken                    = AuthInfo.AuthToken;
+            this.QRCodeIdentification         = AuthInfo.QRCodeIdentification != null
+                                                    ? new eMAIdWithPIN(AuthInfo.QRCodeIdentification.eMAId,
+                                                                       AuthInfo.QRCodeIdentification.PIN,
+                                                                       AuthInfo.QRCodeIdentification.Function,
+                                                                       AuthInfo.QRCodeIdentification.Salt)
+                                                    : null;
+            this.PlugAndChargeIdentification  = AuthInfo.PlugAndChargeIdentification;
+            this.RemoteIdentification         = AuthInfo.RemoteIdentification;
 
         }
 
@@ -255,23 +219,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return new XElement(XMLNamespace + "Identification",
 
-                _AuthToken != null
+                AuthToken != null
                     ? new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                          new XElement(OICPNS.CommonTypes + "UID", _AuthToken.ToString()))
+                          new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString()))
                     : null,
 
-                _QRCodeIdentification != null
-                    ? _QRCodeIdentification.ToXML()
+                QRCodeIdentification != null
+                    ? QRCodeIdentification.ToXML()
                     : null,
 
-                _PlugAndChargeIdentification != null
+                PlugAndChargeIdentification != null
                     ? new XElement(OICPNS.CommonTypes + "PlugAndChargeIdentification",
-                          new XElement(OICPNS.CommonTypes + "EVCOID", _PlugAndChargeIdentification.ToString()))
+                          new XElement(OICPNS.CommonTypes + "EVCOID", PlugAndChargeIdentification.ToString()))
                     : null,
 
-                _RemoteIdentification != null
+                RemoteIdentification != null
                     ? new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                          new XElement(OICPNS.CommonTypes + "EVCOID", _RemoteIdentification.ToString()))
+                          new XElement(OICPNS.CommonTypes + "EVCOID", RemoteIdentification.ToString()))
                     : null);
 
         }
@@ -287,17 +251,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public override String ToString()
         {
 
-            if (_AuthToken != null)
-                return _AuthToken.ToString();
+            if (AuthToken != null)
+                return AuthToken.ToString();
 
-            if (_QRCodeIdentification != null)
-                return _QRCodeIdentification.ToString();
+            if (QRCodeIdentification != null)
+                return QRCodeIdentification.ToString();
 
-            if (_PlugAndChargeIdentification != null)
-                return _PlugAndChargeIdentification.ToString();
+            if (PlugAndChargeIdentification != null)
+                return PlugAndChargeIdentification.ToString();
 
-            if (_RemoteIdentification != null)
-                return _RemoteIdentification.ToString();
+            if (RemoteIdentification != null)
+                return RemoteIdentification.ToString();
 
             return String.Empty;
 

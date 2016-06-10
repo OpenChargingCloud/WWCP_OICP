@@ -15,12 +15,19 @@
  * limitations under the License.
  */
 
+#region Usings
+
+using System;
+
+#endregion
+
 namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
     /// Charging facilities
     /// </summary>
+    [Flags]
     public enum ChargingFacilities
     {
 

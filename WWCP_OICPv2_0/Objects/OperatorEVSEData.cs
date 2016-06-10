@@ -18,13 +18,10 @@
 #region Usings
 
 using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-
 using System.Linq;
-using System.Globalization;
+using System.Xml.Linq;
+using System.Collections.Generic;
 
-using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -33,70 +30,34 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A group of OICP v2.0 EVSE data records.
+    /// A group of OICP EVSE data records.
     /// </summary>
     public class OperatorEVSEData
     {
 
         #region Properties
 
-        #region OperatorId
-
-        private readonly EVSEOperator_Id _OperatorId;
-
         /// <summary>
         /// The unique identification of an Electric Vehicle Supply Equipment Operator.
         /// </summary>
-        public EVSEOperator_Id OperatorId
-        {
-            get
-            {
-                return _OperatorId;
-            }
-        }
-
-        #endregion
-
-        #region OperatorName
-
-        private readonly I18NString _OperatorName;
+        public EVSEOperator_Id              OperatorId        { get; }
 
         /// <summary>
         /// The name of an Electric Vehicle Supply Equipment Operator.
         /// </summary>
-        public I18NString OperatorName
-        {
-            get
-            {
-                return _OperatorName;
-            }
-        }
-
-        #endregion
-
-        #region EVSEDataRecords
-
-        private readonly IEnumerable<EVSEDataRecord> _EVSEDataRecords;
+        public I18NString                   OperatorName      { get; }
 
         /// <summary>
         /// An enumeration of EVSE data records.
         /// </summary>
-        public IEnumerable<EVSEDataRecord> EVSEDataRecords
-        {
-            get
-            {
-                return _EVSEDataRecords;
-            }
-        }
-
-        #endregion
+        public IEnumerable<EVSEDataRecord>  EVSEDataRecords   { get; }
 
         #endregion
 
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new group of OICP v2.0 EVSE data records.
+        /// Create a new group of OICP EVSE data records.
         /// </summary>
         /// <param name="OperatorId">The unique identification of an Electric Vehicle Supply Equipment Operator.</param>
         /// <param name="OperatorName">The name of an Electric Vehicle Supply Equipment Operator.</param>
@@ -113,9 +74,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            this._OperatorId       = OperatorId;
-            this._OperatorName     = OperatorName    != null ? OperatorName    : new I18NString();
-            this._EVSEDataRecords  = EVSEDataRecords != null ? EVSEDataRecords : new EVSEDataRecord[0];
+            this.OperatorId       = OperatorId;
+            this.OperatorName     = OperatorName    != null ? OperatorName    : new I18NString();
+            this.EVSEDataRecords  = EVSEDataRecords != null ? EVSEDataRecords : new EVSEDataRecord[0];
 
         }
 

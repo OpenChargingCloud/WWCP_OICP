@@ -29,63 +29,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The current status of an OICP v2.0 Electric Vehicle Supply Equipment.
+    /// The current status of an OICP Electric Vehicle Supply Equipment.
     /// </summary>
     public class EVSEStatusRecord
     {
 
         #region Properties
 
-        #region EVSE
-
-        private readonly EVSE _EVSE;
-
         /// <summary>
         /// The related the Electric Vehicle Supply Equipment (EVSE).
         /// </summary>
-        public EVSE EVSE
-        {
-            get
-            {
-                return _EVSE;
-            }
-        }
-
-        #endregion
-
-        #region Id
-
-        private readonly EVSE_Id _Id;
+        public EVSE            EVSE     { get; }
 
         /// <summary>
         /// The unique identification of an EVSE.
         /// </summary>
-        public EVSE_Id Id
-        {
-            get
-            {
-                return _Id;
-            }
-        }
-
-        #endregion
-
-        #region Status
-
-        private readonly EVSEStatusType _Status;
+        public EVSE_Id         Id       { get; }
 
         /// <summary>
         /// The current status of an EVSE.
         /// </summary>
-        public EVSEStatusType Status
-        {
-            get
-            {
-                return _Status;
-            }
-        }
-
-        #endregion
+        public EVSEStatusType  Status   { get; }
 
         #endregion
 
@@ -94,7 +58,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region EVSEStatusRecord(EVSE)
 
         /// <summary>
-        /// Create a new OICPv2.0 EVSE status record and store
+        /// Create a new OICP EVSE status record and store
         /// a reference to the given EVSE.
         /// </summary>
         /// <param name="EVSE">The current status of an EVSE.</param>
@@ -105,13 +69,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (EVSE == null)
-                throw new ArgumentNullException("EVSE", "The given EVSE must not be null!");
+                throw new ArgumentNullException(nameof(EVSE),  "The given EVSE must not be null!");
 
             #endregion
 
-            this._EVSE    = EVSE;
-            this._Id      = EVSE.Id;
-            this._Status  = OICPMapper.AsOICPEVSEStatus(EVSE.Status.Value);
+            this.EVSE    = EVSE;
+            this.Id      = EVSE.Id;
+            this.Status  = OICPMapper.AsOICPEVSEStatus(EVSE.Status.Value);
 
         }
 
@@ -120,7 +84,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region EVSEStatusRecord(Id, Status)
 
         /// <summary>
-        /// Create a new OICPv2.0 EVSE status record.
+        /// Create a new OICP EVSE status record.
         /// </summary>
         /// <param name="Id">The unique identification of an EVSE.</param>
         /// <param name="Status">The current status of an EVSE.</param>
@@ -132,12 +96,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (Id == null)
-                throw new ArgumentNullException(nameof(Id), "The given unique identification of an EVSE must not be null!");
+                throw new ArgumentNullException(nameof(Id),  "The given unique identification of an EVSE must not be null!");
 
             #endregion
 
-            this._Id      = Id;
-            this._Status  = Status;
+            this.Id      = Id;
+            this.Status  = Status;
 
         }
 
@@ -231,8 +195,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
-                       new XElement(OICPNS.EVSEStatus + "EvseId",     _Id.    OriginId),
-                       new XElement(OICPNS.EVSEStatus + "EvseStatus", _Status.ToString())
+                       new XElement(OICPNS.EVSEStatus + "EvseId",     Id.    OriginId),
+                       new XElement(OICPNS.EVSEStatus + "EvseStatus", Status.ToString())
                    );
 
         }
@@ -246,7 +210,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public KeyValuePair<EVSE_Id, EVSEStatusType> ToKeyValuePair()
         {
-            return new KeyValuePair<EVSE_Id, EVSEStatusType>(_Id, _Status);
+            return new KeyValuePair<EVSE_Id, EVSEStatusType>(Id, Status);
         }
 
         #endregion

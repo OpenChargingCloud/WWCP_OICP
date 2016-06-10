@@ -30,46 +30,22 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A group of OICP v2.0 operator EVSE status records or a status code.
+    /// A group of OICP operator EVSE status records or a status code.
     /// </summary>
     public class eRoamingEVSEStatusById
     {
 
         #region Properties
 
-        #region EVSEStatusRecords
-
-        private readonly IEnumerable<EVSEStatusRecord> _EVSEStatusRecords;
-
         /// <summary>
         /// An enumeration of EVSE status records.
         /// </summary>
-        public IEnumerable<EVSEStatusRecord> EVSEStatusRecords
-        {
-            get
-            {
-                return _EVSEStatusRecords;
-            }
-        }
-
-        #endregion
-
-        #region StatusCode
-
-        private readonly StatusCode _StatusCode;
+        public IEnumerable<EVSEStatusRecord>  EVSEStatusRecords   { get; }
 
         /// <summary>
         /// The status code for this request.
         /// </summary>
-        public StatusCode StatusCode
-        {
-            get
-            {
-                return _StatusCode;
-            }
-        }
-
-        #endregion
+        public StatusCode                     StatusCode          { get; }
 
         #endregion
 
@@ -78,7 +54,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region eRoamingEVSEStatusById(OperatorEVSEStatus, StatusCode  = null)
 
         /// <summary>
-        /// Create a new group of OICP v2.0 operator EVSE status records or a status code.
+        /// Create a new group of OICP operator EVSE status records or a status code.
         /// </summary>
         /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
         /// <param name="StatusCode">An optional status code for this request.</param>
@@ -89,12 +65,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (EVSEStatusRecords == null)
-                throw new ArgumentNullException("EVSEStatusRecords", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(EVSEStatusRecords),  "The given enumeration of EVSE status records must not be null!");
 
             #endregion
 
-            this._EVSEStatusRecords  = EVSEStatusRecords;
-            this._StatusCode          = StatusCode != null ? StatusCode : new StatusCode(0);
+            this.EVSEStatusRecords  = EVSEStatusRecords;
+            this.StatusCode         = StatusCode != null ? StatusCode : new StatusCode(0);
 
         }
 
@@ -103,14 +79,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region eRoamingEVSEStatus(StatusCode)
 
         /// <summary>
-        /// Create a new group of OICP v2.0 operator EVSE status records or a status code.
+        /// Create a new group of OICP operator EVSE status records or a status code.
         /// </summary>
         /// <pparam name="StatusCode">The status code for this request.</pparam>
         public eRoamingEVSEStatusById(StatusCode StatusCode)
         {
 
-            this._EVSEStatusRecords  = new EVSEStatusRecord[0];
-            this._StatusCode         = StatusCode != null ? StatusCode : new StatusCode(-1);
+            this.EVSEStatusRecords  = new EVSEStatusRecord[0];
+            this.StatusCode         = StatusCode != null ? StatusCode : new StatusCode(-1);
 
         }
 

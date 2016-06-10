@@ -35,7 +35,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.1 roaming client for EMPs.
+    /// An OICP roaming client for EMPs.
     /// </summary>
     public class EMPRoaming
     {
@@ -44,86 +44,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region AuthorizatorId
 
-        private readonly Authorizator_Id _AuthorizatorId;
-
-        public Authorizator_Id AuthorizatorId
-        {
-            get
-            {
-                return _AuthorizatorId;
-            }
-        }
+        public Authorizator_Id AuthorizatorId { get; }
 
         #endregion
 
 
-        #region EMPClient
-
-        private readonly EMPClient _EMPClient;
+        #region EMPClient/-Server
 
         /// <summary>
         /// The EMP client part.
         /// </summary>
-        public EMPClient EMPClient
-        {
-            get
-            {
-                return _EMPClient;
-            }
-        }
-
-        #endregion
-
-        #region EMPServer
-
-        private readonly EMPServer _EMPServer;
+        public EMPClient        EMPClient         { get; }
 
         /// <summary>
         /// The EMP server part.
         /// </summary>
-        public EMPServer EMPServer
-        {
-            get
-            {
-                return _EMPServer;
-            }
-        }
-
-        #endregion
-
-        #region EMPClientLogger
-
-        private readonly EMPClientLogger _EMPClientLogger;
+        public EMPServer        EMPServer         { get; }
 
         /// <summary>
         /// The EMP client logger.
         /// </summary>
-        public EMPClientLogger EMPClientLogger
-        {
-            get
-            {
-                return _EMPClientLogger;
-            }
-        }
-
-        #endregion
-
-        #region EMPServerLogger
-
-        private readonly EMPServerLogger _EMPServerLogger;
+        public EMPClientLogger  EMPClientLogger   { get; }
 
         /// <summary>
         /// The EMP server logger.
         /// </summary>
-        public EMPServerLogger EMPServerLogger
-        {
-            get
-            {
-                return _EMPServerLogger;
-            }
-        }
+        public EMPServerLogger  EMPServerLogger   { get; }
 
         #endregion
+
 
         #region DNSClient
 
@@ -131,12 +80,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// The DNS client defines which DNS servers to use.
         /// </summary>
         public DNSClient DNSClient
-        {
-            get
-            {
-                return _EMPServer.DNSClient;
-            }
-        }
+            => EMPServer.DNSClient;
 
         #endregion
 
@@ -160,12 +104,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             add
             {
-                _EMPServer.OnLogAuthorizeStart += value;
+                EMPServer.OnLogAuthorizeStart += value;
             }
 
             remove
             {
-                _EMPServer.OnLogAuthorizeStart -= value;
+                EMPServer.OnLogAuthorizeStart -= value;
             }
 
         }
@@ -178,12 +122,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             add
             {
-                _EMPServer.OnLogAuthorizeStarted += value;
+                EMPServer.OnLogAuthorizeStarted += value;
             }
 
             remove
             {
-                _EMPServer.OnLogAuthorizeStarted -= value;
+                EMPServer.OnLogAuthorizeStarted -= value;
             }
 
         }
@@ -196,12 +140,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             add
             {
-                _EMPServer.OnAuthorizeStart += value;
+                EMPServer.OnAuthorizeStart += value;
             }
 
             remove
             {
-                _EMPServer.OnAuthorizeStart -= value;
+                EMPServer.OnAuthorizeStart -= value;
             }
 
         }
@@ -218,12 +162,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             add
             {
-                _EMPServer.OnLogAuthorizeStop += value;
+                EMPServer.OnLogAuthorizeStop += value;
             }
 
             remove
             {
-                _EMPServer.OnLogAuthorizeStop -= value;
+                EMPServer.OnLogAuthorizeStop -= value;
             }
 
         }
@@ -236,12 +180,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             add
             {
-                _EMPServer.OnLogAuthorizeStopped += value;
+                EMPServer.OnLogAuthorizeStopped += value;
             }
 
             remove
             {
-                _EMPServer.OnLogAuthorizeStopped -= value;
+                EMPServer.OnLogAuthorizeStopped -= value;
             }
 
         }
@@ -254,12 +198,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             add
             {
-                _EMPServer.OnAuthorizeStop += value;
+                EMPServer.OnAuthorizeStop += value;
             }
 
             remove
             {
-                _EMPServer.OnAuthorizeStop -= value;
+                EMPServer.OnAuthorizeStop -= value;
             }
 
         }
@@ -276,12 +220,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             add
             {
-                _EMPServer.OnLogChargeDetailRecordSend += value;
+                EMPServer.OnLogChargeDetailRecordSend += value;
             }
 
             remove
             {
-                _EMPServer.OnLogChargeDetailRecordSend -= value;
+                EMPServer.OnLogChargeDetailRecordSend -= value;
             }
 
         }
@@ -294,12 +238,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             add
             {
-                _EMPServer.OnLogChargeDetailRecordSent += value;
+                EMPServer.OnLogChargeDetailRecordSent += value;
             }
 
             remove
             {
-                _EMPServer.OnLogChargeDetailRecordSent -= value;
+                EMPServer.OnLogChargeDetailRecordSent -= value;
             }
 
         }
@@ -312,12 +256,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             add
             {
-                _EMPServer.OnChargeDetailRecord += value;
+                EMPServer.OnChargeDetailRecord += value;
             }
 
             remove
             {
-                _EMPServer.OnChargeDetailRecord -= value;
+                EMPServer.OnChargeDetailRecord -= value;
             }
 
         }
@@ -345,10 +289,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           Func<String, String, String>  LogFileCreator  = null)
         {
 
-            this._EMPClient        = EMPClient;
-            this._EMPServer        = EMPServer;
-            this._EMPClientLogger  = new EMPClientLogger(_EMPClient, ClientLoggingContext, LogFileCreator);
-            this._EMPServerLogger  = new EMPServerLogger(_EMPServer, ServerLoggingContext, LogFileCreator);
+            this.EMPClient        = EMPClient;
+            this.EMPServer        = EMPServer;
+            this.EMPClientLogger  = new EMPClientLogger(EMPClient, ClientLoggingContext, LogFileCreator);
+            this.EMPServerLogger  = new EMPServerLogger(EMPServer, ServerLoggingContext, LogFileCreator);
 
         }
 
@@ -439,7 +383,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingEVSEData>
+        public async Task<HTTPResponse<eRoamingEVSEData>>
 
             PullEVSEData(EVSP_Id           ProviderId,
                          GeoCoordinate     SearchCenter  = null,
@@ -447,18 +391,43 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          DateTime?         LastCall      = null,
                          TimeSpan?         QueryTimeout  = null)
 
-        {
+            => await EMPClient.PullEVSEData(ProviderId,
+                                             SearchCenter,
+                                             DistanceKM,
+                                             LastCall,
+                                             QueryTimeout);
 
-            var result = await _EMPClient.PullEVSEData(ProviderId,
-                                                       SearchCenter,
-                                                       DistanceKM,
-                                                       LastCall,
-                                                       QueryTimeout);
+        #endregion
 
-            //ToDo: Process the HTTP!
-            return result.Content;
+        #region SearchEVSE(ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null, QueryTimeout = null)
 
-        }
+        /// <summary>
+        /// Create a new Search EVSE request.
+        /// </summary>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="SearchCenter">An optional geocoordinate of the search center.</param>
+        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
+        /// <param name="Address">An optional address of the charging stations.</param>
+        /// <param name="Plug">Optional plugs of the charging station.</param>
+        /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<eRoamingEvseSearchResult>>
+
+            SearchEVSE(EVSP_Id              ProviderId,
+                       GeoCoordinate        SearchCenter      = null,
+                       Double               DistanceKM        = 0.0,
+                       Address              Address           = null,
+                       PlugTypes?           Plug              = null,
+                       ChargingFacilities?  ChargingFacility  = null,
+                       TimeSpan?            QueryTimeout      = null)
+
+            => await EMPClient.SearchEVSE(ProviderId,
+                                           SearchCenter,
+                                           DistanceKM,
+                                           Address,
+                                           Plug,
+                                           ChargingFacility,
+                                           QueryTimeout);
 
         #endregion
 
@@ -473,7 +442,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingEVSEStatus>
+        public async Task<HTTPResponse<eRoamingEVSEStatus>>
 
             PullEVSEStatus(EVSP_Id          ProviderId,
                            GeoCoordinate    SearchCenter      = null,
@@ -481,18 +450,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            EVSEStatusType?  EVSEStatusFilter  = null,
                            TimeSpan?        QueryTimeout      = null)
 
-        {
-
-            var result = await _EMPClient.PullEVSEStatus(ProviderId,
-                                                         SearchCenter,
-                                                         DistanceKM,
-                                                         EVSEStatusFilter,
-                                                         QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
+            => await EMPClient.PullEVSEStatus(ProviderId,
+                                               SearchCenter,
+                                               DistanceKM,
+                                               EVSEStatusFilter,
+                                               QueryTimeout);
 
         #endregion
 
@@ -504,62 +466,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingEVSEStatusById>
+        public async Task<HTTPResponse<eRoamingEVSEStatusById>>
 
             PullEVSEStatusById(EVSP_Id               ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
                                TimeSpan?             QueryTimeout = null)
 
-        {
-
-            var result = await _EMPClient.PullEVSEStatusById(ProviderId,
-                                                             EVSEIds,
-                                                             QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
-
-        #endregion
-
-
-        #region SearchEVSE(ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null, QueryTimeout = null)
-
-        /// <summary>
-        /// Create a new Search EVSE request.
-        /// </summary>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="SearchCenter">An optional geocoordinate of the search center.</param>
-        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
-        /// <param name="Address">An optional address of the charging stations.</param>
-        /// <param name="Plug">Optional plugs of the charging station.</param>
-        /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingEvseSearchResult>
-
-            SearchEVSE(EVSP_Id              ProviderId,
-                       GeoCoordinate        SearchCenter      = null,
-                       Double               DistanceKM        = 0.0,
-                       Address              Address           = null,
-                       PlugTypes?           Plug              = null,
-                       ChargingFacilities?  ChargingFacility  = null,
-                       TimeSpan?            QueryTimeout      = null)
-
-        {
-
-            var result = await _EMPClient.SearchEVSE(ProviderId,
-                                                     SearchCenter,
-                                                     DistanceKM,
-                                                     Address,
-                                                     Plug,
-                                                     ChargingFacility,
-                                                     QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
+            => await EMPClient.PullEVSEStatusById(ProviderId,
+                                                   EVSEIds,
+                                                   QueryTimeout);
 
         #endregion
 
@@ -572,22 +487,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingAcknowledgement>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
                                    ActionType                               OICPAction    = ActionType.fullLoad,
                                    TimeSpan?                                QueryTimeout  = null)
 
-        {
-
-            var result = await _EMPClient.PushAuthenticationData(ProviderAuthenticationDataRecords,
-                                                                 OICPAction,
-                                                                 QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
+            => await EMPClient.PushAuthenticationData(ProviderAuthenticationDataRecords,
+                                                       OICPAction,
+                                                       QueryTimeout);
 
         #endregion
 
@@ -600,55 +508,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingAcknowledgement>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
                                    EVSP_Id                                   ProviderId,
                                    ActionType                                OICPAction    = ActionType.fullLoad,
                                    TimeSpan?                                 QueryTimeout  = null)
 
-        {
-
-            var result = await _EMPClient.PushAuthenticationData(AuthorizationIdentifications,
-                                                                 ProviderId,
-                                                                 OICPAction,
-                                                                 QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
-
-        #endregion
-
-
-        #region GetChargeDetailRecords(ProviderId, From, To, QueryTimeout = null)
-
-        /// <summary>
-        /// Create a new task querying charge detail records from the OICP server.
-        /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="From">The starting time.</param>
-        /// <param name="To">The end time.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<IEnumerable<ChargeDetailRecord>>
-
-            GetChargeDetailRecords(EVSP_Id    ProviderId,
-                                   DateTime   From,
-                                   DateTime   To,
-                                   TimeSpan?  QueryTimeout  = null)
-
-        {
-
-            var result = await _EMPClient.GetChargeDetailRecords(ProviderId,
-                                                                 From,
-                                                                 To,
-                                                                 QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
+            => await EMPClient.PushAuthenticationData(AuthorizationIdentifications,
+                                                       ProviderId,
+                                                       OICPAction,
+                                                       QueryTimeout);
 
         #endregion
 
@@ -681,20 +551,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                              ChargingProduct_Id      PartnerProductId  = null,
                              TimeSpan?               QueryTimeout      = default(TimeSpan?))
 
-        {
-
-            return await this._EMPClient.ReservationStart(Timestamp,
-                                                          CancellationToken,
-                                                          EventTrackingId,
-                                                          ProviderId,
-                                                          EVSEId,
-                                                          eMAId,
-                                                          SessionId,
-                                                          PartnerSessionId,
-                                                          PartnerProductId,
-                                                          QueryTimeout);
-
-        }
+            => await this.EMPClient.ReservationStart(Timestamp,
+                                                      CancellationToken,
+                                                      EventTrackingId,
+                                                      ProviderId,
+                                                      EVSEId,
+                                                      eMAId,
+                                                      SessionId,
+                                                      PartnerSessionId,
+                                                      PartnerProductId,
+                                                      QueryTimeout);
 
         #endregion
 
@@ -722,18 +588,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             ChargingSession_Id   PartnerSessionId  = null,
                             TimeSpan?            QueryTimeout      = null)
 
-        {
-
-            return await this._EMPClient.ReservationStop(Timestamp,
-                                                         CancellationToken,
-                                                         EventTrackingId,
-                                                         SessionId,
-                                                         ProviderId,
-                                                         EVSEId,
-                                                         PartnerSessionId,
-                                                         QueryTimeout);
-
-        }
+            => await this.EMPClient.ReservationStop(Timestamp,
+                                                     CancellationToken,
+                                                     EventTrackingId,
+                                                     SessionId,
+                                                     ProviderId,
+                                                     EVSEId,
+                                                     PartnerSessionId,
+                                                     QueryTimeout);
 
         #endregion
 
@@ -766,20 +628,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         ChargingProduct_Id      PartnerProductId  = null,
                         TimeSpan?               QueryTimeout      = default(TimeSpan?))
 
-        {
-
-            return await this._EMPClient.RemoteStart(Timestamp,
-                                                     CancellationToken,
-                                                     EventTrackingId,
-                                                     ProviderId,
-                                                     EVSEId,
-                                                     eMAId,
-                                                     SessionId,
-                                                     PartnerSessionId,
-                                                     PartnerProductId,
-                                                     QueryTimeout);
-
-        }
+            => await this.EMPClient.RemoteStart(Timestamp,
+                                                 CancellationToken,
+                                                 EventTrackingId,
+                                                 ProviderId,
+                                                 EVSEId,
+                                                 eMAId,
+                                                 SessionId,
+                                                 PartnerSessionId,
+                                                 PartnerProductId,
+                                                 QueryTimeout);
 
         #endregion
 
@@ -807,18 +665,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                        ChargingSession_Id   PartnerSessionId  = null,
                        TimeSpan?            QueryTimeout      = null)
 
-        {
+            => await this.EMPClient.RemoteStop(Timestamp,
+                                                CancellationToken,
+                                                EventTrackingId,
+                                                SessionId,
+                                                ProviderId,
+                                                EVSEId,
+                                                PartnerSessionId,
+                                                QueryTimeout);
 
-            return await this._EMPClient.RemoteStop(Timestamp,
-                                                    CancellationToken,
-                                                    EventTrackingId,
-                                                    SessionId,
-                                                    ProviderId,
-                                                    EVSEId,
-                                                    PartnerSessionId,
-                                                    QueryTimeout);
+        #endregion
 
-        }
+
+        #region GetChargeDetailRecords(ProviderId, From, To, QueryTimeout = null)
+
+        /// <summary>
+        /// Create a new task querying charge detail records from the OICP server.
+        /// </summary>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="From">The starting time.</param>
+        /// <param name="To">The end time.</param>
+        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        public async Task<HTTPResponse<IEnumerable<ChargeDetailRecord>>>
+
+            GetChargeDetailRecords(EVSP_Id    ProviderId,
+                                   DateTime   From,
+                                   DateTime   To,
+                                   TimeSpan?  QueryTimeout  = null)
+
+            => await EMPClient.GetChargeDetailRecords(ProviderId,
+                                                       From,
+                                                       To,
+                                                       QueryTimeout);
 
         #endregion
 
@@ -827,7 +705,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         public void Start()
         {
-            _EMPServer.Start();
+            EMPServer.Start();
         }
 
         #endregion
@@ -836,7 +714,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         public void Shutdown(String Message = null, Boolean Wait = true)
         {
-            _EMPServer.Shutdown(Message, Wait);
+            EMPServer.Shutdown(Message, Wait);
         }
 
         #endregion

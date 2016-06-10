@@ -79,6 +79,9 @@
     <Compile Include="MobileClient\MobileClient_XMLMethods.cs" />
     <Compile Include="Objects\Data\ActionType.cs" />
     <Compile Include="Objects\Data\ChargingFacilities.cs" />
+    <Compile Include="Objects\Data\PlugTypes.cs" />
+    <Compile Include="Objects\Data\ChargingModes.cs" />
+    <Compile Include="Objects\Data\PaymentOptions.cs" />
     <Compile Include="Objects\Data\ValueAddedServices.cs" />
     <Compile Include="Objects\Data\AuthenticationModes.cs" />
     <Compile Include="Objects\Data\AuthorizationIdentification.cs" />
