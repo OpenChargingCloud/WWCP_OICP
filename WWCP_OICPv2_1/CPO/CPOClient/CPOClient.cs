@@ -934,7 +934,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAuthorizationStop>>
 
-            AuthorizeStop(EVSEOperator_Id      OperatorId,
+            AuthorizeStop(DateTime             Timestamp,
+                          CancellationToken    CancellationToken,
+                          EventTracking_Id     EventTrackingId,
+                          EVSEOperator_Id      OperatorId,
                           ChargingSession_Id   SessionId,
                           Auth_Token           AuthToken,
                           EVSE_Id              EVSEId            = null,
@@ -942,6 +945,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           TimeSpan?            QueryTimeout      = null)
 
         {
+
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
+
+            if (SessionId  == null)
+                throw new ArgumentNullException(nameof(SessionId),  "The given parameter must not be null!");
+
+            if (AuthToken  == null)
+                throw new ArgumentNullException(nameof(AuthToken),  "The given parameter must not be null!");
+
+            #endregion
 
             #region Send OnAuthorizeStop event
 
@@ -1092,6 +1108,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                    TimeSpan?           QueryTimeout  = null)
 
         {
+
+            #region Initial checks
+
+            if (ChargeDetailRecord == null)
+                throw new ArgumentNullException(nameof(ChargeDetailRecord),  "The given charge detail record must not be null!");
+
+            #endregion
 
             #region Documentation
 
@@ -1250,8 +1273,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAuthenticationData>> PullAuthenticationData(EVSEOperator_Id  OperatorId,
-                                                                                           TimeSpan?        QueryTimeout = null)
+        public async Task<HTTPResponse<eRoamingAuthenticationData>>
+
+            PullAuthenticationData(DateTime           Timestamp,
+                                   CancellationToken  CancellationToken,
+                                   EventTracking_Id   EventTrackingId,
+                                   EVSEOperator_Id    OperatorId,
+                                   TimeSpan?          QueryTimeout = null)
+
         {
 
             #region Send OnPullAuthenticationData event

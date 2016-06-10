@@ -1110,38 +1110,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingAuthorizationStop> AuthorizeStop(EVSEOperator_Id      OperatorId,
-                                                                   ChargingSession_Id   SessionId,
-                                                                   Auth_Token           AuthToken,
-                                                                   EVSE_Id              EVSEId            = null,
-                                                                   ChargingSession_Id   PartnerSessionId  = null,   // [maxlength: 50]
-                                                                   TimeSpan?            QueryTimeout      = null)
-        {
+        public async Task<HTTPResponse<eRoamingAuthorizationStop>>
 
-            #region Initial checks
+            AuthorizeStop(DateTime             Timestamp,
+                          CancellationToken    CancellationToken,
+                          EventTracking_Id     EventTrackingId,
+                          EVSEOperator_Id      OperatorId,
+                          ChargingSession_Id   SessionId,
+                          Auth_Token           AuthToken,
+                          EVSE_Id              EVSEId            = null,
+                          ChargingSession_Id   PartnerSessionId  = null,   // [maxlength: 50]
+                          TimeSpan?            QueryTimeout      = null)
 
-            if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
-
-            if (SessionId  == null)
-                throw new ArgumentNullException(nameof(SessionId),  "The given parameter must not be null!");
-
-            if (AuthToken  == null)
-                throw new ArgumentNullException(nameof(AuthToken),  "The given parameter must not be null!");
-
-            #endregion
-
-            var result = await CPOClient.AuthorizeStop(OperatorId,
-                                                        SessionId,
-                                                        AuthToken,
-                                                        EVSEId,
-                                                        PartnerSessionId,
-                                                        QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
+            => await CPOClient.AuthorizeStop(Timestamp,
+                                             CancellationToken,
+                                             EventTrackingId,
+                                             OperatorId,
+                                             SessionId,
+                                             AuthToken,
+                                             EVSEId,
+                                             PartnerSessionId,
+                                             QueryTimeout);
 
         #endregion
 
@@ -1153,7 +1142,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingAcknowledgement>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             SendChargeDetailRecord(DateTime            Timestamp,
                                    CancellationToken   CancellationToken,
@@ -1161,25 +1150,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                    ChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?           QueryTimeout  = null)
 
-        {
-
-            #region Initial checks
-
-            if (ChargeDetailRecord == null)
-                throw new ArgumentNullException(nameof(ChargeDetailRecord), "The given charge detail record must not be null!");
-
-            #endregion
-
-            var result = await CPOClient.SendChargeDetailRecord(Timestamp,
-                                                                CancellationToken,
-                                                                EventTrackingId,
-                                                                ChargeDetailRecord,
-                                                                QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
+            => await CPOClient.SendChargeDetailRecord(Timestamp,
+                                                      CancellationToken,
+                                                      EventTrackingId,
+                                                      ChargeDetailRecord,
+                                                      QueryTimeout);
 
         #endregion
 
@@ -1191,24 +1166,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingAuthenticationData> PullAuthenticationData(EVSEOperator_Id  OperatorId,
-                                                                             TimeSpan?        QueryTimeout = null)
-        {
+        public async Task<HTTPResponse<eRoamingAuthenticationData>>
 
-            #region Initial checks
+            PullAuthenticationData(DateTime           Timestamp,
+                                   CancellationToken  CancellationToken,
+                                   EventTracking_Id   EventTrackingId,
+                                   EVSEOperator_Id    OperatorId,
+                                   TimeSpan?          QueryTimeout = null)
 
-            if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
-
-            #endregion
-
-            var result = await CPOClient.PullAuthenticationData(OperatorId,
-                                                                 QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
+            => await CPOClient.PullAuthenticationData(Timestamp,
+                                                      CancellationToken,
+                                                      EventTrackingId,
+                                                      OperatorId,
+                                                      QueryTimeout);
 
         #endregion
 

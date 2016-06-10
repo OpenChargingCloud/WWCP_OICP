@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -2177,25 +2178,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response  = await CPORoaming.AuthorizeStop(OperatorId,
-                                                            SessionId,
-                                                            AuthToken,
-                                                            QueryTimeout: QueryTimeout);
+            var response = await CPORoaming.AuthorizeStop(Timestamp,
+                                                           CancellationToken,
+                                                           EventTrackingId,
+                                                           OperatorId,
+                                                           SessionId,
+                                                           AuthToken,
+                                                           null,
+                                                           null,
+                                                           QueryTimeout);
 
 
             AuthStopResult result = null;
 
-            if (response.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                result = AuthStopResult.Authorized(AuthorizatorId,
-                                                   response.ProviderId,
-                                                   response.StatusCode.Description,
-                                                   response.StatusCode.AdditionalInfo);
+            if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
+                response.Content                     != null              &&
+                response.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+            {
 
+                result = AuthStopResult.Authorized(AuthorizatorId,
+                                                   response.Content?.ProviderId,
+                                                   response.Content?.StatusCode?.Description,
+                                                   response.Content?.StatusCode?.AdditionalInfo);
+
+            }
             else
                 result = AuthStopResult.NotAuthorized(AuthorizatorId,
-                                                      response.ProviderId,
-                                                      response.StatusCode.Description,
-                                                      response.StatusCode.AdditionalInfo);
+                                                      response.Content?.ProviderId,
+                                                      response.Content?.StatusCode?.Description,
+                                                      response.Content?.StatusCode?.AdditionalInfo);
 
 
             #region Send OnAuthorizeStopped event
@@ -2280,27 +2291,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response  = await CPORoaming.AuthorizeStop(OperatorId,
-                                                            SessionId,
-                                                            AuthToken,
-                                                            EVSEId,
-                                                            null,
-                                                            QueryTimeout);
-
+            var response  = await CPORoaming.AuthorizeStop(Timestamp,
+                                                           CancellationToken,
+                                                           EventTrackingId,
+                                                           OperatorId,
+                                                           SessionId,
+                                                           AuthToken,
+                                                           EVSEId,
+                                                           null,
+                                                           QueryTimeout);
 
             AuthStopEVSEResult result = null;
 
-            if (response.AuthorizationStatus == AuthorizationStatusType.Authorized)
-                result = AuthStopEVSEResult.Authorized(AuthorizatorId,
-                                                       response.ProviderId,
-                                                       response.StatusCode.Description,
-                                                       response.StatusCode.AdditionalInfo);
+            if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
+                response.Content                     != null              &&
+                response.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+            {
 
+                result = AuthStopEVSEResult.Authorized(AuthorizatorId,
+                                                       response.Content?.ProviderId,
+                                                       response.Content?.StatusCode?.Description,
+                                                       response.Content?.StatusCode?.AdditionalInfo);
+
+            }
             else
                 result = AuthStopEVSEResult.NotAuthorized(AuthorizatorId,
-                                                          response.ProviderId,
-                                                          response.StatusCode.Description,
-                                                          response.StatusCode.AdditionalInfo);
+                                                          response.Content?.ProviderId,
+                                                          response.Content?.StatusCode?.Description,
+                                                          response.Content?.StatusCode?.AdditionalInfo);
 
 
             #region Send OnAuthorizeEVSEStopped event
@@ -2502,11 +2520,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             SendCDRResult result = null;
 
-            // true
-            if (response.Result)
+            if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                response.Content        != null              &&
+                response.Content.Result)
+            {
+
                 result = SendCDRResult.Forwarded(AuthorizatorId);
 
-            // false
+            }
+
             else
                 result = SendCDRResult.NotForwared(AuthorizatorId);
 

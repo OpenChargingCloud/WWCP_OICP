@@ -50,16 +50,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Properties
 
-        #region EMPRoaming
-
         /// <summary>
         /// The wrapped EMP roaming object.
         /// </summary>
         public EMPRoaming EMPRoaming { get; }
-
-        #endregion
-
-        #region EMPClient
 
         /// <summary>
         /// The EMP client.
@@ -67,19 +61,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public EMPClient EMPClient
             => EMPRoaming?.EMPClient;
 
-        #endregion
-
-        #region EMPServer
-
         /// <summary>
         /// The EMP server.
         /// </summary>
         public EMPServer EMPServer
             => EMPRoaming?.EMPServer;
-
-        #endregion
-
-        #region ClientLogger
 
         /// <summary>
         /// The EMP client logger.
@@ -87,27 +73,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public EMPClientLogger ClientLogger
             => EMPRoaming?.EMPClientLogger;
 
-        #endregion
-
-        #region ServerLogger
-
         /// <summary>
         /// The EMP server logger.
         /// </summary>
         public EMPServerLogger ServerLogger
             => EMPRoaming?.EMPServerLogger;
 
-        #endregion
-
-        #region DNSClient
-
         /// <summary>
         /// The DNSc server.
         /// </summary>
         public DNSClient DNSClient
             => EMPRoaming?.DNSClient;
-
-        #endregion
 
         #endregion
 
