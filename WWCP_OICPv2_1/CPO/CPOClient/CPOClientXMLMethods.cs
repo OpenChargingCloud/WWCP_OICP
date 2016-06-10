@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// OICP v2.1 CPO Client XML methods.
+    /// OICP CPO Client XML methods.
     /// </summary>
     public static class CPOClientXMLMethods
     {

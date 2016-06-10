@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.0 EMP client logger.
+    /// An OICP EMP client logger.
     /// </summary>
     public class EMPClientLogger : HTTPLogger
     {
@@ -44,22 +44,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region EMPClient
-
-        private readonly EMPClient _EMPClient;
-
         /// <summary>
-        /// The linked OICP v2.0 EMP client.
+        /// The linked OICP EMP client.
         /// </summary>
-        public EMPClient EMPClient
-        {
-            get
-            {
-                return _EMPClient;
-            }
-        }
-
-        #endregion
+        public EMPClient EMPClient { get; }
 
         #endregion
 
@@ -68,9 +56,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region EMPClientLogger(EMPClient, Context = DefaultContext, LogFileCreator = null)
 
         /// <summary>
-        /// Create a new OICP v2.0 EMP client logger using the default logging delegates.
+        /// Create a new OICP EMP client logger using the default logging delegates.
         /// </summary>
-        /// <param name="EMPClient">A OICP v2.0 EMP client.</param>
+        /// <param name="EMPClient">A OICP EMP client.</param>
         /// <param name="Context">A context of this API.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPClientLogger(EMPClient                    EMPClient,
@@ -93,9 +81,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region EMPClientLogger(EMPClient, Context, ... Logging delegates ...)
 
         /// <summary>
-        /// Create a new OICP v2.0 EMP client logger using the given logging delegates.
+        /// Create a new OICP EMP client logger using the given logging delegates.
         /// </summary>
-        /// <param name="EMPClient">A OICP v2.0 EMP client.</param>
+        /// <param name="EMPClient">A OICP EMP client.</param>
         /// <param name="Context">A context of this API.</param>
         /// 
         /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
@@ -160,39 +148,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EMPClient == null)
                 throw new ArgumentNullException(nameof(EMPClient), "The given EMP client must not be null!");
 
-            this._EMPClient = EMPClient;
+            this.EMPClient = EMPClient;
 
             #endregion
 
             #region Register EVSE data/status push log events
 
-            //RegisterEvent("EVSEDataPush",
-            //              handler => _EMPClient.OnEVSEDataPushRequest    += handler,
-            //              handler => _EMPClient.OnEVSEDataPushRequest    -= handler,
-            //              "EVSE", "EVSEData", "Request", "All").
-            //    RegisterDefaultConsoleLogTarget(this).
-            //    RegisterDefaultDiscLogTarget(this);
+            RegisterEvent("AuthorizeRemoteStart",
+                          handler => EMPClient.OnAuthorizeRemoteStartRequest  += handler,
+                          handler => EMPClient.OnAuthorizeRemoteStartRequest  -= handler,
+                          "Authorize", "AuthorizeRemote", "Request", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
-            //RegisterEvent("EVSEDataPushed",
-            //              handler => _EMPClient.OnEVSEDataPushResponse   += handler,
-            //              handler => _EMPClient.OnEVSEDataPushResponse   -= handler,
-            //              "EVSE", "EVSEData", "Response", "All").
-            //    RegisterDefaultConsoleLogTarget(this).
-            //    RegisterDefaultDiscLogTarget(this);
+            RegisterEvent("AuthorizeRemoteStarted",
+                          handler => EMPClient.OnAuthorizeRemoteStartResponse += handler,
+                          handler => EMPClient.OnAuthorizeRemoteStartResponse -= handler,
+                          "Authorize", "AuthorizeRemote", "Response", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
-            //RegisterEvent("EVSEStatusPush",
-            //              handler => _EMPClient.OnEVSEStatusPushRequest  += handler,
-            //              handler => _EMPClient.OnEVSEStatusPushRequest  -= handler,
-            //              "EVSE", "EVSEStatus", "Request", "All").
-            //    RegisterDefaultConsoleLogTarget(this).
-            //    RegisterDefaultDiscLogTarget(this);
+            RegisterEvent("AuthorizeRemoteStop",
+                          handler => EMPClient.OnAuthorizeRemoteStopRequest   += handler,
+                          handler => EMPClient.OnAuthorizeRemoteStopRequest   -= handler,
+                          "Authorize", "AuthorizeRemote", "Request", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
-            //RegisterEvent("EVSEStatusPushed",
-            //              handler => _EMPClient.OnEVSEStatusPushResponse += handler,
-            //              handler => _EMPClient.OnEVSEStatusPushResponse -= handler,
-            //              "EVSE", "EVSEStatus", "Response", "All").
-            //    RegisterDefaultConsoleLogTarget(this).
-            //    RegisterDefaultDiscLogTarget(this);
+            RegisterEvent("AuthorizeRemoteStopped",
+                          handler => EMPClient.OnAuthorizeRemoteStopResponse  += handler,
+                          handler => EMPClient.OnAuthorizeRemoteStopResponse  -= handler,
+                          "Authorize", "AuthorizeRemote", "Response", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
             #endregion
 

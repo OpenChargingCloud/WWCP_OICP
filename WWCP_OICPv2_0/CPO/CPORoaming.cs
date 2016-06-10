@@ -33,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// An OICP v2.0 roaming client for CPOs which combines the CPO client
+    /// An OICP roaming client for CPOs which combines the CPO client
     /// and server and adds additional logging for both.
     /// </summary>
     public class CPORoaming
@@ -41,88 +41,31 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Properties
 
-        #region CPOClient
-
-        private readonly CPOClient _CPOClient;
+        /// <summary>
+        /// The CPO client.
+        /// </summary>
+        public CPOClient        CPOClient         { get; }
 
         /// <summary>
-        /// The CPO client part.
+        /// The CPO server.
         /// </summary>
-        public CPOClient CPOClient
-        {
-            get
-            {
-                return _CPOClient;
-            }
-        }
-
-        #endregion
-
-        #region CPOServer
-
-        private readonly CPOServer _CPOServer;
-
-        /// <summary>
-        /// The CPO server part.
-        /// </summary>
-        public CPOServer CPOServer
-        {
-            get
-            {
-                return _CPOServer;
-            }
-        }
-
-        #endregion
-
-        #region CPOClientLogger
-
-        private readonly CPOClientLogger _CPOClientLogger;
+        public CPOServer        CPOServer         { get; }
 
         /// <summary>
         /// The CPO client logger.
         /// </summary>
-        public CPOClientLogger CPOClientLogger
-        {
-            get
-            {
-                return _CPOClientLogger;
-            }
-        }
-
-        #endregion
-
-        #region CPOServerLogger
-
-        private readonly CPOServerLogger _CPOServerLogger;
+        public CPOClientLogger  CPOClientLogger   { get; }
 
         /// <summary>
         /// The CPO server logger.
         /// </summary>
-        public CPOServerLogger CPOServerLogger
-        {
-            get
-            {
-                return _CPOServerLogger;
-            }
-        }
-
-        #endregion
-
-        #region DNSClient
+        public CPOServerLogger  CPOServerLogger   { get; }
 
         /// <summary>
         /// The DNS client defines which DNS servers to use.
         /// </summary>
         public DNSClient DNSClient
-        {
-            get
-            {
-                return _CPOServer.DNSClient;
-            }
-        }
-
-        #endregion
+            => CPOServer.DNSClient;
 
         #endregion
 
@@ -135,17 +78,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a request pushing EVSE data records will be send.
         /// </summary>
-        public event OnEVSEDataPushDelegate    OnEVSEDataPush
+        public event OnEVSEDataPushDelegate OnEVSEDataPush
         {
 
             add
             {
-                _CPOClient.OnEVSEDataPush += value;
+                CPOClient.OnEVSEDataPush += value;
             }
 
             remove
             {
-                _CPOClient.OnEVSEDataPush -= value;
+                CPOClient.OnEVSEDataPush -= value;
             }
 
         }
@@ -153,17 +96,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a SOAP request pushing EVSE data records will be send.
         /// </summary>
-        public event ClientRequestLogHandler   OnEVSEDataPushRequest
+        public event ClientRequestLogHandler OnEVSEDataPushRequest
         {
 
             add
             {
-                _CPOClient.OnEVSEDataPushRequest += value;
+                CPOClient.OnEVSEDataPushRequest += value;
             }
 
             remove
             {
-                _CPOClient.OnEVSEDataPushRequest -= value;
+                CPOClient.OnEVSEDataPushRequest -= value;
             }
 
         }
@@ -171,17 +114,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to a push EVSE data records SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler  OnEVSEDataPushResponse
+        public event ClientResponseLogHandler OnEVSEDataPushResponse
         {
 
             add
             {
-                _CPOClient.OnEVSEDataPushResponse += value;
+                CPOClient.OnEVSEDataPushResponse += value;
             }
 
             remove
             {
-                _CPOClient.OnEVSEDataPushResponse -= value;
+                CPOClient.OnEVSEDataPushResponse -= value;
             }
 
         }
@@ -189,17 +132,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever EVSE data records had been sent upstream.
         /// </summary>
-        public event OnEVSEDataPushedDelegate  OnEVSEDataPushed
+        public event OnEVSEDataPushedDelegate OnEVSEDataPushed
         {
 
             add
             {
-                _CPOClient.OnEVSEDataPushed += value;
+                CPOClient.OnEVSEDataPushed += value;
             }
 
             remove
             {
-                _CPOClient.OnEVSEDataPushed -= value;
+                CPOClient.OnEVSEDataPushed -= value;
             }
 
         }
@@ -211,17 +154,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a request pushing EVSE status records will be send.
         /// </summary>
-        public event OnEVSEStatusPushDelegate   OnEVSEStatusPush
+        public event OnEVSEStatusPushDelegate OnEVSEStatusPush
         {
 
             add
             {
-                _CPOClient.OnEVSEStatusPush += value;
+                CPOClient.OnEVSEStatusPush += value;
             }
 
             remove
             {
-                _CPOClient.OnEVSEStatusPush -= value;
+                CPOClient.OnEVSEStatusPush -= value;
             }
 
         }
@@ -229,17 +172,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a SOAP request pushing EVSE status records will be send.
         /// </summary>
-        public event ClientRequestLogHandler    OnEVSEStatusPushRequest
+        public event ClientRequestLogHandler OnEVSEStatusPushRequest
         {
 
             add
             {
-                _CPOClient.OnEVSEStatusPushRequest += value;
+                CPOClient.OnEVSEStatusPushRequest += value;
             }
 
             remove
             {
-                _CPOClient.OnEVSEStatusPushRequest -= value;
+                CPOClient.OnEVSEStatusPushRequest -= value;
             }
 
         }
@@ -247,17 +190,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to a push EVSE status records SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler   OnEVSEStatusPushResponse
+        public event ClientResponseLogHandler OnEVSEStatusPushResponse
         {
 
             add
             {
-                _CPOClient.OnEVSEStatusPushResponse += value;
+                CPOClient.OnEVSEStatusPushResponse += value;
             }
 
             remove
             {
-                _CPOClient.OnEVSEStatusPushResponse -= value;
+                CPOClient.OnEVSEStatusPushResponse -= value;
             }
 
         }
@@ -270,12 +213,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _CPOClient.OnEVSEStatusPushed += value;
+                CPOClient.OnEVSEStatusPushed += value;
             }
 
             remove
             {
-                _CPOClient.OnEVSEStatusPushed -= value;
+                CPOClient.OnEVSEStatusPushed -= value;
             }
 
         }
@@ -287,17 +230,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize start request will be send.
         /// </summary>
-        public event OnAuthorizeStartHandler    OnAuthorizeStart
+        public event OnAuthorizeStartHandler OnAuthorizeStart
         {
 
             add
             {
-                _CPOClient.OnAuthorizeStart += value;
+                CPOClient.OnAuthorizeStart += value;
             }
 
             remove
             {
-                _CPOClient.OnAuthorizeStart -= value;
+                CPOClient.OnAuthorizeStart -= value;
             }
 
         }
@@ -305,17 +248,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize start SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler    OnAuthorizeStartRequest
+        public event ClientRequestLogHandler OnAuthorizeStartRequest
         {
 
             add
             {
-                _CPOClient.OnAuthorizeStartRequest += value;
+                CPOClient.OnAuthorizeStartRequest += value;
             }
 
             remove
             {
-                _CPOClient.OnAuthorizeStartRequest -= value;
+                CPOClient.OnAuthorizeStartRequest -= value;
             }
 
         }
@@ -323,17 +266,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to an authorize start SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler   OnAuthorizeStartResponse
+        public event ClientResponseLogHandler OnAuthorizeStartResponse
         {
 
             add
             {
-                _CPOClient.OnAuthorizeStartResponse += value;
+                CPOClient.OnAuthorizeStartResponse += value;
             }
 
             remove
             {
-                _CPOClient.OnAuthorizeStartResponse -= value;
+                CPOClient.OnAuthorizeStartResponse -= value;
             }
 
         }
@@ -341,17 +284,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize start request was sent.
         /// </summary>
-        public event OnAuthorizeStartedHandler  OnAuthorizeStarted
+        public event OnAuthorizeStartedHandler OnAuthorizeStarted
         {
 
             add
             {
-                _CPOClient.OnAuthorizeStarted += value;
+                CPOClient.OnAuthorizeStarted += value;
             }
 
             remove
             {
-                _CPOClient.OnAuthorizeStarted -= value;
+                CPOClient.OnAuthorizeStarted -= value;
             }
 
         }
@@ -363,17 +306,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize stop request will be send.
         /// </summary>
-        public event OnAuthorizeStopHandler     OnAuthorizeStop
+        public event OnAuthorizeStopHandler OnAuthorizeStop
         {
 
             add
             {
-                _CPOClient.OnAuthorizeStop += value;
+                CPOClient.OnAuthorizeStop += value;
             }
 
             remove
             {
-                _CPOClient.OnAuthorizeStop -= value;
+                CPOClient.OnAuthorizeStop -= value;
             }
 
         }
@@ -381,17 +324,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize stop SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler    OnAuthorizeStopRequest
+        public event ClientRequestLogHandler OnAuthorizeStopRequest
         {
 
             add
             {
-                _CPOClient.OnAuthorizeStopRequest += value;
+                CPOClient.OnAuthorizeStopRequest += value;
             }
 
             remove
             {
-                _CPOClient.OnAuthorizeStopRequest -= value;
+                CPOClient.OnAuthorizeStopRequest -= value;
             }
 
         }
@@ -399,17 +342,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to an authorize stop SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler   OnAuthorizeStopResponse
+        public event ClientResponseLogHandler OnAuthorizeStopResponse
         {
 
             add
             {
-                _CPOClient.OnAuthorizeStopResponse += value;
+                CPOClient.OnAuthorizeStopResponse += value;
             }
 
             remove
             {
-                _CPOClient.OnAuthorizeStopResponse -= value;
+                CPOClient.OnAuthorizeStopResponse -= value;
             }
 
         }
@@ -417,17 +360,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize start request was sent.
         /// </summary>
-        public event OnAuthorizeStoppedHandler  OnAuthorizeStopped
+        public event OnAuthorizeStoppedHandler OnAuthorizeStopped
         {
 
             add
             {
-                _CPOClient.OnAuthorizeStopped += value;
+                CPOClient.OnAuthorizeStopped += value;
             }
 
             remove
             {
-                _CPOClient.OnAuthorizeStopped -= value;
+                CPOClient.OnAuthorizeStopped -= value;
             }
 
         }
@@ -439,17 +382,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a charge detail record will be send.
         /// </summary>
-        public event OnSendChargeDetailRecordHandler  OnSendChargeDetailRecord
+        public event OnSendChargeDetailRecordHandler OnSendChargeDetailRecord
         {
 
             add
             {
-                _CPOClient.OnSendChargeDetailRecord += value;
+                CPOClient.OnSendChargeDetailRecord += value;
             }
 
             remove
             {
-                _CPOClient.OnSendChargeDetailRecord -= value;
+                CPOClient.OnSendChargeDetailRecord -= value;
             }
 
         }
@@ -457,17 +400,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a charge detail record will be send via SOAP.
         /// </summary>
-        public event ClientRequestLogHandler          OnSendChargeDetailRecordRequest
+        public event ClientRequestLogHandler OnSendChargeDetailRecordRequest
         {
 
             add
             {
-                _CPOClient.OnSendChargeDetailRecordRequest += value;
+                CPOClient.OnSendChargeDetailRecordRequest += value;
             }
 
             remove
             {
-                _CPOClient.OnSendChargeDetailRecordRequest -= value;
+                CPOClient.OnSendChargeDetailRecordRequest -= value;
             }
 
         }
@@ -475,17 +418,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a SOAP response to a sent charge detail record had been received.
         /// </summary>
-        public event ClientResponseLogHandler         OnSendChargeDetailRecordResponse
+        public event ClientResponseLogHandler OnSendChargeDetailRecordResponse
         {
 
             add
             {
-                _CPOClient.OnSendChargeDetailRecordResponse += value;
+                CPOClient.OnSendChargeDetailRecordResponse += value;
             }
 
             remove
             {
-                _CPOClient.OnSendChargeDetailRecordResponse -= value;
+                CPOClient.OnSendChargeDetailRecordResponse -= value;
             }
 
         }
@@ -493,17 +436,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to a sent charge detail record had been received.
         /// </summary>
-        public event OnChargeDetailRecordSentHandler  OnChargeDetailRecordSent
+        public event OnChargeDetailRecordSentHandler OnChargeDetailRecordSent
         {
 
             add
             {
-                _CPOClient.OnChargeDetailRecordSent += value;
+                CPOClient.OnChargeDetailRecordSent += value;
             }
 
             remove
             {
-                _CPOClient.OnChargeDetailRecordSent -= value;
+                CPOClient.OnChargeDetailRecordSent -= value;
             }
 
         }
@@ -515,17 +458,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a request pulling authentication data will be send.
         /// </summary>
-        public event OnPullAuthenticationDataHandler    OnPullAuthenticationData
+        public event OnPullAuthenticationDataHandler OnPullAuthenticationData
         {
 
             add
             {
-                _CPOClient.OnPullAuthenticationData += value;
+                CPOClient.OnPullAuthenticationData += value;
             }
 
             remove
             {
-                _CPOClient.OnPullAuthenticationData -= value;
+                CPOClient.OnPullAuthenticationData -= value;
             }
 
         }
@@ -533,35 +476,35 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a SOAP request pulling authentication data will be send.
         /// </summary>
-        public event ClientRequestLogHandler            OnPullAuthenticationDataRequest
+        public event ClientRequestLogHandler OnPullAuthenticationDataRequest
         {
 
             add
             {
-                _CPOClient.OnPullAuthenticationDataRequest += value;
+                CPOClient.OnPullAuthenticationDataRequest += value;
             }
 
             remove
             {
-                _CPOClient.OnPullAuthenticationDataRequest -= value;
+                CPOClient.OnPullAuthenticationDataRequest -= value;
             }
 
         }
-        
+
         /// <summary>
         /// An event fired whenever a response to a pull authentication data SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler           OnPullAuthenticationDataResponse
+        public event ClientResponseLogHandler OnPullAuthenticationDataResponse
         {
 
             add
             {
-                _CPOClient.OnPullAuthenticationDataResponse += value;
+                CPOClient.OnPullAuthenticationDataResponse += value;
             }
 
             remove
             {
-                _CPOClient.OnPullAuthenticationDataResponse -= value;
+                CPOClient.OnPullAuthenticationDataResponse -= value;
             }
 
         }
@@ -569,17 +512,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to a pull authentication data request was received.
         /// </summary>
-        public event OnAuthenticationDataPulledHandler  OnAuthenticationDataPulled
+        public event OnAuthenticationDataPulledHandler OnAuthenticationDataPulled
         {
 
             add
             {
-                _CPOClient.OnAuthenticationDataPulled += value;
+                CPOClient.OnAuthenticationDataPulled += value;
             }
 
             remove
             {
-                _CPOClient.OnAuthenticationDataPulled -= value;
+                CPOClient.OnAuthenticationDataPulled -= value;
             }
 
         }
@@ -599,12 +542,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _CPOServer.OnRemoteStart += value;
+                CPOServer.OnRemoteStart += value;
             }
 
             remove
             {
-                _CPOServer.OnRemoteStart -= value;
+                CPOServer.OnRemoteStart -= value;
             }
 
         }
@@ -618,12 +561,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _CPOServer.OnRemoteStop += value;
+                CPOServer.OnRemoteStop += value;
             }
 
             remove
             {
-                _CPOServer.OnRemoteStop -= value;
+                CPOServer.OnRemoteStop -= value;
             }
 
         }
@@ -643,12 +586,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _CPOServer.RequestLog += value;
+                CPOServer.RequestLog += value;
             }
 
             remove
             {
-                _CPOServer.RequestLog -= value;
+                CPOServer.RequestLog -= value;
             }
 
         }
@@ -665,12 +608,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _CPOServer.AccessLog += value;
+                CPOServer.AccessLog += value;
             }
 
             remove
             {
-                _CPOServer.AccessLog -= value;
+                CPOServer.AccessLog -= value;
             }
 
         }
@@ -687,12 +630,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                _CPOServer.ErrorLog += value;
+                CPOServer.ErrorLog += value;
             }
 
             remove
             {
-                _CPOServer.ErrorLog -= value;
+                CPOServer.ErrorLog -= value;
             }
 
         }
@@ -720,10 +663,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           Func<String, String, String>  LogFileCreator        = null)
         {
 
-            this._CPOClient        = CPOClient;
-            this._CPOServer        = CPOServer;
-            this._CPOClientLogger  = new CPOClientLogger(_CPOClient, ClientLoggingContext, LogFileCreator);
-            this._CPOServerLogger  = new CPOServerLogger(_CPOServer, ServerLoggingContext, LogFileCreator);
+            this.CPOClient        = CPOClient;
+            this.CPOServer        = CPOServer;
+            this.CPOClientLogger  = new CPOClientLogger(CPOClient, ClientLoggingContext, LogFileCreator);
+            this.CPOServerLogger  = new CPOServerLogger(CPOServer, ServerLoggingContext, LogFileCreator);
 
         }
 
@@ -822,7 +765,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         {
 
-            var result = await _CPOClient.PushEVSEData(GroupedEVSEs,
+            var result = await CPOClient.PushEVSEData(GroupedEVSEs,
                                                        OICPAction,
                                                        OperatorId,
                                                        OperatorName,
@@ -857,7 +800,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         {
 
-            var result = await _CPOClient.PushEVSEData(EVSEDataRecord,
+            var result = await CPOClient.PushEVSEData(EVSEDataRecord,
                                                        OICPAction,
                                                        OperatorId,
                                                        OperatorName,
@@ -907,7 +850,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            var result = await _CPOClient.PushEVSEData(EVSEDataRecords,
+            var result = await CPOClient.PushEVSEData(EVSEDataRecords,
                                                        OICPAction,
                                                        OperatorId,
                                                        OperatorName,
@@ -934,7 +877,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                          params EVSEDataRecord[]  EVSEDataRecords)
         {
 
-            var result = await _CPOClient.PushEVSEData(OICPAction,
+            var result = await CPOClient.PushEVSEData(OICPAction,
                                                        EVSEDataRecords);
 
             //ToDo: Process the HTTP!
@@ -959,7 +902,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                          params EVSEDataRecord[]  EVSEDataRecords)
         {
 
-            var result = await _CPOClient.PushEVSEData(OICPAction,
+            var result = await CPOClient.PushEVSEData(OICPAction,
                                                        OperatorId,
                                                        EVSEDataRecords);
 
@@ -987,7 +930,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                          params EVSEDataRecord[]  EVSEDataRecords)
         {
 
-            var result = await _CPOClient.PushEVSEData(OICPAction,
+            var result = await CPOClient.PushEVSEData(OICPAction,
                                                        OperatorId,
                                                        OperatorName,
                                                        EVSEDataRecords);
@@ -1020,7 +963,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         {
 
-            var result = await _CPOClient.PushEVSEStatus(EVSEStatusRecords,
+            var result = await CPOClient.PushEVSEStatus(EVSEStatusRecords,
                                                          OICPAction,
                                                          OperatorId,
                                                          OperatorName,
@@ -1055,7 +998,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         {
 
-            var result = await _CPOClient.PushEVSEStatus(EVSEStatus,
+            var result = await CPOClient.PushEVSEStatus(EVSEStatus,
                                                          OICPAction,
                                                          OperatorId,
                                                          OperatorName,
@@ -1094,7 +1037,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         {
 
-            var result = await _CPOClient.AuthorizeStart(OperatorId,
+            var result = await CPOClient.AuthorizeStart(OperatorId,
                                                          AuthToken,
                                                          EVSEId,
                                                          SessionId,
@@ -1145,7 +1088,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            var result = await _CPOClient.AuthorizeStop(OperatorId,
+            var result = await CPOClient.AuthorizeStop(OperatorId,
                                                         SessionId,
                                                         AuthToken,
                                                         EVSEId,
@@ -1181,7 +1124,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            var result = await _CPOClient.SendChargeDetailRecord(ChargeDetailRecord,
+            var result = await CPOClient.SendChargeDetailRecord(ChargeDetailRecord,
                                                                  QueryTimeout);
 
             //ToDo: Process the HTTP!
@@ -1210,7 +1153,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            var result = await _CPOClient.PullAuthenticationData(OperatorId,
+            var result = await CPOClient.PullAuthenticationData(OperatorId,
                                                                  QueryTimeout);
 
             //ToDo: Process the HTTP!
@@ -1226,7 +1169,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         public void Start()
         {
-            _CPOServer.Start();
+            CPOServer.Start();
         }
 
         #endregion
@@ -1235,7 +1178,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         public void Shutdown(String Message = null, Boolean Wait = true)
         {
-            _CPOServer.Shutdown(Message, Wait);
+            CPOServer.Shutdown(Message, Wait);
         }
 
         #endregion

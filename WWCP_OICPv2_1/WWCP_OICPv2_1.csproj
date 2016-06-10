@@ -60,7 +60,9 @@
     <Compile Include="CPO\CPOServer\CPOServerDelegates.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
     <Compile Include="CPO\CPOServiceCheck.cs" />
+    <Compile Include="Version.cs" />
     <Compile Include="EMP\EMPClient\EMPClient.cs" />
+    <Compile Include="EMP\EMPClient\EMPClientDelegates.cs" />
     <Compile Include="EMP\EMPClient\EMPClientLogger.cs" />
     <Compile Include="EMP\EMPClient\EMPClientXMLMethods.cs" />
     <Compile Include="EMP\EMPDelegates.cs" />

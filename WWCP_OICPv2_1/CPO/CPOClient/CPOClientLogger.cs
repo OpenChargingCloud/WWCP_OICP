@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.0 CPO Client logger.
+    /// An OICP CPO client logger.
     /// </summary>
     public class CPOClientLogger : HTTPLogger
     {
@@ -44,22 +44,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region CPOClient
-
-        private readonly CPOClient _CPOClient;
-
         /// <summary>
-        /// The linked OICP v2.0 CPO client.
+        /// The linked OICP CPO client.
         /// </summary>
-        public CPOClient CPOClient
-        {
-            get
-            {
-                return _CPOClient;
-            }
-        }
-
-        #endregion
+        public CPOClient CPOClient { get; }
 
         #endregion
 
@@ -68,9 +56,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region CPOClientLogger(CPOClient, Context = DefaultContext, LogFileCreator = null)
 
         /// <summary>
-        /// Create a new OICP v2.0 CPO client logger using the default logging delegates.
+        /// Create a new OICP CPO client logger using the default logging delegates.
         /// </summary>
-        /// <param name="CPOClient">A OICP v2.0 CPO client.</param>
+        /// <param name="CPOClient">A OICP CPO client.</param>
         /// <param name="Context">A context of this API.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public CPOClientLogger(CPOClient                    CPOClient,
@@ -93,9 +81,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region CPOClientLogger(CPOClient, Context, ... Logging delegates ...)
 
         /// <summary>
-        /// Create a new OICP v2.0 CPO client logger using the given logging delegates.
+        /// Create a new OICP CPO client logger using the given logging delegates.
         /// </summary>
-        /// <param name="CPOClient">A OICP v2.0 CPO client.</param>
+        /// <param name="CPOClient">A OICP CPO client.</param>
         /// <param name="Context">A context of this API.</param>
         /// 
         /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
@@ -160,37 +148,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (CPOClient == null)
                 throw new ArgumentNullException(nameof(CPOClient), "The given CPO client must not be null!");
 
-            this._CPOClient = CPOClient;
+            this.CPOClient = CPOClient;
 
             #endregion
 
             #region Register EVSE data/status push log events
 
             RegisterEvent("EVSEDataPush",
-                          handler => _CPOClient.OnEVSEDataPushRequest    += handler,
-                          handler => _CPOClient.OnEVSEDataPushRequest    -= handler,
+                          handler => CPOClient.OnEVSEDataPushRequest    += handler,
+                          handler => CPOClient.OnEVSEDataPushRequest    -= handler,
                           "EVSE", "EVSEData", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("EVSEDataPushed",
-                          handler => _CPOClient.OnEVSEDataPushResponse   += handler,
-                          handler => _CPOClient.OnEVSEDataPushResponse   -= handler,
+                          handler => CPOClient.OnEVSEDataPushResponse   += handler,
+                          handler => CPOClient.OnEVSEDataPushResponse   -= handler,
                           "EVSE", "EVSEData", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
 
             RegisterEvent("EVSEStatusPush",
-                          handler => _CPOClient.OnEVSEStatusPushRequest  += handler,
-                          handler => _CPOClient.OnEVSEStatusPushRequest  -= handler,
+                          handler => CPOClient.OnEVSEStatusPushRequest  += handler,
+                          handler => CPOClient.OnEVSEStatusPushRequest  -= handler,
                           "EVSE", "EVSEStatus", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("EVSEStatusPushed",
-                          handler => _CPOClient.OnEVSEStatusPushResponse += handler,
-                          handler => _CPOClient.OnEVSEStatusPushResponse -= handler,
+                          handler => CPOClient.OnEVSEStatusPushResponse += handler,
+                          handler => CPOClient.OnEVSEStatusPushResponse -= handler,
                           "EVSE", "EVSEStatus", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
@@ -198,30 +186,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
             RegisterEvent("AuthorizeStart",
-                          handler => _CPOClient.OnAuthorizeStartRequest += handler,
-                          handler => _CPOClient.OnAuthorizeStartRequest -= handler,
+                          handler => CPOClient.OnAuthorizeStartRequest += handler,
+                          handler => CPOClient.OnAuthorizeStartRequest -= handler,
                           "Authorize", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStarted",
-                          handler => _CPOClient.OnAuthorizeStartResponse += handler,
-                          handler => _CPOClient.OnAuthorizeStartResponse -= handler,
+                          handler => CPOClient.OnAuthorizeStartResponse += handler,
+                          handler => CPOClient.OnAuthorizeStartResponse -= handler,
                           "Authorize", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
 
             RegisterEvent("AuthorizeStop",
-                          handler => _CPOClient.OnAuthorizeStopRequest += handler,
-                          handler => _CPOClient.OnAuthorizeStopRequest -= handler,
+                          handler => CPOClient.OnAuthorizeStopRequest += handler,
+                          handler => CPOClient.OnAuthorizeStopRequest -= handler,
                           "Authorize", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStopped",
-                          handler => _CPOClient.OnAuthorizeStopResponse += handler,
-                          handler => _CPOClient.OnAuthorizeStopResponse -= handler,
+                          handler => CPOClient.OnAuthorizeStopResponse += handler,
+                          handler => CPOClient.OnAuthorizeStopResponse -= handler,
                           "Authorize", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
@@ -229,30 +217,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
             RegisterEvent("SendChargeDetailRecord",
-                          handler => _CPOClient.OnSendChargeDetailRecordRequest += handler,
-                          handler => _CPOClient.OnSendChargeDetailRecordRequest -= handler,
+                          handler => CPOClient.OnSendChargeDetailRecordRequest += handler,
+                          handler => CPOClient.OnSendChargeDetailRecordRequest -= handler,
                           "ChargeDetailRecord", "CDR", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("ChargeDetailRecordSent",
-                          handler => _CPOClient.OnSendChargeDetailRecordResponse += handler,
-                          handler => _CPOClient.OnSendChargeDetailRecordResponse -= handler,
+                          handler => CPOClient.OnSendChargeDetailRecordResponse += handler,
+                          handler => CPOClient.OnSendChargeDetailRecordResponse -= handler,
                           "ChargeDetailRecord", "CDR", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
 
             RegisterEvent("PullAuthenticationData",
-                          handler => _CPOClient.OnPullAuthenticationDataRequest += handler,
-                          handler => _CPOClient.OnPullAuthenticationDataRequest -= handler,
+                          handler => CPOClient.OnPullAuthenticationDataRequest += handler,
+                          handler => CPOClient.OnPullAuthenticationDataRequest -= handler,
                           "AuthenticationData", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthenticationDataPulled",
-                          handler => _CPOClient.OnPullAuthenticationDataResponse += handler,
-                          handler => _CPOClient.OnPullAuthenticationDataResponse -= handler,
+                          handler => CPOClient.OnPullAuthenticationDataResponse += handler,
+                          handler => CPOClient.OnPullAuthenticationDataResponse -= handler,
                           "AuthenticationData", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);

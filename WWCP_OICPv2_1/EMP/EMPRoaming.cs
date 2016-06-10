@@ -42,14 +42,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region AuthorizatorId
+        public Authorizator_Id  AuthorizatorId    { get; }
 
-        public Authorizator_Id AuthorizatorId { get; }
-
-        #endregion
-
-
-        #region EMPClient/-Server
 
         /// <summary>
         /// The EMP client part.
@@ -71,18 +65,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public EMPServerLogger  EMPServerLogger   { get; }
 
-        #endregion
-
-
-        #region DNSClient
 
         /// <summary>
         /// The DNS client defines which DNS servers to use.
         /// </summary>
         public DNSClient DNSClient
-            => EMPServer.DNSClient;
-
-        #endregion
+            => EMPServer?.DNSClient;
 
         #endregion
 
@@ -90,6 +78,157 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         // Client methods (logging)
 
+        #region OnAuthorizeRemoteStartRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an authorize start request will be send.
+        /// </summary>
+        public event OnAuthorizeRemoteStartHandler OnAuthorizeRemoteStart
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStart += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStart -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize remote start SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnAuthorizeRemoteStartRequest
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStartRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStartRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to an authorize remote start SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnAuthorizeRemoteStartResponse
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStartResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStartResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize start request was sent.
+        /// </summary>
+        public event OnAuthorizeRemoteStartedHandler OnAuthorizeRemoteStarted
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStarted += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStarted -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnAuthorizeRemoteStopRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an authorize remote stop request will be send.
+        /// </summary>
+        public event OnAuthorizeRemoteStopHandler OnAuthorizeRemoteStop
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStop += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStop -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize remote stop SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnAuthorizeRemoteStopRequest
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStopRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStopRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to an authorize remote stop SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnAuthorizeRemoteStopResponse
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStopResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStopResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize remote stop request was sent.
+        /// </summary>
+        public event OnAuthorizeRemoteStoppedHandler OnAuthorizeRemoteStopped
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStopped += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStopped -= value;
+            }
+
+        }
+
+        #endregion
 
 
         // Server methods
@@ -551,16 +690,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                              ChargingProduct_Id      PartnerProductId  = null,
                              TimeSpan?               QueryTimeout      = default(TimeSpan?))
 
-            => await this.EMPClient.ReservationStart(Timestamp,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      ProviderId,
-                                                      EVSEId,
-                                                      eMAId,
-                                                      SessionId,
-                                                      PartnerSessionId,
-                                                      PartnerProductId,
-                                                      QueryTimeout);
+            => await EMPClient.ReservationStart(Timestamp,
+                                                CancellationToken,
+                                                EventTrackingId,
+                                                ProviderId,
+                                                EVSEId,
+                                                eMAId,
+                                                SessionId,
+                                                PartnerSessionId,
+                                                PartnerProductId,
+                                                QueryTimeout);
 
         #endregion
 
@@ -588,14 +727,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             ChargingSession_Id   PartnerSessionId  = null,
                             TimeSpan?            QueryTimeout      = null)
 
-            => await this.EMPClient.ReservationStop(Timestamp,
-                                                     CancellationToken,
-                                                     EventTrackingId,
-                                                     SessionId,
-                                                     ProviderId,
-                                                     EVSEId,
-                                                     PartnerSessionId,
-                                                     QueryTimeout);
+            => await EMPClient.ReservationStop(Timestamp,
+                                               CancellationToken,
+                                               EventTrackingId,
+                                               SessionId,
+                                               ProviderId,
+                                               EVSEId,
+                                               PartnerSessionId,
+                                               QueryTimeout);
 
         #endregion
 
@@ -628,16 +767,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         ChargingProduct_Id      PartnerProductId  = null,
                         TimeSpan?               QueryTimeout      = default(TimeSpan?))
 
-            => await this.EMPClient.RemoteStart(Timestamp,
-                                                 CancellationToken,
-                                                 EventTrackingId,
-                                                 ProviderId,
-                                                 EVSEId,
-                                                 eMAId,
-                                                 SessionId,
-                                                 PartnerSessionId,
-                                                 PartnerProductId,
-                                                 QueryTimeout);
+            => await EMPClient.RemoteStart(Timestamp,
+                                           CancellationToken,
+                                           EventTrackingId,
+                                           ProviderId,
+                                           EVSEId,
+                                           eMAId,
+                                           SessionId,
+                                           PartnerSessionId,
+                                           PartnerProductId,
+                                           QueryTimeout);
 
         #endregion
 
@@ -665,14 +804,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                        ChargingSession_Id   PartnerSessionId  = null,
                        TimeSpan?            QueryTimeout      = null)
 
-            => await this.EMPClient.RemoteStop(Timestamp,
-                                                CancellationToken,
-                                                EventTrackingId,
-                                                SessionId,
-                                                ProviderId,
-                                                EVSEId,
-                                                PartnerSessionId,
-                                                QueryTimeout);
+            => await EMPClient.RemoteStop(Timestamp,
+                                          CancellationToken,
+                                          EventTrackingId,
+                                          SessionId,
+                                          ProviderId,
+                                          EVSEId,
+                                          PartnerSessionId,
+                                          QueryTimeout);
 
         #endregion
 

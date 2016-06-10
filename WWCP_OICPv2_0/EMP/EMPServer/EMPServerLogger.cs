@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// An OICP v2.0 EMP server logger.
+    /// An OICP EMP server logger.
     /// </summary>
     public class EMPServerLogger : HTTPLogger
     {
@@ -44,22 +44,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Properties
 
-        #region EMPServer
-
-        private readonly EMPServer _EMPServer;
-
         /// <summary>
-        /// The linked OICP v2.0 EMP client.
+        /// The linked OICP EMP server.
         /// </summary>
-        public EMPServer EMPServer
-        {
-            get
-            {
-                return _EMPServer;
-            }
-        }
-
-        #endregion
+        public EMPServer EMPServer { get; }
 
         #endregion
 
@@ -68,9 +56,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region EMPServerLogger(EMPServer, Context = DefaultContext, LogFileCreator = null)
 
         /// <summary>
-        /// Create a new OICP v2.0 EMP server logger using the default logging delegates.
+        /// Create a new OICP EMP server logger using the default logging delegates.
         /// </summary>
-        /// <param name="EMPServer">A OICP v2.0 EMP server.</param>
+        /// <param name="EMPServer">A OICP EMP server.</param>
         /// <param name="Context">A context of this API.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPServerLogger(EMPServer                     EMPServer,
@@ -92,9 +80,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region EMPServerLogger(EMPServer, Context, ... Logging delegates ...)
 
         /// <summary>
-        /// Create a new OICP v2.0 EMP server logger using the given logging delegates.
+        /// Create a new OICP EMP server logger using the given logging delegates.
         /// </summary>
-        /// <param name="EMPServer">A OICP v2.0 EMP server.</param>
+        /// <param name="EMPServer">A OICP EMP server.</param>
         /// <param name="Context">A context of this API.</param>
         /// 
         /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
@@ -160,52 +148,52 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (EMPServer == null)
                 throw new ArgumentNullException(nameof(EMPServer), "The given EMP server must not be null!");
 
-            this._EMPServer = EMPServer;
+            this.EMPServer = EMPServer;
 
             #endregion
 
             #region Register AuthorizeStart/Stop and SendCDR log events
 
             RegisterEvent("AuthorizeStart",
-                          handler => _EMPServer.OnLogAuthorizeStart += handler,
-                          handler => _EMPServer.OnLogAuthorizeStart -= handler,
+                          handler => EMPServer.OnLogAuthorizeStart += handler,
+                          handler => EMPServer.OnLogAuthorizeStart -= handler,
                           "Authorize", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStarted",
-                          handler => _EMPServer.OnLogAuthorizeStarted += handler,
-                          handler => _EMPServer.OnLogAuthorizeStarted -= handler,
+                          handler => EMPServer.OnLogAuthorizeStarted += handler,
+                          handler => EMPServer.OnLogAuthorizeStarted -= handler,
                           "Authorize", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
 
             RegisterEvent("AuthorizeStop",
-                          handler => _EMPServer.OnLogAuthorizeStop += handler,
-                          handler => _EMPServer.OnLogAuthorizeStop -= handler,
+                          handler => EMPServer.OnLogAuthorizeStop += handler,
+                          handler => EMPServer.OnLogAuthorizeStop -= handler,
                           "Authorize", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStopped",
-                          handler => _EMPServer.OnLogAuthorizeStopped += handler,
-                          handler => _EMPServer.OnLogAuthorizeStopped -= handler,
+                          handler => EMPServer.OnLogAuthorizeStopped += handler,
+                          handler => EMPServer.OnLogAuthorizeStopped -= handler,
                           "Authorize", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
 
             RegisterEvent("ChargeDetailRecordSend",
-                          handler => _EMPServer.OnLogChargeDetailRecordSend += handler,
-                          handler => _EMPServer.OnLogChargeDetailRecordSend -= handler,
+                          handler => EMPServer.OnLogChargeDetailRecordSend += handler,
+                          handler => EMPServer.OnLogChargeDetailRecordSend -= handler,
                           "CDR", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("ChargeDetailRecordSent",
-                          handler => _EMPServer.OnLogChargeDetailRecordSent += handler,
-                          handler => _EMPServer.OnLogChargeDetailRecordSent -= handler,
+                          handler => EMPServer.OnLogChargeDetailRecordSent += handler,
+                          handler => EMPServer.OnLogChargeDetailRecordSent -= handler,
                           "CDR", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);

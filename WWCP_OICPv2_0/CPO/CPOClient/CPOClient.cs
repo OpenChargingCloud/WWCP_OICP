@@ -36,7 +36,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// An OICP v2.0 CPO Client.
+    /// An OICP CPO Client.
     /// </summary>
     public class CPOClient : ASOAPClient
     {
@@ -46,7 +46,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default HTTP user agent string.
         /// </summary>
-        public const String DefaultHTTPUserAgent = "GraphDefined OICP v2.0 CPO Client";
+        public const String DefaultHTTPUserAgent = "GraphDefined OICP " + Version.Number + " CPO Client";
 
         #endregion
 
@@ -142,7 +142,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public event ClientResponseLogHandler   OnAuthorizeStopResponse;
 
         /// <summary>
-        /// An event fired whenever an authorize start request was sent.
+        /// An event fired whenever an authorize stop request was sent.
         /// </summary>
         public event OnAuthorizeStoppedHandler  OnAuthorizeStopped;
 
@@ -201,7 +201,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new OICP v2.0 CPOClient.
+        /// Create a new OICP CPO Client.
         /// </summary>
         /// <param name="ClientId">A unqiue identification of this client.</param>
         /// <param name="Hostname">The hostname of the remote OICP service.</param>
@@ -290,7 +290,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 }
                 catch (Exception e)
                 {
-                    e.Log("OICP.CPOClient." + nameof(OnEVSEDataPush));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnEVSEDataPush));
                 }
 
                 #endregion
@@ -385,7 +385,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        e.Log("OICP.CPOClient." + nameof(OnEVSEDataPushed));
+                        e.Log(nameof(CPOClient) + "." + nameof(OnEVSEDataPushed));
                     }
 
                     #endregion
@@ -610,7 +610,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 }
                 catch (Exception e)
                 {
-                    e.Log("OICP.CPOClient." + nameof(OnEVSEStatusPush));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnEVSEStatusPush));
                 }
 
                 #endregion
@@ -705,7 +705,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     }
                     catch (Exception e)
                     {
-                        e.Log("OICP.CPOClient." + nameof(OnEVSEDataPushed));
+                        e.Log(nameof(CPOClient) + "." + nameof(OnEVSEDataPushed));
                     }
 
                     #endregion
@@ -802,7 +802,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log("OICP.CPOClient." + nameof(OnAuthorizeStart));
+                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStart));
             }
 
             #endregion
@@ -825,7 +825,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     "eRoamingAuthorizeStart",
                                                     RequestLogDelegate:   OnAuthorizeStartRequest,
                                                     ResponseLogDelegate:  OnAuthorizeStartResponse,
-                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                     #region OnSuccess
 
@@ -903,7 +903,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 }
                 catch (Exception e)
                 {
-                    e.Log("OICP.CPOClient." + nameof(OnAuthorizeStarted));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStarted));
                 }
 
                 #endregion
@@ -962,7 +962,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log("OICP.CPOClient." + nameof(OnAuthorizeStop));
+                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStop));
             }
 
             #endregion
@@ -984,7 +984,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     "eRoamingAuthorizeStop",
                                                     RequestLogDelegate:   OnAuthorizeStopRequest,
                                                     ResponseLogDelegate:  OnAuthorizeStopResponse,
-                                                    QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                     #region OnSuccess
 
@@ -1061,7 +1061,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 }
                 catch (Exception e)
                 {
-                    e.Log("OICP.CPOClient." + nameof(OnAuthorizeStopped));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopped));
                 }
 
                 #endregion
@@ -1125,7 +1125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log("OICP.CPOClient." + nameof(OnSendChargeDetailRecord));
+                e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecord));
             }
 
             #endregion
@@ -1217,7 +1217,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 }
                 catch (Exception e)
                 {
-                    e.Log("OICP.CPOClient." + nameof(OnChargeDetailRecordSent));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnChargeDetailRecordSent));
                 }
 
                 #endregion
@@ -1258,7 +1258,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log("OICP.CPOClient." + nameof(OnPullAuthenticationData));
+                e.Log(nameof(CPOClient) + "." + nameof(OnPullAuthenticationData));
             }
 
             #endregion
@@ -1342,7 +1342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 }
                 catch (Exception e)
                 {
-                    e.Log("OICP.CPOClient." + nameof(OnAuthenticationDataPulled));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnAuthenticationDataPulled));
                 }
 
                 #endregion
