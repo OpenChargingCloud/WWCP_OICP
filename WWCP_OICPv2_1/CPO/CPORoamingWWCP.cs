@@ -51,67 +51,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region CPORoaming
-
-        private readonly CPORoaming _CPORoaming;
-
         /// <summary>
         /// The wrapped CPO roaming object.
         /// </summary>
-        public CPORoaming CPORoaming
-            => _CPORoaming;
-
-        #endregion
-
-        #region CPOClient
+        public CPORoaming CPORoaming { get; }
 
         /// <summary>
         /// The CPO client.
         /// </summary>
         public CPOClient CPOClient
-            => _CPORoaming?.CPOClient;
-
-        #endregion
-
-        #region CPOServer
+            => CPORoaming?.CPOClient;
 
         /// <summary>
         /// The CPO server.
         /// </summary>
         public CPOServer CPOServer
-            => _CPORoaming?.CPOServer;
-
-        #endregion
-
-        #region ClientLogger
+            => CPORoaming?.CPOServer;
 
         /// <summary>
         /// The CPO client logger.
         /// </summary>
         public CPOClientLogger ClientLogger
-            => _CPORoaming?.CPOClientLogger;
-
-        #endregion
-
-        #region ServerLogger
+            => CPORoaming?.CPOClientLogger;
 
         /// <summary>
         /// The CPO server logger.
         /// </summary>
         public CPOServerLogger ServerLogger
-            => _CPORoaming?.CPOServerLogger;
-
-        #endregion
-
-        #region DNSClient
+            => CPORoaming?.CPOServerLogger;
 
         /// <summary>
         /// The attached DNS server.
         /// </summary>
         public DNSClient DNSClient
-            => _CPORoaming.DNSClient;
-
-        #endregion
+            => CPORoaming.DNSClient;
 
         #endregion
 
@@ -281,15 +254,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            this._CPORoaming           = CPORoaming;
+            this.CPORoaming           = CPORoaming;
             this._EVSE2EVSEDataRecord  = EVSE2EVSEDataRecord;
             this._EVSEDataRecord2XML   = EVSEDataRecord2XML;
 
             // Link events...
-            this._CPORoaming.OnRemoteReservationStart += SendRemoteReservationStart;
-            this._CPORoaming.OnRemoteReservationStop  += SendRemoteReservationStop;
-            this._CPORoaming.OnRemoteStart            += SendRemoteStart;
-            this._CPORoaming.OnRemoteStop             += SendRemoteStop;
+            this.CPORoaming.OnRemoteReservationStart += SendRemoteReservationStart;
+            this.CPORoaming.OnRemoteReservationStop  += SendRemoteReservationStop;
+            this.CPORoaming.OnRemoteStart            += SendRemoteStart;
+            this.CPORoaming.OnRemoteStop             += SendRemoteStop;
 
         }
 
@@ -690,7 +663,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #endregion
 
-                var result = await _CPORoaming.PushEVSEData(GroupedEVSEs.
+                var result = await CPORoaming.PushEVSEData(GroupedEVSEs.
                                                                 SelectMany(group => group).
                                                                 ToLookup  (evse  => evse.Operator,
                                                                            evse  => evse.AsOICPEVSEDataRecord(_EVSE2EVSEDataRecord)),
@@ -1187,7 +1160,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #endregion
 
-                var result = await _CPORoaming.PushEVSEStatus(_GroupedEVSEStatus.
+                var result = await CPORoaming.PushEVSEStatus(_GroupedEVSEStatus.
                                                                   SelectMany(group      => group).
                                                                   Select    (evsestatus => new EVSEStatusRecord(evsestatus.Id, evsestatus.Status.AsOICPEVSEStatus())),
                                                               ActionType.AsOICPActionType(),
@@ -1735,7 +1708,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 //                               _HTTPVirtualHost,
                 //                               TrackingId);
 
-                var result = await _CPORoaming.PushEVSEStatus(NewEVSEStatus,
+                var result = await CPORoaming.PushEVSEStatus(NewEVSEStatus,
                                                               ActionType.insert,
                                                               EVSEStatusDiff.EVSEOperatorId,
                                                               null,
@@ -1760,7 +1733,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 //                                   _HTTPVirtualHost,
                 //                                   TrackingId);
 
-                var result = await _CPORoaming.PushEVSEStatus(ChangedEVSEStatus,
+                var result = await CPORoaming.PushEVSEStatus(ChangedEVSEStatus,
                                                               ActionType.update,
                                                               EVSEStatusDiff.EVSEOperatorId,
                                                               null,
@@ -1784,7 +1757,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 //                                   _HTTPVirtualHost,
                 //                                   TrackingId);
 
-                var result = await _CPORoaming.PushEVSEStatus(RemovedEVSEStatus.Select(EVSEId => new EVSEStatusRecord(EVSEId, EVSEStatusType.OutOfService)),
+                var result = await CPORoaming.PushEVSEStatus(RemovedEVSEStatus.Select(EVSEId => new EVSEStatusRecord(EVSEId, EVSEStatusType.OutOfService)),
                                                               ActionType.delete,
                                                               EVSEStatusDiff.EVSEOperatorId,
                                                               null,
@@ -1805,7 +1778,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region AuthorizeStart(...OperatorId, AuthToken, ChargingProductId = null, SessionId = null, ...)
 
         /// <summary>
-        /// Create an OICP v2.1 AuthorizeStart request.
+        /// Create an OICP AuthorizeStart request.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
@@ -1863,7 +1836,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response = await _CPORoaming.AuthorizeStart(OperatorId,
+            var response = await CPORoaming.AuthorizeStart(OperatorId,
                                                             AuthToken,
                                                             null,
                                                             SessionId,
@@ -1923,7 +1896,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region AuthorizeStart(...OperatorId, AuthToken, EVSEId, ChargingProductId = null, SessionId = null, ...)
 
         /// <summary>
-        /// Create an OICP v2.1 AuthorizeStart request at the given EVSE.
+        /// Create an OICP AuthorizeStart request at the given EVSE.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
@@ -1988,7 +1961,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response  = await _CPORoaming.AuthorizeStart(OperatorId,
+            var response  = await CPORoaming.AuthorizeStart(OperatorId,
                                                              AuthToken,
                                                              EVSEId,
                                                              SessionId,
@@ -2050,7 +2023,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region AuthorizeStart(...OperatorId, AuthToken, ChargingStationId, ChargingProductId = null, SessionId = null, ...)
 
         /// <summary>
-        /// Create an OICP v2.1 AuthorizeStart request at the given charging station.
+        /// Create an OICP AuthorizeStart request at the given charging station.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
@@ -2161,7 +2134,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         //        (e.g. car sharing)
 
         /// <summary>
-        /// Create an OICP v2.1 AuthorizeStop request.
+        /// Create an OICP AuthorizeStop request.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
@@ -2204,7 +2177,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response  = await _CPORoaming.AuthorizeStop(OperatorId,
+            var response  = await CPORoaming.AuthorizeStop(OperatorId,
                                                             SessionId,
                                                             AuthToken,
                                                             QueryTimeout: QueryTimeout);
@@ -2261,7 +2234,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         //        (e.g. car sharing)
 
         /// <summary>
-        /// Create an OICP v2.1 AuthorizeStop request.
+        /// Create an OICP AuthorizeStop request.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
@@ -2307,7 +2280,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response  = await _CPORoaming.AuthorizeStop(OperatorId,
+            var response  = await CPORoaming.AuthorizeStop(OperatorId,
                                                             SessionId,
                                                             AuthToken,
                                                             EVSEId,
@@ -2363,7 +2336,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region AuthorizeStop(...OperatorId, ChargingStationId, SessionId, AuthToken, ...)
 
         /// <summary>
-        /// Create an OICP v2.1 AuthorizeStop request.
+        /// Create an OICP AuthorizeStop request.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
@@ -2461,7 +2434,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region SendChargeDetailRecord(...ChargeDetailRecord, ...)
 
         /// <summary>
-        /// Create an OICP v2.1 SendChargeDetailRecord request.
+        /// Create an OICP SendChargeDetailRecord request.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
@@ -2481,7 +2454,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (ChargeDetailRecord == null)
-                throw new ArgumentNullException(nameof(ChargeDetailRecord), "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(ChargeDetailRecord),  "The given charge detail record must not be null!");
 
             #endregion
 
@@ -2506,23 +2479,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response = await _CPORoaming.SendChargeDetailRecord(
-                               new ChargeDetailRecord(
-                                   ChargeDetailRecord.EVSEId,
-                                   ChargeDetailRecord.SessionId,
-                                   ChargeDetailRecord.SessionTime.Value.StartTime,
-                                   ChargeDetailRecord.SessionTime.Value.EndTime.Value,
-                                   new AuthorizationIdentification(ChargeDetailRecord.IdentificationStart),
-                                   ChargeDetailRecord.ChargingProductId,
-                                   null, // PartnerSessionId
-                                   ChargeDetailRecord.SessionTime.HasValue ? new DateTime?(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
-                                   ChargeDetailRecord.SessionTime.HasValue ?               ChargeDetailRecord.SessionTime.Value.EndTime    : null,
-                                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeteringValues.First().Value)                             : null,
-                                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeteringValues.Last(). Value)                             : null,
-                                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ?             ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<double> v) => v.Value) : null,
-                                   ChargeDetailRecord.ConsumedEnergy,
-                                   ChargeDetailRecord.MeteringSignature),
-                               QueryTimeout);
+            var response = await CPORoaming.SendChargeDetailRecord(Timestamp,
+                                                                   CancellationToken,
+                                                                   EventTrackingId,
+                                                                   new ChargeDetailRecord(
+                                                                       ChargeDetailRecord.EVSEId,
+                                                                       ChargeDetailRecord.SessionId,
+                                                                       ChargeDetailRecord.SessionTime.Value.StartTime,
+                                                                       ChargeDetailRecord.SessionTime.Value.EndTime.Value,
+                                                                       new AuthorizationIdentification(ChargeDetailRecord.IdentificationStart),
+                                                                       ChargeDetailRecord.ChargingProductId,
+                                                                       null, // PartnerSessionId
+                                                                       ChargeDetailRecord.SessionTime.HasValue ? new DateTime?(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
+                                                                       ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.EndTime : null,
+                                                                       ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeteringValues.First().Value) : null,
+                                                                       ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? new Double?(ChargeDetailRecord.EnergyMeteringValues.Last().Value) : null,
+                                                                       ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<double> v) => v.Value) : null,
+                                                                       ChargeDetailRecord.ConsumedEnergy,
+                                                                       ChargeDetailRecord.MeteringSignature),
+                                                                   QueryTimeout);
 
 
             SendCDRResult result = null;

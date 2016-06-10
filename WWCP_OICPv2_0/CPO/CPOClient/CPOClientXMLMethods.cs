@@ -188,7 +188,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region AuthorizeStartXML(OperatorId, AuthToken, EVSEId = null, PartnerProductId = null, SessionId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP v2.0 Authorize Start XML request.
+        /// Create an OICP Authorize Start XML request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
@@ -307,7 +307,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region AuthorizeStopXML (OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null)
 
         /// <summary>
-        /// Create an OICP v2.0 AuthorizeStop XML request.
+        /// Create an OICP AuthorizeStop XML request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="SessionId">The session identification.</param>
@@ -422,7 +422,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region PullAuthenticationDataXML(OperatorId)
 
         /// <summary>
-        /// Create an OICP v2.0 PullAuthenticationData XML request.
+        /// Create an OICP PullAuthenticationData XML request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         public static XElement PullAuthenticationDataXML(EVSEOperator_Id OperatorId)

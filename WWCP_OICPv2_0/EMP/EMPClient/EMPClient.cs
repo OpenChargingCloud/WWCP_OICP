@@ -1037,10 +1037,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<IEnumerable<ChargeDetailRecord>>>
 
-            GetChargeDetailRecords(EVSP_Id    ProviderId,
-                                   DateTime   From,
-                                   DateTime   To,
-                                   TimeSpan?  QueryTimeout  = null)
+            GetChargeDetailRecords(DateTime           Timestamp,
+                                   CancellationToken  CancellationToken,
+                                   EventTracking_Id   EventTrackingId,
+                                   EVSP_Id            ProviderId,
+                                   DateTime           From,
+                                   DateTime           To,
+                                   TimeSpan?          QueryTimeout  = null)
 
         {
 

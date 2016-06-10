@@ -136,7 +136,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region AuthorizeRemoteStart(SessionId, ProviderId, EVSEId, eMAId, ChargingProductId = null, PartnerSessionId = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP v2.0 authorize remote start request.
+        /// Create an OICP authorize remote start request.
         /// </summary>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
@@ -319,7 +319,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region AuthorizeRemoteStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP v2.0 remote authorize stop request.
+        /// Create an OICP remote authorize stop request.
         /// </summary>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>

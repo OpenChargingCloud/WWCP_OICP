@@ -19,6 +19,7 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ using System.Collections.Generic;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -1057,7 +1059,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP v2.1 authorize start request.
+        /// Create an OICP authorize start request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
@@ -1100,7 +1102,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         //        (e.g. car sharing)
 
         /// <summary>
-        /// Create an OICP v2.1 authorize stop request.
+        /// Create an OICP authorize stop request.
         /// </summary>
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
@@ -1153,7 +1155,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<eRoamingAcknowledgement>
 
-            SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
+            SendChargeDetailRecord(DateTime            Timestamp,
+                                   CancellationToken   CancellationToken,
+                                   EventTracking_Id    EventTrackingId,
+                                   ChargeDetailRecord  ChargeDetailRecord,
                                    TimeSpan?           QueryTimeout  = null)
 
         {
@@ -1165,8 +1170,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            var result = await CPOClient.SendChargeDetailRecord(ChargeDetailRecord,
-                                                                 QueryTimeout);
+            var result = await CPOClient.SendChargeDetailRecord(Timestamp,
+                                                                CancellationToken,
+                                                                EventTrackingId,
+                                                                ChargeDetailRecord,
+                                                                QueryTimeout);
 
             //ToDo: Process the HTTP!
             return result.Content;
@@ -1179,7 +1187,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region PullAuthenticationData(OperatorId, QueryTimeout = null)
 
         /// <summary>
-        /// Create an OICP v2.1 PullAuthenticationData request.
+        /// Create an OICP PullAuthenticationData request.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
