@@ -302,7 +302,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        "/ibis/ws/eRoamingEvseData_V2.1",
                                                        _UserAgent,
                                                        _RemoteCertificateValidator,
-                                                       _DNSClient))
+                                                       DNSClient))
                 {
 
                     var result = await OICPClient.Query(CPOClientXMLMethods.PushEVSEDataXML(GroupedEVSEDataRecords,
@@ -312,7 +312,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         "eRoamingPushEvseData",
                                                         RequestLogDelegate:   OnEVSEDataPushRequest,
                                                         ResponseLogDelegate:  OnEVSEDataPushResponse,
-                                                        QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                        QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
 
                                                         #region OnSuccess
 
@@ -622,7 +622,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                        _UserAgent,
                                                        _RemoteCertificateValidator,
-                                                       _DNSClient))
+                                                       DNSClient))
                 {
 
                      var result = await OICPClient.Query(CPOClientXMLMethods.PushEVSEStatusXML(_EVSEStatusRecords,
@@ -632,7 +632,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          "eRoamingPushEvseStatus",
                                                          RequestLogDelegate:   OnEVSEStatusPushRequest,
                                                          ResponseLogDelegate:  OnEVSEStatusPushResponse,
-                                                         QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                         QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
 
                                                          #region OnSuccess
 
@@ -817,7 +817,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
                                                    _UserAgent,
                                                    _RemoteCertificateValidator,
-                                                   DNSClient: _DNSClient))
+                                                   DNSClient: DNSClient))
             {
 
                 var result = await OICPClient.Query(CPOClientXMLMethods.AuthorizeStartXML(OperatorId,
@@ -829,7 +829,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     "eRoamingAuthorizeStart",
                                                     RequestLogDelegate:   OnAuthorizeStartRequest,
                                                     ResponseLogDelegate:  OnAuthorizeStartResponse,
-                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
 
                                                     #region OnSuccess
 
@@ -993,7 +993,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
                                                    _UserAgent,
                                                    _RemoteCertificateValidator,
-                                                   DNSClient: _DNSClient))
+                                                   DNSClient: DNSClient))
             {
 
                 var result = await OICPClient.Query(CPOClientXMLMethods.AuthorizeStopXML(OperatorId,
@@ -1004,7 +1004,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     "eRoamingAuthorizeStop",
                                                     RequestLogDelegate:   OnAuthorizeStopRequest,
                                                     ResponseLogDelegate:  OnAuthorizeStopResponse,
-                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
 
                                                     #region OnSuccess
 
@@ -1168,14 +1168,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
                                                    _UserAgent,
                                                    _RemoteCertificateValidator,
-                                                   DNSClient: _DNSClient))
+                                                   DNSClient: DNSClient))
             {
 
                 var result = await OICPClient.Query(SOAP.Encapsulation(ChargeDetailRecord.ToXML()),
                                                     "eRoamingChargeDetailRecord",
                                                     RequestLogDelegate:   OnSendChargeDetailRecordRequest,
                                                     ResponseLogDelegate:  OnSendChargeDetailRecordResponse,
-                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
 
                                                     #region OnSuccess
 
@@ -1312,14 +1312,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    "/ibis/ws/eRoamingAuthenticationData_V2.0",
                                                    _UserAgent,
                                                    _RemoteCertificateValidator,
-                                                   DNSClient: _DNSClient))
+                                                   DNSClient: DNSClient))
             {
 
                 var result = await OICPClient.Query(CPOClientXMLMethods.PullAuthenticationDataXML(OperatorId),
                                                     "eRoamingPullAuthenticationData",
                                                     RequestLogDelegate:   OnPullAuthenticationDataRequest,
                                                     ResponseLogDelegate:  OnPullAuthenticationDataResponse,
-                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
 
                                                     #region OnSuccess
 

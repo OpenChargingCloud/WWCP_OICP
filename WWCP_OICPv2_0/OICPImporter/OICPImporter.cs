@@ -517,7 +517,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
             get
             {
-                return _EMPClient.QueryTimeout;
+                return _EMPClient.RequestTimeout;
             }
         }
 

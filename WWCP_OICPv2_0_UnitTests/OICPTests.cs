@@ -165,10 +165,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
         {
 
             var result = await HubjectEMP.
-                                   GetChargeDetailRecords(DateTime.Now,
-                                                          new CancellationTokenSource().Token,
-                                                          EventTracking_Id.New,
-                                                          EVSP_Id.Parse("DE*GDF"),
+                                   GetChargeDetailRecords(EVSP_Id.Parse("DE*GDF"),
                                                           new DateTime(2015, 10,  1),
                                                           new DateTime(2015, 10, 31));
 

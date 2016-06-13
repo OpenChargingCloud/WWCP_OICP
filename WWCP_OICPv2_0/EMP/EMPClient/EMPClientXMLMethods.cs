@@ -583,7 +583,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (ProviderAuthenticationDataRecords == null)
-                throw new ArgumentNullException("ProviderAuthenticationDataRecords", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(ProviderAuthenticationDataRecords),  "The given provider authentication data records must not be null!");
 
             #endregion
 
@@ -610,77 +610,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad)
+        //#region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad)
 
-        /// <summary>
-        /// Create a new PushAuthenticationData request.
-        /// </summary>
-        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
-        public static XElement PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
-                                                      EVSP_Id                                   ProviderId,
-                                                      ActionType                                OICPAction  = ActionType.fullLoad)
-        {
+        ///// <summary>
+        ///// Create a new PushAuthenticationData request.
+        ///// </summary>
+        ///// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
+        ///// <param name="ProviderId">The unique identification of the EVSP.</param>
+        ///// <param name="OICPAction">An optional OICP action.</param>
+        //public static XElement PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
+        //                                              EVSP_Id                                   ProviderId,
+        //                                              ActionType                                OICPAction  = ActionType.fullLoad)
+        //{
 
-            return PushAuthenticationData(new ProviderAuthenticationData[] {
-                                              new ProviderAuthenticationData(ProviderId, AuthorizationIdentifications)
-                                          },
-                                          OICPAction);
+        //    return PushAuthenticationData(new ProviderAuthenticationData[] {
+        //                                      new ProviderAuthenticationData(ProviderId, AuthorizationIdentifications)
+        //                                  },
+        //                                  OICPAction);
 
-        }
+        //}
 
-        #endregion
-
-
-        #region GetChargeDetailRecords(ProviderId, From, To)
-
-        /// <summary>
-        /// Create a new GetChargeDetailRecords request.
-        /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="From">The starting time.</param>
-        /// <param name="To">The end time.</param>
-        public static XElement GetChargeDetailRecords(EVSP_Id   ProviderId,
-                                                      DateTime  From,
-                                                      DateTime  To)
-        {
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0">
-            //
-            //    <soapenv:Header/>
-            //
-            //    <soapenv:Body>
-            //       <Authorization:eRoamingGetChargeDetailRecords>
-            //          <Authorization:ProviderID>?</Authorization:ProviderID>
-            //          <Authorization:From>?</Authorization:From>
-            //          <Authorization:To>?</Authorization:To>
-            //       </Authorization:eRoamingGetChargeDetailRecords>
-            //    </soapenv:Body>
-            //
-            // </soapenv:Envelope>
-
-            #endregion
-
-            #region Initial checks
-
-            if (ProviderId == null)
-                throw new ArgumentNullException("ProviderId", "The given parameter must not be null!");
-
-            #endregion
-
-            return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingGetChargeDetailRecords",
-                                          new XElement(OICPNS.Authorization + "ProviderID", ProviderId.ToString()),
-                                          new XElement(OICPNS.Authorization + "From",       From.ToIso8601()),
-                                          new XElement(OICPNS.Authorization + "To",         To.ToIso8601())
-                                      ));
-
-        }
-
-        #endregion
+        //#endregion
 
 
         #region AuthorizeRemoteStartXML(...)
@@ -879,6 +829,56 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
+
+
+        #region GetChargeDetailRecords(ProviderId, From, To)
+
+        /// <summary>
+        /// Create a new GetChargeDetailRecords request.
+        /// </summary>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="From">The starting time.</param>
+        /// <param name="To">The end time.</param>
+        public static XElement GetChargeDetailRecords(EVSP_Id   ProviderId,
+                                                      DateTime  From,
+                                                      DateTime  To)
+        {
+
+            #region Documentation
+
+            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0">
+            //
+            //    <soapenv:Header/>
+            //
+            //    <soapenv:Body>
+            //       <Authorization:eRoamingGetChargeDetailRecords>
+            //          <Authorization:ProviderID>?</Authorization:ProviderID>
+            //          <Authorization:From>?</Authorization:From>
+            //          <Authorization:To>?</Authorization:To>
+            //       </Authorization:eRoamingGetChargeDetailRecords>
+            //    </soapenv:Body>
+            //
+            // </soapenv:Envelope>
+
+            #endregion
+
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException(nameof(ProviderId),  "The given provider identification must not be null!");
+
+            #endregion
+
+            return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingGetChargeDetailRecords",
+                                          new XElement(OICPNS.Authorization + "ProviderID", ProviderId.ToString()),
+                                          new XElement(OICPNS.Authorization + "From",       From.ToIso8601()),
+                                          new XElement(OICPNS.Authorization + "To",         To.ToIso8601())
+                                      ));
+
+        }
+
+        #endregion
 
     }
 

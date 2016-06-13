@@ -776,12 +776,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                    DateTime           To,
                                    TimeSpan?          QueryTimeout  = null)
 
-            => await EMPClient.GetChargeDetailRecords(Timestamp,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      ProviderId,
+            => await EMPClient.GetChargeDetailRecords(ProviderId,
                                                       From,
                                                       To,
+                                                      Timestamp,
+                                                      CancellationToken,
+                                                      EventTrackingId,
                                                       QueryTimeout);
 
         #endregion

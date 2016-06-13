@@ -163,7 +163,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     _URIPrefix + "/Reservation",
                                                     _UserAgent,
                                                     _RemoteCertificateValidator,
-                                                    DNSClient: _DNSClient))
+                                                    DNSClient: DNSClient))
             {
 
                 #region Documentation
@@ -254,7 +254,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 return await _OICPClient.Query(XML,
                                                "AuthorizeRemoteReservationStart",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
                                                HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
 
                                                #region OnSuccess
@@ -345,7 +345,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     _URIPrefix + "/Reservation",
                                                     _UserAgent,
                                                     _RemoteCertificateValidator,
-                                                    DNSClient: _DNSClient))
+                                                    DNSClient: DNSClient))
             {
 
                 #region Documentation
@@ -390,7 +390,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 return await _OICPClient.Query(XML,
                                                "AuthorizeRemoteReservationStop",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
                                                HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
 
                                                #region OnSuccess
@@ -486,7 +486,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     _URIPrefix + "/Authorization",
                                                     _UserAgent,
                                                     _RemoteCertificateValidator,
-                                                    DNSClient: _DNSClient))
+                                                    DNSClient: DNSClient))
             {
 
                 #region Documentation
@@ -578,7 +578,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 return await _OICPClient.Query(XML,
                                                "AuthorizeRemoteStart",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
                                                HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
 
                                                #region OnSuccess
@@ -669,7 +669,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     _URIPrefix + "/Authorization",
                                                     _UserAgent,
                                                     _RemoteCertificateValidator,
-                                                    DNSClient: _DNSClient))
+                                                    DNSClient: DNSClient))
             {
 
                 #region Documentation
@@ -715,7 +715,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 return await _OICPClient.Query(XML,
                                                "AuthorizeRemoteStop",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
                                                HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
 
                                                #region OnSuccess
