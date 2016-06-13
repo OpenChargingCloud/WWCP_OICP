@@ -27,7 +27,65 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// A delegate called whenever an authorize temote start request will be send.
+    /// A delegate called whenever a reservation start request will be send.
+    /// </summary>
+    public delegate Task OnReservationStartRequestHandler(DateTime             Timestamp,
+                                                          EMPClient            Sender,
+                                                          String               SenderId,
+                                                          EVSP_Id              ProviderId,
+                                                          EVSE_Id              EVSEId,
+                                                          eMA_Id               eMAId,
+                                                          ChargingSession_Id   SessionId,
+                                                          ChargingSession_Id   PartnerSessionId,
+                                                          ChargingProduct_Id   PartnerProductId,
+                                                          TimeSpan?            QueryTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a reservation start request was received.
+    /// </summary>
+    public delegate Task OnReservationStartResponseHandler(DateTime                  Timestamp,
+                                                           EMPClient                 Sender,
+                                                           String                    SenderId,
+                                                           EVSP_Id                   ProviderId,
+                                                           EVSE_Id                   EVSEId,
+                                                           eMA_Id                    eMAId,
+                                                           ChargingSession_Id        SessionId,
+                                                           ChargingSession_Id        PartnerSessionId,
+                                                           ChargingProduct_Id        PartnerProductId,
+                                                           TimeSpan?                 QueryTimeout,
+                                                           eRoamingAcknowledgement   Result,
+                                                           TimeSpan                  Duration);
+
+
+    /// <summary>
+    /// A delegate called whenever a reservation stop request will be send.
+    /// </summary>
+    public delegate Task OnReservationStopRequestHandler(DateTime             Timestamp,
+                                                         EMPClient            Sender,
+                                                         String               SenderId,
+                                                         ChargingSession_Id   SessionId,
+                                                         EVSP_Id              ProviderId,
+                                                         EVSE_Id              EVSEId,
+                                                         ChargingSession_Id   PartnerSessionId,
+                                                         TimeSpan?            QueryTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a reservation stop request was received.
+    /// </summary>
+    public delegate Task OnReservationStopResponseHandler(DateTime                  Timestamp,
+                                                          EMPClient                 Sender,
+                                                          String                    SenderId,
+                                                          ChargingSession_Id        SessionId,
+                                                          EVSP_Id                   ProviderId,
+                                                          EVSE_Id                   EVSEId,
+                                                          ChargingSession_Id        PartnerSessionId,
+                                                          TimeSpan?                 QueryTimeout,
+                                                          eRoamingAcknowledgement   Result,
+                                                          TimeSpan                  Duration);
+
+
+        /// <summary>
+    /// A delegate called whenever an authorize remote start request will be send.
     /// </summary>
     public delegate Task OnAuthorizeRemoteStartRequestHandler(DateTime             Timestamp,
                                                               EMPClient            Sender,
@@ -82,6 +140,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                               TimeSpan?                 QueryTimeout,
                                                               eRoamingAcknowledgement   Result,
                                                               TimeSpan                  Duration);
+
+
 
 
 

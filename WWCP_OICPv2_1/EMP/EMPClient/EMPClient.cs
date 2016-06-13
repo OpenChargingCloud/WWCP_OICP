@@ -53,10 +53,58 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Events
 
+        #region OnReservationStartRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a reservation start request will be send.
+        /// </summary>
+        public event OnReservationStartRequestHandler   OnReservationStartRequest;
+
+        /// <summary>
+        /// An event fired whenever a reservation start SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler            OnReservationStartSOAPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a reservation start SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler           OnReservationStartSOAPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a reservation start request had been received.
+        /// </summary>
+        public event OnReservationStartResponseHandler  OnReservationStartResponse;
+
+        #endregion
+
+        #region OnReservationStopRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a reservation stop request will be send.
+        /// </summary>
+        public event OnReservationStopRequestHandler   OnReservationStopRequest;
+
+        /// <summary>
+        /// An event fired whenever a reservation stop SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler           OnReservationStopSOAPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a reservation stop SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler          OnReservationStopSOAPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a reservation remote stop request had been received.
+        /// </summary>
+        public event OnReservationStopResponseHandler  OnReservationStopResponse;
+
+        #endregion
+
         #region OnAuthorizeRemoteStartRequest/-Response
 
         /// <summary>
-        /// An event fired whenever an authorize start request will be send.
+        /// An event fired whenever an authorize remote start request will be send.
         /// </summary>
         public event OnAuthorizeRemoteStartRequestHandler   OnAuthorizeRemoteStartRequest;
 
@@ -770,6 +818,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         {
 
+            #region Send OnReservationStartRequest event
+
+            var Runtime = Stopwatch.StartNew();
+
+            try
+            {
+
+                OnReservationStartRequest?.Invoke(DateTime.Now,
+                                                  this,
+                                                  ClientId,
+                                                  ProviderId,
+                                                  EVSEId,
+                                                  eMAId,
+                                                  SessionId,
+                                                  PartnerSessionId,
+                                                  PartnerProductId,
+                                                  QueryTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnReservationStartRequest));
+            }
+
+            #endregion
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
@@ -780,67 +854,99 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             {
 
-                return await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteReservationStartXML(ProviderId,
-                                                                                                      EVSEId,
-                                                                                                      eMAId,
-                                                                                                      SessionId,
-                                                                                                      PartnerSessionId,
-                                                                                                      PartnerProductId),
-                                               "eRoamingAuthorizeRemoteReservationStart",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                var result = await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteReservationStartXML(ProviderId,
+                                                                                                             EVSEId,
+                                                                                                             eMAId,
+                                                                                                             SessionId,
+                                                                                                             PartnerSessionId,
+                                                                                                             PartnerProductId),
+                                                      "eRoamingAuthorizeRemoteReservationStart",
+                                                      RequestLogDelegate:   OnReservationStartSOAPRequest,
+                                                      ResponseLogDelegate:  OnReservationStartSOAPResponse,
+                                                      QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               #region OnSuccess
+                                                      #region OnSuccess
 
-                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
+                                                      OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
 
-                                               #endregion
+                                                      #endregion
 
-                                               #region OnSOAPFault
+                                                      #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                      OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                          SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(false,
-                                                                                                                                -1,
-                                                                                                                                Description: httpresponse.Content.ToString()),
-                                                                                                    IsFault: true);
+                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                           new eRoamingAcknowledgement(false,
+                                                                                                                                       -1,
+                                                                                                                                       Description: httpresponse.Content.ToString()),
+                                                                                                           IsFault: true);
 
-                                               },
+                                                      },
 
-                                               #endregion
+                                                      #endregion
 
-                                               #region OnHTTPError
+                                                      #region OnHTTPError
 
-                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                      OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendHTTPError(timestamp, soapclient, httpresponse);
+                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(false,
-                                                                                                                                -1,
-                                                                                                                                Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
-                                                                                                    IsFault: true);
+                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                           new eRoamingAcknowledgement(false,
+                                                                                                                                       -1,
+                                                                                                                                       Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                       AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                           IsFault: true);
 
-                                               },
+                                                      },
 
-                                               #endregion
+                                                      #endregion
 
-                                               #region OnException
+                                                      #region OnException
 
-                                               OnException: (timestamp, sender, exception) => {
+                                                      OnException: (timestamp, sender, exception) => {
 
-                                                   SendException(timestamp, sender, exception);
+                                                          SendException(timestamp, sender, exception);
 
-                                                   return null;
+                                                          return null;
 
-                                               }
+                                                      }
 
-                                               #endregion
+                                                      #endregion
 
-                                        );
+                                                     );
+
+                #region Send OnReservationStartResponse event
+
+                Runtime.Stop();
+
+                try
+                {
+
+                    OnReservationStartResponse?.Invoke(DateTime.Now,
+                                                       this,
+                                                       ClientId,
+                                                       ProviderId,
+                                                       EVSEId,
+                                                       eMAId,
+                                                       SessionId,
+                                                       PartnerSessionId,
+                                                       PartnerProductId,
+                                                       QueryTimeout,
+                                                       result.Content,
+                                                       Runtime.Elapsed);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPClient) + "." + nameof(OnReservationStartResponse));
+                }
+
+                #endregion
+
+                return result;
 
             }
 
@@ -883,12 +989,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             {
 
-                return await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteReservationStopXML(SessionId,
+                #region Send OnReservationStopRequest event
+
+                var Runtime = Stopwatch.StartNew();
+
+                try
+                {
+
+                    OnReservationStopRequest?.Invoke(DateTime.Now,
+                                                     this,
+                                                     ClientId,
+                                                     SessionId,
+                                                     ProviderId,
+                                                     EVSEId,
+                                                     PartnerSessionId,
+                                                     QueryTimeout);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPClient) + "." + nameof(OnReservationStopRequest));
+                }
+
+                #endregion
+
+                var result = await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteReservationStopXML(SessionId,
                                                                                                      ProviderId,
                                                                                                      EVSEId,
                                                                                                      PartnerSessionId),
                                                "eRoamingAuthorizeRemoteReservationStop",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                                               RequestLogDelegate:   OnReservationStartSOAPRequest,
+                                               ResponseLogDelegate:  OnReservationStopSOAPResponse,
+                                               QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                #region OnSuccess
 
@@ -942,6 +1074,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                #endregion
 
                                         );
+
+                #region Send OnReservationStopResponse event
+
+                Runtime.Stop();
+
+                try
+                {
+
+                    OnReservationStopResponse?.Invoke(DateTime.Now,
+                                                     this,
+                                                     ClientId,
+                                                     SessionId,
+                                                     ProviderId,
+                                                     EVSEId,
+                                                     PartnerSessionId,
+                                                     QueryTimeout,
+                                                     result.Content,
+                                                     Runtime.Elapsed);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPClient) + "." + nameof(OnReservationStartResponse));
+                }
+
+                #endregion
+
+                return result;
+
 
             }
 
