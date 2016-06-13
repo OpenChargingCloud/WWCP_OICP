@@ -129,10 +129,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
 
             var SendCDRResult = await HubjectCPO.
-                                          SendChargeDetailRecord(DateTime.Now,
-                                                                 new CancellationTokenSource().Token,
-                                                                 EventTracking_Id.New,
-                                                                 new ChargeDetailRecord(
+                                          SendChargeDetailRecord(new ChargeDetailRecord(
                                                                      EVSEId:                EVSEId,
                                                                      SessionId:             AuthStartResult.Content.SessionId,
                                                                      PartnerProductId:      ChargingProduct_Id.Parse("AC1"),
@@ -146,7 +143,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
                                                                      MeterValueEnd:         234.567,
                                                                      MeterValuesInBetween:  Enumeration.Create(123.456, 189.768, 223.312, 234.560, 234.567),
                                                                      ConsumedEnergy:        111.111),
-                                                                 QueryTimeout:          TimeSpan.FromSeconds(120)
+
+                                                                 RequestTimeout:          TimeSpan.FromSeconds(120)
                                                                 );
 
             ConsoleX.WriteLines("SendCDR result:",

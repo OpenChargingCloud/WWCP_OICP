@@ -135,38 +135,56 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    TimeSpan                       Duration);
 
 
-    public delegate Task OnPullAuthenticationDataHandler(DateTime                       Timestamp,
-                                                         CPOClient                      Sender,
-                                                         String                         SenderId,
-                                                         EVSEOperator_Id                OperatorId,
-                                                         TimeSpan?                      QueryTimeout);
 
+    #region OnSendChargeDetailRecord
 
-    public delegate Task OnAuthenticationDataPulledHandler(DateTime                       Timestamp,
-                                                           CPOClient                      Sender,
-                                                           String                         SenderId,
-                                                           EVSEOperator_Id                OperatorId,
-                                                           TimeSpan?                      QueryTimeout,
-                                                           eRoamingAuthenticationData     Result,
-                                                           TimeSpan                       Duration);
+    /// <summary>
+    /// A delegate called whenever a 'charge detail record' will be send.
+    /// </summary>
+    public delegate Task OnSendChargeDetailRecordRequestHandler(DateTime                   LogTimestamp,
+                                                                DateTime                   RequestTimestamp,
+                                                                CPOClient                  Sender,
+                                                                String                     SenderId,
+                                                                ChargeDetailRecord         ChargeDetailRecord,
+                                                                TimeSpan?                  QueryTimeout);
 
+    /// <summary>
+    /// A delegate called whenever a response for a sent 'charge detail record' had been received.
+    /// </summary>
+    public delegate Task OnSendChargeDetailRecordResponseHandler(DateTime                  Timestamp,
+                                                                 CPOClient                 Sender,
+                                                                 String                    SenderId,
+                                                                 ChargeDetailRecord        ChargeDetailRecord,
+                                                                 TimeSpan?                 QueryTimeout,
+                                                                 eRoamingAcknowledgement   Result,
+                                                                 TimeSpan                  Duration);
 
-    
-    public delegate Task OnSendChargeDetailRecordHandler(DateTime                       Timestamp,
-                                                         CPOClient                      Sender,
-                                                         String                         SenderId,
-                                                         ChargeDetailRecord     ChargeDetailRecord,
-                                                         TimeSpan?                      QueryTimeout);
+    #endregion
 
-    public delegate Task OnChargeDetailRecordSentHandler(DateTime                       Timestamp,
-                                                         CPOClient                      Sender,
-                                                         String                         SenderId,
-                                                         ChargeDetailRecord     ChargeDetailRecord,
-                                                         TimeSpan?                      QueryTimeout,
-                                                         eRoamingAcknowledgement        Result,
-                                                         TimeSpan                       Duration);
+    #region OnPullAuthenticationData
 
+    /// <summary>
+    /// A delegate called whenever a 'pull authentication data' request will be send.
+    /// </summary>
+    public delegate Task OnPullAuthenticationDataRequestHandler (DateTime                     LogTimestamp,
+                                                                 DateTime                     RequestTimestamp,
+                                                                 CPOClient                    Sender,
+                                                                 String                       SenderId,
+                                                                 EVSEOperator_Id              OperatorId,
+                                                                 TimeSpan?                    QueryTimeout);
 
+    /// <summary>
+    /// A delegate called whenever a response for a 'pull authentication data' request had been received.
+    /// </summary>
+    public delegate Task OnPullAuthenticationDataResponseHandler(DateTime                     Timestamp,
+                                                                 CPOClient                    Sender,
+                                                                 String                       SenderId,
+                                                                 EVSEOperator_Id              OperatorId,
+                                                                 TimeSpan?                    QueryTimeout,
+                                                                 eRoamingAuthenticationData   Result,
+                                                                 TimeSpan                     Duration);
+
+    #endregion
 
 
 }

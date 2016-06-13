@@ -191,15 +191,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region OnChargeDetailRecordSend/-Sent
 
-        /// <summary>
-        /// An event fired whenever a charge detail record will be send.
-        /// </summary>
-        public override event OnChargeDetailRecordSendDelegate OnChargeDetailRecordSend;
+        ///// <summary>
+        ///// An event fired whenever a charge detail record will be send.
+        ///// </summary>
+        //public override event OnChargeDetailRecordSendDelegate OnChargeDetailRecordSend;
 
-        /// <summary>
-        /// An event fired whenever a charge detail record had been sent.
-        /// </summary>
-        public override event OnChargeDetailRecordSentDelegate OnChargeDetailRecordSent;
+        ///// <summary>
+        ///// An event fired whenever a charge detail record had been sent.
+        ///// </summary>
+        //public override event OnChargeDetailRecordSentDelegate OnChargeDetailRecordSent;
 
         #endregion
 
@@ -1666,7 +1666,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region AuthorizeStart/-Stop...
 
         #region AuthorizeStart(...OperatorId, AuthToken, ChargingProductId = null, SessionId = null, ...)
 
@@ -2357,25 +2356,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #endregion
 
-        #region SendChargeDetailRecord(...ChargeDetailRecord, ...)
+        #region SendChargeDetailRecord(ChargeDetailRecord, ...)
 
         /// <summary>
-        /// Create an OICP SendChargeDetailRecord request.
+        /// Send a charge detail record to an OICP server.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<SendCDRResult>
 
-            SendChargeDetailRecord(DateTime                 Timestamp,
-                                   CancellationToken        CancellationToken,
-                                   EventTracking_Id         EventTrackingId,
-                                   WWCP.ChargeDetailRecord  ChargeDetailRecord,
-                                   TimeSpan?                QueryTimeout  = null)
+            SendChargeDetailRecord(WWCP.ChargeDetailRecord  ChargeDetailRecord,
+
+                                   DateTime?                Timestamp          = null,
+                                   CancellationToken?       CancellationToken  = null,
+                                   EventTracking_Id         EventTrackingId    = null,
+                                   TimeSpan?                RequestTimeout     = null)
 
         {
 
@@ -2386,31 +2386,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            #region Send OnChargeDetailRecordSend event
-
-            try
-            {
-
-                OnChargeDetailRecordSend?.Invoke(Timestamp,
-                                                 this,
-                                                 EventTrackingId,
-                                                 RoamingNetwork.Id,
-                                                 ChargeDetailRecord,
-                                                 QueryTimeout);
-
-            }
-            catch (Exception e)
-            {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnChargeDetailRecordSend));
-            }
-
-            #endregion
-
-
-            var response = await CPORoaming.SendChargeDetailRecord(Timestamp,
-                                                                   CancellationToken,
-                                                                   EventTrackingId,
-                                                                   new ChargeDetailRecord(
+            var response = await CPORoaming.SendChargeDetailRecord(new ChargeDetailRecord(
                                                                        ChargeDetailRecord.EVSEId,
                                                                        ChargeDetailRecord.SessionId,
                                                                        ChargeDetailRecord.SessionTime.Value.StartTime,
@@ -2425,46 +2401,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                        ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<double> v) => v.Value) : null,
                                                                        ChargeDetailRecord.ConsumedEnergy,
                                                                        ChargeDetailRecord.MeteringSignature),
-                                                                   QueryTimeout);
 
+                                                                   Timestamp,
+                                                                   CancellationToken,
+                                                                   EventTrackingId,
+                                                                   RequestTimeout);
 
-            SendCDRResult result = null;
 
             if (response.HTTPStatusCode == HTTPStatusCode.OK &&
                 response.Content        != null              &&
                 response.Content.Result)
             {
 
-                result = SendCDRResult.Forwarded(AuthorizatorId);
+                return SendCDRResult.Forwarded(AuthorizatorId);
 
             }
 
-            else
-                result = SendCDRResult.NotForwared(AuthorizatorId);
-
-
-            #region Send OnChargeDetailRecordSend event
-
-            try
-            {
-
-                OnChargeDetailRecordSent?.Invoke(Timestamp,
-                                                 this,
-                                                 EventTrackingId,
-                                                 RoamingNetwork.Id,
-                                                 ChargeDetailRecord,
-                                                 QueryTimeout,
-                                                 result);
-
-            }
-            catch (Exception e)
-            {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnChargeDetailRecordSent));
-            }
-
-            #endregion
-
-            return result;
+            return SendCDRResult.NotForwared(AuthorizatorId);
 
         }
 

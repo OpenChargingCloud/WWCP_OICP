@@ -384,25 +384,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a charge detail record will be send.
         /// </summary>
-        public event OnSendChargeDetailRecordHandler OnSendChargeDetailRecord
-        {
-
-            add
-            {
-                CPOClient.OnSendChargeDetailRecord += value;
-            }
-
-            remove
-            {
-                CPOClient.OnSendChargeDetailRecord -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever a charge detail record will be send via SOAP.
-        /// </summary>
-        public event ClientRequestLogHandler OnSendChargeDetailRecordRequest
+        public event OnSendChargeDetailRecordRequestHandler OnSendChargeDetailRecord
         {
 
             add
@@ -418,9 +400,45 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         /// <summary>
+        /// An event fired whenever a charge detail record will be send via SOAP.
+        /// </summary>
+        public event ClientRequestLogHandler OnSendChargeDetailRecordRequest
+        {
+
+            add
+            {
+                CPOClient.OnSendChargeDetailRecordSOAPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnSendChargeDetailRecordSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
         /// An event fired whenever a SOAP response to a sent charge detail record had been received.
         /// </summary>
         public event ClientResponseLogHandler OnSendChargeDetailRecordResponse
+        {
+
+            add
+            {
+                CPOClient.OnSendChargeDetailRecordSOAPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnSendChargeDetailRecordSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a sent charge detail record had been received.
+        /// </summary>
+        public event OnSendChargeDetailRecordResponseHandler OnChargeDetailRecordSent
         {
 
             add
@@ -435,24 +453,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         }
 
-        /// <summary>
-        /// An event fired whenever a response to a sent charge detail record had been received.
-        /// </summary>
-        public event OnChargeDetailRecordSentHandler OnChargeDetailRecordSent
-        {
-
-            add
-            {
-                CPOClient.OnChargeDetailRecordSent += value;
-            }
-
-            remove
-            {
-                CPOClient.OnChargeDetailRecordSent -= value;
-            }
-
-        }
-
         #endregion
 
         #region OnPullAuthenticationDataRequest/-Response
@@ -460,25 +460,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a request pulling authentication data will be send.
         /// </summary>
-        public event OnPullAuthenticationDataHandler OnPullAuthenticationData
-        {
-
-            add
-            {
-                CPOClient.OnPullAuthenticationData += value;
-            }
-
-            remove
-            {
-                CPOClient.OnPullAuthenticationData -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever a SOAP request pulling authentication data will be send.
-        /// </summary>
-        public event ClientRequestLogHandler OnPullAuthenticationDataRequest
+        public event OnPullAuthenticationDataRequestHandler OnPullAuthenticationData
         {
 
             add
@@ -494,9 +476,45 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         /// <summary>
+        /// An event fired whenever a SOAP request pulling authentication data will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnPullAuthenticationDataRequest
+        {
+
+            add
+            {
+                CPOClient.OnPullAuthenticationDataSOAPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPullAuthenticationDataSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
         /// An event fired whenever a response to a pull authentication data SOAP request had been received.
         /// </summary>
         public event ClientResponseLogHandler OnPullAuthenticationDataResponse
+        {
+
+            add
+            {
+                CPOClient.OnPullAuthenticationDataSOAPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPullAuthenticationDataSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a pull authentication data request was received.
+        /// </summary>
+        public event OnPullAuthenticationDataResponseHandler OnAuthenticationDataPulled
         {
 
             add
@@ -507,24 +525,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             remove
             {
                 CPOClient.OnPullAuthenticationDataResponse -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever a response to a pull authentication data request was received.
-        /// </summary>
-        public event OnAuthenticationDataPulledHandler OnAuthenticationDataPulled
-        {
-
-            add
-            {
-                CPOClient.OnAuthenticationDataPulled += value;
-            }
-
-            remove
-            {
-                CPOClient.OnAuthenticationDataPulled -= value;
             }
 
         }
@@ -1092,51 +1092,64 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-
-        #region SendChargeDetailRecord(ChargeDetailRecord, QueryTimeout = null)
+        #region SendChargeDetailRecord(ChargeDetailRecord, ...)
 
         /// <summary>
-        /// Create an OICP SendChargeDetailRecord request.
+        /// Send a charge detail record to an OICP server.
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            SendChargeDetailRecord(DateTime            Timestamp,
-                                   CancellationToken   CancellationToken,
-                                   EventTracking_Id    EventTrackingId,
-                                   ChargeDetailRecord  ChargeDetailRecord,
-                                   TimeSpan?           QueryTimeout  = null)
+            SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
 
-            => await CPOClient.SendChargeDetailRecord(Timestamp,
+                                   DateTime?           Timestamp          = null,
+                                   CancellationToken?  CancellationToken  = null,
+                                   EventTracking_Id    EventTrackingId    = null,
+                                   TimeSpan?           RequestTimeout     = null)
+
+
+            => await CPOClient.SendChargeDetailRecord(ChargeDetailRecord,
+
+                                                      Timestamp,
                                                       CancellationToken,
                                                       EventTrackingId,
-                                                      ChargeDetailRecord,
-                                                      QueryTimeout);
+                                                      RequestTimeout);
 
         #endregion
 
 
-        #region PullAuthenticationData(OperatorId, QueryTimeout = null)
+        #region PullAuthenticationData(OperatorId, ...)
 
         /// <summary>
-        /// Create an OICP PullAuthenticationData request.
+        /// Pull authentication data from the OICP server.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAuthenticationData>>
 
-            PullAuthenticationData(DateTime           Timestamp,
-                                   CancellationToken  CancellationToken,
-                                   EventTracking_Id   EventTrackingId,
-                                   EVSEOperator_Id    OperatorId,
-                                   TimeSpan?          QueryTimeout = null)
+            PullAuthenticationData(EVSEOperator_Id     OperatorId,
 
-            => await CPOClient.PullAuthenticationData(Timestamp,
+                                   DateTime?           Timestamp          = null,
+                                   CancellationToken?  CancellationToken  = null,
+                                   EventTracking_Id    EventTrackingId    = null,
+                                   TimeSpan?           RequestTimeout     = null)
+
+
+            => await CPOClient.PullAuthenticationData(OperatorId,
+
+                                                      Timestamp,
                                                       CancellationToken,
                                                       EventTrackingId,
-                                                      OperatorId,
-                                                      QueryTimeout);
+                                                      RequestTimeout);
 
         #endregion
 

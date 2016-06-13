@@ -152,48 +152,48 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region OnSendChargeDetailRecordRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a charge detail record will be send.
+        /// An event fired whenever a 'charge detail record' will be send.
         /// </summary>
-        public event OnSendChargeDetailRecordHandler  OnSendChargeDetailRecord;
+        public event OnSendChargeDetailRecordRequestHandler   OnSendChargeDetailRecordRequest;
 
         /// <summary>
-        /// An event fired whenever a charge detail record will be send via SOAP.
+        /// An event fired whenever a 'charge detail record' will be send via SOAP.
         /// </summary>
-        public event ClientRequestLogHandler          OnSendChargeDetailRecordRequest;
+        public event ClientRequestLogHandler                  OnSendChargeDetailRecordSOAPRequest;
 
         /// <summary>
-        /// An event fired whenever a SOAP response to a sent charge detail record had been received.
+        /// An event fired whenever a SOAP response to a sent 'charge detail record' had been received.
         /// </summary>
-        public event ClientResponseLogHandler         OnSendChargeDetailRecordResponse;
+        public event ClientResponseLogHandler                 OnSendChargeDetailRecordSOAPResponse;
 
         /// <summary>
-        /// An event fired whenever a response to a sent charge detail record had been received.
+        /// An event fired whenever a response to a sent 'charge detail record' had been received.
         /// </summary>
-        public event OnChargeDetailRecordSentHandler  OnChargeDetailRecordSent;
+        public event OnSendChargeDetailRecordResponseHandler  OnSendChargeDetailRecordResponse;
 
         #endregion
 
         #region OnPullAuthenticationDataRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a request pulling authentication data will be send.
+        /// An event fired whenever a 'pull authentication data' request will be send.
         /// </summary>
-        public event OnPullAuthenticationDataHandler    OnPullAuthenticationData;
+        public event OnPullAuthenticationDataRequestHandler   OnPullAuthenticationDataRequest;
 
         /// <summary>
-        /// An event fired whenever a SOAP request pulling authentication data will be send.
+        /// An event fired whenever a 'pull authentication data' SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler            OnPullAuthenticationDataRequest;
+        public event ClientRequestLogHandler                  OnPullAuthenticationDataSOAPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to a pull authentication data SOAP request had been received.
+        /// An event fired whenever a response to a 'pull authentication data' SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler           OnPullAuthenticationDataResponse;
+        public event ClientResponseLogHandler                 OnPullAuthenticationDataSOAPResponse;
 
         /// <summary>
-        /// An event fired whenever a response to a pull authentication data request was received.
+        /// An event fired whenever a response to a 'pull authentication data' request had been received.
         /// </summary>
-        public event OnAuthenticationDataPulledHandler  OnAuthenticationDataPulled;
+        public event OnPullAuthenticationDataResponseHandler  OnPullAuthenticationDataResponse;
 
         #endregion
 
@@ -233,6 +233,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         { }
 
         #endregion
+
+
+        // _OICPClient.RemoteCertificateValidator = this.RemoteCertificateValidator;
+        // _OICPClient.ClientCert                 = this.ClientCert;
+        // _OICPClient.ClientCertificateSelector  = this.ClientCertificateSelector;
 
 
         #region PushEVSEData(GroupedEVSEDataRecords, OICPAction = fullLoad, OperatorId = null, OperatorName = null,                                QueryTimeout = null)
@@ -296,16 +301,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #endregion
 
-                using (var OICPClient = new SOAPClient(_Hostname,
+                using (var _OICPClient = new SOAPClient(_Hostname,
                                                        _TCPPort,
                                                        _HTTPVirtualHost,
                                                        "/ibis/ws/eRoamingEvseData_V2.1",
-                                                       _UserAgent,
+                                                       UserAgent,
                                                        _RemoteCertificateValidator,
                                                        DNSClient))
                 {
 
-                    var result = await OICPClient.Query(CPOClientXMLMethods.PushEVSEDataXML(GroupedEVSEDataRecords,
+                    var result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEDataXML(GroupedEVSEDataRecords,
                                                                                             OICPAction,
                                                                                             OperatorId,
                                                                                             OperatorName),
@@ -616,16 +621,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #endregion
 
-                using (var OICPClient = new SOAPClient(_Hostname,
+                using (var _OICPClient = new SOAPClient(_Hostname,
                                                        _TCPPort,
                                                        _HTTPVirtualHost,
                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
-                                                       _UserAgent,
+                                                       UserAgent,
                                                        _RemoteCertificateValidator,
                                                        DNSClient))
                 {
 
-                     var result = await OICPClient.Query(CPOClientXMLMethods.PushEVSEStatusXML(_EVSEStatusRecords,
+                     var result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEStatusXML(_EVSEStatusRecords,
                                                                                                OICPAction,
                                                                                                OperatorId,
                                                                                                OperatorName),
@@ -811,16 +816,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            using (var OICPClient = new SOAPClient(Hostname,
+            using (var _OICPClient = new SOAPClient(Hostname,
                                                    TCPPort,
                                                    HTTPVirtualHost,
                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                   _UserAgent,
+                                                   UserAgent,
                                                    _RemoteCertificateValidator,
                                                    DNSClient: DNSClient))
             {
 
-                var result = await OICPClient.Query(CPOClientXMLMethods.AuthorizeStartXML(OperatorId,
+                var result = await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStartXML(OperatorId,
                                                                                           AuthToken,
                                                                                           EVSEId,
                                                                                           PartnerProductId,
@@ -987,16 +992,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            using (var OICPClient = new SOAPClient(Hostname,
+            using (var _OICPClient = new SOAPClient(Hostname,
                                                    TCPPort,
                                                    HTTPVirtualHost,
                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                   _UserAgent,
+                                                   UserAgent,
                                                    _RemoteCertificateValidator,
                                                    DNSClient: DNSClient))
             {
 
-                var result = await OICPClient.Query(CPOClientXMLMethods.AuthorizeStopXML(OperatorId,
+                var result = await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStopXML(OperatorId,
                                                                                          SessionId,
                                                                                          AuthToken,
                                                                                          EVSEId,
@@ -1097,17 +1102,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region SendChargeDetailRecord(...ChargeDetailRecord, ...)
 
         /// <summary>
-        /// Create an OICP SendChargeDetailRecord request.
+        /// Send a charge detail record to an OICP server.
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            SendChargeDetailRecord(DateTime            Timestamp,
-                                   CancellationToken   CancellationToken,
-                                   EventTracking_Id    EventTrackingId,
-                                   ChargeDetailRecord  ChargeDetailRecord,
-                                   TimeSpan?           QueryTimeout  = null)
+            SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
+
+                                   DateTime?           Timestamp          = null,
+                                   CancellationToken?  CancellationToken  = null,
+                                   EventTracking_Id    EventTrackingId    = null,
+                                   TimeSpan?           RequestTimeout     = null)
 
         {
 
@@ -1145,37 +1155,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
-                OnSendChargeDetailRecord?.Invoke(DateTime.Now,
-                                                 this,
-                                                 ClientId,
-                                                 ChargeDetailRecord,
-                                                 QueryTimeout);
+                OnSendChargeDetailRecordRequest?.Invoke(DateTime.Now,
+                                                        Timestamp ?? DateTime.Now,
+                                                        this,
+                                                        ClientId,
+                                                        ChargeDetailRecord,
+                                                        RequestTimeout);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecord));
+                e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordRequest));
             }
 
             #endregion
 
-
-            DebugX.Log(SOAP.Encapsulation(ChargeDetailRecord.ToXML()).ToString());
-
-            using (var OICPClient = new SOAPClient(Hostname,
+            using (var _OICPClient = new SOAPClient(Hostname,
                                                    TCPPort,
                                                    HTTPVirtualHost,
                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                   _UserAgent,
+                                                   UserAgent,
                                                    _RemoteCertificateValidator,
-                                                   DNSClient: DNSClient))
+                                                   DNSClient))
             {
 
-                var result = await OICPClient.Query(SOAP.Encapsulation(ChargeDetailRecord.ToXML()),
-                                                    "eRoamingChargeDetailRecord",
-                                                    RequestLogDelegate:   OnSendChargeDetailRecordRequest,
-                                                    ResponseLogDelegate:  OnSendChargeDetailRecordResponse,
-                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                var result = await _OICPClient.Query(SOAP.Encapsulation(ChargeDetailRecord.ToXML()),
+                                                     "eRoamingChargeDetailRecord",
+                                                     RequestLogDelegate:   OnSendChargeDetailRecordSOAPRequest,
+                                                     ResponseLogDelegate:  OnSendChargeDetailRecordSOAPResponse,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                     #region OnSuccess
 
@@ -1243,18 +1253,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 try
                 {
 
-                    OnChargeDetailRecordSent?.Invoke(DateTime.Now,
-                                                     this,
-                                                     ClientId,
-                                                     ChargeDetailRecord,
-                                                     QueryTimeout,
-                                                     result.Content,
-                                                     Runtime.Elapsed);
+                    OnSendChargeDetailRecordResponse?.Invoke(DateTime.Now,
+                                                             this,
+                                                             ClientId,
+                                                             ChargeDetailRecord,
+                                                             RequestTimeout,
+                                                             result.Content,
+                                                             Runtime.Elapsed);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnChargeDetailRecordSent));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordResponse));
                 }
 
                 #endregion
@@ -1268,22 +1278,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region PullAuthenticationData(...OperatorId, ...)
+        #region PullAuthenticationData(OperatorId, ...)
 
         /// <summary>
-        /// Create an OICP PullAuthenticationData request.
+        /// Pull authentication data from the OICP server.
         /// </summary>
         /// <param name="OperatorId">An EVSE operator identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAuthenticationData>>
 
-            PullAuthenticationData(DateTime           Timestamp,
-                                   CancellationToken  CancellationToken,
-                                   EventTracking_Id   EventTrackingId,
-                                   EVSEOperator_Id    OperatorId,
-                                   TimeSpan?          QueryTimeout = null)
+            PullAuthenticationData(EVSEOperator_Id     OperatorId,
+
+                                   DateTime?           Timestamp          = null,
+                                   CancellationToken?  CancellationToken  = null,
+                                   EventTracking_Id    EventTrackingId    = null,
+                                   TimeSpan?           RequestTimeout     = null)
 
         {
+
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification msut not be null!");
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
+
+            #endregion
 
             #region Send OnPullAuthenticationData event
 
@@ -1292,80 +1320,83 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
-                OnPullAuthenticationData?.Invoke(DateTime.Now,
-                                                 this,
-                                                 ClientId,
-                                                 OperatorId,
-                                                 QueryTimeout);
+                OnPullAuthenticationDataRequest?.Invoke(DateTime.Now,
+                                                        Timestamp ?? DateTime.Now,
+                                                        this,
+                                                        ClientId,
+                                                        OperatorId,
+                                                        RequestTimeout);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnPullAuthenticationData));
+                e.Log(nameof(CPOClient) + "." + nameof(OnPullAuthenticationDataRequest));
             }
 
             #endregion
 
-            using (var OICPClient = new SOAPClient(Hostname,
-                                                   TCPPort,
-                                                   HTTPVirtualHost,
-                                                   "/ibis/ws/eRoamingAuthenticationData_V2.0",
-                                                   _UserAgent,
-                                                   _RemoteCertificateValidator,
-                                                   DNSClient: DNSClient))
+            using (var _OICPClient = new SOAPClient(Hostname,
+                                                    TCPPort,
+                                                    HTTPVirtualHost,
+                                                    "/ibis/ws/eRoamingAuthenticationData_V2.0",
+                                                    UserAgent,
+                                                    _RemoteCertificateValidator,
+                                                    DNSClient))
             {
 
-                var result = await OICPClient.Query(CPOClientXMLMethods.PullAuthenticationDataXML(OperatorId),
-                                                    "eRoamingPullAuthenticationData",
-                                                    RequestLogDelegate:   OnPullAuthenticationDataRequest,
-                                                    ResponseLogDelegate:  OnPullAuthenticationDataResponse,
-                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                var result = await _OICPClient.Query(CPOClientXMLMethods.PullAuthenticationDataXML(OperatorId),
+                                                     "eRoamingPullAuthenticationData",
+                                                     RequestLogDelegate:   OnPullAuthenticationDataSOAPRequest,
+                                                     ResponseLogDelegate:  OnPullAuthenticationDataSOAPResponse,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     QueryTimeout:         RequestTimeout,
 
-                                                    #region OnSuccess
+                                                     #region OnSuccess
 
-                                                    OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthenticationData.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthenticationData.Parse),
 
-                                                    #endregion
+                                                     #endregion
 
-                                                    #region OnSOAPFault
+                                                     #region OnSOAPFault
 
-                                                    OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                        SendSOAPError(timestamp, this, httpresponse.Content);
+                                                         SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                        return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
-                                                                                                            IsFault: true);
+                                                         return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
+                                                                                                             IsFault: true);
 
-                                                    },
+                                                     },
 
-                                                    #endregion
+                                                     #endregion
 
-                                                    #region OnHTTPError
+                                                     #region OnHTTPError
 
-                                                    OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                        SendHTTPError(timestamp, this, httpresponse);
+                                                         SendHTTPError(timestamp, this, httpresponse);
 
-                                                        return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
-                                                                                                            IsFault: true);
+                                                         return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
+                                                                                                             IsFault: true);
 
-                                                    },
+                                                     },
 
-                                                    #endregion
+                                                     #endregion
 
-                                                    #region OnException
+                                                     #region OnException
 
-                                                    OnException: (timestamp, sender, exception) => {
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                        SendException(timestamp, sender, exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                        return null;
+                                                         return null;
 
-                                                    }
+                                                     }
 
-                                                    #endregion
+                                                     #endregion
 
-                                                   );
+                                                    );
 
                 #region Send OnAuthenticationDataPulled event
 
@@ -1374,18 +1405,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 try
                 {
 
-                    OnAuthenticationDataPulled?.Invoke(DateTime.Now,
-                                                       this,
-                                                       ClientId,
-                                                       OperatorId,
-                                                       QueryTimeout,
-                                                       result.Content,
-                                                       Runtime.Elapsed);
+                    OnPullAuthenticationDataResponse?.Invoke(DateTime.Now,
+                                                             this,
+                                                             ClientId,
+                                                             OperatorId,
+                                                             RequestTimeout,
+                                                             result.Content,
+                                                             Runtime.Elapsed);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnAuthenticationDataPulled));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnPullAuthenticationDataResponse));
                 }
 
                 #endregion

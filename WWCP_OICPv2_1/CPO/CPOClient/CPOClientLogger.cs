@@ -217,30 +217,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
             RegisterEvent("SendChargeDetailRecord",
-                          handler => CPOClient.OnSendChargeDetailRecordRequest += handler,
-                          handler => CPOClient.OnSendChargeDetailRecordRequest -= handler,
+                          handler => CPOClient.OnSendChargeDetailRecordSOAPRequest += handler,
+                          handler => CPOClient.OnSendChargeDetailRecordSOAPRequest -= handler,
                           "ChargeDetailRecord", "CDR", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("ChargeDetailRecordSent",
-                          handler => CPOClient.OnSendChargeDetailRecordResponse += handler,
-                          handler => CPOClient.OnSendChargeDetailRecordResponse -= handler,
+                          handler => CPOClient.OnSendChargeDetailRecordSOAPResponse += handler,
+                          handler => CPOClient.OnSendChargeDetailRecordSOAPResponse -= handler,
                           "ChargeDetailRecord", "CDR", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
 
             RegisterEvent("PullAuthenticationData",
-                          handler => CPOClient.OnPullAuthenticationDataRequest += handler,
-                          handler => CPOClient.OnPullAuthenticationDataRequest -= handler,
+                          handler => CPOClient.OnPullAuthenticationDataSOAPRequest += handler,
+                          handler => CPOClient.OnPullAuthenticationDataSOAPRequest -= handler,
                           "AuthenticationData", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthenticationDataPulled",
-                          handler => CPOClient.OnPullAuthenticationDataResponse += handler,
-                          handler => CPOClient.OnPullAuthenticationDataResponse -= handler,
+                          handler => CPOClient.OnPullAuthenticationDataSOAPResponse += handler,
+                          handler => CPOClient.OnPullAuthenticationDataSOAPResponse -= handler,
                           "AuthenticationData", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);

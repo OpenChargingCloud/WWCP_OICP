@@ -53,6 +53,102 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Events
 
+        #region OnPullEVSEDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE data' request will be send.
+        /// </summary>
+        public event OnPullEVSEDataRequestHandler   OnPullEVSEDataRequest;
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE data' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler        OnPullEVSEDataSOAPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE data' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler       OnPullEVSEDataSOAPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE data' request had been received.
+        /// </summary>
+        public event OnPullEVSEDataResponseHandler  OnPullEVSEDataResponse;
+
+        #endregion
+
+        #region OnSearchEVSERequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'search EVSE' request will be send.
+        /// </summary>
+        public event OnSearchEVSERequestHandler   OnSearchEVSERequest;
+
+        /// <summary>
+        /// An event fired whenever a 'search EVSE' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler      OnSearchEVSESOAPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'search EVSE' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler     OnSearchEVSESOAPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'search EVSE' request had been received.
+        /// </summary>
+        public event OnSearchEVSEResponseHandler  OnSearchEVSEResponse;
+
+        #endregion
+
+        #region OnPullEVSEStatusRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE status' request will be send.
+        /// </summary>
+        public event OnPullEVSEStatusRequestHandler   OnPullEVSEStatusRequest;
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE status' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler          OnPullEVSEStatusSOAPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE status' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler         OnPullEVSEStatusSOAPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE status' request had been received.
+        /// </summary>
+        public event OnPullEVSEStatusResponseHandler  OnPullEVSEStatusResponse;
+
+        #endregion
+
+        #region OnPullEVSEStatusByIdRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE status by id' request will be send.
+        /// </summary>
+        public event OnPullEVSEStatusByIdRequestHandler   OnPullEVSEStatusByIdRequest;
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE status by id' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler              OnPullEVSEStatusByIdSOAPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE status by id' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler             OnPullEVSEStatusByIdSOAPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE status by id' request had been received.
+        /// </summary>
+        public event OnPullEVSEStatusByIdResponseHandler  OnPullEVSEStatusByIdResponse;
+
+        #endregion
+
         #region OnPushAuthenticationDataRequest/-Response
 
         /// <summary>
@@ -187,7 +283,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, QueryTimeout = null, OnException = null)
+        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, ...)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
@@ -198,81 +294,161 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEVSEData>>
 
-            PullEVSEData(EVSP_Id           ProviderId,
-                         GeoCoordinate     SearchCenter  = null,
-                         Double            DistanceKM    = 0.0,
-                         DateTime?         LastCall      = null,
-                         TimeSpan?         QueryTimeout  = null)
+            PullEVSEData(EVSP_Id             ProviderId,
+                         GeoCoordinate       SearchCenter       = null,
+                         Double              DistanceKM         = 0.0,
+                         DateTime?           LastCall           = null,
+
+                         DateTime?           Timestamp          = null,
+                         CancellationToken?  CancellationToken  = null,
+                         EventTracking_Id    EventTrackingId    = null,
+                         TimeSpan?           RequestTimeout     = null)
 
         {
+
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
+
+            #endregion
+
+            #region Send OnPullEVSEDataRequest event
+
+            var Runtime = Stopwatch.StartNew();
+
+            try
+            {
+
+                OnPullEVSEDataRequest?.Invoke(DateTime.Now,
+                                              Timestamp ?? DateTime.Now,
+                                              this,
+                                              ClientId,
+                                              EventTrackingId,
+                                              ProviderId,
+                                              SearchCenter,
+                                              DistanceKM,
+                                              LastCall,
+                                              RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEDataRequest));
+            }
+
+            #endregion
 
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseData_V2.0",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient))
             {
 
-                return await _OICPClient.Query(EMPClientXMLMethods.PullEVSEDataRequestXML(ProviderId,
-                                                                                           SearchCenter,
-                                                                                           DistanceKM,
-                                                                                           LastCall),
-                                               "eRoamingPullEVSEData",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                var result = await _OICPClient.Query(EMPClientXMLMethods.PullEVSEDataRequestXML(ProviderId,
+                                                                                                SearchCenter,
+                                                                                                DistanceKM,
+                                                                                                LastCall),
+                                                     "eRoamingPullEVSEData",
+                                                     RequestLogDelegate:   OnPullEVSEDataSOAPRequest,
+                                                     ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     QueryTimeout:         RequestTimeout,
 
-                                               #region OnSuccess
+                                                     #region OnSuccess
 
-                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingEVSEData.Parse, base.SendException),
+                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingEVSEData.Parse, base.SendException),
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnSOAPFault
+                                                     #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   DebugX.Log("'PullEVSEDataRequest' lead to a SOAP fault!");
+                                                         DebugX.Log("'PullEVSEDataRequest' lead to a SOAP fault!");
 
-                                                   return new HTTPResponse<eRoamingEVSEData>(httpresponse,
-                                                                                             IsFault: true);
+                                                         return new HTTPResponse<eRoamingEVSEData>(httpresponse,
+                                                                                                   IsFault: true);
 
-                                               },
+                                                     },
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnHTTPError
+                                                     #region OnHTTPError
 
-                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendHTTPError(timestamp, soapclient, httpresponse);
+                                                         SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingEVSEData>(httpresponse,
-                                                                                             new eRoamingEVSEData(StatusCode: new StatusCode(-1,
-                                                                                                                                             Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                             AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
-                                                                                             IsFault: true);
+                                                         return new HTTPResponse<eRoamingEVSEData>(httpresponse,
+                                                                                                   new eRoamingEVSEData(StatusCode: new StatusCode(-1,
+                                                                                                                                                   Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                                   AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
+                                                                                                   IsFault: true);
 
-                                               },
+                                                     },
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnException
+                                                     #region OnException
 
-                                               OnException: (timestamp, sender, exception) => {
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                   SendException(timestamp, sender, exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                   return null;
+                                                         return null;
 
-                                               }
+                                                     }
 
-                                               #endregion
+                                                     #endregion
 
-                                              );
+                                                    );
+
+                #region Send OnPullEVSEDataResponse event
+
+                Runtime.Stop();
+
+                try
+                {
+
+                    OnPullEVSEDataResponse?.Invoke(DateTime.Now,
+                                                   this,
+                                                   ClientId,
+                                                   EventTrackingId,
+                                                   ProviderId,
+                                                   SearchCenter,
+                                                   DistanceKM,
+                                                   LastCall,
+                                                   RequestTimeout,
+                                                   result.Content,
+                                                   Runtime.Elapsed);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEDataResponse));
+                }
+
+                #endregion
+
+                return result;
 
             }
 
@@ -291,91 +467,174 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Address">An optional address of the charging stations.</param>
         /// <param name="Plug">Optional plugs of the charging station.</param>
         /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEvseSearchResult>>
 
             SearchEVSE(EVSP_Id              ProviderId,
-                       GeoCoordinate        SearchCenter      = null,
-                       Double               DistanceKM        = 0.0,
-                       Address              Address           = null,
-                       PlugTypes?           Plug              = null,
-                       ChargingFacilities?  ChargingFacility  = null,
-                       TimeSpan?            QueryTimeout      = null)
+                       GeoCoordinate        SearchCenter       = null,
+                       Double               DistanceKM         = 0.0,
+                       Address              Address            = null,
+                       PlugTypes?           Plug               = null,
+                       ChargingFacilities?  ChargingFacility   = null,
+
+                       DateTime?            Timestamp          = null,
+                       CancellationToken?   CancellationToken  = null,
+                       EventTracking_Id     EventTrackingId    = null,
+                       TimeSpan?            RequestTimeout     = null)
 
         {
+
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
+
+            #endregion
+
+            #region Send OnSearchEVSERequest event
+
+            var Runtime = Stopwatch.StartNew();
+
+            try
+            {
+
+                OnSearchEVSERequest?.Invoke(DateTime.Now,
+                                            Timestamp ?? DateTime.Now,
+                                            this,
+                                            ClientId,
+                                            EventTrackingId,
+                                            ProviderId,
+                                            SearchCenter,
+                                            DistanceKM,
+                                            Address,
+                                            Plug,
+                                            ChargingFacility,
+                                            RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnSearchEVSERequest));
+            }
+
+            #endregion
 
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseSearch_V2.0",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient))
-
             {
 
-                return await _OICPClient.Query(EMPClientXMLMethods.SearchEvseRequestXML(ProviderId,
-                                                                                        SearchCenter,
-                                                                                        DistanceKM,
-                                                                                        Address,
-                                                                                        Plug,
-                                                                                        ChargingFacility),
-                                               "eRoamingSearchEvse",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                var result = await _OICPClient.Query(EMPClientXMLMethods.SearchEvseRequestXML(ProviderId,
+                                                                                              SearchCenter,
+                                                                                              DistanceKM,
+                                                                                              Address,
+                                                                                              Plug,
+                                                                                              ChargingFacility),
+                                                     "eRoamingSearchEvse",
+                                                     RequestLogDelegate:   OnSearchEVSESOAPRequest,
+                                                     ResponseLogDelegate:  OnSearchEVSESOAPResponse,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     QueryTimeout:         RequestTimeout,
 
-                                               #region OnSOAPFault
+                                                     #region OnSOAPFault
 
-                                               OnSuccess: XMLResponse => {
+                                                     OnSuccess: XMLResponse => {
 
-                                                   OICPException _OICPException = null;
-                                                   if (OICPClientHelper.IsHubjectError(XMLResponse.Content, out _OICPException, SendException))
-                                                       return new HTTPResponse<eRoamingEvseSearchResult>(XMLResponse.HTTPRequest, _OICPException);
+                                                         OICPException _OICPException = null;
+                                                         if (OICPClientHelper.IsHubjectError(XMLResponse.Content, out _OICPException, SendException))
+                                                             return new HTTPResponse<eRoamingEvseSearchResult>(XMLResponse.HTTPRequest, _OICPException);
 
-                                                   return XMLResponse.Parse(eRoamingEvseSearchResult.Parse);
+                                                         return XMLResponse.Parse(eRoamingEvseSearchResult.Parse);
 
-                                               },
+                                                     },
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnSOAPFault
+                                                     #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
+                                                         DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
-                                                   return new HTTPResponse<eRoamingEvseSearchResult>(httpresponse,
-                                                                                                     IsFault: true);
+                                                         return new HTTPResponse<eRoamingEvseSearchResult>(httpresponse,
+                                                                                                           IsFault: true);
 
-                                               },
+                                                     },
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnHTTPError
+                                                     #region OnHTTPError
 
-                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendHTTPError(timestamp, soapclient, httpresponse);
+                                                         SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingEvseSearchResult>(httpresponse,
-                                                                                                     IsFault: true);
+                                                         return new HTTPResponse<eRoamingEvseSearchResult>(httpresponse,
+                                                                                                           IsFault: true);
 
-                                               },
+                                                     },
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnException
+                                                     #region OnException
 
-                                               OnException: (timestamp, sender, exception) => {
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                   SendException(timestamp, sender, exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                   return null;
+                                                         return null;
 
-                                               }
+                                                     }
 
-                                               #endregion
+                                                     #endregion
 
-                                        );
+                                                    );
+
+                #region Send OnSearchEVSEResponse event
+
+                Runtime.Stop();
+
+                try
+                {
+
+                    OnSearchEVSEResponse?.Invoke(DateTime.Now,
+                                                 this,
+                                                 ClientId,
+                                                 EventTrackingId,
+                                                 ProviderId,
+                                                 SearchCenter,
+                                                 DistanceKM,
+                                                 Address,
+                                                 Plug,
+                                                 ChargingFacility,
+                                                 RequestTimeout,
+                                                 result.Content,
+                                                 Runtime.Elapsed);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPClient) + "." + nameof(OnSearchEVSEResponse));
+                }
+
+                #endregion
+
+                return result;
 
             }
 
@@ -393,86 +652,161 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEVSEStatus>>
 
-            PullEVSEStatus(EVSP_Id          ProviderId,
-                           GeoCoordinate    SearchCenter      = null,
-                           Double           DistanceKM        = 0.0,
-                           EVSEStatusType?  EVSEStatusFilter  = null,
-                           TimeSpan?        QueryTimeout      = null)
+            PullEVSEStatus(EVSP_Id             ProviderId,
+                           GeoCoordinate       SearchCenter       = null,
+                           Double              DistanceKM         = 0.0,
+                           EVSEStatusType?     EVSEStatusFilter   = null,
+
+                           DateTime?           Timestamp          = null,
+                           CancellationToken?  CancellationToken  = null,
+                           EventTracking_Id    EventTrackingId    = null,
+                           TimeSpan?           RequestTimeout     = null)
 
         {
+
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
+
+            #endregion
+
+            #region Send OnPullEVSEStatusRequest event
+
+            var Runtime = Stopwatch.StartNew();
+
+            try
+            {
+
+                OnPullEVSEStatusRequest?.Invoke(DateTime.Now,
+                                                Timestamp ?? DateTime.Now,
+                                                this,
+                                                ClientId,
+                                                EventTrackingId,
+                                                ProviderId,
+                                                SearchCenter,
+                                                DistanceKM,
+                                                EVSEStatusFilter,
+                                                RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusRequest));
+            }
+
+            #endregion
 
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseStatus_V2.0",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient))
-
             {
 
-               // _OICPClient.ClientCert                 = this.ClientCert;
-               // _OICPClient.RemoteCertificateValidator = this.RemoteCertificateValidator;
-               // _OICPClient.ClientCertificateSelector  = this.ClientCertificateSelector;
+                var result = await _OICPClient.Query(EMPClientXMLMethods.PullEVSEStatusRequestXML(ProviderId,
+                                                                                                  SearchCenter,
+                                                                                                  DistanceKM,
+                                                                                                  EVSEStatusFilter),
+                                                     "eRoamingPullEVSEStatus",
+                                                     RequestLogDelegate:   OnPullEVSEStatusSOAPRequest,
+                                                     ResponseLogDelegate:  OnPullEVSEStatusSOAPResponse,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     QueryTimeout:         RequestTimeout,
 
-                return await _OICPClient.Query(EMPClientXMLMethods.PullEVSEStatusRequestXML(ProviderId,
-                                                                                             SearchCenter,
-                                                                                             DistanceKM,
-                                                                                             EVSEStatusFilter),
-                                               "eRoamingPullEVSEStatus",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                                                     #region OnSuccess
 
-                                               #region OnSuccess
+                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingEVSEStatus.Parse),
 
-                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingEVSEStatus.Parse),
+                                                     #endregion
 
-                                               #endregion
+                                                     #region OnSOAPFault
 
-                                               #region OnSOAPFault
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                         DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
-                                                   DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
+                                                         return new HTTPResponse<eRoamingEVSEStatus>(httpresponse,
+                                                                                                     IsFault: true);
 
-                                                   return new HTTPResponse<eRoamingEVSEStatus>(httpresponse,
-                                                                                               IsFault: true);
+                                                     },
 
-                                               },
+                                                     #endregion
 
-                                               #endregion
+                                                     #region OnHTTPError
 
-                                               #region OnHTTPError
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                         SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                   SendHTTPError(timestamp, soapclient, httpresponse);
+                                                         return new HTTPResponse<eRoamingEVSEStatus>(httpresponse,
+                                                                                                     new eRoamingEVSEStatus(new StatusCode(-1,
+                                                                                                                                           httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                           httpresponse.HTTPBody.ToUTF8String())),
+                                                                                                     IsFault: true);
 
-                                                   return new HTTPResponse<eRoamingEVSEStatus>(httpresponse,
-                                                                                               new eRoamingEVSEStatus(new StatusCode(-1,
-                                                                                                                                     httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                     httpresponse.HTTPBody.ToUTF8String())),
-                                                                                               IsFault: true);
+                                                     },
 
-                                               },
+                                                     #endregion
 
-                                               #endregion
+                                                     #region OnException
 
-                                               #region OnException
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                               OnException: (timestamp, sender, exception) => {
+                                                         SendException(timestamp, sender, exception);
 
-                                                   SendException(timestamp, sender, exception);
+                                                         return null;
 
-                                                   return null;
+                                                     }
 
-                                               }
+                                                     #endregion
 
-                                               #endregion
+                                                    );
 
-                                              );
+                #region Send OnPullEVSEStatusResponse event
+
+                Runtime.Stop();
+
+                try
+                {
+
+                    OnPullEVSEStatusResponse?.Invoke(DateTime.Now,
+                                                     this,
+                                                     ClientId,
+                                                     EventTrackingId,
+                                                     ProviderId,
+                                                     SearchCenter,
+                                                     DistanceKM,
+                                                     EVSEStatusFilter,
+                                                     RequestTimeout,
+                                                     result.Content,
+                                                     Runtime.Elapsed);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusResponse));
+                }
+
+                #endregion
+
+                return result;
 
             }
 
@@ -480,85 +814,163 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PullEVSEStatusById(ProviderId, EVSEIds, QueryTimeout = null)
+        #region PullEVSEStatusById(ProviderId, EVSEIds, ...)
 
         /// <summary>
         /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
         /// </summary>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEVSEStatusById>>
 
             PullEVSEStatusById(EVSP_Id               ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
-                               TimeSpan?             QueryTimeout = null)
+
+                               DateTime?             Timestamp          = null,
+                               CancellationToken?    CancellationToken  = null,
+                               EventTracking_Id      EventTrackingId    = null,
+                               TimeSpan?             RequestTimeout     = null)
 
         {
+
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
+
+            if (EVSEIds == null)
+                throw new ArgumentNullException(nameof(EVSEIds),     "The given enumeration of EVSE identifications must not be null!");
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
+
+            #endregion
+
+            #region Send OnPullEVSEStatusByIdRequest event
+
+            var Runtime = Stopwatch.StartNew();
+
+            try
+            {
+
+                OnPullEVSEStatusByIdRequest?.Invoke(DateTime.Now,
+                                                    Timestamp ?? DateTime.Now,
+                                                    this,
+                                                    ClientId,
+                                                    EventTrackingId,
+                                                    ProviderId,
+                                                    EVSEIds,
+                                                    RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByIdRequest));
+            }
+
+            #endregion
 
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseStatus_V2.0",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient))
-
             {
 
-                return await _OICPClient.Query(EMPClientXMLMethods.PullEVSEStatusByIdRequestXML(ProviderId,
-                                                                                                 EVSEIds),
-                                               "eRoamingPullEvseStatusById",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                var result = await _OICPClient.Query(EMPClientXMLMethods.PullEVSEStatusByIdRequestXML(ProviderId,
+                                                                                                      EVSEIds),
+                                                     "eRoamingPullEvseStatusById",
+                                                     RequestLogDelegate:   OnPullEVSEStatusByIdSOAPRequest,
+                                                     ResponseLogDelegate:  OnPullEVSEStatusByIdSOAPResponse,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     QueryTimeout:         RequestTimeout,
 
-                                               #region OnSuccess
+                                                     #region OnSuccess
 
-                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingEVSEStatusById.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingEVSEStatusById.Parse),
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnSOAPFault
+                                                     #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
+                                                         DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
-                                                   return new HTTPResponse<eRoamingEVSEStatusById>(httpresponse,
-                                                                                                   IsFault: true);
+                                                         return new HTTPResponse<eRoamingEVSEStatusById>(httpresponse,
+                                                                                                         IsFault: true);
 
-                                               },
+                                                     },
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnHTTPError
+                                                     #region OnHTTPError
 
-                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendHTTPError(timestamp, soapclient, httpresponse);
+                                                         SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingEVSEStatusById>(httpresponse,
-                                                                                                   new eRoamingEVSEStatusById(new StatusCode(-1,
-                                                                                                                                             httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                             httpresponse.HTTPBody.ToUTF8String())),
-                                                                                                   IsFault: true);
+                                                         return new HTTPResponse<eRoamingEVSEStatusById>(httpresponse,
+                                                                                                         new eRoamingEVSEStatusById(new StatusCode(-1,
+                                                                                                                                                   httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                                   httpresponse.HTTPBody.ToUTF8String())),
+                                                                                                         IsFault: true);
 
-                                               },
+                                                     },
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnException
+                                                     #region OnException
 
-                                               OnException: (timestamp, sender, exception) => {
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                   SendException(timestamp, sender, exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                   return null;
+                                                         return null;
 
-                                               }
+                                                     }
 
-                                               #endregion
+                                                     #endregion
 
-                                        );
+                                                    );
+
+                #region Send OnPullEVSEStatusByIdResponse event
+
+                Runtime.Stop();
+
+                try
+                {
+
+                    OnPullEVSEStatusByIdResponse?.Invoke(DateTime.Now,
+                                                         this,
+                                                         ClientId,
+                                                         EventTrackingId,
+                                                         ProviderId,
+                                                         EVSEIds,
+                                                         RequestTimeout,
+                                                         result.Content,
+                                                         Runtime.Elapsed);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByIdResponse));
+                }
+
+                #endregion
+
+                return result;
 
             }
 
@@ -567,27 +979,42 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region PushAuthenticationData(...ProviderAuthenticationDataRecords, OICPAction = fullLoad, ...)
+        #region PushAuthenticationData(ProviderAuthenticationDataRecords, OICPAction = fullLoad, ...)
 
         /// <summary>
         /// Create a new task pushing provider authentication data records onto the OICP server.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushAuthenticationData(DateTime                                 Timestamp,
-                                   CancellationToken                        CancellationToken,
-                                   EventTracking_Id                         EventTrackingId,
-                                   IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
-                                   ActionType                               OICPAction    = ActionType.fullLoad,
-                                   TimeSpan?                                QueryTimeout  = null)
+            PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
+                                   ActionType                               OICPAction         = ActionType.fullLoad,
+
+                                   DateTime?                                Timestamp          = null,
+                                   CancellationToken?                       CancellationToken  = null,
+                                   EventTracking_Id                         EventTrackingId    = null,
+                                   TimeSpan?                                RequestTimeout     = null)
 
         {
+
+            #region Initial checks
+
+            if (ProviderAuthenticationDataRecords == null)
+                throw new ArgumentNullException(nameof(ProviderAuthenticationDataRecords), "The given provider authentication data records must not be null!");
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
+
+            #endregion
 
             #region Send OnPushAuthenticationDataRequest event
 
@@ -597,12 +1024,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             {
 
                 OnPushAuthenticationDataRequest?.Invoke(DateTime.Now,
+                                                        Timestamp ?? DateTime.Now,
                                                         this,
                                                         ClientId,
                                                         EventTrackingId,
                                                         ProviderAuthenticationDataRecords,
                                                         OICPAction,
-                                                        QueryTimeout);
+                                                        RequestTimeout);
 
             }
             catch (Exception e)
@@ -616,10 +1044,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthenticationData_V2.0",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient))
-
             {
 
                 var result = await _OICPClient.Query(EMPClientXMLMethods.PushAuthenticationData(ProviderAuthenticationDataRecords,
@@ -629,7 +1056,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnPushAuthenticationDataSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -697,7 +1124,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                              EventTrackingId,
                                                              ProviderAuthenticationDataRecords,
                                                              OICPAction,
-                                                             QueryTimeout,
+                                                             RequestTimeout,
                                                              result.Content,
                                                              Runtime.Elapsed);
 
@@ -722,64 +1149,88 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Create a new task pushing authorization identifications onto the OICP server.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushAuthenticationData(DateTime                                  Timestamp,
-                                   CancellationToken                         CancellationToken,
-                                   EventTracking_Id                          EventTrackingId,
-                                   IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
+            PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
                                    EVSP_Id                                   ProviderId,
-                                   ActionType                                OICPAction    = ActionType.fullLoad,
-                                   TimeSpan?                                 QueryTimeout  = null)
+                                   ActionType                                OICPAction         = ActionType.fullLoad,
 
-            => await PushAuthenticationData(Timestamp,
-                                            CancellationToken,
-                                            EventTrackingId,
-                                            new ProviderAuthenticationData[] {
+                                   DateTime?                                 Timestamp          = null,
+                                   CancellationToken?                        CancellationToken  = null,
+                                   EventTracking_Id                          EventTrackingId    = null,
+                                   TimeSpan?                                 RequestTimeout     = null)
+
+            => await PushAuthenticationData(new ProviderAuthenticationData[] {
                                                 new ProviderAuthenticationData(ProviderId, AuthorizationIdentifications)
                                             },
                                             OICPAction,
-                                            QueryTimeout);
+
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
 
         #endregion
 
 
-        #region RemoteStart(...ProviderId, EVSEId, eMAId, SessionId = null, PartnerSessionId = null, PartnerProductId = null, ...)
+        #region RemoteStart(ProviderId, EVSEId, eMAId, SessionId = null, PartnerSessionId = null, PartnerProductId = null, ...)
 
         /// <summary>
         /// Start a charging session at the given EVSE.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
         /// <param name="eMAId">The unique identification of the e-mobility account.</param>
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            RemoteStart(DateTime                Timestamp,
-                        CancellationToken       CancellationToken,
-                        EventTracking_Id        EventTrackingId,
-                        EVSP_Id                 ProviderId,
+            RemoteStart(EVSP_Id                 ProviderId,
                         EVSE_Id                 EVSEId,
                         eMA_Id                  eMAId,
-                        ChargingSession_Id      SessionId         = null,
-                        ChargingSession_Id      PartnerSessionId  = null,
-                        ChargingProduct_Id      PartnerProductId  = null,
-                        TimeSpan?               QueryTimeout      = default(TimeSpan?))
+                        ChargingSession_Id      SessionId          = null,
+                        ChargingSession_Id      PartnerSessionId   = null,
+                        ChargingProduct_Id      PartnerProductId   = null,
+
+                        DateTime?               Timestamp          = null,
+                        CancellationToken?      CancellationToken  = null,
+                        EventTracking_Id        EventTrackingId    = null,
+                        TimeSpan?               RequestTimeout     = null)
 
         {
+
+            #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
+
+            if (EVSEId == null)
+                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
+
+            if (eMAId == null)
+                throw new ArgumentNullException(nameof(eMAId),       "The given e-mobility account identification must not be null!");
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
+
+            #endregion
 
             #region Send OnAuthorizeRemoteStartRequest event
 
@@ -789,6 +1240,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             {
 
                 OnAuthorizeRemoteStartRequest?.Invoke(DateTime.Now,
+                                                      Timestamp ?? DateTime.Now,
                                                       this,
                                                       ClientId,
                                                       EventTrackingId,
@@ -798,7 +1250,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                       SessionId,
                                                       PartnerSessionId,
                                                       PartnerProductId,
-                                                      QueryTimeout);
+                                                      RequestTimeout);
 
             }
             catch (Exception e)
@@ -812,10 +1264,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient))
-
             {
 
                 var result = await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteStartXML(ProviderId,
@@ -829,7 +1280,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -901,7 +1352,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                            SessionId,
                                                            PartnerSessionId,
                                                            PartnerProductId,
-                                                           QueryTimeout,
+                                                           RequestTimeout,
                                                            result.Content,
                                                            Runtime.Elapsed);
 
@@ -921,31 +1372,52 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region RemoteStop(...EVSEId, SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
+        #region RemoteStop(EVSEId, SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
 
         /// <summary>
         /// Stop the given charging session at the given EVSE.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
         /// <param name="PartnerSessionId">The unique identification for the partner charging session.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            RemoteStop(DateTime             Timestamp,
-                       CancellationToken    CancellationToken,
-                       EventTracking_Id     EventTrackingId,
-                       ChargingSession_Id   SessionId,
+            RemoteStop(ChargingSession_Id   SessionId,
                        EVSP_Id              ProviderId,
                        EVSE_Id              EVSEId,
-                       ChargingSession_Id   PartnerSessionId  = null,
-                       TimeSpan?            QueryTimeout      = null)
+                       ChargingSession_Id   PartnerSessionId   = null,
+
+                       DateTime?            Timestamp          = null,
+                       CancellationToken?   CancellationToken  = null,
+                       EventTracking_Id     EventTrackingId    = null,
+                       TimeSpan?            RequestTimeout     = null)
 
         {
+
+            #region Initial checks
+
+            if (SessionId == null)
+                throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
+
+            if (ProviderId == null)
+                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
+
+            if (EVSEId == null)
+                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
+
+            #endregion
 
             #region Send OnAuthorizeRemoteStopRequest event
 
@@ -955,6 +1427,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             {
 
                 OnAuthorizeRemoteStopRequest?.Invoke(DateTime.Now,
+                                                     Timestamp ?? DateTime.Now,
                                                      this,
                                                      ClientId,
                                                      EventTrackingId,
@@ -962,7 +1435,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ProviderId,
                                                      EVSEId,
                                                      PartnerSessionId,
-                                                     QueryTimeout);
+                                                     RequestTimeout);
 
             }
             catch (Exception e)
@@ -976,10 +1449,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient))
-
             {
 
                 var result = await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteStopXML(SessionId,
@@ -991,7 +1463,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnAuthorizeRemoteStopSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1061,7 +1533,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                           ProviderId,
                                                           EVSEId,
                                                           PartnerSessionId,
-                                                          QueryTimeout,
+                                                          RequestTimeout,
                                                           result.Content,
                                                           Runtime.Elapsed);
 
@@ -1089,8 +1561,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="From">The starting time.</param>
-        /// <param name="To">The end time.</param>
-        /// <param name="Timestamp">An optional timestamp of the request.</param>
+        /// <param name="To">An optional end time. [default: current time].</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
@@ -1098,7 +1571,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             GetChargeDetailRecords(EVSP_Id             ProviderId,
                                    DateTime            From,
-                                   DateTime            To,
+                                   DateTime?           To                 = null,
+
                                    DateTime?           Timestamp          = null,
                                    CancellationToken?  CancellationToken  = null,
                                    EventTracking_Id    EventTrackingId    = null,
@@ -1107,6 +1581,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
 
             #region Initial checks
+
+            if (ProviderId == null)
+                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
+
+            if (!To.HasValue)
+                To = DateTime.Now;
 
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
@@ -1130,7 +1610,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         EventTrackingId,
                                                         ProviderId,
                                                         From,
-                                                        To,
+                                                        To.Value,
                                                         RequestTimeout);
 
             }
@@ -1145,15 +1625,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient))
-
             {
 
                 var result = await _OICPClient.Query(EMPClientXMLMethods.GetChargeDetailRecords(ProviderId,
                                                                                                 From,
-                                                                                                To),
+                                                                                                To.Value),
                                                      "eRoamingGetChargeDetailRecords",
                                                      RequestLogDelegate:   OnGetChargeDetailRecordsSOAPRequest,
                                                      ResponseLogDelegate:  OnGetChargeDetailRecordsSOAPResponse,
@@ -1222,7 +1701,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                              EventTrackingId,
                                                              ProviderId,
                                                              From,
-                                                             To,
+                                                             To.Value,
                                                              RequestTimeout,
                                                              result.Content,
                                                              Runtime.Elapsed);

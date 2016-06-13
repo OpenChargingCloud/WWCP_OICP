@@ -22,24 +22,158 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    #region OnPullEVSEData
+
+    /// <summary>
+    /// A delegate called whenever a 'pull EVSE data' request will be send.
+    /// </summary>
+    public delegate Task OnPullEVSEDataRequestHandler (DateTime           LogTimestamp,
+                                                       DateTime           RequestTimestamp,
+                                                       EMPClient          Sender,
+                                                       String             SenderId,
+                                                       EventTracking_Id   EventTrackingId,
+                                                       EVSP_Id            ProviderId,
+                                                       GeoCoordinate      SearchCenter,
+                                                       Double             DistanceKM,
+                                                       DateTime?          LastCall,
+                                                       TimeSpan?          RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a 'pull EVSE data' request had been received.
+    /// </summary>
+    public delegate Task OnPullEVSEDataResponseHandler(DateTime           Timestamp,
+                                                       EMPClient          Sender,
+                                                       String             SenderId,
+                                                       EventTracking_Id   EventTrackingId,
+                                                       EVSP_Id            ProviderId,
+                                                       GeoCoordinate      SearchCenter,
+                                                       Double             DistanceKM,
+                                                       DateTime?          LastCall,
+                                                       TimeSpan?          RequestTimeout,
+                                                       eRoamingEVSEData   Result,
+                                                       TimeSpan           Duration);
+
+    #endregion
+
+    #region OnSearchEVSE
+
+    /// <summary>
+    /// A delegate called whenever a 'search EVSE' request will be send.
+    /// </summary>
+    public delegate Task OnSearchEVSERequestHandler (DateTime                   LogTimestamp,
+                                                     DateTime                   RequestTimestamp,
+                                                     EMPClient                  Sender,
+                                                     String                     SenderId,
+                                                     EventTracking_Id           EventTrackingId,
+                                                     EVSP_Id                    ProviderId,
+                                                     GeoCoordinate              SearchCenter,
+                                                     Double                     DistanceKM,
+                                                     Address                    Address,
+                                                     PlugTypes?                 Plug,
+                                                     ChargingFacilities?        ChargingFacility,
+                                                     TimeSpan?                  RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a 'search EVSE' request had been received.
+    /// </summary>
+    public delegate Task OnSearchEVSEResponseHandler(DateTime                   Timestamp,
+                                                     EMPClient                  Sender,
+                                                     String                     SenderId,
+                                                     EventTracking_Id           EventTrackingId,
+                                                     EVSP_Id                    ProviderId,
+                                                     GeoCoordinate              SearchCenter,
+                                                     Double                     DistanceKM,
+                                                     Address                    Address,
+                                                     PlugTypes?                 Plug,
+                                                     ChargingFacilities?        ChargingFacility,
+                                                     TimeSpan?                  RequestTimeout,
+                                                     eRoamingEvseSearchResult   Result,
+                                                     TimeSpan                   Duration);
+
+    #endregion
+
+    #region OnPullEVSEStatusById
+
+    /// <summary>
+    /// A delegate called whenever a 'pull EVSE status' request will be send.
+    /// </summary>
+    public delegate Task OnPullEVSEStatusRequestHandler (DateTime             LogTimestamp,
+                                                         DateTime             RequestTimestamp,
+                                                         EMPClient            Sender,
+                                                         String               SenderId,
+                                                         EventTracking_Id     EventTrackingId,
+                                                         EVSP_Id              ProviderId,
+                                                         GeoCoordinate        SearchCenter,
+                                                         Double               DistanceKM,
+                                                         EVSEStatusType?      EVSEStatusFilter,
+                                                         TimeSpan?            RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a 'pull EVSE status' request had been received.
+    /// </summary>
+    public delegate Task OnPullEVSEStatusResponseHandler(DateTime             Timestamp,
+                                                         EMPClient            Sender,
+                                                         String               SenderId,
+                                                         EventTracking_Id     EventTrackingId,
+                                                         EVSP_Id              ProviderId,
+                                                         GeoCoordinate        SearchCenter,
+                                                         Double               DistanceKM,
+                                                         EVSEStatusType?      EVSEStatusFilter,
+                                                         TimeSpan?            RequestTimeout,
+                                                         eRoamingEVSEStatus   Result,
+                                                         TimeSpan             Duration);
+
+    #endregion
+
+    #region OnPullEVSEStatusById
+
+    /// <summary>
+    /// A delegate called whenever a 'pull EVSE status by id' request will be send.
+    /// </summary>
+    public delegate Task OnPullEVSEStatusByIdRequestHandler (DateTime                 LogTimestamp,
+                                                             DateTime                 RequestTimestamp,
+                                                             EMPClient                Sender,
+                                                             String                   SenderId,
+                                                             EventTracking_Id         EventTrackingId,
+                                                             EVSP_Id                  ProviderId,
+                                                             IEnumerable<EVSE_Id>     EVSEIds,
+                                                             TimeSpan?                RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a 'pull EVSE status by id' request had been received.
+    /// </summary>
+    public delegate Task OnPullEVSEStatusByIdResponseHandler(DateTime                 Timestamp,
+                                                             EMPClient                Sender,
+                                                             String                   SenderId,
+                                                             EventTracking_Id         EventTrackingId,
+                                                             EVSP_Id                  ProviderId,
+                                                             IEnumerable<EVSE_Id>     EVSEIds,
+                                                             TimeSpan?                RequestTimeout,
+                                                             eRoamingEVSEStatusById   Result,
+                                                             TimeSpan                 Duration);
+
+    #endregion
+
     #region OnPushAuthenticationData
 
     /// <summary>
     /// A delegate called whenever a 'push authentication data' request will be send.
     /// </summary>
-    public delegate Task OnPushAuthenticationDataRequestHandler (DateTime                                 Timestamp,
+    public delegate Task OnPushAuthenticationDataRequestHandler (DateTime                                 LogTimestamp,
+                                                                 DateTime                                 RequestTimestamp,
                                                                  EMPClient                                Sender,
                                                                  String                                   SenderId,
                                                                  EventTracking_Id                         EventTrackingId,
                                                                  IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
                                                                  ActionType                               OICPAction,
-                                                                 TimeSpan?                                QueryTimeout);
+                                                                 TimeSpan?                                RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'push authentication data' request had been received.
@@ -50,7 +184,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                  EventTracking_Id                         EventTrackingId,
                                                                  IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
                                                                  ActionType                               OICPAction,
-                                                                 TimeSpan?                                QueryTimeout,
+                                                                 TimeSpan?                                RequestTimeout,
                                                                  eRoamingAcknowledgement                  Result,
                                                                  TimeSpan                                 Duration);
 
@@ -61,7 +195,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// A delegate called whenever a 'reservation start' request will be send.
     /// </summary>
-    public delegate Task OnReservationStartRequestHandler (DateTime                  Timestamp,
+    public delegate Task OnReservationStartRequestHandler (DateTime                  LogTimestamp,
+                                                           DateTime                  RequestTimestamp,
                                                            EMPClient                 Sender,
                                                            String                    SenderId,
                                                            EventTracking_Id          EventTrackingId,
@@ -71,7 +206,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            ChargingSession_Id        SessionId,
                                                            ChargingSession_Id        PartnerSessionId,
                                                            ChargingProduct_Id        PartnerProductId,
-                                                           TimeSpan?                 QueryTimeout);
+                                                           TimeSpan?                 RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'reservation start' request had been received.
@@ -86,7 +221,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            ChargingSession_Id        SessionId,
                                                            ChargingSession_Id        PartnerSessionId,
                                                            ChargingProduct_Id        PartnerProductId,
-                                                           TimeSpan?                 QueryTimeout,
+                                                           TimeSpan?                 RequestTimeout,
                                                            eRoamingAcknowledgement   Result,
                                                            TimeSpan                  Duration);
 
@@ -94,7 +229,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// A delegate called whenever a reservation stop request will be send.
     /// </summary>
-    public delegate Task OnReservationStopRequestHandler  (DateTime                  Timestamp,
+    public delegate Task OnReservationStopRequestHandler  (DateTime                  LogTimestamp,
+                                                           DateTime                  RequestTimestamp,
                                                            EMPClient                 Sender,
                                                            String                    SenderId,
                                                            EventTracking_Id          EventTrackingId,
@@ -102,7 +238,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            EVSP_Id                   ProviderId,
                                                            EVSE_Id                   EVSEId,
                                                            ChargingSession_Id        PartnerSessionId,
-                                                           TimeSpan?                 QueryTimeout);
+                                                           TimeSpan?                 RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a reservation stop request had been received.
@@ -115,7 +251,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            EVSP_Id                   ProviderId,
                                                            EVSE_Id                   EVSEId,
                                                            ChargingSession_Id        PartnerSessionId,
-                                                           TimeSpan?                 QueryTimeout,
+                                                           TimeSpan?                 RequestTimeout,
                                                            eRoamingAcknowledgement   Result,
                                                            TimeSpan                  Duration);
 
@@ -126,7 +262,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// A delegate called whenever an 'authorize remote start' request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteStartRequestHandler (DateTime                  Timestamp,
+    public delegate Task OnAuthorizeRemoteStartRequestHandler (DateTime                  LogTimestamp,
+                                                               DateTime                  RequestTimestamp,
                                                                EMPClient                 Sender,
                                                                String                    SenderId,
                                                                EventTracking_Id          EventTrackingId,
@@ -136,7 +273,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                ChargingSession_Id        SessionId,
                                                                ChargingSession_Id        PartnerSessionId,
                                                                ChargingProduct_Id        PartnerProductId,
-                                                               TimeSpan?                 QueryTimeout);
+                                                               TimeSpan?                 RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for an 'authorize remote start' request had been received.
@@ -151,7 +288,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                ChargingSession_Id        SessionId,
                                                                ChargingSession_Id        PartnerSessionId,
                                                                ChargingProduct_Id        PartnerProductId,
-                                                               TimeSpan?                 QueryTimeout,
+                                                               TimeSpan?                 RequestTimeout,
                                                                eRoamingAcknowledgement   Result,
                                                                TimeSpan                  Duration);
 
@@ -159,7 +296,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// A delegate called whenever an 'authorize remote stop' request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteStopRequestHandler  (DateTime                  Timestamp,
+    public delegate Task OnAuthorizeRemoteStopRequestHandler  (DateTime                  LogTimestamp,
+                                                               DateTime                  RequestTimestamp,
                                                                EMPClient                 Sender,
                                                                String                    SenderId,
                                                                EventTracking_Id          EventTrackingId,
@@ -167,7 +305,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                EVSP_Id                   ProviderId,
                                                                EVSE_Id                   EVSEId,
                                                                ChargingSession_Id        PartnerSessionId,
-                                                               TimeSpan?                 QueryTimeout);
+                                                               TimeSpan?                 RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for an 'authorize remote stop' request had been received.
@@ -180,7 +318,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                EVSP_Id                   ProviderId,
                                                                EVSE_Id                   EVSEId,
                                                                ChargingSession_Id        PartnerSessionId,
-                                                               TimeSpan?                 QueryTimeout,
+                                                               TimeSpan?                 RequestTimeout,
                                                                eRoamingAcknowledgement   Result,
                                                                TimeSpan                  Duration);
 
@@ -199,7 +337,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                  EVSP_Id                          ProviderId,
                                                                  DateTime                         From,
                                                                  DateTime                         To,
-                                                                 TimeSpan?                        QueryTimeout);
+                                                                 TimeSpan?                        RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'get charge detail records' request had been received.
@@ -211,7 +349,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                  EVSP_Id                          ProviderId,
                                                                  DateTime                         From,
                                                                  DateTime                         To,
-                                                                 TimeSpan?                        QueryTimeout,
+                                                                 TimeSpan?                        RequestTimeout,
                                                                  IEnumerable<ChargeDetailRecord>  Result,
                                                                  TimeSpan                         Duration);
 

@@ -113,11 +113,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
             var req2 = HubjectEMP.
 
-                          PullEVSEData(ProviderId:    EVSP_Id.Parse("DE*GDF"),
-                                       SearchCenter:  new GeoCoordinate(Latitude. Parse(49.731102),
-                                                                        Longitude.Parse(10.142533)),
-                                       DistanceKM:    100,
-                                       QueryTimeout:  TimeSpan.FromSeconds(120)).
+                          PullEVSEData(ProviderId:      EVSP_Id.Parse("DE*GDF"),
+                                       SearchCenter:    new GeoCoordinate(Latitude. Parse(49.731102),
+                                                                          Longitude.Parse(10.142533)),
+                                       DistanceKM:      100,
+                                       RequestTimeout:  TimeSpan.FromSeconds(120)).
 
                           ContinueWith(task =>
                           {
@@ -192,7 +192,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
                                                                               Longitude.Parse(10.142533)),
                                          DistanceKM:        100,
                                          EVSEStatusFilter:  EVSEStatusType.Available,
-                                         QueryTimeout:      TimeSpan.FromSeconds(120)).
+                                         RequestTimeout:    TimeSpan.FromSeconds(120)).
 
                           ContinueWith(task =>
                           {
@@ -227,10 +227,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
         {
 
             var req5 = HubjectEMP.
-                PullEVSEStatusById(ProviderId:    EVSP_Id.Parse("DE*GDF"),
-                                   EVSEIds:       Enumeration.Create(EVSE_Id.Parse("DE*GEF*E123456789*1"),
-                                                                     EVSE_Id.Parse("+49*822*083431571*1")),
-                                   QueryTimeout:  TimeSpan.FromSeconds(120)).
+                PullEVSEStatusById(ProviderId:      EVSP_Id.Parse("DE*GDF"),
+                                   EVSEIds:         Enumeration.Create(EVSE_Id.Parse("DE*GEF*E123456789*1"),
+                                                                       EVSE_Id.Parse("+49*822*083431571*1")),
+                                   RequestTimeout:  TimeSpan.FromSeconds(120)).
 
                 ContinueWith(task =>
                 {
@@ -268,11 +268,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
                 var result = await HubjectEMP.
                     SearchEVSE(EVSP_Id.Parse("DE*GDF"),
-                               SearchCenter:  new GeoCoordinate(Latitude. Parse(49.731102),
-                                                                Longitude.Parse(10.142533)),
-                               DistanceKM:    100,
-                               Plug:          PlugTypes.Type2Outlet,
-                               QueryTimeout:  TimeSpan.FromSeconds(120));
+                               SearchCenter:    new GeoCoordinate(Latitude. Parse(49.731102),
+                                                                  Longitude.Parse(10.142533)),
+                               DistanceKM:      100,
+                               Plug:            PlugTypes.Type2Outlet,
+                               RequestTimeout:  TimeSpan.FromSeconds(120));
 
                 if (result.Content.HasResults())
                     Console.WriteLine(result.Content.
@@ -297,10 +297,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
             Task.Factory.StartNew(async () => {
 
                 var result = await HubjectEMP.
-                    PushAuthenticationData(DateTime.Now,
-                                           new CancellationTokenSource().Token,
-                                           EventTracking_Id.New,
-                                           Enumeration.Create(  // ([A-Za-z]{2} \-? [A-Za-z0-9]{3} \-? C[A-Za-z0-9]{8}[\*|\-]?[\d|X])
+                    PushAuthenticationData(Enumeration.Create(  // ([A-Za-z]{2} \-? [A-Za-z0-9]{3} \-? C[A-Za-z0-9]{8}[\*|\-]?[\d|X])
 
                                                AuthorizationIdentification.FromAuthToken
                                                    (Auth_Token.Parse("08152305")),
@@ -310,9 +307,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
                                                     "1234") //DE**GDF*CAETE4*3"), "1234") //
 
                                            ),
-                                           ProviderId:   EVSP_Id.   Parse("DE*GDF"),
-                                           OICPAction:   ActionType.fullLoad,
-                                           QueryTimeout: TimeSpan.  FromSeconds(120));
+                                           ProviderId:     EVSP_Id.   Parse("DE*GDF"),
+                                           OICPAction:     ActionType.fullLoad,
+                                           RequestTimeout: TimeSpan.  FromSeconds(120));
 
 
                 if (result.Content.Result)
@@ -338,11 +335,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
             Task.Factory.StartNew(async () => {
 
                 var result = await HubjectCPO.
-                    PullAuthenticationData(DateTime.Now,
-                                           new CancellationTokenSource().Token,
-                                           EventTracking_Id.New, 
-                                           EVSEOperator_Id.Parse("DE*GEF"),
-                                           QueryTimeout: TimeSpan.FromSeconds(120));
+                    PullAuthenticationData(EVSEOperator_Id.Parse("DE*GEF"),
+                                           RequestTimeout: TimeSpan.FromSeconds(120));
 
 
                 if (result.Content.StatusCode.HasResult)

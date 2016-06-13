@@ -35,7 +35,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.1 EMP HTTP/SOAP/XML server.
+    /// An OICP EMP HTTP/SOAP/XML server.
     /// </summary>
     public class EMPServer : ASOAPServer
     {

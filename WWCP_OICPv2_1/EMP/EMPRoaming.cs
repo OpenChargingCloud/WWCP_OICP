@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -26,7 +27,6 @@ using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.Threading;
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -76,12 +76,544 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Events
 
-        // Client methods (logging)
+        // EMPClient logging methods
+
+        #region OnPullEVSEDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE data' request will be send.
+        /// </summary>
+        public event OnPullEVSEDataRequestHandler OnPullEVSEDataRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEDataRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEDataRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE data' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnPullEVSEDataSOAPRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEDataSOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEDataSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE data' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnPullEVSEDataSOAPResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEDataSOAPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEDataSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE data' request had been received.
+        /// </summary>
+        public event OnPullEVSEDataResponseHandler OnPullEVSEDataResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEDataResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEDataResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnSearchEVSERequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'search EVSE' request will be send.
+        /// </summary>
+        public event OnSearchEVSERequestHandler OnSearchEVSERequest
+        {
+
+            add
+            {
+                EMPClient.OnSearchEVSERequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnSearchEVSERequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a 'search EVSE' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnSearchEVSESOAPRequest
+        {
+
+            add
+            {
+                EMPClient.OnSearchEVSESOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnSearchEVSESOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'search EVSE' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnSearchEVSESOAPResponse
+        {
+
+            add
+            {
+                EMPClient.OnSearchEVSESOAPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnSearchEVSESOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'search EVSE' request had been received.
+        /// </summary>
+        public event OnSearchEVSEResponseHandler OnSearchEVSEResponse
+        {
+
+            add
+            {
+                EMPClient.OnSearchEVSEResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnSearchEVSEResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnPullEVSEStatusRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE status' request will be send.
+        /// </summary>
+        public event OnPullEVSEStatusRequestHandler OnPullEVSEStatusRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE status' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnPullEVSEStatusSOAPRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusSOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE status' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnPullEVSEStatusSOAPResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusSOAPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE status' request had been received.
+        /// </summary>
+        public event OnPullEVSEStatusResponseHandler OnPullEVSEStatusResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnPullEVSEStatusByIdRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE status by id' request will be send.
+        /// </summary>
+        public event OnPullEVSEStatusByIdRequestHandler OnPullEVSEStatusByIdRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusByIdRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByIdRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE status by id' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnPullEVSEStatusByIdSOAPRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusByIdSOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByIdSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE status by id' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnPullEVSEStatusByIdSOAPResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusByIdSOAPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByIdSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE status by id' request had been received.
+        /// </summary>
+        public event OnPullEVSEStatusByIdResponseHandler OnPullEVSEStatusByIdResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusByIdResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByIdResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnPushAuthenticationDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'push authentication data' request will be send.
+        /// </summary>
+        public event OnPushAuthenticationDataRequestHandler OnPushAuthenticationDataRequest
+        {
+
+            add
+            {
+                EMPClient.OnPushAuthenticationDataRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPushAuthenticationDataRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a 'push authentication data' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnPushAuthenticationDataSOAPRequest
+        {
+
+            add
+            {
+                EMPClient.OnPushAuthenticationDataSOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPushAuthenticationDataSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'push authentication data' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnPushAuthenticationDataSOAPResponse
+        {
+
+            add
+            {
+                EMPClient.OnPushAuthenticationDataSOAPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPushAuthenticationDataSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'push authentication data' request had been received.
+        /// </summary>
+        public event OnPushAuthenticationDataResponseHandler OnPushAuthenticationDataResponse
+        {
+
+            add
+            {
+                EMPClient.OnPushAuthenticationDataResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPushAuthenticationDataResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnReservationStartRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'reservation start' request will be send.
+        /// </summary>
+        public event OnReservationStartRequestHandler OnReservationStartRequest
+        {
+
+            add
+            {
+                EMPClient.OnReservationStartRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnReservationStartRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a 'reservation start' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnReservationStartSOAPRequest
+        {
+
+            add
+            {
+                EMPClient.OnReservationStartSOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnReservationStartSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'reservation start' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnReservationStartSOAPResponse
+        {
+
+            add
+            {
+                EMPClient.OnReservationStartSOAPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnReservationStartSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'reservation start' request had been received.
+        /// </summary>
+        public event OnReservationStartResponseHandler OnReservationStartResponse
+        {
+
+            add
+            {
+                EMPClient.OnReservationStartResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnReservationStartResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnReservationStopRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'reservation stop' request will be send.
+        /// </summary>
+        public event OnReservationStopRequestHandler OnReservationStopRequest
+        {
+
+            add
+            {
+                EMPClient.OnReservationStopRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnReservationStopRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a 'reservation stop' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnReservationStopSOAPRequest
+        {
+
+            add
+            {
+                EMPClient.OnReservationStopSOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnReservationStopSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'reservation stop' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnReservationStopSOAPResponse
+        {
+
+            add
+            {
+                EMPClient.OnReservationStopSOAPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnReservationStopSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'reservation stop' request had been received.
+        /// </summary>
+        public event OnReservationStopResponseHandler OnReservationStopResponse
+        {
+
+            add
+            {
+                EMPClient.OnReservationStopResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnReservationStopResponse -= value;
+            }
+
+        }
+
+        #endregion
 
         #region OnAuthorizeRemoteStartRequest/-Response
 
         /// <summary>
-        /// An event fired whenever an authorize start request will be send.
+        /// An event fired whenever an 'authorize remote start' request will be send.
         /// </summary>
         public event OnAuthorizeRemoteStartRequestHandler OnAuthorizeRemoteStartRequest
         {
@@ -99,7 +631,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         /// <summary>
-        /// An event fired whenever an authorize remote start SOAP request will be send.
+        /// An event fired whenever an 'authorize remote start' SOAP request will be send.
         /// </summary>
         public event ClientRequestLogHandler OnAuthorizeRemoteStartSOAPRequest
         {
@@ -117,7 +649,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         /// <summary>
-        /// An event fired whenever a response to an authorize remote start SOAP request had been received.
+        /// An event fired whenever a response to an 'authorize remote start' SOAP request had been received.
         /// </summary>
         public event ClientResponseLogHandler OnAuthorizeRemoteStartSOAPResponse
         {
@@ -135,7 +667,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         /// <summary>
-        /// An event fired whenever a response to an authorize remote start request had been received.
+        /// An event fired whenever a response to an 'authorize remote start' request had been received.
         /// </summary>
         public event OnAuthorizeRemoteStartResponseHandler OnAuthorizeRemoteStartResponse
         {
@@ -157,7 +689,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region OnAuthorizeRemoteStopRequest/-Response
 
         /// <summary>
-        /// An event fired whenever an authorize remote stop request will be send.
+        /// An event fired whenever an 'authorize remote stop' request will be send.
         /// </summary>
         public event OnAuthorizeRemoteStopRequestHandler OnAuthorizeRemoteStopRequest
         {
@@ -175,7 +707,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         /// <summary>
-        /// An event fired whenever an authorize remote stop SOAP request will be send.
+        /// An event fired whenever an 'authorize remote stop' SOAP request will be send.
         /// </summary>
         public event ClientRequestLogHandler OnAuthorizeRemoteStopSOAPRequest
         {
@@ -193,7 +725,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         /// <summary>
-        /// An event fired whenever a response to an authorize remote stop SOAP request had been received.
+        /// An event fired whenever a response to an 'authorize remote stop' SOAP request had been received.
         /// </summary>
         public event ClientResponseLogHandler OnAuthorizeRemoteStopSOAPResponse
         {
@@ -211,7 +743,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         /// <summary>
-        /// An event fired whenever a response to an authorize remote stop request had been received.
+        /// An event fired whenever a response to an 'authorize remote stop' request had been received.
         /// </summary>
         public event OnAuthorizeRemoteStopResponseHandler OnAuthorizeRemoteStopResponse
         {
@@ -230,8 +762,84 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+        #region OnGetChargeDetailRecordsRequest/-Response
 
-        // Server methods
+        /// <summary>
+        /// An event fired whenever a 'get charge detail records' request will be send.
+        /// </summary>
+        public event OnGetChargeDetailRecordsRequestHandler OnGetChargeDetailRecordsRequest
+        {
+
+            add
+            {
+                EMPClient.OnGetChargeDetailRecordsRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnGetChargeDetailRecordsRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a 'get charge detail records' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnGetChargeDetailRecordsSOAPRequest
+        {
+
+            add
+            {
+                EMPClient.OnGetChargeDetailRecordsSOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnGetChargeDetailRecordsSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a 'get charge detail records' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnGetChargeDetailRecordsSOAPResponse
+        {
+
+            add
+            {
+                EMPClient.OnGetChargeDetailRecordsSOAPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnGetChargeDetailRecordsSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response for a 'get charge detail records' request was received.
+        /// </summary>
+        public event OnGetChargeDetailRecordsResponseHandler OnGetChargeDetailRecordsResponse
+        {
+
+            add
+            {
+                EMPClient.OnGetChargeDetailRecordsResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnGetChargeDetailRecordsResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+
+        // EMPServer methods
 
         #region OnAuthorizeStart
 
@@ -407,6 +1015,75 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+
+        // Generic HTTP/SOAP server logging
+
+        #region RequestLog
+
+        /// <summary>
+        /// An event called whenever a request came in.
+        /// </summary>
+        public event RequestLogHandler RequestLog
+        {
+
+            add
+            {
+                EMPServer.RequestLog += value;
+            }
+
+            remove
+            {
+                EMPServer.RequestLog -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region AccessLog
+
+        /// <summary>
+        /// An event called whenever a request could successfully be processed.
+        /// </summary>
+        public event AccessLogHandler AccessLog
+        {
+
+            add
+            {
+                EMPServer.AccessLog += value;
+            }
+
+            remove
+            {
+                EMPServer.AccessLog -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region ErrorLog
+
+        /// <summary>
+        /// An event called whenever a request resulted in an error.
+        /// </summary>
+        public event ErrorLogHandler ErrorLog
+        {
+
+            add
+            {
+                EMPServer.ErrorLog += value;
+            }
+
+            remove
+            {
+                EMPServer.ErrorLog -= value;
+            }
+
+        }
+
+        #endregion
+
         #endregion
 
         #region Constructor(s)
@@ -448,7 +1125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
@@ -466,7 +1143,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           String                               RemoteHTTPVirtualHost       = null,
                           RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                           String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
-                          TimeSpan?                            QueryTimeout                = null,
+                          TimeSpan?                            RequestTimeout                = null,
 
                           String                               ServerName                  = EMPServer.DefaultHTTPServerName,
                           IPPort                               ServerTCPPort               = null,
@@ -485,7 +1162,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                  RemoteHTTPVirtualHost,
                                  RemoteCertificateValidator,
                                  HTTPUserAgent,
-                                 QueryTimeout,
+                                 RequestTimeout,
                                  DNSClient),
 
                    new EMPServer(ServerName,
@@ -510,7 +1187,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, QueryTimeout = null, OnException = null)
+        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, ...)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
@@ -521,24 +1198,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEVSEData>>
 
-            PullEVSEData(EVSP_Id           ProviderId,
-                         GeoCoordinate     SearchCenter  = null,
-                         Double            DistanceKM    = 0.0,
-                         DateTime?         LastCall      = null,
-                         TimeSpan?         QueryTimeout  = null)
+            PullEVSEData(EVSP_Id             ProviderId,
+                         GeoCoordinate       SearchCenter       = null,
+                         Double              DistanceKM         = 0.0,
+                         DateTime?           LastCall           = null,
+
+                         DateTime?           Timestamp          = null,
+                         CancellationToken?  CancellationToken  = null,
+                         EventTracking_Id    EventTrackingId    = null,
+                         TimeSpan?           RequestTimeout     = null)
+
 
             => await EMPClient.PullEVSEData(ProviderId,
-                                             SearchCenter,
-                                             DistanceKM,
-                                             LastCall,
-                                             QueryTimeout);
+                                            SearchCenter,
+                                            DistanceKM,
+                                            LastCall,
+
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
 
         #endregion
 
-        #region SearchEVSE(ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null, QueryTimeout = null)
+        #region SearchEVSE(ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null, ...)
 
         /// <summary>
         /// Create a new Search EVSE request.
@@ -549,29 +1239,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Address">An optional address of the charging stations.</param>
         /// <param name="Plug">Optional plugs of the charging station.</param>
         /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEvseSearchResult>>
 
             SearchEVSE(EVSP_Id              ProviderId,
-                       GeoCoordinate        SearchCenter      = null,
-                       Double               DistanceKM        = 0.0,
-                       Address              Address           = null,
-                       PlugTypes?           Plug              = null,
-                       ChargingFacilities?  ChargingFacility  = null,
-                       TimeSpan?            QueryTimeout      = null)
+                       GeoCoordinate        SearchCenter       = null,
+                       Double               DistanceKM         = 0.0,
+                       Address              Address            = null,
+                       PlugTypes?           Plug               = null,
+                       ChargingFacilities?  ChargingFacility   = null,
+
+                       DateTime?            Timestamp          = null,
+                       CancellationToken?   CancellationToken  = null,
+                       EventTracking_Id     EventTrackingId    = null,
+                       TimeSpan?            RequestTimeout     = null)
+
 
             => await EMPClient.SearchEVSE(ProviderId,
-                                           SearchCenter,
-                                           DistanceKM,
-                                           Address,
-                                           Plug,
-                                           ChargingFacility,
-                                           QueryTimeout);
+                                          SearchCenter,
+                                          DistanceKM,
+                                          Address,
+                                          Plug,
+                                          ChargingFacility,
+
+                                          Timestamp,
+                                          CancellationToken,
+                                          EventTrackingId,
+                                          RequestTimeout);
 
         #endregion
 
 
-        #region PullEVSEStatus(ProviderId, SearchCenter = null, DistanceKM = 0.0, EVSEStatusFilter = null, QueryTimeout = null)
+        #region PullEVSEStatus(ProviderId, SearchCenter = null, DistanceKM = 0.0, EVSEStatusFilter = null, ...)
 
         /// <summary>
         /// Create a new task requesting the current status of all EVSEs (within an optional search radius and status).
@@ -580,289 +1283,343 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEVSEStatus>>
 
-            PullEVSEStatus(EVSP_Id          ProviderId,
-                           GeoCoordinate    SearchCenter      = null,
-                           Double           DistanceKM        = 0.0,
-                           EVSEStatusType?  EVSEStatusFilter  = null,
-                           TimeSpan?        QueryTimeout      = null)
+            PullEVSEStatus(EVSP_Id             ProviderId,
+                           GeoCoordinate       SearchCenter       = null,
+                           Double              DistanceKM         = 0.0,
+                           EVSEStatusType?     EVSEStatusFilter   = null,
+
+                           DateTime?           Timestamp          = null,
+                           CancellationToken?  CancellationToken  = null,
+                           EventTracking_Id    EventTrackingId    = null,
+                           TimeSpan?           RequestTimeout     = null)
+
 
             => await EMPClient.PullEVSEStatus(ProviderId,
-                                               SearchCenter,
-                                               DistanceKM,
-                                               EVSEStatusFilter,
-                                               QueryTimeout);
+                                              SearchCenter,
+                                              DistanceKM,
+                                              EVSEStatusFilter,
+
+                                              Timestamp,
+                                              CancellationToken,
+                                              EventTrackingId,
+                                              RequestTimeout);
 
         #endregion
 
-        #region PullEVSEStatusById(ProviderId, EVSEIds, QueryTimeout = null)
+        #region PullEVSEStatusById(ProviderId, EVSEIds, ...)
 
         /// <summary>
         /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
         /// </summary>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEVSEStatusById>>
 
             PullEVSEStatusById(EVSP_Id               ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
-                               TimeSpan?             QueryTimeout = null)
+
+                               DateTime?             Timestamp          = null,
+                               CancellationToken?    CancellationToken  = null,
+                               EventTracking_Id      EventTrackingId    = null,
+                               TimeSpan?             RequestTimeout     = null)
+
 
             => await EMPClient.PullEVSEStatusById(ProviderId,
-                                                   EVSEIds,
-                                                   QueryTimeout);
+                                                  EVSEIds,
+
+                                                  Timestamp,
+                                                  CancellationToken,
+                                                  EventTrackingId,
+                                                  RequestTimeout);
 
         #endregion
 
 
-        #region PushAuthenticationData(...ProviderAuthenticationDataRecords, OICPAction = fullLoad, ...)
+        #region PushAuthenticationData(ProviderAuthenticationDataRecords, OICPAction = fullLoad, ...)
 
         /// <summary>
         /// Create a new task pushing provider authentication data records onto the OICP server.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushAuthenticationData(DateTime                                 Timestamp,
-                                   CancellationToken                        CancellationToken,
-                                   EventTracking_Id                         EventTrackingId,
-                                   IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
-                                   ActionType                               OICPAction    = ActionType.fullLoad,
-                                   TimeSpan?                                QueryTimeout  = null)
+            PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
+                                   ActionType                               OICPAction         = ActionType.fullLoad,
 
-            => await EMPClient.PushAuthenticationData(Timestamp,
+                                   DateTime?                                Timestamp          = null,
+                                   CancellationToken?                       CancellationToken  = null,
+                                   EventTracking_Id                         EventTrackingId    = null,
+                                   TimeSpan?                                RequestTimeout     = null)
+
+
+            => await EMPClient.PushAuthenticationData(ProviderAuthenticationDataRecords,
+                                                      OICPAction,
+
+                                                      Timestamp,
                                                       CancellationToken,
                                                       EventTrackingId,
-                                                      ProviderAuthenticationDataRecords,
-                                                      OICPAction,
-                                                      QueryTimeout);
+                                                      RequestTimeout);
 
         #endregion
 
-        #region PushAuthenticationData(...AuthorizationIdentifications, ProviderId, OICPAction = fullLoad, ...)
+        #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad, ...)
 
         /// <summary>
         /// Create a new task pushing authorization identifications onto the OICP server.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushAuthenticationData(DateTime                                  Timestamp,
-                                   CancellationToken                         CancellationToken,
-                                   EventTracking_Id                          EventTrackingId,
-                                   IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
+            PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
                                    EVSP_Id                                   ProviderId,
-                                   ActionType                                OICPAction    = ActionType.fullLoad,
-                                   TimeSpan?                                 QueryTimeout  = null)
+                                   ActionType                                OICPAction         = ActionType.fullLoad,
 
-            => await EMPClient.PushAuthenticationData(Timestamp,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      AuthorizationIdentifications,
+                                   DateTime?                                 Timestamp          = null,
+                                   CancellationToken?                        CancellationToken  = null,
+                                   EventTracking_Id                          EventTrackingId    = null,
+                                   TimeSpan?                                 RequestTimeout     = null)
+
+
+            => await EMPClient.PushAuthenticationData(AuthorizationIdentifications,
                                                       ProviderId,
                                                       OICPAction,
-                                                      QueryTimeout);
+
+                                                      Timestamp,
+                                                      CancellationToken,
+                                                      EventTrackingId,
+                                                      RequestTimeout);
 
         #endregion
 
 
-        #region ReservationStart(...EVSEId, ProviderId, eMAId, SessionId = null, PartnerSessionId = null, ChargingProductId = null, ...)
+        #region ReservationStart(EVSEId, ProviderId, eMAId, SessionId = null, PartnerSessionId = null, ChargingProductId = null, ...)
 
         /// <summary>
         /// Create a reservation at the given EVSE.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
         /// <param name="eMAId">The unique identification of the e-mobility account.</param>
         /// <param name="SessionId">An optional unique identification of the charging session.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            ReservationStart(DateTime                Timestamp,
-                             CancellationToken       CancellationToken,
-                             EventTracking_Id        EventTrackingId,
-                             EVSE_Id                 EVSEId,
-                             EVSP_Id                 ProviderId,
-                             eMA_Id                  eMAId,
-                             ChargingSession_Id      SessionId         = null,
-                             ChargingSession_Id      PartnerSessionId  = null,
-                             ChargingProduct_Id      PartnerProductId  = null,
-                             TimeSpan?               QueryTimeout      = default(TimeSpan?))
+            ReservationStart(EVSE_Id             EVSEId,
+                             EVSP_Id             ProviderId,
+                             eMA_Id              eMAId,
+                             ChargingSession_Id  SessionId          = null,
+                             ChargingSession_Id  PartnerSessionId   = null,
+                             ChargingProduct_Id  PartnerProductId   = null,
 
-            => await EMPClient.ReservationStart(Timestamp,
-                                                CancellationToken,
-                                                EventTrackingId,
-                                                ProviderId,
+                             DateTime?           Timestamp          = null,
+                             CancellationToken?  CancellationToken  = null,
+                             EventTracking_Id    EventTrackingId    = null,
+                             TimeSpan?           RequestTimeout     = null)
+
+
+            => await EMPClient.ReservationStart(ProviderId,
                                                 EVSEId,
                                                 eMAId,
                                                 SessionId,
                                                 PartnerSessionId,
                                                 PartnerProductId,
-                                                QueryTimeout);
+
+                                                Timestamp,
+                                                CancellationToken,
+                                                EventTrackingId,
+                                                RequestTimeout);
 
         #endregion
 
-        #region ReservationStop(...SessionId, ProviderId, EVSEId, PartnerSessionId = null, ...)
+        #region ReservationStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, ...)
 
         /// <summary>
         /// Delete a reservation at the given EVSE.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            ReservationStop(DateTime             Timestamp,
-                            CancellationToken    CancellationToken,
-                            EventTracking_Id     EventTrackingId,
-                            ChargingSession_Id   SessionId,
-                            EVSP_Id              ProviderId,
-                            EVSE_Id              EVSEId,
-                            ChargingSession_Id   PartnerSessionId  = null,
-                            TimeSpan?            QueryTimeout      = null)
+            ReservationStop(ChargingSession_Id  SessionId,
+                            EVSP_Id             ProviderId,
+                            EVSE_Id             EVSEId,
+                            ChargingSession_Id  PartnerSessionId   = null,
 
-            => await EMPClient.ReservationStop(Timestamp,
-                                               CancellationToken,
-                                               EventTrackingId,
-                                               SessionId,
+                            DateTime?           Timestamp          = null,
+                            CancellationToken?  CancellationToken  = null,
+                            EventTracking_Id    EventTrackingId    = null,
+                            TimeSpan?           RequestTimeout     = null)
+
+
+            => await EMPClient.ReservationStop(SessionId,
                                                ProviderId,
                                                EVSEId,
                                                PartnerSessionId,
-                                               QueryTimeout);
+
+                                               Timestamp,
+                                               CancellationToken,
+                                               EventTrackingId,
+                                               RequestTimeout);
 
         #endregion
 
 
-        #region RemoteStart(...EVSEId, ProviderId, eMAId, SessionId = null, PartnerSessionId = null, ChargingProductId = null, ...)
+        #region RemoteStart(EVSEId, ProviderId, eMAId, SessionId = null, PartnerSessionId = null, ChargingProductId = null, ...)
 
         /// <summary>
         /// Start a charging session at the given EVSE.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
         /// <param name="eMAId">The unique identification of the e-mobility account.</param>
         /// <param name="SessionId">An optional unique identification of the charging session.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            RemoteStart(DateTime                Timestamp,
-                        CancellationToken       CancellationToken,
-                        EventTracking_Id        EventTrackingId,
-                        EVSE_Id                 EVSEId,
-                        EVSP_Id                 ProviderId,
-                        eMA_Id                  eMAId,
-                        ChargingSession_Id      SessionId         = null,
-                        ChargingSession_Id      PartnerSessionId  = null,
-                        ChargingProduct_Id      PartnerProductId  = null,
-                        TimeSpan?               QueryTimeout      = default(TimeSpan?))
+            RemoteStart(EVSE_Id             EVSEId,
+                        EVSP_Id             ProviderId,
+                        eMA_Id              eMAId,
+                        ChargingSession_Id  SessionId          = null,
+                        ChargingSession_Id  PartnerSessionId   = null,
+                        ChargingProduct_Id  PartnerProductId   = null,
 
-            => await EMPClient.RemoteStart(Timestamp,
-                                           CancellationToken,
-                                           EventTrackingId,
-                                           ProviderId,
+                        DateTime?           Timestamp          = null,
+                        CancellationToken?  CancellationToken  = null,
+                        EventTracking_Id    EventTrackingId    = null,
+                        TimeSpan?           RequestTimeout     = null)
+
+
+            => await EMPClient.RemoteStart(ProviderId,
                                            EVSEId,
                                            eMAId,
                                            SessionId,
                                            PartnerSessionId,
                                            PartnerProductId,
-                                           QueryTimeout);
+
+                                           Timestamp,
+                                           CancellationToken,
+                                           EventTrackingId,
+                                           RequestTimeout);
 
         #endregion
 
-        #region RemoteStop(...SessionId, ProviderId, EVSEId, PartnerSessionId = null, ...)
+        #region RemoteStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, ...)
 
         /// <summary>
         /// Stop the given charging session at the given EVSE.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            RemoteStop(DateTime             Timestamp,
-                       CancellationToken    CancellationToken,
-                       EventTracking_Id     EventTrackingId,
-                       ChargingSession_Id   SessionId,
-                       EVSP_Id              ProviderId,
-                       EVSE_Id              EVSEId,
-                       ChargingSession_Id   PartnerSessionId  = null,
-                       TimeSpan?            QueryTimeout      = null)
+            RemoteStop(ChargingSession_Id  SessionId,
+                       EVSP_Id             ProviderId,
+                       EVSE_Id             EVSEId,
+                       ChargingSession_Id  PartnerSessionId   = null,
 
-            => await EMPClient.RemoteStop(Timestamp,
-                                          CancellationToken,
-                                          EventTrackingId,
-                                          SessionId,
+                       DateTime?           Timestamp          = null,
+                       CancellationToken?  CancellationToken  = null,
+                       EventTracking_Id    EventTrackingId    = null,
+                       TimeSpan?           RequestTimeout     = null)
+
+
+            => await EMPClient.RemoteStop(SessionId,
                                           ProviderId,
                                           EVSEId,
                                           PartnerSessionId,
-                                          QueryTimeout);
+
+                                          Timestamp,
+                                          CancellationToken,
+                                          EventTrackingId,
+                                          RequestTimeout);
 
         #endregion
 
 
-        #region GetChargeDetailRecords(...ProviderId, From, To, ...)
+        #region GetChargeDetailRecords(ProviderId, From, To = null, ...)
 
         /// <summary>
         /// Create a new task querying charge detail records from the OICP server.
         /// </summary>
-        /// <param name="Timestamp">The timestamp of the request.</param>
-        /// <param name="CancellationToken">A token to cancel this request.</param>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="From">The starting time.</param>
-        /// <param name="To">The end time.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// <param name="To">An optional end time. [default: current time].</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<IEnumerable<ChargeDetailRecord>>>
 
-            GetChargeDetailRecords(DateTime           Timestamp,
-                                   CancellationToken  CancellationToken,
-                                   EventTracking_Id   EventTrackingId,
-                                   EVSP_Id            ProviderId,
-                                   DateTime           From,
-                                   DateTime           To,
-                                   TimeSpan?          QueryTimeout  = null)
+            GetChargeDetailRecords(EVSP_Id             ProviderId,
+                                   DateTime            From,
+                                   DateTime?           To                 = null,
+
+                                   DateTime?           Timestamp          = null,
+                                   CancellationToken?  CancellationToken  = null,
+                                   EventTracking_Id    EventTrackingId    = null,
+                                   TimeSpan?           RequestTimeout     = null)
+
 
             => await EMPClient.GetChargeDetailRecords(ProviderId,
                                                       From,
                                                       To,
+
                                                       Timestamp,
                                                       CancellationToken,
                                                       EventTrackingId,
-                                                      QueryTimeout);
+                                                      RequestTimeout);
 
         #endregion
 

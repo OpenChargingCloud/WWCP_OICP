@@ -37,7 +37,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.0 CPO client.
+    /// An OICP Central client.
     /// </summary>
     public class CentralClient : ASOAPClient
     {
@@ -92,7 +92,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new OICP v2.0 Central Client.
+        /// Create a new OICP Central client.
         /// </summary>
         /// <param name="ClientId">A unqiue identification of this client.</param>
         /// <param name="Hostname">The hostname of the remote OICP service.</param>
@@ -161,7 +161,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Reservation",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient: DNSClient))
             {
@@ -343,7 +343,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Reservation",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient: DNSClient))
             {
@@ -484,7 +484,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Authorization",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient: DNSClient))
             {
@@ -667,7 +667,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Authorization",
-                                                    _UserAgent,
+                                                    UserAgent,
                                                     _RemoteCertificateValidator,
                                                     DNSClient: DNSClient))
             {
