@@ -957,23 +957,32 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region PushAuthenticationData(ProviderAuthenticationDataRecords, OICPAction = fullLoad, QueryTimeout = null)
+        #region PushAuthenticationData(...ProviderAuthenticationDataRecords, OICPAction = fullLoad, ...)
 
         /// <summary>
         /// Create a new task pushing provider authentication data records onto the OICP server.
         /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<eRoamingAcknowledgement>
 
-            PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
+            PushAuthenticationData(DateTime                                 Timestamp,
+                                   CancellationToken                        CancellationToken,
+                                   EventTracking_Id                         EventTrackingId,
+                                   IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
                                    ActionType                               OICPAction    = ActionType.fullLoad,
                                    TimeSpan?                                QueryTimeout  = null)
 
         {
 
-            var result = await EMPRoaming.PushAuthenticationData(ProviderAuthenticationDataRecords,
+            var result = await EMPRoaming.PushAuthenticationData(Timestamp,
+                                                                 CancellationToken,
+                                                                 EventTrackingId,
+                                                                 ProviderAuthenticationDataRecords,
                                                                  OICPAction,
                                                                  QueryTimeout);
 
@@ -991,25 +1000,34 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushAuthenticationData(AuthorizationIdentifications, OICPAction = fullLoad, ProviderId = null, QueryTimeout = null)
+        #region PushAuthenticationData(...AuthorizationIdentifications, OICPAction = fullLoad, ProviderId = null, ...)
 
         /// <summary>
         /// Create a new task pushing authorization identifications onto the OICP server.
         /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
         /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<eRoamingAcknowledgement>
 
-            PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
+            PushAuthenticationData(DateTime                                  Timestamp,
+                                   CancellationToken                         CancellationToken,
+                                   EventTracking_Id                          EventTrackingId,
+                                   IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
                                    ActionType                                OICPAction    = ActionType.fullLoad,
                                    EVSP_Id                                   ProviderId    = null,
                                    TimeSpan?                                 QueryTimeout  = null)
 
         {
 
-            var result = await EMPRoaming.PushAuthenticationData(AuthorizationIdentifications,
+            var result = await EMPRoaming.PushAuthenticationData(Timestamp,
+                                                                 CancellationToken,
+                                                                 EventTrackingId,
+                                                                 AuthorizationIdentifications,
                                                                  ProviderId,
                                                                  OICPAction,
                                                                  QueryTimeout);
@@ -1065,7 +1083,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     IEnumerable<UInt32>      PINs               = null,
                     TimeSpan?                QueryTimeout       = null)
 
-            => Task.FromResult(ReservationResult.Error("OICPv2.0 does not support reservations!"));
+        {
+
+            #region Initial checks
+
+            if (EVSEId == null)
+                throw new ArgumentNullException(nameof(EVSEId),  "The given EVSE identification must not be null!");
+
+            #endregion
+
+            return Task.FromResult(ReservationResult.Error("OICPv2.0 does not support reservations!"));
+
+        }
 
         #endregion
 
@@ -1093,7 +1122,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               EVSE_Id                                EVSEId        = null,
                               TimeSpan?                              QueryTimeout  = null)
 
-            => Task.FromResult(CancelReservationResult.Error("OICPv2.0 does not support reservations!"));
+        {
+
+            #region Initial checks
+
+            if (ReservationId == null)
+                throw new ArgumentNullException(nameof(ReservationId),  "The given reservation identification must not be null!");
+
+            #endregion
+
+            return Task.FromResult(CancelReservationResult.Error("OICPv2.0 does not support reservations!"));
+
+        }
 
         #endregion
 

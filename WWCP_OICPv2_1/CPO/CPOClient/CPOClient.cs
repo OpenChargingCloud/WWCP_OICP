@@ -556,7 +556,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region PushEVSEStatus(EVSEStatusRecords,  OICPAction = update, OperatorId = null, OperatorName = null,                                  QueryTimeout = null)
+        #region PushEVSEStatus(...EVSEStatusRecords,  OICPAction = update, OperatorId = null, OperatorName = null, ...)
 
         /// <summary>
         /// Upload the given lookup of EVSE status records grouped by their EVSE operator identification.
@@ -723,7 +723,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region PushEVSEStatus(KeyValuePairs<...>, OICPAction = update, OperatorId = null, OperatorName = null, IncludeEVSEStatusRecords = null, QueryTimeout = null)
+        #region PushEVSEStatus(...KeyValuePairs<...>, OICPAction = update, OperatorId = null, OperatorName = null, IncludeEVSEStatusRecords = null, ...)
 
         /// <summary>
         /// Create a new task pushing EVSE status key-value-pairs onto the OICP server.
@@ -758,7 +758,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeStart(...OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, ...)
 
         /// <summary>
         /// Create an OICP authorize start request.
@@ -772,7 +772,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAuthorizationStart>>
 
-            AuthorizeStart(EVSEOperator_Id     OperatorId,
+            AuthorizeStart(DateTime            Timestamp,
+                           CancellationToken   CancellationToken,
+                           EventTracking_Id    EventTrackingId,
+                           EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            EVSE_Id             EVSEId            = null,
                            ChargingSession_Id  SessionId         = null,
@@ -917,7 +920,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region AuthorizeStop (OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeStop (...OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, ...)
 
         // UID => Not everybody can stop any session, but maybe another
         //        UID than the UID which started the session!
@@ -1091,8 +1094,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-
-        #region SendChargeDetailRecord(ChargeDetailRecord, QueryTimeout = null)
+        #region SendChargeDetailRecord(...ChargeDetailRecord, ...)
 
         /// <summary>
         /// Create an OICP SendChargeDetailRecord request.
@@ -1266,7 +1268,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region PullAuthenticationData(OperatorId, QueryTimeout = null)
+        #region PullAuthenticationData(...OperatorId, ...)
 
         /// <summary>
         /// Create an OICP PullAuthenticationData request.

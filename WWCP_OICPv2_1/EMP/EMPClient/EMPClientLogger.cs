@@ -154,31 +154,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Register EVSE data/status push log events
 
-            RegisterEvent("AuthorizeRemoteStart",
-                          handler => EMPClient.OnAuthorizeRemoteStartRequest  += handler,
-                          handler => EMPClient.OnAuthorizeRemoteStartRequest  -= handler,
-                          "Authorize", "AuthorizeRemote", "Request", "All").
+            RegisterEvent("AuthorizeRemoteStartRequest",
+                          handler => EMPClient.OnAuthorizeRemoteStartSOAPRequest  += handler,
+                          handler => EMPClient.OnAuthorizeRemoteStartSOAPRequest  -= handler,
+                          "AuthorizeRemoteStart", "AuthorizeRemote", "Authorize", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("AuthorizeRemoteStarted",
-                          handler => EMPClient.OnAuthorizeRemoteStartResponse += handler,
-                          handler => EMPClient.OnAuthorizeRemoteStartResponse -= handler,
-                          "Authorize", "AuthorizeRemote", "Response", "All").
+            RegisterEvent("AuthorizeRemoteStartResponse",
+                          handler => EMPClient.OnAuthorizeRemoteStartSOAPResponse += handler,
+                          handler => EMPClient.OnAuthorizeRemoteStartSOAPResponse -= handler,
+                          "AuthorizeRemoteStart", "AuthorizeRemote", "Authorize", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("AuthorizeRemoteStop",
-                          handler => EMPClient.OnAuthorizeRemoteStopRequest   += handler,
-                          handler => EMPClient.OnAuthorizeRemoteStopRequest   -= handler,
-                          "Authorize", "AuthorizeRemote", "Request", "All").
+            RegisterEvent("AuthorizeRemoteStopRequest",
+                          handler => EMPClient.OnAuthorizeRemoteStopSOAPRequest += handler,
+                          handler => EMPClient.OnAuthorizeRemoteStopSOAPRequest   -= handler,
+                          "AuthorizeRemoteStop", "AuthorizeRemote", "Authorize", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("AuthorizeRemoteStopped",
-                          handler => EMPClient.OnAuthorizeRemoteStopResponse  += handler,
-                          handler => EMPClient.OnAuthorizeRemoteStopResponse  -= handler,
-                          "Authorize", "AuthorizeRemote", "Response", "All").
+            RegisterEvent("AuthorizeRemoteStopResponse",
+                          handler => EMPClient.OnAuthorizeRemoteStopSOAPResponse += handler,
+                          handler => EMPClient.OnAuthorizeRemoteStopSOAPResponse  -= handler,
+                          "AuthorizeRemoteStop", "AuthorizeRemote", "Authorize", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 

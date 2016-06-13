@@ -41,7 +41,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
         {
 
             var result = await HubjectCPO.
-                                   AuthorizeStart(EVSEOperator_Id.Parse("DE*GEF"),
+                                   AuthorizeStart(DateTime.Now,
+                                                  new CancellationTokenSource().Token,
+                                                  EventTracking_Id.New, 
+                                                  EVSEOperator_Id.Parse("DE*GEF"),
                                                   AuthToken,
                                                   EVSE_Id.        Parse("DE*GEF*E123456789*1"));
 
@@ -63,7 +66,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
         {
 
             var result = await HubjectCPO.
-                                   AuthorizeStop(EVSEOperator_Id.Parse("DE*GEF"),
+                                   AuthorizeStop(DateTime.Now,
+                                                 new CancellationTokenSource().Token,
+                                                 EventTracking_Id.New,
+                                                 EVSEOperator_Id.Parse("DE*GEF"),
                                                  SessionId,
                                                  AuthToken,
                                                  EVSE_Id.        Parse("DE*GEF*E123456789*1"));
@@ -89,7 +95,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
 
             var AuthStartResult = await HubjectCPO.
-                                            AuthorizeStart(EVSEOperatorId,
+                                            AuthorizeStart(DateTime.Now,
+                                                           new CancellationTokenSource().Token,
+                                                           EventTracking_Id.New,
+                                                           EVSEOperatorId,
                                                            AuthToken,
                                                            EVSEId);
 
@@ -102,7 +111,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
 
             var AuthStopResult = await HubjectCPO.
-                                           AuthorizeStop(EVSEOperatorId,
+                                           AuthorizeStop(DateTime.Now,
+                                                         new CancellationTokenSource().Token,
+                                                         EventTracking_Id.New,
+                                                         EVSEOperatorId,
                                                          AuthStartResult.Content.SessionId,
                                                          AuthToken,
                                                          EVSEId);

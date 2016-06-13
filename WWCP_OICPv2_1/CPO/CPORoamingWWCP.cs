@@ -1837,28 +1837,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response = await CPORoaming.AuthorizeStart(OperatorId,
-                                                            AuthToken,
-                                                            null,
-                                                            SessionId,
-                                                            ChargingProductId,
-                                                            null,
-                                                            QueryTimeout);
+            var response = await CPORoaming.AuthorizeStart(Timestamp,
+                                                           CancellationToken,
+                                                           EventTrackingId,
+                                                           OperatorId,
+                                                           AuthToken,
+                                                           null,
+                                                           SessionId,
+                                                           ChargingProductId,
+                                                           null,
+                                                           QueryTimeout);
 
             AuthStartResult result = null;
 
-            if (response.AuthorizationStatus == AuthorizationStatusType.Authorized)
+            if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
+                response.Content                     != null              &&
+                response.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+            {
+
                 result = AuthStartResult.Authorized(AuthorizatorId,
-                                                    response.SessionId,
-                                                    response.ProviderId,
-                                                    response.StatusCode.Description,
-                                                    response.StatusCode.AdditionalInfo);
+                                                    response.Content.SessionId,
+                                                    response.Content.ProviderId,
+                                                    response.Content.StatusCode.Description,
+                                                    response.Content.StatusCode.AdditionalInfo);
+
+            }
 
             else
                 result = AuthStartResult.NotAuthorized(AuthorizatorId,
-                                                       response.ProviderId,
-                                                       response.StatusCode.Description,
-                                                       response.StatusCode.AdditionalInfo);
+                                                       response.Content.ProviderId,
+                                                       response.Content.StatusCode.Description,
+                                                       response.Content.StatusCode.AdditionalInfo);
 
 
             #region Send OnAuthorizeStarted event
@@ -1962,29 +1971,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response  = await CPORoaming.AuthorizeStart(OperatorId,
-                                                             AuthToken,
-                                                             EVSEId,
-                                                             SessionId,
-                                                             ChargingProductId,
-                                                             null,
-                                                             QueryTimeout);
+            var response  = await CPORoaming.AuthorizeStart(Timestamp,
+                                                            CancellationToken,
+                                                            EventTrackingId,
+                                                            OperatorId,
+                                                            AuthToken,
+                                                            EVSEId,
+                                                            SessionId,
+                                                            ChargingProductId,
+                                                            null,
+                                                            QueryTimeout);
 
 
             AuthStartEVSEResult result = null;
 
-            if (response.AuthorizationStatus == AuthorizationStatusType.Authorized)
+            if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
+                response.Content                     != null              &&
+                response.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+            {
+
                 result = AuthStartEVSEResult.Authorized(AuthorizatorId,
-                                                        response.SessionId,
-                                                        response.ProviderId,
-                                                        response.StatusCode.Description,
-                                                        response.StatusCode.AdditionalInfo);
+                                                        response.Content.SessionId,
+                                                        response.Content.ProviderId,
+                                                        response.Content.StatusCode.Description,
+                                                        response.Content.StatusCode.AdditionalInfo);
+
+            }
 
             else
                 result = AuthStartEVSEResult.NotAuthorized(AuthorizatorId,
-                                                           response.ProviderId,
-                                                           response.StatusCode.Description,
-                                                           response.StatusCode.AdditionalInfo);
+                                                           response.Content.ProviderId,
+                                                           response.Content.StatusCode.Description,
+                                                           response.Content.StatusCode.AdditionalInfo);
 
 
             #region Send OnAuthorizeEVSEStarted event
@@ -2267,6 +2285,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           TimeSpan?           QueryTimeout  = null)
         {
 
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
+
+            if (EVSEId     == null)
+                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
+
+            if (SessionId  == null)
+                throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
+
+            if (AuthToken  == null)
+                throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
+
+            #endregion
+
             #region Send OnAuthorizeEVSEStop event
 
             try
@@ -2379,14 +2413,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
-            if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
+            if (OperatorId         == null)
+                throw new ArgumentNullException(nameof(OperatorId),         "The given EVSE operator identification must not be null!");
 
-            if (SessionId  == null)
-                throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
+            if (ChargingStationId  == null)
+                throw new ArgumentNullException(nameof(ChargingStationId),  "The given EVSE identification must not be null!");
 
-            if (AuthToken  == null)
-                throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
+            if (SessionId          == null)
+                throw new ArgumentNullException(nameof(SessionId),          "The given charging session identification must not be null!");
+
+            if (AuthToken          == null)
+                throw new ArgumentNullException(nameof(AuthToken),          "The given authentication token must not be null!");
 
             #endregion
 
@@ -2414,7 +2451,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var result = AuthStopChargingStationResult.Error(AuthorizatorId);
+            var result = AuthStopChargingStationResult.Error(AuthorizatorId,
+                                                             "OICP does not support this request!");
 
 
             #region Send OnAuthorizeChargingStationStopped event

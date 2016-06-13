@@ -772,7 +772,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAuthorizationStart>>
 
-            AuthorizeStart(EVSEOperator_Id     OperatorId,
+            AuthorizeStart(DateTime            Timestamp,
+                           CancellationToken   CancellationToken,
+                           EventTracking_Id    EventTrackingId,
+                           EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            EVSE_Id             EVSEId            = null,
                            ChargingSession_Id  SessionId         = null,

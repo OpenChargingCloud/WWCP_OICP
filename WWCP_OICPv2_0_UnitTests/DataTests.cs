@@ -335,7 +335,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
             Task.Factory.StartNew(async () => {
 
                 var result = await HubjectCPO.
-                    PullAuthenticationData(EVSEOperator_Id.Parse("DE*GEF"),
+                    PullAuthenticationData(DateTime.Now,
+                                           new CancellationTokenSource().Token,
+                                           EventTracking_Id.New, 
+                                           EVSEOperator_Id.Parse("DE*GEF"),
                                            QueryTimeout: TimeSpan.FromSeconds(120));
 
 

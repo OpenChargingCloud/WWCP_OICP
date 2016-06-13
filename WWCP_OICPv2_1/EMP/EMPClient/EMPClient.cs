@@ -58,22 +58,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// An event fired whenever an authorize start request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteStartHandler    OnAuthorizeRemoteStart;
+        public event OnAuthorizeRemoteStartRequestHandler   OnAuthorizeRemoteStartRequest;
 
         /// <summary>
         /// An event fired whenever an authorize remote start SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler          OnAuthorizeRemoteStartRequest;
+        public event ClientRequestLogHandler                OnAuthorizeRemoteStartSOAPRequest;
 
         /// <summary>
         /// An event fired whenever a response to an authorize remote start SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler         OnAuthorizeRemoteStartResponse;
+        public event ClientResponseLogHandler               OnAuthorizeRemoteStartSOAPResponse;
 
         /// <summary>
-        /// An event fired whenever an authorize start request was sent.
+        /// An event fired whenever a response to an authorize remote start request had been received.
         /// </summary>
-        public event OnAuthorizeRemoteStartedHandler  OnAuthorizeRemoteStarted;
+        public event OnAuthorizeRemoteStartResponseHandler  OnAuthorizeRemoteStartResponse;
 
         #endregion
 
@@ -82,22 +82,46 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// An event fired whenever an authorize remote stop request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteStopHandler     OnAuthorizeRemoteStop;
+        public event OnAuthorizeRemoteStopRequestHandler   OnAuthorizeRemoteStopRequest;
 
         /// <summary>
         /// An event fired whenever an authorize remote stop SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler          OnAuthorizeRemoteStopRequest;
+        public event ClientRequestLogHandler               OnAuthorizeRemoteStopSOAPRequest;
 
         /// <summary>
         /// An event fired whenever a response to an authorize remote stop SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler         OnAuthorizeRemoteStopResponse;
+        public event ClientResponseLogHandler              OnAuthorizeRemoteStopSOAPResponse;
 
         /// <summary>
-        /// An event fired whenever an authorize remote stop request was sent.
+        /// An event fired whenever a response to an authorize remote stop request had been received.
         /// </summary>
-        public event OnAuthorizeRemoteStoppedHandler  OnAuthorizeRemoteStopped;
+        public event OnAuthorizeRemoteStopResponseHandler  OnAuthorizeRemoteStopResponse;
+
+        #endregion
+
+        #region OnGetChargeDetailRecordsRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a GetChargeDetailRecords request will be send.
+        /// </summary>
+        public event OnGetChargeDetailRecordsRequestHandler   OnGetChargeDetailRecordsRequest;
+
+        /// <summary>
+        /// An event fired whenever a GetChargeDetailRecords SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                  OnGetChargeDetailRecordsSOAPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a GetChargeDetailRecords SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                 OnGetChargeDetailRecordsSOAPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for a GetChargeDetailRecords request was received.
+        /// </summary>
+        public event OnGetChargeDetailRecordsResponseHandler  OnGetChargeDetailRecordsResponse;
 
         #endregion
 
@@ -519,17 +543,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region PushAuthenticationData(ProviderAuthenticationDataRecords, OICPAction = fullLoad, QueryTimeout = null)
+        #region PushAuthenticationData(...ProviderAuthenticationDataRecords, OICPAction = fullLoad, ...)
 
         /// <summary>
         /// Create a new task pushing provider authentication data records onto the OICP server.
         /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
+            PushAuthenticationData(DateTime                                 Timestamp,
+                                   CancellationToken                        CancellationToken,
+                                   EventTracking_Id                         EventTrackingId,
+                                   IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
                                    ActionType                               OICPAction    = ActionType.fullLoad,
                                    TimeSpan?                                QueryTimeout  = null)
 
@@ -548,6 +578,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 return await _OICPClient.Query(EMPClientXMLMethods.PushAuthenticationData(ProviderAuthenticationDataRecords,
                                                                                            OICPAction),
                                                "eRoamingPushAuthenticationData",
+
                                                QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                #region OnSuccess
@@ -609,18 +640,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad, QueryTimeout = null)
+        #region PushAuthenticationData(...AuthorizationIdentifications, ProviderId, OICPAction = fullLoad, ...)
 
         /// <summary>
         /// Create a new task pushing authorization identifications onto the OICP server.
         /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
+            PushAuthenticationData(DateTime                                  Timestamp,
+                                   CancellationToken                         CancellationToken,
+                                   EventTracking_Id                          EventTrackingId,
+                                   IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
                                    EVSP_Id                                   ProviderId,
                                    ActionType                                OICPAction    = ActionType.fullLoad,
                                    TimeSpan?                                 QueryTimeout  = null)
@@ -943,28 +980,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         {
 
-            #region Send OnAuthorizeRemoteStart event
+            #region Send OnAuthorizeRemoteStartRequest event
 
             var Runtime = Stopwatch.StartNew();
 
             try
             {
 
-                OnAuthorizeRemoteStart?.Invoke(DateTime.Now,
-                                               this,
-                                               ClientId,
-                                               ProviderId,
-                                               EVSEId,
-                                               eMAId,
-                                               SessionId,
-                                               PartnerSessionId,
-                                               PartnerProductId,
-                                               QueryTimeout);
+                OnAuthorizeRemoteStartRequest?.Invoke(DateTime.Now,
+                                                      this,
+                                                      ClientId,
+                                                      ProviderId,
+                                                      EVSEId,
+                                                      eMAId,
+                                                      SessionId,
+                                                      PartnerSessionId,
+                                                      PartnerProductId,
+                                                      QueryTimeout);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStart));
+                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStartRequest));
             }
 
             #endregion
@@ -986,8 +1023,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                                  PartnerSessionId,
                                                                                                  PartnerProductId),
                                                      "eRoamingAuthorizeRemoteStart",
-                                                     RequestLogDelegate:   OnAuthorizeRemoteStartRequest,
-                                                     ResponseLogDelegate:  OnAuthorizeRemoteStartResponse,
+                                                     RequestLogDelegate:   OnAuthorizeRemoteStartSOAPRequest,
+                                                     ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
                                                      QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                      #region OnSuccess
@@ -1043,30 +1080,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                     );
 
-                #region Send OnAuthorizeRemoteStarted event
+                #region Send OnAuthorizeRemoteStartResponse event
 
                 Runtime.Stop();
 
                 try
                 {
 
-                    OnAuthorizeRemoteStarted?.Invoke(DateTime.Now,
-                                                     this,
-                                                     ClientId,
-                                                     ProviderId,
-                                                     EVSEId,
-                                                     eMAId,
-                                                     SessionId,
-                                                     PartnerSessionId,
-                                                     PartnerProductId,
-                                                     QueryTimeout,
-                                                     result.Content,
-                                                     Runtime.Elapsed);
+                    OnAuthorizeRemoteStartResponse?.Invoke(DateTime.Now,
+                                                           this,
+                                                           ClientId,
+                                                           ProviderId,
+                                                           EVSEId,
+                                                           eMAId,
+                                                           SessionId,
+                                                           PartnerSessionId,
+                                                           PartnerProductId,
+                                                           QueryTimeout,
+                                                           result.Content,
+                                                           Runtime.Elapsed);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStarted));
+                    e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStartResponse));
                 }
 
                 #endregion
@@ -1105,26 +1142,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         {
 
-            #region Send OnAuthorizeRemoteStop event
+            #region Send OnAuthorizeRemoteStopRequest event
 
             var Runtime = Stopwatch.StartNew();
 
             try
             {
 
-                OnAuthorizeRemoteStop?.Invoke(DateTime.Now,
-                                              this,
-                                              ClientId,
-                                              SessionId,
-                                              ProviderId,
-                                              EVSEId,
-                                              PartnerSessionId,
-                                              QueryTimeout);
+                OnAuthorizeRemoteStopRequest?.Invoke(DateTime.Now,
+                                                     this,
+                                                     ClientId,
+                                                     SessionId,
+                                                     ProviderId,
+                                                     EVSEId,
+                                                     PartnerSessionId,
+                                                     QueryTimeout);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStop));
+                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStopRequest));
             }
 
             #endregion
@@ -1144,8 +1181,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                                 EVSEId,
                                                                                                 PartnerSessionId),
                                                      "eRoamingAuthorizeRemoteStop",
-                                                     RequestLogDelegate:   OnAuthorizeRemoteStopRequest,
-                                                     ResponseLogDelegate:  OnAuthorizeRemoteStopResponse,
+                                                     RequestLogDelegate:   OnAuthorizeRemoteStopSOAPRequest,
+                                                     ResponseLogDelegate:  OnAuthorizeRemoteStopSOAPResponse,
                                                      QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
                                                      #region OnSuccess
@@ -1201,28 +1238,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                     );
 
-                #region Send OnAuthorizeRemoteStopped event
+                #region Send OnAuthorizeRemoteStopResponse event
 
                 Runtime.Stop();
 
                 try
                 {
 
-                    OnAuthorizeRemoteStopped?.Invoke(DateTime.Now,
-                                                     this,
-                                                     ClientId,
-                                                     SessionId,
-                                                     ProviderId,
-                                                     EVSEId,
-                                                     PartnerSessionId,
-                                                     QueryTimeout,
-                                                     result.Content,
-                                                     Runtime.Elapsed);
+                    OnAuthorizeRemoteStopResponse?.Invoke(DateTime.Now,
+                                                          this,
+                                                          ClientId,
+                                                          SessionId,
+                                                          ProviderId,
+                                                          EVSEId,
+                                                          PartnerSessionId,
+                                                          QueryTimeout,
+                                                          result.Content,
+                                                          Runtime.Elapsed);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStopped));
+                    e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStopResponse));
                 }
 
                 #endregion
@@ -1236,11 +1273,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region GetChargeDetailRecords(ProviderId, From, To, QueryTimeout = null)
+        #region GetChargeDetailRecords(...ProviderId, From, To, ...)
 
         /// <summary>
         /// Create a new task querying charge detail records from the OICP server.
         /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="From">The starting time.</param>
         /// <param name="To">The end time.</param>
@@ -1257,6 +1297,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         {
 
+            #region Send OnGetChargeDetailRecordsRequest event
+
+            var Runtime = Stopwatch.StartNew();
+
+            try
+            {
+
+                OnGetChargeDetailRecordsRequest?.Invoke(DateTime.Now,
+                                                        this,
+                                                        ClientId,
+                                                        ProviderId,
+                                                        From,
+                                                        To,
+                                                        QueryTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnGetChargeDetailRecordsRequest));
+            }
+
+            #endregion
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
@@ -1267,59 +1330,88 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             {
 
-                return await _OICPClient.Query(EMPClientXMLMethods.GetChargeDetailRecords(ProviderId,
-                                                                                          From,
-                                                                                          To),
-                                               "eRoamingGetChargeDetailRecords",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
+                var result = await _OICPClient.Query(EMPClientXMLMethods.GetChargeDetailRecords(ProviderId,
+                                                                                                From,
+                                                                                                To),
+                                                     "eRoamingGetChargeDetailRecords",
+                                                     RequestLogDelegate:   OnGetChargeDetailRecordsSOAPRequest,
+                                                     ResponseLogDelegate:  OnGetChargeDetailRecordsSOAPResponse,
+                                                     QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.QueryTimeout,
 
-                                               #region OnSuccess
+                                                     #region OnSuccess
 
-                                               OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingChargeDetailRecords.ParseXML),
+                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingChargeDetailRecords.ParseXML),
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnSOAPFault
+                                                     #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                         SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                   return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
-                                                                                                                    new ChargeDetailRecord[0],
-                                                                                                                    IsFault: true);
+                                                         return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
+                                                                                                                          new ChargeDetailRecord[0],
+                                                                                                                          IsFault: true);
 
-                                               },
+                                                     },
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnHTTPError
+                                                     #region OnHTTPError
 
-                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendHTTPError(timestamp, soapclient, httpresponse);
+                                                         SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                   return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
-                                                                                                                    new ChargeDetailRecord[0],
-                                                                                                                    IsFault: true);
+                                                         return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
+                                                                                                                          new ChargeDetailRecord[0],
+                                                                                                                          IsFault: true);
 
-                                               },
+                                                     },
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnException
+                                                     #region OnException
 
-                                               OnException: (timestamp, sender, exception) => {
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                   SendException(timestamp, sender, exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                   return null;
+                                                         return null;
 
-                                               }
+                                                     }
 
-                                               #endregion
+                                                     #endregion
 
-                                        );
+                                                    );
+
+                #region Send OnGetChargeDetailRecordsResponse event
+
+                Runtime.Stop();
+
+                try
+                {
+
+                    OnGetChargeDetailRecordsResponse?.Invoke(DateTime.Now,
+                                                             this,
+                                                             ClientId,
+                                                             ProviderId,
+                                                             From,
+                                                             To,
+                                                             QueryTimeout,
+                                                             result.Content,
+                                                             Runtime.Elapsed);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPClient) + "." + nameof(OnGetChargeDetailRecordsResponse));
+                }
+
+                #endregion
+
+                return result;
 
             }
 

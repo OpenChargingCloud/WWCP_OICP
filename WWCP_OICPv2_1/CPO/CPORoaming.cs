@@ -1056,7 +1056,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeStart(...OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, ...)
 
         /// <summary>
         /// Create an OICP authorize start request.
@@ -1068,9 +1068,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<eRoamingAuthorizationStart>
+        public async Task<HTTPResponse<eRoamingAuthorizationStart>>
 
-            AuthorizeStart(EVSEOperator_Id     OperatorId,
+            AuthorizeStart(DateTime            Timestamp,
+                           CancellationToken   CancellationToken,
+                           EventTracking_Id    EventTrackingId,
+                           EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            EVSE_Id             EVSEId            = null,
                            ChargingSession_Id  SessionId         = null,
@@ -1078,24 +1081,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            ChargingSession_Id  PartnerSessionId  = null,   // [maxlength: 50]
                            TimeSpan?           QueryTimeout      = null)
 
-        {
-
-            var result = await CPOClient.AuthorizeStart(OperatorId,
-                                                         AuthToken,
-                                                         EVSEId,
-                                                         SessionId,
-                                                         PartnerProductId,
-                                                         PartnerSessionId,
-                                                         QueryTimeout);
-
-            //ToDo: Process the HTTP!
-            return result.Content;
-
-        }
+            => await CPOClient.AuthorizeStart(Timestamp,
+                                              CancellationToken,
+                                              EventTrackingId,
+                                              OperatorId,
+                                              AuthToken,
+                                              EVSEId,
+                                              SessionId,
+                                              PartnerProductId,
+                                              PartnerSessionId,
+                                              QueryTimeout);
 
         #endregion
 
-        #region AuthorizeStop (OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeStop (...OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, ...)
 
         // UID => Not everybody can stop any session, but maybe another
         //        UID than the UID which started the session!

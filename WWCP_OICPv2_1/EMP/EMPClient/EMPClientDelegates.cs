@@ -19,6 +19,7 @@
 
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 #endregion
 
@@ -28,58 +29,84 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// A delegate called whenever an authorize temote start request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteStartHandler(DateTime             Timestamp,
-                                                       EMPClient            Sender,
-                                                       String               SenderId,
-                                                       EVSP_Id              ProviderId,
-                                                       EVSE_Id              EVSEId,
-                                                       eMA_Id               eMAId,
-                                                       ChargingSession_Id   SessionId,
-                                                       ChargingSession_Id   PartnerSessionId,
-                                                       ChargingProduct_Id   PartnerProductId,
-                                                       TimeSpan?            QueryTimeout);
+    public delegate Task OnAuthorizeRemoteStartRequestHandler(DateTime             Timestamp,
+                                                              EMPClient            Sender,
+                                                              String               SenderId,
+                                                              EVSP_Id              ProviderId,
+                                                              EVSE_Id              EVSEId,
+                                                              eMA_Id               eMAId,
+                                                              ChargingSession_Id   SessionId,
+                                                              ChargingSession_Id   PartnerSessionId,
+                                                              ChargingProduct_Id   PartnerProductId,
+                                                              TimeSpan?            QueryTimeout);
 
     /// <summary>
-    /// A delegate called whenever an authorize remote start request was sent.
+    /// A delegate called whenever a response for an authorize remote start request was received.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteStartedHandler(DateTime                  Timestamp,
-                                                         EMPClient                 Sender,
-                                                         String                    SenderId,
-                                                         EVSP_Id                   ProviderId,
-                                                         EVSE_Id                   EVSEId,
-                                                         eMA_Id                    eMAId,
-                                                         ChargingSession_Id        SessionId,
-                                                         ChargingSession_Id        PartnerSessionId,
-                                                         ChargingProduct_Id        PartnerProductId,
-                                                         TimeSpan?                 QueryTimeout,
-                                                         eRoamingAcknowledgement   Result,
-                                                         TimeSpan                  Duration);
+    public delegate Task OnAuthorizeRemoteStartResponseHandler(DateTime                  Timestamp,
+                                                               EMPClient                 Sender,
+                                                               String                    SenderId,
+                                                               EVSP_Id                   ProviderId,
+                                                               EVSE_Id                   EVSEId,
+                                                               eMA_Id                    eMAId,
+                                                               ChargingSession_Id        SessionId,
+                                                               ChargingSession_Id        PartnerSessionId,
+                                                               ChargingProduct_Id        PartnerProductId,
+                                                               TimeSpan?                 QueryTimeout,
+                                                               eRoamingAcknowledgement   Result,
+                                                               TimeSpan                  Duration);
 
 
     /// <summary>
     /// A delegate called whenever an authorize remote stop request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteStopHandler(DateTime             Timestamp,
-                                                      EMPClient            Sender,
-                                                      String               SenderId,
-                                                      ChargingSession_Id   SessionId,
-                                                      EVSP_Id              ProviderId,
-                                                      EVSE_Id              EVSEId,
-                                                      ChargingSession_Id   PartnerSessionId,
-                                                      TimeSpan?            QueryTimeout);
+    public delegate Task OnAuthorizeRemoteStopRequestHandler(DateTime             Timestamp,
+                                                             EMPClient            Sender,
+                                                             String               SenderId,
+                                                             ChargingSession_Id   SessionId,
+                                                             EVSP_Id              ProviderId,
+                                                             EVSE_Id              EVSEId,
+                                                             ChargingSession_Id   PartnerSessionId,
+                                                             TimeSpan?            QueryTimeout);
 
     /// <summary>
-    /// A delegate called whenever an authorize remote stop request was sent.
+    /// A delegate called whenever a response for an authorize remote stop request was received.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteStoppedHandler(DateTime                  Timestamp,
-                                                         EMPClient                 Sender,
-                                                         String                    SenderId,
-                                                         ChargingSession_Id        SessionId,
-                                                         EVSP_Id                   ProviderId,
-                                                         EVSE_Id                   EVSEId,
-                                                         ChargingSession_Id        PartnerSessionId,
-                                                         TimeSpan?                 QueryTimeout,
-                                                         eRoamingAcknowledgement   Result,
-                                                         TimeSpan                  Duration);
+    public delegate Task OnAuthorizeRemoteStopResponseHandler(DateTime                  Timestamp,
+                                                              EMPClient                 Sender,
+                                                              String                    SenderId,
+                                                              ChargingSession_Id        SessionId,
+                                                              EVSP_Id                   ProviderId,
+                                                              EVSE_Id                   EVSEId,
+                                                              ChargingSession_Id        PartnerSessionId,
+                                                              TimeSpan?                 QueryTimeout,
+                                                              eRoamingAcknowledgement   Result,
+                                                              TimeSpan                  Duration);
+
+
+
+    /// <summary>
+    /// A delegate called whenever a GetChargeDetailRecords request will be send.
+    /// </summary>
+    public delegate Task OnGetChargeDetailRecordsRequestHandler(DateTime             Timestamp,
+                                                                EMPClient            Sender,
+                                                                String               SenderId,
+                                                                EVSP_Id              ProviderId,
+                                                                DateTime             From,
+                                                                DateTime             To,
+                                                                TimeSpan?            QueryTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a GetChargeDetailRecords request was received.
+    /// </summary>
+    public delegate Task OnGetChargeDetailRecordsResponseHandler(DateTime                         Timestamp,
+                                                                 EMPClient                        Sender,
+                                                                 String                           SenderId,
+                                                                 EVSP_Id                          ProviderId,
+                                                                 DateTime                         From,
+                                                                 DateTime                         To,
+                                                                 TimeSpan?                        QueryTimeout,
+                                                                 IEnumerable<ChargeDetailRecord>  Result,
+                                                                 TimeSpan                         Duration);
 
 }

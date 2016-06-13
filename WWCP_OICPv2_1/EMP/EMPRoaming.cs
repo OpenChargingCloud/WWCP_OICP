@@ -83,25 +83,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// An event fired whenever an authorize start request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteStartHandler OnAuthorizeRemoteStart
-        {
-
-            add
-            {
-                EMPClient.OnAuthorizeRemoteStart += value;
-            }
-
-            remove
-            {
-                EMPClient.OnAuthorizeRemoteStart -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever an authorize remote start SOAP request will be send.
-        /// </summary>
-        public event ClientRequestLogHandler OnAuthorizeRemoteStartRequest
+        public event OnAuthorizeRemoteStartRequestHandler OnAuthorizeRemoteStartRequest
         {
 
             add
@@ -117,9 +99,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         /// <summary>
+        /// An event fired whenever an authorize remote start SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnAuthorizeRemoteStartSOAPRequest
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStartSOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStartSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
         /// An event fired whenever a response to an authorize remote start SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnAuthorizeRemoteStartResponse
+        public event ClientResponseLogHandler OnAuthorizeRemoteStartSOAPResponse
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStartSOAPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStartSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to an authorize remote start request had been received.
+        /// </summary>
+        public event OnAuthorizeRemoteStartResponseHandler OnAuthorizeRemoteStartResponse
         {
 
             add
@@ -134,24 +152,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         }
 
-        /// <summary>
-        /// An event fired whenever an authorize start request was sent.
-        /// </summary>
-        public event OnAuthorizeRemoteStartedHandler OnAuthorizeRemoteStarted
-        {
-
-            add
-            {
-                EMPClient.OnAuthorizeRemoteStarted += value;
-            }
-
-            remove
-            {
-                EMPClient.OnAuthorizeRemoteStarted -= value;
-            }
-
-        }
-
         #endregion
 
         #region OnAuthorizeRemoteStopRequest/-Response
@@ -159,25 +159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// An event fired whenever an authorize remote stop request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteStopHandler OnAuthorizeRemoteStop
-        {
-
-            add
-            {
-                EMPClient.OnAuthorizeRemoteStop += value;
-            }
-
-            remove
-            {
-                EMPClient.OnAuthorizeRemoteStop -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever an authorize remote stop SOAP request will be send.
-        /// </summary>
-        public event ClientRequestLogHandler OnAuthorizeRemoteStopRequest
+        public event OnAuthorizeRemoteStopRequestHandler OnAuthorizeRemoteStopRequest
         {
 
             add
@@ -193,9 +175,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         /// <summary>
+        /// An event fired whenever an authorize remote stop SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnAuthorizeRemoteStopSOAPRequest
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStopSOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStopSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
         /// An event fired whenever a response to an authorize remote stop SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnAuthorizeRemoteStopResponse
+        public event ClientResponseLogHandler OnAuthorizeRemoteStopSOAPResponse
+        {
+
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStopSOAPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStopSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to an authorize remote stop request had been received.
+        /// </summary>
+        public event OnAuthorizeRemoteStopResponseHandler OnAuthorizeRemoteStopResponse
         {
 
             add
@@ -206,24 +224,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             remove
             {
                 EMPClient.OnAuthorizeRemoteStopResponse -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever an authorize remote stop request was sent.
-        /// </summary>
-        public event OnAuthorizeRemoteStoppedHandler OnAuthorizeRemoteStopped
-        {
-
-            add
-            {
-                EMPClient.OnAuthorizeRemoteStopped += value;
-            }
-
-            remove
-            {
-                EMPClient.OnAuthorizeRemoteStopped -= value;
             }
 
         }
@@ -618,46 +618,64 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region PushAuthenticationData(ProviderAuthenticationDataRecords, OICPAction = fullLoad, QueryTimeout = null)
+        #region PushAuthenticationData(...ProviderAuthenticationDataRecords, OICPAction = fullLoad, ...)
 
         /// <summary>
         /// Create a new task pushing provider authentication data records onto the OICP server.
         /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
+            PushAuthenticationData(DateTime                                 Timestamp,
+                                   CancellationToken                        CancellationToken,
+                                   EventTracking_Id                         EventTrackingId,
+                                   IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
                                    ActionType                               OICPAction    = ActionType.fullLoad,
                                    TimeSpan?                                QueryTimeout  = null)
 
-            => await EMPClient.PushAuthenticationData(ProviderAuthenticationDataRecords,
-                                                       OICPAction,
-                                                       QueryTimeout);
+            => await EMPClient.PushAuthenticationData(Timestamp,
+                                                      CancellationToken,
+                                                      EventTrackingId,
+                                                      ProviderAuthenticationDataRecords,
+                                                      OICPAction,
+                                                      QueryTimeout);
 
         #endregion
 
-        #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad, QueryTimeout = null)
+        #region PushAuthenticationData(...AuthorizationIdentifications, ProviderId, OICPAction = fullLoad, ...)
 
         /// <summary>
         /// Create a new task pushing authorization identifications onto the OICP server.
         /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
+            PushAuthenticationData(DateTime                                  Timestamp,
+                                   CancellationToken                         CancellationToken,
+                                   EventTracking_Id                          EventTrackingId,
+                                   IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
                                    EVSP_Id                                   ProviderId,
                                    ActionType                                OICPAction    = ActionType.fullLoad,
                                    TimeSpan?                                 QueryTimeout  = null)
 
-            => await EMPClient.PushAuthenticationData(AuthorizationIdentifications,
-                                                       ProviderId,
-                                                       OICPAction,
-                                                       QueryTimeout);
+            => await EMPClient.PushAuthenticationData(Timestamp,
+                                                      CancellationToken,
+                                                      EventTrackingId,
+                                                      AuthorizationIdentifications,
+                                                      ProviderId,
+                                                      OICPAction,
+                                                      QueryTimeout);
 
         #endregion
 
@@ -816,11 +834,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region GetChargeDetailRecords(ProviderId, From, To, QueryTimeout = null)
+        #region GetChargeDetailRecords(...ProviderId, From, To, ...)
 
         /// <summary>
         /// Create a new task querying charge detail records from the OICP server.
         /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="CancellationToken">A token to cancel this request.</param>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="From">The starting time.</param>
         /// <param name="To">The end time.</param>
