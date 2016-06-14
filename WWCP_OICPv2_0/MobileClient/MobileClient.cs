@@ -186,7 +186,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                                                ProductId,
                                                                                                GetNewSession),
                                                "eRoamingMobileAuthorizeStart",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                                               QueryTimeout: QueryTimeout ?? this.RequestTimeout,
 
                                                #region OnSuccess
 
@@ -271,7 +271,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 return await _OICPClient.Query(MobileClient_XMLMethods.MobileRemoteStartXML(SessionId),
                                                "eRoamingMobileRemoteStart",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                                               QueryTimeout: QueryTimeout ?? this.RequestTimeout,
 
                                                #region OnSuccess
 
@@ -358,7 +358,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 return await _OICPClient.Query(MobileClient_XMLMethods.MobileRemoteStopXML(SessionId),
                                                "eRoamingMobileRemoteStop",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                                               QueryTimeout: QueryTimeout ?? this.RequestTimeout,
 
                                                #region OnSuccess
 

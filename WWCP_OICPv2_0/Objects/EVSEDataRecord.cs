@@ -508,9 +508,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                              try
                                                              {
                                                                  if (I18NTokens.Length == 2)
-                                                                     _AdditionalInfo.Add((Languages) Enum.Parse(typeof(Languages),
-                                                                                                                Country.ParseAlpha3Code(I18NTokens[0]).Alpha2Code.ToLower()),
-                                                                                         I18NTokens[1]);
+                                                                 {
+                                                                     _AdditionalInfo.Add((Languages)Enum.Parse(typeof(Languages),
+                                                                                                               Country.ParseAlpha3Code(I18NTokens[0]).Alpha2Code.ToLower()),
+                                                                                        I18NTokens[1]);
+                                                                 }
                                                              }
                                                              catch (Exception e)
                                                              {
