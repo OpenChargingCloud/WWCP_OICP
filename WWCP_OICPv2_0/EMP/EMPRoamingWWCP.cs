@@ -57,18 +57,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
         /// <summary>
-        /// The EMP client.
-        /// </summary>
-        public EMPClient EMPClient
-            => EMPRoaming?.EMPClient;
-
-        /// <summary>
-        /// The EMP server.
-        /// </summary>
-        public EMPServer EMPServer
-            => EMPRoaming?.EMPServer;
-
-        /// <summary>
         /// The EMP client logger.
         /// </summary>
         public EMPClientLogger ClientLogger

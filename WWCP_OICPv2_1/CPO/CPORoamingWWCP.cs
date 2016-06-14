@@ -57,17 +57,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public CPORoaming CPORoaming { get; }
 
-        /// <summary>
-        /// The CPO client.
-        /// </summary>
-        public CPOClient CPOClient
-            => CPORoaming?.CPOClient;
-
-        /// <summary>
-        /// The CPO server.
-        /// </summary>
-        public CPOServer CPOServer
-            => CPORoaming?.CPOServer;
 
         /// <summary>
         /// The CPO client logger.
