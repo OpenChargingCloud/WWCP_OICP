@@ -40,31 +40,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public class EMPRoaming
     {
 
-        #region Properties
-
-        public Authorizator_Id  AuthorizatorId    { get; }
-
+        #region Data
 
         /// <summary>
         /// The EMP client part.
         /// </summary>
-        public EMPClient        EMPClient         { get; }
+        private readonly EMPClient EMPClient;
 
         /// <summary>
         /// The EMP server part.
         /// </summary>
-        public EMPServer        EMPServer         { get; }
+        private readonly EMPServer EMPServer;
+
+        #endregion
+
+        #region Properties
+
+        public Authorizator_Id AuthorizatorId { get; }
 
         /// <summary>
         /// The EMP client logger.
         /// </summary>
-        public EMPClientLogger  EMPClientLogger   { get; }
+        public EMPClientLogger EMPClientLogger { get; }
 
         /// <summary>
         /// The EMP server logger.
         /// </summary>
-        public EMPServerLogger  EMPServerLogger   { get; }
-
+        public EMPServerLogger EMPServerLogger { get; }
 
         /// <summary>
         /// The DNS client defines which DNS servers to use.

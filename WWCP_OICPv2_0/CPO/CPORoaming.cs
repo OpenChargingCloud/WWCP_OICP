@@ -41,27 +41,31 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public class CPORoaming
     {
 
-        #region Properties
+        #region Data
 
         /// <summary>
         /// The CPO client.
         /// </summary>
-        public CPOClient        CPOClient         { get; }
+        private readonly CPOClient CPOClient;
 
         /// <summary>
         /// The CPO server.
         /// </summary>
-        public CPOServer        CPOServer         { get; }
+        private readonly CPOServer CPOServer;
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// The CPO client logger.
         /// </summary>
-        public CPOClientLogger  CPOClientLogger   { get; }
+        public CPOClientLogger CPOClientLogger { get; }
 
         /// <summary>
         /// The CPO server logger.
         /// </summary>
-        public CPOServerLogger  CPOServerLogger   { get; }
+        public CPOServerLogger CPOServerLogger { get; }
 
         /// <summary>
         /// The DNS client defines which DNS servers to use.

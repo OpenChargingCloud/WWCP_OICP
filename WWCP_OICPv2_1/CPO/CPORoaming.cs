@@ -41,17 +41,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public class CPORoaming
     {
 
-        #region Properties
+        #region Data
 
         /// <summary>
         /// The CPO client.
         /// </summary>
-        public CPOClient        CPOClient         { get; }
+        private readonly CPOClient CPOClient;
 
         /// <summary>
         /// The CPO server.
         /// </summary>
-        public CPOServer        CPOServer         { get; }
+        private readonly CPOServer CPOServer;
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// The CPO client logger.
