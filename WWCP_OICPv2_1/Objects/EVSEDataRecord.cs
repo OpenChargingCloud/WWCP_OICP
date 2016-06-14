@@ -390,7 +390,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             //    <EVSEData:ValueAddedServices>
             //       <!--1 or more repetitions:-->
             //       <EVSEData:ValueAddedService>?</EVSEData:ValueAddedService>
-            //    </EVSEData:ValueAddedServices>            //
+            //    </EVSEData:ValueAddedServices>
+            //
             //    <EVSEData:Accessibility>?</EVSEData:Accessibility>
             //    <EVSEData:HotlinePhoneNum>?</EVSEData:HotlinePhoneNum>
             //
@@ -893,6 +894,320 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
+
+
+        public Builder ToBuilder(EVSE_Id NewEVSEId = null)
+        {
+
+            return new Builder(NewEVSEId ?? this.EVSEId);
+
+        }
+
+
+        /// <summary>
+        /// An OICP Electric Vehicle Supply Equipment (EVSE).
+        /// This is meant to be one electrical circuit which can charge a electric vehicle.
+        /// </summary>
+        public class Builder
+        {
+
+            #region Data
+
+            private static readonly Regex HotlinePhoneNumberRegExpr = new Regex("\\+[^0-9]");
+
+            #endregion
+
+            #region Properties
+
+            /// <summary>
+            /// The related the Electric Vehicle Supply Equipment (EVSE).
+            /// </summary>
+            public EVSE EVSE { get; set; }
+
+            /// <summary>
+            /// The unique identification of the Electric Vehicle Supply Equipment (EVSE).
+            /// </summary>
+            public EVSE_Id EVSEId { get; }
+
+            /// <summary>
+            /// An EVSE operator.
+            /// </summary>
+            public EVSEOperator EVSEOperator { get; set; }
+
+
+            public String DeltaType { get; set; }
+            public DateTime? LastUpdate { get; set; }
+
+            public String ChargingStationId { get; set; }
+            public I18NString ChargingStationName { get; set; }
+            public Address Address { get; set; }
+            public GeoCoordinate GeoCoordinate { get; set; }
+
+            /// <summary>
+            /// The types of the charging plugs.
+            /// </summary>
+            public PlugTypes Plugs { get; set; }
+
+            public ChargingFacilities ChargingFacilities { get; set; }
+            public ChargingModes ChargingModes { get; set; }
+            public AuthenticationModes AuthenticationModes { get; set; }
+            public Double? MaxCapacity { get; set; }
+            public PaymentOptions PaymentOptions { get; set; }
+            public ValueAddedServices ValueAddedServices { get; set; }
+            public AccessibilityTypes Accessibility { get; set; }
+            public String HotlinePhoneNumber { get; set; }
+            public I18NString AdditionalInfo { get; set; }
+            public GeoCoordinate GeoChargingPointEntrance { get; set; }
+
+            #region IsOpen24Hours
+
+            public Boolean IsOpen24Hours
+            {
+                get
+                {
+
+                    if (OpeningTime == null)
+                        return true;
+
+                    return OpeningTime.IsOpen24Hours;
+
+                }
+            }
+
+            #endregion
+
+
+            public OpeningTimes OpeningTime { get; set; }
+
+            public HubOperator_Id HubOperatorId { get; set; }
+
+            public RoamingProvider_Id ClearingHouseId { get; set; }
+            public Boolean IsHubjectCompatible { get; set; }
+            public Boolean DynamicInfoAvailable { get; set; }
+
+            #endregion
+
+            #region Constructor(s)
+
+            #region (internal) Builder(EVSE, ...)
+
+            /// <summary>
+            /// Create a new EVSE data record.
+            /// </summary>
+            /// <param name="EVSE">An EVSE identification.</param>
+            internal Builder(EVSE                              EVSE,
+                                    String                            ChargingStationId           = null,
+                                    I18NString                        ChargingStationName         = null,
+                                    Address                           Address                     = null,
+                                    GeoCoordinate                     GeoCoordinate               = null,
+                                    PlugTypes                         Plugs                       = PlugTypes.Unspecified,
+                                    ChargingFacilities                ChargingFacilities          = ChargingFacilities.Unspecified,
+                                    ChargingModes                     ChargingModes               = ChargingModes.Unspecified,
+                                    AuthenticationModes               AuthenticationModes         = AuthenticationModes.Unkown,
+                                    Int32?                            MaxCapacity                 = null,
+                                    PaymentOptions                    PaymentOptions              = PaymentOptions.Unspecified,
+                                    ValueAddedServices                ValueAddedServices          = ValueAddedServices.None,
+                                    AccessibilityTypes                Accessibility               = AccessibilityTypes.Free_publicly_accessible,
+                                    String                            HotlinePhoneNumber          = null,
+                                    I18NString                        AdditionalInfo              = null,
+                                    GeoCoordinate                     GeoChargingPointEntrance    = null,
+                                    Boolean?                          IsOpen24Hours               = null,
+                                    OpeningTimes                      OpeningTime                 = null,
+                                    HubOperator_Id                    HubOperatorId               = null,
+                                    RoamingProvider_Id                ClearingHouseId             = null,
+                                    Boolean                           IsHubjectCompatible         = true,
+                                    Boolean                           DynamicInfoAvailable        = true)
+
+                : this(EVSE.Id,
+                       "",
+                       DateTime.Now,
+                       EVSE.Operator,
+                       ChargingStationId,
+                       ChargingStationName,
+                       Address,
+                       GeoCoordinate,
+                       Plugs,
+                       ChargingFacilities,
+                       ChargingModes,
+                       AuthenticationModes,
+                       MaxCapacity,
+                       PaymentOptions,
+                       ValueAddedServices,
+                       Accessibility,
+                       HotlinePhoneNumber,
+                       AdditionalInfo,
+                       GeoChargingPointEntrance,
+                       IsOpen24Hours,
+                       OpeningTime,
+                       HubOperatorId,
+                       ClearingHouseId,
+                       IsHubjectCompatible,
+                       DynamicInfoAvailable)
+
+            {
+
+                this.EVSE = EVSE;
+
+            }
+
+            #endregion
+
+            #region Builder(EVSEId, EVSEOperator = null)
+
+            /// <summary>
+            /// Create a new EVSE data record.
+            /// </summary>
+            /// <param name="EVSEId">A unique EVSE identification.</param>
+            /// <param name="EVSEOperator">An EVSE operator.</param>
+            public Builder(EVSE_Id       EVSEId,
+                           EVSEOperator  EVSEOperator = null)
+            {
+
+                #region Initial checks
+
+                if (EVSEId == null)
+                    throw new ArgumentNullException(nameof(EVSEId),  "The given unique EVSE identification must not be null!");
+
+                #endregion
+
+                this.EVSEId               = EVSEId;
+                this.EVSEOperator         = EVSEOperator;
+                this.ChargingStationName  = new I18NString();
+                this.AdditionalInfo       = new I18NString();
+
+            }
+
+            #endregion
+
+            #region Builder(EVSEId, EVSEOperator, ...)
+
+            /// <summary>
+            /// Create a new EVSE data record.
+            /// </summary>
+            /// <param name="EVSEId">A unique EVSE identification.</param>
+            /// <param name="EVSEOperator">An EVSE operator.</param>
+            public Builder(EVSE_Id                           EVSEId,
+                                  String                            DeltaType,
+                                  DateTime?                         LastUpdate,
+                                  EVSEOperator                      EVSEOperator,
+                                  String                            ChargingStationId           = null,
+                                  I18NString                        ChargingStationName         = null,
+                                  Address                           Address                     = null,
+                                  GeoCoordinate                     GeoCoordinate               = null,
+                                  PlugTypes                         Plugs                       = PlugTypes.Unspecified,
+                                  ChargingFacilities                ChargingFacilities          = ChargingFacilities.Unspecified,
+                                  ChargingModes                     ChargingModes               = ChargingModes.Unspecified,
+                                  AuthenticationModes               AuthenticationModes         = AuthenticationModes.Unkown,
+                                  Double?                           MaxCapacity                 = null,
+                                  PaymentOptions                    PaymentOptions              = PaymentOptions.Unspecified,
+                                  ValueAddedServices                ValueAddedServices          = ValueAddedServices.None,
+                                  AccessibilityTypes                Accessibility               = AccessibilityTypes.Free_publicly_accessible,
+                                  String                            HotlinePhoneNumber          = null,
+                                  I18NString                        AdditionalInfo              = null,
+                                  GeoCoordinate                     GeoChargingPointEntrance    = null,
+                                  Boolean?                          IsOpen24Hours               = null,
+                                  OpeningTimes                      OpeningTime                 = null,
+                                  HubOperator_Id                    HubOperatorId               = null,
+                                  RoamingProvider_Id                ClearingHouseId             = null,
+                                  Boolean                           IsHubjectCompatible         = true,
+                                  Boolean                           DynamicInfoAvailable        = true)
+
+                : this(EVSEId, EVSEOperator)
+
+            {
+
+                #region Initial checks
+
+                if (Address == null)
+                    throw new ArgumentNullException(nameof(Address),              "The given address must not be null!");
+
+                if (GeoCoordinate == null)
+                    throw new ArgumentNullException(nameof(GeoCoordinate),        "The given geo coordinate must not be null!");
+
+                if (Plugs == PlugTypes.Unspecified)
+                    throw new ArgumentNullException(nameof(Plugs),                "The given plugs must not be empty!");
+
+                if (AuthenticationModes == AuthenticationModes.Unkown)
+                    throw new ArgumentNullException(nameof(AuthenticationModes),  "The given authentication modes must not be null or empty!");
+
+                if (HotlinePhoneNumber == null || HotlinePhoneNumber.IsNullOrEmpty())
+                    throw new ArgumentNullException(nameof(HotlinePhoneNumber),   "The given hotline phone number must not be null or empty!");
+
+                #endregion
+
+                this.DeltaType                 = DeltaType;
+                this.LastUpdate                = LastUpdate;
+
+                this.ChargingStationId         = ChargingStationId;
+                this.ChargingStationName       = ChargingStationName ?? new I18NString();
+                this.Address                   = Address;
+                this.GeoCoordinate             = GeoCoordinate;
+                this.Plugs                     = Plugs;
+                this.ChargingModes             = ChargingModes;
+                this.ChargingFacilities        = ChargingFacilities;
+                this.AuthenticationModes       = AuthenticationModes;
+                this.MaxCapacity               = MaxCapacity;
+                this.PaymentOptions            = PaymentOptions;
+                this.ValueAddedServices        = ValueAddedServices;
+                this.Accessibility             = Accessibility;
+                this.HotlinePhoneNumber        = HotlinePhoneNumber;
+                this.AdditionalInfo            = AdditionalInfo ?? new I18NString();
+                this.GeoChargingPointEntrance  = GeoChargingPointEntrance;
+                this.HubOperatorId             = HubOperatorId;
+                this.ClearingHouseId           = ClearingHouseId;
+                this.IsHubjectCompatible       = IsHubjectCompatible;
+                this.DynamicInfoAvailable      = DynamicInfoAvailable;
+
+
+                if (IsOpen24Hours != null && IsOpen24Hours.HasValue && IsOpen24Hours.Value)
+                    this.OpeningTime  = OpeningTimes.Open24Hours;
+
+                if (OpeningTime != null)
+                    this.OpeningTime  = OpeningTime;
+
+                if (OpeningTime == null && (IsOpen24Hours == null || !IsOpen24Hours.HasValue))
+                    this.OpeningTime  = OpeningTimes.Open24Hours;
+
+            }
+
+            #endregion
+
+            #endregion
+
+
+            public EVSEDataRecord Build()
+            {
+
+                return new EVSEDataRecord(EVSEId,
+                                          DeltaType,
+                                          LastUpdate,
+                                          EVSEOperator,
+                                          ChargingStationId,
+                                          ChargingStationName,
+                                          Address,
+                                          GeoCoordinate,
+                                          Plugs,
+                                          ChargingFacilities,
+                                          ChargingModes,
+                                          AuthenticationModes,
+                                          MaxCapacity,
+                                          PaymentOptions,
+                                          ValueAddedServices,
+                                          Accessibility,
+                                          HotlinePhoneNumber,
+                                          AdditionalInfo,
+                                          GeoChargingPointEntrance,
+                                          IsOpen24Hours,
+                                          OpeningTime,
+                                          HubOperatorId,
+                                          ClearingHouseId,
+                                          IsHubjectCompatible,
+                                          DynamicInfoAvailable);
+
+          }
+
+        }
+
 
     }
 

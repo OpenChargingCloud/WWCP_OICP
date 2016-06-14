@@ -402,7 +402,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region ToJSON(this AuthenticationModes, JPropertyKey)
 
-        public static JProperty ToJSON(this ReactiveSet<AuthenticationMode> AuthenticationModes, String JPropertyKey)
+        public static JProperty ToJSON(this ReactiveSet<AuthenticationModes> AuthenticationModes, String JPropertyKey)
         {
 
             return new JProperty(JPropertyKey,
@@ -609,7 +609,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                            ChargingPool.GeoLocation.ToJSON("GeoLocation"),
                                                ChargingPool.Address.ToJSON("Address"),
-                                   ChargingPool.AuthenticationModes.ToJSON("AuthenticationModes"),
+                                   //ChargingPool.AuthenticationModes.ToJSON("AuthenticationModes"),
                                            ChargingPool.OpeningTimes.ToJSON("OpeningTimes"),
 
                                ExpandChargingStations
@@ -692,7 +692,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                    ChargingStation.Description.             ToJSON("Description"),
                                    ChargingStation.GeoLocation         != ChargingStation.ChargingPool.GeoLocation         ?         ChargingStation.GeoLocation.ToJSON("GeoLocation")         : null,
                                    ChargingStation.Address             != ChargingStation.ChargingPool.Address             ?             ChargingStation.Address.ToJSON("Address")             : null,
-                                   ChargingStation.AuthenticationModes != ChargingStation.ChargingPool.AuthenticationModes ? ChargingStation.AuthenticationModes.ToJSON("AuthenticationModes") : null,
+                                   //ChargingStation.AuthenticationModes != ChargingStation.ChargingPool.AuthenticationModes ? ChargingStation.AuthenticationModes.ToJSON("AuthenticationModes") : null,
                                    ChargingStation.OpeningTimes         != ChargingStation.ChargingPool.OpeningTimes         ?         ChargingStation.OpeningTimes.ToJSON("OpeningTimes")        : null,
 
                                    ExpandEVSEs
@@ -709,7 +709,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                    ChargingStation.Description.             ToJSON("Description"),
                                                 ChargingStation.GeoLocation.ToJSON("GeoLocation"),
                                                     ChargingStation.Address.ToJSON("Address"),
-                                        ChargingStation.AuthenticationModes.ToJSON("AuthenticationModes"),
+                               //         ChargingStation.AuthenticationModes.ToJSON("AuthenticationModes"),
                                                 ChargingStation.OpeningTimes.ToJSON("OpeningTimes"),
 
                                    ExpandEVSEs
@@ -807,7 +807,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                     EVSE.ChargingStation.GeoLocation.ToJSON("GeoLocation"),
                                         EVSE.ChargingStation.Address.ToJSON("Address"),
-                            EVSE.ChargingStation.AuthenticationModes.ToJSON("AuthenticationModes"),
+                            //EVSE.ChargingStation.AuthenticationModes.ToJSON("AuthenticationModes"),
                                    EVSE.ChargingStation.OpeningTimes.ToJSON("OpeningTimes"),
 
                            EVSE.SocketOutlets.Count > 0 ? new JProperty("SocketOutlets",      new JArray(EVSE.SocketOutlets.ToJSON()))         : null,

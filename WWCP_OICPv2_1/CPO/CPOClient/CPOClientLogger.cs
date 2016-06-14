@@ -201,15 +201,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
             RegisterEvent("AuthorizeStop",
-                          handler => CPOClient.OnAuthorizeStopRequest += handler,
-                          handler => CPOClient.OnAuthorizeStopRequest -= handler,
+                          handler => CPOClient.OnAuthorizeStopSOAPRequest += handler,
+                          handler => CPOClient.OnAuthorizeStopSOAPRequest -= handler,
                           "Authorize", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStopped",
-                          handler => CPOClient.OnAuthorizeStopResponse += handler,
-                          handler => CPOClient.OnAuthorizeStopResponse -= handler,
+                          handler => CPOClient.OnAuthorizeStopSOAPResponse += handler,
+                          handler => CPOClient.OnAuthorizeStopSOAPResponse -= handler,
                           "Authorize", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);

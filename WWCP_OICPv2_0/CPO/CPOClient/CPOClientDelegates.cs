@@ -75,10 +75,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     TimeSpan                       Duration);
 
 
+    #region OnAuthorizeStart
+
     /// <summary>
-    /// A delegate called whenever an authorize start request will be send.
+    /// A delegate called whenever an 'authorize start' request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeStartHandler(DateTime                       Timestamp,
+    public delegate Task OnAuthorizeStartHandler(DateTime                       LogTimestamp,
+                                                 DateTime                       RequestTimestamp,
                                                  CPOClient                      Sender,
                                                  String                         SenderId,
                                                  EVSEOperator_Id                OperatorId,
@@ -90,50 +93,55 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                  TimeSpan?                      QueryTimeout);
 
     /// <summary>
-    /// A delegate called whenever an authorize start request was sent.
+    /// A delegate called whenever a response to a 'authorize start' request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeStartedHandler(DateTime                       Timestamp,
-                                                   CPOClient                      Sender,
-                                                   String                         SenderId,
-                                                   EVSEOperator_Id                OperatorId,
-                                                   Auth_Token                     AuthToken,
-                                                   EVSE_Id                        EVSEId,
-                                                   ChargingSession_Id             SessionId,
-                                                   ChargingProduct_Id             PartnerProductId,
-                                                   ChargingSession_Id             PartnerSessionId,
-                                                   TimeSpan?                      QueryTimeout,
-                                                   eRoamingAuthorizationStart     Result,
-                                                   TimeSpan                       Duration);
+    public delegate Task OnAuthorizeStartedHandler(DateTime                     Timestamp,
+                                                   CPOClient                    Sender,
+                                                   String                       SenderId,
+                                                   EVSEOperator_Id              OperatorId,
+                                                   Auth_Token                   AuthToken,
+                                                   EVSE_Id                      EVSEId,
+                                                   ChargingSession_Id           SessionId,
+                                                   ChargingProduct_Id           PartnerProductId,
+                                                   ChargingSession_Id           PartnerSessionId,
+                                                   TimeSpan?                    QueryTimeout,
+                                                   eRoamingAuthorizationStart   Result,
+                                                   TimeSpan                     Duration);
 
+    #endregion
+
+    #region OnAuthorizeStop
 
     /// <summary>
-    /// A delegate called whenever an authorize stop request will be send.
+    /// A delegate called whenever an 'authorize stop' request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeStopHandler(DateTime                       Timestamp,
-                                                CPOClient                      Sender,
-                                                String                         SenderId,
-                                                EVSEOperator_Id                OperatorId,
-                                                ChargingSession_Id             SessionId,
-                                                Auth_Token                     AuthToken,
-                                                EVSE_Id                        EVSEId,
-                                                ChargingSession_Id             PartnerSessionId,
-                                                TimeSpan?                      QueryTimeout);
+    public delegate Task OnAuthorizeStopRequestHandler(DateTime                     LogTimestamp,
+                                                       DateTime                     RequestTimestamp,
+                                                       CPOClient                    Sender,
+                                                       String                       SenderId,
+                                                       EVSEOperator_Id              OperatorId,
+                                                       ChargingSession_Id           SessionId,
+                                                       Auth_Token                   AuthToken,
+                                                       EVSE_Id                      EVSEId,
+                                                       ChargingSession_Id           PartnerSessionId,
+                                                       TimeSpan?                    QueryTimeout);
 
     /// <summary>
-    /// A delegate called whenever an authorize stop request was sent.
+    /// A delegate called whenever a response to a 'authorize stop' request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeStoppedHandler(DateTime                       Timestamp,
-                                                   CPOClient                      Sender,
-                                                   String                         SenderId,
-                                                   EVSEOperator_Id                OperatorId,
-                                                   ChargingSession_Id             SessionId,
-                                                   Auth_Token                     AuthToken,
-                                                   EVSE_Id                        EVSEId,
-                                                   ChargingSession_Id             PartnerSessionId,
-                                                   TimeSpan?                      QueryTimeout,
-                                                   eRoamingAuthorizationStop      Result,
-                                                   TimeSpan                       Duration);
+    public delegate Task OnAuthorizeStopResponseHandler(DateTime                    Timestamp,
+                                                        CPOClient                   Sender,
+                                                        String                      SenderId,
+                                                        EVSEOperator_Id             OperatorId,
+                                                        ChargingSession_Id          SessionId,
+                                                        Auth_Token                  AuthToken,
+                                                        EVSE_Id                     EVSEId,
+                                                        ChargingSession_Id          PartnerSessionId,
+                                                        TimeSpan?                   QueryTimeout,
+                                                        eRoamingAuthorizationStop   Result,
+                                                        TimeSpan                    Duration);
 
+    #endregion
 
     #region OnSendChargeDetailRecord
 

@@ -331,7 +331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
@@ -360,7 +360,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               String                               RemoteHTTPVirtualHost       = null,
                               RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                               String                               HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
-                              TimeSpan?                            QueryTimeout                = null,
+                              TimeSpan?                            RequestTimeout                = null,
 
                               String                               ServerName                  = CPOServer.DefaultHTTPServerName,
                               IPPort                               ServerTCPPort               = null,
@@ -391,7 +391,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                   RemoteHTTPVirtualHost,
                                   RemoteCertificateValidator,
                                   HTTPUserAgent,
-                                  QueryTimeout,
+                                  RequestTimeout,
 
                                   ServerName,
                                   ServerTCPPort,
@@ -435,7 +435,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        ChargingSession_Id  PartnerSessionId,
                                        EVSP_Id             ProviderId,
                                        eMA_Id              eMAId,
-                                       TimeSpan?           QueryTimeout = null)
+                                       TimeSpan?           RequestTimeout = null)
 
         {
 
@@ -477,7 +477,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                  eMAId:              eMAId,
                                                  ChargingProductId:  ChargingProductId,
                                                  eMAIds:             new eMA_Id[] { eMAId },
-                                                 QueryTimeout:       QueryTimeout);
+                                                 QueryTimeout:     RequestTimeout);
 
         }
 
@@ -495,7 +495,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       ChargingSession_Id  SessionId,
                                       ChargingSession_Id  PartnerSessionId,
                                       EVSP_Id             ProviderId    = null,
-                                      TimeSpan?           QueryTimeout  = null)
+                                      TimeSpan?           RequestTimeout  = null)
 
         {
 
@@ -505,7 +505,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            ChargingReservation_Id.Parse(SessionId.ToString()),
                                                            ChargingReservationCancellationReason.Deleted,
                                                            ProviderId,
-                                                           QueryTimeout: QueryTimeout);
+                                                           QueryTimeout: RequestTimeout);
 
         }
 
@@ -525,7 +525,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             ChargingSession_Id  PartnerSessionId,
                             EVSP_Id             ProviderId,
                             eMA_Id              eMAId,
-                            TimeSpan?           QueryTimeout = null)
+                            TimeSpan?           RequestTimeout = null)
 
         {
 
@@ -554,7 +554,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      SessionId,
                                                      ProviderId,
                                                      eMAId,
-                                                     QueryTimeout);
+                                                     RequestTimeout);
 
         }
 
@@ -572,7 +572,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            ChargingSession_Id  SessionId,
                            ChargingSession_Id  PartnerSessionId,
                            EVSP_Id             ProviderId    = null,
-                           TimeSpan?           QueryTimeout  = null)
+                           TimeSpan?           RequestTimeout  = null)
 
         {
 
@@ -584,7 +584,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     ReservationHandling.Close,
                                                     ProviderId,
                                                     null,
-                                                    QueryTimeout);
+                                                    RequestTimeout);
 
         }
 
@@ -595,7 +595,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region PushEVSEData...
 
-        #region PushEVSEData(GroupedEVSEs,     ActionType = fullLoad, OperatorId = null, OperatorName = null,                      QueryTimeout = null)
+        #region PushEVSEData(GroupedEVSEs,     ActionType = fullLoad, OperatorId = null, OperatorName = null,                      RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE data of the given lookup of EVSEs grouped by their EVSE operator.
@@ -604,14 +604,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEData(ILookup<EVSEOperator, EVSE>  GroupedEVSEs,
                          WWCP.ActionType              ActionType    = WWCP.ActionType.fullLoad,
                          EVSEOperator_Id              OperatorId    = null,
                          String                       OperatorName  = null,
-                         TimeSpan?                    QueryTimeout  = null)
+                         TimeSpan?                    RequestTimeout  = null)
 
         {
 
@@ -657,7 +657,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             ActionType.AsOICPActionType(),
                                                             OperatorId,
                                                             OperatorName,
-                                                            QueryTimeout);
+                                                            RequestTimeout);
 
                 if (result.Result == true)
                     Acknowledgement = new Acknowledgement(true);
@@ -696,7 +696,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region PushEVSEData(EVSE,             ActionType = insert,   OperatorId = null, OperatorName = null,                      QueryTimeout = null)
+        #region PushEVSEData(EVSE,             ActionType = insert,   OperatorId = null, OperatorName = null,                      RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE data of the given EVSE.
@@ -705,14 +705,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEData(EVSE                 EVSE,
                          WWCP.ActionType      ActionType    = WWCP.ActionType.insert,
                          EVSEOperator_Id      OperatorId    = null,
                          String               OperatorName  = null,
-                         TimeSpan?            QueryTimeout  = null)
+                         TimeSpan?            RequestTimeout  = null)
 
         {
 
@@ -732,13 +732,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                 ? EVSE.Operator.Name.FirstText
                                                 : null,
                                       null,
-                                      QueryTimeout);
+                                      RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEData(EVSEs,            ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(EVSEs,            ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE data of the given enumeration of EVSEs.
@@ -748,7 +748,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEData(IEnumerable<EVSE>    EVSEs,
@@ -756,7 +756,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          EVSEOperator_Id      OperatorId    = null,
                          String               OperatorName  = null,
                          Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                         TimeSpan?            QueryTimeout  = null)
+                         TimeSpan?            RequestTimeout  = null)
 
         {
 
@@ -785,7 +785,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                           ActionType,
                                           OperatorId,
                                           OperatorName,
-                                          QueryTimeout);
+                                          RequestTimeout);
 
             return new Acknowledgement(true);
 
@@ -793,7 +793,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region PushEVSEData(ChargingStation,  ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(ChargingStation,  ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE data of the given charging station.
@@ -803,7 +803,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEData(ChargingStation      ChargingStation,
@@ -811,7 +811,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          EVSEOperator_Id      OperatorId    = null,
                          String               OperatorName  = null,
                          Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                         TimeSpan?            QueryTimeout  = null)
+                         TimeSpan?            RequestTimeout  = null)
 
         {
 
@@ -827,13 +827,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       OperatorId   != null ? OperatorId   : ChargingStation.ChargingPool.Operator.Id,
                                       OperatorName != null ? OperatorName : ChargingStation.ChargingPool.Operator.Name.FirstText,
                                       IncludeEVSEs,
-                                      QueryTimeout);
+                                      RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEData(ChargingStations, ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(ChargingStations, ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE data of the given charging stations.
@@ -843,7 +843,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEData(IEnumerable<ChargingStation>  ChargingStations,
@@ -851,7 +851,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          EVSEOperator_Id               OperatorId    = null,
                          String                        OperatorName  = null,
                          Func<EVSE, Boolean>           IncludeEVSEs  = null,
-                         TimeSpan?                     QueryTimeout  = null)
+                         TimeSpan?                     RequestTimeout  = null)
 
         {
 
@@ -867,13 +867,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       OperatorId,
                                       OperatorName,
                                       IncludeEVSEs,
-                                      QueryTimeout);
+                                      RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEData(ChargingPool,     ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(ChargingPool,     ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE data of the given charging pool.
@@ -883,7 +883,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEData(ChargingPool         ChargingPool,
@@ -891,7 +891,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          EVSEOperator_Id      OperatorId    = null,
                          String               OperatorName  = null,
                          Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                         TimeSpan?            QueryTimeout  = null)
+                         TimeSpan?            RequestTimeout  = null)
 
         {
 
@@ -907,13 +907,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       OperatorId   != null ? OperatorId   : ChargingPool.Operator.Id,
                                       OperatorName != null ? OperatorName : ChargingPool.Operator.Name.FirstText,
                                       IncludeEVSEs,
-                                      QueryTimeout);
+                                      RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEData(ChargingPools,    ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(ChargingPools,    ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE data of the given charging pools.
@@ -923,7 +923,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEData(IEnumerable<ChargingPool>  ChargingPools,
@@ -931,7 +931,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          EVSEOperator_Id            OperatorId    = null,
                          String                     OperatorName  = null,
                          Func<EVSE, Boolean>        IncludeEVSEs  = null,
-                         TimeSpan?                  QueryTimeout  = null)
+                         TimeSpan?                  RequestTimeout  = null)
 
         {
 
@@ -948,13 +948,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       OperatorId,
                                       OperatorName,
                                       IncludeEVSEs,
-                                      QueryTimeout);
+                                      RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEData(EVSEOperator,     ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(EVSEOperator,     ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE data of the given EVSE operator.
@@ -964,7 +964,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEData(EVSEOperator         EVSEOperator,
@@ -972,7 +972,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          EVSEOperator_Id      OperatorId    = null,
                          String               OperatorName  = null,
                          Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                         TimeSpan?            QueryTimeout  = null)
+                         TimeSpan?            RequestTimeout  = null)
 
         {
 
@@ -988,13 +988,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       OperatorId,
                                       OperatorName,
                                       IncludeEVSEs,
-                                      QueryTimeout);
+                                      RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEData(EVSEOperators,    ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(EVSEOperators,    ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE data of the given EVSE operators.
@@ -1004,7 +1004,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId"></param>
         /// <param name="OperatorName">An optional alternative EVSE operator name used for uploading all EVSEs.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// <param name="RequestTimeout">An optional timeout for this query.</param>
         /// <returns></returns>
         public override async Task<Acknowledgement>
 
@@ -1013,7 +1013,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          EVSEOperator_Id                       OperatorId    = null,
                          String                                OperatorName  = null,
                          Func<EVSE, Boolean>                   IncludeEVSEs  = null,
-                         TimeSpan?                             QueryTimeout  = null)
+                         TimeSpan?                             RequestTimeout  = null)
 
         {
 
@@ -1031,13 +1031,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       OperatorId,
                                       OperatorName,
                                       IncludeEVSEs,
-                                      QueryTimeout);
+                                      RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEData(RoamingNetwork,   ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEData(RoamingNetwork,   ActionType = fullLoad, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE data of the given roaming network.
@@ -1047,7 +1047,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEData(RoamingNetwork       RoamingNetwork,
@@ -1055,7 +1055,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          EVSEOperator_Id      OperatorId    = null,
                          String               OperatorName  = null,
                          Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                         TimeSpan?            QueryTimeout  = null)
+                         TimeSpan?            RequestTimeout  = null)
 
         {
 
@@ -1071,7 +1071,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       OperatorId,
                                       OperatorName,
                                       IncludeEVSEs,
-                                      QueryTimeout);
+                                      RequestTimeout);
 
         }
 
@@ -1081,7 +1081,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region PushEVSEStatus...
 
-        #region PushEVSEStatus(GroupedEVSEStatus, ActionType = update, OperatorId = null, OperatorName = null,                      QueryTimeout = null)
+        #region PushEVSEStatus(GroupedEVSEStatus, ActionType = update, OperatorId = null, OperatorName = null,                      RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE status of the given lookup of EVSE status types grouped by their EVSE operator.
@@ -1090,14 +1090,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(ILookup<EVSEOperator_Id, EVSEStatus>  GroupedEVSEStatus,
                            WWCP.ActionType                       ActionType    = WWCP.ActionType.update,
                            EVSEOperator_Id                       OperatorId    = null,
                            String                                OperatorName  = null,
-                           TimeSpan?                             QueryTimeout  = null)
+                           TimeSpan?                             RequestTimeout  = null)
 
         {
 
@@ -1153,7 +1153,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                               ActionType.AsOICPActionType(),
                                                               OperatorId,
                                                               OperatorName,
-                                                              QueryTimeout);
+                                                              RequestTimeout);
 
                 if (result.Result == true)
                     Acknowledgement = new Acknowledgement(true);
@@ -1193,7 +1193,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region PushEVSEStatus(EVSEStatus,        ActionType = update, OperatorId = null, OperatorName = null,                      QueryTimeout = null)
+        #region PushEVSEStatus(EVSEStatus,        ActionType = update, OperatorId = null, OperatorName = null,                      RequestTimeout = null)
 
         /// <summary>
         /// Upload the given EVSE status.
@@ -1202,14 +1202,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(EVSEStatus       EVSEStatus,
                            WWCP.ActionType  ActionType    = WWCP.ActionType.update,
                            EVSEOperator_Id  OperatorId    = null,
                            String           OperatorName  = null,
-                           TimeSpan?        QueryTimeout  = null)
+                           TimeSpan?        RequestTimeout  = null)
 
         {
 
@@ -1224,13 +1224,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         ActionType,
                                         OperatorId,
                                         OperatorName,
-                                        QueryTimeout);
+                                        RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(EVSEStatus,        ActionType = update, OperatorId = null, OperatorName = null,                      QueryTimeout = null)
+        #region PushEVSEStatus(EVSEStatus,        ActionType = update, OperatorId = null, OperatorName = null,                      RequestTimeout = null)
 
         /// <summary>
         /// Upload the status of the given enumeration of EVSE status.
@@ -1239,14 +1239,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(IEnumerable<EVSEStatus>  EVSEStatus,
                            WWCP.ActionType          ActionType    = WWCP.ActionType.update,
                            EVSEOperator_Id          OperatorId    = null,
                            String                   OperatorName  = null,
-                           TimeSpan?                QueryTimeout  = null)
+                           TimeSpan?                RequestTimeout  = null)
 
         {
 
@@ -1266,7 +1266,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                             ActionType,
                                             OperatorId,
                                             OperatorName,
-                                            QueryTimeout);
+                                            RequestTimeout);
 
             return new Acknowledgement(true);
 
@@ -1274,7 +1274,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region PushEVSEStatus(EVSE,              ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(EVSE,              ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload the EVSE status of the given EVSE.
@@ -1284,7 +1284,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(EVSE                 EVSE,
@@ -1292,7 +1292,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            EVSEOperator_Id      OperatorId    = null,
                            String               OperatorName  = null,
                            Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                           TimeSpan?            QueryTimeout  = null)
+                           TimeSpan?            RequestTimeout  = null)
 
         {
 
@@ -1310,13 +1310,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         ActionType,
                                         OperatorId,
                                         OperatorName,
-                                        QueryTimeout);
+                                        RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(EVSEs,             ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(EVSEs,             ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload all EVSE status of the given enumeration of charging stations.
@@ -1326,7 +1326,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(IEnumerable<EVSE>  EVSEs,
@@ -1334,7 +1334,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            EVSEOperator_Id               OperatorId    = null,
                            String                        OperatorName  = null,
                            Func<EVSE, Boolean>           IncludeEVSEs  = null,
-                           TimeSpan?                     QueryTimeout  = null)
+                           TimeSpan?                     RequestTimeout  = null)
 
         {
 
@@ -1354,7 +1354,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                             ActionType,
                                             OperatorId,
                                             OperatorName,
-                                            QueryTimeout);
+                                            RequestTimeout);
 
             else
                 return new Acknowledgement(true);
@@ -1363,7 +1363,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region PushEVSEStatus(ChargingStation,   ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(ChargingStation,   ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload all EVSE status of the given charging station.
@@ -1373,7 +1373,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(ChargingStation      ChargingStation,
@@ -1381,7 +1381,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            EVSEOperator_Id      OperatorId    = null,
                            String               OperatorName  = null,
                            Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                           TimeSpan?            QueryTimeout  = null)
+                           TimeSpan?            RequestTimeout  = null)
 
         {
 
@@ -1398,13 +1398,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         ActionType,
                                         OperatorId   != null ? OperatorId   : ChargingStation.ChargingPool.Operator.Id,
                                         OperatorName != null ? OperatorName : ChargingStation.ChargingPool.Operator.Name.FirstText,
-                                        QueryTimeout);
+                                        RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(ChargingStations,  ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(ChargingStations,  ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload all EVSE status of the given enumeration of charging stations.
@@ -1414,7 +1414,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(IEnumerable<ChargingStation>  ChargingStations,
@@ -1422,7 +1422,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            EVSEOperator_Id               OperatorId    = null,
                            String                        OperatorName  = null,
                            Func<EVSE, Boolean>           IncludeEVSEs  = null,
-                           TimeSpan?                     QueryTimeout  = null)
+                           TimeSpan?                     RequestTimeout  = null)
 
         {
 
@@ -1439,13 +1439,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         ActionType,
                                         OperatorId,
                                         OperatorName,
-                                        QueryTimeout);
+                                        RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(ChargingPool,      ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(ChargingPool,      ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload all EVSE status of the given charging pool.
@@ -1455,7 +1455,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(ChargingPool         ChargingPool,
@@ -1463,7 +1463,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            EVSEOperator_Id      OperatorId    = null,
                            String               OperatorName  = null,
                            Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                           TimeSpan?            QueryTimeout  = null)
+                           TimeSpan?            RequestTimeout  = null)
 
         {
 
@@ -1480,13 +1480,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         ActionType,
                                         OperatorId   != null ? OperatorId   : ChargingPool.Operator.Id,
                                         OperatorName != null ? OperatorName : ChargingPool.Operator.Name.FirstText,
-                                        QueryTimeout);
+                                        RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(ChargingPools,     ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(ChargingPools,     ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload all EVSE status of the given enumeration of charging pools.
@@ -1496,7 +1496,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(IEnumerable<ChargingPool>  ChargingPools,
@@ -1504,7 +1504,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            EVSEOperator_Id            OperatorId    = null,
                            String                     OperatorName  = null,
                            Func<EVSE, Boolean>        IncludeEVSEs  = null,
-                           TimeSpan?                  QueryTimeout  = null)
+                           TimeSpan?                  RequestTimeout  = null)
 
         {
 
@@ -1524,13 +1524,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         ActionType,
                                         OperatorId,
                                         OperatorName,
-                                        QueryTimeout);
+                                        RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(EVSEOperator,      ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(EVSEOperator,      ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload all EVSE status of the given EVSE operator.
@@ -1540,7 +1540,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(EVSEOperator         EVSEOperator,
@@ -1548,7 +1548,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            EVSEOperator_Id      OperatorId    = null,
                            String               OperatorName  = null,
                            Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                           TimeSpan?            QueryTimeout  = null)
+                           TimeSpan?            RequestTimeout  = null)
 
         {
 
@@ -1567,13 +1567,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         OperatorName.IsNotNullOrEmpty()
                                             ? OperatorName
                                             : EVSEOperator.Name.FirstText,
-                                        QueryTimeout);
+                                        RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(EVSEOperators,     ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(EVSEOperators,     ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload all EVSE status of the given enumeration of EVSE operators.
@@ -1583,7 +1583,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(IEnumerable<EVSEOperator>  EVSEOperators,
@@ -1591,7 +1591,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            EVSEOperator_Id            OperatorId    = null,
                            String                     OperatorName  = null,
                            Func<EVSE, Boolean>        IncludeEVSEs  = null,
-                           TimeSpan?                  QueryTimeout  = null)
+                           TimeSpan?                  RequestTimeout  = null)
 
         {
 
@@ -1613,13 +1613,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         ActionType,
                                         OperatorId,
                                         OperatorName,
-                                        QueryTimeout);
+                                        RequestTimeout);
 
         }
 
         #endregion
 
-        #region PushEVSEStatus(RoamingNetwork,    ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, QueryTimeout = null)
+        #region PushEVSEStatus(RoamingNetwork,    ActionType = update, OperatorId = null, OperatorName = null, IncludeEVSEs = null, RequestTimeout = null)
 
         /// <summary>
         /// Upload all EVSE status of the given roaming network.
@@ -1629,7 +1629,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An optional unique identification of the EVSE operator.</param>
         /// <param name="OperatorName">The optional name of the EVSE operator.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
-        /// <param name="QueryTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
+        /// <param name="RequestTimeout">An optional timeout of the HTTP client [default 60 sec.]</param>
         public override async Task<Acknowledgement>
 
             PushEVSEStatus(RoamingNetwork       RoamingNetwork,
@@ -1637,7 +1637,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            EVSEOperator_Id      OperatorId    = null,
                            String               OperatorName  = null,
                            Func<EVSE, Boolean>  IncludeEVSEs  = null,
-                           TimeSpan?            QueryTimeout  = null)
+                           TimeSpan?            RequestTimeout  = null)
 
         {
 
@@ -1654,24 +1654,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         ActionType,
                                         OperatorId,
                                         OperatorName,
-                                        QueryTimeout);
+                                        RequestTimeout);
 
         }
 
         #endregion
 
 
-        #region PushEVSEStatus(EVSEStatusDiff, QueryTimeout = null)
+        #region PushEVSEStatus(EVSEStatusDiff, RequestTimeout = null)
 
         /// <summary>
         /// Send EVSE status updates.
         /// </summary>
         /// <param name="EVSEStatusDiff">An EVSE status diff.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// <param name="RequestTimeout">An optional timeout for this query.</param>
         public override async Task
 
             PushEVSEStatus(EVSEStatusDiff  EVSEStatusDiff,
-                           TimeSpan?       QueryTimeout  = null)
+                           TimeSpan?       RequestTimeout  = null)
 
         {
 
@@ -1699,7 +1699,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                               ActionType.insert,
                                                               EVSEStatusDiff.EVSEOperatorId,
                                                               null,
-                                                              QueryTimeout);
+                                                              RequestTimeout);
 
             }
 
@@ -1724,7 +1724,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                               ActionType.update,
                                                               EVSEStatusDiff.EVSEOperatorId,
                                                               null,
-                                                              QueryTimeout);
+                                                              RequestTimeout);
 
             }
 
@@ -1748,7 +1748,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                               ActionType.delete,
                                                               EVSEStatusDiff.EVSEOperatorId,
                                                               null,
-                                                              QueryTimeout);
+                                                              RequestTimeout);
 
             }
 
@@ -1773,17 +1773,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStartResult>
 
-            AuthorizeStart(DateTime            Timestamp,
-                           CancellationToken   CancellationToken,
-                           EventTracking_Id    EventTrackingId,
-                           EVSEOperator_Id     OperatorId,
+            AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            ChargingProduct_Id  ChargingProductId  = null,
                            ChargingSession_Id  SessionId          = null,
-                           TimeSpan?           QueryTimeout       = null)
+
+                           DateTime?           Timestamp          = null,
+                           CancellationToken?  CancellationToken  = null,
+                           EventTracking_Id    EventTrackingId    = null,
+                           TimeSpan?           RequestTimeout     = null)
         {
 
             #region Initial checks
@@ -1811,7 +1812,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                          AuthToken,
                                          ChargingProductId,
                                          SessionId,
-                                         QueryTimeout);
+                                         RequestTimeout);
 
             }
             catch (Exception e)
@@ -1822,16 +1823,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response = await CPORoaming.AuthorizeStart(Timestamp,
-                                                           CancellationToken,
-                                                           EventTrackingId,
-                                                           OperatorId,
+            var response = await CPORoaming.AuthorizeStart(OperatorId,
                                                            AuthToken,
                                                            null,
                                                            SessionId,
                                                            ChargingProductId,
                                                            null,
-                                                           QueryTimeout);
+
+                                                           Timestamp,
+                                                           CancellationToken,
+                                                           EventTrackingId,
+                                                           RequestTimeout);
 
             AuthStartResult result = null;
 
@@ -1870,7 +1872,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            AuthToken,
                                            ChargingProductId,
                                            SessionId,
-                                           QueryTimeout,
+                                           RequestTimeout,
                                            result,
                                            Runtime.Elapsed);
 
@@ -1901,18 +1903,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSEId">The unique identification of an EVSE.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStartEVSEResult>
 
-            AuthorizeStart(DateTime            Timestamp,
-                           CancellationToken   CancellationToken,
-                           EventTracking_Id    EventTrackingId,
-                           EVSEOperator_Id     OperatorId,
+            AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            EVSE_Id             EVSEId,
                            ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
                            ChargingSession_Id  SessionId          = null,
-                           TimeSpan?           QueryTimeout       = null)
+
+                           DateTime?           Timestamp          = null,
+                           CancellationToken?  CancellationToken  = null,
+                           EventTracking_Id    EventTrackingId    = null,
+                           TimeSpan?           RequestTimeout     = null)
 
         {
 
@@ -1945,7 +1948,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                              EVSEId,
                                              ChargingProductId,
                                              SessionId,
-                                             QueryTimeout);
+                                             RequestTimeout);
 
             }
             catch (Exception e)
@@ -1956,16 +1959,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response  = await CPORoaming.AuthorizeStart(Timestamp,
-                                                            CancellationToken,
-                                                            EventTrackingId,
-                                                            OperatorId,
+            var response  = await CPORoaming.AuthorizeStart(OperatorId,
                                                             AuthToken,
                                                             EVSEId,
                                                             SessionId,
                                                             ChargingProductId,
                                                             null,
-                                                            QueryTimeout);
+
+                                                            Timestamp,
+                                                            CancellationToken,
+                                                            EventTrackingId,
+                                                            RequestTimeout);
 
 
             AuthStartEVSEResult result = null;
@@ -2006,7 +2010,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                EVSEId,
                                                ChargingProductId,
                                                SessionId,
-                                               QueryTimeout,
+                                               RequestTimeout,
                                                result,
                                                Runtime.Elapsed);
 
@@ -2037,18 +2041,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ChargingStationId">The unique identification of a charging station.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStartChargingStationResult>
 
-            AuthorizeStart(DateTime            Timestamp,
-                           CancellationToken   CancellationToken,
-                           EventTracking_Id    EventTrackingId,
-                           EVSEOperator_Id     OperatorId,
+            AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            ChargingStation_Id  ChargingStationId,
                            ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
                            ChargingSession_Id  SessionId          = null,
-                           TimeSpan?           QueryTimeout       = null)
+
+                           DateTime?           Timestamp          = null,
+                           CancellationToken?  CancellationToken  = null,
+                           EventTracking_Id    EventTrackingId    = null,
+                           TimeSpan?           RequestTimeout     = null)
 
         {
 
@@ -2081,7 +2086,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         ChargingStationId,
                                                         ChargingProductId,
                                                         SessionId,
-                                                        QueryTimeout);
+                                                        RequestTimeout);
 
             }
             catch (Exception e)
@@ -2112,7 +2117,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           ChargingStationId,
                                                           ChargingProductId,
                                                           SessionId,
-                                                          QueryTimeout,
+                                                          RequestTimeout,
                                                           result,
                                                           Runtime.Elapsed);
 
@@ -2146,16 +2151,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStopResult>
 
-            AuthorizeStop(DateTime            Timestamp,
-                          CancellationToken   CancellationToken,
-                          EventTracking_Id    EventTrackingId,
-                          EVSEOperator_Id     OperatorId,
+            AuthorizeStop(EVSEOperator_Id     OperatorId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
-                          TimeSpan?           QueryTimeout  = null)
+
+                          DateTime?           Timestamp          = null,
+                          CancellationToken?  CancellationToken  = null,
+                          EventTracking_Id    EventTrackingId    = null,
+                          TimeSpan?           RequestTimeout     = null)
         {
 
             #region Send OnAuthorizeStop event
@@ -2170,7 +2176,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         OperatorId,
                                         SessionId,
                                         AuthToken,
-                                        QueryTimeout);
+                                        RequestTimeout);
 
             }
             catch (Exception e)
@@ -2181,15 +2187,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response = await CPORoaming.AuthorizeStop(Timestamp,
-                                                           CancellationToken,
-                                                           EventTrackingId,
-                                                           OperatorId,
-                                                           SessionId,
-                                                           AuthToken,
-                                                           null,
-                                                           null,
-                                                           QueryTimeout);
+            var response = await CPORoaming.AuthorizeStop(OperatorId,
+                                                          SessionId,
+                                                          AuthToken,
+                                                          null,
+                                                          null,
+
+                                                          Timestamp,
+                                                          CancellationToken,
+                                                          EventTrackingId,
+                                                          RequestTimeout);
 
 
             AuthStopResult result = null;
@@ -2224,7 +2231,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            OperatorId,
                                            SessionId,
                                            AuthToken,
-                                           QueryTimeout,
+                                           RequestTimeout,
                                            result);
 
             }
@@ -2257,17 +2264,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSEId">The unique identification of an EVSE.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStopEVSEResult>
 
-            AuthorizeStop(DateTime            Timestamp,
-                          CancellationToken   CancellationToken,
-                          EventTracking_Id    EventTrackingId,
-                          EVSEOperator_Id     OperatorId,
+            AuthorizeStop(EVSEOperator_Id     OperatorId,
                           EVSE_Id             EVSEId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
-                          TimeSpan?           QueryTimeout  = null)
+
+                          DateTime?           Timestamp          = null,
+                          CancellationToken?  CancellationToken  = null,
+                          EventTracking_Id    EventTrackingId    = null,
+                          TimeSpan?           RequestTimeout     = null)
         {
 
             #region Initial checks
@@ -2299,7 +2307,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                             EVSEId,
                                             SessionId,
                                             AuthToken,
-                                            QueryTimeout);
+                                            RequestTimeout);
 
             }
             catch (Exception e)
@@ -2310,15 +2318,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            var response  = await CPORoaming.AuthorizeStop(Timestamp,
-                                                           CancellationToken,
-                                                           EventTrackingId,
-                                                           OperatorId,
+            var response  = await CPORoaming.AuthorizeStop(OperatorId,
                                                            SessionId,
                                                            AuthToken,
                                                            EVSEId,
                                                            null,
-                                                           QueryTimeout);
+
+                                                           Timestamp,
+                                                           CancellationToken,
+                                                           EventTrackingId,
+                                                           RequestTimeout);
 
             AuthStopEVSEResult result = null;
 
@@ -2353,7 +2362,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                EVSEId,
                                                SessionId,
                                                AuthToken,
-                                               QueryTimeout,
+                                               RequestTimeout,
                                                result);
 
             }
@@ -2382,17 +2391,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ChargingStationId">A charging station identification.</param>
         /// <param name="SessionId">The session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStopChargingStationResult>
 
-            AuthorizeStop(DateTime            Timestamp,
-                          CancellationToken   CancellationToken,
-                          EventTracking_Id    EventTrackingId,
-                          EVSEOperator_Id     OperatorId,
+            AuthorizeStop(EVSEOperator_Id     OperatorId,
                           ChargingStation_Id  ChargingStationId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
-                          TimeSpan?           QueryTimeout  = null)
+
+                          DateTime?           Timestamp          = null,
+                          CancellationToken?  CancellationToken  = null,
+                          EventTracking_Id    EventTrackingId    = null,
+                          TimeSpan?           RequestTimeout     = null)
 
         {
 
@@ -2425,7 +2435,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        ChargingStationId,
                                                        SessionId,
                                                        AuthToken,
-                                                       QueryTimeout);
+                                                       RequestTimeout);
 
             }
             catch (Exception e)
@@ -2453,7 +2463,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           ChargingStationId,
                                                           SessionId,
                                                           AuthToken,
-                                                          QueryTimeout,
+                                                          RequestTimeout,
                                                           result);
 
             }

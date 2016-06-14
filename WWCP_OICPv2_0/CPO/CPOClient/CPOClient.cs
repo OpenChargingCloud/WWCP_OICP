@@ -128,24 +128,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region OnAuthorizeStopRequest/-Response
 
         /// <summary>
-        /// An event fired whenever an authorize stop request will be send.
+        /// An event fired whenever an 'authorize stop' request will be send.
         /// </summary>
-        public event OnAuthorizeStopHandler     OnAuthorizeStop;
+        public event OnAuthorizeStopRequestHandler   OnAuthorizeStopRequest;
 
         /// <summary>
-        /// An event fired whenever an authorize stop SOAP request will be send.
+        /// An event fired whenever an 'authorize stop' SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler    OnAuthorizeStopRequest;
+        public event ClientRequestLogHandler         OnAuthorizeStopSOAPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to an authorize stop SOAP request had been received.
+        /// An event fired whenever a response to a 'authorize stop' SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler   OnAuthorizeStopResponse;
+        public event ClientResponseLogHandler        OnAuthorizeStopSOAPResponse;
 
         /// <summary>
-        /// An event fired whenever an authorize stop request was sent.
+        /// An event fired whenever a response to a 'authorize stop' request had been received.
         /// </summary>
-        public event OnAuthorizeStoppedHandler  OnAuthorizeStopped;
+        public event OnAuthorizeStopResponseHandler  OnAuthorizeStopResponse;
 
         #endregion
 
@@ -556,7 +556,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region PushEVSEStatus(EVSEStatusRecords,  OICPAction = update, OperatorId = null, OperatorName = null,                                  QueryTimeout = null)
+        #region PushEVSEStatus(...EVSEStatusRecords,  OICPAction = update, OperatorId = null, OperatorName = null, ...)
 
         /// <summary>
         /// Upload the given lookup of EVSE status records grouped by their EVSE operator identification.
@@ -616,7 +616,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 #endregion
 
-                using (var OICPClient = new SOAPClient(_Hostname,
+                using (var _OICPClient = new SOAPClient(_Hostname,
                                                        _TCPPort,
                                                        _HTTPVirtualHost,
                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
@@ -625,7 +625,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                        DNSClient))
                 {
 
-                     var result = await OICPClient.Query(CPOClientXMLMethods.PushEVSEStatusXML(_EVSEStatusRecords,
+                     var result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEStatusXML(_EVSEStatusRecords,
                                                                                                OICPAction,
                                                                                                OperatorId,
                                                                                                OperatorName),
@@ -723,7 +723,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushEVSEStatus(KeyValuePairs<...>, OICPAction = update, OperatorId = null, OperatorName = null, IncludeEVSEStatusRecords = null, QueryTimeout = null)
+        #region PushEVSEStatus(...KeyValuePairs<...>, OICPAction = update, OperatorId = null, OperatorName = null, IncludeEVSEStatusRecords = null, ...)
 
         /// <summary>
         /// Create a new task pushing EVSE status key-value-pairs onto the OICP server.
@@ -758,7 +758,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, ...)
 
         /// <summary>
         /// Create an OICP authorize start request.
@@ -769,19 +769,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAuthorizationStart>>
 
-            AuthorizeStart(DateTime            Timestamp,
-                           CancellationToken   CancellationToken,
-                           EventTracking_Id    EventTrackingId,
-                           EVSEOperator_Id     OperatorId,
+            AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
-                           EVSE_Id             EVSEId            = null,
-                           ChargingSession_Id  SessionId         = null,
-                           ChargingProduct_Id  PartnerProductId  = null,   // [maxlength: 100]
-                           ChargingSession_Id  PartnerSessionId  = null,   // [maxlength: 50]
-                           TimeSpan?           QueryTimeout      = null)
+                           EVSE_Id             EVSEId             = null,
+                           ChargingSession_Id  SessionId          = null,
+                           ChargingProduct_Id  PartnerProductId   = null,
+                           ChargingSession_Id  PartnerSessionId   = null,
+
+                           DateTime?           Timestamp          = null,
+                           CancellationToken?  CancellationToken  = null,
+                           EventTracking_Id    EventTrackingId    = null,
+                           TimeSpan?           RequestTimeout     = null)
 
         {
 
@@ -793,6 +798,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             {
 
                 OnAuthorizeStart?.Invoke(DateTime.Now,
+                                         Timestamp ?? DateTime.Now,
                                          this,
                                          ClientId,
                                          OperatorId,
@@ -801,7 +807,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                          SessionId,
                                          PartnerProductId,
                                          PartnerSessionId,
-                                         QueryTimeout);
+                                         RequestTimeout);
 
             }
             catch (Exception e)
@@ -811,78 +817,80 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            using (var OICPClient = new SOAPClient(Hostname,
+            using (var _OICPClient = new SOAPClient(Hostname,
                                                    TCPPort,
                                                    HTTPVirtualHost,
                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
                                                    UserAgent,
                                                    _RemoteCertificateValidator,
-                                                   DNSClient: DNSClient))
+                                                   DNSClient))
             {
 
-                var result = await OICPClient.Query(CPOClientXMLMethods.AuthorizeStartXML(OperatorId,
-                                                                                          AuthToken,
-                                                                                          EVSEId,
-                                                                                          PartnerProductId,
-                                                                                          SessionId,
-                                                                                          PartnerSessionId),
-                                                    "eRoamingAuthorizeStart",
-                                                    RequestLogDelegate:   OnAuthorizeStartRequest,
-                                                    ResponseLogDelegate:  OnAuthorizeStartResponse,
-                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                var result = await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStartXML(OperatorId,
+                                                                                           AuthToken,
+                                                                                           EVSEId,
+                                                                                           PartnerProductId,
+                                                                                           SessionId,
+                                                                                           PartnerSessionId),
+                                                     "eRoamingAuthorizeStart",
+                                                     RequestLogDelegate:   OnAuthorizeStartRequest,
+                                                     ResponseLogDelegate:  OnAuthorizeStartResponse,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     QueryTimeout:         RequestTimeout,
 
-                                                    #region OnSuccess
+                                                     #region OnSuccess
 
-                                                    OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthorizationStart.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthorizationStart.Parse),
 
-                                                    #endregion
+                                                     #endregion
 
-                                                    #region OnSOAPFault
+                                                     #region OnSOAPFault
 
-                                                    OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                        SendSOAPError(timestamp, this, httpresponse.Content);
+                                                         SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                        return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
-                                                                                                            new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
-                                                                                                                                           StatusCode: new StatusCode(-1,
-                                                                                                                                                                      Description: httpresponse.Content.ToString())),
-                                                                                                            IsFault: true);
+                                                         return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
+                                                                                                             new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
+                                                                                                                                            StatusCode: new StatusCode(-1,
+                                                                                                                                                                       Description: httpresponse.Content.ToString())),
+                                                                                                             IsFault: true);
 
-                                                    },
+                                                     },
 
-                                                    #endregion
+                                                     #endregion
 
-                                                    #region OnHTTPError
+                                                     #region OnHTTPError
 
-                                                    OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                        SendHTTPError(timestamp, this, httpresponse);
+                                                         SendHTTPError(timestamp, this, httpresponse);
 
-                                                        return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
-                                                                                                            new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
-                                                                                                                                           StatusCode: new StatusCode(-1,
-                                                                                                                                                                      Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                                      AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
-                                                                                                            IsFault: true);
+                                                         return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
+                                                                                                             new eRoamingAuthorizationStart(AuthorizationStatusType.NotAuthorized,
+                                                                                                                                            StatusCode: new StatusCode(-1,
+                                                                                                                                                                       Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                                                       AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
+                                                                                                             IsFault: true);
 
-                                                    },
+                                                     },
 
-                                                    #endregion
+                                                     #endregion
 
-                                                    #region OnException
+                                                     #region OnException
 
-                                                    OnException: (timestamp, sender, exception) => {
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                        SendException(timestamp, sender, exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                        return null;
+                                                         return null;
 
-                                                    }
+                                                     }
 
-                                                    #endregion
+                                                     #endregion
 
-                                                   );
+                                                    );
 
                 #region Send OnAuthorizeStart event
 
@@ -900,7 +908,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                SessionId,
                                                PartnerProductId,
                                                PartnerSessionId,
-                                               QueryTimeout,
+                                               RequestTimeout,
                                                result.Content,
                                                Runtime.Elapsed);
 
@@ -920,7 +928,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region AuthorizeStop (OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeStop (OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, ...)
 
         // UID => Not everybody can stop any session, but maybe another
         //        UID than the UID which started the session!
@@ -934,139 +942,54 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAuthorizationStop>>
 
-            AuthorizeStop(DateTime             Timestamp,
-                          CancellationToken    CancellationToken,
-                          EventTracking_Id     EventTrackingId,
-                          EVSEOperator_Id      OperatorId,
-                          ChargingSession_Id   SessionId,
-                          Auth_Token           AuthToken,
-                          EVSE_Id              EVSEId            = null,
-                          ChargingSession_Id   PartnerSessionId  = null,   // [maxlength: 50]
-                          TimeSpan?            QueryTimeout      = null)
+            AuthorizeStop(EVSEOperator_Id     OperatorId,
+                          ChargingSession_Id  SessionId,
+                          Auth_Token          AuthToken,
+                          EVSE_Id             EVSEId             = null,
+                          ChargingSession_Id  PartnerSessionId   = null,
+
+                          DateTime?           Timestamp          = null,
+                          CancellationToken?  CancellationToken  = null,
+                          EventTracking_Id    EventTrackingId    = null,
+                          TimeSpan?           RequestTimeout     = null)
 
         {
 
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
 
-            if (SessionId  == null)
-                throw new ArgumentNullException(nameof(SessionId),  "The given parameter must not be null!");
+            if (SessionId == null)
+                throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
 
-            if (AuthToken  == null)
-                throw new ArgumentNullException(nameof(AuthToken),  "The given parameter must not be null!");
+            if (AuthToken == null)
+                throw new ArgumentNullException(nameof(AuthToken),   "The given auth token must not be null!");
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
 
             #endregion
 
-            #region Send OnAuthorizeStop event
+            #region Send OnAuthorizeStopRequest event
 
             var Runtime = Stopwatch.StartNew();
 
             try
             {
 
-                OnAuthorizeStop?.Invoke(DateTime.Now,
-                                        this,
-                                        ClientId,
-                                        OperatorId,
-                                        SessionId,
-                                        AuthToken,
-                                        EVSEId,
-                                        PartnerSessionId,
-                                        QueryTimeout);
-
-            }
-            catch (Exception e)
-            {
-                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStop));
-            }
-
-            #endregion
-
-            using (var OICPClient = new SOAPClient(Hostname,
-                                                   TCPPort,
-                                                   HTTPVirtualHost,
-                                                   "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                   UserAgent,
-                                                   _RemoteCertificateValidator,
-                                                   DNSClient: DNSClient))
-            {
-
-                var result = await OICPClient.Query(CPOClientXMLMethods.AuthorizeStopXML(OperatorId,
-                                                                                         SessionId,
-                                                                                         AuthToken,
-                                                                                         EVSEId,
-                                                                                         PartnerSessionId),
-                                                    "eRoamingAuthorizeStop",
-                                                    RequestLogDelegate:   OnAuthorizeStopRequest,
-                                                    ResponseLogDelegate:  OnAuthorizeStopResponse,
-                                                    QueryTimeout:         QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
-
-                                                    #region OnSuccess
-
-                                                    OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthorizationStop.Parse),
-
-                                                    #endregion
-
-                                                    #region OnSOAPFault
-
-                                                    OnSOAPFault: (timestamp, soapclient, httpresponse) => {
-
-                                                        SendSOAPError(timestamp, this, httpresponse.Content);
-
-                                                        return new HTTPResponse<eRoamingAuthorizationStop>(httpresponse,
-                                                                                                           new eRoamingAuthorizationStop(AuthorizationStatusType.NotAuthorized,
-                                                                                                                                         StatusCode: new StatusCode(-1,
-                                                                                                                                                                    Description: httpresponse.Content.ToString())),
-                                                                                                           IsFault: true);
-
-                                                    },
-
-                                                    #endregion
-
-                                                    #region OnHTTPError
-
-                                                    OnHTTPError: (timestamp, soapclient, httpresponse) => {
-
-                                                        SendHTTPError(timestamp, this, httpresponse);
-
-                                                        return new HTTPResponse<eRoamingAuthorizationStop>(httpresponse,
-                                                                                                           new eRoamingAuthorizationStop(AuthorizationStatusType.NotAuthorized,
-                                                                                                                                         StatusCode: new StatusCode(-1,
-                                                                                                                                                                    Description: httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                                    AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
-                                                                                                           IsFault: true);
-
-                                                    },
-
-                                                    #endregion
-
-                                                    #region OnException
-
-                                                    OnException: (timestamp, sender, exception) => {
-
-                                                        SendException(timestamp, sender, exception);
-
-                                                        return null;
-
-                                                    }
-
-                                                    #endregion
-
-                                                   );
-
-                #region Send OnAuthorizeStopped event
-
-                Runtime.Stop();
-
-                try
-                {
-
-                    OnAuthorizeStopped?.Invoke(DateTime.Now,
+                OnAuthorizeStopRequest?.Invoke(DateTime.Now,
+                                               Timestamp ?? DateTime.Now,
                                                this,
                                                ClientId,
                                                OperatorId,
@@ -1074,14 +997,113 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                AuthToken,
                                                EVSEId,
                                                PartnerSessionId,
-                                               QueryTimeout,
-                                               result.Content,
-                                               Runtime.Elapsed);
+                                               RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopRequest));
+            }
+
+            #endregion
+
+            using (var _OICPClient = new SOAPClient(Hostname,
+                                                    TCPPort,
+                                                    HTTPVirtualHost,
+                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    UserAgent,
+                                                    _RemoteCertificateValidator,
+                                                    DNSClient))
+            {
+
+                var result = await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStopXML(OperatorId,
+                                                                                         SessionId,
+                                                                                         AuthToken,
+                                                                                         EVSEId,
+                                                                                         PartnerSessionId),
+                                                     "eRoamingAuthorizeStop",
+                                                     RequestLogDelegate:   OnAuthorizeStopSOAPRequest,
+                                                     ResponseLogDelegate:  OnAuthorizeStopSOAPResponse,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     QueryTimeout:         RequestTimeout,
+
+                                                     #region OnSuccess
+
+                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthorizationStop.Parse),
+
+                                                     #endregion
+
+                                                     #region OnSOAPFault
+
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+
+                                                         SendSOAPError(timestamp, this, httpresponse.Content);
+
+                                                         return new HTTPResponse<eRoamingAuthorizationStop>(httpresponse,
+                                                                                                            new eRoamingAuthorizationStop(AuthorizationStatusType.NotAuthorized,
+                                                                                                                                          StatusCode: new StatusCode(-1,
+                                                                                                                                                                     Description: httpresponse.Content.ToString())),
+                                                                                                            IsFault: true);
+
+                                                     },
+
+                                                     #endregion
+
+                                                     #region OnHTTPError
+
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                         SendHTTPError(timestamp, this, httpresponse);
+
+                                                         return new HTTPResponse<eRoamingAuthorizationStop>(httpresponse,
+                                                                                                            new eRoamingAuthorizationStop(AuthorizationStatusType.NotAuthorized,
+                                                                                                                                          StatusCode: new StatusCode(-1,
+                                                                                                                                                                     Description: httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                                                     AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
+                                                                                                            IsFault: true);
+
+                                                     },
+
+                                                     #endregion
+
+                                                     #region OnException
+
+                                                     OnException: (timestamp, sender, exception) => {
+
+                                                         SendException(timestamp, sender, exception);
+
+                                                         return null;
+
+                                                     }
+
+                                                     #endregion
+
+                                                    );
+
+                #region Send OnAuthorizeStopResponse event
+
+                Runtime.Stop();
+
+                try
+                {
+
+                    OnAuthorizeStopResponse?.Invoke(DateTime.Now,
+                                                    this,
+                                                    ClientId,
+                                                    OperatorId,
+                                                    SessionId,
+                                                    AuthToken,
+                                                    EVSEId,
+                                                    PartnerSessionId,
+                                                    RequestTimeout,
+                                                    result.Content,
+                                                    Runtime.Elapsed);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopped));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopResponse));
                 }
 
                 #endregion

@@ -308,25 +308,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize stop request will be send.
         /// </summary>
-        public event OnAuthorizeStopHandler OnAuthorizeStop
-        {
-
-            add
-            {
-                CPOClient.OnAuthorizeStop += value;
-            }
-
-            remove
-            {
-                CPOClient.OnAuthorizeStop -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever an authorize stop SOAP request will be send.
-        /// </summary>
-        public event ClientRequestLogHandler OnAuthorizeStopRequest
+        public event OnAuthorizeStopRequestHandler OnAuthorizeStop
         {
 
             add
@@ -342,9 +324,45 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         /// <summary>
+        /// An event fired whenever an authorize stop SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnAuthorizeStopRequest
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStopSOAPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStopSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
         /// An event fired whenever a response to an authorize stop SOAP request had been received.
         /// </summary>
         public event ClientResponseLogHandler OnAuthorizeStopResponse
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStopSOAPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStopSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize start request was sent.
+        /// </summary>
+        public event OnAuthorizeStopResponseHandler OnAuthorizeStopped
         {
 
             add
@@ -355,24 +373,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             remove
             {
                 CPOClient.OnAuthorizeStopResponse -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever an authorize start request was sent.
-        /// </summary>
-        public event OnAuthorizeStoppedHandler OnAuthorizeStopped
-        {
-
-            add
-            {
-                CPOClient.OnAuthorizeStopped += value;
-            }
-
-            remove
-            {
-                CPOClient.OnAuthorizeStopped -= value;
             }
 
         }
@@ -966,10 +966,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
 
             var result = await CPOClient.PushEVSEStatus(EVSEStatusRecords,
-                                                         OICPAction,
-                                                         OperatorId,
-                                                         OperatorName,
-                                                         QueryTimeout);
+                                                        OICPAction,
+                                                        OperatorId,
+                                                        OperatorName,
+                                                        QueryTimeout);
 
             //ToDo: Process the HTTP!
             return result.Content;
@@ -1015,7 +1015,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region AuthorizeStart(...OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, ...)
+        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, ...)
 
         /// <summary>
         /// Create an OICP authorize start request.
@@ -1026,34 +1026,41 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAuthorizationStart>>
 
-            AuthorizeStart(DateTime            Timestamp,
-                           CancellationToken   CancellationToken,
-                           EventTracking_Id    EventTrackingId,
-                           EVSEOperator_Id     OperatorId,
+            AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            EVSE_Id             EVSEId            = null,
                            ChargingSession_Id  SessionId         = null,
-                           ChargingProduct_Id  PartnerProductId  = null,   // [maxlength: 100]
-                           ChargingSession_Id  PartnerSessionId  = null,   // [maxlength: 50]
-                           TimeSpan?           QueryTimeout      = null)
+                           ChargingProduct_Id  PartnerProductId  = null,
+                           ChargingSession_Id  PartnerSessionId  = null,
 
-            => await CPOClient.AuthorizeStart(Timestamp,
-                                              CancellationToken,
-                                              EventTrackingId,
-                                              OperatorId,
+                           DateTime?           Timestamp          = null,
+                           CancellationToken?  CancellationToken  = null,
+                           EventTracking_Id    EventTrackingId    = null,
+                           TimeSpan?           RequestTimeout     = null)
+
+
+            => await CPOClient.AuthorizeStart(OperatorId,
                                               AuthToken,
                                               EVSEId,
                                               SessionId,
                                               PartnerProductId,
                                               PartnerSessionId,
-                                              QueryTimeout);
+
+                                              Timestamp,
+                                              CancellationToken,
+                                              EventTrackingId,
+                                              RequestTimeout);
 
         #endregion
 
-        #region AuthorizeStop (...OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, ...)
+        #region AuthorizeStop (OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, ...)
 
         // UID => Not everybody can stop any session, but maybe another
         //        UID than the UID which started the session!
@@ -1067,28 +1074,35 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAuthorizationStop>>
 
-            AuthorizeStop(DateTime             Timestamp,
-                          CancellationToken    CancellationToken,
-                          EventTracking_Id     EventTrackingId,
-                          EVSEOperator_Id      OperatorId,
-                          ChargingSession_Id   SessionId,
-                          Auth_Token           AuthToken,
-                          EVSE_Id              EVSEId            = null,
-                          ChargingSession_Id   PartnerSessionId  = null,   // [maxlength: 50]
-                          TimeSpan?            QueryTimeout      = null)
+            AuthorizeStop(EVSEOperator_Id     OperatorId,
+                          ChargingSession_Id  SessionId,
+                          Auth_Token          AuthToken,
+                          EVSE_Id             EVSEId             = null,
+                          ChargingSession_Id  PartnerSessionId   = null,
 
-            => await CPOClient.AuthorizeStop(Timestamp,
-                                             CancellationToken,
-                                             EventTrackingId,
-                                             OperatorId,
+                          DateTime?           Timestamp          = null,
+                          CancellationToken?  CancellationToken  = null,
+                          EventTracking_Id    EventTrackingId    = null,
+                          TimeSpan?           RequestTimeout     = null)
+
+
+            => await CPOClient.AuthorizeStop(OperatorId,
                                              SessionId,
                                              AuthToken,
                                              EVSEId,
                                              PartnerSessionId,
-                                             QueryTimeout);
+
+                                             Timestamp,
+                                             CancellationToken,
+                                             EventTrackingId,
+                                             RequestTimeout);
 
         #endregion
 

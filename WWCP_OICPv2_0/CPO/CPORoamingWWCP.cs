@@ -1679,17 +1679,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStartResult>
 
-            AuthorizeStart(DateTime            Timestamp,
-                           CancellationToken   CancellationToken,
-                           EventTracking_Id    EventTrackingId,
-                           EVSEOperator_Id     OperatorId,
+            AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            ChargingProduct_Id  ChargingProductId  = null,
                            ChargingSession_Id  SessionId          = null,
-                           TimeSpan?           QueryTimeout       = null)
+
+                           DateTime?           Timestamp          = null,
+                           CancellationToken?  CancellationToken  = null,
+                           EventTracking_Id    EventTrackingId    = null,
+                           TimeSpan?           RequestTimeout     = null)
         {
 
             #region Initial checks
@@ -1709,7 +1710,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnAuthorizeStart?.Invoke(Timestamp,
+                OnAuthorizeStart?.Invoke(DateTime.Now,
                                          this,
                                          EventTrackingId,
                                          RoamingNetwork.Id,
@@ -1717,7 +1718,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                          AuthToken,
                                          ChargingProductId,
                                          SessionId,
-                                         QueryTimeout);
+                                         RequestTimeout);
 
             }
             catch (Exception e)
@@ -1728,16 +1729,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
 
-            var response = await CPORoaming.AuthorizeStart(Timestamp,
-                                                           CancellationToken,
-                                                           EventTrackingId,
-                                                           OperatorId,
+            var response = await CPORoaming.AuthorizeStart(OperatorId,
                                                            AuthToken,
                                                            null,
                                                            SessionId,
                                                            ChargingProductId,
                                                            null,
-                                                           QueryTimeout);
+
+                                                           Timestamp,
+                                                           CancellationToken,
+                                                           EventTrackingId,
+                                                           RequestTimeout);
 
             AuthStartResult result = null;
 
@@ -1753,6 +1755,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     response.Content.StatusCode.AdditionalInfo);
 
             }
+
             else
                 result = AuthStartResult.NotAuthorized(AuthorizatorId,
                                                        response.Content.ProviderId,
@@ -1767,7 +1770,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnAuthorizeStarted?.Invoke(Timestamp,
+                OnAuthorizeStarted?.Invoke(DateTime.Now,
                                            this,
                                            EventTrackingId,
                                            RoamingNetwork.Id,
@@ -1775,7 +1778,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                            AuthToken,
                                            ChargingProductId,
                                            SessionId,
-                                           QueryTimeout,
+                                           RequestTimeout,
                                            result,
                                            Runtime.Elapsed);
 
@@ -1806,31 +1809,32 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="EVSEId">The unique identification of an EVSE.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStartEVSEResult>
 
-            AuthorizeStart(DateTime            Timestamp,
-                           CancellationToken   CancellationToken,
-                           EventTracking_Id    EventTrackingId,
-                           EVSEOperator_Id     OperatorId,
+            AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            EVSE_Id             EVSEId,
                            ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
                            ChargingSession_Id  SessionId          = null,
-                           TimeSpan?           QueryTimeout       = null)
+
+                           DateTime?           Timestamp          = null,
+                           CancellationToken?  CancellationToken  = null,
+                           EventTracking_Id    EventTrackingId    = null,
+                           TimeSpan?           RequestTimeout     = null)
 
         {
 
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId), "The given EVSE operator identification must not be null!");
 
             if (AuthToken == null)
-                throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
+                throw new ArgumentNullException(nameof(AuthToken),  "The given authentication token must not be null!");
 
             if (EVSEId    == null)
-                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
+                throw new ArgumentNullException(nameof(EVSEId),     "The given EVSE identification must not be null!");
 
             #endregion
 
@@ -1841,7 +1845,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnAuthorizeEVSEStart?.Invoke(Timestamp,
+                OnAuthorizeEVSEStart?.Invoke(DateTime.Now,
                                              this,
                                              EventTrackingId,
                                              RoamingNetwork.Id,
@@ -1850,7 +1854,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                              EVSEId,
                                              ChargingProductId,
                                              SessionId,
-                                             QueryTimeout);
+                                             RequestTimeout);
 
             }
             catch (Exception e)
@@ -1861,16 +1865,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
 
-            var response  = await CPORoaming.AuthorizeStart(Timestamp,
-                                                            CancellationToken,
-                                                            EventTrackingId,
-                                                            OperatorId,
+            var response  = await CPORoaming.AuthorizeStart(OperatorId,
                                                             AuthToken,
                                                             EVSEId,
                                                             SessionId,
                                                             ChargingProductId,
                                                             null,
-                                                            QueryTimeout);
+
+                                                            Timestamp,
+                                                            CancellationToken,
+                                                            EventTrackingId,
+                                                            RequestTimeout);
 
 
             AuthStartEVSEResult result = null;
@@ -1902,7 +1907,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnAuthorizeEVSEStarted?.Invoke(Timestamp,
+                OnAuthorizeEVSEStarted?.Invoke(DateTime.Now,
                                                this,
                                                EventTrackingId,
                                                RoamingNetwork.Id,
@@ -1911,7 +1916,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                EVSEId,
                                                ChargingProductId,
                                                SessionId,
-                                               QueryTimeout,
+                                               RequestTimeout,
                                                result,
                                                Runtime.Elapsed);
 
@@ -1942,18 +1947,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ChargingStationId">The unique identification of a charging station.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStartChargingStationResult>
 
-            AuthorizeStart(DateTime            Timestamp,
-                           CancellationToken   CancellationToken,
-                           EventTracking_Id    EventTrackingId,
-                           EVSEOperator_Id     OperatorId,
+            AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            ChargingStation_Id  ChargingStationId,
                            ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
                            ChargingSession_Id  SessionId          = null,
-                           TimeSpan?           QueryTimeout       = null)
+
+                           DateTime?           Timestamp          = null,
+                           CancellationToken?  CancellationToken  = null,
+                           EventTracking_Id    EventTrackingId    = null,
+                           TimeSpan?           RequestTimeout     = null)
 
         {
 
@@ -1977,7 +1983,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnAuthorizeChargingStationStart?.Invoke(Timestamp,
+                OnAuthorizeChargingStationStart?.Invoke(DateTime.Now,
                                                         this,
                                                         EventTrackingId,
                                                         RoamingNetwork.Id,
@@ -1986,7 +1992,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         ChargingStationId,
                                                         ChargingProductId,
                                                         SessionId,
-                                                        QueryTimeout);
+                                                        RequestTimeout);
 
             }
             catch (Exception e)
@@ -1997,6 +2003,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
 
+            //ToDo: Implement AuthorizeStart(...ChargingStationId...)
             var result = AuthStartChargingStationResult.Error(AuthorizatorId, "Not implemented!");
 
 
@@ -2007,7 +2014,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnAuthorizeChargingStationStarted?.Invoke(Timestamp,
+                OnAuthorizeChargingStationStarted?.Invoke(DateTime.Now,
                                                           this,
                                                           EventTrackingId,
                                                           RoamingNetwork.Id,
@@ -2016,7 +2023,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                           ChargingStationId,
                                                           ChargingProductId,
                                                           SessionId,
-                                                          QueryTimeout,
+                                                          RequestTimeout,
                                                           result,
                                                           Runtime.Elapsed);
 
@@ -2050,16 +2057,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStopResult>
 
-            AuthorizeStop(DateTime            Timestamp,
-                          CancellationToken   CancellationToken,
-                          EventTracking_Id    EventTrackingId,
-                          EVSEOperator_Id     OperatorId,
+            AuthorizeStop(EVSEOperator_Id     OperatorId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
-                          TimeSpan?           QueryTimeout  = null)
+
+                          DateTime?           Timestamp          = null,
+                          CancellationToken?  CancellationToken  = null,
+                          EventTracking_Id    EventTrackingId    = null,
+                          TimeSpan?           RequestTimeout     = null)
         {
 
             #region Send OnAuthorizeStop event
@@ -2067,14 +2075,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnAuthorizeStop?.Invoke(Timestamp,
+                OnAuthorizeStop?.Invoke(DateTime.Now,
                                         this,
                                         EventTrackingId,
                                         RoamingNetwork.Id,
                                         OperatorId,
                                         SessionId,
                                         AuthToken,
-                                        QueryTimeout);
+                                        RequestTimeout);
 
             }
             catch (Exception e)
@@ -2085,15 +2093,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
 
-            var response = await CPORoaming.AuthorizeStop(Timestamp,
-                                                          CancellationToken,
-                                                          EventTrackingId,
-                                                          OperatorId,
+            var response = await CPORoaming.AuthorizeStop(OperatorId,
                                                           SessionId,
                                                           AuthToken,
                                                           null,
                                                           null,
-                                                          QueryTimeout);
+
+                                                          Timestamp,
+                                                          CancellationToken,
+                                                          EventTrackingId,
+                                                          RequestTimeout);
 
 
             AuthStopResult result = null;
@@ -2121,14 +2130,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnAuthorizeStopped?.Invoke(Timestamp,
+                OnAuthorizeStopped?.Invoke(DateTime.Now,
                                            this,
                                            EventTrackingId,
                                            RoamingNetwork.Id,
                                            OperatorId,
                                            SessionId,
                                            AuthToken,
-                                           QueryTimeout,
+                                           RequestTimeout,
                                            result);
 
             }
@@ -2161,25 +2170,42 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="EVSEId">The unique identification of an EVSE.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStopEVSEResult>
 
-            AuthorizeStop(DateTime            Timestamp,
-                          CancellationToken   CancellationToken,
-                          EventTracking_Id    EventTrackingId,
-                          EVSEOperator_Id     OperatorId,
+            AuthorizeStop(EVSEOperator_Id     OperatorId,
                           EVSE_Id             EVSEId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
-                          TimeSpan?           QueryTimeout  = null)
+
+                          DateTime?           Timestamp          = null,
+                          CancellationToken?  CancellationToken  = null,
+                          EventTracking_Id    EventTrackingId    = null,
+                          TimeSpan?           RequestTimeout     = null)
         {
+
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
+
+            if (EVSEId     == null)
+                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
+
+            if (SessionId  == null)
+                throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
+
+            if (AuthToken  == null)
+                throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
+
+            #endregion
 
             #region Send OnAuthorizeEVSEStop event
 
             try
             {
 
-                OnAuthorizeEVSEStop?.Invoke(Timestamp,
+                OnAuthorizeEVSEStop?.Invoke(DateTime.Now,
                                             this,
                                             EventTrackingId,
                                             RoamingNetwork.Id,
@@ -2187,7 +2213,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                             EVSEId,
                                             SessionId,
                                             AuthToken,
-                                            QueryTimeout);
+                                            RequestTimeout);
 
             }
             catch (Exception e)
@@ -2198,17 +2224,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
 
-            var response  = await CPORoaming.AuthorizeStop(Timestamp,
-                                                           CancellationToken,
-                                                           EventTrackingId,
-                                                           OperatorId,
+            var response  = await CPORoaming.AuthorizeStop(OperatorId,
                                                            SessionId,
                                                            AuthToken,
                                                            EVSEId,
                                                            null,
-                                                           QueryTimeout);
 
-
+                                                           Timestamp,
+                                                           CancellationToken,
+                                                           EventTrackingId,
+                                                           RequestTimeout);
 
             AuthStopEVSEResult result = null;
 
@@ -2235,7 +2260,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnAuthorizeEVSEStopped?.Invoke(Timestamp,
+                OnAuthorizeEVSEStopped?.Invoke(DateTime.Now,
                                                this,
                                                EventTrackingId,
                                                RoamingNetwork.Id,
@@ -2243,7 +2268,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                EVSEId,
                                                SessionId,
                                                AuthToken,
-                                               QueryTimeout,
+                                               RequestTimeout,
                                                result);
 
             }
@@ -2272,30 +2297,34 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ChargingStationId">A charging station identification.</param>
         /// <param name="SessionId">The session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStopChargingStationResult>
 
-            AuthorizeStop(DateTime            Timestamp,
-                          CancellationToken   CancellationToken,
-                          EventTracking_Id    EventTrackingId,
-                          EVSEOperator_Id     OperatorId,
+            AuthorizeStop(EVSEOperator_Id     OperatorId,
                           ChargingStation_Id  ChargingStationId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
-                          TimeSpan?           QueryTimeout  = null)
+
+                          DateTime?           Timestamp          = null,
+                          CancellationToken?  CancellationToken  = null,
+                          EventTracking_Id    EventTrackingId    = null,
+                          TimeSpan?           RequestTimeout     = null)
 
         {
 
             #region Initial checks
 
-            if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
+            if (OperatorId         == null)
+                throw new ArgumentNullException(nameof(OperatorId),         "The given EVSE operator identification must not be null!");
 
-            if (SessionId  == null)
-                throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
+            if (ChargingStationId  == null)
+                throw new ArgumentNullException(nameof(ChargingStationId),  "The given EVSE identification must not be null!");
 
-            if (AuthToken  == null)
-                throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
+            if (SessionId          == null)
+                throw new ArgumentNullException(nameof(SessionId),          "The given charging session identification must not be null!");
+
+            if (AuthToken          == null)
+                throw new ArgumentNullException(nameof(AuthToken),          "The given authentication token must not be null!");
 
             #endregion
 
@@ -2304,7 +2333,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnAuthorizeChargingStationStop?.Invoke(Timestamp,
+                OnAuthorizeChargingStationStop?.Invoke(DateTime.Now,
                                                        this,
                                                        EventTrackingId,
                                                        RoamingNetwork.Id,
@@ -2312,7 +2341,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                        ChargingStationId,
                                                        SessionId,
                                                        AuthToken,
-                                                       QueryTimeout);
+                                                       RequestTimeout);
 
             }
             catch (Exception e)
@@ -2323,7 +2352,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
 
-            var result = AuthStopChargingStationResult.Error(AuthorizatorId, "Not implemented!");
+            var result = AuthStopChargingStationResult.Error(AuthorizatorId,
+                                                             "OICP does not support this request!");
 
 
             #region Send OnAuthorizeChargingStationStopped event
@@ -2331,7 +2361,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnAuthorizeChargingStationStopped?.Invoke(Timestamp,
+                OnAuthorizeChargingStationStopped?.Invoke(DateTime.Now,
                                                           this,
                                                           EventTrackingId,
                                                           RoamingNetwork.Id,
@@ -2339,7 +2369,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                           ChargingStationId,
                                                           SessionId,
                                                           AuthToken,
-                                                          QueryTimeout,
+                                                          RequestTimeout,
                                                           result);
 
             }
