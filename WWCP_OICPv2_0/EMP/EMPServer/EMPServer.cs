@@ -880,22 +880,38 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     if (response == null)
                     {
 
-                        var OnChargeDetailRecordLocal = OnChargeDetailRecord;
-                        if (OnChargeDetailRecordLocal != null)
-                        {
+                        //var OnChargeDetailRecordLocal = OnChargeDetailRecord;
+                        //if (OnChargeDetailRecordLocal != null)
+                        //{
+                        //
+                        //    var CTS = new CancellationTokenSource();
+                        //
+                        //    var task = OnChargeDetailRecord(DateTime.Now,
+                        //                                    CTS.Token,
+                        //                                    EventTracking_Id.New,
+                        //                                    CDR,
+                        //                                    DefaultQueryTimeout);
+                        //
+                        //    task.Wait();
+                        //    response = task.Result;
+                        //
+                        //}
 
-                            var CTS = new CancellationTokenSource();
 
-                            var task = OnChargeDetailRecord(DateTime.Now,
-                                                            CTS.Token,
-                                                            EventTracking_Id.New,
-                                                            CDR,
-                                                            DefaultQueryTimeout);
 
-                            task.Wait();
-                            response = task.Result;
+                        var results = OnChargeDetailRecord.GetInvocationList().
+                             Select(subscriber => (subscriber as OnChargeDetailRecordDelegate)
+                                                        (DateTime.Now,
+                                                         Request.CancellationToken,
+                                                         Request.EventTrackingId,
+                                                         CDR,
+                                                         DefaultQueryTimeout));
 
-                        }
+                        var task = Task.WhenAll(results);
+
+                        task.Wait();
+
+                        response = results.FirstOrDefault()?.Result;
 
                     }
 
