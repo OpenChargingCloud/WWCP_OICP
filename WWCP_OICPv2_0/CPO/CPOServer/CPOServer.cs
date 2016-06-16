@@ -166,7 +166,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                          HTTPMethod.GET,
                                          new String[] { "/", URIPrefix + "/" },
                                          HTTPContentType.TEXT_UTF8,
-                                         HTTPDelegate: Request => {
+                                         HTTPDelegate: async Request => {
 
                                              return new HTTPResponseBuilder(Request) {
 
