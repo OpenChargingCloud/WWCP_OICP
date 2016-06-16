@@ -268,10 +268,220 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this.EMPRoaming            = EMPRoaming;
             this._EVSEDataRecord2EVSE  = EVSEDataRecord2EVSE;
 
-            // Link AuthorizeStart/-Stop and CDR events
-            this.EMPRoaming.OnAuthorizeStart     += SendAuthorizeStart;
-            this.EMPRoaming.OnAuthorizeStop      += SendAuthorizeStop;
-            this.EMPRoaming.OnChargeDetailRecord += SendChargeDetailRecord;
+            // Link events...
+
+            #region OnAuthorizeStart
+
+            this.EMPRoaming.OnAuthorizeStart += async (Timestamp,
+                                                       Sender,
+                                                       CancellationToken,
+                                                       EventTrackingId,
+                                                       OperatorId,
+                                                       AuthToken,
+                                                       EVSEId,
+                                                       SessionId,
+                                                       PartnerProductId,
+                                                       PartnerSessionId,
+                                                       QueryTimeout) => {
+
+
+                var response = await RoamingNetwork.AuthorizeStart(Timestamp,
+                                                                   CancellationToken,
+                                                                   EventTrackingId,
+                                                                   OperatorId,
+                                                                   AuthToken,
+                                                                   EVSEId,
+                                                                   PartnerProductId,
+                                                                   SessionId,
+                                                                   QueryTimeout);
+
+                if (response != null)
+                {
+                    switch (response.Result)
+                    {
+
+                        case AuthStartEVSEResultType.Authorized:
+                            return new eRoamingAuthorizationStart(response.SessionId,
+                                                                  null,
+                                                                  response.ProviderId,
+                                                                  "Ready to charge!",
+                                                                  null,
+                                                                  response.ListOfAuthStopTokens.
+                                                                      SafeSelect(token => new AuthorizationIdentification(AuthInfo.FromAuthToken(token))));
+
+                        case AuthStartEVSEResultType.NotAuthorized:
+                            return new eRoamingAuthorizationStart(StatusCodes.RFIDAuthenticationfailed_InvalidUID,
+                                                                  "RFID Authentication failed - invalid UID");
+
+                        case AuthStartEVSEResultType.InvalidSessionId:
+                            return new eRoamingAuthorizationStart(StatusCodes.SessionIsInvalid,
+                                                                  "Session is invalid");
+
+                        case AuthStartEVSEResultType.EVSECommunicationTimeout:
+                            return new eRoamingAuthorizationStart(StatusCodes.CommunicationToEVSEFailed,
+                                                                  "Communication to EVSE failed!");
+
+                        case AuthStartEVSEResultType.StartChargingTimeout:
+                            return new eRoamingAuthorizationStart(StatusCodes.NoEVConnectedToEVSE,
+                                                                  "No EV connected to EVSE!");
+
+                        case AuthStartEVSEResultType.Reserved:
+                            return new eRoamingAuthorizationStart(StatusCodes.EVSEAlreadyReserved,
+                                                                  "EVSE already reserved!");
+
+                        case AuthStartEVSEResultType.UnknownEVSE:
+                            return new eRoamingAuthorizationStart(StatusCodes.UnknownEVSEID,
+                                                                  "Unknown EVSE ID!");
+
+                        case AuthStartEVSEResultType.OutOfService:
+                            return new eRoamingAuthorizationStart(StatusCodes.EVSEOutOfService,
+                                                                  "EVSE out of service!");
+
+                    }
+                }
+
+                return new eRoamingAuthorizationStart(StatusCodes.ServiceNotAvailable,
+                                                      "Service not available!",
+                                                      SessionId:  response?.SessionId ?? SessionId,
+                                                      ProviderId: response?.ProviderId);
+
+            };
+
+            #endregion
+
+            #region OnAuthorizeStop
+
+            this.EMPRoaming.OnAuthorizeStop += async (Timestamp,
+                                                      Sender,
+                                                      CancellationToken,
+                                                      EventTrackingId,
+                                                      SessionId,
+                                                      PartnerSessionId,
+                                                      OperatorId,
+                                                      EVSEId,
+                                                      AuthToken,
+                                                      QueryTimeout) => {
+
+
+                var response = await RoamingNetwork.AuthorizeStop(Timestamp,
+                                                                  CancellationToken,
+                                                                  EventTrackingId,
+                                                                  OperatorId,
+                                                                  SessionId,
+                                                                  AuthToken,
+                                                                  EVSEId,
+                                                                  QueryTimeout);
+
+                if (response != null)
+                {
+                    switch (response.Result)
+                    {
+
+                        case AuthStopEVSEResultType.Authorized:
+                            return new eRoamingAuthorizationStop(response.SessionId,
+                                                                 response.ProviderId,
+                                                                 null,
+                                                                 "Ready to stop charging!");
+
+                        case AuthStopEVSEResultType.InvalidSessionId:
+                            return new eRoamingAuthorizationStop(StatusCodes.SessionIsInvalid,
+                                                                 "Session is invalid");
+
+                        case AuthStopEVSEResultType.EVSECommunicationTimeout:
+                            return new eRoamingAuthorizationStop(StatusCodes.CommunicationToEVSEFailed,
+                                                                 "Communication to EVSE failed!");
+
+                        case AuthStopEVSEResultType.StopChargingTimeout:
+                            return new eRoamingAuthorizationStop(StatusCodes.NoEVConnectedToEVSE,
+                                                                 "No EV connected to EVSE!");
+
+                        case AuthStopEVSEResultType.UnknownEVSE:
+                            return new eRoamingAuthorizationStop(StatusCodes.UnknownEVSEID,
+                                                                 "Unknown EVSE ID!");
+
+                        case AuthStopEVSEResultType.OutOfService:
+                            return new eRoamingAuthorizationStop(StatusCodes.EVSEOutOfService,
+                                                                 "EVSE out of service!");
+
+                    }
+                }
+
+                return new eRoamingAuthorizationStop(StatusCodes.ServiceNotAvailable,
+                                                     "Service not available!",
+                                                     SessionId:  response?.SessionId ?? SessionId,
+                                                     ProviderId: response?.ProviderId);
+
+            };
+
+            #endregion
+
+            #region OnChargeDetailRecord
+
+            this.EMPRoaming.OnChargeDetailRecord += async (Timestamp,
+                                                           Sender,
+                                                           CancellationToken,
+                                                           EventTrackingId,
+                                                           ChargeDetailRecord,
+                                                           QueryTimeout) => {
+
+
+                var response = await RoamingNetwork.SendChargeDetailRecord(Timestamp,
+                                                                           CancellationToken,
+                                                                           EventTrackingId,
+                                                                           OICPMapper.AsWWCPChargeDetailRecord(ChargeDetailRecord),
+                                                                           QueryTimeout);
+
+                if (response != null)
+                {
+                    switch (response.Status)
+                    {
+
+                        case SendCDRResultType.Forwarded:
+                            return new eRoamingAcknowledgement(StatusCodes.Success,
+                                                               "Charge detail record forwarded!",
+                                                               null,
+                                                               ChargeDetailRecord?.SessionId,
+                                                               ChargeDetailRecord?.PartnerSessionId);
+
+                        case SendCDRResultType.NotForwared:
+                            return new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                               "Communication to EVSE failed!",
+                                                               null,
+                                                               ChargeDetailRecord?.SessionId,
+                                                               ChargeDetailRecord?.PartnerSessionId);
+
+                        case SendCDRResultType.InvalidSessionId:
+                            return new eRoamingAcknowledgement(StatusCodes.SessionIsInvalid,
+                                                               "Session is invalid",
+                                                               null,
+                                                               ChargeDetailRecord?.SessionId,
+                                                               ChargeDetailRecord?.PartnerSessionId);
+
+                        case SendCDRResultType.UnknownEVSE:
+                            return new eRoamingAcknowledgement(StatusCodes.UnknownEVSEID,
+                                                               "Unknown EVSE ID!",
+                                                               null,
+                                                               ChargeDetailRecord?.SessionId,
+                                                               ChargeDetailRecord?.PartnerSessionId);
+
+                        case SendCDRResultType.Error:
+                            return new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                               "Data Error!",
+                                                               null,
+                                                               ChargeDetailRecord?.SessionId,
+                                                               ChargeDetailRecord?.PartnerSessionId);
+
+                    }
+                }
+
+                return new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                   "Service not available!",
+                                                   null,
+                                                   ChargeDetailRecord?.SessionId);
+
+            };
+
+            #endregion
 
         }
 
@@ -1453,120 +1663,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return new WWCP.ChargeDetailRecord[0];
 
-        }
-
-        #endregion
-
-
-
-        // EMPServer methods
-
-        #region (private) SendAuthorizeStart(...)
-
-        private async Task<AuthStartEVSEResult>
-
-            SendAuthorizeStart(DateTime            Timestamp,
-                               EMPServer           Sender,
-                               CancellationToken   CancellationToken,
-                               EventTracking_Id    EventTrackingId,
-                               EVSEOperator_Id     OperatorId,
-                               Auth_Token          AuthToken,
-                               EVSE_Id             EVSEId            = null,
-                               ChargingSession_Id  SessionId         = null,
-                               ChargingProduct_Id  PartnerProductId  = null,
-                               ChargingSession_Id  PartnerSessionId  = null,
-                               TimeSpan?           QueryTimeout      = null)
-
-        {
-
-            var OnAuthorizeStartLocal = OnAuthorizeStartEVSE;
-            if (OnAuthorizeStartLocal != null)
-            {
-
-                return await OnAuthorizeStartLocal(Timestamp,
-                                                   CancellationToken,
-                                                   EventTrackingId,
-                                                   OperatorId,
-                                                   AuthToken,
-                                                   EVSEId,
-                                                   PartnerProductId,
-                                                   SessionId,
-                                                   QueryTimeout);
-
-            }
-
-            else
-                return AuthStartEVSEResult.OutOfService(AuthorizatorId);
-
-        }
-
-        #endregion
-
-        #region (private) SendAuthorizeStop(...)
-
-        private async Task<AuthStopEVSEResult>
-
-            SendAuthorizeStop(DateTime            Timestamp,
-                              EMPServer           Sender,
-                              CancellationToken   CancellationToken,
-                              EventTracking_Id    EventTrackingId,
-                              ChargingSession_Id  SessionId,
-                              ChargingSession_Id  PartnerSessionId,
-                              EVSEOperator_Id     OperatorId,
-                              EVSE_Id             EVSEId,
-                              Auth_Token          AuthToken,
-                              TimeSpan?           QueryTimeout  = null)
-
-        {
-
-            var OnAuthorizeStopEVSELocal = OnAuthorizeStopEVSE;
-            if (OnAuthorizeStopEVSELocal != null)
-            {
-
-                return await OnAuthorizeStopEVSELocal(Timestamp,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      OperatorId,
-                                                      EVSEId,
-                                                      SessionId,
-                                                      AuthToken,
-                                                      QueryTimeout);
-
-            }
-
-            else
-                return AuthStopEVSEResult.OutOfService(AuthorizatorId);
-
-        }
-
-        #endregion
-
-        #region (private) SendChargeDetailRecord(...)
-
-        private async Task<SendCDRResult>
-
-            SendChargeDetailRecord(DateTime                    Timestamp,
-                                   CancellationToken           CancellationToken,
-                                   EventTracking_Id            EventTrackingId,
-                                   ChargeDetailRecord  ChargeDetailRecord,
-                                   TimeSpan?                   QueryTimeout = null)
-
-        {
-
-            var OnChargeDetailRecordLocal = OnChargeDetailRecord;
-            if (OnChargeDetailRecordLocal != null)
-            {
-
-                return await OnChargeDetailRecordLocal(Timestamp,
-                                                       CancellationToken,
-                                                       EventTrackingId,
-                                                       ChargeDetailRecord.AsWWCPChargeDetailRecord(),
-                                                       QueryTimeout);
-
-            }
-
-            else
-                return SendCDRResult.OutOfService(AuthorizatorId);
         }
 
         #endregion

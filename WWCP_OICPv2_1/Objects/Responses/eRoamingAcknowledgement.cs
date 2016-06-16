@@ -36,89 +36,185 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region Result
-
-        private readonly Boolean _Result;
-
         /// <summary>
         /// The result of the operation.
         /// </summary>
-        public Boolean Result => _Result;
-
-        #endregion
-
-        #region StatusCode
-
-        private readonly StatusCode _StatusCode;
+        public Boolean             Result              { get; }
 
         /// <summary>
         /// The status code of the operation.
         /// </summary>
-        public StatusCode StatusCode => _StatusCode;
-
-        #endregion
-
-        #region SessionId
-
-        private readonly ChargingSession_Id _SessionId;
+        public StatusCode          StatusCode          { get; }
 
         /// <summary>
         /// An optional charging session identification for
         /// RemoteReservationStart and RemoteStart requests.
         /// </summary>
-        public ChargingSession_Id SessionId => _SessionId;
-
-        #endregion
-
-        #region PartnerSessionId
-
-        private readonly ChargingSession_Id _PartnerSessionId;
+        public ChargingSession_Id  SessionId           { get; }
 
         /// <summary>
         /// An optional partner charging session identification for
         /// RemoteReservationStart and RemoteStart requests.
         /// </summary>
-        public ChargingSession_Id PartnerSessionId => _PartnerSessionId;
-
-        #endregion
+        public ChargingSession_Id  PartnerSessionId    { get; }
 
         #endregion
 
         #region Constructor(s)
 
+        #region (private) eRoamingAcknowledgement(Result, StatusCode, ...)
+
         /// <summary>
         /// Create a new OICP acknowledgement.
         /// </summary>
         /// <param name="Result">The result of the operation.</param>
-        /// <param name="Code">The result code of the operation.</param>
-        /// <param name="Description">The description of the result code.</param>
-        /// <param name="AdditionalInfo">Additional information.</param>
+        /// <param name="StatusCode">The status code of the operation.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
-        public eRoamingAcknowledgement(Boolean             Result,
-                                       Int32               Code,
-                                       String              Description       = null,
-                                       String              AdditionalInfo    = null,
-                                       ChargingSession_Id  SessionId         = null,
-                                       ChargingSession_Id  PartnerSessionId  = null)
+        private eRoamingAcknowledgement(Boolean             Result,
+                                        StatusCode          StatusCode,
+                                        ChargingSession_Id  SessionId         = null,
+                                        ChargingSession_Id  PartnerSessionId  = null)
         {
 
-            this._Result            = Result;
-            this._StatusCode        = new StatusCode(Code,
-                                                     Description    ?? String.Empty,
-                                                     AdditionalInfo ?? String.Empty);
-            this._SessionId         = SessionId;
-            this._PartnerSessionId  = PartnerSessionId;
+            this.Result            = Result;
+            this.StatusCode        = StatusCode;
+            this.SessionId         = SessionId;
+            this.PartnerSessionId  = PartnerSessionId;
 
         }
 
         #endregion
 
+        #region eRoamingAcknowledgement(SessionId, ...)
+
+        /// <summary>
+        /// Create a new OICP 'positive' acknowledgement.
+        /// </summary>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        public eRoamingAcknowledgement(ChargingSession_Id  SessionId,
+                                       ChargingSession_Id  PartnerSessionId          = null,
+                                       String              StatusCodeDescription     = null,
+                                       String              StatusCodeAdditionalInfo  = null)
+
+            : this(true,
+                   new StatusCode(StatusCodes.Success,
+                                  StatusCodeDescription,
+                                  StatusCodeAdditionalInfo),
+                   SessionId,
+                   PartnerSessionId)
+
+        { }
+
+        #endregion
+
+        #region eRoamingAcknowledgement(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'negative' acknowledgement.
+        /// </summary>
+        /// <param name="StatusCode">The status code of the operation.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public eRoamingAcknowledgement(StatusCodes         StatusCode,
+                                       String              StatusCodeDescription     = null,
+                                       String              StatusCodeAdditionalInfo  = null,
+                                       ChargingSession_Id  SessionId                 = null,
+                                       ChargingSession_Id  PartnerSessionId          = null)
+
+            : this(false,
+                   new StatusCode(StatusCode,
+                                  StatusCodeDescription,
+                                  StatusCodeAdditionalInfo),
+                   SessionId,
+                   PartnerSessionId)
+
+        { }
+
+        #endregion
+
+        #endregion
+
+
+        #region Documentation
+
+        // <?xml version='1.0' encoding='UTF-8'?>
+        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
+        //   <soapenv:Body>
+        //     <CommonTypes:eRoamingAcknowledgement>
+        //
+        //       <CommonTypes:Result>true</CommonTypes:Result>
+        //
+        //       <CommonTypes:StatusCode>
+        //         <CommonTypes:Code>000</CommonTypes:Code>
+        //         <CommonTypes:Description>Success</CommonTypes:Description>
+        //         <CommonTypes:AdditionalInfo />
+        //       </CommonTypes:StatusCode>
+        //
+        //     </CommonTypes:eRoamingAcknowledgement>
+        //   </soapenv:Body>
+        //
+        // </soapenv:Envelope>
+
+        // <?xml version='1.0' encoding='UTF-8'?>
+        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
+        //   <soapenv:Body>
+        //     <CommonTypes:eRoamingAcknowledgement>
+        //
+        //       <CommonTypes:Result>true</CommonTypes:Result>
+        //
+        //       <CommonTypes:StatusCode>
+        //         <CommonTypes:Code>009</CommonTypes:Code>
+        //         <CommonTypes:Description>Data transaction error</CommonTypes:Description>
+        //         <CommonTypes:AdditionalInfo>The Push of data is already in progress.</CommonTypes:AdditionalInfo>
+        //       </CommonTypes:StatusCode>
+        //
+        //     </CommonTypes:eRoamingAcknowledgement>
+        //   </soapenv:Body>
+        //
+        // </soapenv:Envelope>
+
+        // HTTP/1.1 200 OK
+        // Date: Tue, 31 May 2016 03:15:36 GMT
+        // Content-Type: text/xml;charset=utf-8
+        // Connection: close
+        // Transfer-Encoding: chunked
+        // 
+        // <?xml version='1.0' encoding='UTF-8'?>
+        // <soapenv:Envelope xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/v2.0"
+        //                   xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/">
+        //
+        //   <soapenv:Body>
+        //     <CommonTypes:eRoamingAcknowledgement>
+        //
+        //       <CommonTypes:Result>true</CommonTypes:Result>
+        //
+        //       <CommonTypes:StatusCode>
+        //         <CommonTypes:Code>000</CommonTypes:Code>
+        //         <CommonTypes:Description>Success</CommonTypes:Description>
+        //       </CommonTypes:StatusCode>
+        //
+        //       <CommonTypes:SessionID>04cf39ad-0a88-1295-27dc-d593d1a076ac</CommonTypes:SessionID>
+        //
+        //     </CommonTypes:eRoamingAcknowledgement>
+        //   </soapenv:Body>
+        // </soapenv:Envelope>
+
+        #endregion
 
         #region (static) Parse(XML)
 
         /// <summary>
-        /// Create a new Hubject Acknowledgement result.
+        /// Try to parse the given XML representation of an OICP acknowledgement.
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
         public static eRoamingAcknowledgement Parse(XElement XML)
@@ -138,89 +234,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region (static) TryParse(XML, out Acknowledgement)
 
         /// <summary>
-        /// Create a new Hubject Acknowledgement result.
+        /// Parse the given XML representation of an OICP acknowledgement.
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement</param>
         public static Boolean TryParse(XElement XML, out eRoamingAcknowledgement Acknowledgement)
         {
 
-            #region Documentation
-
-            // <?xml version='1.0' encoding='UTF-8'?>
-            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            //
-            //   <soapenv:Body>
-            //     <CommonTypes:eRoamingAcknowledgement>
-            //
-            //       <CommonTypes:Result>true</CommonTypes:Result>
-            //
-            //       <CommonTypes:StatusCode>
-            //         <CommonTypes:Code>000</CommonTypes:Code>
-            //         <CommonTypes:Description>Success</CommonTypes:Description>
-            //         <CommonTypes:AdditionalInfo />
-            //       </CommonTypes:StatusCode>
-            //
-            //     </CommonTypes:eRoamingAcknowledgement>
-            //   </soapenv:Body>
-            //
-            // </soapenv:Envelope>
-
-            // <?xml version='1.0' encoding='UTF-8'?>
-            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            //
-            //   <soapenv:Body>
-            //     <CommonTypes:eRoamingAcknowledgement>
-            //
-            //       <CommonTypes:Result>true</CommonTypes:Result>
-            //
-            //       <CommonTypes:StatusCode>
-            //         <CommonTypes:Code>009</CommonTypes:Code>
-            //         <CommonTypes:Description>Data transaction error</CommonTypes:Description>
-            //         <CommonTypes:AdditionalInfo>The Push of data is already in progress.</CommonTypes:AdditionalInfo>
-            //       </CommonTypes:StatusCode>
-            //
-            //     </CommonTypes:eRoamingAcknowledgement>
-            //   </soapenv:Body>
-            //
-            // </soapenv:Envelope>
-
-            // HTTP/1.1 200 OK
-            // Date: Tue, 31 May 2016 03:15:36 GMT
-            // Content-Type: text/xml;charset=utf-8
-            // Connection: close
-            // Transfer-Encoding: chunked
-            // 
-            // <?xml version='1.0' encoding='UTF-8'?>
-            // <soapenv:Envelope xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/v2.0"
-            //                   xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/">
-            //
-            //   <soapenv:Body>
-            //     <CommonTypes:eRoamingAcknowledgement>
-            //
-            //       <CommonTypes:Result>true</CommonTypes:Result>
-            //
-            //       <CommonTypes:StatusCode>
-            //         <CommonTypes:Code>000</CommonTypes:Code>
-            //         <CommonTypes:Description>Success</CommonTypes:Description>
-            //       </CommonTypes:StatusCode>
-            //
-            //       <CommonTypes:SessionID>04cf39ad-0a88-1295-27dc-d593d1a076ac</CommonTypes:SessionID>
-            //
-            //     </CommonTypes:eRoamingAcknowledgement>
-            //   </soapenv:Body>
-            // </soapenv:Envelope>
-
-            #endregion
 
             Acknowledgement = null;
 
             try
             {
 
-                // The eRoamingAcknowledgement might be top-level or nested!
                 var AcknowledgementXML  = XML.Descendants(OICPNS.CommonTypes + "eRoamingAcknowledgement").
                                               FirstOrDefault();
 
@@ -230,30 +256,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (AcknowledgementXML == null)
                     return false;
 
-                var Result          = (AcknowledgementXML.ElementValueOrFail(OICPNS.CommonTypes + "Result", "Missing 'Result'-XML-tag!") == "true")
-                                           ? true
-                                           : false;
-
-                var SessionId         = AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "SessionID",        ChargingSession_Id.Parse);
-                var PartnerSessionId  = AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "PartnerSessionID", ChargingSession_Id.Parse);
-
-
-                var StatusCodeXML     = AcknowledgementXML.ElementOrFail    (OICPNS.CommonTypes + "StatusCode",
-                                                                             "Missing 'StatusCode'-XML-tag!");
-
-                var Code              = StatusCodeXML.MapValueOrFail        (OICPNS.CommonTypes + "Code",             Int16.Parse,
-                                                                             "Invalid or missing 'StatusCode/Code' XML-tag!");
-
-                var Description       = StatusCodeXML.ElementValueOrDefault (OICPNS.CommonTypes + "Description");
-
-                var AdditionalInfo    = StatusCodeXML.ElementValueOrDefault (OICPNS.CommonTypes + "AdditionalInfo");
-
-                Acknowledgement = new eRoamingAcknowledgement(Result,
-                                                              Code,
-                                                              Description    ?? "",
-                                                              AdditionalInfo ?? "",
-                                                              SessionId,
-                                                              PartnerSessionId);
+                Acknowledgement = new eRoamingAcknowledgement((AcknowledgementXML.ElementValueOrFail(OICPNS.CommonTypes + "Result", "Missing 'Result'-XML-tag!") == "true")
+                                                                  ? true
+                                                                  : false,
+                                                              StatusCode.Parse(AcknowledgementXML.ElementOrFail(OICPNS.CommonTypes + "StatusCode",
+                                                                                                                "Missing 'StatusCode'-XML-tag!")),
+                                                              AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "SessionID", ChargingSession_Id.Parse),
+                                                              AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "PartnerSessionID", ChargingSession_Id.Parse));
 
                 return true;
 
@@ -267,29 +276,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-
         #region ToXML
 
         /// <summary>
         /// Return a XML-representation of this object.
         /// </summary>
-        public XElement ToXML => new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+        public XElement ToXML() => new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                                     new XElement(OICPNS.CommonTypes + "Result", _Result),
+                                       new XElement(OICPNS.CommonTypes + "Result", Result),
 
-                                     _StatusCode.ToXML,
+                                       StatusCode.ToXML(),
 
-                                     _SessionId != null
-                                         ? new XElement(OICPNS.CommonTypes + "SessionID",         _SessionId.ToString())
-                                         : null,
+                                       SessionId != null
+                                           ? new XElement(OICPNS.CommonTypes + "SessionID",         SessionId.ToString())
+                                           : null,
 
-                                     _PartnerSessionId != null
-                                         ? new XElement(OICPNS.CommonTypes + "PartnerSessionID",  _PartnerSessionId.ToString())
-                                         : null
+                                       PartnerSessionId != null
+                                           ? new XElement(OICPNS.CommonTypes + "PartnerSessionID",  PartnerSessionId.ToString())
+                                           : null
 
-                               );
+                                 );
 
         #endregion
+
 
         #region (override) ToString()
 
@@ -297,9 +306,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Return a string representation of this object.
         /// </summary>
         public override String ToString()
-        {
-            return String.Concat("Result: " + _Result + "; " + _StatusCode.Code, " / ", _StatusCode.Description, " / ", _StatusCode.AdditionalInfo);
-        }
+            => String.Concat("Result: " + Result + "; " + StatusCode.Code, " / ", StatusCode.Description, " / ", StatusCode.AdditionalInfo);
 
         #endregion
 

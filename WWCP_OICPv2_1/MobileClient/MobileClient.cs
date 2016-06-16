@@ -201,8 +201,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
                                                    return new HTTPResponse<eRoamingMobileAuthorizationStart>(httpresponse,
-                                                                                                             new eRoamingMobileAuthorizationStart(-1,
-                                                                                                                                                  Description: httpresponse.Content.ToString()),
+                                                                                                             new eRoamingMobileAuthorizationStart(StatusCodes.SystemError,
+                                                                                                                                                  httpresponse.Content.ToString()),
                                                                                                              IsFault: true);
 
                                                },
@@ -216,9 +216,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                    return new HTTPResponse<eRoamingMobileAuthorizationStart>(httpresponse,
-                                                                                                             new eRoamingMobileAuthorizationStart(-1,
-                                                                                                                                                  Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                  AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                             new eRoamingMobileAuthorizationStart(StatusCodes.SystemError,
+                                                                                                                                                  httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                                  httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                              IsFault: true);
 
                                                },
@@ -286,9 +286,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
                                                    return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(false,
-                                                                                                                                -1,
-                                                                                                                                Description: httpresponse.Content.ToString()),
+                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                httpresponse.Content.ToString()),
                                                                                                     IsFault: true);
 
                                                },
@@ -302,10 +301,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                    return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(false,
-                                                                                                                                -1,
-                                                                                                                                Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                     IsFault: true);
 
                                                },
@@ -373,9 +371,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
                                                    return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(false,
-                                                                                                                                -1,
-                                                                                                                                Description: httpresponse.Content.ToString()),
+                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                httpresponse.Content.ToString()),
                                                                                                     IsFault: true);
 
                                                },
@@ -389,10 +386,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                    return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(false,
-                                                                                                                                -1,
-                                                                                                                                Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                     IsFault: true);
 
                                                },
