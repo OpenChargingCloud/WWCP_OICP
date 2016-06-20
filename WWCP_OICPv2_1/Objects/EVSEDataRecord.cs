@@ -901,7 +901,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public Builder ToBuilder(EVSE_Id NewEVSEId = null)
         {
 
-            return new Builder(NewEVSEId ?? this.EVSEId);
+            return new Builder(NewEVSEId ?? this.EVSEId)
+            {
+
+                DeltaType                 = DeltaType,
+                LastUpdate                = LastUpdate,
+                
+                ChargingStationId         = ChargingStationId,
+                ChargingStationName       = ChargingStationName,
+                Address                   = Address,
+                GeoCoordinate             = GeoCoordinate,
+                Plugs                     = Plugs,
+                ChargingModes             = ChargingModes,
+                ChargingFacilities        = ChargingFacilities,
+                AuthenticationModes       = AuthenticationModes,
+                MaxCapacity               = MaxCapacity,
+                PaymentOptions            = PaymentOptions,
+                ValueAddedServices        = ValueAddedServices,
+                Accessibility             = Accessibility,
+                HotlinePhoneNumber        = HotlinePhoneNumber,
+                AdditionalInfo            = AdditionalInfo,
+                GeoChargingPointEntrance  = GeoChargingPointEntrance,
+                HubOperatorId             = HubOperatorId,
+                ClearingHouseId           = ClearingHouseId,
+                IsHubjectCompatible       = IsHubjectCompatible,
+                DynamicInfoAvailable      = DynamicInfoAvailable,
+
+                OpeningTime               = OpeningTime
+
+            };
 
         }
 

@@ -31,25 +31,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public enum PlugTypes
     {
 
-        Unspecified,
-        SmallPaddleInductive,
-        LargePaddleInductive,
-        AVCONConnector,
-        TeslaConnector,
-        NEMA5_20,
-        TypeEFrenchStandard,
-        TypeFSchuko,
-        TypeGBritishStandard,
-        TypeJSwissStandard,
-        Type1Connector_CableAttached,
-        Type2Outlet,
-        Type2Connector_CableAttached,
-        Type3Outlet,
-        IEC60309SinglePhase,
-        IEC60309ThreePhase,
-        CCSCombo2Plug_CableAttached,
-        CCSCombo1Plug_CableAttached,
-        CHAdeMO
+        Unspecified                     = 0,
+        SmallPaddleInductive            = 1,
+        LargePaddleInductive            = 1 <<  1,
+        AVCONConnector                  = 1 <<  2,
+        TeslaConnector                  = 1 <<  3,
+        NEMA5_20                        = 1 <<  4,
+        TypeEFrenchStandard             = 1 <<  5,
+        TypeFSchuko                     = 1 <<  6,
+        TypeGBritishStandard            = 1 <<  7,
+        TypeJSwissStandard              = 1 <<  8,
+        Type1Connector_CableAttached    = 1 <<  9,
+        Type2Outlet                     = 1 << 10,
+        Type2Connector_CableAttached    = 1 << 11,
+        Type3Outlet                     = 1 << 12,
+        IEC60309SinglePhase             = 1 << 13,
+        IEC60309ThreePhase              = 1 << 14,
+        CCSCombo2Plug_CableAttached     = 1 << 15,
+        CCSCombo1Plug_CableAttached     = 1 << 16,
+        CHAdeMO                         = 1 << 17
 
     }
 

@@ -34,32 +34,32 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Unknown charging mode.
         /// </summary>
-        Unspecified = 0,
+        Unspecified     = 0,
 
         /// <summary>
         /// IEC 61851-1 Mode 1
         /// </summary>
-        Mode_1,
+        Mode_1          = 1,
 
         /// <summary>
         /// IEC 61851-1 Mode 2
         /// </summary>
-        Mode_2,
+        Mode_2          = 2,
 
         /// <summary>
         /// IEC 61851-1 Mode 3
         /// </summary>
-        Mode_3,
+        Mode_3          = 4,
 
         /// <summary>
         /// IEC 61851-1 Mode 4
         /// </summary>
-        Mode_4,
+        Mode_4          = 8,
 
         /// <summary>
         /// CHAdeMO
         /// </summary>
-        CHAdeMO,
+        CHAdeMO         = 16
 
     }
 

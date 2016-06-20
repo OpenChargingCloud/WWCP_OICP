@@ -31,13 +31,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public enum PaymentOptions
     {
 
-        Unspecified,
-        Free,
-        Direct,         // e.g. Cash, Card, SMS
-        SMS,
-        Cash,
-        CreditCard,
-        Contract
+        Unspecified   = 0,
+        Free          = 1,
+        Direct        = 1 << 1,   // e.g. Cash, Card, SMS
+        SMS           = 1 << 2,
+        Cash          = 1 << 3,
+        CreditCard    = 1 << 4,
+        Contract      = 1 << 5
 
     }
 
