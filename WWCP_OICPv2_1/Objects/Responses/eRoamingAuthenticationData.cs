@@ -30,46 +30,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// A group of OICP v2.0 provider authentication data records.
+    /// A group of OICP provider authentication data records.
     /// </summary>
     public class eRoamingAuthenticationData
     {
 
         #region Properties
 
-        #region ProviderAuthenticationDataRecords
-
-        private readonly IEnumerable<ProviderAuthenticationData> _ProviderAuthenticationDataRecords;
-
         /// <summary>
         /// An enumeration of provider authentication data records.
         /// </summary>
-        public IEnumerable<ProviderAuthenticationData> ProviderAuthenticationDataRecords
-        {
-            get
-            {
-                return _ProviderAuthenticationDataRecords;
-            }
-        }
-
-        #endregion
-
-        #region StatusCode
-
-        private readonly StatusCode _StatusCode;
+        public IEnumerable<ProviderAuthenticationData> ProviderAuthenticationDataRecords  { get; }
 
         /// <summary>
         /// The status code for this request.
         /// </summary>
-        public StatusCode StatusCode
-        {
-            get
-            {
-                return _StatusCode;
-            }
-        }
-
-        #endregion
+        public StatusCode                              StatusCode                         { get; }
 
         #endregion
 
@@ -89,12 +65,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (ProviderAuthenticationDataRecords == null)
-                throw new ArgumentNullException("ProviderAuthenticationDataRecords", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(ProviderAuthenticationDataRecords),  "The given provider authentication data records must not be null!");
 
             #endregion
 
-            this._ProviderAuthenticationDataRecords  = ProviderAuthenticationDataRecords;
-            this._StatusCode                         = StatusCode != null ? StatusCode : new StatusCode(0);
+            this.ProviderAuthenticationDataRecords  = ProviderAuthenticationDataRecords;
+            this.StatusCode                         = StatusCode ?? new StatusCode(StatusCodes.SystemError);
 
         }
 
@@ -109,8 +85,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public eRoamingAuthenticationData(StatusCode StatusCode)
         {
 
-            this._ProviderAuthenticationDataRecords  = new ProviderAuthenticationData[0];
-            this._StatusCode                         = StatusCode != null ? StatusCode : new StatusCode(-1);
+            this.ProviderAuthenticationDataRecords  = new ProviderAuthenticationData[0];
+            this.StatusCode                         = StatusCode ?? new StatusCode(StatusCodes.DataError);
 
         }
 

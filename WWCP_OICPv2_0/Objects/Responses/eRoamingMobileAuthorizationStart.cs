@@ -29,142 +29,52 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// An abstract Hubject Authorization result.
+    /// An OICP authorization start response.
     /// </summary>
     public class eRoamingMobileAuthorizationStart
     {
 
         #region Properties
 
-        #region AuthorizationStatus
-
-        private readonly AuthorizationStatusType _AuthorizationStatus;
-
         /// <summary>
         /// The authorization status, e.g. "Authorized".
         /// </summary>
-        public AuthorizationStatusType AuthorizationStatus
-        {
-            get
-            {
-                return _AuthorizationStatus;
-            }
-        }
-
-        #endregion
-
-        #region GeoCoordinates
-
-        private readonly GeoCoordinate _GeoCoordinates;
+        public AuthorizationStatusType  AuthorizationStatus     { get; }
 
         /// <summary>
         /// The geo coordinate of the EVSE.
         /// </summary>
-        public GeoCoordinate GeoCoordinates
-        {
-            get
-            {
-                return _GeoCoordinates;
-            }
-        }
-
-        #endregion
-
-        #region ChargingStationName
-
-        private readonly I18NString _ChargingStationName;
+        public GeoCoordinate            GeoCoordinates          { get; }
 
         /// <summary>
         /// The name of the charging station.
         /// </summary>
-        public I18NString ChargingStationName
-        {
-            get
-            {
-                return _ChargingStationName;
-            }
-        }
-
-        #endregion
-
-        #region Address
-
-        private readonly Address _Address;
+        public I18NString               ChargingStationName     { get; }
 
         /// <summary>
         /// The address of the EVSE.
         /// </summary>
-        public Address Address
-        {
-            get
-            {
-                return _Address;
-            }
-        }
-
-        #endregion
-
-        #region SessionId
-
-        private readonly ChargingSession_Id _SessionId;
+        public Address                  Address                 { get; }
 
         /// <summary>
         /// The Hubject session identification.
         /// </summary>
-        public ChargingSession_Id SessionId
-        {
-            get
-            {
-                return _SessionId;
-            }
-        }
-
-        #endregion
-
-        #region StatusCode
-
-        private readonly StatusCode _StatusCode;
+        public ChargingSession_Id       SessionId               { get; }
 
         /// <summary>
         /// The status code of the request.
         /// </summary>
-        public StatusCode StatusCode
-        {
-            get
-            {
-                return _StatusCode;
-            }
-        }
+        public StatusCode               StatusCode              { get; }
 
-        #endregion
+        /// <summary>
+        /// The terms of use.
+        /// </summary>
+        public I18NString               TermsOfUse              { get; }
 
-        #region TermsOfUse
-
-        private readonly I18NString _TermsOfUse;
-
-        public I18NString TermsOfUse
-        {
-            get
-            {
-                return _TermsOfUse;
-            }
-        }
-
-        #endregion
-
-        #region AdditionalInfo
-
-        private readonly I18NString _AdditionalInfo;
-
-        public I18NString AdditionalInfo
-        {
-            get
-            {
-                return _AdditionalInfo;
-            }
-        }
-
-        #endregion
+        /// <summary>
+        /// Additional information.
+        /// </summary>
+        public I18NString               AdditionalInfo          { get; }
 
         #endregion
 
@@ -173,7 +83,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region eRoamingMobileAuthorizationStart(AuthorizationStatus, GeoCoordinates, SessionId  = null, StatusCode = null, TermsOfUse = null, Address = null, AdditionalInfo = null, ChargingStationName = null)
 
         /// <summary>
-        /// Create a new OICP v2.0 AuthorizationStart response.
+        /// Create a new OICP authorization start response.
         /// </summary>
         /// <param name="AuthorizationStatus">The status of the mobile authorization request.</param>
         /// <param name="GeoCoordinates">The geo coordinate of the EVSE.</param>
@@ -195,41 +105,38 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Initial checks
 
-            if (AuthorizationStatus == null)
-                throw new ArgumentNullException("AuthorizationStatus", "The given parameter must not be null!");
-
             if (GeoCoordinates == null)
-                throw new ArgumentNullException("GeoCoordinates", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(GeoCoordinates),  "The given geo coordinates must not be null!");
 
             #endregion
 
-            this._AuthorizationStatus  = AuthorizationStatus;
-            this._GeoCoordinates       = GeoCoordinates;
-            this._ChargingStationName  = ChargingStationName != null ? ChargingStationName : new I18NString();
-            this._Address              = Address;
-            this._SessionId            = SessionId;
-            this._StatusCode           = StatusCode          != null ? StatusCode          : new StatusCode(0);
-            this._TermsOfUse           = TermsOfUse          != null ? TermsOfUse          : new I18NString();
-            this._AdditionalInfo       = AdditionalInfo      != null ? AdditionalInfo      : new I18NString();
+            this.AuthorizationStatus  = AuthorizationStatus;
+            this.GeoCoordinates       = GeoCoordinates;
+            this.ChargingStationName  = ChargingStationName ?? new I18NString();
+            this.Address              = Address;
+            this.SessionId            = SessionId;
+            this.StatusCode           = StatusCode          ?? new StatusCode(StatusCodes.Success);
+            this.TermsOfUse           = TermsOfUse          ?? new I18NString();
+            this.AdditionalInfo       = AdditionalInfo      ?? new I18NString();
 
         }
 
         #endregion
 
-        #region eRoamingMobileAuthorizationStart(StatusCode)
+        #region eRoamingMobileAuthorizationStart(StatusCode, ...)
 
         /// <summary>
-        /// Create a new group of OICP v2.0 operator EVSE status records or a status code.
+        /// Create a new OICP authorization start response.
         /// </summary>
         /// <pparam name="StatusCode">The status code for this request.</pparam>
-        public eRoamingMobileAuthorizationStart(Int16  Code,
-                                                String Description     = null,
-                                                String AdditionalInfo  = null)
+        public eRoamingMobileAuthorizationStart(StatusCodes  StatusCode,
+                                                String       Description     = null,
+                                                String       AdditionalInfo  = null)
         {
 
-            this._AuthorizationStatus  = AuthorizationStatusType.NotAuthorized;
-            this._StatusCode           = new StatusCode(Code, Description, AdditionalInfo);
-            this._GeoCoordinates       = GeoCoordinate.Zero;
+            this.AuthorizationStatus  = AuthorizationStatusType.NotAuthorized;
+            this.StatusCode           = new StatusCode(StatusCode, Description, AdditionalInfo);
+            this.GeoCoordinates       = GeoCoordinate.Zero;
 
         }
 

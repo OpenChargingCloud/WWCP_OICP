@@ -354,7 +354,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
                                          HTTPMethod.GET,
                                          "/RNs/{RoamingNetworkId}" + _URIPrefix + "/EVSEs",
                                          HTTPContentType.XML_UTF8,
-                                         HTTPDelegate: Request => {
+                                         HTTPDelegate: async Request => {
 
                                              #region Check HTTP Basic Authentication
 
@@ -423,7 +423,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
                                          HTTPMethod.GET,
                                          "/RNs/{RoamingNetworkId}" + _URIPrefix + "/EVSEStatus",
                                          HTTPContentType.XML_UTF8,
-                                         HTTPDelegate: Request => {
+                                         HTTPDelegate: async Request => {
 
                                              #region Check HTTP Basic Authentication
 

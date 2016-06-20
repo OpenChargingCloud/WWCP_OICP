@@ -96,6 +96,7 @@
     <Compile Include="Objects\Data\GeoCoordinatesResponseFormatTypes.cs" />
     <Compile Include="Objects\Data\ActionType.cs" />
     <Compile Include="Objects\Data\AuthorizationStatusType.cs" />
+    <Compile Include="Objects\Responses\StatusCodes.cs" />
     <Compile Include="Objects\Responses\StatusCode.cs" />
     <Compile Include="Objects\Data\OICPMapper.cs" />
     <Compile Include="Objects\Responses\eRoamingAcknowledgement.cs" />

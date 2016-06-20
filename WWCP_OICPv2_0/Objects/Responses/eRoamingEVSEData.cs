@@ -64,12 +64,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorEVSEData == null)
-                throw new ArgumentNullException("OperatorEVSEData", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(OperatorEVSEData), "The given operator EVSE data must not be null!");
 
             #endregion
 
             this.OperatorEVSEData  = OperatorEVSEData;
-            this.StatusCode        = StatusCode != null ? StatusCode : new StatusCode(0);
+            this.StatusCode        = StatusCode ?? new StatusCode(StatusCodes.Success);
 
         }
 
@@ -85,7 +85,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
 
             this.OperatorEVSEData  = new OperatorEVSEData[0];
-            this.StatusCode        = StatusCode != null ? StatusCode : new StatusCode(-1);
+            this.StatusCode        = StatusCode ?? new StatusCode(StatusCodes.DataError);
 
         }
 

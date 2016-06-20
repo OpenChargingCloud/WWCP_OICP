@@ -67,7 +67,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             this.OperatorEVSEStatus  = OperatorEVSEStatus;
-            this.StatusCode          = StatusCode != null ? StatusCode : new StatusCode(0);
+            this.StatusCode          = StatusCode ?? new StatusCode(StatusCodes.Success);
 
         }
 
@@ -83,7 +83,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             this.OperatorEVSEStatus  = new OperatorEVSEStatus[0];
-            this.StatusCode          = StatusCode != null ? StatusCode : new StatusCode(-1);
+            this.StatusCode          = StatusCode ?? new StatusCode(StatusCodes.DataError);
 
         }
 

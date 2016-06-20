@@ -115,7 +115,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        HTTPMethod.GET,
                                        "/",
                                        HTTPContentType.HTML_UTF8,
-                                       HTTPDelegate: Request => {
+                                       HTTPDelegate: async Request => {
 
                                            var RoamingNetworkId = Request.ParsedURIParameters[0];
 
@@ -133,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        HTTPMethod.GET,
                                        "/",
                                        HTTPContentType.TEXT_UTF8,
-                                       HTTPDelegate: Request => {
+                                       HTTPDelegate: async Request => {
 
                                            var RoamingNetworkId = Request.ParsedURIParameters[0];
 
@@ -154,7 +154,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Generic OICPServerDelegate
 
-            HTTPDelegate OICPServerDelegate = Request => {
+            HTTPDelegate OICPServerDelegate = async Request => {
 
                 //var _EventTrackingId = EventTracking_Id.New;
                 //Log.WriteLine("Event tracking: " + _EventTrackingId);
@@ -494,7 +494,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                    HTTPMethod.GET,
                                    "/RNs/{RoamingNetwork}",
                                    HTTPContentType.HTML_UTF8,
-                                   HTTPDelegate: Request => {
+                                   HTTPDelegate: async Request => {
 
                                        var RoamingNetworkId = Request.ParsedURIParameters[0];
 
@@ -512,7 +512,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                    HTTPMethod.GET,
                                    "/RNs/{RoamingNetwork}",
                                    HTTPContentType.TEXT_UTF8,
-                                   HTTPDelegate: Request => {
+                                   HTTPDelegate: async Request => {
 
                                        var RoamingNetworkId = Request.ParsedURIParameters[0];
 

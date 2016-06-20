@@ -35,7 +35,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.1 CPO HTTP/SOAP/XML Server API.
+    /// An OICP CPO HTTP/SOAP/XML Server API.
     /// </summary>
     public class CPOServer : ASOAPServer
     {
@@ -204,7 +204,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                          HTTPMethod.GET,
                                          new String[] { "/", URIPrefix + "/" },
                                          HTTPContentType.TEXT_UTF8,
-                                         HTTPDelegate: Request => {
+                                         HTTPDelegate: async Request => {
 
                                              return new HTTPResponseBuilder(Request) {
 
@@ -237,7 +237,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                             URIPrefix + "/Reservation",
                                             "AuthorizeRemoteReservationStart",
                                             XML => XML.Descendants(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart").FirstOrDefault(),
-                                            (Request, RemoteStartXML) => {
+                                            async (Request, RemoteStartXML) => {
 
 
                     #region Documentation
@@ -321,22 +321,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    XElement            IdentificationXML;
-                    XElement            QRCodeIdentificationXML;
-                    XElement            PnCIdentificationXML;
-                    XElement            RemoteIdentificationXML;
-                    XElement            PartnerSessionIdXML;
-                    XElement            ChargingProductIdXML;
+                    ChargingSession_Id      SessionId           = null;
+                    ChargingSession_Id      PartnerSessionId    = null;
+                    EVSP_Id                 ProviderId          = null;
+                    EVSE_Id                 EVSEId              = null;
+                    eMA_Id                  eMAId               = null;
+                    ChargingProduct_Id      ChargingProductId   = null;
 
-                    ChargingSession_Id  SessionId           = null;
-                    ChargingSession_Id  PartnerSessionId    = null;
-                    EVSP_Id             ProviderId          = null;
-                    EVSE_Id             EVSEId              = null;
-                    eMA_Id              eMAId               = null;
-                    ChargingProduct_Id  ChargingProductId   = null;
+                    eRoamingAcknowledgement response            = null;
 
                     try
                     {
+
+                        XElement            IdentificationXML;
+                        XElement            QRCodeIdentificationXML;
+                        XElement            PnCIdentificationXML;
+                        XElement            RemoteIdentificationXML;
+                        XElement            PartnerSessionIdXML;
+                        XElement            ChargingProductIdXML;
 
                         SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Reservation + "SessionID",        null));
 
@@ -374,22 +376,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     catch (Exception e)
                     {
 
-                        //Log.Timestamp("Invalid RemoteStartXML: " + e.Message);
-
-                        return new HTTPResponseBuilder(Request) {
-                            HTTPStatusCode  = HTTPStatusCode.OK,
-                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                            Content         = SOAP.Encapsulation(
-                                                  new eRoamingAcknowledgement(false,
-                                                                              22,
-                                                                              "Request led to an exception!",
-                                                                              e.Message).ToXML).ToUTF8Bytes()
-                        };
+                        response = new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                               "Request led to an exception!",
+                                                               e.Message);
 
                     }
 
                     #endregion
-
 
                     #region Documentation
 
@@ -430,108 +423,54 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Call async subscribers
 
-                    ReservationResult response = null;
-
-                    var OnRemoteReservationStartLocal = OnRemoteReservationStart;
-                    if (OnRemoteReservationStartLocal != null)
+                    if (response == null)
                     {
 
-                        var CTS = new CancellationTokenSource();
+                        var results = OnRemoteReservationStart?.
+                                          GetInvocationList()?.
+                                          SafeSelect(subscriber => (subscriber as OnRemoteReservationStartDelegate)
+                                              (DateTime.Now,
+                                               this,
+                                               Request.CancellationToken,
+                                               Request.EventTrackingId,
+                                               EVSEId,
+                                               ChargingProductId,
+                                               SessionId,
+                                               PartnerSessionId,
+                                               ProviderId,
+                                               eMAId,
+                                               DefaultQueryTimeout)).
+                                          ToArray();
 
-                        var task = OnRemoteReservationStartLocal(DateTime.Now,
-                                                                 this,
-                                                                 Request.CancellationToken,
-                                                                 Request.EventTrackingId,
-                                                                 EVSEId,
-                                                                 ChargingProductId,
-                                                                 SessionId,
-                                                                 PartnerSessionId,
-                                                                 ProviderId,
-                                                                 eMAId,
-                                                                 DefaultQueryTimeout);
+                        if (results.Length > 0)
+                        {
 
-                        task.Wait();
-                        response = task.Result;
+                            await Task.WhenAll(results);
+
+                            response = results.FirstOrDefault()?.Result;
+
+                        }
+
+                        if (results.Length == 0 || response == null)
+                            response = new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                   "Could not process the incoming AuthorizeRemoteReservationStart request!",
+                                                                   null,
+                                                                   SessionId,
+                                                                   PartnerSessionId);
 
                     }
 
                     #endregion
 
-                    #region Map result
-
-                    var HubjectCode            = 320;
-                    var HubjectDescription     = "Service not available!";
-                    var HubjectAdditionalInfo  = "";
-
-                    if (response != null)
-                        switch (response.Result)
-                        {
-
-                            case ReservationResultType.Success:
-                                HubjectCode         = 0;
-                                HubjectDescription  = "Ready to charge!";
-                                break;
-
-                            //case ReservationResultType.InvalidSessionId:
-                            //    HubjectCode         = "400";
-                            //    HubjectDescription  = "Session is invalid";
-                            //    break;
-
-                            case ReservationResultType.Offline:
-                                HubjectCode         = 501;
-                                HubjectDescription  = "Communication to EVSE failed!";
-                                break;
-
-                            case ReservationResultType.Timeout:
-                                HubjectCode         = 510;
-                                HubjectDescription  = "Communication to EVSE failed!";
-                                break;
-
-                            case ReservationResultType.AlreadyReserved:
-                                HubjectCode         = 601;
-                                HubjectDescription  = "EVSE reserved!";
-                                break;
-
-                            case ReservationResultType.AlreadyInUse:
-                                HubjectCode         = 602;
-                                HubjectDescription  = "EVSE is already in use!";
-                                break;
-
-                            case ReservationResultType.UnknownEVSE:
-                                HubjectCode         = 603;
-                                HubjectDescription  = "Unknown EVSE ID!";
-                                break;
-
-                            case ReservationResultType.OutOfService:
-                                HubjectCode         = 700;
-                                HubjectDescription  = "EVSE out of service!";
-                                break;
-
-
-                            default:
-                                HubjectCode         = 320;
-                                HubjectDescription  = "Service not available!";
-                                break;
-
-                        }
-
-                    #endregion
-
-                    #region Return SOAPResponse
+                    #region Create SOAPResponse
 
                     var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         Server          = SOAPServer.DefaultServerName,
                         Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(
-                                              new eRoamingAcknowledgement(response != null && response.Result == ReservationResultType.Success,
-                                                                          HubjectCode,
-                                                                          HubjectDescription,
-                                                                          HubjectAdditionalInfo,
-                                                                          SessionId).ToXML).ToUTF8Bytes()
+                        Content         = SOAP.Encapsulation(response.ToXML()).ToUTF8Bytes()
                     };
-
 
                     #endregion
 
@@ -566,7 +505,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                             URIPrefix + "/Reservation",
                                             "AuthorizeRemoteReservationStop",
                                             XML => XML.Descendants(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStop").FirstOrDefault(),
-                                            (Request, RemoteStopXML) => {
+                                            async (Request, RemoteStopXML) => {
 
                     #region Documentation
 
@@ -613,15 +552,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    XElement PartnerSessionIdXML;
+                    ChargingSession_Id      SessionId         = null;
+                    ChargingSession_Id      PartnerSessionId  = null;
+                    EVSP_Id                 ProviderId        = null;
+                    EVSE_Id                 EVSEId            = null;
 
-                    ChargingSession_Id  SessionId         = null;
-                    ChargingSession_Id  PartnerSessionId  = null;
-                    EVSP_Id             ProviderId        = null;
-                    EVSE_Id             EVSEId            = null;
+                    eRoamingAcknowledgement response          = null;
 
                     try
                     {
+
+                        XElement PartnerSessionIdXML;
 
                         SessionId         = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Reservation + "SessionID",  "No SessionID XML tag provided!"));
 
@@ -636,20 +577,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     catch (Exception e)
                     {
 
-                        return new HTTPResponseBuilder(Request) {
-                            HTTPStatusCode  = HTTPStatusCode.OK,
-                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                            Content         = SOAP.Encapsulation(
-                                                  new eRoamingAcknowledgement(false,
-                                                                              22,
-                                                                              "Request led to an exception!",
-                                                                              e.Message).ToXML).ToUTF8Bytes()
-                        };
+                        response = new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                               "Request led to an exception!",
+                                                               e.Message);
 
                     }
 
                     #endregion
-
 
                     #region Documentation
 
@@ -690,78 +624,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Call async subscribers
 
-                    CancelReservationResult response = null;
-
-                    var OnRemoteReservationStopLocal = OnRemoteReservationStop;
-                    if (OnRemoteReservationStopLocal != null)
+                    if (response == null)
                     {
 
-                        var CTS = new CancellationTokenSource();
+                        var results = OnRemoteReservationStop?.
+                                          GetInvocationList()?.
+                                          SafeSelect(subscriber => (subscriber as OnRemoteReservationStopDelegate)
+                                              (DateTime.Now,
+                                               this,
+                                               Request.CancellationToken,
+                                               Request.EventTrackingId,
+                                               EVSEId,
+                                               SessionId,
+                                               PartnerSessionId,
+                                               ProviderId,
+                                               DefaultQueryTimeout)).
+                                          ToArray();
 
-                        var task = OnRemoteReservationStopLocal(DateTime.Now,
-                                                                this,
-                                                                Request.CancellationToken,
-                                                                Request.EventTrackingId,
-                                                                EVSEId,
-                                                                SessionId,
-                                                                PartnerSessionId,
-                                                                ProviderId,
-                                                                DefaultQueryTimeout);
-
-                        task.Wait();
-                        response = task.Result;
-
-                    }
-
-                    #endregion
-
-                    #region Map result
-
-                    var HubjectCode            = 320;
-                    var HubjectDescription     = "Service not available!";
-                    var HubjectAdditionalInfo  = "";
-
-                    if (response != null)
-                        switch (response.Result)
+                        if (results.Length > 0)
                         {
 
-                            case CancelReservationResultType.Success:
-                                HubjectCode         = 0;
-                                HubjectDescription  = "Ready to stop charging!";
-                                break;
+                            await Task.WhenAll(results);
 
-                            case CancelReservationResultType.UnknownReservationId:
-                                HubjectCode         = 400;
-                                HubjectDescription  = "Session is invalid";
-                                break;
-
-                            case CancelReservationResultType.Offline:
-                                HubjectCode         = 501;
-                                HubjectDescription  = "Communication to EVSE failed!";
-                                break;
-
-                            case CancelReservationResultType.Timeout:
-                                HubjectCode         = 510;
-                                HubjectDescription  = "No EV connected to EVSE!";
-                                break;
-
-                            case CancelReservationResultType.UnknownEVSE:
-                                HubjectCode         = 603;
-                                HubjectDescription  = "Unknown EVSE ID!";
-                                break;
-
-                            case CancelReservationResultType.OutOfService:
-                                HubjectCode         = 700;
-                                HubjectDescription  = "EVSE out of service!";
-                                break;
-
-
-                            default:
-                                HubjectCode         = 320;
-                                HubjectDescription  = "Service not available!";
-                                break;
+                            response = results.FirstOrDefault()?.Result;
 
                         }
+
+                        if (results.Length == 0 || response == null)
+                            response = new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                   "Could not process the incoming AuthorizeRemoteReservationStop request!",
+                                                                   null,
+                                                                   SessionId,
+                                                                   PartnerSessionId);
+
+                    }
 
                     #endregion
 
@@ -772,12 +668,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         Server          = SOAPServer.DefaultServerName,
                         Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(
-                                              new eRoamingAcknowledgement(response != null && response.Result == CancelReservationResultType.Success,
-                                                                          HubjectCode,
-                                                                          HubjectDescription,
-                                                                          HubjectAdditionalInfo,
-                                                                          SessionId).ToXML).ToUTF8Bytes()
+                        Content         = SOAP.Encapsulation(response.ToXML()).ToUTF8Bytes()
                     };
 
                     #endregion
@@ -814,7 +705,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                             URIPrefix + "/Authorization",
                                             "AuthorizeRemoteStart",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart").FirstOrDefault(),
-                                            (Request, RemoteStartXML) => {
+                                            async (Request, RemoteStartXML) => {
 
 
                     #region Documentation
@@ -897,22 +788,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    XElement            IdentificationXML;
-                    XElement            QRCodeIdentificationXML;
-                    XElement            PnCIdentificationXML;
-                    XElement            RemoteIdentificationXML;
-                    XElement            PartnerSessionIdXML;
-                    XElement            ChargingProductIdXML;
+                    ChargingSession_Id      SessionId           = null;
+                    ChargingSession_Id      PartnerSessionId    = null;
+                    EVSP_Id                 ProviderId          = null;
+                    EVSE_Id                 EVSEId              = null;
+                    eMA_Id                  eMAId               = null;
+                    ChargingProduct_Id      ChargingProductId   = null;
 
-                    ChargingSession_Id  SessionId           = null;
-                    ChargingSession_Id  PartnerSessionId    = null;
-                    EVSP_Id             ProviderId          = null;
-                    EVSE_Id             EVSEId              = null;
-                    eMA_Id              eMAId               = null;
-                    ChargingProduct_Id  ChargingProductId   = null;
+                    eRoamingAcknowledgement response            = null;
 
                     try
                     {
+
+                        XElement  IdentificationXML;
+                        XElement  QRCodeIdentificationXML;
+                        XElement  PnCIdentificationXML;
+                        XElement  RemoteIdentificationXML;
+                        XElement  PartnerSessionIdXML;
+                        XElement  ChargingProductIdXML;
 
                         SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",        null));
 
@@ -950,22 +843,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     catch (Exception e)
                     {
 
-                        //Log.Timestamp("Invalid RemoteStartXML: " + e.Message);
-
-                        return new HTTPResponseBuilder(Request) {
-                            HTTPStatusCode  = HTTPStatusCode.OK,
-                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                            Content         = SOAP.Encapsulation(
-                                                  new eRoamingAcknowledgement(false,
-                                                                              22,
-                                                                              "Request led to an exception!",
-                                                                              e.Message).ToXML).ToUTF8Bytes()
-                        };
+                        response = new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                               "Request led to an exception!",
+                                                               e.Message);
 
                     }
 
                     #endregion
-
 
                     #region Documentation
 
@@ -1006,6 +890,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Call async subscribers
 
+<<<<<<< HEAD
                     var response = RemoteStartEVSEResult.Error("Missing subscribers in '" + nameof(CPOServer) + "'!");
 
                     var OnRemoteStartLocal = OnRemoteStart;
@@ -1059,73 +944,56 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     if (response != null)
                         switch (response.Result)
+=======
+                    if (response == null)
+                    {
+
+                        var results = OnRemoteStart?.
+                                          GetInvocationList()?.
+                                          SafeSelect(subscriber => (subscriber as OnRemoteStartDelegate)
+                                              (DateTime.Now,
+                                               this,
+                                               Request.CancellationToken,
+                                               Request.EventTrackingId,
+                                               EVSEId,
+                                               ChargingProductId,
+                                               SessionId,
+                                               PartnerSessionId,
+                                               ProviderId,
+                                               eMAId,
+                                               DefaultQueryTimeout)).
+                                          ToArray();
+
+                        if (results.Length > 0)
+>>>>>>> 481f2e71a7f632494d782cc1348f063baa081752
                         {
 
-                            case RemoteStartEVSEResultType.Success:
-                                HubjectCode         = 0;
-                                HubjectDescription  = "Ready to charge!";
-                                break;
+                            await Task.WhenAll(results);
 
-                            case RemoteStartEVSEResultType.InvalidSessionId:
-                                HubjectCode         = 400;
-                                HubjectDescription  = "Session is invalid";
-                                break;
-
-                            case RemoteStartEVSEResultType.Offline:
-                                HubjectCode         = 501;
-                                HubjectDescription  = "Communication to EVSE failed!";
-                                break;
-
-                            case RemoteStartEVSEResultType.Timeout:
-                                HubjectCode         = 510;
-                                HubjectDescription  = "No EV connected to EVSE!";
-                                break;
-
-                            case RemoteStartEVSEResultType.Reserved:
-                                HubjectCode         = 601;
-                                HubjectDescription  = "EVSE reserved!";
-                                break;
-
-                            case RemoteStartEVSEResultType.AlreadyInUse:
-                                HubjectCode         = 602;
-                                HubjectDescription  = "EVSE is already in use!";
-                                break;
-
-                            case RemoteStartEVSEResultType.UnknownEVSE:
-                                HubjectCode         = 603;
-                                HubjectDescription  = "Unknown EVSE ID!";
-                                break;
-
-                            case RemoteStartEVSEResultType.OutOfService:
-                                HubjectCode         = 700;
-                                HubjectDescription  = "EVSE out of service!";
-                                break;
-
-
-                            default:
-                                HubjectCode         = 320;
-                                HubjectDescription  = "Service not available!";
-                                break;
+                            response = results.FirstOrDefault()?.Result;
 
                         }
 
+                        if (results.Length == 0 || response == null)
+                            response = new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                   "Could not process the incoming AuthorizeRemoteStart request!",
+                                                                   null,
+                                                                   SessionId,
+                                                                   PartnerSessionId);
+
+                    }
+
                     #endregion
 
-                    #region Return SOAPResponse
+                    #region Create SOAPResponse
 
                     var HTTPResponse = new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         Server          = SOAPServer.DefaultServerName,
                         Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(
-                                              new eRoamingAcknowledgement(response != null && response.Result == RemoteStartEVSEResultType.Success,
-                                                                          HubjectCode,
-                                                                          HubjectDescription,
-                                                                          HubjectAdditionalInfo,
-                                                                          SessionId).ToXML).ToUTF8Bytes()
+                        Content         = SOAP.Encapsulation(response.ToXML()).ToUTF8Bytes()
                     };
-
 
                     #endregion
 
@@ -1160,7 +1028,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                             URIPrefix + "/Authorization",
                                             "AuthorizeRemoteStop",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop").FirstOrDefault(),
-                                            (Request, RemoteStopXML) => {
+                                            async (Request, RemoteStopXML) => {
 
                     #region Documentation
 
@@ -1208,15 +1076,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    XElement            PartnerSessionIdXML;
+                    ChargingSession_Id      SessionId         = null;
+                    ChargingSession_Id      PartnerSessionId  = null;
+                    EVSP_Id                 ProviderId        = null;
+                    EVSE_Id                 EVSEId            = null;
 
-                    ChargingSession_Id  SessionId         = null;
-                    ChargingSession_Id  PartnerSessionId  = null;
-                    EVSP_Id             ProviderId        = null;
-                    EVSE_Id             EVSEId            = null;
+                    eRoamingAcknowledgement response          = null;
 
                     try
                     {
+
+                        XElement  PartnerSessionIdXML;
 
                         SessionId         = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
 
@@ -1231,20 +1101,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     catch (Exception e)
                     {
 
-                        return new HTTPResponseBuilder(Request) {
-                            HTTPStatusCode  = HTTPStatusCode.OK,
-                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                            Content         = SOAP.Encapsulation(
-                                                  new eRoamingAcknowledgement(false,
-                                                                              22,
-                                                                              "Request led to an exception!",
-                                                                              e.Message).ToXML).ToUTF8Bytes()
-                        };
+                        response = new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                               "Request led to an exception!",
+                                                               e.Message);
 
                     }
 
                     #endregion
-
 
                     #region Documentation
 
@@ -1285,78 +1148,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Call async subscribers
 
-                    RemoteStopEVSEResult response = null;
-
-                    var OnRemoteStopLocal = OnRemoteStop;
-                    if (OnRemoteStopLocal != null)
+                    if (response == null)
                     {
 
-                        var CTS = new CancellationTokenSource();
+                        var results = OnRemoteStop?.
+                                          GetInvocationList()?.
+                                          SafeSelect(subscriber => (subscriber as OnRemoteStopDelegate)
+                                              (DateTime.Now,
+                                               this,
+                                               Request.CancellationToken,
+                                               Request.EventTrackingId,
+                                               EVSEId,
+                                               SessionId,
+                                               PartnerSessionId,
+                                               ProviderId,
+                                               DefaultQueryTimeout)).
+                                          ToArray();
 
-                        var task = OnRemoteStopLocal(DateTime.Now,
-                                                     this,
-                                                     Request.CancellationToken,
-                                                     Request.EventTrackingId,
-                                                     EVSEId,
-                                                     SessionId,
-                                                     PartnerSessionId,
-                                                     ProviderId,
-                                                     DefaultQueryTimeout);
-
-                        task.Wait();
-                        response = task.Result;
-
-                    }
-
-                    #endregion
-
-                    #region Map result
-
-                    var HubjectCode            = 320;
-                    var HubjectDescription     = "Service not available!";
-                    var HubjectAdditionalInfo  = "";
-
-                    if (response != null)
-                        switch (response.Result)
+                        if (results.Length > 0)
                         {
 
-                            case RemoteStopEVSEResultType.Success:
-                                HubjectCode         = 000;
-                                HubjectDescription  = "Ready to stop charging!";
-                                break;
+                            await Task.WhenAll(results);
 
-                            case RemoteStopEVSEResultType.InvalidSessionId:
-                                HubjectCode         = 400;
-                                HubjectDescription  = "Session is invalid";
-                                break;
-
-                            case RemoteStopEVSEResultType.Offline:
-                                HubjectCode         = 501;
-                                HubjectDescription  = "Communication to EVSE failed!";
-                                break;
-
-                            case RemoteStopEVSEResultType.Timeout:
-                                HubjectCode         = 510;
-                                HubjectDescription  = "No EV connected to EVSE!";
-                                break;
-
-                            case RemoteStopEVSEResultType.UnknownEVSE:
-                                HubjectCode         = 603;
-                                HubjectDescription  = "Unknown EVSE ID!";
-                                break;
-
-                            case RemoteStopEVSEResultType.OutOfService:
-                                HubjectCode         = 700;
-                                HubjectDescription  = "EVSE out of service!";
-                                break;
-
-
-                            default:
-                                HubjectCode         = 320;
-                                HubjectDescription  = "Service not available!";
-                                break;
+                            response = results.FirstOrDefault()?.Result;
 
                         }
+
+                        if (results.Length == 0 || response == null)
+                            response = new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                   "Could not process the incoming AuthorizeRemoteStop request!",
+                                                                   null,
+                                                                   SessionId,
+                                                                   PartnerSessionId);
+
+                    }
 
                     #endregion
 
@@ -1367,12 +1192,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         Server          = SOAPServer.DefaultServerName,
                         Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(
-                                              new eRoamingAcknowledgement(response != null && response.Result == RemoteStopEVSEResultType.Success,
-                                                                          HubjectCode,
-                                                                          HubjectDescription,
-                                                                          HubjectAdditionalInfo,
-                                                                          SessionId).ToXML).ToUTF8Bytes()
+                        Content         = SOAP.Encapsulation(response.ToXML()).ToUTF8Bytes()
                     };
 
                     #endregion
@@ -1487,6 +1307,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
+<<<<<<< HEAD
         #region (internal) SendRemoteStart(...)
 
         internal async Task<RemoteStartEVSEResult> SendRemoteStart(DateTime            Timestamp,
@@ -1564,6 +1385,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
+=======
+>>>>>>> 481f2e71a7f632494d782cc1348f063baa081752
     }
 
 }

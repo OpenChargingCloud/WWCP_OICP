@@ -244,13 +244,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            this.CPORoaming           = CPORoaming;
+            this.CPORoaming            = CPORoaming;
             this._EVSE2EVSEDataRecord  = EVSE2EVSEDataRecord;
             this._EVSEDataRecord2XML   = EVSEDataRecord2XML;
 
             // Link RemoteStart/-Stop events
-            this.CPORoaming.OnRemoteStart += SendRemoteStart;
-            this.CPORoaming.OnRemoteStop  += SendRemoteStop;
+         //   this.CPORoaming.OnRemoteStart += SendRemoteStart;
+         //   this.CPORoaming.OnRemoteStop  += SendRemoteStop;
 
         }
 

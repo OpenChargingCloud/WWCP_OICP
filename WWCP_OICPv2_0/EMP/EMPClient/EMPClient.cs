@@ -398,7 +398,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingEVSEData>(httpresponse,
-                                                                                                   new eRoamingEVSEData(StatusCode: new StatusCode(-1,
+                                                                                                   new eRoamingEVSEData(StatusCode: new StatusCode(StatusCodes.DataError,
                                                                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                                    AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
                                                                                                    IsFault: true);
@@ -756,7 +756,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingEVSEStatus>(httpresponse,
-                                                                                                     new eRoamingEVSEStatus(new StatusCode(-1,
+                                                                                                     new eRoamingEVSEStatus(new StatusCode(StatusCodes.DataError,
                                                                                                                                            httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                            httpresponse.HTTPBody.ToUTF8String())),
                                                                                                      IsFault: true);
@@ -922,7 +922,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingEVSEStatusById>(httpresponse,
-                                                                                                         new eRoamingEVSEStatusById(new StatusCode(-1,
+                                                                                                         new eRoamingEVSEStatusById(new StatusCode(StatusCodes.DataError,
                                                                                                                                                    httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                                    httpresponse.HTTPBody.ToUTF8String())),
                                                                                                          IsFault: true);
@@ -1071,9 +1071,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(false,
-                                                                                                                                      -1,
-                                                                                                                                      Description: httpresponse.Content.ToString()),
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                                                                                                      httpresponse.Content.ToString()),
                                                                                                           IsFault: true);
 
                                                      },
@@ -1087,10 +1086,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(false,
-                                                                                                                                      -1,
-                                                                                                                                      Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                      AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                           IsFault: true);
 
                                                      },
@@ -1295,9 +1293,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(false,
-                                                                                                                                      -1,
-                                                                                                                                      Description: httpresponse.Content.ToString()),
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                                                                                                      httpresponse.Content.ToString()),
                                                                                                           IsFault: true);
 
                                                      },
@@ -1311,10 +1308,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(false,
-                                                                                                                                      -1,
-                                                                                                                                      Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                      AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                           IsFault: true);
 
                                                      },
@@ -1478,9 +1474,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(false,
-                                                                                                                                      -1,
-                                                                                                                                      Description: httpresponse.Content.ToString()),
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                                                                                                      httpresponse.Content.ToString()),
                                                                                                           IsFault: true);
 
                                                      },
@@ -1494,10 +1489,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(false,
-                                                                                                                                      -1,
-                                                                                                                                      Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                      AdditionalInfo: httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                           IsFault: true);
 
                                                      },

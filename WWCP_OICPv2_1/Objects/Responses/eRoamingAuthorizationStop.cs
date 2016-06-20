@@ -28,212 +28,182 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An authorization stop result.
+    /// An OICP authorization stop result.
     /// </summary>
     public class eRoamingAuthorizationStop
     {
 
         #region Properties
 
-        #region SessionId
-
-        private readonly ChargingSession_Id _SessionId;
+        /// <summary>
+        /// The charging session identification.
+        /// </summary>
+        public ChargingSession_Id       SessionId              { get; }
 
         /// <summary>
-        /// The Hubject session identification.
+        /// An optional partner charging session identification.
         /// </summary>
-        public ChargingSession_Id SessionId
-        {
-            get
-            {
-                return _SessionId;
-            }
-        }
-
-        #endregion
-
-        #region PartnerSessionId
-
-        private readonly ChargingSession_Id _PartnerSessionId;
+        public ChargingSession_Id       PartnerSessionId       { get; }
 
         /// <summary>
-        /// Your own session identification.
+        /// The e-mobility provider identification.
         /// </summary>
-        public ChargingSession_Id PartnerSessionId
-        {
-            get
-            {
-                return _PartnerSessionId;
-            }
-        }
-
-        #endregion
-
-        #region ProviderId
-
-        private readonly EVSP_Id _ProviderId;
-
-        /// <summary>
-        /// The provider identification, e.g. BMW.
-        /// </summary>
-        public EVSP_Id ProviderId
-        {
-            get
-            {
-                return _ProviderId;
-            }
-        }
-
-        #endregion
-
-        #region AuthorizationStatus
-
-        private readonly AuthorizationStatusType _AuthorizationStatus;
+        public EVSP_Id                  ProviderId             { get; }
 
         /// <summary>
         /// The authorization status, e.g. "Authorized".
         /// </summary>
-        public AuthorizationStatusType AuthorizationStatus
-        {
-            get
-            {
-                return _AuthorizationStatus;
-            }
-        }
-
-        #endregion
-
-        #region StatusCode
-
-        private readonly StatusCode _StatusCode;
+        public AuthorizationStatusType  AuthorizationStatus    { get; }
 
         /// <summary>
         /// The authorization status code.
         /// </summary>
-        public StatusCode StatusCode
-        {
-            get
-            {
-                return _StatusCode;
-            }
-        }
-
-        #endregion
+        public StatusCode               StatusCode             { get; }
 
         #endregion
 
         #region Constructor(s)
 
+        #region (private) eRoamingAuthorizationStop(AuthorizationStatus, ...)
+
         /// <summary>
-        /// Create a new authorization stop result.
+        /// Create a new OICP authorization stop result.
         /// </summary>
-        public eRoamingAuthorizationStop(AuthorizationStatusType  AuthorizationStatus,
-                                         ChargingSession_Id       SessionId         = null,
-                                         ChargingSession_Id       PartnerSessionId  = null,
-                                         EVSP_Id                  ProviderId        = null,
-                                         StatusCode               StatusCode        = null)
+        /// <param name="AuthorizationStatus">The authorization status.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="StatusCode">An optional status code.</param>
+        private eRoamingAuthorizationStop(AuthorizationStatusType  AuthorizationStatus,
+                                          ChargingSession_Id       SessionId         = null,
+                                          ChargingSession_Id       PartnerSessionId  = null,
+                                          EVSP_Id                  ProviderId        = null,
+                                          StatusCode               StatusCode        = null)
         {
 
-            this._AuthorizationStatus  = AuthorizationStatus;
-            this._SessionId            = SessionId;
-            this._PartnerSessionId     = PartnerSessionId;
-            this._ProviderId           = ProviderId;
-            this._StatusCode           = StatusCode;
+            this.AuthorizationStatus  = AuthorizationStatus;
+            this.SessionId            = SessionId;
+            this.PartnerSessionId     = PartnerSessionId;
+            this.ProviderId           = ProviderId;
+            this.StatusCode           = StatusCode;
 
         }
+
+        #endregion
+
+        #region eRoamingAuthorizationStop(SessionId, ...)
+
+        /// <summary>
+        /// Create a new OICP 'Authorized' authorization stop result.
+        /// </summary>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        public eRoamingAuthorizationStop(ChargingSession_Id  SessionId,
+                                         EVSP_Id             ProviderId                = null,
+                                         ChargingSession_Id  PartnerSessionId          = null,
+                                         String              StatusCodeDescription     = null,
+                                         String              StatusCodeAdditionalInfo  = null)
+
+            : this(AuthorizationStatusType.Authorized,
+                   SessionId,
+                   PartnerSessionId,
+                   ProviderId,
+                   new StatusCode(StatusCodes.Success,
+                                  StatusCodeDescription,
+                                  StatusCodeAdditionalInfo))
+
+        { }
+
+        #endregion
+
+        #region eRoamingAuthorizationStop(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'NotAuthorized' authorization stop result.
+        /// </summary>
+        /// <param name="StatusCode">The status code of the operation.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        public eRoamingAuthorizationStop(StatusCodes              StatusCode,
+                                         String                   StatusCodeDescription     = null,
+                                         String                   StatusCodeAdditionalInfo  = null,
+                                         ChargingSession_Id       SessionId                 = null,
+                                         ChargingSession_Id       PartnerSessionId          = null,
+                                         EVSP_Id                  ProviderId                = null)
+        {
+
+            this.AuthorizationStatus  = AuthorizationStatusType.NotAuthorized;
+            this.SessionId            = SessionId;
+            this.PartnerSessionId     = PartnerSessionId;
+            this.ProviderId           = ProviderId;
+            this.StatusCode           = new StatusCode(StatusCode,
+                                                       StatusCodeDescription,
+                                                       StatusCodeAdditionalInfo);
+
+        }
+
+        #endregion
 
         #endregion
 
 
         #region (static) Parse(eRoamingAuthorizationStopXML)
 
+        /// <summary>
+        /// Parse the given XML representation of an OICP authorization stop result.
+        /// </summary>
+        /// <param name="eRoamingAuthorizationStopXML">The XML to parse.</param>
         public static eRoamingAuthorizationStop Parse(XElement eRoamingAuthorizationStopXML)
         {
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            //
-            // [...]
-            //
-            //    <Authorization:eRoamingAuthorizationStop>
-            //
-            //       <!--Optional:-->
-            //       <Authorization:SessionID>?</Authorization:SessionID>
-            //
-            //       <!--Optional:-->
-            //       <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
-            //
-            //       <!--Optional:-->
-            //       <Authorization:ProviderID>?</Authorization:ProviderID>
-            //
-            //       <Authorization:AuthorizationStatus>?</Authorization:AuthorizationStatus>
-            //
-            //       <Authorization:StatusCode>
-            //
-            //          <CommonTypes:Code>?</CommonTypes:Code>
-            //
-            //          <!--Optional:-->
-            //          <CommonTypes:Description>?</CommonTypes:Description>
-            //
-            //          <!--Optional:-->
-            //          <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-            //
-            //       </Authorization:StatusCode>
-            //
-            //    </Authorization:eRoamingAuthorizationStop>
-            //
-            // [...]
-            //
-            // </soapenv:Envelope>
-
-
-
-            // <Authorization:eRoamingAuthorizationStop>
-            //
-            //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
-            //
-            //   <Authorization:StatusCode>
-            //     <CommonTypes:Code>102</CommonTypes:Code>
-            //     <CommonTypes:Description>RFID Authentication failed – invalid UID</CommonTypes:Description>
-            //   </Authorization:StatusCode>
-            //
-            // </Authorization:eRoamingAuthorizationStop>
-
-
-
-            // <Authorization:eRoamingAuthorizationStop>
-            //
-            //   <Authorization:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</Authorization:SessionID>
-            //   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
-            //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
-            //
-            //   <Authorization:StatusCode>
-            //     <CommonTypes:Code>400</CommonTypes:Code>
-            //     <CommonTypes:Description>Session is invalid</CommonTypes:Description>
-            //   </Authorization:StatusCode>
-            //
-            // </Authorization:eRoamingAuthorizationStop>
-
-            #endregion
 
             if (eRoamingAuthorizationStopXML.Name != OICPNS.Authorization + "eRoamingAuthorizationStop")
                 throw new ArgumentException("Invalid eRoamingAuthorizationStop XML");
 
             return new eRoamingAuthorizationStop(
                            (AuthorizationStatusType) Enum.Parse(typeof(AuthorizationStatusType), eRoamingAuthorizationStopXML.ElementValueOrFail(OICPNS.Authorization + "AuthorizationStatus")),
-                           eRoamingAuthorizationStopXML.MapValueOrNull(OICPNS.Authorization + "SessionID",                        ChargingSession_Id.         Parse),
-                           eRoamingAuthorizationStopXML.MapValueOrNull(OICPNS.Authorization + "PartnerSessionID",                 ChargingSession_Id.         Parse),
-                           eRoamingAuthorizationStopXML.MapValueOrNull(OICPNS.Authorization + "ProviderID",                       EVSP_Id.                    Parse),
-                           eRoamingAuthorizationStopXML.MapElement    (OICPNS.Authorization + "StatusCode",                       StatusCode.                 Parse)
+                           eRoamingAuthorizationStopXML.MapValueOrNull(OICPNS.Authorization + "SessionID",         ChargingSession_Id.Parse),
+                           eRoamingAuthorizationStopXML.MapValueOrNull(OICPNS.Authorization + "PartnerSessionID",  ChargingSession_Id.Parse),
+                           eRoamingAuthorizationStopXML.MapValueOrNull(OICPNS.Authorization + "ProviderID",        EVSP_Id.           Parse),
+                           eRoamingAuthorizationStopXML.MapElement    (OICPNS.Authorization + "StatusCode",        StatusCode.        Parse)
                        );
 
         }
 
         #endregion
 
+        #region ToXML()
+
+        /// <summary>
+        /// Return a XML representation of this object.
+        /// </summary>
+        public XElement ToXML()
+            => new XElement(OICPNS.Authorization + "eRoamingAuthorizationStop",
+
+                SessionId != null
+                    ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.ToString())
+                    : null,
+
+                PartnerSessionId != null
+                    ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                    : null,
+
+                ProviderId != null
+                    ? new XElement(OICPNS.Authorization + "ProviderID",        ProviderId.ToString())
+                    : null,
+
+                new XElement(OICPNS.Authorization + "AuthorizationStatus",     AuthorizationStatus.ToString()),
+
+                StatusCode.ToXML()
+
+            );
+
+        #endregion
 
     }
 

@@ -17,9 +17,10 @@
 
 #region Usings
 
-using org.GraphDefined.Vanaheimr.Illias;
 using System;
 using System.Xml.Linq;
+
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -27,83 +28,79 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// A Hubject status code.
+    /// An OICP status code.
     /// </summary>
     public class StatusCode
     {
 
         #region Properties
 
-        #region Code
-
-        private readonly Int32 _Code;
-
         /// <summary>
         /// The result code of the operation.
         /// </summary>
-        public Int32 Code => _Code;
-
-        #endregion
-
-        #region HasResult
+        public StatusCodes Code              { get; }
 
         /// <summary>
         /// Whether the operation was successful and returned a valid result.
         /// </summary>
-        public Boolean HasResult => _Code == 0;
-
-        #endregion
-
-        #region Description
-
-        private readonly String _Description;
+        public Boolean     HasResult => Code == 0;
 
         /// <summary>
         /// The description of the result code.
         /// </summary>
-        public String Description => _Description;
-
-        #endregion
-
-        #region AdditionalInfo
-
-        private readonly String _AdditionalInfo;
+        public String      Description       { get; }
 
         /// <summary>
         /// Additional information.
         /// </summary>
-        public String AdditionalInfo => _AdditionalInfo;
-
-        #endregion
+        public String      AdditionalInfo    { get; }
 
         #endregion
 
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new Hubject status code.
+        /// Create a new OICP status code.
         /// </summary>
         /// <param name="Code">The result code of the operation.</param>
-        /// <param name="Description">The description of the result code.</param>
-        /// <param name="AdditionalInfo">Additional information.</param>
-        public StatusCode(Int32   Code,
-                          String  Description     = null,
-                          String  AdditionalInfo  = null)
+        /// <param name="Description">An optional description of the result code.</param>
+        /// <param name="AdditionalInfo">An optional additional information.</param>
+        public StatusCode(StatusCodes  Code,
+                          String       Description     = null,
+                          String       AdditionalInfo  = null)
         {
 
-            this._Code            = Code;
-            this._Description     = Description    != null ? Description    : String.Empty;
-            this._AdditionalInfo  = AdditionalInfo != null ? AdditionalInfo : String.Empty;
+            this.Code            = Code;
+            this.Description     = Description.   IsNotNullOrEmpty() ? Description    : String.Empty;
+            this.AdditionalInfo  = AdditionalInfo.IsNotNullOrEmpty() ? AdditionalInfo : String.Empty;
 
         }
 
         #endregion
 
 
+        #region Documentation
+
+        // <?xml version='1.0' encoding='UTF-8'?>
+        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
+        // [...]
+        //
+        //  <CommonTypes:StatusCode>
+        //    <CommonTypes:Code>000</CommonTypes:Code>
+        //    <CommonTypes:Description>Success</CommonTypes:Description>
+        //    <CommonTypes:AdditionalInfo />
+        //  </CommonTypes:StatusCode>
+        //
+        // [...]
+
+        #endregion
+
         #region (static) Parse(StatusCodeXML)
 
         /// <summary>
-        /// Create a new Hubject status code.
+        /// Parse the given XML representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeXML">The XML to parse.</param>
         public static StatusCode Parse(XElement  StatusCodeXML)
@@ -123,7 +120,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region (static) TryParse(StatusCodeXML, out StatusCode, OnException = null)
 
         /// <summary>
-        /// Create a new Hubject status code.
+        /// Try to parse the given XML representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeXML">The XML to parse.</param>
         /// <param name="StatusCode">The parsed status code</param>
@@ -133,47 +130,25 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                        OnExceptionDelegate  OnException  = null)
         {
 
-            #region Documentation
-
-            // <?xml version='1.0' encoding='UTF-8'?>
-            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            //
-            // [...]
-            //
-            //  <CommonTypes:StatusCode>
-            //    <CommonTypes:Code>000</CommonTypes:Code>
-            //    <CommonTypes:Description>Success</CommonTypes:Description>
-            //    <CommonTypes:AdditionalInfo />
-            //  </CommonTypes:StatusCode>
-            //
-            // [...]
-
-            #endregion
-
-            StatusCode = null;
-
             try
             {
 
                 // Sometimes CommonTypes:StatusCode, sometimes Authorization:StatusCode!
                 if (StatusCodeXML.Name.LocalName != "StatusCode")
+                {
+                    StatusCode = null;
                     return false;
+                }
 
-                var _Code            = StatusCodeXML.Element(OICPNS.CommonTypes + "Code");
-                var _Description     = StatusCodeXML.Element(OICPNS.CommonTypes + "Description");
-                var _AdditionalInfo  = StatusCodeXML.Element(OICPNS.CommonTypes + "AdditionalInfo");
+                StatusCode = new StatusCode(StatusCodeXML.MapValueOrFail       (OICPNS.CommonTypes + "Code",
+                                                                                str => (StatusCodes) Int16.Parse(str),
+                                                                                "Invalid or missing 'Code' XML tag!"),
 
-                if (_Code == null)
-                    return false;
+                                            StatusCodeXML.ElementValueOrDefault(OICPNS.CommonTypes + "Description",
+                                                                                String.Empty),
 
-                Int16 __Code;
-                if (!Int16.TryParse(_Code.Value, out __Code))
-                    return false;
-
-                StatusCode = new StatusCode(__Code,
-                                            _Description    != null ? _Description.   Value : String.Empty,
-                                            _AdditionalInfo != null ? _AdditionalInfo.Value : String.Empty);
+                                            StatusCodeXML.ElementValueOrDefault(OICPNS.CommonTypes + "AdditionalInfo",
+                                                                                String.Empty));
 
                 return true;
 
@@ -181,9 +156,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             catch (Exception e)
             {
 
-                if (OnException != null)
-                    OnException(DateTime.Now, StatusCodeXML, e);
+                OnException?.Invoke(DateTime.Now, StatusCodeXML, e);
 
+                StatusCode = null;
                 return false;
 
             }
@@ -192,19 +167,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-
-        #region ToXML
+        #region ToXML()
 
         /// <summary>
-        /// Return a XML-representation of this object.
+        /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML => new XElement(OICPNS.CommonTypes + "StatusCode",
-                                     new XElement(OICPNS.CommonTypes + "Code",            Code.ToString("D3")),
-                                     new XElement(OICPNS.CommonTypes + "Description",     Description),
-                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  AdditionalInfo)
-                                 );
+        public XElement ToXML() => new XElement(OICPNS.CommonTypes + "StatusCode",
+
+                                       new XElement(OICPNS.CommonTypes + "Code",  ((Int32) Code).ToString("D3")),
+
+                                       Description.IsNotNullOrEmpty()
+                                           ? new XElement(OICPNS.CommonTypes + "Description",     Description)
+                                           : null,
+
+                                       AdditionalInfo.IsNotNullOrEmpty()
+                                           ? new XElement(OICPNS.CommonTypes + "AdditionalInfo",  AdditionalInfo)
+                                           : null
+
+                                   );
 
         #endregion
+
 
         #region (override) ToString()
 
@@ -212,9 +195,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// Return a string representation of this object.
         /// </summary>
         public override String ToString()
-        {
-            return String.Concat("StatusCode: ", _Code, ", Description: ", _Description, ", Additional Info: ", _AdditionalInfo);
-        }
+            => String.Concat("StatusCode: ", ((Int32) Code), ", Description: ", Description, ", Additional Info: ", AdditionalInfo);
 
         #endregion
 
