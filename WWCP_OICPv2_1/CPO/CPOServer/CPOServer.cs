@@ -890,61 +890,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Call async subscribers
 
-<<<<<<< HEAD
-                    var response = RemoteStartEVSEResult.Error("Missing subscribers in '" + nameof(CPOServer) + "'!");
-
-                    var OnRemoteStartLocal = OnRemoteStart;
-                    if (OnRemoteStartLocal != null)
-                    {
-
-                        var CTS = new CancellationTokenSource();
-
-                //        var task = OnRemoteStartLocal(DateTime.Now,
-                //                                      this,
-                //                                      Request.CancellationToken,
-                //                                      Request.EventTrackingId,
-                //                                      EVSEId,
-                //                                      ChargingProductId,
-                //                                      SessionId,
-                //                                      PartnerSessionId,
-                //                                      ProviderId,
-                //                                      eMAId,
-                //                                      DefaultQueryTimeout);
-
-                //        task.Wait();
-                //        response = task.Result;
-
-                        var results = OnRemoteStartLocal.GetInvocationList().
-                                                             Select(subscriber => (subscriber as OnRemoteStartDelegate)
-                                                                                        (DateTime.Now,
-                                                                                         this,
-                                                                                         Request.CancellationToken,
-                                                                                         Request.EventTrackingId,
-                                                                                         EVSEId,
-                                                                                         ChargingProductId,
-                                                                                         SessionId,
-                                                                                         PartnerSessionId,
-                                                                                         ProviderId,
-                                                                                         eMAId,
-                                                                                         DefaultQueryTimeout));
-
-                        await Task.WhenAll(results);
-
-                        response = results.First(result => result.Result.Result != RemoteStartEVSEResultType.Unspecified).Result;
-
-                    }
-
-                    #endregion
-
-                    #region Map result
-
-                    var HubjectCode            = 320;
-                    var HubjectDescription     = "Service not available!";
-                    var HubjectAdditionalInfo  = "";
-
-                    if (response != null)
-                        switch (response.Result)
-=======
                     if (response == null)
                     {
 
@@ -965,7 +910,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                           ToArray();
 
                         if (results.Length > 0)
->>>>>>> 481f2e71a7f632494d782cc1348f063baa081752
                         {
 
                             await Task.WhenAll(results);
@@ -1307,86 +1251,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-<<<<<<< HEAD
-        #region (internal) SendRemoteStart(...)
-
-        internal async Task<RemoteStartEVSEResult> SendRemoteStart(DateTime            Timestamp,
-                                                                   CPOServer           Sender,
-                                                                   CancellationToken   CancellationToken,
-                                                                   EventTracking_Id    EventTrackingId,
-                                                                   EVSE_Id             EVSEId,
-                                                                   ChargingProduct_Id  ChargingProductId,
-                                                                   ChargingSession_Id  SessionId,
-                                                                   ChargingSession_Id  PartnerSessionId,
-                                                                   EVSP_Id             ProviderId,
-                                                                   eMA_Id              eMAId,
-                                                                   TimeSpan?           QueryTimeout  = null)
-        {
-
-            var OnRemoteStartLocal = OnRemoteStart;
-            if (OnRemoteStartLocal == null)
-                return RemoteStartEVSEResult.Error();
-
-            var results = await Task.WhenAll(OnRemoteStartLocal.
-                                                 GetInvocationList().
-                                                 Select(subscriber => (subscriber as OnRemoteStartDelegate)
-                                                     (Timestamp,
-                                                      this,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      EVSEId,
-                                                      ChargingProductId,
-                                                      SessionId,
-                                                      PartnerSessionId,
-                                                      ProviderId,
-                                                      eMAId,
-                                                      QueryTimeout)));
-
-            return results.First(result => result.Result != RemoteStartEVSEResultType.Unspecified);
-
-        }
-
-        #endregion
-
-        #region (internal) SendRemoteStop(...)
-
-        internal async Task<RemoteStopEVSEResult> SendRemoteStop(DateTime            Timestamp,
-                                                                 CPOServer           Sender,
-                                                                 CancellationToken   CancellationToken,
-                                                                 EventTracking_Id    EventTrackingId,
-                                                                 EVSE_Id             EVSEId,
-                                                                 ChargingSession_Id  SessionId,
-                                                                 ChargingSession_Id  PartnerSessionId,
-                                                                 EVSP_Id             ProviderId,
-                                                                 TimeSpan?           QueryTimeout  = null)
-        {
-
-            var OnRemoteStopLocal = OnRemoteStop;
-            if (OnRemoteStopLocal == null)
-                return RemoteStopEVSEResult.Error(SessionId);
-
-            var results = await Task.WhenAll(OnRemoteStopLocal.
-                                                 GetInvocationList().
-                                                 Select(subscriber => (subscriber as OnRemoteStopDelegate)
-                                                     (Timestamp,
-                                                      this,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      EVSEId,
-                                                      SessionId,
-                                                      PartnerSessionId,
-                                                      ProviderId,
-                                                      QueryTimeout)));
-
-            return results.First(result => result.Result != RemoteStopEVSEResultType.Unspecified);
-
-        }
-
-        #endregion
-
-
-=======
->>>>>>> 481f2e71a7f632494d782cc1348f063baa081752
     }
 
 }
