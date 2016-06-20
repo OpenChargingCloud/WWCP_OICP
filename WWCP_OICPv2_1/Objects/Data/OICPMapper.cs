@@ -630,7 +630,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return Enum.GetValues(typeof(ChargingFacilities)).
                         Cast<ChargingFacilities>().
-                        Where(aaa => e.HasFlag(aaa) && e != ChargingFacilities.Unspecified);
+                        Where(flag => e.HasFlag(flag) && flag != ChargingFacilities.Unspecified);
 
         }
 
@@ -706,7 +706,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return Enum.GetValues(typeof(AccessibilityTypes)).
                         Cast<AccessibilityTypes>().
-                        Where(aaa => e.HasFlag(aaa) && e != AccessibilityTypes.Unspecified);
+                        Where(flag => e.HasFlag(flag) && flag != AccessibilityTypes.Unspecified);
 
         }
 
@@ -854,7 +854,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return Enum.GetValues(typeof(PaymentOptions)).
                         Cast<PaymentOptions>().
-                        Where(aaa => e.HasFlag(aaa) && e != PaymentOptions.Unspecified);
+                        Where(flag => e.HasFlag(flag) && flag != PaymentOptions.Unspecified);
 
         }
 
@@ -1023,7 +1023,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return Enum.GetValues(typeof(AuthenticationModes)).
                         Cast<AuthenticationModes>().
-                        Where(aaa => e.HasFlag(aaa) && e != AuthenticationModes.Unkown);
+                        Where(flag => e.HasFlag(flag) && flag != AuthenticationModes.Unkown);
 
         }
 
@@ -1185,7 +1185,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return Enum.GetValues(typeof(ChargingModes)).
                         Cast<ChargingModes>().
-                        Where(aaa => e.HasFlag(aaa) && e != ChargingModes.Unspecified);
+                        Where(flag => e.HasFlag(flag) && flag != ChargingModes.Unspecified);
 
         }
 
@@ -1477,7 +1477,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return Enum.GetValues(typeof(PlugTypes)).
                         Cast<PlugTypes>().
-                        Where(aaa => e.HasFlag(aaa) && e != PlugTypes.Unspecified);
+                        Where(flag => e.HasFlag(flag) && flag != PlugTypes.Unspecified);
 
         }
 
@@ -1576,7 +1576,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return Enum.GetValues(typeof(ValueAddedServices)).
                         Cast<ValueAddedServices>().
-                        Where(aaa => e.HasFlag(aaa) && e != ValueAddedServices.None);
+                        Where(flag => e.HasFlag(flag) && flag != ValueAddedServices.None);
 
         }
 
