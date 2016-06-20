@@ -34,7 +34,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public static class OICPMapper
     {
 
-
         #region AsOICPEVSEDataRecord(this EVSE, EVSE2EVSEDataRecord = null)
 
         /// <summary>
@@ -57,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      EVSE.ChargingModes.AsOICPChargingMode(),
                                                      EVSE.ChargingStation.AuthenticationModes.
                                                                               Select(mode => OICPMapper.AsOICPAuthenticationMode(mode)).
-                                                                              Where (mode => mode != AuthenticationModes.Unkown).
+                                                                              Where(mode => mode != AuthenticationModes.Unkown).
                                                                               Reduce(),
                                                      null, // MaxCapacity [kWh]
                                                      EVSE.ChargingStation.PaymentOptions.SafeSelect(option => OICPMapper.AsOICPPaymentOption(option)).Reduce(),
@@ -630,7 +629,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return Enum.GetValues(typeof(ChargingFacilities)).
                         Cast<ChargingFacilities>().
-                        Where(aaa => e.HasFlag(aaa));
+                        Where(aaa => e.HasFlag(aaa) && e != ChargingFacilities.Unspecified);
 
         }
 
@@ -706,7 +705,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return Enum.GetValues(typeof(AccessibilityTypes)).
                         Cast<AccessibilityTypes>().
-                        Where(aaa => e.HasFlag(aaa));
+                        Where(aaa => e.HasFlag(aaa) && e != AccessibilityTypes.Unspecified);
 
         }
 
@@ -854,7 +853,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return Enum.GetValues(typeof(PaymentOptions)).
                         Cast<PaymentOptions>().
-                        Where(aaa => e.HasFlag(aaa));
+                        Where(aaa => e.HasFlag(aaa) && e != PaymentOptions.Unspecified);
 
         }
 
@@ -930,7 +929,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public static AuthenticationModes AsOICPAuthenticationMode(this WWCP.AuthenticationModes WWCPAuthMode)
         {
 
-            var _AuthenticationModes = AuthenticationModes.Unkown;
+            var _AuthenticationModes = OICPv2_0.AuthenticationModes.Unkown;
 
             switch (WWCPAuthMode.Type)
             {
@@ -1023,7 +1022,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return Enum.GetValues(typeof(AuthenticationModes)).
                         Cast<AuthenticationModes>().
-                        Where(aaa => e.HasFlag(aaa));
+                        Where(aaa => e.HasFlag(aaa) && e != AuthenticationModes.Unkown);
 
         }
 
@@ -1185,7 +1184,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return Enum.GetValues(typeof(ChargingModes)).
                         Cast<ChargingModes>().
-                        Where(aaa => e.HasFlag(aaa));
+                        Where(aaa => e.HasFlag(aaa) && e != ChargingModes.Unspecified);
 
         }
 
@@ -1477,7 +1476,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return Enum.GetValues(typeof(PlugTypes)).
                         Cast<PlugTypes>().
-                        Where(aaa => e.HasFlag(aaa));
+                        Where(aaa => e.HasFlag(aaa) && e != PlugTypes.Unspecified);
 
         }
 
@@ -1498,8 +1497,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                EVSEId:             ChargeDetailRecord.EVSEId,
                                                ChargingProductId:  ChargeDetailRecord.PartnerProductId,
                                                SessionTime:        new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
-                                               EnergyMeteringValues:  new List<Timestamped<double>> { new Timestamped<double>(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.MeterValueStart.Value),
-                                                                                                      new Timestamped<double>(ChargeDetailRecord.ChargingEnd.Value,   ChargeDetailRecord.MeterValueEnd.Value) },
+                                               EnergyMeteringValues:  new List<Timestamped<double>>() { new Timestamped<double>(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.MeterValueStart.Value),
+                                                                                                     new Timestamped<double>(ChargeDetailRecord.ChargingEnd.Value,   ChargeDetailRecord.MeterValueEnd.Value) },
                                                //MeterValuesInBetween
                                                //ConsumedEnergy
                                                MeteringSignature:  ChargeDetailRecord.MeteringSignature);
@@ -1507,7 +1506,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         #endregion
-
 
 
 
