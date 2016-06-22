@@ -249,8 +249,174 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             this._EVSEDataRecord2XML   = EVSEDataRecord2XML;
 
             // Link RemoteStart/-Stop events
-         //   this.CPORoaming.OnRemoteStart += SendRemoteStart;
-         //   this.CPORoaming.OnRemoteStop  += SendRemoteStop;
+
+            #region OnRemoteStart
+
+            this.CPORoaming.OnRemoteStart += async (Timestamp,
+                                                    Sender,
+                                                    CancellationToken,
+                                                    EventTrackingId,
+                                                    EVSEId,
+                                                    ChargingProductId,
+                                                    SessionId,
+                                                    PartnerSessionId,
+                                                    ProviderId,
+                                                    eMAId,
+                                                    RequestTimeout) => {
+
+                #region Request mapping
+
+                ChargingReservation_Id ReservationId = null;
+
+                if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
+                {
+
+                    var Elements = ChargingProductId.ToString().Split('|').ToArray();
+
+                    if (Elements.Length > 0)
+                    {
+                        var ChargingReservationIdText = Elements.FirstOrDefault(element => element.StartsWith("R=", StringComparison.InvariantCulture));
+                        if (ChargingReservationIdText.IsNotNullOrEmpty())
+                            ReservationId = ChargingReservation_Id.Parse(ChargingReservationIdText.Substring(2));
+                    }
+
+                }
+
+                #endregion
+
+                var response = await _RoamingNetwork.RemoteStart(Timestamp,
+                                                                 CancellationToken,
+                                                                 EventTrackingId,
+                                                                 EVSEId,
+                                                                 ChargingProductId,
+                                                                 ReservationId,
+                                                                 SessionId,
+                                                                 ProviderId,
+                                                                 eMAId,
+                                                                 RequestTimeout);
+
+                #region Response mapping
+
+                if (response != null)
+                {
+                    switch (response.Result)
+                    {
+
+                        case RemoteStartEVSEResultType.Success:
+                            return new eRoamingAcknowledgement(response.Session.Id,
+                                                               StatusCodeDescription: "Ready to charge!");
+
+                        case RemoteStartEVSEResultType.InvalidSessionId:
+                            return new eRoamingAcknowledgement(StatusCodes.SessionIsInvalid,
+                                                               "Session is invalid!",
+                                                               SessionId: SessionId);
+
+                        case RemoteStartEVSEResultType.InvalidCredentials:
+                            return new eRoamingAcknowledgement(StatusCodes.NoValidContract,
+                                                               "No valid contract!");
+
+                        case RemoteStartEVSEResultType.Offline:
+                            return new eRoamingAcknowledgement(StatusCodes.CommunicationToEVSEFailed,
+                                                               "Communication to EVSE failed!");
+
+                        case RemoteStartEVSEResultType.Timeout:
+                        case RemoteStartEVSEResultType.CommunicationError:
+                            return new eRoamingAcknowledgement(StatusCodes.CommunicationToEVSEFailed,
+                                                               "Communication to EVSE failed!");
+
+                        case RemoteStartEVSEResultType.Reserved:
+                            return new eRoamingAcknowledgement(StatusCodes.EVSEAlreadyReserved,
+                                                               "EVSE already reserved!");
+
+                        case RemoteStartEVSEResultType.AlreadyInUse:
+                            return new eRoamingAcknowledgement(StatusCodes.EVSEAlreadyInUse_WrongToken,
+                                                               "EVSE is already in use!");
+
+                        case RemoteStartEVSEResultType.UnknownEVSE:
+                            return new eRoamingAcknowledgement(StatusCodes.UnknownEVSEID,
+                                                               "Unknown EVSE ID!");
+
+                        case RemoteStartEVSEResultType.OutOfService:
+                            return new eRoamingAcknowledgement(StatusCodes.EVSEOutOfService,
+                                                               "EVSE out of service!");
+
+                    }
+                }
+
+                return new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                   "Service not available!",
+                                                   SessionId: SessionId);
+
+                #endregion
+
+            };
+
+            #endregion
+
+            #region OnRemoteStop
+
+            this.CPORoaming.OnRemoteStop += async (Timestamp,
+                                                   Sender,
+                                                   CancellationToken,
+                                                   EventTrackingId,
+                                                   EVSEId,
+                                                   SessionId,
+                                                   PartnerSessionId,
+                                                   ProviderId,
+                                                   RequestTimeout) => {
+
+                var response = await _RoamingNetwork.RemoteStop(Timestamp,
+                                                                CancellationToken,
+                                                                EventTrackingId,
+                                                                EVSEId,
+                                                                SessionId,
+                                                                ReservationHandling.Close,
+                                                                ProviderId,
+                                                                null,
+                                                                RequestTimeout);
+
+                #region Response mapping
+
+                if (response != null)
+                {
+                    switch (response.Result)
+                    {
+
+                        case RemoteStopEVSEResultType.Success:
+                            return new eRoamingAcknowledgement(response.SessionId,
+                                                               StatusCodeDescription: "Ready to stop charging!");
+
+                        case RemoteStopEVSEResultType.InvalidSessionId:
+                            return new eRoamingAcknowledgement(StatusCodes.SessionIsInvalid,
+                                                               "Session is invalid!",
+                                                               SessionId: SessionId);
+
+                        case RemoteStopEVSEResultType.Offline:
+                        case RemoteStopEVSEResultType.Timeout:
+                        case RemoteStopEVSEResultType.CommunicationError:
+                            return new eRoamingAcknowledgement(StatusCodes.CommunicationToEVSEFailed,
+                                                               "Communication to EVSE failed!");
+
+                        case RemoteStopEVSEResultType.UnknownEVSE:
+                            return new eRoamingAcknowledgement(StatusCodes.UnknownEVSEID,
+                                                               "Unknown EVSE ID!");
+
+                        case RemoteStopEVSEResultType.OutOfService:
+                            return new eRoamingAcknowledgement(StatusCodes.EVSEOutOfService,
+                                                               "EVSE out of service!");
+
+                    }
+                }
+
+                return new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                   "Service not available!",
+                                                   SessionId: SessionId);
+
+                #endregion
+
+            };
+
+            #endregion
 
         }
 

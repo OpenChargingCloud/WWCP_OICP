@@ -514,15 +514,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region OnRemoteStop
 
-            this.CPORoaming.OnRemoteReservationStop += async (Timestamp,
-                                                              Sender,
-                                                              CancellationToken,
-                                                              EventTrackingId,
-                                                              EVSEId,
-                                                              SessionId,
-                                                              PartnerSessionId,
-                                                              ProviderId,
-                                                              RequestTimeout) => {
+            this.CPORoaming.OnRemoteStop += async (Timestamp,
+                                                   Sender,
+                                                   CancellationToken,
+                                                   EventTrackingId,
+                                                   EVSEId,
+                                                   SessionId,
+                                                   PartnerSessionId,
+                                                   ProviderId,
+                                                   RequestTimeout) => {
 
                 var response = await _RoamingNetwork.RemoteStop(Timestamp,
                                                                 CancellationToken,
