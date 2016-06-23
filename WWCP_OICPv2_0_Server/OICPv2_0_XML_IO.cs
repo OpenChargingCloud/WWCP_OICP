@@ -70,7 +70,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
                        SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingEvseData",
                                               new XElement(OICPNS.EVSEData + "EvseData",
 
-                                                  EVSEDataRecords.ToLookup(evsedatarecord => evsedatarecord.EVSEOperator).
+                                                  EVSEDataRecords.ToLookup(evsedatarecord => evsedatarecord.EVSE?.Operator).
                                                     Select(group =>
 
                                                       group.Where(evsedatarecord => evsedatarecord != null).Any()

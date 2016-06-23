@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
                     EVSE_Id.Parse("DE*GEF*E123456789*2"),
                     "",
                     DateTime.Now,
-                    EVSEOperator:         RN.CreateNewEVSEOperator(EVSEOperator_Id.Parse("TEST"), I18NString.Create(Languages.de, "TEST")),
+                    //EVSEOperator:         RN.CreateNewEVSEOperator(EVSEOperator_Id.Parse("TEST"), I18NString.Create(Languages.de, "TEST")),
                     ChargingStationId:    ChargingStation_Id.Parse("DE*GEF*S123456789").ToString(),
                     ChargingStationName:  I18NString.Create(Languages.de, "Testbox 1").
                                                         Add(Languages.en, "Testbox One"),
@@ -87,7 +87,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
                           PushEVSEData(EVSEDataRecords,
                                        ActionType.insert,
-                                       IncludeEVSEDataRecords: evse => evse.EVSEId.ToString().StartsWith("DE")).
+                                       IncludeEVSEDataRecords: evse => evse.Id.ToString().StartsWith("DE")).
 
                           ContinueWith(task =>
                           {
@@ -278,7 +278,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
                     Console.WriteLine(result.Content.
                                           EVSEMatches.
                                           Select(match => "'" + match.EVSEDataRecord.ChargingStationName.FirstText  + " / " +
-                                                                match.EVSEDataRecord.EVSEId.             ToString() + "' in " +
+                                                                match.EVSEDataRecord.Id.             ToString() + "' in " +
                                                                 match.Distance + " km").
                                           AggregateWith(Environment.NewLine) +
                                           Environment.NewLine);

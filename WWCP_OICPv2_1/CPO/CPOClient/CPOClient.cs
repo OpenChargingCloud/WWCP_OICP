@@ -477,7 +477,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             if (_EVSEDataRecords.Any())
-                return await PushEVSEData(_EVSEDataRecords.ToLookup(evsedatarecord => evsedatarecord.EVSEOperator),
+                return await PushEVSEData(_EVSEDataRecords.ToLookup(evsedatarecord => evsedatarecord.EVSE.Operator),
                                           OICPAction,
                                           OperatorId,
                                           OperatorName,

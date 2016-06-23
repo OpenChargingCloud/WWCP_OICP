@@ -47,46 +47,102 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region Properties
 
         /// <summary>
-        /// The related the Electric Vehicle Supply Equipment (EVSE).
-        /// </summary>
-        public EVSE EVSE { get; }
-
-        /// <summary>
         /// The unique identification of the Electric Vehicle Supply Equipment (EVSE).
         /// </summary>
-        public EVSE_Id EVSEId { get; }
+        public EVSE_Id              Id                          { get; }
 
         /// <summary>
-        /// An EVSE operator.
+        /// The related WWCP Electric Vehicle Supply Equipment (EVSE).
         /// </summary>
-        public EVSEOperator EVSEOperator { get; }
+        public EVSE                 EVSE                        { get; }
 
-
-        public String DeltaType { get; }
-        public DateTime? LastUpdate { get; }
-
-        public String ChargingStationId { get; }
-        public I18NString ChargingStationName { get; }
-        public Address Address { get; }
-        public GeoCoordinate GeoCoordinate { get; }
 
         /// <summary>
-        /// The types of the charging plugs.
+        /// The delta type when this EVSE data record was just downloaded.
         /// </summary>
-        public PlugTypes Plugs { get; }
+        public String               DeltaType                   { get; }
 
-        public ChargingFacilities ChargingFacilities { get; }
-        public ChargingModes ChargingModes { get; }
-        public AuthenticationModes AuthenticationModes { get; }
-        public Double? MaxCapacity { get; }
-        public PaymentOptions PaymentOptions { get; }
-        public AccessibilityTypes Accessibility { get; }
-        public String HotlinePhoneNumber { get; }
-        public I18NString AdditionalInfo { get; }
-        public GeoCoordinate GeoChargingPointEntrance { get; }
+        /// <summary>
+        /// The last update timestamp of this EVSE data record.
+        /// </summary>
+        public DateTime?            LastUpdate                  { get; }
+
+
+        /// <summary>
+        /// The identification of the charging station hosting this EVSE.
+        /// </summary>
+        public String               ChargingStationId           { get; }
+
+        /// <summary>
+        /// The multi-language name of the charging station hosting this EVSE.
+        /// </summary>
+        public I18NString           ChargingStationName         { get; }
+
+        /// <summary>
+        /// The address of this EVSE.
+        /// </summary>
+        public Address              Address                     { get; }
+
+        /// <summary>
+        /// The geo coordinate of this EVSE.
+        /// </summary>
+        public GeoCoordinate        GeoCoordinate               { get; }
+
+        /// <summary>
+        /// The types of charging plugs attached to this EVSE.
+        /// </summary>
+        public PlugTypes            Plugs                       { get; }
+
+        /// <summary>
+        /// The charging facilities at this EVSE.
+        /// </summary>
+        public ChargingFacilities   ChargingFacilities          { get; }
+
+        /// <summary>
+        /// The charging modes this EVSE supports.
+        /// </summary>
+        public ChargingModes        ChargingModes               { get; }
+
+        /// <summary>
+        /// The authentication modes this EVSE supports.
+        /// </summary>
+        public AuthenticationModes  AuthenticationModes         { get; }
+
+        /// <summary>
+        /// The maximum capacity this EVSE provides.
+        /// </summary>
+        public Double?              MaxCapacity                 { get; }
+
+        /// <summary>
+        /// The payment options this EVSE supports.
+        /// </summary>
+        public PaymentOptions       PaymentOptions              { get; }
+
+        /// <summary>
+        /// The accessibility of this EVSE.
+        /// </summary>
+        public AccessibilityTypes   Accessibility               { get; }
+
+        /// <summary>
+        /// The phone number of the EVSE operators hotline.
+        /// </summary>
+        public String               HotlinePhoneNumber          { get; }
+
+        /// <summary>
+        /// Additional multi-language information about this EVSE.
+        /// </summary>
+        public I18NString           AdditionalInfo              { get; }
+
+        /// <summary>
+        /// The geo coordinate of the entrance to this EVSE.
+        /// </summary>
+        public GeoCoordinate        GeoChargingPointEntrance    { get; }
 
         #region IsOpen24Hours
 
+        /// <summary>
+        /// Whether this EVSE is open 24/7.
+        /// </summary>
         public Boolean IsOpen24Hours
         {
             get
@@ -102,15 +158,30 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
+        /// <summary>
+        /// The opening times of this EVSE.
+        /// </summary>
+        public OpeningTimes         OpeningTime                 { get; }
 
-        public OpeningTimes OpeningTime { get; }
+        /// <summary>
+        /// An optional hub operator of this EVSE.
+        /// </summary>
+        public HubOperator_Id       HubOperatorId               { get; }
 
-        public HubOperator_Id HubOperatorId { get; }
+        /// <summary>
+        /// An optional clearing house of this EVSE.
+        /// </summary>
+        public RoamingProvider_Id   ClearingHouseId             { get; }
 
-        public RoamingProvider_Id ClearingHouseId { get; }
-        public Boolean IsHubjectCompatible { get; }
-        public Boolean DynamicInfoAvailable { get; }
+        /// <summary>
+        /// Whether this EVSE is Hubject compatible.
+        /// </summary>
+        public Boolean              IsHubjectCompatible         { get; }
 
+        /// <summary>
+        /// Whether this EVSE provides dynamic status information.
+        /// </summary>
+        public Boolean              DynamicInfoAvailable        { get; }
 
         #endregion
 
@@ -121,7 +192,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Create a new EVSE data record.
         /// </summary>
-        /// <param name="EVSE">An EVSE identification.</param>
+        /// <param name="EVSE">A WWCP EVSE.</param>
+        /// <param name="ChargingStationId">The identification of the charging station hosting this EVSE.</param>
+        /// <param name="ChargingStationName">The multi-language name of the charging station hosting this EVSE.</param>
+        /// <param name="Address">The address of this EVSE.</param>
+        /// <param name="GeoCoordinate">The geo coordinate of this EVSE.</param>
+        /// <param name="Plugs">The types of charging plugs attached to this EVSE.</param>
+        /// <param name="ChargingFacilities">The charging facilities at this EVSE.</param>
+        /// <param name="ChargingModes">The charging modes this EVSE supports.</param>
+        /// <param name="AuthenticationModes">The authentication modes this EVSE supports.</param>
+        /// <param name="MaxCapacity">The maximum capacity this EVSE provides.</param>
+        /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
+        /// <param name="Accessibility">The accessibility of this EVSE.</param>
+        /// <param name="HotlinePhoneNumber">The phone number of the EVSE operators hotline.</param>
+        /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
+        /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
+        /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
+        /// <param name="OpeningTime">The opening times of this EVSE.</param>
+        /// <param name="HubOperatorId">An optional hub operator of this EVSE.</param>
+        /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
+        /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
+        /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
         internal EVSEDataRecord(EVSE                              EVSE,
                                 String                            ChargingStationId           = null,
                                 I18NString                        ChargingStationName         = null,
@@ -147,7 +238,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             : this(EVSE.Id,
                    "",
                    DateTime.Now,
-                   EVSE.Operator,
                    ChargingStationId,
                    ChargingStationName,
                    Address,
@@ -177,26 +267,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region EVSEDataRecord(EVSEId, EVSEOperator = null)
+        #region EVSEDataRecord(Id)
 
         /// <summary>
         /// Create a new EVSE data record.
         /// </summary>
-        /// <param name="EVSEId">A unique EVSE identification.</param>
-        /// <param name="EVSEOperator">An EVSE operator.</param>
-        public EVSEDataRecord(EVSE_Id       EVSEId,
-                              EVSEOperator  EVSEOperator = null)
+        /// <param name="Id">The unique identification of an EVSE.</param>
+        public EVSEDataRecord(EVSE_Id  Id)
         {
 
             #region Initial checks
 
-            if (EVSEId == null)
-                throw new ArgumentNullException(nameof(EVSEId),  "The given unique EVSE identification must not be null!");
+            if (Id == null)
+                throw new ArgumentNullException(nameof(Id),  "The given unique EVSE identification must not be null!");
 
             #endregion
 
-            this.EVSEId               = EVSEId;
-            this.EVSEOperator         = EVSEOperator;
+            this.Id                   = Id;
             this.ChargingStationName  = new I18NString();
             this.AdditionalInfo       = new I18NString();
 
@@ -204,17 +291,37 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region EVSEDataRecord(EVSEId, EVSEOperator, ...)
+        #region EVSEDataRecord(Id, ...)
 
         /// <summary>
         /// Create a new EVSE data record.
         /// </summary>
-        /// <param name="EVSEId">A unique EVSE identification.</param>
-        /// <param name="EVSEOperator">An EVSE operator.</param>
-        public EVSEDataRecord(EVSE_Id                           EVSEId,
+        /// <param name="Id">A unique EVSE identification.</param>
+        /// <param name="DeltaType">The delta type when this EVSE data record was just downloaded.</param>
+        /// <param name="LastUpdate">The last update timestamp of this EVSE data record.</param>
+        /// <param name="ChargingStationId">The identification of the charging station hosting this EVSE.</param>
+        /// <param name="ChargingStationName">The multi-language name of the charging station hosting this EVSE.</param>
+        /// <param name="Address">The address of this EVSE.</param>
+        /// <param name="GeoCoordinate">The geo coordinate of this EVSE.</param>
+        /// <param name="Plugs">The types of charging plugs attached to this EVSE.</param>
+        /// <param name="ChargingFacilities">The charging facilities at this EVSE.</param>
+        /// <param name="ChargingModes">The charging modes this EVSE supports.</param>
+        /// <param name="AuthenticationModes">The authentication modes this EVSE supports.</param>
+        /// <param name="MaxCapacity">The maximum capacity this EVSE provides.</param>
+        /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
+        /// <param name="Accessibility">The accessibility of this EVSE.</param>
+        /// <param name="HotlinePhoneNumber">The phone number of the EVSE operators hotline.</param>
+        /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
+        /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
+        /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
+        /// <param name="OpeningTime">The opening times of this EVSE.</param>
+        /// <param name="HubOperatorId">An optional hub operator of this EVSE.</param>
+        /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
+        /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
+        /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
+        public EVSEDataRecord(EVSE_Id                           Id,
                               String                            DeltaType,
                               DateTime?                         LastUpdate,
-                              EVSEOperator                      EVSEOperator,
                               String                            ChargingStationId           = null,
                               I18NString                        ChargingStationName         = null,
                               Address                           Address                     = null,
@@ -236,7 +343,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               Boolean                           IsHubjectCompatible         = true,
                               Boolean                           DynamicInfoAvailable        = true)
 
-            : this(EVSEId, EVSEOperator)
+            : this(Id)
 
         {
 
@@ -562,7 +669,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 _LastUpdate,
 
-                null,
+           //     null,
 
                 EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationId", ""),
                 _ChargingStationName,
@@ -770,7 +877,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             return new XElement(OICPNS.EVSEData + "EvseDataRecord",
 
-                new XElement(OICPNS.EVSEData + "EvseId",                EVSEId.OriginId),
+                new XElement(OICPNS.EVSEData + "EvseId",                Id.OriginId),
                 new XElement(OICPNS.EVSEData + "ChargingStationId",     ChargingStationId),
                 new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.de].SubstringMax(50)),
                 new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.en].SubstringMax(50)),
@@ -885,12 +992,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public Builder ToBuilder(EVSE_Id NewEVSEId = null)
         {
 
-            return new Builder(NewEVSEId ?? this.EVSEId)
+            return new Builder(NewEVSEId ?? this.Id)
             {
 
                 DeltaType                 = DeltaType,
                 LastUpdate                = LastUpdate,
-                
+
                 ChargingStationId         = ChargingStationId,
                 ChargingStationName       = ChargingStationName,
                 Address                   = Address,
@@ -1189,7 +1296,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 return new EVSEDataRecord(EVSEId,
                                           DeltaType,
                                           LastUpdate,
-                                          EVSEOperator,
                                           ChargingStationId,
                                           ChargingStationName,
                                           Address,

@@ -141,7 +141,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                       foreach (var EvseDataRecord in _OperatorEvseData.EVSEDataRecords)
                                                       {
 
-                                                          PoolId  = ChargingPool_Id.Generate(EvseDataRecord.EVSEId.OperatorId,
+                                                          PoolId  = ChargingPool_Id.Generate(EvseDataRecord.Id.OperatorId,
                                                                                              EvseDataRecord.Address,
                                                                                              EvseDataRecord.GeoCoordinate);
 
@@ -149,7 +149,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                         EvseDataRecord.Address,
                                                                                         EvseDataRecord.GeoCoordinate,
                                                                                         EvseDataRecord.ChargingStationId, // Is a string in OICP v2.0!
-                                                                                        EvseDataRecord.EVSEId);
+                                                                                        EvseDataRecord.Id);
 
                                                       }
 
@@ -170,7 +170,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           try
                                                           {
 
-                                                              EVSEInfo = EVSEIdLookup[EvseDataRecord.EVSEId];
+                                                              EVSEInfo = EVSEIdLookup[EvseDataRecord.Id];
 
                                                               #region Set derived WWCP properties
 
@@ -318,7 +318,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                               #region Update matching EVSE... or create a new one!
 
-                                                              if (_ChargingStation.TryGetEVSEbyId(EvseDataRecord.EVSEId, out _EVSE))
+                                                              if (_ChargingStation.TryGetEVSEbyId(EvseDataRecord.Id, out _EVSE))
                                                               {
 
                                                                   // Update via events!
@@ -331,7 +331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                               }
 
                                                               else
-                                                                  _ChargingStation.CreateNewEVSE(EvseDataRecord.EVSEId,
+                                                                  _ChargingStation.CreateNewEVSE(EvseDataRecord.Id,
 
                                                                                                  Configurator: evse => {
 
