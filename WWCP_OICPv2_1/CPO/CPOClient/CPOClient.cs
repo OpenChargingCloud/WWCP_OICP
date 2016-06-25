@@ -683,7 +683,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                              SendException(timestamp, sender, exception);
 
-                                                             return null;
+                                                             return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                                      exception.Message,
+                                                                                                                                                      exception.StackTrace),
+                                                                                                                          Exception: exception);
 
                                                          }
 
@@ -887,7 +890,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingAuthorizationStart>.ExceptionThrown(new eRoamingAuthorizationStart(StatusCodes.SystemError,
+                                                                                                                                                        exception.Message,
+                                                                                                                                                        exception.StackTrace),
+                                                                                                                         Exception: exception);
 
                                                      }
 
