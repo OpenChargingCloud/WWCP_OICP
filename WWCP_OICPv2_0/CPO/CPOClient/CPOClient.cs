@@ -316,7 +316,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                         #region OnSuccess
 
-                                                        OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
+                                                        OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
 
                                                         #endregion
 
@@ -635,7 +635,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                          #region OnSuccess
 
-                                                         OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
+                                                         OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
 
                                                          #endregion
 
@@ -839,7 +839,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthorizationStart.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAuthorizationStart.Parse),
 
                                                      #endregion
 
@@ -1026,7 +1026,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthorizationStop.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAuthorizationStop.Parse),
 
                                                      #endregion
 
@@ -1200,7 +1200,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                     #region OnSuccess
 
-                                                    OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
+                                                    OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
 
                                                     #endregion
 
@@ -1363,7 +1363,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthenticationData.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAuthenticationData.Parse),
 
                                                      #endregion
 

@@ -286,7 +286,6 @@ namespace org.GraphDefined.WWCP
                                                                  StatusCheckEvery,
                                                                  DisableAutoUploads);
 
-
             OICPConfigurator?.Invoke(NewRoamingProvider);
 
             return RoamingNetwork.

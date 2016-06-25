@@ -321,7 +321,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          #region OnSuccess
 
-                                                         OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
+                                                         OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
 
                                                          #endregion
 
@@ -331,10 +331,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                              SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                             return new HTTPResponse<eRoamingAcknowledgement>(
-                                                                 httpresponse,
-                                                                 new eRoamingAcknowledgement(StatusCodes.SystemError),
-                                                                 IsFault: true);
+                                                             return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                              new eRoamingAcknowledgement(StatusCodes.SystemError),
+                                                                                                              IsFault: true);
 
                                                          },
 
@@ -362,7 +361,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                              SendException(timestamp, sender, exception);
 
-                                                             return null;
+                                                             return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                                      exception.Message,
+                                                                                                                                                      exception.StackTrace),
+                                                                                                                          Exception:  exception);
 
                                                          }
 
@@ -640,7 +642,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          #region OnSuccess
 
-                                                         OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
+                                                         OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
 
                                                          #endregion
 
@@ -844,7 +846,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthorizationStart.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAuthorizationStart.Parse),
 
                                                      #endregion
 
@@ -1031,7 +1033,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthorizationStop.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAuthorizationStop.Parse),
 
                                                      #endregion
 
@@ -1205,7 +1207,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                     #region OnSuccess
 
-                                                    OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAcknowledgement.Parse),
+                                                    OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
 
                                                     #endregion
 
@@ -1252,7 +1254,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                         SendException(timestamp, sender, exception);
 
-                                                        return null;
+                                                        return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                 exception.Message,
+                                                                                                                                                 exception.StackTrace,
+                                                                                                                                                 ChargeDetailRecord.SessionId),
+                                                                                                                     Exception:  exception);
 
                                                     }
 
@@ -1368,7 +1374,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.Parse(eRoamingAuthenticationData.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAuthenticationData.Parse),
 
                                                      #endregion
 

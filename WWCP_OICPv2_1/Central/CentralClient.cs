@@ -260,7 +260,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                #region OnSuccess
 
                                                OnSuccess: XMLResponse => {
-                                                   return XMLResponse.Parse(eRoamingAcknowledgement.Parse);
+                                                   return XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse);
                                                },
 
                                                #endregion
@@ -394,7 +394,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                #region OnSuccess
 
                                                OnSuccess: XMLResponse => {
-                                                   return XMLResponse.Parse(eRoamingAcknowledgement.Parse);
+                                                   return XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse);
                                                },
 
                                                #endregion
@@ -580,7 +580,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                #region OnSuccess
 
                                                OnSuccess: XMLResponse => {
-                                                   return XMLResponse.Parse(eRoamingAcknowledgement.Parse);
+                                                   return XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse);
                                                },
 
                                                #endregion
@@ -715,7 +715,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                #region OnSuccess
 
                                                OnSuccess: XMLResponse => {
-                                                   return XMLResponse.Parse(eRoamingAcknowledgement.Parse);
+                                                   return XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse);
                                                },
 
                                                #endregion
