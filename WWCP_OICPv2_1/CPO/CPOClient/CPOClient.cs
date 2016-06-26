@@ -272,6 +272,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (GroupedEVSEDataRecords == null)
                 throw new ArgumentNullException(nameof(GroupedEVSEDataRecords),  "The given lookup of EVSE data records must not be null!");
 
+
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
@@ -639,6 +640,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EVSEStatusRecords == null)
                 throw new ArgumentNullException(nameof(EVSEStatusRecords), "The given enumeration of EVSE status records must not be null!");
 
+
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
@@ -880,6 +882,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (AuthToken == null)
                 throw new ArgumentNullException(nameof(AuthToken),   "The given auth token must not be null!");
 
+
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
@@ -1071,6 +1074,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (AuthToken == null)
                 throw new ArgumentNullException(nameof(AuthToken),   "The given auth token must not be null!");
 
+
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
@@ -1240,6 +1244,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             if (ChargeDetailRecord == null)
                 throw new ArgumentNullException(nameof(ChargeDetailRecord),  "The given charge detail record must not be null!");
+
 
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
@@ -1429,6 +1434,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             if (OperatorId == null)
                 throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification msut not be null!");
+
 
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;

@@ -20,7 +20,6 @@
 using System;
 using System.Linq;
 using System.Threading;
-using System.Diagnostics;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -57,6 +56,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         public CPORoaming CPORoaming { get; }
 
+        /// <summary>
+        /// The CPO client.
+        /// </summary>
+        public CPOClient CPOClient
+            => CPORoaming?.CPOClient;
+
+        /// <summary>
+        /// The CPO server.
+        /// </summary>
+        public CPOServer CPOServer
+            => CPORoaming?.CPOServer;
 
         /// <summary>
         /// The CPO client logger.
@@ -82,31 +92,31 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         // Client logging...
 
-        #region OnEVSEDataPush/-Pushed
+        #region OnPushEVSEDataRequest/-Response
 
         /// <summary>
         /// An event fired whenever new EVSE data will be send upstream.
         /// </summary>
-        public override event WWCP.OnPushEVSEDataRequestDelegate    OnEVSEDataPush;
+        public override event WWCP.OnPushEVSEDataRequestDelegate   OnPushEVSEDataRequest;
 
         /// <summary>
         /// An event fired whenever new EVSE data had been sent upstream.
         /// </summary>
-        public override event WWCP.OnPushEVSEDataResponseDelegate  OnEVSEDataPushed;
+        public override event WWCP.OnPushEVSEDataResponseDelegate  OnPushEVSEDataResponse;
 
         #endregion
 
-        #region OnEVSEStatusPush/-Pushed
+        #region OnPushEVSEStatusRequest/-Response
 
         /// <summary>
         /// An event fired whenever new EVSE status will be send upstream.
         /// </summary>
-        public override event WWCP.OnPushEVSEStatusRequestDelegate    OnEVSEStatusPush;
+        public override event WWCP.OnPushEVSEStatusRequestDelegate   OnPushEVSEStatusRequest;
 
         /// <summary>
         /// An event fired whenever new EVSE status had been sent upstream.
         /// </summary>
-        public override event WWCP.OnPushEVSEStatusResponseDelegate  OnEVSEStatusPushed;
+        public override event WWCP.OnPushEVSEStatusResponseDelegate  OnPushEVSEStatusResponse;
 
         #endregion
 
@@ -513,7 +523,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               String                               RemoteHTTPVirtualHost       = null,
                               RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                               String                               HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
-                              TimeSpan?                            RequestTimeout                = null,
+                              TimeSpan?                            RequestTimeout              = null,
 
                               String                               ServerName                  = CPOServer.DefaultHTTPServerName,
                               IPPort                               ServerTCPPort               = null,
@@ -609,6 +619,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (GroupedEVSEs == null)
                 throw new ArgumentNullException(nameof(GroupedEVSEs), "The given lookup of EVSEs must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
+
             #endregion
 
             #region Get effective number of EVSE data records to upload
@@ -633,21 +653,21 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 try
                 {
 
-                    OnEVSEDataPush?.Invoke(DateTime.Now,
-                                           Timestamp.Value,
-                                           this,
-                                           this.Id.ToString(),
-                                           EventTrackingId,
-                                           RoamingNetwork.Id,
-                                           ActionType,
-                                           GroupedEVSEs,
-                                           (UInt32) NumberOfEVSEs,
-                                           RequestTimeout);
+                    OnPushEVSEDataRequest?.Invoke(DateTime.Now,
+                                                  Timestamp.Value,
+                                                  this,
+                                                  this.Id.ToString(),
+                                                  EventTrackingId,
+                                                  RoamingNetwork.Id,
+                                                  ActionType,
+                                                  GroupedEVSEs,
+                                                  (UInt32) NumberOfEVSEs,
+                                                  RequestTimeout);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnEVSEStatusPush));
+                    e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnPushEVSEStatusRequest));
                 }
 
                 #endregion
@@ -688,23 +708,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnEVSEDataPushed?.Invoke(DateTime.Now,
-                                         Timestamp.Value,
-                                         this,
-                                         this.Id.ToString(),
-                                         EventTrackingId,
-                                         RoamingNetwork.Id,
-                                         ActionType,
-                                         GroupedEVSEs,
-                                         (UInt32) NumberOfEVSEs,
-                                         RequestTimeout,
-                                         result,
-                                         DateTime.Now - Timestamp.Value);
+                OnPushEVSEDataResponse?.Invoke(DateTime.Now,
+                                               Timestamp.Value,
+                                               this,
+                                               this.Id.ToString(),
+                                               EventTrackingId,
+                                               RoamingNetwork.Id,
+                                               ActionType,
+                                               GroupedEVSEs,
+                                               (UInt32) NumberOfEVSEs,
+                                               RequestTimeout,
+                                               result,
+                                               DateTime.Now - Timestamp.Value);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnEVSEStatusPushed));
+                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnPushEVSEStatusResponse));
             }
 
             #endregion
@@ -717,7 +737,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region PushEVSEData(EVSE,             ActionType = insert,   OperatorId = null, OperatorName = null,                      RequestTimeout = null)
+        #region PushEVSEData(EVSE,             ActionType = insert,   OperatorId = null, OperatorName = null, ...)
 
         /// <summary>
         /// Upload the EVSE data of the given EVSE.
@@ -1242,6 +1262,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (GroupedEVSEStatus == null)
                 throw new ArgumentNullException(nameof(GroupedEVSEStatus), "The given lookup of EVSE status must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
+
             #endregion
 
             #region Get effective number of EVSE status to upload
@@ -1277,21 +1307,21 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 try
                 {
 
-                    OnEVSEStatusPush?.Invoke(DateTime.Now,
-                                             Timestamp.Value,
-                                             this,
-                                             this.Id.ToString(),
-                                             EventTrackingId,
-                                             RoamingNetwork.Id,
-                                             ActionType,
-                                             _GroupedEVSEStatus,
-                                             (UInt32) _NumberOfEVSEStatus,
-                                             RequestTimeout);
+                    OnPushEVSEStatusRequest?.Invoke(DateTime.Now,
+                                                    Timestamp.Value,
+                                                    this,
+                                                    this.Id.ToString(),
+                                                    EventTrackingId,
+                                                    RoamingNetwork.Id,
+                                                    ActionType,
+                                                    _GroupedEVSEStatus,
+                                                    (UInt32) _NumberOfEVSEStatus,
+                                                    RequestTimeout);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnEVSEStatusPush));
+                    e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnPushEVSEStatusRequest));
                 }
 
                 #endregion
@@ -1333,23 +1363,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                OnEVSEStatusPushed?.Invoke(DateTime.Now,
-                                           Timestamp.Value,
-                                           this,
-                                           this.Id.ToString(),
-                                           EventTrackingId,
-                                           RoamingNetwork.Id,
-                                           ActionType,
-                                           _GroupedEVSEStatus,
-                                           (UInt32) _NumberOfEVSEStatus,
-                                           RequestTimeout,
-                                           result,
-                                           DateTime.Now - Timestamp.Value);
+                OnPushEVSEStatusResponse?.Invoke(DateTime.Now,
+                                                 Timestamp.Value,
+                                                 this,
+                                                 this.Id.ToString(),
+                                                 EventTrackingId,
+                                                 RoamingNetwork.Id,
+                                                 ActionType,
+                                                 _GroupedEVSEStatus,
+                                                 (UInt32) _NumberOfEVSEStatus,
+                                                 RequestTimeout,
+                                                 result,
+                                                 DateTime.Now - Timestamp.Value);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnEVSEStatusPushed));
+                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnPushEVSEStatusResponse));
             }
 
             #endregion
@@ -2116,11 +2146,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (AuthToken == null)
                 throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
+
             #endregion
 
             #region Send OnAuthorizeStart event
-
-            var Runtime = Stopwatch.StartNew();
 
             try
             {
@@ -2180,8 +2218,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnAuthorizeStarted event
 
-            Runtime.Stop();
-
             try
             {
 
@@ -2195,7 +2231,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                            SessionId,
                                            RequestTimeout,
                                            result,
-                                           Runtime.Elapsed);
+                                           DateTime.Now - Timestamp.Value);
 
             }
             catch (Exception e)
@@ -2251,11 +2287,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (EVSEId    == null)
                 throw new ArgumentNullException(nameof(EVSEId),     "The given EVSE identification must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
+
             #endregion
 
             #region Send OnAuthorizeEVSEStart event
-
-            var Runtime = Stopwatch.StartNew();
 
             try
             {
@@ -2317,8 +2361,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnAuthorizeEVSEStarted event
 
-            Runtime.Stop();
-
             try
             {
 
@@ -2333,7 +2375,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                SessionId,
                                                RequestTimeout,
                                                result,
-                                               Runtime.Elapsed);
+                                               DateTime.Now - Timestamp.Value);
 
             }
             catch (Exception e)
@@ -2389,11 +2431,19 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (ChargingStationId == null)
                 throw new ArgumentNullException(nameof(ChargingStationId),  "The given charging station identification must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
+
             #endregion
 
             #region Send OnAuthorizeChargingStationStart event
-
-            var Runtime = Stopwatch.StartNew();
 
             try
             {
@@ -2424,8 +2474,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnAuthorizeChargingStationStarted event
 
-            Runtime.Stop();
-
             try
             {
 
@@ -2440,7 +2488,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                           SessionId,
                                                           RequestTimeout,
                                                           result,
-                                                          Runtime.Elapsed);
+                                                          DateTime.Now - Timestamp.Value);
 
             }
             catch (Exception e)
@@ -2484,6 +2532,29 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           EventTracking_Id    EventTrackingId    = null,
                           TimeSpan?           RequestTimeout     = null)
         {
+
+            #region Initial checks
+
+            if (OperatorId == null)
+                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
+
+            if (SessionId == null)
+                throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
+
+            if (AuthToken == null)
+                throw new ArgumentNullException(nameof(AuthToken),   "The given auth token must not be null!");
+
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
+
+            #endregion
 
             #region Send OnAuthorizeStop event
 
@@ -2613,6 +2684,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (AuthToken  == null)
                 throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
+
             #endregion
 
             #region Send OnAuthorizeEVSEStop event
@@ -2741,6 +2822,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (AuthToken          == null)
                 throw new ArgumentNullException(nameof(AuthToken),          "The given authentication token must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
+
             #endregion
 
             #region Send OnAuthorizeChargingStationStop event
@@ -2828,6 +2919,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             if (ChargeDetailRecord == null)
                 throw new ArgumentNullException(nameof(ChargeDetailRecord),  "The given charge detail record must not be null!");
+
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
 
             #endregion
 

@@ -41,21 +41,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public class CPORoaming
     {
 
-        #region Data
+        #region Properties
 
         /// <summary>
         /// The CPO client.
         /// </summary>
-        private readonly CPOClient CPOClient;
+        public CPOClient        CPOClient         { get; }
 
         /// <summary>
         /// The CPO server.
         /// </summary>
-        private readonly CPOServer CPOServer;
-
-        #endregion
-
-        #region Properties
+        public CPOServer        CPOServer         { get; }
 
         /// <summary>
         /// The CPO client logger.
@@ -79,12 +75,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         // CPOClient logging methods
 
-        #region OnEVSEDataPush/-Pushed
+        #region OnPushEVSEDataRequest/-Response
 
         /// <summary>
         /// An event fired whenever a request pushing EVSE data records will be send.
         /// </summary>
-        public event OnPushEVSEDataRequestDelegate OnEVSEDataPush
+        public event OnPushEVSEDataRequestDelegate OnPushEVSEDataRequest
         {
 
             add
@@ -102,7 +98,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a SOAP request pushing EVSE data records will be send.
         /// </summary>
-        public event ClientRequestLogHandler OnEVSEDataPushRequest
+        public event ClientRequestLogHandler OnPushEVSEDataSOAPRequest
         {
 
             add
@@ -120,7 +116,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to a push EVSE data records SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnEVSEDataPushResponse
+        public event ClientResponseLogHandler OnPushEVSEDataSOAPResponse
         {
 
             add
@@ -138,7 +134,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever EVSE data records had been sent upstream.
         /// </summary>
-        public event OnPushEVSEDataResponseDelegate OnEVSEDataPushed
+        public event OnPushEVSEDataResponseDelegate OnPushEVSEDataResponse
         {
 
             add
@@ -155,12 +151,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region OnEVSEStatusPush/-Pushed
+        #region OnPushEVSEStatusRequest/-Response
 
         /// <summary>
         /// An event fired whenever a request pushing EVSE status records will be send.
         /// </summary>
-        public event OnPushEVSEStatusRequestDelegate OnEVSEStatusPush
+        public event OnPushEVSEStatusRequestDelegate OnPushEVSEStatusRequest
         {
 
             add
@@ -178,7 +174,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a SOAP request pushing EVSE status records will be send.
         /// </summary>
-        public event ClientRequestLogHandler OnEVSEStatusPushRequest
+        public event ClientRequestLogHandler OnPushEVSEStatusSOAPRequest
         {
 
             add
@@ -196,7 +192,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to a push EVSE status records SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnEVSEStatusPushResponse
+        public event ClientResponseLogHandler OnPushEVSEStatusSOAPResponse
         {
 
             add
@@ -214,7 +210,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever EVSE status records had been sent upstream.
         /// </summary>
-        public event OnPushEVSEStatusResponseDelegate OnEVSEStatusPushed
+        public event OnPushEVSEStatusResponseDelegate OnPushEVSEStatusResponse
         {
 
             add
@@ -236,25 +232,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize start request will be send.
         /// </summary>
-        public event OnAuthorizeStartHandler OnAuthorizeStart
-        {
-
-            add
-            {
-                CPOClient.OnAuthorizeStart += value;
-            }
-
-            remove
-            {
-                CPOClient.OnAuthorizeStart -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever an authorize start SOAP request will be send.
-        /// </summary>
-        public event ClientRequestLogHandler OnAuthorizeStartRequest
+        public event OnAuthorizeStartHandler OnAuthorizeStartRequest
         {
 
             add
@@ -270,9 +248,45 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         }
 
         /// <summary>
+        /// An event fired whenever an authorize start SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnAuthorizeStartSOAPRequest
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStartSOAPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStartSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
         /// An event fired whenever a response to an authorize start SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnAuthorizeStartResponse
+        public event ClientResponseLogHandler OnAuthorizeStartSOAPResponse
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStartSOAPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStartSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize start request was sent.
+        /// </summary>
+        public event OnAuthorizeStartedHandler OnAuthorizeStartResponse
         {
 
             add
@@ -287,24 +301,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         }
 
-        /// <summary>
-        /// An event fired whenever an authorize start request was sent.
-        /// </summary>
-        public event OnAuthorizeStartedHandler OnAuthorizeStarted
-        {
-
-            add
-            {
-                CPOClient.OnAuthorizeStarted += value;
-            }
-
-            remove
-            {
-                CPOClient.OnAuthorizeStarted -= value;
-            }
-
-        }
-
         #endregion
 
         #region OnAuthorizeStopRequest/-Response
@@ -312,7 +308,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize stop request will be send.
         /// </summary>
-        public event OnAuthorizeStopRequestHandler OnAuthorizeStop
+        public event OnAuthorizeStopRequestHandler OnAuthorizeStopRequest
         {
 
             add
@@ -330,7 +326,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize stop SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler OnAuthorizeStopRequest
+        public event ClientRequestLogHandler OnAuthorizeStopSOAPRequest
         {
 
             add
@@ -348,7 +344,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to an authorize stop SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnAuthorizeStopResponse
+        public event ClientResponseLogHandler OnAuthorizeStopSOAPResponse
         {
 
             add
@@ -366,7 +362,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize start request was sent.
         /// </summary>
-        public event OnAuthorizeStopResponseHandler OnAuthorizeStopped
+        public event OnAuthorizeStopResponseHandler OnAuthorizeStopResponse
         {
 
             add
@@ -388,7 +384,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a charge detail record will be send.
         /// </summary>
-        public event OnSendChargeDetailRecordRequestHandler OnSendChargeDetailRecord
+        public event OnSendChargeDetailRecordRequestHandler OnSendChargeDetailRecordRequest
         {
 
             add
@@ -406,7 +402,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a charge detail record will be send via SOAP.
         /// </summary>
-        public event ClientRequestLogHandler OnSendChargeDetailRecordRequest
+        public event ClientRequestLogHandler OnSendChargeDetailRecordSOAPRequest
         {
 
             add
@@ -424,7 +420,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a SOAP response to a sent charge detail record had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnSendChargeDetailRecordResponse
+        public event ClientResponseLogHandler OnSendChargeDetailRecordSOAPResponse
         {
 
             add
@@ -442,7 +438,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to a sent charge detail record had been received.
         /// </summary>
-        public event OnSendChargeDetailRecordResponseHandler OnChargeDetailRecordSent
+        public event OnSendChargeDetailRecordResponseHandler OnSendChargeDetailRecordResponse
         {
 
             add
@@ -464,7 +460,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a request pulling authentication data will be send.
         /// </summary>
-        public event OnPullAuthenticationDataRequestHandler OnPullAuthenticationData
+        public event OnPullAuthenticationDataRequestHandler OnPullAuthenticationDataRequest
         {
 
             add
@@ -482,7 +478,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a SOAP request pulling authentication data will be send.
         /// </summary>
-        public event ClientRequestLogHandler OnPullAuthenticationDataRequest
+        public event ClientRequestLogHandler OnPullAuthenticationDataSOAPRequest
         {
 
             add
@@ -500,7 +496,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to a pull authentication data SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnPullAuthenticationDataResponse
+        public event ClientResponseLogHandler OnPullAuthenticationDataSOAPResponse
         {
 
             add
@@ -518,7 +514,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a response to a pull authentication data request was received.
         /// </summary>
-        public event OnPullAuthenticationDataResponseHandler OnAuthenticationDataPulled
+        public event OnPullAuthenticationDataResponseHandler OnPullAuthenticationDataResponse
         {
 
             add
