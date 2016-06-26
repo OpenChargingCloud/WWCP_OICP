@@ -155,30 +155,30 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Register EVSE data/status push log events
 
             RegisterEvent("EVSEDataPush",
-                          handler => CPOClient.OnEVSEDataPushRequest    += handler,
-                          handler => CPOClient.OnEVSEDataPushRequest    -= handler,
+                          handler => CPOClient.OnPushEVSEDataSOAPRequest    += handler,
+                          handler => CPOClient.OnPushEVSEDataSOAPRequest    -= handler,
                           "EVSE", "EVSEData", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("EVSEDataPushed",
-                          handler => CPOClient.OnEVSEDataPushResponse   += handler,
-                          handler => CPOClient.OnEVSEDataPushResponse   -= handler,
+                          handler => CPOClient.OnPushEVSEDataSOAPResponse   += handler,
+                          handler => CPOClient.OnPushEVSEDataSOAPResponse   -= handler,
                           "EVSE", "EVSEData", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
 
             RegisterEvent("EVSEStatusPush",
-                          handler => CPOClient.OnEVSEStatusPushRequest  += handler,
-                          handler => CPOClient.OnEVSEStatusPushRequest  -= handler,
+                          handler => CPOClient.OnPushEVSEStatusSOAPRequest  += handler,
+                          handler => CPOClient.OnPushEVSEStatusSOAPRequest  -= handler,
                           "EVSE", "EVSEStatus", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("EVSEStatusPushed",
-                          handler => CPOClient.OnEVSEStatusPushResponse += handler,
-                          handler => CPOClient.OnEVSEStatusPushResponse -= handler,
+                          handler => CPOClient.OnPushEVSEStatusSOAPResponse += handler,
+                          handler => CPOClient.OnPushEVSEStatusSOAPResponse -= handler,
                           "EVSE", "EVSEStatus", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
@@ -186,15 +186,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
             RegisterEvent("AuthorizeStart",
-                          handler => CPOClient.OnAuthorizeStartRequest += handler,
-                          handler => CPOClient.OnAuthorizeStartRequest -= handler,
+                          handler => CPOClient.OnAuthorizeStartSOAPRequest += handler,
+                          handler => CPOClient.OnAuthorizeStartSOAPRequest -= handler,
                           "Authorize", "Request", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("AuthorizeStarted",
-                          handler => CPOClient.OnAuthorizeStartResponse += handler,
-                          handler => CPOClient.OnAuthorizeStartResponse -= handler,
+                          handler => CPOClient.OnAuthorizeStartSOAPResponse += handler,
+                          handler => CPOClient.OnAuthorizeStartSOAPResponse -= handler,
                           "Authorize", "Response", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);

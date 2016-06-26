@@ -159,9 +159,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
                           PushEVSEStatus(EVSEStatus,
                                          ActionType.insert,
-                                         OperatorId: EVSEOperator_Id.Parse("DE*GEF"),
-                                         OperatorName: "Test CPO 1",
-                                         QueryTimeout: TimeSpan.FromSeconds(120)).
+                                         OperatorId:      EVSEOperator_Id.Parse("DE*GEF"),
+                                         OperatorName:    "Test CPO 1",
+                                         RequestTimeout:  TimeSpan.FromSeconds(120)).
 
                           ContinueWith(task =>
                           {

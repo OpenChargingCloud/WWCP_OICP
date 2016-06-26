@@ -21,59 +21,75 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
+    #region OnPushEVSEData/-Status
+
     /// <summary>
     /// A delegate called whenever new EVSE data record will be send upstream.
     /// </summary>
-    public delegate Task OnEVSEDataPushDelegate(DateTime                               Timestamp,
-                                                CPOClient                              Sender,
-                                                String                                 SenderId,
-                                                ActionType                             ActionType,
-                                                ILookup<EVSEOperator, EVSEDataRecord>  EVSEData,
-                                                UInt32                                 NumberOfEVSEs);
+    public delegate Task OnPushEVSEDataRequestDelegate (DateTime                                LogTimestamp,
+                                                        DateTime                                RequestTimestamp,
+                                                        CPOClient                               Sender,
+                                                        String                                  SenderId,
+                                                        EventTracking_Id                        EventTrackingId,
+                                                        ActionType                              ActionType,
+                                                        ILookup<EVSEOperator, EVSEDataRecord>   EVSEData,
+                                                        UInt32                                  NumberOfEVSEs,
+                                                        TimeSpan?                               RequestTimeout);
 
 
     /// <summary>
     /// A delegate called whenever new EVSE data record had been send upstream.
     /// </summary>
-    public delegate Task OnEVSEDataPushedDelegate(DateTime                               Timestamp,
-                                                  CPOClient                              Sender,
-                                                  String                                 SenderId,
-                                                  ActionType                             ActionType,
-                                                  ILookup<EVSEOperator, EVSEDataRecord>  EVSEData,
-                                                  UInt32                                 NumberOfEVSEs,
-                                                  eRoamingAcknowledgement                Result,
-                                                  TimeSpan                               Duration);
+    public delegate Task OnPushEVSEDataResponseDelegate(DateTime                                LogTimestamp,
+                                                        DateTime                                RequestTimestamp,
+                                                        CPOClient                               Sender,
+                                                        String                                  SenderId,
+                                                        EventTracking_Id                        EventTrackingId,
+                                                        ActionType                              ActionType,
+                                                        ILookup<EVSEOperator, EVSEDataRecord>   EVSEData,
+                                                        UInt32                                  NumberOfEVSEs,
+                                                        TimeSpan?                               RequestTimeout,
+                                                        eRoamingAcknowledgement                 Result,
+                                                        TimeSpan                                Duration);
 
     
     /// <summary>
     /// A delegate called whenever new EVSE status will be send upstream.
     /// </summary>
-    public delegate Task OnEVSEStatusPushDelegate(DateTime                       Timestamp,
-                                                  CPOClient                      Sender,
-                                                  String                         SenderId,
-                                                  ActionType                     ActionType,
-                                                  IEnumerable<EVSEStatusRecord>  EVSEStatusRecords,
-                                                  UInt32                         NumberOfEVSEs);
+    public delegate Task OnPushEVSEStatusRequestDelegate (DateTime                        LogTimestamp,
+                                                          DateTime                        RequestTimestamp,
+                                                          CPOClient                       Sender,
+                                                          String                          SenderId,
+                                                          EventTracking_Id                EventTrackingId,
+                                                          ActionType                      ActionType,
+                                                          IEnumerable<EVSEStatusRecord>   EVSEStatusRecords,
+                                                          UInt32                          NumberOfEVSEs,
+                                                          TimeSpan?                       RequestTimeout);
 
 
     /// <summary>
     /// A delegate called whenever new EVSE status had been send upstream.
     /// </summary>
-    public delegate Task OnEVSEStatusPushedDelegate(DateTime                       Timestamp,
-                                                    CPOClient                      Sender,
-                                                    String                         SenderId,
-                                                    ActionType                     ActionType,
-                                                    IEnumerable<EVSEStatusRecord>  EVSEStatusRecords,
-                                                    UInt32                         NumberOfEVSEs,
-                                                    eRoamingAcknowledgement        Result,
-                                                    TimeSpan                       Duration);
+    public delegate Task OnPushEVSEStatusResponseDelegate(DateTime                        LogTimestamp,
+                                                          DateTime                        RequestTimestamp,
+                                                          CPOClient                       Sender,
+                                                          String                          SenderId,
+                                                          EventTracking_Id                EventTrackingId,
+                                                          ActionType                      ActionType,
+                                                          IEnumerable<EVSEStatusRecord>   EVSEStatusRecords,
+                                                          UInt32                          NumberOfEVSEs,
+                                                          TimeSpan?                       RequestTimeout,
+                                                          eRoamingAcknowledgement         Result,
+                                                          TimeSpan                        Duration);
 
+    #endregion
 
     #region OnAuthorizeStart
 
@@ -90,7 +106,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                  ChargingSession_Id             SessionId,
                                                  ChargingProduct_Id             PartnerProductId,
                                                  ChargingSession_Id             PartnerSessionId,
-                                                 TimeSpan?                      QueryTimeout);
+                                                 TimeSpan?                      RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response to a 'authorize start' request had been received.
@@ -104,7 +120,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    ChargingSession_Id           SessionId,
                                                    ChargingProduct_Id           PartnerProductId,
                                                    ChargingSession_Id           PartnerSessionId,
-                                                   TimeSpan?                    QueryTimeout,
+                                                   TimeSpan?                    RequestTimeout,
                                                    eRoamingAuthorizationStart   Result,
                                                    TimeSpan                     Duration);
 
@@ -124,7 +140,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                        Auth_Token                   AuthToken,
                                                        EVSE_Id                      EVSEId,
                                                        ChargingSession_Id           PartnerSessionId,
-                                                       TimeSpan?                    QueryTimeout);
+                                                       TimeSpan?                    RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response to a 'authorize stop' request had been received.
@@ -137,7 +153,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         Auth_Token                  AuthToken,
                                                         EVSE_Id                     EVSEId,
                                                         ChargingSession_Id          PartnerSessionId,
-                                                        TimeSpan?                   QueryTimeout,
+                                                        TimeSpan?                   RequestTimeout,
                                                         eRoamingAuthorizationStop   Result,
                                                         TimeSpan                    Duration);
 
@@ -148,21 +164,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// A delegate called whenever a 'charge detail record' will be send.
     /// </summary>
-    public delegate Task OnSendChargeDetailRecordRequestHandler(DateTime                   LogTimestamp,
-                                                                DateTime                   RequestTimestamp,
-                                                                CPOClient                  Sender,
-                                                                String                     SenderId,
-                                                                ChargeDetailRecord         ChargeDetailRecord,
-                                                                TimeSpan?                  QueryTimeout);
+    public delegate Task OnSendChargeDetailRecordRequestHandler (DateTime                  LogTimestamp,
+                                                                 DateTime                  RequestTimestamp,
+                                                                 CPOClient                 Sender,
+                                                                 String                    SenderId,
+                                                                 EventTracking_Id          EventTrackingId,
+                                                                 ChargeDetailRecord        ChargeDetailRecord,
+                                                                 TimeSpan?                 RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a sent 'charge detail record' had been received.
     /// </summary>
     public delegate Task OnSendChargeDetailRecordResponseHandler(DateTime                  Timestamp,
+                                                                 DateTime                  RequestTimestamp,
                                                                  CPOClient                 Sender,
                                                                  String                    SenderId,
+                                                                 EventTracking_Id          EventTrackingId,
                                                                  ChargeDetailRecord        ChargeDetailRecord,
-                                                                 TimeSpan?                 QueryTimeout,
+                                                                 TimeSpan?                 RequestTimeout,
                                                                  eRoamingAcknowledgement   Result,
                                                                  TimeSpan                  Duration);
 
@@ -177,8 +196,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                  DateTime                     RequestTimestamp,
                                                                  CPOClient                    Sender,
                                                                  String                       SenderId,
+                                                                 EventTracking_Id             EventTrackingId,
                                                                  EVSEOperator_Id              OperatorId,
-                                                                 TimeSpan?                    QueryTimeout);
+                                                                 TimeSpan?                    RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'pull authentication data' request had been received.
@@ -186,8 +206,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public delegate Task OnPullAuthenticationDataResponseHandler(DateTime                     Timestamp,
                                                                  CPOClient                    Sender,
                                                                  String                       SenderId,
+                                                                 EventTracking_Id             EventTrackingId,
                                                                  EVSEOperator_Id              OperatorId,
-                                                                 TimeSpan?                    QueryTimeout,
+                                                                 TimeSpan?                    RequestTimeout,
                                                                  eRoamingAuthenticationData   Result,
                                                                  TimeSpan                     Duration);
 

@@ -20,7 +20,6 @@
 using System;
 using System.Linq;
 using System.Threading;
-using System.Diagnostics;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -53,51 +52,51 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Events
 
-        #region OnEVSEDataPush/-Pushed
+        #region OnPushEVSEDataRequest/-Response
 
         /// <summary>
         /// An event fired whenever a request pushing EVSE data records will be send.
         /// </summary>
-        public event OnEVSEDataPushDelegate    OnEVSEDataPush;
+        public event OnPushEVSEDataRequestDelegate   OnPushEVSEDataRequest;
 
         /// <summary>
         /// An event fired whenever a SOAP request pushing EVSE data records will be send.
         /// </summary>
-        public event ClientRequestLogHandler   OnEVSEDataPushRequest;
+        public event ClientRequestLogHandler         OnPushEVSEDataSOAPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a push EVSE data records SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler  OnEVSEDataPushResponse;
+        public event ClientResponseLogHandler        OnPushEVSEDataSOAPResponse;
 
         /// <summary>
         /// An event fired whenever EVSE data records had been sent upstream.
         /// </summary>
-        public event OnEVSEDataPushedDelegate  OnEVSEDataPushed;
+        public event OnPushEVSEDataResponseDelegate  OnPushEVSEDataResponse;
 
         #endregion
 
-        #region OnEVSEStatusPush/-Pushed
+        #region OnPushEVSEStatusRequest/-Response
 
         /// <summary>
         /// An event fired whenever a request pushing EVSE status records will be send.
         /// </summary>
-        public event OnEVSEStatusPushDelegate   OnEVSEStatusPush;
+        public event OnPushEVSEStatusRequestDelegate   OnPushEVSEStatusRequest;
 
         /// <summary>
         /// An event fired whenever a SOAP request pushing EVSE status records will be send.
         /// </summary>
-        public event ClientRequestLogHandler    OnEVSEStatusPushRequest;
+        public event ClientRequestLogHandler           OnPushEVSEStatusSOAPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a push EVSE status records SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler   OnEVSEStatusPushResponse;
+        public event ClientResponseLogHandler          OnPushEVSEStatusSOAPResponse;
 
         /// <summary>
         /// An event fired whenever EVSE status records had been sent upstream.
         /// </summary>
-        public event OnEVSEStatusPushedDelegate OnEVSEStatusPushed;
+        public event OnPushEVSEStatusResponseDelegate  OnPushEVSEStatusResponse;
 
         #endregion
 
@@ -106,22 +105,22 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever an authorize start request will be send.
         /// </summary>
-        public event OnAuthorizeStartHandler    OnAuthorizeStart;
+        public event OnAuthorizeStartHandler    OnAuthorizeStartRequest;
 
         /// <summary>
         /// An event fired whenever an authorize start SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler    OnAuthorizeStartRequest;
+        public event ClientRequestLogHandler    OnAuthorizeStartSOAPRequest;
 
         /// <summary>
         /// An event fired whenever a response to an authorize start SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler   OnAuthorizeStartResponse;
+        public event ClientResponseLogHandler   OnAuthorizeStartSOAPResponse;
 
         /// <summary>
         /// An event fired whenever an authorize start request was sent.
         /// </summary>
-        public event OnAuthorizeStartedHandler  OnAuthorizeStarted;
+        public event OnAuthorizeStartedHandler  OnAuthorizeStartResponse;
 
         #endregion
 
@@ -271,7 +270,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (GroupedEVSEDataRecords == null)
-                throw new ArgumentNullException("GroupedEVSEDataRecords", "The given lookup of EVSE data records must not be null!");
+                throw new ArgumentNullException(nameof(GroupedEVSEDataRecords),  "The given lookup of EVSE data records must not be null!");
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
 
             #endregion
 
@@ -287,35 +295,36 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (NumberOfEVSEDataRecords > 0)
             {
 
-                #region Send OnEVSEDataPush event
-
-                var Runtime = Stopwatch.StartNew();
+                #region Send OnPushEVSEDataRequest event
 
                 try
                 {
 
-                    OnEVSEDataPush?.Invoke(DateTime.Now,
-                                           this,
-                                           ClientId,
-                                           OICPAction,
-                                           GroupedEVSEDataRecords,
-                                           (UInt32) NumberOfEVSEDataRecords);
+                    OnPushEVSEDataRequest?.Invoke(DateTime.Now,
+                                                  Timestamp.Value,
+                                                  this,
+                                                  ClientId,
+                                                  EventTrackingId,
+                                                  OICPAction,
+                                                  GroupedEVSEDataRecords,
+                                                  (UInt32) NumberOfEVSEDataRecords,
+                                                  RequestTimeout);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnEVSEDataPush));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEDataRequest));
                 }
 
                 #endregion
 
                 using (var _OICPClient = new SOAPClient(_Hostname,
-                                                       _TCPPort,
-                                                       _HTTPVirtualHost,
-                                                       "/ibis/ws/eRoamingEvseData_V2.1",
-                                                       UserAgent,
-                                                       _RemoteCertificateValidator,
-                                                       DNSClient))
+                                                        _TCPPort,
+                                                        _HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingEvseData_V2.1",
+                                                        UserAgent,
+                                                        _RemoteCertificateValidator,
+                                                        DNSClient))
                 {
 
                     var result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEDataXML(GroupedEVSEDataRecords,
@@ -323,11 +332,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                                              OperatorId,
                                                                                              OperatorName),
                                                          "eRoamingPushEvseData",
-                                                         RequestLogDelegate:   OnEVSEDataPushRequest,
-                                                         ResponseLogDelegate:  OnEVSEDataPushResponse,
+                                                         RequestLogDelegate:   OnPushEVSEDataSOAPRequest,
+                                                         ResponseLogDelegate:  OnPushEVSEDataSOAPResponse,
                                                          CancellationToken:    CancellationToken,
                                                          EventTrackingId:      EventTrackingId,
-                                                         QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                         QueryTimeout:         RequestTimeout,
 
                                                          #region OnSuccess
 
@@ -383,26 +392,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         );
 
 
-                    #region Send OnEVSEDataPushed event
-
-                    Runtime.Stop();
+                    #region Send OnPushEVSEDataResponse event
 
                     try
                     {
 
-                        OnEVSEDataPushed?.Invoke(DateTime.Now,
-                                                 this,
-                                                 ClientId,
-                                                 OICPAction,
-                                                 GroupedEVSEDataRecords,
-                                                 (UInt32)NumberOfEVSEDataRecords,
-                                                 result.Content,
-                                                 Runtime.Elapsed);
+                        OnPushEVSEDataResponse?.Invoke(DateTime.Now,
+                                                       Timestamp.Value,
+                                                       this,
+                                                       ClientId,
+                                                       EventTrackingId,
+                                                       OICPAction,
+                                                       GroupedEVSEDataRecords,
+                                                       (UInt32) NumberOfEVSEDataRecords,
+                                                       RequestTimeout,
+                                                       result.Content,
+                                                       DateTime.Now - Timestamp.Value);
 
                     }
                     catch (Exception e)
                     {
-                        e.Log(nameof(CPOClient) + "." + nameof(OnEVSEDataPushed));
+                        e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEDataResponse));
                     }
 
                     #endregion
@@ -629,12 +639,21 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (EVSEStatusRecords == null)
                 throw new ArgumentNullException(nameof(EVSEStatusRecords), "The given enumeration of EVSE status records must not be null!");
 
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
+
             #endregion
 
             #region Get effective number of EVSE data records to upload
 
             var _EVSEStatusRecords         = EVSEStatusRecords.ToArray();
-            var NumberOfEVSEStatusRecords  = _EVSEStatusRecords.Count();
+            var NumberOfEVSEStatusRecords  = _EVSEStatusRecords.Length;
 
             #endregion
 
@@ -642,35 +661,36 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (NumberOfEVSEStatusRecords > 0)
             {
 
-                #region Send OnEVSEStatusPush event
-
-                var Runtime = Stopwatch.StartNew();
+                #region Send OnPushEVSEStatusRequest event
 
                 try
                 {
 
-                    OnEVSEStatusPush?.Invoke(DateTime.Now,
-                                             this,
-                                             ClientId,
-                                             OICPAction,
-                                             _EVSEStatusRecords,
-                                             (UInt32) NumberOfEVSEStatusRecords);
+                    OnPushEVSEStatusRequest?.Invoke(DateTime.Now,
+                                                    Timestamp.Value,
+                                                    this,
+                                                    ClientId,
+                                                    EventTrackingId,
+                                                    OICPAction,
+                                                    _EVSEStatusRecords,
+                                                    (UInt32) NumberOfEVSEStatusRecords,
+                                                    RequestTimeout);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnEVSEStatusPush));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEStatusRequest));
                 }
 
                 #endregion
 
                 using (var _OICPClient = new SOAPClient(_Hostname,
-                                                       _TCPPort,
-                                                       _HTTPVirtualHost,
-                                                       "/ibis/ws/eRoamingEvseStatus_V2.0",
-                                                       UserAgent,
-                                                       _RemoteCertificateValidator,
-                                                       DNSClient))
+                                                        _TCPPort,
+                                                        _HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                        UserAgent,
+                                                        _RemoteCertificateValidator,
+                                                        DNSClient))
                 {
 
                      var result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEStatusXML(_EVSEStatusRecords,
@@ -678,11 +698,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                                                 OperatorId,
                                                                                                 OperatorName),
                                                           "eRoamingPushEvseStatus",
-                                                          RequestLogDelegate:   OnEVSEStatusPushRequest,
-                                                          ResponseLogDelegate:  OnEVSEStatusPushResponse,
+                                                          RequestLogDelegate:   OnPushEVSEStatusSOAPRequest,
+                                                          ResponseLogDelegate:  OnPushEVSEStatusSOAPResponse,
                                                           CancellationToken:    CancellationToken,
                                                           EventTrackingId:      EventTrackingId,
-                                                          QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                          QueryTimeout:         RequestTimeout,
 
                                                           #region OnSuccess
 
@@ -739,26 +759,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          );
 
 
-                    #region Send OnEVSEStatusPushed event
-
-                    Runtime.Stop();
+                    #region Send OnPushEVSEStatusResponse event
 
                     try
                     {
 
-                        OnEVSEStatusPushed?.Invoke(DateTime.Now,
-                                                   this,
-                                                   ClientId,
-                                                   OICPAction,
-                                                   _EVSEStatusRecords,
-                                                   (UInt32) NumberOfEVSEStatusRecords,
-                                                   result.Content,
-                                                   Runtime.Elapsed);
+                        OnPushEVSEStatusResponse?.Invoke(DateTime.Now,
+                                                         Timestamp.Value,
+                                                         this,
+                                                         ClientId,
+                                                         EventTrackingId,
+                                                         OICPAction,
+                                                         _EVSEStatusRecords,
+                                                         (UInt32) NumberOfEVSEStatusRecords,
+                                                         RequestTimeout,
+                                                         result.Content,
+                                                         DateTime.Now - Timestamp.Value);
 
                     }
                     catch (Exception e)
                     {
-                        e.Log(nameof(CPOClient) + "." + nameof(OnEVSEDataPushed));
+                        e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEDataResponse));
                     }
 
                     #endregion
@@ -851,40 +872,57 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         {
 
-            #region Send OnAuthorizeStart event
+            #region Initial checks
 
-            var Runtime = Stopwatch.StartNew();
+            if (OperatorId == null)
+                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
+
+            if (AuthToken == null)
+                throw new ArgumentNullException(nameof(AuthToken),   "The given auth token must not be null!");
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
+
+            #endregion
+
+            #region Send OnAuthorizeStartRequest event
 
             try
             {
 
-                OnAuthorizeStart?.Invoke(DateTime.Now,
-                                         Timestamp ?? DateTime.Now,
-                                         this,
-                                         ClientId,
-                                         OperatorId,
-                                         AuthToken,
-                                         EVSEId,
-                                         SessionId,
-                                         PartnerProductId,
-                                         PartnerSessionId,
-                                         RequestTimeout);
+                OnAuthorizeStartRequest?.Invoke(DateTime.Now,
+                                                Timestamp.Value,
+                                                this,
+                                                ClientId,
+                                                OperatorId,
+                                                AuthToken,
+                                                EVSEId,
+                                                SessionId,
+                                                PartnerProductId,
+                                                PartnerSessionId,
+                                                RequestTimeout);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStart));
+                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStartRequest));
             }
 
             #endregion
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                   TCPPort,
-                                                   HTTPVirtualHost,
-                                                   "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                   UserAgent,
-                                                   _RemoteCertificateValidator,
-                                                   DNSClient))
+                                                    TCPPort,
+                                                    HTTPVirtualHost,
+                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    UserAgent,
+                                                    _RemoteCertificateValidator,
+                                                    DNSClient))
             {
 
                 var result = await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStartXML(OperatorId,
@@ -894,11 +932,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                                            SessionId,
                                                                                            PartnerSessionId),
                                                      "eRoamingAuthorizeStart",
-                                                     RequestLogDelegate:   OnAuthorizeStartRequest,
-                                                     ResponseLogDelegate:  OnAuthorizeStartResponse,
+                                                     RequestLogDelegate:   OnAuthorizeStartSOAPRequest,
+                                                     ResponseLogDelegate:  OnAuthorizeStartSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -954,30 +992,28 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                     );
 
-                #region Send OnAuthorizeStart event
-
-                Runtime.Stop();
+                #region Send OnAuthorizeStartResponse event
 
                 try
                 {
 
-                    OnAuthorizeStarted?.Invoke(DateTime.Now,
-                                               this,
-                                               ClientId,
-                                               OperatorId,
-                                               AuthToken,
-                                               EVSEId,
-                                               SessionId,
-                                               PartnerProductId,
-                                               PartnerSessionId,
-                                               RequestTimeout,
-                                               result.Content,
-                                               Runtime.Elapsed);
+                    OnAuthorizeStartResponse?.Invoke(DateTime.Now,
+                                                     this,
+                                                     ClientId,
+                                                     OperatorId,
+                                                     AuthToken,
+                                                     EVSEId,
+                                                     SessionId,
+                                                     PartnerProductId,
+                                                     PartnerSessionId,
+                                                     RequestTimeout,
+                                                     result.Content,
+                                                     DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStarted));
+                    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStartResponse));
                 }
 
                 #endregion
@@ -1035,6 +1071,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (AuthToken == null)
                 throw new ArgumentNullException(nameof(AuthToken),   "The given auth token must not be null!");
 
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -1045,13 +1084,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnAuthorizeStopRequest event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnAuthorizeStopRequest?.Invoke(DateTime.Now,
-                                               Timestamp ?? DateTime.Now,
+                                               Timestamp.Value,
                                                this,
                                                ClientId,
                                                OperatorId,
@@ -1088,7 +1125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnAuthorizeStopSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1146,8 +1183,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 #region Send OnAuthorizeStopResponse event
 
-                Runtime.Stop();
-
                 try
                 {
 
@@ -1161,7 +1196,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     PartnerSessionId,
                                                     RequestTimeout,
                                                     result.Content,
-                                                    Runtime.Elapsed);
+                                                    DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
@@ -1206,6 +1241,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (ChargeDetailRecord == null)
                 throw new ArgumentNullException(nameof(ChargeDetailRecord),  "The given charge detail record must not be null!");
 
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = this.RequestTimeout;
+
             #endregion
 
             #region Documentation
@@ -1230,15 +1274,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnSendChargeDetailRecord event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnSendChargeDetailRecordRequest?.Invoke(DateTime.Now,
-                                                        Timestamp ?? DateTime.Now,
+                                                        Timestamp.Value,
                                                         this,
                                                         ClientId,
+                                                        EventTrackingId,
                                                         ChargeDetailRecord,
                                                         RequestTimeout);
 
@@ -1251,12 +1294,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                   TCPPort,
-                                                   HTTPVirtualHost,
-                                                   "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                   UserAgent,
-                                                   _RemoteCertificateValidator,
-                                                   DNSClient))
+                                                    TCPPort,
+                                                    HTTPVirtualHost,
+                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    UserAgent,
+                                                    _RemoteCertificateValidator,
+                                                    DNSClient))
             {
 
                 var result = await _OICPClient.Query(SOAP.Encapsulation(ChargeDetailRecord.ToXML()),
@@ -1265,83 +1308,83 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnSendChargeDetailRecordSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
-                                                    #region OnSuccess
+                                                     #region OnSuccess
 
-                                                    OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
 
-                                                    #endregion
+                                                     #endregion
 
-                                                    #region OnSOAPFault
+                                                     #region OnSOAPFault
 
-                                                    OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                        DebugX.Log("e:" + httpresponse.EntirePDU);
+                                                         DebugX.Log("e:" + httpresponse.EntirePDU);
 
-                                                        SendSOAPError(timestamp, this, httpresponse.Content);
+                                                         SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                        return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                         new eRoamingAcknowledgement(StatusCodes.SystemError,
-                                                                                                                                     httpresponse.Content.ToString()),
-                                                                                                         IsFault: true);
+                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                      httpresponse.Content.ToString()),
+                                                                                                          IsFault: true);
 
-                                                    },
+                                                     },
 
-                                                    #endregion
+                                                     #endregion
 
-                                                    #region OnHTTPError
+                                                     #region OnHTTPError
 
-                                                    OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                        DebugX.Log("e:" + httpresponse.EntirePDU);
+                                                         DebugX.Log("e:" + httpresponse.EntirePDU);
 
-                                                        SendHTTPError(timestamp, this, httpresponse);
+                                                         SendHTTPError(timestamp, this, httpresponse);
 
-                                                        return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                         new eRoamingAcknowledgement(StatusCodes.SystemError,
-                                                                                                                                     httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                     httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                         IsFault: true);
+                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                          IsFault: true);
 
-                                                    },
+                                                     },
 
-                                                    #endregion
+                                                     #endregion
 
-                                                    #region OnException
+                                                     #region OnException
 
-                                                    OnException: (timestamp, sender, exception) => {
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                        DebugX.Log("e:" + exception.Message);
+                                                         DebugX.Log("e:" + exception.Message);
 
-                                                        SendException(timestamp, sender, exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                        return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
-                                                                                                                                                 exception.Message,
-                                                                                                                                                 exception.StackTrace,
-                                                                                                                                                 ChargeDetailRecord.SessionId),
-                                                                                                                     Exception:  exception);
+                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                  exception.Message,
+                                                                                                                                                  exception.StackTrace,
+                                                                                                                                                  ChargeDetailRecord.SessionId),
+                                                                                                                      Exception:  exception);
 
-                                                    }
+                                                     }
 
-                                                    #endregion
+                                                     #endregion
 
-                                                   );
+                                                    );
 
                 #region Send OnChargeDetailRecordSent event
-
-                Runtime.Stop();
 
                 try
                 {
 
                     OnSendChargeDetailRecordResponse?.Invoke(DateTime.Now,
+                                                             Timestamp.Value,
                                                              this,
                                                              ClientId,
+                                                             EventTrackingId,
                                                              ChargeDetailRecord,
                                                              RequestTimeout,
                                                              result.Content,
-                                                             Runtime.Elapsed);
+                                                             DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
@@ -1387,6 +1430,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (OperatorId == null)
                 throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification msut not be null!");
 
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -1397,15 +1443,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #region Send OnPullAuthenticationData event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnPullAuthenticationDataRequest?.Invoke(DateTime.Now,
-                                                        Timestamp ?? DateTime.Now,
+                                                        Timestamp.Value,
                                                         this,
                                                         ClientId,
+                                                        EventTrackingId,
                                                         OperatorId,
                                                         RequestTimeout);
 
@@ -1432,7 +1477,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnPullAuthenticationDataSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1485,18 +1530,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 #region Send OnAuthenticationDataPulled event
 
-                Runtime.Stop();
-
                 try
                 {
 
                     OnPullAuthenticationDataResponse?.Invoke(DateTime.Now,
                                                              this,
                                                              ClientId,
+                                                             EventTrackingId,
                                                              OperatorId,
                                                              RequestTimeout,
                                                              result.Content,
-                                                             Runtime.Elapsed);
+                                                             DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)

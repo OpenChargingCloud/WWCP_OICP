@@ -84,17 +84,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a request pushing EVSE data records will be send.
         /// </summary>
-        public event OnEVSEDataPushDelegate OnEVSEDataPush
+        public event OnPushEVSEDataRequestDelegate OnEVSEDataPush
         {
 
             add
             {
-                CPOClient.OnEVSEDataPush += value;
+                CPOClient.OnPushEVSEDataRequest += value;
             }
 
             remove
             {
-                CPOClient.OnEVSEDataPush -= value;
+                CPOClient.OnPushEVSEDataRequest -= value;
             }
 
         }
@@ -107,12 +107,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                CPOClient.OnEVSEDataPushRequest += value;
+                CPOClient.OnPushEVSEDataSOAPRequest += value;
             }
 
             remove
             {
-                CPOClient.OnEVSEDataPushRequest -= value;
+                CPOClient.OnPushEVSEDataSOAPRequest -= value;
             }
 
         }
@@ -125,12 +125,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                CPOClient.OnEVSEDataPushResponse += value;
+                CPOClient.OnPushEVSEDataSOAPResponse += value;
             }
 
             remove
             {
-                CPOClient.OnEVSEDataPushResponse -= value;
+                CPOClient.OnPushEVSEDataSOAPResponse -= value;
             }
 
         }
@@ -138,17 +138,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever EVSE data records had been sent upstream.
         /// </summary>
-        public event OnEVSEDataPushedDelegate OnEVSEDataPushed
+        public event OnPushEVSEDataResponseDelegate OnEVSEDataPushed
         {
 
             add
             {
-                CPOClient.OnEVSEDataPushed += value;
+                CPOClient.OnPushEVSEDataResponse += value;
             }
 
             remove
             {
-                CPOClient.OnEVSEDataPushed -= value;
+                CPOClient.OnPushEVSEDataResponse -= value;
             }
 
         }
@@ -160,17 +160,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever a request pushing EVSE status records will be send.
         /// </summary>
-        public event OnEVSEStatusPushDelegate OnEVSEStatusPush
+        public event OnPushEVSEStatusRequestDelegate OnEVSEStatusPush
         {
 
             add
             {
-                CPOClient.OnEVSEStatusPush += value;
+                CPOClient.OnPushEVSEStatusRequest += value;
             }
 
             remove
             {
-                CPOClient.OnEVSEStatusPush -= value;
+                CPOClient.OnPushEVSEStatusRequest -= value;
             }
 
         }
@@ -183,12 +183,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                CPOClient.OnEVSEStatusPushRequest += value;
+                CPOClient.OnPushEVSEStatusSOAPRequest += value;
             }
 
             remove
             {
-                CPOClient.OnEVSEStatusPushRequest -= value;
+                CPOClient.OnPushEVSEStatusSOAPRequest -= value;
             }
 
         }
@@ -201,12 +201,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             add
             {
-                CPOClient.OnEVSEStatusPushResponse += value;
+                CPOClient.OnPushEVSEStatusSOAPResponse += value;
             }
 
             remove
             {
-                CPOClient.OnEVSEStatusPushResponse -= value;
+                CPOClient.OnPushEVSEStatusSOAPResponse -= value;
             }
 
         }
@@ -214,17 +214,17 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever EVSE status records had been sent upstream.
         /// </summary>
-        public event OnEVSEStatusPushedDelegate OnEVSEStatusPushed
+        public event OnPushEVSEStatusResponseDelegate OnEVSEStatusPushed
         {
 
             add
             {
-                CPOClient.OnEVSEStatusPushed += value;
+                CPOClient.OnPushEVSEStatusResponse += value;
             }
 
             remove
             {
-                CPOClient.OnEVSEStatusPushed -= value;
+                CPOClient.OnPushEVSEStatusResponse -= value;
             }
 
         }

@@ -60,12 +60,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// An event fired whenever new EVSE data record will be send upstream.
         /// </summary>
-        public event OnEVSEDataPushDelegate   OnEVSEDataPush;
+        public event OnPushEVSEDataRequestDelegate   OnEVSEDataPush;
 
         /// <summary>
         /// An event fired whenever new EVSE data record had been sent upstream.
         /// </summary>
-        public event OnEVSEDataPushedDelegate OnEVSEDataPushed;
+        public event OnPushEVSEDataResponseDelegate OnEVSEDataPushed;
 
         #endregion
 
