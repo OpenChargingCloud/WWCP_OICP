@@ -29,7 +29,10 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public static partial class Ext
+    /// <summary>
+    /// Extention methods for OICP EVSE search results.
+    /// </summary>
+    public static class eRoamingEvseSearchResultExtentions
     {
 
         #region HasResults(this eRoamingEvseSearchResult)
@@ -53,36 +56,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
     /// <summary>
-    /// A group of OICP v2.0 EVSE search result.
+    /// A group of OICP EVSE search result.
     /// </summary>
     public class eRoamingEvseSearchResult
     {
 
         #region Properties
 
-        #region EVSEMatches
-
-        private readonly IEnumerable<EVSEMatch> _EVSEMatches;
-
         /// <summary>
         /// An enumeration of EVSE matches.
         /// </summary>
-        public IEnumerable<EVSEMatch> EVSEMatches
-        {
-            get
-            {
-                return _EVSEMatches;
-            }
-        }
-
-        #endregion
+        public IEnumerable<EVSEMatch> EVSEMatches { get; }
 
         #endregion
 
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new group of OICP v2.0 EVSE search result.
+        /// Create a new group of OICP EVSE search result.
         /// </summary>
         /// <param name="EVSEMatches">An enumeration of EVSE matches.</param>
         public eRoamingEvseSearchResult(IEnumerable<EVSEMatch> EVSEMatches)
@@ -91,11 +82,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (EVSEMatches == null)
-                throw new ArgumentNullException("EVSEMatches", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(EVSEMatches),  "The given enumeration of matching EVSEs must not be null!");
 
             #endregion
 
-            this._EVSEMatches  = EVSEMatches;
+            this.EVSEMatches  = EVSEMatches;
 
         }
 

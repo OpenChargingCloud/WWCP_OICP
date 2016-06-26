@@ -423,7 +423,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -451,9 +451,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingEVSEData>(httpresponse,
-                                                                                                   new eRoamingEVSEData(StatusCode: new StatusCode(StatusCodes.DataError,
-                                                                                                                                                   Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                   AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
+                                                                                                   new eRoamingEVSEData(StatusCodes.DataError,
+                                                                                                                        Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                        AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                    IsFault: true);
 
                                                      },
@@ -466,7 +466,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingEVSEData>.ExceptionThrown(new eRoamingEVSEData(StatusCodes.ServiceNotAvailable,
+                                                                                                                                    exception.Message,
+                                                                                                                                    exception.StackTrace),
+                                                                                                               Exception: exception);
 
                                                      }
 
@@ -602,7 +605,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnSearchEVSESOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSOAPFault
 
@@ -650,7 +653,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingEvseSearchResult>.ExceptionThrown(new eRoamingEvseSearchResult(new EVSEMatch[0]),
+                                                                                                                       Exception: exception);
 
                                                      }
 
@@ -781,7 +785,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnPullEVSEStatusSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -809,9 +813,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingEVSEStatus>(httpresponse,
-                                                                                                     new eRoamingEVSEStatus(new StatusCode(StatusCodes.DataError,
-                                                                                                                                           httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                           httpresponse.HTTPBody.ToUTF8String())),
+                                                                                                     new eRoamingEVSEStatus(StatusCodes.DataError,
+                                                                                                                            Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                            AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                      IsFault: true);
 
                                                      },
@@ -824,7 +828,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingEVSEStatus>.ExceptionThrown(new eRoamingEVSEStatus(StatusCodes.ServiceNotAvailable,
+                                                                                                                                        exception.Message,
+                                                                                                                                        exception.StackTrace),
+                                                                                                                 Exception: exception);
 
                                                      }
 
@@ -947,7 +954,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnPullEVSEStatusByIdSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -975,9 +982,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingEVSEStatusById>(httpresponse,
-                                                                                                         new eRoamingEVSEStatusById(new StatusCode(StatusCodes.DataError,
-                                                                                                                                                   httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                   httpresponse.HTTPBody.      ToUTF8String())),
+                                                                                                         new eRoamingEVSEStatusById(StatusCodes.DataError,
+                                                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                    AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                          IsFault: true);
 
                                                      },
@@ -990,7 +997,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingEVSEStatusById>.ExceptionThrown(new eRoamingEVSEStatusById(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                exception.Message,
+                                                                                                                                                exception.StackTrace),
+                                                                                                                     Exception: exception);
 
                                                      }
 
@@ -1109,7 +1119,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnPushAuthenticationDataSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1154,7 +1164,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                  exception.Message,
+                                                                                                                                                  exception.StackTrace),
+                                                                                                                      Exception: exception);
 
                                                      }
 
@@ -1322,68 +1335,72 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             {
 
                 var result = await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteReservationStartXML(ProviderId,
-                                                                                                             EVSEId,
-                                                                                                             eMAId,
-                                                                                                             SessionId,
-                                                                                                             PartnerSessionId,
-                                                                                                             PartnerProductId),
-                                                      "eRoamingAuthorizeRemoteReservationStart",
-                                                      RequestLogDelegate:   OnReservationStartSOAPRequest,
-                                                      ResponseLogDelegate:  OnReservationStartSOAPResponse,
-                                                      CancellationToken:    CancellationToken,
-                                                      EventTrackingId:      EventTrackingId,
-                                                      QueryTimeout:         RequestTimeout,
+                                                                                                            EVSEId,
+                                                                                                            eMAId,
+                                                                                                            SessionId,
+                                                                                                            PartnerSessionId,
+                                                                                                            PartnerProductId),
+                                                     "eRoamingAuthorizeRemoteReservationStart",
+                                                     RequestLogDelegate:   OnReservationStartSOAPRequest,
+                                                     ResponseLogDelegate:  OnReservationStartSOAPResponse,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
-                                                      #region OnSuccess
+                                                     #region OnSuccess
 
-                                                      OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
 
-                                                      #endregion
+                                                     #endregion
 
-                                                      #region OnSOAPFault
+                                                     #region OnSOAPFault
 
-                                                      OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                          SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                         SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                           new eRoamingAcknowledgement(StatusCodes.DataError,
-                                                                                                                                       httpresponse.Content.ToString()),
-                                                                                                           IsFault: true);
+                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                                                                                                      httpresponse.Content.ToString()),
+                                                                                                          IsFault: true);
 
-                                                      },
+                                                     },
 
-                                                      #endregion
+                                                     #endregion
 
-                                                      #region OnHTTPError
+                                                     #region OnHTTPError
 
-                                                      OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                          SendHTTPError(timestamp, soapclient, httpresponse);
+                                                         SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                           new eRoamingAcknowledgement(StatusCodes.DataError,
-                                                                                                                                       httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                       httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                           IsFault: true);
+                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                          IsFault: true);
 
-                                                      },
+                                                     },
 
-                                                      #endregion
+                                                     #endregion
 
-                                                      #region OnException
+                                                     #region OnException
 
-                                                      OnException: (timestamp, sender, exception) => {
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                          SendException(timestamp, sender, exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                          return null;
+                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                  exception.Message,
+                                                                                                                                                  exception.StackTrace,
+                                                                                                                                                  SessionId),
+                                                                                                                      Exception: exception);
 
-                                                      }
+                                                     }
 
-                                                      #endregion
+                                                     #endregion
 
-                                                     );
+                                                    );
 
                 #region Send OnReservationStartResponse event
 
@@ -1504,66 +1521,70 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             {
 
                 var result = await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteReservationStopXML(SessionId,
-                                                                                                     ProviderId,
-                                                                                                     EVSEId,
-                                                                                                     PartnerSessionId),
-                                               "eRoamingAuthorizeRemoteReservationStop",
-                                               RequestLogDelegate:   OnReservationStartSOAPRequest,
-                                               ResponseLogDelegate:  OnReservationStopSOAPResponse,
-                                               CancellationToken:    CancellationToken,
-                                               EventTrackingId:      EventTrackingId,
-                                               QueryTimeout:         RequestTimeout,
+                                                                                                           ProviderId,
+                                                                                                           EVSEId,
+                                                                                                           PartnerSessionId),
+                                                     "eRoamingAuthorizeRemoteReservationStop",
+                                                     RequestLogDelegate:   OnReservationStartSOAPRequest,
+                                                     ResponseLogDelegate:  OnReservationStopSOAPResponse,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
-                                               #region OnSuccess
+                                                     #region OnSuccess
 
-                                               OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnSOAPFault
+                                                     #region OnSOAPFault
 
-                                               OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                         SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(StatusCodes.DataError,
-                                                                                                                                httpresponse.Content.ToString()),
-                                                                                                    IsFault: true);
+                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                                                                                                      httpresponse.Content.ToString()),
+                                                                                                          IsFault: true);
 
-                                               },
+                                                     },
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnHTTPError
+                                                     #region OnHTTPError
 
-                                               OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                   SendHTTPError(timestamp, soapclient, httpresponse);
+                                                         SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(StatusCodes.DataError,
-                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                    IsFault: true);
+                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                          IsFault: true);
 
-                                               },
+                                                     },
 
-                                               #endregion
+                                                     #endregion
 
-                                               #region OnException
+                                                     #region OnException
 
-                                               OnException: (timestamp, sender, exception) => {
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                   SendException(timestamp, sender, exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                   return null;
+                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                  exception.Message,
+                                                                                                                                                  exception.StackTrace,
+                                                                                                                                                  SessionId),
+                                                                                                                      Exception: exception);
 
-                                               }
+                                                     }
 
-                                               #endregion
+                                                     #endregion
 
-                                        );
+                                                    );
 
                 #region Send OnReservationStopResponse event
 
@@ -1700,7 +1721,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1745,7 +1766,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                  exception.Message,
+                                                                                                                                                  exception.StackTrace,
+                                                                                                                                                  SessionId),
+                                                                                                                      Exception: exception);
 
                                                      }
 
@@ -1881,7 +1906,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnAuthorizeRemoteStopSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1926,7 +1951,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                  exception.Message,
+                                                                                                                                                  exception.StackTrace,
+                                                                                                                                                  SessionId),
+                                                                                                                      Exception: exception);
 
                                                      }
 
@@ -2054,7 +2083,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnGetChargeDetailRecordsSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -2069,8 +2098,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
                                                          return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
-                                                                                                                          new ChargeDetailRecord[0],
-                                                                                                                          IsFault: true);
+                                                                                                                  new ChargeDetailRecord[0],
+                                                                                                                  IsFault: true);
 
                                                      },
 
@@ -2083,8 +2112,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
-                                                                                                                          new ChargeDetailRecord[0],
-                                                                                                                          IsFault: true);
+                                                                                                                  new ChargeDetailRecord[0],
+                                                                                                                  IsFault: true);
 
                                                      },
 

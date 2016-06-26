@@ -21,6 +21,8 @@ using System;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
+using org.GraphDefined.Vanaheimr.Illias;
+
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPv2_0
@@ -73,17 +75,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region eRoamingEVSEStatus(StatusCode)
+        #region eRoamingEVSEStatus(Code, Description = null, AdditionalInfo = null)
 
         /// <summary>
         /// Create a new group of OICP operator EVSE status records or a status code.
         /// </summary>
-        /// <pparam name="StatusCode">The status code for this request.</pparam>
-        public eRoamingEVSEStatus(StatusCode  StatusCode)
+        /// <param name="Code">The result code of the operation.</param>
+        /// <param name="Description">An optional description of the result code.</param>
+        /// <param name="AdditionalInfo">An optional additional information.</param>
+        public eRoamingEVSEStatus(StatusCodes  Code,
+                                  String       Description     = null,
+                                  String       AdditionalInfo  = null)
         {
 
             this.OperatorEVSEStatus  = new OperatorEVSEStatus[0];
-            this.StatusCode          = StatusCode ?? new StatusCode(StatusCodes.DataError);
+            this.StatusCode          = new StatusCode(Code,
+                                                      Description,
+                                                      AdditionalInfo);
 
         }
 
@@ -148,8 +156,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (eRoamingEVSEStatusXML.Name != OICPNS.EVSEStatus + "eRoamingEvseStatus")
                 throw new Exception("Invalid eRoamingEvseStatus XML!");
 
-            var EVSEStatusXML  = eRoamingEVSEStatusXML.Element(OICPNS.EVSEStatus + "EvseStatuses");
-            var StatusCodeXML  = eRoamingEVSEStatusXML.Element(OICPNS.EVSEStatus + "StatusCode");
+            var EVSEStatusXML  = eRoamingEVSEStatusXML.Element   (OICPNS.EVSEStatus + "EvseStatuses");
+            var _StatusCode    = eRoamingEVSEStatusXML.MapElement(OICPNS.EVSEStatus + "StatusCode",
+                                                                  StatusCode.Parse);
 
             if (EVSEStatusXML != null)
             {
@@ -158,11 +167,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 if (OperatorEvseStatusXMLs != null)
                     return new eRoamingEVSEStatus(OICPv2_0.OperatorEVSEStatus.Parse(OperatorEvseStatusXMLs),
-                                                  StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+                                                  _StatusCode);
 
             }
 
-            return new eRoamingEVSEStatus(StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+            return _StatusCode != null
+                       ? new eRoamingEVSEStatus(_StatusCode.Code,
+                                                _StatusCode.Description,
+                                                _StatusCode.AdditionalInfo)
+                       : new eRoamingEVSEStatus(StatusCodes.DataError);
 
         }
 

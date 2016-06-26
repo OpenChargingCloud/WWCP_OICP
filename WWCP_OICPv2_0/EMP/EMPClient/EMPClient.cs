@@ -370,7 +370,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -398,9 +398,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingEVSEData>(httpresponse,
-                                                                                                   new eRoamingEVSEData(StatusCode: new StatusCode(StatusCodes.DataError,
-                                                                                                                                                   Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                   AdditionalInfo: httpresponse.HTTPBody.ToUTF8String())),
+                                                                                                   new eRoamingEVSEData(StatusCodes.DataError,
+                                                                                                                        Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                        AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                    IsFault: true);
 
                                                      },
@@ -413,7 +413,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingEVSEData>.ExceptionThrown(new eRoamingEVSEData(StatusCodes.ServiceNotAvailable,
+                                                                                                                                    exception.Message,
+                                                                                                                                    exception.StackTrace),
+                                                                                                               Exception: exception);
 
                                                      }
 
@@ -549,7 +552,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnSearchEVSESOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSOAPFault
 
@@ -597,7 +600,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingEvseSearchResult>.ExceptionThrown(new eRoamingEvseSearchResult(new EVSEMatch[0]),
+                                                                                                                       Exception: exception);
 
                                                      }
 
@@ -728,7 +732,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnPullEVSEStatusSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -756,9 +760,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingEVSEStatus>(httpresponse,
-                                                                                                     new eRoamingEVSEStatus(new StatusCode(StatusCodes.DataError,
-                                                                                                                                           httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                           httpresponse.HTTPBody.ToUTF8String())),
+                                                                                                     new eRoamingEVSEStatus(StatusCodes.DataError,
+                                                                                                                            Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                            AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                      IsFault: true);
 
                                                      },
@@ -771,7 +775,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingEVSEStatus>.ExceptionThrown(new eRoamingEVSEStatus(StatusCodes.ServiceNotAvailable,
+                                                                                                                                        exception.Message,
+                                                                                                                                        exception.StackTrace),
+                                                                                                                 Exception: exception);
 
                                                      }
 
@@ -894,7 +901,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnPullEVSEStatusByIdSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -922,9 +929,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<eRoamingEVSEStatusById>(httpresponse,
-                                                                                                         new eRoamingEVSEStatusById(new StatusCode(StatusCodes.DataError,
-                                                                                                                                                   httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                   httpresponse.HTTPBody.ToUTF8String())),
+                                                                                                         new eRoamingEVSEStatusById(StatusCodes.DataError,
+                                                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                    AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                          IsFault: true);
 
                                                      },
@@ -937,7 +944,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingEVSEStatusById>.ExceptionThrown(new eRoamingEVSEStatusById(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                exception.Message,
+                                                                                                                                                exception.StackTrace),
+                                                                                                                     Exception: exception);
 
                                                      }
 
@@ -1056,7 +1066,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnPushAuthenticationDataSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1101,7 +1111,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                  exception.Message,
+                                                                                                                                                  exception.StackTrace),
+                                                                                                                      Exception: exception);
 
                                                      }
 
@@ -1278,7 +1291,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1323,7 +1336,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                  exception.Message,
+                                                                                                                                                  exception.StackTrace,
+                                                                                                                                                  SessionId),
+                                                                                                                      Exception: exception);
 
                                                      }
 
@@ -1459,7 +1476,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnAuthorizeRemoteStopSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1504,7 +1521,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return null;
+                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                                  exception.Message,
+                                                                                                                                                  exception.StackTrace,
+                                                                                                                                                  SessionId),
+                                                                                                                      Exception: exception);
 
                                                      }
 
@@ -1632,7 +1653,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      ResponseLogDelegate:  OnGetChargeDetailRecordsSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1647,8 +1668,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
                                                          return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
-                                                                                                                          new ChargeDetailRecord[0],
-                                                                                                                          IsFault: true);
+                                                                                                                  new ChargeDetailRecord[0],
+                                                                                                                  IsFault: true);
 
                                                      },
 
@@ -1661,8 +1682,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                          return new HTTPResponse<IEnumerable<ChargeDetailRecord>>(httpresponse,
-                                                                                                                          new ChargeDetailRecord[0],
-                                                                                                                          IsFault: true);
+                                                                                                                  new ChargeDetailRecord[0],
+                                                                                                                  IsFault: true);
 
                                                      },
 

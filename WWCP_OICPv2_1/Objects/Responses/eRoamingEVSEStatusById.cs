@@ -76,17 +76,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region eRoamingEVSEStatus(StatusCode)
+        #region eRoamingEVSEStatus(Code, Description = null, AdditionalInfo = null)
 
         /// <summary>
         /// Create a new group of OICP operator EVSE status records or a status code.
         /// </summary>
-        /// <pparam name="StatusCode">The status code for this request.</pparam>
-        public eRoamingEVSEStatusById(StatusCode StatusCode)
+        /// <param name="Code">The result code of the operation.</param>
+        /// <param name="Description">An optional description of the result code.</param>
+        /// <param name="AdditionalInfo">An optional additional information.</param>
+        public eRoamingEVSEStatusById(StatusCodes  Code,
+                                      String       Description     = null,
+                                      String       AdditionalInfo  = null)
         {
 
             this.EVSEStatusRecords  = new EVSEStatusRecord[0];
-            this.StatusCode         = StatusCode ?? new StatusCode(StatusCodes.DataError);
+            this.StatusCode         = new StatusCode(Code,
+                                                     Description,
+                                                     AdditionalInfo);
 
         }
 
@@ -144,18 +150,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (eRoamingEvseStatusByIdXML.Name != OICPNS.EVSEStatus + "eRoamingEvseStatusById")
                 throw new Exception("Invalid eRoamingEvseStatusById XML!");
 
-            var EvseStatusRecordsXML  = eRoamingEvseStatusByIdXML.Element(OICPNS.EVSEStatus + "EvseStatusRecords");
-            var StatusCodeXML         = eRoamingEvseStatusByIdXML.Element(OICPNS.EVSEStatus + "StatusCode");
+            var EvseStatusRecordsXML  = eRoamingEvseStatusByIdXML.Element   (OICPNS.EVSEStatus + "EvseStatusRecords");
+            var _StatusCode           = eRoamingEvseStatusByIdXML.MapElement(OICPNS.EVSEStatus + "StatusCode",
+                                                                             StatusCode.Parse);
 
             if (EvseStatusRecordsXML != null)
                 return new eRoamingEVSEStatusById(EvseStatusRecordsXML.
                                                       Elements  (OICPNS.EVSEStatus + "EvseStatusRecord").
                                                       SafeSelect(EvseStatusRecordXML => EVSEStatusRecord.Parse(EvseStatusRecordXML)).
                                                       Where     (statusrecord        => statusrecord != null),
-                                                  StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+                                                  _StatusCode);
 
 
-            return new eRoamingEVSEStatusById(StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+            return _StatusCode != null
+                       ? new eRoamingEVSEStatusById(_StatusCode.Code,
+                                                    _StatusCode.Description,
+                                                    _StatusCode.AdditionalInfo)
+                       : new eRoamingEVSEStatusById(StatusCodes.DataError);
 
         }
 

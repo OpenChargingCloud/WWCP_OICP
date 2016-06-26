@@ -64,7 +64,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorEVSEData == null)
-                throw new ArgumentNullException(nameof(OperatorEVSEData), "The given operator EVSE data must not be null!");
+                throw new ArgumentNullException(nameof(OperatorEVSEData),  "The given operator EVSE data must not be null!");
 
             #endregion
 
@@ -75,17 +75,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region eRoamingEVSEData(StatusCode)
+        #region eRoamingEVSEData(Code, Description = null, AdditionalInfo = null)
 
         /// <summary>
         /// Create a new group of OICP operator EVSE data records or a status code.
         /// </summary>
-        /// <pparam name="StatusCode">The status code for this request.</pparam>
-        public eRoamingEVSEData(StatusCode  StatusCode)
+        /// <param name="Code">The result code of the operation.</param>
+        /// <param name="Description">An optional description of the result code.</param>
+        /// <param name="AdditionalInfo">An optional additional information.</param>
+        public eRoamingEVSEData(StatusCodes  Code,
+                                String       Description     = null,
+                                String       AdditionalInfo  = null)
         {
 
             this.OperatorEVSEData  = new OperatorEVSEData[0];
-            this.StatusCode        = StatusCode ?? new StatusCode(StatusCodes.DataError);
+            this.StatusCode        = new StatusCode(Code,
+                                                    Description,
+                                                    AdditionalInfo);
 
         }
 
@@ -151,8 +157,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (eRoamingEVSEDataXML.Name != OICPNS.EVSEData + "eRoamingEvseData")
                 throw new Exception("Invalid eRoamingEvseData XML!");
 
-            var EVSEDataXML    = eRoamingEVSEDataXML.Element(OICPNS.EVSEData + "EvseData");
-            var StatusCodeXML  = eRoamingEVSEDataXML.Element(OICPNS.EVSEData + "StatusCode");
+            var EVSEDataXML  = eRoamingEVSEDataXML.Element   (OICPNS.EVSEData + "EvseData");
+            var _StatusCode  = eRoamingEVSEDataXML.MapElement(OICPNS.EVSEData + "StatusCode",
+                                                              StatusCode.Parse);
 
             if (EVSEDataXML != null)
             {
@@ -161,11 +168,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 if (OperatorEvseDataXMLs != null)
                     return new eRoamingEVSEData(OICPv2_0.OperatorEVSEData.Parse(OperatorEvseDataXMLs, OnException),
-                                                StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+                                                _StatusCode);
 
             }
 
-            return new eRoamingEVSEData(StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+            return _StatusCode != null
+                       ? new eRoamingEVSEData(_StatusCode.Code,
+                                              _StatusCode.Description,
+                                              _StatusCode.AdditionalInfo)
+                       : new eRoamingEVSEData(StatusCodes.DataError);
 
         }
 

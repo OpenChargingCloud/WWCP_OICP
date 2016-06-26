@@ -54,7 +54,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region eRoamingAuthenticationData(ProviderAuthenticationDataRecords, StatusCode  = null)
 
         /// <summary>
-        /// Create a new group of OICP v2.0 provider authentication data records.
+        /// Create a new group of OICP provider authentication data records.
         /// </summary>
         /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
         /// <param name="StatusCode">An optional status code for this request.</param>
@@ -76,17 +76,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region eRoamingAuthenticationData(StatusCode)
+        #region eRoamingAuthenticationData(Code, Description = null, AdditionalInfo = null)
 
         /// <summary>
-        /// Create a new group of OICP v2.0 provider authentication data records.
+        /// Create a new group of OICP provider authentication data records.
         /// </summary>
-        /// <pparam name="StatusCode">The status code for this request.</pparam>
-        public eRoamingAuthenticationData(StatusCode StatusCode)
+        /// <param name="Code">The result code of the operation.</param>
+        /// <param name="Description">An optional description of the result code.</param>
+        /// <param name="AdditionalInfo">An optional additional information.</param>
+        public eRoamingAuthenticationData(StatusCodes  Code,
+                                          String       Description     = null,
+                                          String       AdditionalInfo  = null)
+
         {
 
             this.ProviderAuthenticationDataRecords  = new ProviderAuthenticationData[0];
-            this.StatusCode                         = StatusCode ?? new StatusCode(StatusCodes.DataError);
+            this.StatusCode                         = new StatusCode(Code,
+                                                                     Description,
+                                                                     AdditionalInfo);
 
         }
 
@@ -180,18 +187,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (eRoamingAuthenticationDataXML.Name != OICPNS.AuthenticationData + "eRoamingAuthenticationData")
                 throw new Exception("Invalid eRoamingAuthenticationData XML!");
 
-            var AuthenticationDataXML  = eRoamingAuthenticationDataXML.Element(OICPNS.AuthenticationData + "AuthenticationData");
-            var StatusCodeXML          = eRoamingAuthenticationDataXML.Element(OICPNS.AuthenticationData + "StatusCode");
+            var AuthenticationDataXML  = eRoamingAuthenticationDataXML.Element   (OICPNS.AuthenticationData + "AuthenticationData");
+            var StatusCodeXML          = eRoamingAuthenticationDataXML.MapElement(OICPNS.AuthenticationData + "StatusCode",
+                                                                                  StatusCode.Parse);
 
             if (AuthenticationDataXML != null)
                 return new eRoamingAuthenticationData(AuthenticationDataXML.
                                                           Elements  (OICPNS.AuthenticationData + "ProviderAuthenticationData").
                                                           SafeSelect(ProviderAuthenticationDataXML => ProviderAuthenticationData.Parse(ProviderAuthenticationDataXML)).
                                                           Where     (ProviderAuthenticationData    => ProviderAuthenticationData != null),
-                                                      StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+                                                      StatusCodeXML);
 
 
-            return new eRoamingAuthenticationData(StatusCodeXML != null ? StatusCode.Parse(StatusCodeXML) : null);
+            return StatusCodeXML != null
+                       ? new eRoamingAuthenticationData(StatusCodeXML.Code,
+                                                        StatusCodeXML.Description,
+                                                        StatusCodeXML.AdditionalInfo)
+                       : new eRoamingAuthenticationData(StatusCodes.DataError);
 
         }
 
