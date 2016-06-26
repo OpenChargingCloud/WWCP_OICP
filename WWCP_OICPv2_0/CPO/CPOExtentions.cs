@@ -19,6 +19,7 @@
 
 using System;
 using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -31,7 +32,7 @@ namespace org.GraphDefined.WWCP
 {
 
     /// <summary>
-    /// Extentions methods for the WWCP wrapper for OICP v2.0 roaming clients for EVSE operators/CPOs.
+    /// Extentions methods for the WWCP wrapper for OICP roaming clients for EVSE operators/CPOs.
     /// </summary>
     public static class CPOExtentions
     {
@@ -50,8 +51,9 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
-        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// 
@@ -85,6 +87,7 @@ namespace org.GraphDefined.WWCP
                                               IPPort                                RemoteTCPPort               = null,
                                               String                                RemoteHTTPVirtualHost       = null,
                                               RemoteCertificateValidationCallback   RemoteCertificateValidator  = null,
+                                              X509Certificate                       ClientCert                  = null,
                                               String                                HTTPUserAgent               = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
                                               TimeSpan?                             QueryTimeout                = null,
 
@@ -133,8 +136,9 @@ namespace org.GraphDefined.WWCP
 
                                                                  RemoteHostname,
                                                                  RemoteTCPPort,
-                                                                 RemoteHTTPVirtualHost,
                                                                  RemoteCertificateValidator,
+                                                                 ClientCert,
+                                                                 RemoteHTTPVirtualHost,
                                                                  HTTPUserAgent,
                                                                  QueryTimeout,
 
@@ -184,8 +188,9 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
-        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// 
@@ -213,8 +218,9 @@ namespace org.GraphDefined.WWCP
 
                                               String                                RemoteHostname,
                                               IPPort                                RemoteTCPPort               = null,
-                                              String                                RemoteHTTPVirtualHost       = null,
                                               RemoteCertificateValidationCallback   RemoteCertificateValidator  = null,
+                                              X509Certificate                       ClientCert                  = null,
+                                              String                                RemoteHTTPVirtualHost       = null,
                                               String                                HTTPUserAgent               = OICPv2_0.CPOClient.DefaultHTTPUserAgent,
                                               TimeSpan?                             QueryTimeout                = null,
 
@@ -265,8 +271,9 @@ namespace org.GraphDefined.WWCP
                                                                  new OICPv2_0.CPOClient(Id.ToString(),
                                                                                         RemoteHostname,
                                                                                         RemoteTCPPort,
-                                                                                        RemoteHTTPVirtualHost,
                                                                                         RemoteCertificateValidator,
+                                                                                        ClientCert,
+                                                                                        RemoteHTTPVirtualHost,
                                                                                         HTTPUserAgent,
                                                                                         QueryTimeout,
                                                                                         DNSClient),
@@ -286,7 +293,6 @@ namespace org.GraphDefined.WWCP
                                                                  StatusCheckEvery,
                                                                  DisableAutoUploads);
 
-
             OICPConfigurator?.Invoke(NewRoamingProvider);
 
             return RoamingNetwork.
@@ -301,18 +307,18 @@ namespace org.GraphDefined.WWCP
         #region CreateOICPv2_0_CPOServiceCheck(this RoamingProvider, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, InitialDelay = null)
 
         /// <summary>
-        /// Create a new OICP v2.0 service checker.
+        /// Create a new OICP v2.1 service checker.
         /// </summary>
         /// <typeparam name="T">The type of the data returned by the service checker.</typeparam>
         /// <param name="CPORoamingProvider">A roaming provider.</param>
-        /// <param name="ServiceChecker">A function to check the OICP v2.0 service regularly and providing some result.</param>
+        /// <param name="ServiceChecker">A function to check the OICP v2.1 service regularly and providing some result.</param>
         /// <param name="OnFirstCheck">A delegate processing the first check result.</param>
         /// <param name="OnEveryCheck">A delegate processing a check result.</param>
         /// <param name="CheckEvery">The time span between two consecutive service checks.</param>
         /// <param name="InitialDelay">Initial delay between startup and first check.</param>
         public static OICPv2_0.CPOServiceCheck<T>
 
-            CreateOICPv2_0_CPOServiceCheck<T>(this AEVSEOperatorRoamingProvider    CPORoamingProvider,
+            CreateOICPv2_0_CPOServiceCheck<T>(this AEVSEOperatorRoamingProvider     CPORoamingProvider,
                                               OICPv2_0.CPOServiceCheckDelegate<T>  ServiceChecker,
                                               Action<T>                            OnFirstCheck,
                                               Action<T>                            OnEveryCheck,
@@ -328,7 +334,7 @@ namespace org.GraphDefined.WWCP
             var _CPORoamingWWCP = (CPORoamingProvider as OICPv2_0.CPORoamingWWCP);
 
             if (_CPORoamingWWCP == null)
-                throw new ArgumentException("The given CPO roaming provider is not an OICP v2.0 CPO roaming provider!", nameof(CPORoamingProvider));
+                throw new ArgumentException("The given CPO roaming provider is not an OICP v2.1 CPO roaming provider!", nameof(CPORoamingProvider));
 
             #endregion
 

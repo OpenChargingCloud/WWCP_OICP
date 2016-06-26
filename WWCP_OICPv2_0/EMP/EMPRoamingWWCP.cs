@@ -23,6 +23,7 @@ using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Aegir;
@@ -45,6 +46,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region Data
 
         private readonly EVSEDataRecord2EVSEDelegate _EVSEDataRecord2EVSE;
+
+        /// <summary>
+        ///  The default reservation time.
+        /// </summary>
+        public static readonly TimeSpan DefaultReservationTime = TimeSpan.FromMinutes(15);
 
         #endregion
 
@@ -537,8 +543,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// 
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
-        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// 
@@ -560,8 +567,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                               String                               RemoteHostname,
                               IPPort                               RemoteTCPPort               = null,
-                              String                               RemoteHTTPVirtualHost       = null,
                               RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                              X509Certificate                      ClientCert                  = null,
+                              String                               RemoteHTTPVirtualHost       = null,
                               String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
                               TimeSpan?                            QueryTimeout                = null,
 
@@ -585,8 +593,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                    new EMPRoaming(Id.ToString(),
                                   RemoteHostname,
                                   RemoteTCPPort,
-                                  RemoteHTTPVirtualHost,
                                   RemoteCertificateValidator,
+                                  ClientCert,
+                                  RemoteHTTPVirtualHost,
                                   HTTPUserAgent,
                                   QueryTimeout,
 
@@ -1230,11 +1239,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     EventTracking_Id         EventTrackingId    = null,
                     TimeSpan?                RequestTimeout     = null)
 
-        {
 
-            return Task.FromResult(ReservationResult.Error("OICPv2.0 does not support reservations!"));
+            => Task.FromResult(ReservationResult.Error("OICP " + Version.Number + " does not support charging reservations!"));
 
-        }
 
         #endregion
 
@@ -1264,11 +1271,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               EventTracking_Id                       EventTrackingId    = null,
                               TimeSpan?                              RequestTimeout     = null)
 
-        {
 
-            return Task.FromResult(CancelReservationResult.Error("OICPv2.0 does not support reservations!"));
+            => Task.FromResult(CancelReservationResult.Error("OICP " + Version.Number + " does not support charging reservations!"));
 
-        }
 
         #endregion
 

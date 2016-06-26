@@ -20,6 +20,7 @@
 using System;
 using System.Net.Security;
 using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -33,7 +34,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// An OICP v2.0 Mobile client.
+    /// An OICP v2.1 Mobile client.
     /// </summary>
     public class MobileClient : ASOAPClient
     {
@@ -55,16 +56,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ClientId">A unqiue identification of this client.</param>
         /// <param name="Hostname">The OICP hostname to connect to.</param>
         /// <param name="TCPPort">An optional OICP TCP port to connect to.</param>
-        /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         public MobileClient(String                               ClientId,
                             String                               Hostname,
                             IPPort                               TCPPort                     = null,
-                            String                               HTTPVirtualHost             = null,
                             RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                            X509Certificate                      ClientCert                  = null,
+                            String                               HTTPVirtualHost             = null,
                             String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                             TimeSpan?                            QueryTimeout                = null,
                             DNSClient                            DNSClient                   = null)
@@ -72,8 +75,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             : base(ClientId,
                    Hostname,
                    TCPPort,
-                   HTTPVirtualHost,
                    RemoteCertificateValidator,
+                   ClientCert,
+                   HTTPVirtualHost,
                    HTTPUserAgent,
                    QueryTimeout,
                    DNSClient)
@@ -83,7 +87,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region MobileAuthorizeStart(EVSEId, eMAId, PIN, PartnerProductId = null, GetNewSession = null, QueryTimeout = null)
+        #region MobileAuthorizeStart(EVSEId, eMAId, PIN, PartnerProductId = null, GetNewSession = null, ...)
 
         /// <summary>
         /// Create a new task sending a mobile AuthorizeStart request.
@@ -115,7 +119,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region MobileAuthorizeStart(EVSEId, eMAId, HashedPIN, Function, Salt, PartnerProductId = null, GetNewSession = null, QueryTimeout = null)
+        #region MobileAuthorizeStart(EVSEId, eMAId, HashedPIN, Function, Salt, PartnerProductId = null, GetNewSession = null, ...)
 
         /// <summary>
         /// Create a new task sending a mobile AuthorizeStart request.
@@ -151,7 +155,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region MobileAuthorizeStart(EVSEId, eMAIdWithPIN, PartnerProductId = null, GetNewSession = null, QueryTimeout = null)
+        #region MobileAuthorizeStart(EVSEId, eMAIdWithPIN, PartnerProductId = null, GetNewSession = null, ...)
 
         /// <summary>
         /// Create a new task sending a mobile AuthorizeStart request.
@@ -175,8 +179,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingMobileAuthorization_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
 
             {
@@ -186,7 +191,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                                                ProductId,
                                                                                                GetNewSession),
                                                "eRoamingMobileAuthorizeStart",
-                                               QueryTimeout: QueryTimeout ?? this.RequestTimeout,
+                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
 
                                                #region OnSuccess
 
@@ -245,7 +250,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region MobileRemoteStart(SessionId, QueryTimeout = null)
+
+        #region MobileRemoteStart(SessionId, ...)
 
         /// <summary>
         /// Create a new task starting a remote charging session.
@@ -263,15 +269,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingMobileAuthorization_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
 
             {
 
                 return await _OICPClient.Query(MobileClient_XMLMethods.MobileRemoteStartXML(SessionId),
                                                "eRoamingMobileRemoteStart",
-                                               QueryTimeout: QueryTimeout ?? this.RequestTimeout,
+                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
 
                                                #region OnSuccess
 
@@ -330,7 +337,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region MobileRemoteStop(SessionId, QueryTimeout = null)
+        #region MobileRemoteStop(SessionId, ...)
 
         /// <summary>
         /// Create a new task stopping a remote charging session.
@@ -348,15 +355,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingMobileAuthorization_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
 
             {
 
                 return await _OICPClient.Query(MobileClient_XMLMethods.MobileRemoteStopXML(SessionId),
                                                "eRoamingMobileRemoteStop",
-                                               QueryTimeout: QueryTimeout ?? this.RequestTimeout,
+                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
 
                                                #region OnSuccess
 

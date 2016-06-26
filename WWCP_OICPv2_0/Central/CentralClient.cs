@@ -19,17 +19,18 @@
 
 using System;
 using System.Linq;
+using System.Xml.Linq;
 using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using System.Xml.Linq;
 
 #endregion
 
@@ -97,18 +98,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ClientId">A unqiue identification of this client.</param>
         /// <param name="Hostname">The hostname of the remote OICP service.</param>
         /// <param name="TCPPort">An optional TCP port of the remote OICP service.</param>
-        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
-        /// <param name="URIPrefix">An optional common prefix of all URIs.</param>
+        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CentralClient(String                               ClientId,
                              String                               Hostname,
                              IPPort                               TCPPort                     = null,
-                             RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                              String                               HTTPVirtualHost             = null,
-                             String                               URIPrefix                   = "/Authorization",
+                             RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                             X509Certificate                      ClientCert                  = null,
+                             String                               URIPrefix                   = "/ibis/ws/eRoamingAuthorization_V2.0",
                              String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                              TimeSpan?                            QueryTimeout                = null,
                              DNSClient                            DNSClient                   = null)
@@ -116,8 +117,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             : base(ClientId,
                    Hostname,
                    TCPPort,
-                   HTTPVirtualHost,
                    RemoteCertificateValidator,
+                   ClientCert,
+                   HTTPVirtualHost,
                    HTTPUserAgent,
                    QueryTimeout,
                    DNSClient)
@@ -126,7 +128,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             this._Random     = new Random(DateTime.Now.Millisecond);
 
-            this._URIPrefix  = URIPrefix.IsNotNullOrEmpty() ? URIPrefix : "/Authorization";
+            this._URIPrefix  = URIPrefix.IsNotNullOrEmpty() ? URIPrefix : "/ibis/ws/eRoamingAuthorization_V2.0";
 
         }
 
@@ -160,10 +162,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
-                                                    _URIPrefix,
+                                                    _URIPrefix + "/Authorization",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
-                                                    DNSClient: DNSClient))
+                                                    DNSClient))
             {
 
                 #region Documentation
@@ -244,7 +247,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                      new XElement(OICPNS.CommonTypes + "QRCodeIdentification",
                                                          new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
                                                      )
-                                                 )
+                                                 ),
+
+                                                 ChargingProductId != null
+                                                     ? new XElement(OICPNS.Authorization + "PartnerProductID", ChargingProductId.ToString())
+                                                     : null
 
                                              ));
 
@@ -337,10 +344,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
-                                                    _URIPrefix,
+                                                    _URIPrefix + "/Authorization",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
-                                                    DNSClient: DNSClient))
+                                                    DNSClient))
             {
 
                 #region Documentation

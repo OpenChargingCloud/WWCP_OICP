@@ -22,6 +22,7 @@ using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -972,8 +973,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ClientId">A unqiue identification of this client.</param>
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
-        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// 
@@ -990,8 +992,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public EMPRoaming(String                               ClientId,
                           String                               RemoteHostname,
                           IPPort                               RemoteTCPPort               = null,
-                          String                               RemoteHTTPVirtualHost       = null,
                           RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                          X509Certificate                      ClientCert                  = null,
+                          String                               RemoteHTTPVirtualHost       = null,
                           String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
                           TimeSpan?                            QueryTimeout                = null,
 
@@ -1009,8 +1012,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             : this(new EMPClient(ClientId,
                                  RemoteHostname,
                                  RemoteTCPPort,
-                                 RemoteHTTPVirtualHost,
                                  RemoteCertificateValidator,
+                                 ClientCert,
+                                 RemoteHTTPVirtualHost,
                                  HTTPUserAgent,
                                  QueryTimeout,
                                  DNSClient),

@@ -18,11 +18,12 @@
 #region Usings
 
 using System;
+using System.Net.Security;
 using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using System.Net.Security;
 
 #endregion
 
@@ -30,7 +31,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
     /// <summary>
-    /// Check any OICP v2.0 CPO service.
+    /// Check any OICP v2.1 CPO service.
     /// </summary>
     /// <typeparam name="TResult">The type of data which will be processed on every update run.</typeparam>
     public class CPOServiceCheck<TResult> : AServiceCheck<TResult>
@@ -102,6 +103,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                IPPort                               RemoteTCPPort               = null,
                                String                               RemoteHTTPVirtualHost       = null,
                                RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                               X509Certificate                      ClientCert                  = null,
                                String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                                TimeSpan?                            QueryTimeout                = null,
 
@@ -116,8 +118,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             : this(new CPORoaming(ClientId,
                                   RemoteHostname,
                                   RemoteTCPPort,
-                                  RemoteHTTPVirtualHost,
                                   RemoteCertificateValidator,
+                                  ClientCert,
+                                  RemoteHTTPVirtualHost,
                                   HTTPUserAgent,
                                   QueryTimeout,
 
@@ -176,8 +179,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             //                                         (Timestamp,
             //                                          this,
             //                                          ch)));
-
-
 
         }
 

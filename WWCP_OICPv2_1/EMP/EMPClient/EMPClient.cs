@@ -19,10 +19,10 @@
 
 using System;
 using System.Threading;
-using System.Diagnostics;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
@@ -303,16 +303,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ClientId">A unqiue identification of this client.</param>
         /// <param name="Hostname">The OICP hostname to connect to.</param>
         /// <param name="TCPPort">An optional OICP TCP port to connect to.</param>
-        /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         public EMPClient(String                               ClientId,
                          String                               Hostname,
                          IPPort                               TCPPort                     = null,
-                         String                               HTTPVirtualHost             = null,
                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                         X509Certificate                      ClientCert                  = null,
+                         String                               HTTPVirtualHost             = null,
                          String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                          TimeSpan?                            QueryTimeout                = null,
                          DNSClient                            DNSClient                   = null)
@@ -320,8 +322,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             : base(ClientId,
                    Hostname,
                    TCPPort,
-                   HTTPVirtualHost,
                    RemoteCertificateValidator,
+                   ClientCert,
+                   HTTPVirtualHost,
                    HTTPUserAgent,
                    QueryTimeout,
                    DNSClient)
@@ -329,11 +332,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         { }
 
         #endregion
-
-
-        // _OICPClient.RemoteCertificateValidator = this.RemoteCertificateValidator;
-        // _OICPClient.ClientCert                 = this.ClientCert;
-        // _OICPClient.ClientCertificateSelector  = this.ClientCertificateSelector;
 
 
         #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, ...)
@@ -371,6 +369,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (ProviderId == null)
                 throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -381,13 +383,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Send OnPullEVSEDataRequest event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnPullEVSEDataRequest?.Invoke(DateTime.Now,
-                                              Timestamp ?? DateTime.Now,
+                                              Timestamp.Value,
                                               this,
                                               ClientId,
                                               EventTrackingId,
@@ -405,12 +405,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseData_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
             {
 
@@ -423,7 +425,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -479,8 +481,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Send OnPullEVSEDataResponse event
 
-                Runtime.Stop();
-
                 try
                 {
 
@@ -494,7 +494,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    LastCall,
                                                    RequestTimeout,
                                                    result.Content,
-                                                   Runtime.Elapsed);
+                                                   DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
@@ -549,6 +549,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (ProviderId == null)
                 throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -559,13 +563,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Send OnSearchEVSERequest event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnSearchEVSERequest?.Invoke(DateTime.Now,
-                                            Timestamp ?? DateTime.Now,
+                                            Timestamp.Value,
                                             this,
                                             ClientId,
                                             EventTrackingId,
@@ -585,12 +587,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseSearch_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
             {
 
@@ -605,7 +609,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnSearchEVSESOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSOAPFault
 
@@ -664,8 +668,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Send OnSearchEVSEResponse event
 
-                Runtime.Stop();
-
                 try
                 {
 
@@ -681,7 +683,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                  ChargingFacility,
                                                  RequestTimeout,
                                                  result.Content,
-                                                 Runtime.Elapsed);
+                                                 DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
@@ -733,6 +735,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (ProviderId == null)
                 throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -743,13 +749,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Send OnPullEVSEStatusRequest event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnPullEVSEStatusRequest?.Invoke(DateTime.Now,
-                                                Timestamp ?? DateTime.Now,
+                                                Timestamp.Value,
                                                 this,
                                                 ClientId,
                                                 EventTrackingId,
@@ -767,12 +771,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
             {
 
@@ -785,7 +791,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnPullEVSEStatusSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -841,8 +847,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Send OnPullEVSEStatusResponse event
 
-                Runtime.Stop();
-
                 try
                 {
 
@@ -856,7 +860,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      EVSEStatusFilter,
                                                      RequestTimeout,
                                                      result.Content,
-                                                     Runtime.Elapsed);
+                                                     DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
@@ -906,6 +910,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EVSEIds == null)
                 throw new ArgumentNullException(nameof(EVSEIds),     "The given enumeration of EVSE identifications must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -916,13 +924,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Send OnPullEVSEStatusByIdRequest event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnPullEVSEStatusByIdRequest?.Invoke(DateTime.Now,
-                                                    Timestamp ?? DateTime.Now,
+                                                    Timestamp.Value,
                                                     this,
                                                     ClientId,
                                                     EventTrackingId,
@@ -938,12 +944,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
             {
 
@@ -954,7 +962,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnPullEVSEStatusByIdSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1010,8 +1018,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Send OnPullEVSEStatusByIdResponse event
 
-                Runtime.Stop();
-
                 try
                 {
 
@@ -1023,7 +1029,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          EVSEIds,
                                                          RequestTimeout,
                                                          result.Content,
-                                                         Runtime.Elapsed);
+                                                         DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
@@ -1071,6 +1077,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (ProviderAuthenticationDataRecords == null)
                 throw new ArgumentNullException(nameof(ProviderAuthenticationDataRecords), "The given provider authentication data records must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -1081,13 +1091,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Send OnPushAuthenticationDataRequest event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnPushAuthenticationDataRequest?.Invoke(DateTime.Now,
-                                                        Timestamp ?? DateTime.Now,
+                                                        Timestamp.Value,
                                                         this,
                                                         ClientId,
                                                         EventTrackingId,
@@ -1103,12 +1111,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthenticationData_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
             {
 
@@ -1119,7 +1129,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnPushAuthenticationDataSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1177,8 +1187,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Send OnPushAuthenticationDataResponse event
 
-                Runtime.Stop();
-
                 try
                 {
 
@@ -1190,7 +1198,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                              OICPAction,
                                                              RequestTimeout,
                                                              result.Content,
-                                                             Runtime.Elapsed);
+                                                             DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
@@ -1289,6 +1297,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 throw new ArgumentNullException(nameof(eMAId),       "The given e-mobility account identification must not be null!");
 
 
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -1299,13 +1310,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Send OnReservationStartRequest event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnReservationStartRequest?.Invoke(DateTime.Now,
-                                                  Timestamp ?? DateTime.Now,
+                                                  Timestamp.Value,
                                                   this,
                                                   ClientId,
                                                   EventTrackingId,
@@ -1325,12 +1334,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingReservation_V1.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
             {
 
@@ -1345,7 +1356,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnReservationStartSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1404,8 +1415,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Send OnReservationStartResponse event
 
-                Runtime.Stop();
-
                 try
                 {
 
@@ -1421,7 +1430,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        PartnerProductId,
                                                        RequestTimeout,
                                                        result.Content,
-                                                       Runtime.Elapsed);
+                                                       DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
@@ -1477,6 +1486,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EVSEId == null)
                 throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -1487,13 +1500,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Send OnReservationStopRequest event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnReservationStopRequest?.Invoke(DateTime.Now,
-                                                 Timestamp ?? DateTime.Now,
+                                                 Timestamp.Value,
                                                  this,
                                                  ClientId,
                                                  EventTrackingId,
@@ -1511,12 +1522,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingReservation_V1.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
             {
 
@@ -1529,7 +1542,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnReservationStopSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1588,8 +1601,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Send OnReservationStopResponse event
 
-                Runtime.Stop();
-
                 try
                 {
 
@@ -1603,7 +1614,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      PartnerSessionId,
                                                      RequestTimeout,
                                                      result.Content,
-                                                     Runtime.Elapsed);
+                                                     DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
@@ -1665,6 +1676,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (eMAId == null)
                 throw new ArgumentNullException(nameof(eMAId),       "The given e-mobility account identification must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -1675,13 +1690,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Send OnAuthorizeRemoteStartRequest event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnAuthorizeRemoteStartRequest?.Invoke(DateTime.Now,
-                                                      Timestamp ?? DateTime.Now,
+                                                      Timestamp.Value,
                                                       this,
                                                       ClientId,
                                                       EventTrackingId,
@@ -1701,12 +1714,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
             {
 
@@ -1721,7 +1736,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1780,8 +1795,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Send OnAuthorizeRemoteStartResponse event
 
-                Runtime.Stop();
-
                 try
                 {
 
@@ -1797,7 +1810,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            PartnerProductId,
                                                            RequestTimeout,
                                                            result.Content,
-                                                           Runtime.Elapsed);
+                                                           DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
@@ -1854,6 +1867,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EVSEId == null)
                 throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -1864,13 +1881,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Send OnAuthorizeRemoteStopRequest event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnAuthorizeRemoteStopRequest?.Invoke(DateTime.Now,
-                                                     Timestamp ?? DateTime.Now,
+                                                     Timestamp.Value,
                                                      this,
                                                      ClientId,
                                                      EventTrackingId,
@@ -1888,12 +1903,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
             {
 
@@ -1906,7 +1923,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnAuthorizeRemoteStopSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -1965,8 +1982,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Send OnAuthorizeRemoteStopResponse event
 
-                Runtime.Stop();
-
                 try
                 {
 
@@ -1980,7 +1995,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           PartnerSessionId,
                                                           RequestTimeout,
                                                           result.Content,
-                                                          Runtime.Elapsed);
+                                                          DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)
@@ -2033,6 +2048,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (!To.HasValue)
                 To = DateTime.Now;
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
@@ -2043,13 +2062,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Send OnGetChargeDetailRecordsRequest event
 
-            var Runtime = Stopwatch.StartNew();
-
             try
             {
 
                 OnGetChargeDetailRecordsRequest?.Invoke(DateTime.Now,
-                                                        Timestamp ?? DateTime.Now,
+                                                        Timestamp.Value,
                                                         this,
                                                         ClientId,
                                                         EventTrackingId,
@@ -2066,12 +2083,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
             {
 
@@ -2083,7 +2102,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ResponseLogDelegate:  OnGetChargeDetailRecordsSOAPResponse,
                                                      CancellationToken:    CancellationToken,
                                                      EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout ?? this.RequestTimeout,
+                                                     QueryTimeout:         RequestTimeout,
 
                                                      #region OnSuccess
 
@@ -2135,8 +2154,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Send OnGetChargeDetailRecordsResponse event
 
-                Runtime.Stop();
-
                 try
                 {
 
@@ -2149,7 +2166,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                              To.Value,
                                                              RequestTimeout,
                                                              result.Content,
-                                                             Runtime.Elapsed);
+                                                             DateTime.Now - Timestamp.Value);
 
                 }
                 catch (Exception e)

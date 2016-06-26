@@ -19,6 +19,7 @@
 
 using System;
 using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -50,8 +51,9 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
-        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// 
@@ -78,8 +80,9 @@ namespace org.GraphDefined.WWCP
 
                                               String                                RemoteHostname,
                                               IPPort                                RemoteTCPPort               = null,
-                                              String                                RemoteHTTPVirtualHost       = null,
                                               RemoteCertificateValidationCallback   RemoteCertificateValidator  = null,
+                                              X509Certificate                       ClientCert                  = null,
+                                              String                                RemoteHTTPVirtualHost       = null,
                                               String                                HTTPUserAgent               = OICPv2_1.EMPClient.DefaultHTTPUserAgent,
                                               TimeSpan?                             QueryTimeout                = null,
 
@@ -123,8 +126,9 @@ namespace org.GraphDefined.WWCP
 
                                                                  RemoteHostname,
                                                                  RemoteTCPPort,
-                                                                 RemoteHTTPVirtualHost,
                                                                  RemoteCertificateValidator,
+                                                                 ClientCert,
+                                                                 RemoteHTTPVirtualHost,
                                                                  HTTPUserAgent,
                                                                  QueryTimeout,
 
@@ -192,8 +196,9 @@ namespace org.GraphDefined.WWCP
 
                                               String                                RemoteHostname,
                                               IPPort                                RemoteTCPPort               = null,
-                                              String                                RemoteHTTPVirtualHost       = null,
                                               RemoteCertificateValidationCallback   RemoteCertificateValidator  = null,
+                                              X509Certificate                       ClientCert                  = null,
+                                              String                                RemoteHTTPVirtualHost       = null,
                                               String                                HTTPUserAgent               = OICPv2_1.EMPClient.DefaultHTTPUserAgent,
                                               TimeSpan?                             QueryTimeout                = null,
 
@@ -239,8 +244,9 @@ namespace org.GraphDefined.WWCP
                                                                  new OICPv2_1.EMPClient(Id.ToString(),
                                                                                         RemoteHostname,
                                                                                         RemoteTCPPort,
-                                                                                        RemoteHTTPVirtualHost,
                                                                                         RemoteCertificateValidator,
+                                                                                        ClientCert,
+                                                                                        RemoteHTTPVirtualHost,
                                                                                         HTTPUserAgent,
                                                                                         QueryTimeout,
                                                                                         DNSClient),

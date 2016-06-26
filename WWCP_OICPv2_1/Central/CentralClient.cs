@@ -19,17 +19,18 @@
 
 using System;
 using System.Linq;
+using System.Xml.Linq;
 using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using System.Xml.Linq;
 
 #endregion
 
@@ -107,6 +108,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                              IPPort                               TCPPort                     = null,
                              String                               HTTPVirtualHost             = null,
                              RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                             X509Certificate                      ClientCert                  = null,
                              String                               URIPrefix                   = "/ibis/ws/eRoamingAuthorization_V2.0",
                              String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                              TimeSpan?                            QueryTimeout                = null,
@@ -115,8 +117,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             : base(ClientId,
                    Hostname,
                    TCPPort,
-                   HTTPVirtualHost,
                    RemoteCertificateValidator,
+                   ClientCert,
+                   HTTPVirtualHost,
                    HTTPUserAgent,
                    QueryTimeout,
                    DNSClient)
@@ -161,9 +164,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Reservation",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
-                                                    DNSClient: DNSClient))
+                                                    DNSClient))
             {
 
                 #region Documentation
@@ -341,9 +345,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Reservation",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
-                                                    DNSClient: DNSClient))
+                                                    DNSClient))
             {
 
                 #region Documentation
@@ -480,9 +485,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Authorization",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
-                                                    DNSClient: DNSClient))
+                                                    DNSClient))
             {
 
                 #region Documentation
@@ -661,9 +667,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Authorization",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
-                                                    DNSClient: DNSClient))
+                                                    DNSClient))
             {
 
                 #region Documentation

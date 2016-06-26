@@ -23,6 +23,7 @@ using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -206,16 +207,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ClientId">A unqiue identification of this client.</param>
         /// <param name="Hostname">The hostname of the remote OICP service.</param>
         /// <param name="TCPPort">An optional TCP port of the remote OICP service.</param>
-        /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CPOClient(String                               ClientId,
                          String                               Hostname,
                          IPPort                               TCPPort                     = null,
-                         String                               HTTPVirtualHost             = null,
                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                         X509Certificate                      ClientCert                  = null,
+                         String                               HTTPVirtualHost             = null,
                          String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                          TimeSpan?                            QueryTimeout                = null,
                          DNSClient                            DNSClient                   = null)
@@ -223,8 +226,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             : base(ClientId,
                    Hostname,
                    TCPPort,
-                   HTTPVirtualHost,
                    RemoteCertificateValidator,
+                   ClientCert,
+                   HTTPVirtualHost,
                    HTTPUserAgent,
                    QueryTimeout,
                    DNSClient)
@@ -232,11 +236,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         { }
 
         #endregion
-
-
-        // _OICPClient.RemoteCertificateValidator = this.RemoteCertificateValidator;
-        // _OICPClient.ClientCert                 = this.ClientCert;
-        // _OICPClient.ClientCertificateSelector  = this.ClientCertificateSelector;
 
 
         #region PushEVSEData(GroupedEVSEDataRecords, OICPAction = fullLoad, OperatorId = null, OperatorName = null, ...)
@@ -319,12 +318,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #endregion
 
-                using (var _OICPClient = new SOAPClient(_Hostname,
-                                                        _TCPPort,
-                                                        _HTTPVirtualHost,
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingEvseData_V2.1",
+                                                        RemoteCertificateValidator,
+                                                        ClientCert,
                                                         UserAgent,
-                                                        _RemoteCertificateValidator,
                                                         DNSClient))
                 {
 
@@ -686,12 +686,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #endregion
 
-                using (var _OICPClient = new SOAPClient(_Hostname,
-                                                        _TCPPort,
-                                                        _HTTPVirtualHost,
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                        RemoteCertificateValidator,
+                                                        ClientCert,
                                                         UserAgent,
-                                                        _RemoteCertificateValidator,
                                                         DNSClient))
                 {
 
@@ -945,8 +946,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         TCPPort,
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                        RemoteCertificateValidator,
+                                                        ClientCert,
                                                         UserAgent,
-                                                        _RemoteCertificateValidator,
                                                         DNSClient))
                 {
 
@@ -1161,8 +1163,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         TCPPort,
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                        RemoteCertificateValidator,
+                                                        ClientCert,
                                                         UserAgent,
-                                                        _RemoteCertificateValidator,
                                                         DNSClient))
                 {
 
@@ -1375,8 +1378,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         TCPPort,
                                                         HTTPVirtualHost,
                                                         "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                        RemoteCertificateValidator,
+                                                        ClientCert,
                                                         UserAgent,
-                                                        _RemoteCertificateValidator,
                                                         DNSClient))
                 {
 
@@ -1548,8 +1552,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     TCPPort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthenticationData_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
                                                     UserAgent,
-                                                    _RemoteCertificateValidator,
                                                     DNSClient))
             {
 

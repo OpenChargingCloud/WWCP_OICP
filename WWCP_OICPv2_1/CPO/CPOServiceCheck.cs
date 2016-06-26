@@ -20,6 +20,7 @@
 using System;
 using System.Net.Security;
 using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
@@ -102,6 +103,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                IPPort                               RemoteTCPPort               = null,
                                String                               RemoteHTTPVirtualHost       = null,
                                RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                               X509Certificate                      ClientCert                  = null,
                                String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                                TimeSpan?                            QueryTimeout                = null,
 
@@ -116,8 +118,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             : this(new CPORoaming(ClientId,
                                   RemoteHostname,
                                   RemoteTCPPort,
-                                  RemoteHTTPVirtualHost,
                                   RemoteCertificateValidator,
+                                  ClientCert,
+                                  RemoteHTTPVirtualHost,
                                   HTTPUserAgent,
                                   QueryTimeout,
 
