@@ -919,16 +919,38 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
-                                                    HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                    UserAgent,
-                                                    _RemoteCertificateValidator,
-                                                    DNSClient))
+            #region Verify length of AuthToken
+
+            HTTPResponse<eRoamingAuthorizationStart> result = null;
+
+            if (AuthToken.Length !=  8 &&
+                AuthToken.Length != 14 &&
+                AuthToken.Length != 20)
             {
 
-                var result = await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStartXML(OperatorId,
+                result = new HTTPResponse<eRoamingAuthorizationStart>(HTTPResponse.BadRequest,
+                                                                      new eRoamingAuthorizationStart(StatusCodes.DataError,
+                                                                                                     "OICP " + Version.Number + " only allows a 8 or 20 hex-character authentication token!"),
+                                                                      IsFault: true);
+
+            }
+
+            #endregion
+
+
+            if (result == null)
+            {
+
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                        UserAgent,
+                                                        _RemoteCertificateValidator,
+                                                        DNSClient))
+                {
+
+                    result = await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStartXML(OperatorId,
                                                                                            AuthToken,
                                                                                            EVSEId,
                                                                                            PartnerProductId,
@@ -995,35 +1017,38 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                     );
 
-                #region Send OnAuthorizeStartResponse event
-
-                try
-                {
-
-                    OnAuthorizeStartResponse?.Invoke(DateTime.Now,
-                                                     this,
-                                                     ClientId,
-                                                     OperatorId,
-                                                     AuthToken,
-                                                     EVSEId,
-                                                     SessionId,
-                                                     PartnerProductId,
-                                                     PartnerSessionId,
-                                                     RequestTimeout,
-                                                     result.Content,
-                                                     DateTime.Now - Timestamp.Value);
-
                 }
-                catch (Exception e)
-                {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStartResponse));
-                }
-
-                #endregion
-
-                return result;
 
             }
+
+            #region Send OnAuthorizeStartResponse event
+
+            try
+            {
+
+                OnAuthorizeStartResponse?.Invoke(DateTime.Now,
+                                                 this,
+                                                 ClientId,
+                                                 OperatorId,
+                                                 AuthToken,
+                                                 EVSEId,
+                                                 SessionId,
+                                                 PartnerProductId,
+                                                 PartnerSessionId,
+                                                 RequestTimeout,
+                                                 result.Content,
+                                                 DateTime.Now - Timestamp.Value);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStartResponse));
+            }
+
+            #endregion
+
+
+            return result;
 
         }
 
@@ -1110,16 +1135,38 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
-                                                    HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                    UserAgent,
-                                                    _RemoteCertificateValidator,
-                                                    DNSClient))
+            #region Verify length of AuthToken
+
+            HTTPResponse<eRoamingAuthorizationStop> result = null;
+
+            if (AuthToken.Length !=  8 &&
+                AuthToken.Length != 14 &&
+                AuthToken.Length != 20)
             {
 
-                var result = await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStopXML(OperatorId,
+                result = new HTTPResponse<eRoamingAuthorizationStop>(HTTPResponse.BadRequest,
+                                                                     new eRoamingAuthorizationStop(StatusCodes.DataError,
+                                                                                                   "OICP " + Version.Number + " only allows a 8 or 20 hex-character authentication token!"),
+                                                                     IsFault: true);
+
+            }
+
+            #endregion
+
+
+            if (result != null)
+            {
+
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                        UserAgent,
+                                                        _RemoteCertificateValidator,
+                                                        DNSClient))
+                {
+
+                    result = await _OICPClient.Query(CPOClientXMLMethods.AuthorizeStopXML(OperatorId,
                                                                                          SessionId,
                                                                                          AuthToken,
                                                                                          EVSEId,
@@ -1185,34 +1232,37 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                     );
 
-                #region Send OnAuthorizeStopResponse event
-
-                try
-                {
-
-                    OnAuthorizeStopResponse?.Invoke(DateTime.Now,
-                                                    this,
-                                                    ClientId,
-                                                    OperatorId,
-                                                    SessionId,
-                                                    AuthToken,
-                                                    EVSEId,
-                                                    PartnerSessionId,
-                                                    RequestTimeout,
-                                                    result.Content,
-                                                    DateTime.Now - Timestamp.Value);
-
                 }
-                catch (Exception e)
-                {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopResponse));
-                }
-
-                #endregion
-
-                return result;
 
             }
+
+            #region Send OnAuthorizeStopResponse event
+
+            try
+            {
+
+                OnAuthorizeStopResponse?.Invoke(DateTime.Now,
+                                                this,
+                                                ClientId,
+                                                OperatorId,
+                                                SessionId,
+                                                AuthToken,
+                                                EVSEId,
+                                                PartnerSessionId,
+                                                RequestTimeout,
+                                                result.Content,
+                                                DateTime.Now - Timestamp.Value);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopResponse));
+            }
+
+            #endregion
+
+
+            return result;
 
         }
 
@@ -1298,16 +1348,39 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
-                                                    HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
-                                                    UserAgent,
-                                                    _RemoteCertificateValidator,
-                                                    DNSClient))
+            #region Verify length of AuthToken, if present...
+
+            HTTPResponse<eRoamingAcknowledgement> result = null;
+
+            if (ChargeDetailRecord?.Identification?.AuthToken         != null &&
+                ChargeDetailRecord?.Identification?.AuthToken.Length  !=    8 &&
+                ChargeDetailRecord?.Identification?.AuthToken.Length  !=   14 &&
+                ChargeDetailRecord?.Identification?.AuthToken.Length  !=   20)
             {
 
-                var result = await _OICPClient.Query(SOAP.Encapsulation(ChargeDetailRecord.ToXML()),
+                result = new HTTPResponse<eRoamingAcknowledgement>(HTTPResponse.BadRequest,
+                                                                   new eRoamingAcknowledgement(StatusCodes.DataError,
+                                                                                               "OICP " + Version.Number + " only allows a 8 or 20 hex-character authentication token!"),
+                                                                   IsFault: true);
+
+            }
+
+            #endregion
+
+
+            if (result != null)
+            {
+
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        TCPPort,
+                                                        HTTPVirtualHost,
+                                                        "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                        UserAgent,
+                                                        _RemoteCertificateValidator,
+                                                        DNSClient))
+                {
+
+                    result = await _OICPClient.Query(SOAP.Encapsulation(ChargeDetailRecord.ToXML()),
                                                      "eRoamingChargeDetailRecord",
                                                      RequestLogDelegate:   OnSendChargeDetailRecordSOAPRequest,
                                                      ResponseLogDelegate:  OnSendChargeDetailRecordSOAPResponse,
@@ -1376,32 +1449,35 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                     );
 
-                #region Send OnChargeDetailRecordSent event
-
-                try
-                {
-
-                    OnSendChargeDetailRecordResponse?.Invoke(DateTime.Now,
-                                                             Timestamp.Value,
-                                                             this,
-                                                             ClientId,
-                                                             EventTrackingId,
-                                                             ChargeDetailRecord,
-                                                             RequestTimeout,
-                                                             result.Content,
-                                                             DateTime.Now - Timestamp.Value);
-
                 }
-                catch (Exception e)
-                {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordResponse));
-                }
-
-                #endregion
-
-                return result;
 
             }
+
+            #region Send OnChargeDetailRecordSent event
+
+            try
+            {
+
+                OnSendChargeDetailRecordResponse?.Invoke(DateTime.Now,
+                                                         Timestamp.Value,
+                                                         this,
+                                                         ClientId,
+                                                         EventTrackingId,
+                                                         ChargeDetailRecord,
+                                                         RequestTimeout,
+                                                         result.Content,
+                                                         DateTime.Now - Timestamp.Value);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordResponse));
+            }
+
+            #endregion
+
+
+            return result;
 
         }
 
