@@ -39,7 +39,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// An OICP CPO Client.
     /// </summary>
-    public class CPOClient : ASOAPClient
+    public partial class CPOClient : ASOAPClient
     {
 
         #region Data
@@ -48,6 +48,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// The default HTTP user agent string.
         /// </summary>
         public const String DefaultHTTPUserAgent = "GraphDefined OICP " + Version.Number + " CPO Client";
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The attached OICP CPO client (HTTP/SOAP client) logger.
+        /// </summary>
+        public CPOClientLogger Logger { get; }
 
         #endregion
 
@@ -201,6 +210,66 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
+        #region CPOClient(ClientId, Hostname, ..., LoggingContext = EMPClientLogger.DefaultContext, ...)
+
+        /// <summary>
+        /// Create a new OICP CPO Client.
+        /// </summary>
+        /// <param name="ClientId">A unqiue identification of this client.</param>
+        /// <param name="Hostname">The hostname of the remote OICP service.</param>
+        /// <param name="TCPPort">An optional TCP port of the remote OICP service.</param>
+        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
+        /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
+        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="DNSClient">An optional DNS client to use.</param>
+        /// <param name="LoggingContext">An optional context for logging client methods.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        public CPOClient(String                               ClientId,
+                         String                               Hostname,
+                         IPPort                               TCPPort                     = null,
+                         RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                         X509Certificate                      ClientCert                  = null,
+                         String                               HTTPVirtualHost             = null,
+                         String                               HTTPUserAgent               = DefaultHTTPUserAgent,
+                         TimeSpan?                            QueryTimeout                = null,
+                         DNSClient                            DNSClient                   = null,
+                         String                               LoggingContext              = CPOClientLogger.DefaultContext,
+                         Func<String, String, String>         LogFileCreator              = null)
+
+            : base(ClientId,
+                   Hostname,
+                   TCPPort,
+                   RemoteCertificateValidator,
+                   ClientCert,
+                   HTTPVirtualHost,
+                   HTTPUserAgent,
+                   QueryTimeout,
+                   DNSClient)
+
+        {
+
+            #region Initial checks
+
+            if (ClientId.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Logger),    "The given client identification must not be null or empty!");
+
+            if (Hostname.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
+
+            #endregion
+
+            this.Logger = new CPOClientLogger(this,
+                                              LoggingContext,
+                                              LogFileCreator);
+
+        }
+
+        #endregion
+
+        #region CPOClient(ClientId, Logger, Hostname, ...)
+
         /// <summary>
         /// Create a new OICP CPO Client.
         /// </summary>
@@ -214,6 +283,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CPOClient(String                               ClientId,
+                         CPOClientLogger                      Logger,
                          String                               Hostname,
                          IPPort                               TCPPort                     = null,
                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
@@ -233,7 +303,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                    QueryTimeout,
                    DNSClient)
 
-        { }
+        {
+
+            #region Initial checks
+
+            if (ClientId.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Logger),    "The given client identification must not be null or empty!");
+
+            if (Logger == null)
+                throw new ArgumentNullException(nameof(Logger),    "The given mobile client logger must not be null!");
+
+            if (Hostname.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
+
+            #endregion
+
+            this.Logger = Logger;
+
+        }
+
+        #endregion
 
         #endregion
 
@@ -264,7 +353,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                          EventTracking_Id                       EventTrackingId    = null,
                          TimeSpan?                              RequestTimeout     = null)
 
-                {
+        {
 
             #region Initial checks
 

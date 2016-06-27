@@ -190,6 +190,73 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
     #endregion
 
+    #region OnReservationStart/-Stop
+
+    /// <summary>
+    /// A delegate called whenever a 'reservation start' request will be send.
+    /// </summary>
+    public delegate Task OnReservationStartRequestHandler (DateTime                  LogTimestamp,
+                                                           DateTime                  RequestTimestamp,
+                                                           EMPClient                 Sender,
+                                                           String                    SenderId,
+                                                           EventTracking_Id          EventTrackingId,
+                                                           EVSP_Id                   ProviderId,
+                                                           EVSE_Id                   EVSEId,
+                                                           eMA_Id                    eMAId,
+                                                           ChargingSession_Id        SessionId,
+                                                           ChargingSession_Id        PartnerSessionId,
+                                                           ChargingProduct_Id        PartnerProductId,
+                                                           TimeSpan?                 RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a 'reservation start' request had been received.
+    /// </summary>
+    public delegate Task OnReservationStartResponseHandler(DateTime                  Timestamp,
+                                                           EMPClient                 Sender,
+                                                           String                    SenderId,
+                                                           EventTracking_Id          EventTrackingId,
+                                                           EVSP_Id                   ProviderId,
+                                                           EVSE_Id                   EVSEId,
+                                                           eMA_Id                    eMAId,
+                                                           ChargingSession_Id        SessionId,
+                                                           ChargingSession_Id        PartnerSessionId,
+                                                           ChargingProduct_Id        PartnerProductId,
+                                                           TimeSpan?                 RequestTimeout,
+                                                           eRoamingAcknowledgement   Result,
+                                                           TimeSpan                  Duration);
+
+
+    /// <summary>
+    /// A delegate called whenever a reservation stop request will be send.
+    /// </summary>
+    public delegate Task OnReservationStopRequestHandler  (DateTime                  LogTimestamp,
+                                                           DateTime                  RequestTimestamp,
+                                                           EMPClient                 Sender,
+                                                           String                    SenderId,
+                                                           EventTracking_Id          EventTrackingId,
+                                                           ChargingSession_Id        SessionId,
+                                                           EVSP_Id                   ProviderId,
+                                                           EVSE_Id                   EVSEId,
+                                                           ChargingSession_Id        PartnerSessionId,
+                                                           TimeSpan?                 RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a reservation stop request had been received.
+    /// </summary>
+    public delegate Task OnReservationStopResponseHandler (DateTime                  Timestamp,
+                                                           EMPClient                 Sender,
+                                                           String                    SenderId,
+                                                           EventTracking_Id          EventTrackingId,
+                                                           ChargingSession_Id        SessionId,
+                                                           EVSP_Id                   ProviderId,
+                                                           EVSE_Id                   EVSEId,
+                                                           ChargingSession_Id        PartnerSessionId,
+                                                           TimeSpan?                 RequestTimeout,
+                                                           eRoamingAcknowledgement   Result,
+                                                           TimeSpan                  Duration);
+
+    #endregion
+
     #region OnRemoteStart/-Stop
 
     /// <summary>

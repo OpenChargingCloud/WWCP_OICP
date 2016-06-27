@@ -27,6 +27,9 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    /// <summary>
+    /// An OICP CPO Client.
+    /// </summary>
     public partial class CPOClient : ASOAPClient
     {
 
@@ -38,12 +41,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Data
 
-        /// <summary>
-        /// The default context for this logger.
-        /// </summary>
-        public const String DefaultContext = "OICP_CPOClient";
+            /// <summary>
+            /// The default context for this logger.
+            /// </summary>
+            public const String DefaultContext = "OICP_CPOClient";
 
-        #endregion
+            #endregion
 
             #region Properties
 

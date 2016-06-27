@@ -91,7 +91,7 @@ namespace org.GraphDefined.WWCP
                                               String                                ServerURIPrefix             = "",
                                               Boolean                               ServerAutoStart             = true,
 
-                                              String                                ClientLoggingContext        = OICPv2_0.EMPClientLogger.DefaultContext,
+                                              String                                ClientLoggingContext        = OICPv2_0.EMPClient.EMPClientLogger.DefaultContext,
                                               String                                ServerLoggingContext        = OICPv2_0.EMPServerLogger.DefaultContext,
                                               Func<String, String, String>          LogFileCreator              = null,
 
@@ -204,7 +204,7 @@ namespace org.GraphDefined.WWCP
 
                                               String                                ServerURIPrefix             = null,
 
-                                              String                                ClientLoggingContext        = OICPv2_0.EMPClientLogger.DefaultContext,
+                                              String                                ClientLoggingContext        = OICPv2_0.EMPClient.EMPClientLogger.DefaultContext,
                                               String                                ServerLoggingContext        = OICPv2_0.EMPServerLogger.DefaultContext,
                                               Func<String, String, String>          LogFileCreator              = null,
 
@@ -249,12 +249,13 @@ namespace org.GraphDefined.WWCP
                                                                                         RemoteHTTPVirtualHost,
                                                                                         HTTPUserAgent,
                                                                                         QueryTimeout,
-                                                                                        DNSClient),
+                                                                                        DNSClient,
+                                                                                        ClientLoggingContext,
+                                                                                        LogFileCreator),
 
                                                                  new OICPv2_0.EMPServer(SOAPServer,
                                                                                         ServerURIPrefix),
 
-                                                                 ClientLoggingContext,
                                                                  ServerLoggingContext,
                                                                  LogFileCreator,
 

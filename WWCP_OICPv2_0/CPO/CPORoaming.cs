@@ -55,11 +55,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public CPOServer        CPOServer         { get; }
 
         /// <summary>
-        /// The CPO client logger.
-        /// </summary>
-        public CPOClientLogger  CPOClientLogger   { get; }
-
-        /// <summary>
         /// The CPO server logger.
         /// </summary>
         public CPOServerLogger  CPOServerLogger   { get; }
@@ -649,26 +644,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region CPORoaming(CPOClient, CPOServer, ClientLoggingContext = CPOClientLogger.DefaultContext, ServerLoggingContext = CPOServerLogger.DefaultContext, LogFileCreator = null)
+        #region CPORoaming(CPOClient, CPOServer, ServerLoggingContext = CPOServerLogger.DefaultContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP roaming client for CPOs.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
         /// <param name="CPOServer">A CPO sever.</param>
-        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public CPORoaming(CPOClient                     CPOClient,
                           CPOServer                     CPOServer,
-                          String                        ClientLoggingContext  = CPOClientLogger.DefaultContext,
                           String                        ServerLoggingContext  = CPOServerLogger.DefaultContext,
                           Func<String, String, String>  LogFileCreator        = null)
         {
 
             this.CPOClient        = CPOClient;
             this.CPOServer        = CPOServer;
-            this.CPOClientLogger  = new CPOClientLogger(CPOClient, ClientLoggingContext, LogFileCreator);
             this.CPOServerLogger  = new CPOServerLogger(CPOServer, ServerLoggingContext, LogFileCreator);
 
         }
@@ -713,7 +705,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           String                               ServerURIPrefix             = "",
                           Boolean                              ServerAutoStart             = false,
 
-                          String                               ClientLoggingContext        = CPOClientLogger.DefaultContext,
+                          String                               ClientLoggingContext        = CPOClient.CPOClientLogger.DefaultContext,
                           String                               ServerLoggingContext        = CPOServerLogger.DefaultContext,
                           Func<String, String, String>         LogFileCreator              = null,
 
@@ -727,7 +719,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                  RemoteHTTPVirtualHost,
                                  HTTPUserAgent,
                                  QueryTimeout,
-                                 DNSClient),
+                                 DNSClient,
+                                 ClientLoggingContext,
+                                 LogFileCreator),
 
                    new CPOServer(ServerName,
                                  ServerTCPPort,
@@ -735,7 +729,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                  DNSClient,
                                  false),
 
-                   ClientLoggingContext,
+    //               ClientLoggingContext,
                    ServerLoggingContext,
                    LogFileCreator)
 

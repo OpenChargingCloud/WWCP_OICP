@@ -660,7 +660,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                         Hostname:         _Hostname,
                                         TCPPort:          _TCPPort,
                                         HTTPVirtualHost:  _HTTPVirtualHost,
-                                        QueryTimeout:     QueryTimeout,
+                                        RequestTimeout:     QueryTimeout,
                                         DNSClient:        _DNSClient);
 
             _EMPClient.OnException += SendException;
@@ -769,7 +769,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                         Hostname:         _Hostname,
                                         TCPPort:          _TCPPort,
                                         HTTPVirtualHost:  _HTTPVirtualHost,
-                                        QueryTimeout:     QueryTimeout,
+                                        RequestTimeout:     QueryTimeout,
                                         DNSClient:        _DNSClient);
 
             _EMPClient.OnException += SendException;

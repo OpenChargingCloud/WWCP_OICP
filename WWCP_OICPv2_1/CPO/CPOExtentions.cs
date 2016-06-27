@@ -308,11 +308,11 @@ namespace org.GraphDefined.WWCP
         #region CreateOICPv2_1_CPOServiceCheck(this RoamingProvider, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, InitialDelay = null)
 
         /// <summary>
-        /// Create a new OICP v2.1 service checker.
+        /// Create a new OICP service checker.
         /// </summary>
         /// <typeparam name="T">The type of the data returned by the service checker.</typeparam>
         /// <param name="CPORoamingProvider">A roaming provider.</param>
-        /// <param name="ServiceChecker">A function to check the OICP v2.1 service regularly and providing some result.</param>
+        /// <param name="ServiceChecker">A function to check the OICP service regularly and providing some result.</param>
         /// <param name="OnFirstCheck">A delegate processing the first check result.</param>
         /// <param name="OnEveryCheck">A delegate processing a check result.</param>
         /// <param name="CheckEvery">The time span between two consecutive service checks.</param>
@@ -335,7 +335,7 @@ namespace org.GraphDefined.WWCP
             var _CPORoamingWWCP = (CPORoamingProvider as OICPv2_1.CPORoamingWWCP);
 
             if (_CPORoamingWWCP == null)
-                throw new ArgumentException("The given CPO roaming provider is not an OICP v2.1 CPO roaming provider!", nameof(CPORoamingProvider));
+                throw new ArgumentException("The given CPO roaming provider is not an OICP " + OICPv2_1.Version.Number + " CPO roaming provider!", nameof(CPORoamingProvider));
 
             #endregion
 

@@ -27,6 +27,9 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    /// <summary>
+    /// An OICP EMP client.
+    /// </summary>
     public partial class EMPClient : ASOAPClient
     {
 

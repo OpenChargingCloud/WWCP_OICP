@@ -25,10 +25,10 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Aegir;
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -41,33 +41,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     public class EMPRoaming
     {
 
-        #region Data
+        #region Properties
+
+        public Authorizator_Id  AuthorizatorId      { get; }
 
         /// <summary>
         /// The EMP client part.
         /// </summary>
-        private readonly EMPClient EMPClient;
+        public EMPClient        EMPClient           { get; }
 
         /// <summary>
         /// The EMP server part.
         /// </summary>
-        private readonly EMPServer EMPServer;
-
-        #endregion
-
-        #region Properties
-
-        public Authorizator_Id  AuthorizatorId    { get; }
-
-        /// <summary>
-        /// The EMP client logger.
-        /// </summary>
-        public EMPClientLogger  EMPClientLogger   { get; }
+        public EMPServer        EMPServer           { get; }
 
         /// <summary>
         /// The EMP server logger.
         /// </summary>
-        public EMPServerLogger  EMPServerLogger   { get; }
+        public EMPServerLogger  EMPServerLogger     { get; }
 
         /// <summary>
         /// The DNS client defines which DNS servers to use.
@@ -939,26 +930,23 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region EMPRoaming(EMPClient, EMPServer, ClientLoggingContext = EMPClientLogger.DefaultContext, ServerLoggingContext = EMPServerLogger.DefaultContext, LogFileCreator = null)
+        #region EMPRoaming(EMPClient, EMPServer, ServerLoggingContext = EMPServerLogger.DefaultContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP roaming client for EMPs.
         /// </summary>
         /// <param name="EMPClient">A EMP client.</param>
         /// <param name="EMPServer">A EMP sever.</param>
-        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPRoaming(EMPClient                     EMPClient,
                           EMPServer                     EMPServer,
-                          String                        ClientLoggingContext   = EMPClientLogger.DefaultContext,
                           String                        ServerLoggingContext   = EMPServerLogger.DefaultContext,
                           Func<String, String, String>  LogFileCreator  = null)
         {
 
             this.EMPClient        = EMPClient;
             this.EMPServer        = EMPServer;
-            this.EMPClientLogger  = new EMPClientLogger(EMPClient, ClientLoggingContext, LogFileCreator);
             this.EMPServerLogger  = new EMPServerLogger(EMPServer, ServerLoggingContext, LogFileCreator);
 
         }
@@ -977,7 +965,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
@@ -996,14 +984,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                           X509Certificate                      ClientCert                  = null,
                           String                               RemoteHTTPVirtualHost       = null,
                           String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
-                          TimeSpan?                            QueryTimeout                = null,
+                          TimeSpan?                            RequestTimeout                = null,
 
                           String                               ServerName                  = EMPServer.DefaultHTTPServerName,
                           IPPort                               ServerTCPPort               = null,
                           String                               ServerURIPrefix             = "",
                           Boolean                              ServerAutoStart             = false,
 
-                          String                               ClientLoggingContext        = EMPClientLogger.DefaultContext,
+                          String                               ClientLoggingContext        = EMPClient.EMPClientLogger.DefaultContext,
                           String                               ServerLoggingContext        = EMPServerLogger.DefaultContext,
                           Func<String, String, String>         LogFileCreator              = null,
 
@@ -1016,8 +1004,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                  ClientCert,
                                  RemoteHTTPVirtualHost,
                                  HTTPUserAgent,
-                                 QueryTimeout,
-                                 DNSClient),
+                                 RequestTimeout,
+                                 DNSClient,
+                                 ClientLoggingContext,
+                                 LogFileCreator),
 
                    new EMPServer(ServerName,
                                  ServerTCPPort,
@@ -1025,7 +1015,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                  DNSClient,
                                  false),
 
-                   ClientLoggingContext,
                    ServerLoggingContext,
                    LogFileCreator)
 
