@@ -27,13 +27,16 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    /// <summary>
-    /// An OICP CPO client logger.
-    /// </summary>
-    public class CPOClientLogger : HTTPLogger
+    public partial class CPOClient : ASOAPClient
     {
 
-        #region Data
+        /// <summary>
+        /// An OICP CPO client (HTTP/SOAP client) logger.
+        /// </summary>
+        public class CPOClientLogger : HTTPLogger
+        {
+
+            #region Data
 
         /// <summary>
         /// The default context for this logger.
@@ -42,217 +45,219 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region Properties
+            #region Properties
 
-        /// <summary>
-        /// The linked OICP CPO client.
-        /// </summary>
-        public CPOClient CPOClient { get; }
-
-        #endregion
-
-        #region Constructor(s)
-
-        #region CPOClientLogger(CPOClient, Context = DefaultContext, LogFileCreator = null)
-
-        /// <summary>
-        /// Create a new OICP CPO client logger using the default logging delegates.
-        /// </summary>
-        /// <param name="CPOClient">A OICP CPO client.</param>
-        /// <param name="Context">A context of this API.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public CPOClientLogger(CPOClient                    CPOClient,
-                               String                       Context         = DefaultContext,
-                               Func<String, String, String> LogFileCreator  = null)
-
-            : this(CPOClient,
-                   Context.IsNotNullOrEmpty() ? Context : DefaultContext,
-                   null,
-                   null,
-                   null,
-                   null,
-
-                   LogFileCreator: LogFileCreator)
-
-        { }
-
-        #endregion
-
-        #region CPOClientLogger(CPOClient, Context, ... Logging delegates ...)
-
-        /// <summary>
-        /// Create a new OICP CPO client logger using the given logging delegates.
-        /// </summary>
-        /// <param name="CPOClient">A OICP CPO client.</param>
-        /// <param name="Context">A context of this API.</param>
-        /// 
-        /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
-        /// <param name="LogHTTPResponse_toConsole">A delegate to log HTTP requests/responses to console.</param>
-        /// <param name="LogHTTPRequest_toDisc">A delegate to log incoming HTTP requests to disc.</param>
-        /// <param name="LogHTTPResponse_toDisc">A delegate to log HTTP requests/responses to disc.</param>
-        /// 
-        /// <param name="LogHTTPRequest_toNetwork">A delegate to log incoming HTTP requests to a network target.</param>
-        /// <param name="LogHTTPResponse_toNetwork">A delegate to log HTTP requests/responses to a network target.</param>
-        /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP client sent events source.</param>
-        /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP client sent events source.</param>
-        /// 
-        /// <param name="LogHTTPError_toConsole">A delegate to log HTTP errors to console.</param>
-        /// <param name="LogHTTPError_toDisc">A delegate to log HTTP errors to disc.</param>
-        /// <param name="LogHTTPError_toNetwork">A delegate to log HTTP errors to a network target.</param>
-        /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
-        /// 
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public CPOClientLogger(CPOClient                     CPOClient,
-                               String                        Context,
-
-                               HTTPRequestLoggerDelegate     LogHTTPRequest_toConsole,
-                               HTTPResponseLoggerDelegate    LogHTTPResponse_toConsole,
-                               HTTPRequestLoggerDelegate     LogHTTPRequest_toDisc,
-                               HTTPResponseLoggerDelegate    LogHTTPResponse_toDisc,
-
-                               HTTPRequestLoggerDelegate     LogHTTPRequest_toNetwork   = null,
-                               HTTPResponseLoggerDelegate    LogHTTPResponse_toNetwork  = null,
-                               HTTPRequestLoggerDelegate     LogHTTPRequest_toHTTPSSE   = null,
-                               HTTPResponseLoggerDelegate    LogHTTPResponse_toHTTPSSE  = null,
-
-                               HTTPResponseLoggerDelegate    LogHTTPError_toConsole     = null,
-                               HTTPResponseLoggerDelegate    LogHTTPError_toDisc        = null,
-                               HTTPResponseLoggerDelegate    LogHTTPError_toNetwork     = null,
-                               HTTPResponseLoggerDelegate    LogHTTPError_toHTTPSSE     = null,
-
-                               Func<String, String, String>  LogFileCreator             = null)
-
-            : base(Context.IsNotNullOrEmpty() ? Context : DefaultContext,
-
-                   LogHTTPRequest_toConsole,
-                   LogHTTPResponse_toConsole,
-                   LogHTTPRequest_toDisc,
-                   LogHTTPResponse_toDisc,
-
-                   LogHTTPRequest_toNetwork,
-                   LogHTTPResponse_toNetwork,
-                   LogHTTPRequest_toHTTPSSE,
-                   LogHTTPResponse_toHTTPSSE,
-
-                   LogHTTPError_toConsole,
-                   LogHTTPError_toDisc,
-                   LogHTTPError_toNetwork,
-                   LogHTTPError_toHTTPSSE,
-
-                   LogFileCreator)
-
-        {
-
-            #region Initial checks
-
-            if (CPOClient == null)
-                throw new ArgumentNullException(nameof(CPOClient), "The given CPO client must not be null!");
-
-            this.CPOClient = CPOClient;
+            /// <summary>
+            /// The attached OICP CPO client.
+            /// </summary>
+            public CPOClient CPOClient { get; }
 
             #endregion
 
-            #region Register EVSE data/status push log events
+            #region Constructor(s)
 
-            RegisterEvent("EVSEDataPush",
-                          handler => CPOClient.OnPushEVSEDataSOAPRequest    += handler,
-                          handler => CPOClient.OnPushEVSEDataSOAPRequest    -= handler,
-                          "EVSE", "EVSEData", "Request", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+            #region CPOClientLogger(CPOClient, Context = DefaultContext, LogFileCreator = null)
 
-            RegisterEvent("EVSEDataPushed",
-                          handler => CPOClient.OnPushEVSEDataSOAPResponse   += handler,
-                          handler => CPOClient.OnPushEVSEDataSOAPResponse   -= handler,
-                          "EVSE", "EVSEData", "Response", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+            /// <summary>
+            /// Create a new OICP CPO client logger using the default logging delegates.
+            /// </summary>
+            /// <param name="CPOClient">A OICP CPO client.</param>
+            /// <param name="Context">A context of this API.</param>
+            /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+            public CPOClientLogger(CPOClient                    CPOClient,
+                                   String                       Context         = DefaultContext,
+                                   Func<String, String, String> LogFileCreator  = null)
+
+                : this(CPOClient,
+                       Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+                       null,
+                       null,
+                       null,
+                       null,
+
+                       LogFileCreator: LogFileCreator)
+
+            { }
+
+            #endregion
+
+            #region CPOClientLogger(CPOClient, Context, ... Logging delegates ...)
+
+            /// <summary>
+            /// Create a new OICP CPO client logger using the given logging delegates.
+            /// </summary>
+            /// <param name="CPOClient">A OICP CPO client.</param>
+            /// <param name="Context">A context of this API.</param>
+            /// 
+            /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
+            /// <param name="LogHTTPResponse_toConsole">A delegate to log HTTP requests/responses to console.</param>
+            /// <param name="LogHTTPRequest_toDisc">A delegate to log incoming HTTP requests to disc.</param>
+            /// <param name="LogHTTPResponse_toDisc">A delegate to log HTTP requests/responses to disc.</param>
+            /// 
+            /// <param name="LogHTTPRequest_toNetwork">A delegate to log incoming HTTP requests to a network target.</param>
+            /// <param name="LogHTTPResponse_toNetwork">A delegate to log HTTP requests/responses to a network target.</param>
+            /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP client sent events source.</param>
+            /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP client sent events source.</param>
+            /// 
+            /// <param name="LogHTTPError_toConsole">A delegate to log HTTP errors to console.</param>
+            /// <param name="LogHTTPError_toDisc">A delegate to log HTTP errors to disc.</param>
+            /// <param name="LogHTTPError_toNetwork">A delegate to log HTTP errors to a network target.</param>
+            /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
+            /// 
+            /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+            public CPOClientLogger(CPOClient                     CPOClient,
+                                   String                        Context,
+
+                                   HTTPRequestLoggerDelegate     LogHTTPRequest_toConsole,
+                                   HTTPResponseLoggerDelegate    LogHTTPResponse_toConsole,
+                                   HTTPRequestLoggerDelegate     LogHTTPRequest_toDisc,
+                                   HTTPResponseLoggerDelegate    LogHTTPResponse_toDisc,
+
+                                   HTTPRequestLoggerDelegate     LogHTTPRequest_toNetwork   = null,
+                                   HTTPResponseLoggerDelegate    LogHTTPResponse_toNetwork  = null,
+                                   HTTPRequestLoggerDelegate     LogHTTPRequest_toHTTPSSE   = null,
+                                   HTTPResponseLoggerDelegate    LogHTTPResponse_toHTTPSSE  = null,
+
+                                   HTTPResponseLoggerDelegate    LogHTTPError_toConsole     = null,
+                                   HTTPResponseLoggerDelegate    LogHTTPError_toDisc        = null,
+                                   HTTPResponseLoggerDelegate    LogHTTPError_toNetwork     = null,
+                                   HTTPResponseLoggerDelegate    LogHTTPError_toHTTPSSE     = null,
+
+                                   Func<String, String, String>  LogFileCreator             = null)
+
+                : base(Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+
+                       LogHTTPRequest_toConsole,
+                       LogHTTPResponse_toConsole,
+                       LogHTTPRequest_toDisc,
+                       LogHTTPResponse_toDisc,
+
+                       LogHTTPRequest_toNetwork,
+                       LogHTTPResponse_toNetwork,
+                       LogHTTPRequest_toHTTPSSE,
+                       LogHTTPResponse_toHTTPSSE,
+
+                       LogHTTPError_toConsole,
+                       LogHTTPError_toDisc,
+                       LogHTTPError_toNetwork,
+                       LogHTTPError_toHTTPSSE,
+
+                       LogFileCreator)
+
+            {
+
+                #region Initial checks
+
+                if (CPOClient == null)
+                    throw new ArgumentNullException(nameof(CPOClient), "The given CPO client must not be null!");
+
+                this.CPOClient = CPOClient;
+
+                #endregion
+
+                #region Register EVSE data/status push log events
+
+                RegisterEvent("EVSEDataPush",
+                              handler => CPOClient.OnPushEVSEDataSOAPRequest    += handler,
+                              handler => CPOClient.OnPushEVSEDataSOAPRequest    -= handler,
+                              "EVSE", "EVSEData", "Request", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("EVSEDataPushed",
+                              handler => CPOClient.OnPushEVSEDataSOAPResponse   += handler,
+                              handler => CPOClient.OnPushEVSEDataSOAPResponse   -= handler,
+                              "EVSE", "EVSEData", "Response", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
 
-            RegisterEvent("EVSEStatusPush",
-                          handler => CPOClient.OnPushEVSEStatusSOAPRequest  += handler,
-                          handler => CPOClient.OnPushEVSEStatusSOAPRequest  -= handler,
-                          "EVSE", "EVSEStatus", "Request", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("EVSEStatusPush",
+                              handler => CPOClient.OnPushEVSEStatusSOAPRequest  += handler,
+                              handler => CPOClient.OnPushEVSEStatusSOAPRequest  -= handler,
+                              "EVSE", "EVSEStatus", "Request", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("EVSEStatusPushed",
-                          handler => CPOClient.OnPushEVSEStatusSOAPResponse += handler,
-                          handler => CPOClient.OnPushEVSEStatusSOAPResponse -= handler,
-                          "EVSE", "EVSEStatus", "Response", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
-
-
-
-            RegisterEvent("AuthorizeStart",
-                          handler => CPOClient.OnAuthorizeStartSOAPRequest += handler,
-                          handler => CPOClient.OnAuthorizeStartSOAPRequest -= handler,
-                          "Authorize", "Request", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
-
-            RegisterEvent("AuthorizeStarted",
-                          handler => CPOClient.OnAuthorizeStartSOAPResponse += handler,
-                          handler => CPOClient.OnAuthorizeStartSOAPResponse -= handler,
-                          "Authorize", "Response", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
-
-
-            RegisterEvent("AuthorizeStop",
-                          handler => CPOClient.OnAuthorizeStopSOAPRequest += handler,
-                          handler => CPOClient.OnAuthorizeStopSOAPRequest -= handler,
-                          "Authorize", "Request", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
-
-            RegisterEvent("AuthorizeStopped",
-                          handler => CPOClient.OnAuthorizeStopSOAPResponse += handler,
-                          handler => CPOClient.OnAuthorizeStopSOAPResponse -= handler,
-                          "Authorize", "Response", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("EVSEStatusPushed",
+                              handler => CPOClient.OnPushEVSEStatusSOAPResponse += handler,
+                              handler => CPOClient.OnPushEVSEStatusSOAPResponse -= handler,
+                              "EVSE", "EVSEStatus", "Response", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
 
 
-            RegisterEvent("SendChargeDetailRecord",
-                          handler => CPOClient.OnSendChargeDetailRecordSOAPRequest += handler,
-                          handler => CPOClient.OnSendChargeDetailRecordSOAPRequest -= handler,
-                          "ChargeDetailRecord", "CDR", "Request", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("AuthorizeStart",
+                              handler => CPOClient.OnAuthorizeStartSOAPRequest += handler,
+                              handler => CPOClient.OnAuthorizeStartSOAPRequest -= handler,
+                              "Authorize", "Request", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("ChargeDetailRecordSent",
-                          handler => CPOClient.OnSendChargeDetailRecordSOAPResponse += handler,
-                          handler => CPOClient.OnSendChargeDetailRecordSOAPResponse -= handler,
-                          "ChargeDetailRecord", "CDR", "Response", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("AuthorizeStarted",
+                              handler => CPOClient.OnAuthorizeStartSOAPResponse += handler,
+                              handler => CPOClient.OnAuthorizeStartSOAPResponse -= handler,
+                              "Authorize", "Response", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
 
-            RegisterEvent("PullAuthenticationData",
-                          handler => CPOClient.OnPullAuthenticationDataSOAPRequest += handler,
-                          handler => CPOClient.OnPullAuthenticationDataSOAPRequest -= handler,
-                          "AuthenticationData", "Request", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("AuthorizeStop",
+                              handler => CPOClient.OnAuthorizeStopSOAPRequest += handler,
+                              handler => CPOClient.OnAuthorizeStopSOAPRequest -= handler,
+                              "Authorize", "Request", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("AuthenticationDataPulled",
-                          handler => CPOClient.OnPullAuthenticationDataSOAPResponse += handler,
-                          handler => CPOClient.OnPullAuthenticationDataSOAPResponse -= handler,
-                          "AuthenticationData", "Response", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("AuthorizeStopped",
+                              handler => CPOClient.OnAuthorizeStopSOAPResponse += handler,
+                              handler => CPOClient.OnAuthorizeStopSOAPResponse -= handler,
+                              "Authorize", "Response", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+
+                RegisterEvent("SendChargeDetailRecord",
+                              handler => CPOClient.OnSendChargeDetailRecordSOAPRequest += handler,
+                              handler => CPOClient.OnSendChargeDetailRecordSOAPRequest -= handler,
+                              "ChargeDetailRecord", "CDR", "Request", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("ChargeDetailRecordSent",
+                              handler => CPOClient.OnSendChargeDetailRecordSOAPResponse += handler,
+                              handler => CPOClient.OnSendChargeDetailRecordSOAPResponse -= handler,
+                              "ChargeDetailRecord", "CDR", "Response", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("PullAuthenticationData",
+                              handler => CPOClient.OnPullAuthenticationDataSOAPRequest += handler,
+                              handler => CPOClient.OnPullAuthenticationDataSOAPRequest -= handler,
+                              "AuthenticationData", "Request", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("AuthenticationDataPulled",
+                              handler => CPOClient.OnPullAuthenticationDataSOAPResponse += handler,
+                              handler => CPOClient.OnPullAuthenticationDataSOAPResponse -= handler,
+                              "AuthenticationData", "Response", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
+            }
+
+            #endregion
 
             #endregion
 
         }
 
-        #endregion
-
-        #endregion
-
-    }
+     }
 
 }

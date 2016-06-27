@@ -39,7 +39,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// An OICP CPO Client.
     /// </summary>
-    public class CPOClient : ASOAPClient
+    public partial class CPOClient : ASOAPClient
     {
 
         #region Data
@@ -48,6 +48,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// The default HTTP user agent string.
         /// </summary>
         public const String DefaultHTTPUserAgent = "GraphDefined OICP " + Version.Number + " CPO Client";
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The attached OICP CPO client (HTTP/SOAP client) logger.
+        /// </summary>
+        public CPOClientLogger Logger { get; }
 
         #endregion
 
@@ -201,6 +210,66 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
+        #region CPOClient(ClientId, Hostname, ..., LoggingContext = EMPClientLogger.DefaultContext, ...)
+
+        /// <summary>
+        /// Create a new OICP CPO Client.
+        /// </summary>
+        /// <param name="ClientId">A unqiue identification of this client.</param>
+        /// <param name="Hostname">The hostname of the remote OICP service.</param>
+        /// <param name="TCPPort">An optional TCP port of the remote OICP service.</param>
+        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
+        /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
+        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="DNSClient">An optional DNS client to use.</param>
+        /// <param name="LoggingContext">An optional context for logging client methods.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        public CPOClient(String                               ClientId,
+                         String                               Hostname,
+                         IPPort                               TCPPort                     = null,
+                         RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                         X509Certificate                      ClientCert                  = null,
+                         String                               HTTPVirtualHost             = null,
+                         String                               HTTPUserAgent               = DefaultHTTPUserAgent,
+                         TimeSpan?                            QueryTimeout                = null,
+                         DNSClient                            DNSClient                   = null,
+                         String                               LoggingContext              = CPOClientLogger.DefaultContext,
+                         Func<String, String, String>         LogFileCreator              = null)
+
+            : base(ClientId,
+                   Hostname,
+                   TCPPort,
+                   RemoteCertificateValidator,
+                   ClientCert,
+                   HTTPVirtualHost,
+                   HTTPUserAgent,
+                   QueryTimeout,
+                   DNSClient)
+
+        {
+
+            #region Initial checks
+
+            if (ClientId.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Logger),    "The given client identification must not be null or empty!");
+
+            if (Hostname.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
+
+            #endregion
+
+            this.Logger = new CPOClientLogger(this,
+                                              LoggingContext,
+                                              LogFileCreator);
+
+        }
+
+        #endregion
+
+        #region CPOClient(ClientId, Logger, Hostname, ...)
+
         /// <summary>
         /// Create a new OICP CPO Client.
         /// </summary>
@@ -214,6 +283,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CPOClient(String                               ClientId,
+                         CPOClientLogger                      Logger,
                          String                               Hostname,
                          IPPort                               TCPPort                     = null,
                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
@@ -233,7 +303,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    QueryTimeout,
                    DNSClient)
 
-        { }
+        {
+
+            #region Initial checks
+
+            if (ClientId.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Logger),    "The given client identification must not be null or empty!");
+
+            if (Logger == null)
+                throw new ArgumentNullException(nameof(Logger),    "The given mobile client logger must not be null!");
+
+            if (Hostname.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
+
+            #endregion
+
+            this.Logger = Logger;
+
+        }
+
+        #endregion
 
         #endregion
 
@@ -289,34 +378,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                               Select(group => group.Count()).
                                               Sum   ();
 
+            HTTPResponse<eRoamingAcknowledgement> result = null;
+
+            #endregion
+
+            #region Send OnPushEVSEDataRequest event
+
+            try
+            {
+
+                OnPushEVSEDataRequest?.Invoke(DateTime.Now,
+                                              Timestamp.Value,
+                                              this,
+                                              ClientId,
+                                              EventTrackingId,
+                                              OICPAction,
+                                              GroupedEVSEDataRecords,
+                                              (UInt32) NumberOfEVSEDataRecords,
+                                              RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEDataRequest));
+            }
+
             #endregion
 
 
             if (NumberOfEVSEDataRecords > 0)
             {
-
-                #region Send OnPushEVSEDataRequest event
-
-                try
-                {
-
-                    OnPushEVSEDataRequest?.Invoke(DateTime.Now,
-                                                  Timestamp.Value,
-                                                  this,
-                                                  ClientId,
-                                                  EventTrackingId,
-                                                  OICPAction,
-                                                  GroupedEVSEDataRecords,
-                                                  (UInt32) NumberOfEVSEDataRecords,
-                                                  RequestTimeout);
-
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEDataRequest));
-                }
-
-                #endregion
 
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
@@ -328,75 +419,81 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         DNSClient))
                 {
 
-                    var result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEDataXML(GroupedEVSEDataRecords,
-                                                                                             OICPAction,
-                                                                                             OperatorId,
-                                                                                             OperatorName),
-                                                         "eRoamingPushEvseData",
-                                                         RequestLogDelegate:   OnPushEVSEDataSOAPRequest,
-                                                         ResponseLogDelegate:  OnPushEVSEDataSOAPResponse,
-                                                         CancellationToken:    CancellationToken,
-                                                         EventTrackingId:      EventTrackingId,
-                                                         QueryTimeout:         RequestTimeout,
+                    result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEDataXML(GroupedEVSEDataRecords,
+                                                                                         OICPAction,
+                                                                                         OperatorId,
+                                                                                         OperatorName),
+                                                     "eRoamingPushEvseData",
+                                                     RequestLogDelegate:   OnPushEVSEDataSOAPRequest,
+                                                     ResponseLogDelegate:  OnPushEVSEDataSOAPResponse,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     QueryTimeout:         RequestTimeout,
 
-                                                         #region OnSuccess
+                                                     #region OnSuccess
 
-                                                         OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
 
-                                                         #endregion
+                                                     #endregion
 
-                                                         #region OnSOAPFault
+                                                     #region OnSOAPFault
 
-                                                         OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                             SendSOAPError(timestamp, this, httpresponse.Content);
+                                                         SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                             return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                              new eRoamingAcknowledgement(StatusCodes.SystemError),
-                                                                                                              IsFault: true);
+                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError),
+                                                                                                          IsFault: true);
 
-                                                         },
+                                                     },
 
-                                                         #endregion
+                                                     #endregion
 
-                                                         #region OnHTTPError
+                                                     #region OnHTTPError
 
-                                                         OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                             SendHTTPError(timestamp, this, httpresponse);
+                                                         SendHTTPError(timestamp, this, httpresponse);
 
-                                                             return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                              new eRoamingAcknowledgement(StatusCodes.SystemError,
-                                                                                                                                          httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                          httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                              IsFault: true);
+                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                          IsFault: true);
 
-                                                         },
+                                                     },
 
-                                                         #endregion
+                                                     #endregion
 
-                                                         #region OnException
+                                                     #region OnException
 
-                                                         OnException: (timestamp, sender, exception) => {
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                             SendException(timestamp, sender, exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                             return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.SystemError,
-                                                                                                                                                      exception.Message,
-                                                                                                                                                      exception.StackTrace),
-                                                                                                                          Exception:  exception);
+                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                                  exception.Message,
+                                                                                                                                                  exception.StackTrace),
+                                                                                                                      Exception:  exception);
 
-                                                         }
+                                                     }
 
-                                                         #endregion
+                                                     #endregion
 
-                                                        );
+                                                    );
+
+                }
+            }
+
+            else
+                result = HTTPResponse<eRoamingAcknowledgement>.OK(new eRoamingAcknowledgement(StatusCodes.Success));
 
 
-                    #region Send OnPushEVSEDataResponse event
+            #region Send OnPushEVSEDataResponse event
 
-                    try
-                    {
+            try
+            {
 
                         OnPushEVSEDataResponse?.Invoke(DateTime.Now,
                                                        Timestamp.Value,
@@ -418,13 +515,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #endregion
 
-                    return result;
 
-                }
-
-            }
-
-            return HTTPResponse<eRoamingAcknowledgement>.OK(new eRoamingAcknowledgement(StatusCodes.Success));
+            return result;
 
         }
 
@@ -657,34 +749,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             var _EVSEStatusRecords         = EVSEStatusRecords.ToArray();
             var NumberOfEVSEStatusRecords  = _EVSEStatusRecords.Length;
 
+            HTTPResponse<eRoamingAcknowledgement> result = null;
+
+            #endregion
+
+            #region Send OnPushEVSEStatusRequest event
+
+            try
+            {
+
+                OnPushEVSEStatusRequest?.Invoke(DateTime.Now,
+                                                Timestamp.Value,
+                                                this,
+                                                ClientId,
+                                                EventTrackingId,
+                                                OICPAction,
+                                                _EVSEStatusRecords,
+                                                (UInt32) NumberOfEVSEStatusRecords,
+                                                RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEStatusRequest));
+            }
+
             #endregion
 
 
             if (NumberOfEVSEStatusRecords > 0)
             {
-
-                #region Send OnPushEVSEStatusRequest event
-
-                try
-                {
-
-                    OnPushEVSEStatusRequest?.Invoke(DateTime.Now,
-                                                    Timestamp.Value,
-                                                    this,
-                                                    ClientId,
-                                                    EventTrackingId,
-                                                    OICPAction,
-                                                    _EVSEStatusRecords,
-                                                    (UInt32) NumberOfEVSEStatusRecords,
-                                                    RequestTimeout);
-
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEStatusRequest));
-                }
-
-                #endregion
 
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
@@ -696,104 +790,106 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         DNSClient))
                 {
 
-                     var result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEStatusXML(_EVSEStatusRecords,
-                                                                                                OICPAction,
-                                                                                                OperatorId,
-                                                                                                OperatorName),
-                                                          "eRoamingPushEvseStatus",
-                                                          RequestLogDelegate:   OnPushEVSEStatusSOAPRequest,
-                                                          ResponseLogDelegate:  OnPushEVSEStatusSOAPResponse,
-                                                          CancellationToken:    CancellationToken,
-                                                          EventTrackingId:      EventTrackingId,
-                                                          QueryTimeout:         RequestTimeout,
+                     result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEStatusXML(_EVSEStatusRecords,
+                                                                                            OICPAction,
+                                                                                            OperatorId,
+                                                                                            OperatorName),
+                                                      "eRoamingPushEvseStatus",
+                                                      RequestLogDelegate:   OnPushEVSEStatusSOAPRequest,
+                                                      ResponseLogDelegate:  OnPushEVSEStatusSOAPResponse,
+                                                      CancellationToken:    CancellationToken,
+                                                      EventTrackingId:      EventTrackingId,
+                                                      QueryTimeout:         RequestTimeout,
 
-                                                          #region OnSuccess
+                                                      #region OnSuccess
 
-                                                          OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
+                                                      OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
 
-                                                          #endregion
+                                                      #endregion
 
-                                                          #region OnSOAPFault
+                                                      #region OnSOAPFault
 
-                                                          OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                      OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                              SendSOAPError(timestamp, this, httpresponse.Content);
+                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                              return new HTTPResponse<eRoamingAcknowledgement>(
-                                                                  httpresponse,
-                                                                  new eRoamingAcknowledgement(StatusCodes.SystemError),
-                                                                  IsFault: true);
+                                                          return new HTTPResponse<eRoamingAcknowledgement>(
+                                                              httpresponse,
+                                                              new eRoamingAcknowledgement(StatusCodes.SystemError),
+                                                              IsFault: true);
 
-                                                          },
+                                                      },
 
-                                                          #endregion
+                                                      #endregion
 
-                                                          #region OnHTTPError
+                                                      #region OnHTTPError
 
-                                                          OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                      OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                              SendHTTPError(timestamp, this, httpresponse);
+                                                          SendHTTPError(timestamp, this, httpresponse);
 
-                                                              return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                               new eRoamingAcknowledgement(StatusCodes.SystemError,
-                                                                                                                                           httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                           httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                               IsFault: true);
+                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
+                                                                                                           new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                       httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                       httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                           IsFault: true);
 
-                                                          },
+                                                      },
 
-                                                         #endregion
+                                                     #endregion
 
-                                                          #region OnException
+                                                      #region OnException
 
-                                                          OnException: (timestamp, sender, exception) => {
+                                                      OnException: (timestamp, sender, exception) => {
 
-                                                              SendException(timestamp, sender, exception);
+                                                          SendException(timestamp, sender, exception);
 
-                                                              return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.SystemError,
-                                                                                                                                                       exception.Message,
-                                                                                                                                                       exception.StackTrace),
-                                                                                                                           Exception: exception);
+                                                          return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                                                                                                                   exception.Message,
+                                                                                                                                                   exception.StackTrace),
+                                                                                                                       Exception: exception);
 
-                                                          }
+                                                      }
 
-                                                          #endregion
+                                                      #endregion
 
-                                                         );
-
-
-                    #region Send OnPushEVSEStatusResponse event
-
-                    try
-                    {
-
-                        OnPushEVSEStatusResponse?.Invoke(DateTime.Now,
-                                                         Timestamp.Value,
-                                                         this,
-                                                         ClientId,
-                                                         EventTrackingId,
-                                                         OICPAction,
-                                                         _EVSEStatusRecords,
-                                                         (UInt32) NumberOfEVSEStatusRecords,
-                                                         RequestTimeout,
-                                                         result.Content,
-                                                         DateTime.Now - Timestamp.Value);
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEDataResponse));
-                    }
-
-                    #endregion
-
-                    return result;
+                                                     );
 
                 }
 
             }
 
-            return HTTPResponse<eRoamingAcknowledgement>.OK(new eRoamingAcknowledgement(StatusCodes.Success));
+            else
+                result = HTTPResponse<eRoamingAcknowledgement>.OK(new eRoamingAcknowledgement(StatusCodes.Success));
+
+
+            #region Send OnPushEVSEStatusResponse event
+
+            try
+            {
+
+                OnPushEVSEStatusResponse?.Invoke(DateTime.Now,
+                                                 Timestamp.Value,
+                                                 this,
+                                                 ClientId,
+                                                 EventTrackingId,
+                                                 OICPAction,
+                                                 _EVSEStatusRecords,
+                                                 (UInt32) NumberOfEVSEStatusRecords,
+                                                 RequestTimeout,
+                                                 result.Content,
+                                                 DateTime.Now - Timestamp.Value);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEDataResponse));
+            }
+
+            #endregion
+
+
+            return result;
 
         }
 

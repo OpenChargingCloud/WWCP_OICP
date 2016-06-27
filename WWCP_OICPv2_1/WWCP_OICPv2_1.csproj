@@ -60,6 +60,8 @@
     <Compile Include="CPO\CPOServer\CPOServerDelegates.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
     <Compile Include="CPO\CPOServiceCheck.cs" />
+    <Compile Include="MobileClient\MobileClientDelegates.cs" />
+    <Compile Include="MobileClient\MobileClientLogger.cs" />
     <Compile Include="Objects\Responses\StatusCodes.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="EMP\EMPClient\EMPClient.cs" />

@@ -63,10 +63,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
         /// <summary>
+        /// The EMP client.
+        /// </summary>
+        public EMPClient Client
+            => EMPRoaming?.EMPClient;
+
+        /// <summary>
         /// The EMP client logger.
         /// </summary>
-        public EMPClientLogger ClientLogger
-            => EMPRoaming?.EMPClientLogger;
+        public EMPClient.EMPClientLogger ClientLogger
+            => EMPRoaming?.EMPClient?.Logger;
+
+
+        /// <summary>
+        /// The EMP server.
+        /// </summary>
+        public EMPServer Server
+            => EMPRoaming?.EMPServer;
 
         /// <summary>
         /// The EMP server logger.
@@ -499,7 +512,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// 
         /// <param name="EMPClient">An OICP EMP client.</param>
         /// <param name="EMPServer">An OICP EMP sever.</param>
-        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
@@ -510,7 +522,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                               EMPClient                     EMPClient,
                               EMPServer                     EMPServer,
-                              String                        ClientLoggingContext  = EMPClientLogger.DefaultContext,
                               String                        ServerLoggingContext  = EMPServerLogger.DefaultContext,
                               Func<String, String, String>  LogFileCreator        = null,
 
@@ -522,7 +533,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                    new EMPRoaming(EMPClient,
                                   EMPServer,
-                                  ClientLoggingContext,
                                   ServerLoggingContext,
                                   LogFileCreator),
 
@@ -578,7 +588,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               String                               ServerURIPrefix             = "",
                               Boolean                              ServerAutoStart             = false,
 
-                              String                               ClientLoggingContext        = EMPClientLogger.DefaultContext,
+                              String                               ClientLoggingContext        = EMPClient.EMPClientLogger.DefaultContext,
                               String                               ServerLoggingContext        = EMPServerLogger.DefaultContext,
                               Func<String, String, String>         LogFileCreator              = null,
 

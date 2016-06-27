@@ -41,33 +41,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public class EMPRoaming
     {
 
-        #region Data
+        #region Properties
+
+        public Authorizator_Id  AuthorizatorId      { get; }
 
         /// <summary>
         /// The EMP client part.
         /// </summary>
-        private readonly EMPClient EMPClient;
+        public EMPClient        EMPClient           { get; }
 
         /// <summary>
         /// The EMP server part.
         /// </summary>
-        private readonly EMPServer EMPServer;
-
-        #endregion
-
-        #region Properties
-
-        public Authorizator_Id AuthorizatorId { get; }
-
-        /// <summary>
-        /// The EMP client logger.
-        /// </summary>
-        public EMPClientLogger EMPClientLogger { get; }
+        public EMPServer        EMPServer           { get; }
 
         /// <summary>
         /// The EMP server logger.
         /// </summary>
-        public EMPServerLogger EMPServerLogger { get; }
+        public EMPServerLogger  EMPServerLogger     { get; }
 
         /// <summary>
         /// The DNS client defines which DNS servers to use.
@@ -1091,26 +1082,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
-        #region EMPRoaming(EMPClient, EMPServer, ClientLoggingContext = EMPClientLogger.DefaultContext, ServerLoggingContext = EMPServerLogger.DefaultContext, LogFileCreator = null)
+        #region EMPRoaming(EMPClient, EMPServer, ServerLoggingContext = EMPServerLogger.DefaultContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new OICP roaming client for EMPs.
         /// </summary>
         /// <param name="EMPClient">A EMP client.</param>
         /// <param name="EMPServer">A EMP sever.</param>
-        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPRoaming(EMPClient                     EMPClient,
                           EMPServer                     EMPServer,
-                          String                        ClientLoggingContext   = EMPClientLogger.DefaultContext,
                           String                        ServerLoggingContext   = EMPServerLogger.DefaultContext,
                           Func<String, String, String>  LogFileCreator  = null)
         {
 
             this.EMPClient        = EMPClient;
             this.EMPServer        = EMPServer;
-            this.EMPClientLogger  = new EMPClientLogger(EMPClient, ClientLoggingContext, LogFileCreator);
             this.EMPServerLogger  = new EMPServerLogger(EMPServer, ServerLoggingContext, LogFileCreator);
 
         }
@@ -1155,7 +1143,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           String                               ServerURIPrefix             = "",
                           Boolean                              ServerAutoStart             = false,
 
-                          String                               ClientLoggingContext        = EMPClientLogger.DefaultContext,
+                          String                               ClientLoggingContext        = EMPClient.EMPClientLogger.DefaultContext,
                           String                               ServerLoggingContext        = EMPServerLogger.DefaultContext,
                           Func<String, String, String>         LogFileCreator              = null,
 
@@ -1169,7 +1157,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                  RemoteHTTPVirtualHost,
                                  HTTPUserAgent,
                                  RequestTimeout,
-                                 DNSClient),
+                                 DNSClient,
+                                 ClientLoggingContext,
+                                 LogFileCreator),
 
                    new EMPServer(ServerName,
                                  ServerTCPPort,
@@ -1177,7 +1167,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                  DNSClient,
                                  false),
 
-                   ClientLoggingContext,
                    ServerLoggingContext,
                    LogFileCreator)
 

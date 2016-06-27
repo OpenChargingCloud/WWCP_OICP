@@ -39,7 +39,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// An OICP EMP client.
     /// </summary>
-    public class EMPClient : ASOAPClient
+    public partial class EMPClient : ASOAPClient
     {
 
         #region Data
@@ -48,6 +48,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// The default HTTP user agent string.
         /// </summary>
         public const String DefaultHTTPUserAgent = "GraphDefined OICP " + Version.Number + " EMP Client";
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The attached OICP EMP client (HTTP/SOAP client) logger.
+        /// </summary>
+        public EMPClientLogger Logger { get; }
 
         #endregion
 
@@ -297,6 +306,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
+        #region EMPClient(ClientId, Hostname, ..., LoggingContext = EMPClientLogger.DefaultContext, ...)
+
         /// <summary>
         /// Create a new OICP EMP client.
         /// </summary>
@@ -307,8 +318,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
+        /// <param name="LoggingContext">An optional context for logging client methods.</param>
+        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPClient(String                               ClientId,
                          String                               Hostname,
                          IPPort                               TCPPort                     = null,
@@ -316,7 +329,64 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          X509Certificate                      ClientCert                  = null,
                          String                               HTTPVirtualHost             = null,
                          String                               HTTPUserAgent               = DefaultHTTPUserAgent,
-                         TimeSpan?                            QueryTimeout                = null,
+                         TimeSpan?                            RequestTimeout              = null,
+                         DNSClient                            DNSClient                   = null,
+                         String                               LoggingContext              = EMPClientLogger.DefaultContext,
+                         Func<String, String, String>         LogFileCreator              = null)
+
+            : base(ClientId,
+                   Hostname,
+                   TCPPort,
+                   RemoteCertificateValidator,
+                   ClientCert,
+                   HTTPVirtualHost,
+                   HTTPUserAgent,
+                   RequestTimeout,
+                   DNSClient)
+
+        {
+
+            #region Initial checks
+
+            if (ClientId.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Logger),    "The given client identification must not be null or empty!");
+
+            if (Hostname.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
+
+            #endregion
+
+            this.Logger = new EMPClientLogger(this,
+                                              LoggingContext,
+                                              LogFileCreator);
+
+        }
+
+        #endregion
+
+        #region EMPClient(ClientId, Logger, Hostname, ...)
+
+        /// <summary>
+        /// Create a new OICP EMP client.
+        /// </summary>
+        /// <param name="ClientId">A unqiue identification of this client.</param>
+        /// <param name="Hostname">The OICP hostname to connect to.</param>
+        /// <param name="TCPPort">An optional OICP TCP port to connect to.</param>
+        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
+        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
+        /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="DNSClient">An optional DNS client.</param>
+        public EMPClient(String                               ClientId,
+                         EMPClientLogger                      Logger,
+                         String                               Hostname,
+                         IPPort                               TCPPort                     = null,
+                         RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                         X509Certificate                      ClientCert                  = null,
+                         String                               HTTPVirtualHost             = null,
+                         String                               HTTPUserAgent               = DefaultHTTPUserAgent,
+                         TimeSpan?                            RequestTimeout              = null,
                          DNSClient                            DNSClient                   = null)
 
             : base(ClientId,
@@ -326,10 +396,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    ClientCert,
                    HTTPVirtualHost,
                    HTTPUserAgent,
-                   QueryTimeout,
+                   RequestTimeout,
                    DNSClient)
 
-        { }
+        {
+
+            #region Initial checks
+
+            if (ClientId.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Logger),    "The given client identification must not be null or empty!");
+
+            if (Logger == null)
+                throw new ArgumentNullException(nameof(Logger),    "The given mobile client logger must not be null!");
+
+            if (Hostname.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
+
+            #endregion
+
+            this.Logger = Logger;
+
+        }
+
+        #endregion
 
         #endregion
 

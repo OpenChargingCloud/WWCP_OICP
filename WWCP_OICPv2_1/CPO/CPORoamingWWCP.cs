@@ -57,11 +57,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public CPORoaming CPORoaming { get; }
 
+
         /// <summary>
         /// The CPO client.
         /// </summary>
         public CPOClient CPOClient
             => CPORoaming?.CPOClient;
+
+        /// <summary>
+        /// The CPO client logger.
+        /// </summary>
+        public CPOClient.CPOClientLogger ClientLogger
+            => CPORoaming?.CPOClient?.Logger;
+
 
         /// <summary>
         /// The CPO server.
@@ -70,16 +78,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             => CPORoaming?.CPOServer;
 
         /// <summary>
-        /// The CPO client logger.
-        /// </summary>
-        public CPOClientLogger ClientLogger
-            => CPORoaming?.CPOClientLogger;
-
-        /// <summary>
         /// The CPO server logger.
         /// </summary>
         public CPOServerLogger ServerLogger
             => CPORoaming?.CPOServerLogger;
+
 
         /// <summary>
         /// The attached DNS server.
@@ -603,7 +606,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// 
         /// <param name="CPOClient">An OICP CPO client.</param>
         /// <param name="CPOServer">An OICP CPO sever.</param>
-        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
@@ -620,7 +622,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                               CPOClient                     CPOClient,
                               CPOServer                     CPOServer,
-                              String                        ClientLoggingContext  = CPOClientLogger.DefaultContext,
                               String                        ServerLoggingContext  = CPOServerLogger.DefaultContext,
                               Func<String, String, String>  LogFileCreator        = null,
 
@@ -638,7 +639,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                    new CPORoaming(CPOClient,
                                   CPOServer,
-                                  ClientLoggingContext,
                                   ServerLoggingContext,
                                   LogFileCreator),
 
@@ -706,7 +706,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               String                               ServerURIPrefix             = "",
                               Boolean                              ServerAutoStart             = false,
 
-                              String                               ClientLoggingContext        = CPOClientLogger.DefaultContext,
+                              String                               ClientLoggingContext        = CPOClient.CPOClientLogger.DefaultContext,
                               String                               ServerLoggingContext        = CPOServerLogger.DefaultContext,
                               Func<String, String, String>         LogFileCreator              = null,
 

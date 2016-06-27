@@ -44,7 +44,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         UInt32                                  NumberOfEVSEs,
                                                         TimeSpan?                               RequestTimeout);
 
-
     /// <summary>
     /// A delegate called whenever new EVSE data record had been send upstream.
     /// </summary>
@@ -60,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         eRoamingAcknowledgement                 Result,
                                                         TimeSpan                                Duration);
 
-    
+
     /// <summary>
     /// A delegate called whenever new EVSE status will be send upstream.
     /// </summary>
@@ -73,7 +72,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                           IEnumerable<EVSEStatusRecord>   EVSEStatusRecords,
                                                           UInt32                          NumberOfEVSEs,
                                                           TimeSpan?                       RequestTimeout);
-
 
     /// <summary>
     /// A delegate called whenever new EVSE status had been send upstream.
@@ -92,7 +90,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
     #endregion
 
-    #region OnAuthorizeStart
+    #region OnAuthorizeStart/-Stop
 
     /// <summary>
     /// A delegate called whenever an 'authorize start' request will be send.
@@ -125,9 +123,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                    eRoamingAuthorizationStart   Result,
                                                    TimeSpan                     Duration);
 
-    #endregion
-
-    #region OnAuthorizeStop
 
     /// <summary>
     /// A delegate called whenever an 'authorize stop' request will be send.
