@@ -412,7 +412,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         TCPPort,
                                                         HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingEvseData_V2.1",
+                                                        "/ibis/ws/eRoamingEvseData_V2.0",
                                                         RemoteCertificateValidator,
                                                         ClientCert,
                                                         UserAgent,
