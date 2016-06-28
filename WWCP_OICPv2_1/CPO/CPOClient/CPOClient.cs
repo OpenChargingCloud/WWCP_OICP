@@ -1027,7 +1027,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 result = new HTTPResponse<eRoamingAuthorizationStart>(HTTPResponse.BadRequest,
                                                                       new eRoamingAuthorizationStart(StatusCodes.DataError,
-                                                                                                     "OICP " + Version.Number + " only allows a 8 or 20 hex-character authentication token!"),
+                                                                                                     "OICP " + Version.Number + " only allows a 8, 14 or 20 hex-character authentication token!"),
                                                                       IsFault: true);
 
             }
@@ -1244,7 +1244,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 result = new HTTPResponse<eRoamingAuthorizationStop>(HTTPResponse.BadRequest,
                                                                      new eRoamingAuthorizationStop(StatusCodes.DataError,
-                                                                                                   "OICP " + Version.Number + " only allows a 8 or 20 hex-character authentication token!"),
+                                                                                                   "OICP " + Version.Number + " only allows a 8, 14 or 20 hex-character authentication token!"),
                                                                      IsFault: true);
 
             }
@@ -1459,7 +1459,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 result = new HTTPResponse<eRoamingAcknowledgement>(HTTPResponse.BadRequest,
                                                                    new eRoamingAcknowledgement(StatusCodes.DataError,
-                                                                                               "OICP " + Version.Number + " only allows a 8 or 20 hex-character authentication token!"),
+                                                                                               "OICP " + Version.Number + " only allows a 8, 14 or 20 hex-character authentication token!"),
                                                                    IsFault: true);
 
             }
