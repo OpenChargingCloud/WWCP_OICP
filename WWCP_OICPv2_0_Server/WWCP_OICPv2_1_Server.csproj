@@ -7,8 +7,8 @@
     <ProjectGuid>{6D76FDDF-9029-41A3-BD6B-2061B32BAC03}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>org.GraphDefined.WWCP.OICPv2_0.Server</RootNamespace>
-    <AssemblyName>org.GraphDefined.WWCP.OICPv2_0.Server</AssemblyName>
+    <RootNamespace>org.GraphDefined.WWCP.OICPv2_1.Server</RootNamespace>
+    <AssemblyName>org.GraphDefined.WWCP.OICPv2_1.Server</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\org.GraphDefined.WWCP.OICPv2_0.Server.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\org.GraphDefined.WWCP.OICPv2_1.Server.xml</DocumentationFile>
     <CodeAnalysisRuleSet>..\..\WWCP_Core\WWCP.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SOAPServer\CentralClient.cs" />
+    <Compile Include="SOAPServer\CentralServer.cs" />
     <Compile Include="OICPv2_0_XML_IO.cs" />
     <Compile Include="OICPv2_0_IO.cs" />
     <Compile Include="OICPv2_0_Server.cs" />

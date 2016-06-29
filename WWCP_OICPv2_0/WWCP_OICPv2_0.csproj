@@ -112,8 +112,6 @@
     <Compile Include="CPO\CPOServer\CPOServer.cs" />
     <Compile Include="Objects\EVSEDataRecord.cs" />
     <Compile Include="OICPImporter\OICPImporter.cs" />
-    <Compile Include="Central\CentralClient.cs" />
-    <Compile Include="Central\CentralServer.cs" />
     <Compile Include="CPO\CPOServiceCheck.cs" />
     <Compile Include="IO\AServiceCheck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

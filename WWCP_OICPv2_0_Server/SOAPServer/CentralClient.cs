@@ -136,6 +136,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
 
+
+        // Towards CPOs
+
         #region AuthorizeRemoteReservationStart(SessionId, ProviderId, EVSEId, eMAId, ChargingProductId = null, PartnerSessionId = null, QueryTimeout = null)
 
         /// <summary>
