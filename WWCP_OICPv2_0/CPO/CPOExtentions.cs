@@ -304,52 +304,6 @@ namespace org.GraphDefined.WWCP
 
         #endregion
 
-
-        #region CreateOICPv2_0_CPOServiceCheck(this RoamingProvider, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, InitialDelay = null)
-
-        /// <summary>
-        /// Create a new OICP service checker.
-        /// </summary>
-        /// <typeparam name="T">The type of the data returned by the service checker.</typeparam>
-        /// <param name="CPORoamingProvider">A roaming provider.</param>
-        /// <param name="ServiceChecker">A function to check the OICP service regularly and providing some result.</param>
-        /// <param name="OnFirstCheck">A delegate processing the first check result.</param>
-        /// <param name="OnEveryCheck">A delegate processing a check result.</param>
-        /// <param name="CheckEvery">The time span between two consecutive service checks.</param>
-        /// <param name="InitialDelay">Initial delay between startup and first check.</param>
-        public static OICPv2_0.CPOServiceCheck<T>
-
-            CreateOICPv2_0_CPOServiceCheck<T>(this AEVSEOperatorRoamingProvider     CPORoamingProvider,
-                                              OICPv2_0.CPOServiceCheckDelegate<T>  ServiceChecker,
-                                              Action<T>                            OnFirstCheck,
-                                              Action<T>                            OnEveryCheck,
-                                              TimeSpan                             CheckEvery,
-                                              TimeSpan?                            InitialDelay = null)
-        {
-
-            #region Initial checks
-
-            if (CPORoamingProvider == null)
-                throw new ArgumentNullException(nameof(CPORoamingProvider), "The given CPO roaming provider must not be null!");
-
-            var _CPORoamingWWCP = (CPORoamingProvider as OICPv2_0.CPORoamingWWCP);
-
-            if (_CPORoamingWWCP == null)
-                throw new ArgumentException("The given CPO roaming provider is not an OICP " + OICPv2_0.Version.Number + " CPO roaming provider!", nameof(CPORoamingProvider));
-
-            #endregion
-
-            return new OICPv2_0.CPOServiceCheck<T>(_CPORoamingWWCP.CPORoaming,
-                                                   ServiceChecker,
-                                                   OnFirstCheck,
-                                                   OnEveryCheck,
-                                                   CheckEvery,
-                                                   InitialDelay);
-
-        }
-
-        #endregion
-
     }
 
 }

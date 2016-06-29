@@ -26,13 +26,13 @@ using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_0.Server
+namespace org.GraphDefined.WWCP.OICPv2_1.Server
 {
 
     /// <summary>
-    /// OICP v2.0 XML I/O.
+    /// OICP XML I/O.
     /// </summary>
-    public static class OICPv2_0_XML_IO
+    public static class OICP_XML_IO
     {
 
         public static XNamespace OICPPlusEVSEOperator = "http://ld.graphdefined.org/e-Mobility/OICPPlus/EVSEOperator/v2.0";

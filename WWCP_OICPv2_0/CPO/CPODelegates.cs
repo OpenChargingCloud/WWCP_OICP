@@ -55,8 +55,4 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
     public delegate XElement       XMLPostProcessingDelegate       (XElement                  XML);
 
-    public delegate Task<TResult>  CPOServiceCheckDelegate<TResult>(DateTime                  Timestamp,
-                                                                    CPOServiceCheck<TResult>  CPOServiceCheck,
-                                                                    CPORoaming                CPORoaming);
-
 }

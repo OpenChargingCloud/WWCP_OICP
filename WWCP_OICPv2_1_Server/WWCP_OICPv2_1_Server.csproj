@@ -49,10 +49,11 @@
   <ItemGroup>
     <Compile Include="SOAPServer\CentralClient.cs" />
     <Compile Include="SOAPServer\CentralServer.cs" />
-    <Compile Include="OICPv2_0_XML_IO.cs" />
+    <Compile Include="OICP_XML_IO.cs" />
     <Compile Include="OICPv2_0_IO.cs" />
-    <Compile Include="OICPv2_0_Server.cs" />
+    <Compile Include="OICPServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Version.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Aegir\Aegir\Aegir.csproj">
@@ -79,13 +80,13 @@
       <Project>{33836742-af1d-4aa4-963f-b0a8e60e6480}</Project>
       <Name>WWCP_Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WWCP_OICPv2_0\WWCP_OICPv2_0.csproj">
-      <Project>{4bb02c38-48c3-41cb-99f6-a1888881b942}</Project>
-      <Name>WWCP_OICPv2_0</Name>
+    <ProjectReference Include="..\WWCP_OICPv2_1\WWCP_OICPv2_1.csproj">
+      <Project>{a01e9361-39c7-4705-9173-7cea79364dd0}</Project>
+      <Name>WWCP_OICPv2_1</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HTTPRoot\Logos\REWAG_Logo.png" />
+    <EmbeddedResource Include="HTTPServer\HTTPRoot\Logos\REWAG_Logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

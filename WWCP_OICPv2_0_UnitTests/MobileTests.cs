@@ -42,7 +42,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
             var MobileAuthorizationStart = await HubjectMobile.
                                    MobileAuthorizeStart(EVSEId,
                                                         eMAIdWithPin,
-                                                        QueryTimeout: TimeSpan.FromSeconds(120));
+                                                        RequestTimeout: TimeSpan.FromSeconds(120));
 
 
 
@@ -69,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
                 var RemoteStart = await HubjectMobile.
                                             MobileRemoteStart(SessionId,
-                                                              QueryTimeout: TimeSpan.FromSeconds(240));
+                                                              RequestTimeout: TimeSpan.FromSeconds(240));
 
                 if (!RemoteStart.Content.Result)
                 {
@@ -87,7 +87,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
                     var RemoteStop = await HubjectMobile.
                                                MobileRemoteStop(SessionId,
-                                                                QueryTimeout: TimeSpan.FromSeconds(120));
+                                                                RequestTimeout: TimeSpan.FromSeconds(120));
 
 
                     if (!RemoteStop.Content.Result)

@@ -33,13 +33,13 @@ using org.GraphDefined.WWCP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_0
+namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// OICP v2.0 JSON/XML I/O.
+    /// OICP JSON/XML I/O.
     /// </summary>
-    public static class OICPv2_0_IO
+    public static class OICP_IO
     {
 
         #region ParseChargingPool(this HTTPRequest, DefaultServerName, RoamingNetwork, out ChargingPool, out HTTPResponse)

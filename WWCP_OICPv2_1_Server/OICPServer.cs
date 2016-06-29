@@ -29,7 +29,7 @@ using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_0.Server
+namespace org.GraphDefined.WWCP.OICPv2_1.Server
 {
 
         /// <summary>
@@ -130,9 +130,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
 
 
     /// <summary>
-    /// A HTTP server providing OICPv2.0 data structures.
+    /// A HTTP server providing OICP data structures.
     /// </summary>
-    public class OICPv2_0_Server
+    public class OICPServer
     {
 
         #region Data
@@ -140,7 +140,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
         /// <summary>
         /// The name or identification string of this HTTP API.
         /// </summary>
-        public  const           String                                     ServerName             = "Belectric Drive OICPv2.0 HTTP API";
+        public  const           String                                     ServerName             = "Belectric Drive OICP" + Version.Number + " HTTP API";
 
         public  static readonly IEnumerable<KeyValuePair<String, String>>  HTTPLogins             = new KeyValuePair<String, String>[] {
                                                                                                         new KeyValuePair<String, String>("bdrive",    "fgdpou/20f12§o"),
@@ -288,14 +288,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
         /// <param name="EVSEDataRecord2XML">An optional delegate to process an EVSE data record XML before sending it somewhere.</param>
         /// <param name="EVSEStatusRecord2XML">An optional delegate to process an EVSE status record XML before sending it somewhere.</param>
         /// <param name="XMLPostProcessing">An optional delegate to process the XML after its final creation.</param>
-        public OICPv2_0_Server(RoamingNetwork                               RoamingNetwork,
-                               HTTPServer<RoamingNetworks, RoamingNetwork>  HTTPServer,
-                               String                                       URIPrefix             = "/ext/OICPPlusv2.0",
-                               XMLNamespacesDelegate                        XMLNamespaces         = null,
-                               EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
-                               EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML    = null,
-                               EVSEStatusRecord2XMLDelegate                 EVSEStatusRecord2XML  = null,
-                               XMLPostProcessingDelegate                    XMLPostProcessing     = null)
+        public OICPServer(RoamingNetwork                               RoamingNetwork,
+                          HTTPServer<RoamingNetworks, RoamingNetwork>  HTTPServer,
+                          String                                       URIPrefix             = "/ext/OICPPlus",
+                          XMLNamespacesDelegate                        XMLNamespaces         = null,
+                          EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
+                          EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML    = null,
+                          EVSEStatusRecord2XMLDelegate                 EVSEStatusRecord2XML  = null,
+                          XMLPostProcessingDelegate                    XMLPostProcessing     = null)
         {
 
             #region Initial checks
@@ -339,7 +339,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
 
             HTTPServer.RegisterResourcesFolder(HTTPHostname.Any,
                                                URIPrefix + "/",
-                                               "org.GraphDefined.WWCP.OICPv2_0.Server.HTTPRoot",
+                                               "org.GraphDefined.WWCP.OICPv2_1.Server.HTTPServer.HTTPRoot",
                                                DefaultFilename: "index.html");
 
             #endregion
@@ -347,9 +347,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
 
             #region GET     ~/EVSEs
 
-            // ---------------------------------------------------------------------------------------------
-            // curl -v -H "Accept: application/json" http://127.0.0.1:3004/RNs/Prod/ext/OICPPlusv2.0/EVSEs
-            // ---------------------------------------------------------------------------------------------
+            // -----------------------------------------------------------------------------------------
+            // curl -v -H "Accept: application/json" http://127.0.0.1:3004/RNs/Prod/ext/OICPPlus/EVSEs
+            // -----------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
                                          "/RNs/{RoamingNetworkId}" + _URIPrefix + "/EVSEs",
@@ -417,7 +417,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.Server
             #region GET     ~/EVSEStatus
 
             // ----------------------------------------------------------------------------------------------
-            // curl -v -H "Accept: application/json" http://127.0.0.1:3004/ext/OICPv2.0/RNs/Prod/EVSEStatus
+            // curl -v -H "Accept: application/json" http://127.0.0.1:3004/RNs/Prod/ext/OICPPlus/EVSEStatus
             // ----------------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
