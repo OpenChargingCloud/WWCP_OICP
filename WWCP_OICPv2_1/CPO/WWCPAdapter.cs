@@ -32,14 +32,14 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_0
+namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
     /// <summary>
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class CPORoamingWWCP : AEVSEOperatorRoamingProvider
+    public class WWCPAdapter : AEVSEOperatorRoamingProvider
     {
 
         #region Data
@@ -196,7 +196,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region CPORoamingWWCP(Id, Name, RoamingNetwork, CPORoaming, EVSE2EVSEDataRecord = null)
+        #region WWCPAdapter(Id, Name, RoamingNetwork, CPORoaming, EVSE2EVSEDataRecord = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for EVSE operators/CPOs.
@@ -213,18 +213,18 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
         /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
-        public CPORoamingWWCP(RoamingProvider_Id           Id,
-                              I18NString                   Name,
-                              RoamingNetwork               RoamingNetwork,
+        public WWCPAdapter(RoamingProvider_Id           Id,
+                           I18NString                   Name,
+                           RoamingNetwork               RoamingNetwork,
 
-                              CPORoaming                   CPORoaming,
-                              EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord  = null,
-                              EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML   = null,
+                           CPORoaming                   CPORoaming,
+                           EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord  = null,
+                           EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML   = null,
 
-                              Func<EVSE, Boolean>          IncludeEVSEs         = null,
-                              TimeSpan?                    ServiceCheckEvery    = null,
-                              TimeSpan?                    StatusCheckEvery     = null,
-                              Boolean                      DisableAutoUploads   = false)
+                           Func<EVSE, Boolean>          IncludeEVSEs         = null,
+                           TimeSpan?                    ServiceCheckEvery    = null,
+                           TimeSpan?                    StatusCheckEvery     = null,
+                           Boolean                      DisableAutoUploads   = false)
 
             : base(Id,
                    Name,
@@ -249,6 +249,179 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             this._EVSEDataRecord2XML   = EVSEDataRecord2XML;
 
             // Link events...
+
+            #region OnRemoteReservationStart
+
+            this.CPORoaming.OnRemoteReservationStart += async (Timestamp,
+                                                               Sender,
+                                                               CancellationToken,
+                                                               EventTrackingId,
+                                                               EVSEId,
+                                                               ChargingProductId,
+                                                               SessionId,
+                                                               PartnerSessionId,
+                                                               ProviderId,
+                                                               eMAId,
+                                                               RequestTimeout) => {
+
+
+                #region Request transformation
+
+                TimeSpan? Duration = null;
+
+                if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
+                {
+
+                    var Elements = ChargingProductId.ToString().Split('|').ToArray();
+
+                    if (Elements.Length > 0)
+                    {
+
+                        var DurationText = Elements.FirstOrDefault(element => element.StartsWith("D=", StringComparison.InvariantCulture));
+                        if (DurationText != null)
+                        {
+
+                            DurationText = DurationText.Substring(2);
+
+                            if (DurationText.EndsWith("sec", StringComparison.InvariantCulture))
+                                Duration = TimeSpan.FromSeconds(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+
+                            if (DurationText.EndsWith("min", StringComparison.InvariantCulture))
+                                Duration = TimeSpan.FromMinutes(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+
+                        }
+
+                    }
+
+                }
+
+                #endregion
+
+                var response = await RoamingNetwork.Reserve(Timestamp,
+                                                            CancellationToken,
+                                                            EventTrackingId,
+                                                            EVSEId,
+                                                            Duration:           Duration,
+                                                            ReservationId:      SessionId != null ? ChargingReservation_Id.Parse(SessionId.ToString()) : null,
+                                                            ProviderId:         ProviderId,
+                                                            eMAId:              eMAId,
+                                                            ChargingProductId:  ChargingProductId,
+                                                            eMAIds:             new eMA_Id[] { eMAId },
+                                                            QueryTimeout:       RequestTimeout);
+
+                #region Response mapping
+
+                if (response != null)
+                {
+                    switch (response.Result)
+                    {
+
+                        case ReservationResultType.Success:
+                            return new eRoamingAcknowledgement(ChargingSession_Id.Parse(response.Reservation.Id.ToString()),
+                                                               StatusCodeDescription: "Ready to charge!");
+
+                        case ReservationResultType.InvalidCredentials:
+                            return new eRoamingAcknowledgement(StatusCodes.SessionIsInvalid,
+                                                               "Session is invalid",
+                                                               SessionId: ChargingSession_Id.Parse(response.Reservation.Id.ToString()));
+
+                        case ReservationResultType.Timeout:
+                        case ReservationResultType.CommunicationError:
+                            return new eRoamingAcknowledgement(StatusCodes.CommunicationToEVSEFailed,
+                                                               "Communication to EVSE failed!");
+
+                        case ReservationResultType.AlreadyReserved:
+                            return new eRoamingAcknowledgement(StatusCodes.EVSEAlreadyReserved,
+                                                               "EVSE already reserved!");
+
+                        case ReservationResultType.AlreadyInUse:
+                            return new eRoamingAcknowledgement(StatusCodes.EVSEAlreadyInUse_WrongToken,
+                                                               "EVSE is already in use!");
+
+                        case ReservationResultType.UnknownEVSE:
+                            return new eRoamingAcknowledgement(StatusCodes.UnknownEVSEID,
+                                                               "Unknown EVSE ID!");
+
+                        case ReservationResultType.OutOfService:
+                            return new eRoamingAcknowledgement(StatusCodes.EVSEOutOfService,
+                                                               "EVSE out of service!");
+
+                    }
+                }
+
+                return new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                   "Service not available!",
+                                                   SessionId: ChargingSession_Id.Parse(response.Reservation.Id.ToString()));
+
+                #endregion
+
+            };
+
+            #endregion
+
+            #region OnRemoteReservationStop
+
+            this.CPORoaming.OnRemoteReservationStop += async (Timestamp,
+                                                              Sender,
+                                                              CancellationToken,
+                                                              EventTrackingId,
+                                                              EVSEId,
+                                                              SessionId,
+                                                              PartnerSessionId,
+                                                              ProviderId,
+                                                              RequestTimeout) => {
+
+                var response = await _RoamingNetwork.CancelReservation(Timestamp,
+                                                                       CancellationToken,
+                                                                       EventTrackingId,
+                                                                       ChargingReservation_Id.Parse(SessionId.ToString()),
+                                                                       ChargingReservationCancellationReason.Deleted,
+                                                                       ProviderId,
+                                                                       EVSEId,
+                                                                       RequestTimeout);
+
+                #region Response mapping
+
+                if (response != null)
+                {
+                    switch (response.Result)
+                    {
+
+                        case CancelReservationResultType.Success:
+                            return new eRoamingAcknowledgement(ChargingSession_Id.Parse(response.ReservationId.ToString()),
+                                                               StatusCodeDescription: "Reservation deleted!");
+
+                        case CancelReservationResultType.UnknownReservationId:
+                            return new eRoamingAcknowledgement(StatusCodes.SessionIsInvalid,
+                                                               "Session is invalid!",
+                                                               SessionId: SessionId);
+
+                        case CancelReservationResultType.Offline:
+                        case CancelReservationResultType.Timeout:
+                        case CancelReservationResultType.CommunicationError:
+                            return new eRoamingAcknowledgement(StatusCodes.CommunicationToEVSEFailed,
+                                                               "Communication to EVSE failed!");
+
+                        case CancelReservationResultType.UnknownEVSE:
+                            return new eRoamingAcknowledgement(StatusCodes.UnknownEVSEID,
+                                                               "Unknown EVSE ID!");
+
+                        case CancelReservationResultType.OutOfService:
+                            return new eRoamingAcknowledgement(StatusCodes.EVSEOutOfService,
+                                                               "EVSE out of service!");
+
+                    }
+                }
+
+                return new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                   "Service not available!",
+                                                   SessionId: SessionId);
+
+                #endregion
+
+            };
+
+            #endregion
 
             #region OnRemoteStart
 
@@ -422,7 +595,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region CPORoamingWWCP(Id, Name, RoamingNetwork, CPOClient, CPOServer, EVSEDataRecordProcessing = null)
+        #region WWCPAdapter(Id, Name, RoamingNetwork, CPOClient, CPOServer, EVSEDataRecordProcessing = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for EVSE operators/CPOs.
@@ -443,22 +616,22 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
         /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
-        public CPORoamingWWCP(RoamingProvider_Id            Id,
-                              I18NString                    Name,
-                              RoamingNetwork                RoamingNetwork,
+        public WWCPAdapter(RoamingProvider_Id            Id,
+                           I18NString                    Name,
+                           RoamingNetwork                RoamingNetwork,
 
-                              CPOClient                     CPOClient,
-                              CPOServer                     CPOServer,
-                              String                        ServerLoggingContext  = CPOServerLogger.DefaultContext,
-                              Func<String, String, String>  LogFileCreator        = null,
+                           CPOClient                     CPOClient,
+                           CPOServer                     CPOServer,
+                           String                        ServerLoggingContext  = CPOServerLogger.DefaultContext,
+                           Func<String, String, String>  LogFileCreator        = null,
 
-                              EVSE2EVSEDataRecordDelegate   EVSE2EVSEDataRecord   = null,
-                              EVSEDataRecord2XMLDelegate    EVSEDataRecord2XML    = null,
+                           EVSE2EVSEDataRecordDelegate   EVSE2EVSEDataRecord   = null,
+                           EVSEDataRecord2XMLDelegate    EVSEDataRecord2XML    = null,
 
-                              Func<EVSE, Boolean>           IncludeEVSEs          = null,
-                              TimeSpan?                     ServiceCheckEvery     = null,
-                              TimeSpan?                     StatusCheckEvery      = null,
-                              Boolean                       DisableAutoUploads    = false)
+                           Func<EVSE, Boolean>           IncludeEVSEs          = null,
+                           TimeSpan?                     ServiceCheckEvery     = null,
+                           TimeSpan?                     StatusCheckEvery      = null,
+                           Boolean                       DisableAutoUploads    = false)
 
             : this(Id,
                    Name,
@@ -481,7 +654,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region CPORoamingWWCP(Id, Name, RoamingNetwork, RemoteHostName, ...)
+        #region WWCPAdapter(Id, Name, RoamingNetwork, RemoteHostName, ...)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for EVSE operators/CPOs.
@@ -516,36 +689,36 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public CPORoamingWWCP(RoamingProvider_Id                   Id,
-                              I18NString                           Name,
-                              RoamingNetwork                       RoamingNetwork,
+        public WWCPAdapter(RoamingProvider_Id                   Id,
+                           I18NString                           Name,
+                           RoamingNetwork                       RoamingNetwork,
 
-                              String                               RemoteHostname,
-                              IPPort                               RemoteTCPPort               = null,
-                              RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                              X509Certificate                      ClientCert                  = null,
-                              String                               RemoteHTTPVirtualHost       = null,
-                              String                               HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
-                              TimeSpan?                            RequestTimeout              = null,
+                           String                               RemoteHostname,
+                           IPPort                               RemoteTCPPort               = null,
+                           RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                           X509Certificate                      ClientCert                  = null,
+                           String                               RemoteHTTPVirtualHost       = null,
+                           String                               HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
+                           TimeSpan?                            RequestTimeout              = null,
 
-                              String                               ServerName                  = CPOServer.DefaultHTTPServerName,
-                              IPPort                               ServerTCPPort               = null,
-                              String                               ServerURIPrefix             = "",
-                              Boolean                              ServerAutoStart             = false,
+                           String                               ServerName                  = CPOServer.DefaultHTTPServerName,
+                           IPPort                               ServerTCPPort               = null,
+                           String                               ServerURIPrefix             = "",
+                           Boolean                              ServerAutoStart             = false,
 
-                              String                               ClientLoggingContext        = CPOClient.CPOClientLogger.DefaultContext,
-                              String                               ServerLoggingContext        = CPOServerLogger.DefaultContext,
-                              Func<String, String, String>         LogFileCreator              = null,
+                           String                               ClientLoggingContext        = CPOClient.CPOClientLogger.DefaultContext,
+                           String                               ServerLoggingContext        = CPOServerLogger.DefaultContext,
+                           Func<String, String, String>         LogFileCreator              = null,
 
-                              EVSE2EVSEDataRecordDelegate          EVSE2EVSEDataRecord         = null,
-                              EVSEDataRecord2XMLDelegate           EVSEDataRecord2XML          = null,
+                           EVSE2EVSEDataRecordDelegate          EVSE2EVSEDataRecord         = null,
+                           EVSEDataRecord2XMLDelegate           EVSEDataRecord2XML          = null,
 
-                              Func<EVSE, Boolean>                  IncludeEVSEs                = null,
-                              TimeSpan?                            ServiceCheckEvery           = null,
-                              TimeSpan?                            StatusCheckEvery            = null,
-                              Boolean                              DisableAutoUploads          = false,
+                           Func<EVSE, Boolean>                  IncludeEVSEs                = null,
+                           TimeSpan?                            ServiceCheckEvery           = null,
+                           TimeSpan?                            StatusCheckEvery            = null,
+                           Boolean                              DisableAutoUploads          = false,
 
-                              DNSClient                            DNSClient                   = null)
+                           DNSClient                            DNSClient                   = null)
 
             : this(Id,
                    Name,
@@ -671,7 +844,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnPushEVSEStatusRequest));
+                    e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusRequest));
                 }
 
                 #endregion
@@ -728,7 +901,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnPushEVSEStatusResponse));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusResponse));
             }
 
             #endregion
@@ -1325,7 +1498,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnPushEVSEStatusRequest));
+                    e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusRequest));
                 }
 
                 #endregion
@@ -1383,7 +1556,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnPushEVSEStatusResponse));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusResponse));
             }
 
             #endregion
@@ -2180,7 +2353,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeStart));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeStart));
             }
 
             #endregion
@@ -2240,7 +2413,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeStarted));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeStarted));
             }
 
             #endregion
@@ -2322,7 +2495,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeEVSEStart));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeEVSEStart));
             }
 
             #endregion
@@ -2384,7 +2557,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeEVSEStarted));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeEVSEStarted));
             }
 
             #endregion
@@ -2466,7 +2639,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeChargingStationStart));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeChargingStationStart));
             }
 
             #endregion
@@ -2497,7 +2670,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeChargingStationStarted));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeChargingStationStarted));
             }
 
             #endregion
@@ -2577,7 +2750,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeStop));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeStop));
             }
 
             #endregion
@@ -2633,7 +2806,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeStopped));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeStopped));
             }
 
             #endregion
@@ -2718,7 +2891,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeEVSEStop));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeEVSEStop));
             }
 
             #endregion
@@ -2774,7 +2947,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeEVSEStopped));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeEVSEStopped));
             }
 
             #endregion
@@ -2856,7 +3029,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeChargingStationStop));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeChargingStationStop));
             }
 
             #endregion
@@ -2885,7 +3058,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPORoamingWWCP) + "." + nameof(OnAuthorizeChargingStationStopped));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeChargingStationStopped));
             }
 
             #endregion
@@ -2983,7 +3156,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             foreach (var _ChargingStation in ChargingStations)
                 foreach (var _EVSE in _ChargingStation)
-                    Console.WriteLine(DateTime.Now + " CPORoamingWWCP says: " + _EVSE.Id + " was removed!");
+                    Console.WriteLine(DateTime.Now + " WWCPAdapter says: " + _EVSE.Id + " was removed!");
 
         }
 

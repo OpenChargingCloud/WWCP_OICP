@@ -33,14 +33,14 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_0
+namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 {
 
     /// <summary>
     /// A WWCP wrapper for the OICP EMP Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class EMPRoamingWWCP : AEMPRoamingProvider
+    public class WWCPAdapter : AEMPRoamingProvider
     {
 
         #region Data
@@ -239,7 +239,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        #region EMPRoamingWWCP(Id, Name, RoamingNetwork, EMPRoaming, EVSEDataRecord2EVSE = null)
+        #region WWCPAdapter(Id, Name, RoamingNetwork, EMPRoaming, EVSEDataRecord2EVSE = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP EMP Roaming client for e-mobility providers/EMPs.
@@ -250,12 +250,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// 
         /// <param name="EMPRoaming">A OICP EMP roaming object to be mapped to WWCP.</param>
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
-        public EMPRoamingWWCP(RoamingProvider_Id           Id,
-                              I18NString                   Name,
-                              RoamingNetwork               RoamingNetwork,
+        public WWCPAdapter(RoamingProvider_Id           Id,
+                           I18NString                   Name,
+                           RoamingNetwork               RoamingNetwork,
 
-                              EMPRoaming                   EMPRoaming,
-                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE = null)
+                           EMPRoaming                   EMPRoaming,
+                           EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE = null)
 
             : base(Id,
                    Name,
@@ -501,7 +501,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region EMPRoamingWWCP(Id, Name, RoamingNetwork, EMPClient, EMPServer, Context = EMPRoaming.DefaultLoggingContext, LogFileCreator = null)
+        #region WWCPAdapter(Id, Name, RoamingNetwork, EMPClient, EMPServer, Context = EMPRoaming.DefaultLoggingContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP EMP Roaming client for e-mobility providers/EMPs.
@@ -516,16 +516,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
-        public EMPRoamingWWCP(RoamingProvider_Id            Id,
-                              I18NString                    Name,
-                              RoamingNetwork                RoamingNetwork,
+        public WWCPAdapter(RoamingProvider_Id            Id,
+                           I18NString                    Name,
+                           RoamingNetwork                RoamingNetwork,
 
-                              EMPClient                     EMPClient,
-                              EMPServer                     EMPServer,
-                              String                        ServerLoggingContext  = EMPServerLogger.DefaultContext,
-                              Func<String, String, String>  LogFileCreator        = null,
+                           EMPClient                     EMPClient,
+                           EMPServer                     EMPServer,
+                           String                        ServerLoggingContext  = EMPServerLogger.DefaultContext,
+                           Func<String, String, String>  LogFileCreator        = null,
 
-                              EVSEDataRecord2EVSEDelegate   EVSEDataRecord2EVSE   = null)
+                           EVSEDataRecord2EVSEDelegate   EVSEDataRecord2EVSE   = null)
 
             : this(Id,
                    Name,
@@ -542,7 +542,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region EMPRoamingWWCP(Id, Name, RoamingNetwork, RemoteHostName, ...)
+        #region WWCPAdapter(Id, Name, RoamingNetwork, RemoteHostName, ...)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP EMP Roaming client for e-mobility providers/EMPs.
@@ -571,30 +571,30 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public EMPRoamingWWCP(RoamingProvider_Id                   Id,
-                              I18NString                           Name,
-                              RoamingNetwork                       RoamingNetwork,
+        public WWCPAdapter(RoamingProvider_Id                   Id,
+                           I18NString                           Name,
+                           RoamingNetwork                       RoamingNetwork,
 
-                              String                               RemoteHostname,
-                              IPPort                               RemoteTCPPort               = null,
-                              RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                              X509Certificate                      ClientCert                  = null,
-                              String                               RemoteHTTPVirtualHost       = null,
-                              String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
-                              TimeSpan?                            QueryTimeout                = null,
+                           String                               RemoteHostname,
+                           IPPort                               RemoteTCPPort               = null,
+                           RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                           X509Certificate                      ClientCert                  = null,
+                           String                               RemoteHTTPVirtualHost       = null,
+                           String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
+                           TimeSpan?                            QueryTimeout                = null,
 
-                              String                               ServerName                  = EMPServer.DefaultHTTPServerName,
-                              IPPort                               ServerTCPPort               = null,
-                              String                               ServerURIPrefix             = "",
-                              Boolean                              ServerAutoStart             = false,
+                           String                               ServerName                  = EMPServer.DefaultHTTPServerName,
+                           IPPort                               ServerTCPPort               = null,
+                           String                               ServerURIPrefix             = "",
+                           Boolean                              ServerAutoStart             = false,
 
-                              String                               ClientLoggingContext        = EMPClient.EMPClientLogger.DefaultContext,
-                              String                               ServerLoggingContext        = EMPServerLogger.DefaultContext,
-                              Func<String, String, String>         LogFileCreator              = null,
+                           String                               ClientLoggingContext        = EMPClient.EMPClientLogger.DefaultContext,
+                           String                               ServerLoggingContext        = EMPServerLogger.DefaultContext,
+                           Func<String, String, String>         LogFileCreator              = null,
 
-                              EVSEDataRecord2EVSEDelegate          EVSEDataRecord2EVSE         = null,
+                           EVSEDataRecord2EVSEDelegate          EVSEDataRecord2EVSE         = null,
 
-                              DNSClient                            DNSClient                   = null)
+                           DNSClient                            DNSClient                   = null)
 
             : this(Id,
                    Name,
@@ -1231,7 +1231,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override Task<ReservationResult>
+        public override async Task<ReservationResult>
 
             Reserve(EVSE_Id                  EVSEId,
                     DateTime?                StartTime          = null,
@@ -1249,9 +1249,124 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     EventTracking_Id         EventTrackingId    = null,
                     TimeSpan?                RequestTimeout     = null)
 
+        {
 
-            => Task.FromResult(ReservationResult.Error("OICP " + Version.Number + " does not support charging reservations!"));
+            #region Check if the PartnerProductId has a special format like 'D=15min|P=AC1'
 
+            var PartnerProductIdElements = new Dictionary<String, String>();
+
+            if (ChargingProductId.ToString().IsNotNullOrEmpty() &&
+               !ChargingProductId.ToString().Contains('='))
+            {
+                PartnerProductIdElements.Add("P", ChargingProductId.ToString());
+                ChargingProductId = null;
+            }
+
+            if (ChargingProductId != null)
+                ChargingProductId.ToString().DoubleSplitInto('|', '=', PartnerProductIdElements);
+
+            #endregion
+
+            #region Copy the 'StartTime' value into the PartnerProductId
+
+            if (StartTime.HasValue)
+            {
+
+                if (!PartnerProductIdElements.ContainsKey("S"))
+                    PartnerProductIdElements.Add("S", StartTime.Value.ToIso8601());
+                else
+                    PartnerProductIdElements["S"] = StartTime.Value.ToIso8601();
+
+            }
+
+            #endregion
+
+            #region Copy the 'Duration' value into the PartnerProductId
+
+            if (Duration.HasValue && Duration.Value >= TimeSpan.FromSeconds(1))
+            {
+
+                if (Duration.Value.Minutes > 0 && Duration.Value.Seconds == 0)
+                {
+                    if (!PartnerProductIdElements.ContainsKey("D"))
+                        PartnerProductIdElements.Add("D", Duration.Value.TotalMinutes + "min");
+                    else
+                        PartnerProductIdElements["D"] = Duration.Value.TotalMinutes + "min";
+                }
+
+                else
+                {
+                    if (!PartnerProductIdElements.ContainsKey("D"))
+                        PartnerProductIdElements.Add("D", Duration.Value.TotalSeconds + "sec");
+                    else
+                        PartnerProductIdElements["D"] = Duration.Value.TotalSeconds + "sec";
+                }
+
+            }
+
+            #endregion
+
+            #region Add the eMAId to the list of valid eMAIds
+
+            if (eMAIds == null && eMAId != null)
+                eMAIds = new List<eMA_Id> { eMAId };
+
+            if (eMAIds != null && !eMAIds.Contains(eMAId))
+            {
+                var _eMAIds = new List<eMA_Id>(eMAIds);
+                _eMAIds.Add(eMAId);
+                eMAIds = _eMAIds;
+            }
+
+            #endregion
+
+
+            var result = await EMPRoaming.ReservationStart(EVSEId:             EVSEId,
+                                                           ProviderId:         ProviderId,
+                                                           eMAId:              eMAId,
+                                                           SessionId:          ReservationId != null ? ChargingSession_Id.Parse(ReservationId.ToString()) : null,
+                                                           PartnerSessionId:   null,
+                                                           PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.
+                                                                                                            Select(kvp => kvp.Key + "=" + kvp.Value).
+                                                                                                            AggregateWith("|")),
+
+                                                           Timestamp:          Timestamp,
+                                                           CancellationToken:  CancellationToken,
+                                                           EventTrackingId:    EventTrackingId,
+                                                           RequestTimeout:     RequestTimeout);
+
+
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null              &&
+                result.Content.Result)
+            {
+
+                return ReservationResult.Success(result.Content.SessionId != null
+                                                     ? new ChargingReservation(ReservationId:            ChargingReservation_Id.Parse(result.Content.SessionId.ToString()),
+                                                                               Timestamp:                DateTime.Now,
+                                                                               StartTime:                DateTime.Now,
+                                                                               Duration:                 Duration.HasValue ? Duration.Value : DefaultReservationTime,
+                                                                               EndTime:                  DateTime.Now + (Duration.HasValue ? Duration.Value : DefaultReservationTime),
+                                                                               ConsumedReservationTime:  TimeSpan.FromSeconds(0),
+                                                                               ReservationLevel:         ChargingReservationLevel.EVSE,
+                                                                               ProviderId:               ProviderId,
+                                                                               eMAId:                    eMAId,
+                                                                               RoamingNetwork:           RoamingNetwork,
+                                                                               ChargingPoolId:           null,
+                                                                               ChargingStationId:        null,
+                                                                               EVSEId:                   EVSEId,
+                                                                               ChargingProductId:        ChargingProductId,
+                                                                               AuthTokens:               AuthTokens,
+                                                                               eMAIds:                   eMAIds,
+                                                                               PINs:                     PINs)
+                                                     : null);
+
+            }
+
+            return ReservationResult.Error(result.HTTPStatusCode.ToString(),
+                                           result);
+
+        }
 
         #endregion
 
@@ -1269,7 +1384,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override Task<CancelReservationResult>
+        public override async Task<CancelReservationResult>
 
             CancelReservation(ChargingReservation_Id                 ReservationId,
                               ChargingReservationCancellationReason  Reason,
@@ -1281,9 +1396,31 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               EventTracking_Id                       EventTrackingId    = null,
                               TimeSpan?                              RequestTimeout     = null)
 
+        {
 
-            => Task.FromResult(CancelReservationResult.Error("OICP " + Version.Number + " does not support charging reservations!"));
+            var result = await EMPRoaming.ReservationStop(SessionId:          ChargingSession_Id.Parse(ReservationId.ToString()),
+                                                          ProviderId:         ProviderId,
+                                                          EVSEId:             EVSEId,
+                                                          PartnerSessionId:   null,
 
+                                                          Timestamp:          Timestamp,
+                                                          CancellationToken:  CancellationToken,
+                                                          EventTrackingId:    EventTrackingId,
+                                                          RequestTimeout:     RequestTimeout);
+
+            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
+                result.Content        != null              &&
+                result.Content.Result)
+            {
+
+                return CancelReservationResult.Success(ReservationId);
+
+            }
+
+            return CancelReservationResult.Error(result.HTTPStatusCode.ToString(),
+                                                 result);
+
+        }
 
         #endregion
 

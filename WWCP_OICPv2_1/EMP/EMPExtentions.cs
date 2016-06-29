@@ -32,7 +32,7 @@ namespace org.GraphDefined.WWCP
 {
 
     /// <summary>
-    /// Extentions methods for the WWCP wrapper for OICP v2.1 roaming clients for e-mobility providers/EMPs.
+    /// Extentions methods for the WWCP wrapper for OICP roaming clients for e-mobility providers/EMPs.
     /// </summary>
     public static class EMPExtentions
     {
@@ -99,7 +99,7 @@ namespace org.GraphDefined.WWCP
 
                                               DNSClient                             DNSClient                   = null,
 
-                                              Action<OICPv2_1.EMPRoamingWWCP>       OICPConfigurator            = null,
+                                              Action<OICPv2_1.EMP.WWCPAdapter>      OICPConfigurator            = null,
                                               Action<AEMPRoamingProvider>           Configurator                = null)
 
         {
@@ -120,30 +120,30 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_1.EMPRoamingWWCP(Id,
-                                                                 Name,
-                                                                 RoamingNetwork,
+            var NewRoamingProvider = new OICPv2_1.EMP.WWCPAdapter(Id,
+                                                                  Name,
+                                                                  RoamingNetwork,
 
-                                                                 RemoteHostname,
-                                                                 RemoteTCPPort,
-                                                                 RemoteCertificateValidator,
-                                                                 ClientCert,
-                                                                 RemoteHTTPVirtualHost,
-                                                                 HTTPUserAgent,
-                                                                 QueryTimeout,
+                                                                  RemoteHostname,
+                                                                  RemoteTCPPort,
+                                                                  RemoteCertificateValidator,
+                                                                  ClientCert,
+                                                                  RemoteHTTPVirtualHost,
+                                                                  HTTPUserAgent,
+                                                                  QueryTimeout,
 
-                                                                 ServerName,
-                                                                 ServerTCPPort,
-                                                                 ServerURIPrefix,
-                                                                 ServerAutoStart,
+                                                                  ServerName,
+                                                                  ServerTCPPort,
+                                                                  ServerURIPrefix,
+                                                                  ServerAutoStart,
 
-                                                                 ClientLoggingContext,
-                                                                 ServerLoggingContext,
-                                                                 LogFileCreator,
+                                                                  ClientLoggingContext,
+                                                                  ServerLoggingContext,
+                                                                  LogFileCreator,
 
-                                                                 EVSEDataRecord2EVSE,
+                                                                  EVSEDataRecord2EVSE,
 
-                                                                 DNSClient);
+                                                                  DNSClient);
 
 
             OICPConfigurator?.Invoke(NewRoamingProvider);
@@ -212,7 +212,7 @@ namespace org.GraphDefined.WWCP
 
                                               DNSClient                             DNSClient                   = null,
 
-                                              Action<OICPv2_1.EMPRoamingWWCP>       OICPConfigurator            = null,
+                                              Action<OICPv2_1.EMP.WWCPAdapter>      OICPConfigurator            = null,
                                               Action<AEMPRoamingProvider>           Configurator                = null)
 
         {
@@ -237,29 +237,29 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_1.EMPRoamingWWCP(Id,
-                                                                 Name,
-                                                                 RoamingNetwork,
+            var NewRoamingProvider = new OICPv2_1.EMP.WWCPAdapter(Id,
+                                                                  Name,
+                                                                  RoamingNetwork,
 
-                                                                 new OICPv2_1.EMPClient(Id.ToString(),
-                                                                                        RemoteHostname,
-                                                                                        RemoteTCPPort,
-                                                                                        RemoteCertificateValidator,
-                                                                                        ClientCert,
-                                                                                        RemoteHTTPVirtualHost,
-                                                                                        HTTPUserAgent,
-                                                                                        QueryTimeout,
-                                                                                        DNSClient,
-                                                                                        ClientLoggingContext,
-                                                                                        LogFileCreator),
+                                                                  new OICPv2_1.EMPClient(Id.ToString(),
+                                                                                         RemoteHostname,
+                                                                                         RemoteTCPPort,
+                                                                                         RemoteCertificateValidator,
+                                                                                         ClientCert,
+                                                                                         RemoteHTTPVirtualHost,
+                                                                                         HTTPUserAgent,
+                                                                                         QueryTimeout,
+                                                                                         DNSClient,
+                                                                                         ClientLoggingContext,
+                                                                                         LogFileCreator),
 
-                                                                 new OICPv2_1.EMPServer(SOAPServer,
-                                                                                        ServerURIPrefix),
+                                                                  new OICPv2_1.EMPServer(SOAPServer,
+                                                                                         ServerURIPrefix),
 
-                                                                 ServerLoggingContext,
-                                                                 LogFileCreator,
+                                                                  ServerLoggingContext,
+                                                                  LogFileCreator,
 
-                                                                 EVSEDataRecord2EVSE);
+                                                                  EVSEDataRecord2EVSE);
 
 
             OICPConfigurator?.Invoke(NewRoamingProvider);
@@ -269,48 +269,6 @@ namespace org.GraphDefined.WWCP
                                                 Configurator);
 
         }
-
-        #endregion
-
-
-        #region CreateOICPv2_1_EMPServiceCheck(this RoamingProvider, ServiceChecker, OnFirstCheck, OnEveryCheck, CheckEvery, InitialDelay = null)
-
-        ///// <summary>
-        ///// Create a new OICP v2.0 service checker.
-        ///// </summary>
-        ///// <typeparam name="T">The type of the data returned by the service checker.</typeparam>
-        ///// <param name="RoamingProvider">A roaming provider.</param>
-        ///// <param name="ServiceChecker">A function to check the OICP v2.0 service regularly and providing some result.</param>
-        ///// <param name="OnFirstCheck">A delegate processing the first check result.</param>
-        ///// <param name="OnEveryCheck">A delegate processing a check result.</param>
-        ///// <param name="CheckEvery">The time span between two consecutive service checks.</param>
-        ///// <param name="InitialDelay">Initial delay between startup and first check.</param>
-        //public static OICPv2_1.EMPServiceCheck<T>
-
-        //    CreateOICPv2_1_EMPServiceCheck<T>(this RoamingProvider                 RoamingProvider,
-        //                                      OICPv2_0.EMPServiceCheckDelegate<T>  ServiceChecker,
-        //                                      Action<T>                            OnFirstCheck,
-        //                                      Action<T>                            OnEveryCheck,
-        //                                      TimeSpan                             CheckEvery,
-        //                                      TimeSpan?                            InitialDelay = null)
-        //{
-
-        //    #region Initial checks
-
-        //    var _EMPRoamingWWCP = (RoamingProvider.OperatorRoamingService as OICPv2_0.EMPRoamingWWCP);
-
-        //    if (_EMPRoamingWWCP == null)
-        //        throw new ArgumentException("The given roaming provider is not an OICP v2.0 EMP roaming provider!", "RoamingProvider");
-
-        //    #endregion
-
-        //    return new OICPv2_0.EMPServiceCheck<T>(_EMPRoamingWWCP.EMPRoaming,
-        //                                           ServiceChecker,
-        //                                           OnFirstCheck,
-        //                                           OnEveryCheck,
-        //                                           CheckEvery);
-
-        //}
 
         #endregion
 

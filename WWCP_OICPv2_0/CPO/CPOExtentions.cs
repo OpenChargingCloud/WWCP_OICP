@@ -108,7 +108,7 @@ namespace org.GraphDefined.WWCP
                                               TimeSpan?                             StatusCheckEvery            = null,
                                               Boolean                               DisableAutoUploads          = false,
 
-                                              Action<OICPv2_0.CPORoamingWWCP>       OICPConfigurator            = null,
+                                              Action<OICPv2_0.CPO.WWCPAdapter>      OICPConfigurator            = null,
                                               Action<AEVSEOperatorRoamingProvider>  Configurator                = null,
                                               DNSClient                             DNSClient                   = null)
 
@@ -130,36 +130,36 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_0.CPORoamingWWCP(Id,
-                                                                 Name,
-                                                                 RoamingNetwork,
+            var NewRoamingProvider = new OICPv2_0.CPO.WWCPAdapter(Id,
+                                                                  Name,
+                                                                  RoamingNetwork,
 
-                                                                 RemoteHostname,
-                                                                 RemoteTCPPort,
-                                                                 RemoteCertificateValidator,
-                                                                 ClientCert,
-                                                                 RemoteHTTPVirtualHost,
-                                                                 HTTPUserAgent,
-                                                                 QueryTimeout,
+                                                                  RemoteHostname,
+                                                                  RemoteTCPPort,
+                                                                  RemoteCertificateValidator,
+                                                                  ClientCert,
+                                                                  RemoteHTTPVirtualHost,
+                                                                  HTTPUserAgent,
+                                                                  QueryTimeout,
 
-                                                                 ServerName,
-                                                                 ServerTCPPort,
-                                                                 ServerURIPrefix,
-                                                                 ServerAutoStart,
+                                                                  ServerName,
+                                                                  ServerTCPPort,
+                                                                  ServerURIPrefix,
+                                                                  ServerAutoStart,
 
-                                                                 ClientLoggingContext,
-                                                                 ServerLoggingContext,
-                                                                 LogFileCreator,
+                                                                  ClientLoggingContext,
+                                                                  ServerLoggingContext,
+                                                                  LogFileCreator,
 
-                                                                 EVSE2EVSEDataRecord,
-                                                                 EVSEDataRecord2XML,
+                                                                  EVSE2EVSEDataRecord,
+                                                                  EVSEDataRecord2XML,
 
-                                                                 IncludeEVSEs,
-                                                                 ServiceCheckEvery,
-                                                                 StatusCheckEvery,
-                                                                 DisableAutoUploads,
+                                                                  IncludeEVSEs,
+                                                                  ServiceCheckEvery,
+                                                                  StatusCheckEvery,
+                                                                  DisableAutoUploads,
 
-                                                                 DNSClient);
+                                                                  DNSClient);
 
 
             OICPConfigurator?.Invoke(NewRoamingProvider);
@@ -238,7 +238,7 @@ namespace org.GraphDefined.WWCP
                                               TimeSpan?                             StatusCheckEvery            = null,
                                               Boolean                               DisableAutoUploads          = false,
 
-                                              Action<OICPv2_0.CPORoamingWWCP>       OICPConfigurator            = null,
+                                              Action<OICPv2_0.CPO.WWCPAdapter>      OICPConfigurator            = null,
                                               Action<AEVSEOperatorRoamingProvider>  Configurator                = null,
                                               DNSClient                             DNSClient                   = null)
 
@@ -264,35 +264,35 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_0.CPORoamingWWCP(Id,
-                                                                 Name,
-                                                                 RoamingNetwork,
+            var NewRoamingProvider = new OICPv2_0.CPO.WWCPAdapter(Id,
+                                                                  Name,
+                                                                  RoamingNetwork,
 
-                                                                 new OICPv2_0.CPOClient(Id.ToString(),
-                                                                                        RemoteHostname,
-                                                                                        RemoteTCPPort,
-                                                                                        RemoteCertificateValidator,
-                                                                                        ClientCert,
-                                                                                        RemoteHTTPVirtualHost,
-                                                                                        HTTPUserAgent,
-                                                                                        QueryTimeout,
-                                                                                        DNSClient,
-                                                                                        ClientLoggingContext,
-                                                                                        LogFileCreator),
+                                                                  new OICPv2_0.CPOClient(Id.ToString(),
+                                                                                         RemoteHostname,
+                                                                                         RemoteTCPPort,
+                                                                                         RemoteCertificateValidator,
+                                                                                         ClientCert,
+                                                                                         RemoteHTTPVirtualHost,
+                                                                                         HTTPUserAgent,
+                                                                                         QueryTimeout,
+                                                                                         DNSClient,
+                                                                                         ClientLoggingContext,
+                                                                                         LogFileCreator),
 
-                                                                 new OICPv2_0.CPOServer(SOAPServer,
-                                                                                        ServerURIPrefix),
+                                                                  new OICPv2_0.CPOServer(SOAPServer,
+                                                                                         ServerURIPrefix),
 
-                                                                 ServerLoggingContext,
-                                                                 LogFileCreator,
+                                                                  ServerLoggingContext,
+                                                                  LogFileCreator,
 
-                                                                 EVSE2EVSEDataRecord,
-                                                                 EVSEDataRecord2XML,
+                                                                  EVSE2EVSEDataRecord,
+                                                                  EVSEDataRecord2XML,
 
-                                                                 IncludeEVSEs,
-                                                                 ServiceCheckEvery,
-                                                                 StatusCheckEvery,
-                                                                 DisableAutoUploads);
+                                                                  IncludeEVSEs,
+                                                                  ServiceCheckEvery,
+                                                                  StatusCheckEvery,
+                                                                  DisableAutoUploads);
 
             OICPConfigurator?.Invoke(NewRoamingProvider);
 

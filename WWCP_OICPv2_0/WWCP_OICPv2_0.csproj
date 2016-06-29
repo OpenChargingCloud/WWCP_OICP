@@ -51,13 +51,13 @@
     <Compile Include="CPO\CPOClient\CPOClientLogger.cs" />
     <Compile Include="CPO\CPODelegates.cs" />
     <Compile Include="CPO\CPOExtentions.cs" />
-    <Compile Include="CPO\CPORoamingWWCP.cs" />
+    <Compile Include="CPO\WWCPAdapter.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
     <Compile Include="EMP\EMPClient\EMPClientDelegates.cs" />
     <Compile Include="EMP\EMPClient\EMPClientLogger.cs" />
     <Compile Include="EMP\EMPDelegates.cs" />
     <Compile Include="EMP\EMPExtentions.cs" />
-    <Compile Include="EMP\EMPRoamingWWCP.cs" />
+    <Compile Include="EMP\WWCPAdapter.cs" />
     <Compile Include="EMP\EMPRoaming.cs" />
     <Compile Include="EMP\EMPServer\EMPServerLogger.cs" />
     <Compile Include="EMP\EMPServer\EMPServerDelegates.cs" />
