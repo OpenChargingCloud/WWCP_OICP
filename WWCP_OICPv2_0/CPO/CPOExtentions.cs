@@ -103,7 +103,7 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord         = null,
                                               OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML          = null,
 
-                                              Func<EVSE, Boolean>                   IncludeEVSEs                = null,
+                                              IncludeEVSEDelegate                   IncludeEVSEs                = null,
                                               TimeSpan?                             ServiceCheckEvery           = null,
                                               TimeSpan?                             StatusCheckEvery            = null,
                                               Boolean                               DisableAutoUploads          = false,
@@ -233,7 +233,7 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord         = null,
                                               OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML          = null,
 
-                                              Func<EVSE, Boolean>                   IncludeEVSEs                = null,
+                                              IncludeEVSEDelegate                   IncludeEVSEs                = null,
                                               TimeSpan?                             ServiceCheckEvery           = null,
                                               TimeSpan?                             StatusCheckEvery            = null,
                                               Boolean                               DisableAutoUploads          = false,

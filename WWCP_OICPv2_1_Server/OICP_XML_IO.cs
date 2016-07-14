@@ -48,6 +48,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         /// <param name="EVSEDataRecord2XML">An optional delegate to process an EVSE data record XML before sending it somewhere.</param>
         /// <param name="XMLPostProcessing">An optional delegate to process the XML after its final creation.</param>
         public static XElement ToXML(this IEnumerable<EVSEDataRecord>  EVSEDataRecords,
+                                     RoamingNetwork                    RoamingNetwork,
                                      XMLNamespacesDelegate             XMLNamespaces       = null,
                                      EVSEDataRecord2XMLDelegate        EVSEDataRecord2XML  = null,
                                      XMLPostProcessingDelegate         XMLPostProcessing   = null)
@@ -56,10 +57,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
             #region Initial checks
 
             if (EVSEDataRecords == null)
-                throw new ArgumentNullException("EVSEDataRecords", "The given enumeration of EVSE data records must not be null!");
+                throw new ArgumentNullException(nameof(EVSEDataRecords), "The given enumeration of EVSE data records must not be null!");
 
             if (EVSEDataRecord2XML == null)
-                EVSEDataRecord2XML = (evsedatarecord, xml) => xml;
+                EVSEDataRecord2XML = (rn, evsedatarecord, xml) => xml;
 
             if (XMLPostProcessing == null)
                 XMLPostProcessing = xml => xml;
@@ -73,7 +74,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                   EVSEDataRecords.ToLookup(evsedatarecord => evsedatarecord.EVSE?.Operator).
                                                     Select(group =>
 
-                                                      group.Where(evsedatarecord => evsedatarecord != null).Any()
+                                                      group.Any(evsedatarecord => evsedatarecord != null)
                                                           ? new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
                                                                 new XElement(OICPNS.EVSEData + "OperatorID", group.Key.Id.OriginId),
@@ -90,7 +91,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                                                                 // <EvseDataRecord> ... </EvseDataRecord>
                                                                 group.Where (evsedatarecord => evsedatarecord != null).
-                                                                      Select(evsedatarecord => EVSEDataRecord2XML(evsedatarecord, evsedatarecord.ToXML())).
+                                                                      Select(evsedatarecord => EVSEDataRecord2XML(RoamingNetwork, evsedatarecord, evsedatarecord.ToXML())).
                                                                       ToArray()
 
                                                             )
@@ -116,6 +117,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         /// <param name="EVSEStatusRecord2XML">An optional delegate to process an EVSE status record XML before sending it somewhere.</param>
         /// <param name="XMLPostProcessing">An optional delegate to process the XML after its final creation.</param>
         public static XElement ToXML(this IEnumerable<EVSE>        EVSEs,
+                                     RoamingNetwork                RoamingNetwork,
                                      XMLNamespacesDelegate         XMLNamespaces         = null,
                                      EVSEStatusRecord2XMLDelegate  EVSEStatusRecord2XML  = null,
                                      XMLPostProcessingDelegate     XMLPostProcessing     = null)
@@ -126,10 +128,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
             #region Initial checks
 
             if (EVSEs == null)
-                throw new ArgumentNullException("EVSEs",  "The given enumeration of EVSEs must not be null!");
+                throw new ArgumentNullException(nameof(EVSEs),  "The given enumeration of EVSEs must not be null!");
 
             if (EVSEStatusRecord2XML == null)
-                EVSEStatusRecord2XML = (evsestatusrecord, xml) => xml;
+                EVSEStatusRecord2XML = (rn, evsestatusrecord, xml) => xml;
 
             if (XMLPostProcessing == null)
                 XMLPostProcessing = xml => xml;
@@ -143,7 +145,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                   EVSEs.ToLookup(evse => evse.Operator, evse => new EVSEStatusRecord(evse)).
                                                     Select(group =>
 
-                                                      group.Where(evsestatusrecord => evsestatusrecord != null).Any()
+                                                      group.Any(evsestatusrecord => evsestatusrecord != null)
                                                           ? new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
                                                                 new XElement(OICPNS.EVSEStatus + "OperatorID", group.Key.Id.OriginId),
@@ -160,7 +162,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                                                                 // <EvseStatusRecord> ... </EvseStatusRecord>
                                                                 group.Where (evsestatusrecord => evsestatusrecord != null).
-                                                                      Select(evsestatusrecord => EVSEStatusRecord2XML(evsestatusrecord, evsestatusrecord.ToXML())).
+                                                                      Select(evsestatusrecord => EVSEStatusRecord2XML(RoamingNetwork, evsestatusrecord, evsestatusrecord.ToXML())).
                                                                       ToArray()
 
                                                             )

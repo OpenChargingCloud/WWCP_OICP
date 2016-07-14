@@ -29,6 +29,9 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace org.GraphDefined.WWCP.OICPv2_0
 {
 
+    public delegate String  EVSEOperatorNameSelectorDelegate(I18NString        I18NText);
+    public delegate Boolean IncludeEVSEStatusRecordsDelegate(EVSEStatusRecord  EVSEStatusRecord);
+
     #region OnPushEVSEData/-Status
 
     /// <summary>
@@ -40,7 +43,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         String                                  SenderId,
                                                         EventTracking_Id                        EventTrackingId,
                                                         ActionType                              ActionType,
-                                                        ILookup<EVSEOperator, EVSEDataRecord>   EVSEData,
+                                                        ILookup<EVSEOperator, EVSEDataRecord>   EVSEDataRecords,
                                                         UInt32                                  NumberOfEVSEs,
                                                         TimeSpan?                               RequestTimeout);
 
@@ -53,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         String                                  SenderId,
                                                         EventTracking_Id                        EventTrackingId,
                                                         ActionType                              ActionType,
-                                                        ILookup<EVSEOperator, EVSEDataRecord>   EVSEData,
+                                                        ILookup<EVSEOperator, EVSEDataRecord>   EVSEDataRecords,
                                                         UInt32                                  NumberOfEVSEs,
                                                         TimeSpan?                               RequestTimeout,
                                                         eRoamingAcknowledgement                 Result,
@@ -63,30 +66,30 @@ namespace org.GraphDefined.WWCP.OICPv2_0
     /// <summary>
     /// A delegate called whenever new EVSE status will be send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEStatusRequestDelegate (DateTime                        LogTimestamp,
-                                                          DateTime                        RequestTimestamp,
-                                                          CPOClient                       Sender,
-                                                          String                          SenderId,
-                                                          EventTracking_Id                EventTrackingId,
-                                                          ActionType                      ActionType,
-                                                          IEnumerable<EVSEStatusRecord>   EVSEStatusRecords,
-                                                          UInt32                          NumberOfEVSEs,
-                                                          TimeSpan?                       RequestTimeout);
+    public delegate Task OnPushEVSEStatusRequestDelegate (DateTime                                 LogTimestamp,
+                                                          DateTime                                 RequestTimestamp,
+                                                          CPOClient                                Sender,
+                                                          String                                   SenderId,
+                                                          EventTracking_Id                         EventTrackingId,
+                                                          ActionType                               ActionType,
+                                                          ILookup<EVSEOperator, EVSEStatusRecord>  EVSEStatusRecords,
+                                                          UInt32                                   NumberOfEVSEs,
+                                                          TimeSpan?                                RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever new EVSE status had been send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEStatusResponseDelegate(DateTime                        LogTimestamp,
-                                                          DateTime                        RequestTimestamp,
-                                                          CPOClient                       Sender,
-                                                          String                          SenderId,
-                                                          EventTracking_Id                EventTrackingId,
-                                                          ActionType                      ActionType,
-                                                          IEnumerable<EVSEStatusRecord>   EVSEStatusRecords,
-                                                          UInt32                          NumberOfEVSEs,
-                                                          TimeSpan?                       RequestTimeout,
-                                                          eRoamingAcknowledgement         Result,
-                                                          TimeSpan                        Duration);
+    public delegate Task OnPushEVSEStatusResponseDelegate(DateTime                                 LogTimestamp,
+                                                          DateTime                                 RequestTimestamp,
+                                                          CPOClient                                Sender,
+                                                          String                                   SenderId,
+                                                          EventTracking_Id                         EventTrackingId,
+                                                          ActionType                               ActionType,
+                                                          ILookup<EVSEOperator, EVSEStatusRecord>  EVSEStatusRecords,
+                                                          UInt32                                   NumberOfEVSEs,
+                                                          TimeSpan?                                RequestTimeout,
+                                                          eRoamingAcknowledgement                  Result,
+                                                          TimeSpan                                 Duration);
 
     #endregion
 

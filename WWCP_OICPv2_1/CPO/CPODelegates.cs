@@ -39,18 +39,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// A delegate which allows you to modify the XML representation
     /// of EVSE data records before sending them upstream.
     /// </summary>
+    /// <param name="RoamingNetwork">An EVSE roaming network.</param>
     /// <param name="EVSEDataRecord">An EVSE data record.</param>
     /// <param name="XML">The XML representation of an EVSE data record.</param>
-    public delegate XElement       EVSEDataRecord2XMLDelegate      (EVSEDataRecord            EVSEDataRecord,
+    public delegate XElement       EVSEDataRecord2XMLDelegate      (RoamingNetwork            RoamingNetwork,
+                                                                    EVSEDataRecord            EVSEDataRecord,
                                                                     XElement                  XML);
 
     /// <summary>
     /// A delegate which allows you to modify the XML representation
     /// of EVSE status records before sending them upstream.
     /// </summary>
+    /// <param name="RoamingNetwork">An EVSE roaming network.</param>
     /// <param name="EVSEStatusRecord">An EVSE status record.</param>
     /// <param name="XML">The XML representation of an EVSE status record.</param>
-    public delegate XElement       EVSEStatusRecord2XMLDelegate    (EVSEStatusRecord          EVSEStatusRecord,
+    public delegate XElement       EVSEStatusRecord2XMLDelegate    (RoamingNetwork            RoamingNetwork,
+                                                                    EVSEStatusRecord          EVSEStatusRecord,
                                                                     XElement                  XML);
 
     public delegate XElement       XMLPostProcessingDelegate       (XElement                  XML);

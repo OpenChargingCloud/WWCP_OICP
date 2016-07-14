@@ -405,7 +405,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                                                   Skip(skip).
                                                                                   Take(take).
                                                                                   Select (evse => OICPMapper.AsOICPEVSEDataRecord(evse, EVSE2EVSEDataRecord)).
-                                                                                  ToXML  (XMLNamespaces, EVSEDataRecord2XML, XMLPostProcessing).
+                                                                                  ToXML  (_RoamingNetwork, XMLNamespaces, EVSEDataRecord2XML, XMLPostProcessing).
                                                                                   ToUTF8Bytes()
                                              }.Set(new HTTPHeaderField("X-ExpectedTotalNumberOfItems", typeof(UInt64), HeaderFieldType.Response, RequestPathSemantic.EndToEnd),
                                                    _ExpectedCount);
@@ -473,7 +473,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                                                   OrderBy(evse => evse.Id).
                                                                                   Skip(skip).
                                                                                   Take(take).
-                                                                                  ToXML(XMLNamespaces, EVSEStatusRecord2XML, XMLPostProcessing).
+                                                                                  ToXML(_RoamingNetwork, XMLNamespaces, EVSEStatusRecord2XML, XMLPostProcessing).
                                                                                   ToUTF8Bytes()
                                              }.Set(new HTTPHeaderField("X-ExpectedTotalNumberOfItems", typeof(UInt64), HeaderFieldType.Response, RequestPathSemantic.EndToEnd),
                                                    _ExpectedCount);

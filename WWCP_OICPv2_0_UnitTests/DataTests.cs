@@ -151,16 +151,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
         public async Task TestPushEVSEStatus(CPOClient HubjectCPO)
         {
 
-            var EVSEStatus = new Dictionary<EVSE_Id, EVSEStatusType>();
-            EVSEStatus.Add(EVSE_Id.Parse("DE*GEF*E123456789*1"), EVSEStatusType.Available);
-            EVSEStatus.Add(EVSE_Id.Parse("DE*GEF*E123456789*2"), EVSEStatusType.Occupied);
+            var EVSEStatus = new List<EVSEStatusRecord>();
+            EVSEStatus.Add(new EVSEStatusRecord(EVSE_Id.Parse("DE*GEF*E123456789*1"), EVSEStatusType.Available));
+            EVSEStatus.Add(new EVSEStatusRecord(EVSE_Id.Parse("DE*GEF*E123456789*2"), EVSEStatusType.Occupied));
 
             var req3 = HubjectCPO.
 
                           PushEVSEStatus(EVSEStatus,
                                          ActionType.insert,
-                                         OperatorId:      EVSEOperator_Id.Parse("DE*GEF"),
-                                         OperatorName:    "Test CPO 1",
                                          RequestTimeout:  TimeSpan.FromSeconds(120)).
 
                           ContinueWith(task =>

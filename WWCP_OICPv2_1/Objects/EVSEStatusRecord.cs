@@ -37,11 +37,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Properties
 
         /// <summary>
-        /// The related the Electric Vehicle Supply Equipment (EVSE).
-        /// </summary>
-        public EVSE            EVSE     { get; }
-
-        /// <summary>
         /// The unique identification of an EVSE.
         /// </summary>
         public EVSE_Id         Id       { get; }
@@ -58,8 +53,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region EVSEStatusRecord(EVSE)
 
         /// <summary>
-        /// Create a new OICP EVSE status record and store
-        /// a reference to the given EVSE.
+        /// Create a new OICP EVSE status record based on the given EVSE.
         /// </summary>
         /// <param name="EVSE">The current status of an EVSE.</param>
         public EVSEStatusRecord(EVSE EVSE)
@@ -73,9 +67,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            this.EVSE    = EVSE;
             this.Id      = EVSE.Id;
             this.Status  = OICPMapper.AsOICPEVSEStatus(EVSE.Status.Value);
+
+        }
+
+        #endregion
+
+        #region EVSEStatusRecord(EVSEStatus)
+
+        /// <summary>
+        /// Create a new OICP EVSE status record based on the given WWCP EVSE status.
+        /// </summary>
+        /// <param name="EVSEStatus">The current status of an EVSE.</param>
+        public EVSEStatusRecord(EVSEStatus EVSEStatus)
+
+        {
+
+            #region Initial checks
+
+            if (EVSEStatus == null)
+                throw new ArgumentNullException(nameof(EVSEStatus),  "The given EVSE status must not be null!");
+
+            #endregion
+
+            this.Id      = EVSEStatus.Id;
+            this.Status  = OICPMapper.AsOICPEVSEStatus(EVSEStatus.Status);
 
         }
 
@@ -165,6 +182,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
             return new EVSEStatusRecord(KeyValuePair.Key, KeyValuePair.Value);
         }
+
+        #endregion
+
+
+        #region AsWWCPEVSEStatus()
+
+        public EVSEStatus AsWWCPEVSEStatus()
+
+            => new EVSEStatus(Id,
+                              OICPMapper.AsWWCPEVSEStatus(Status),
+                              DateTime.Now);
 
         #endregion
 
