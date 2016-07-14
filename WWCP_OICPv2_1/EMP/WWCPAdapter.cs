@@ -331,7 +331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             return new eRoamingAuthorizationStart(StatusCodes.SessionIsInvalid,
                                                                   "Session is invalid");
 
-                        case AuthStartEVSEResultType.EVSECommunicationTimeout:
+                        case AuthStartEVSEResultType.CommunicationTimeout:
                             return new eRoamingAuthorizationStart(StatusCodes.CommunicationToEVSEFailed,
                                                                   "Communication to EVSE failed!");
 

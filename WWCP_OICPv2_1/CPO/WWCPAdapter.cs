@@ -2371,6 +2371,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                            EventTrackingId,
                                                            RequestTimeout);
 
+
+            var Now     = DateTime.Now;
+            var Runtime = Now - Timestamp.Value;
+
             AuthStartResult result = null;
 
             if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
@@ -2382,7 +2386,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     response.Content.SessionId,
                                                     response.Content.ProviderId,
                                                     response.Content.StatusCode.Description,
-                                                    response.Content.StatusCode.AdditionalInfo);
+                                                    response.Content.StatusCode.AdditionalInfo,
+                                                    Runtime);
 
             }
 
@@ -2390,7 +2395,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 result = AuthStartResult.NotAuthorized(AuthorizatorId,
                                                        response.Content.ProviderId,
                                                        response.Content.StatusCode.Description,
-                                                       response.Content.StatusCode.AdditionalInfo);
+                                                       response.Content.StatusCode.AdditionalInfo,
+                                                       Runtime);
 
 
             #region Send OnAuthorizeStarted event
@@ -2398,7 +2404,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStarted?.Invoke(DateTime.Now,
+                OnAuthorizeStarted?.Invoke(Now,
                                            this,
                                            EventTrackingId,
                                            RoamingNetwork.Id,
@@ -2408,7 +2414,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                            SessionId,
                                            RequestTimeout,
                                            result,
-                                           DateTime.Now - Timestamp.Value);
+                                           Runtime);
 
             }
             catch (Exception e)
@@ -2514,6 +2520,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                             RequestTimeout);
 
 
+            var Now     = DateTime.Now;
+            var Runtime = Now - Timestamp.Value;
+
             AuthStartEVSEResult result = null;
 
             if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
@@ -2525,7 +2534,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                         response.Content.SessionId,
                                                         response.Content.ProviderId,
                                                         response.Content.StatusCode.Description,
-                                                        response.Content.StatusCode.AdditionalInfo);
+                                                        response.Content.StatusCode.AdditionalInfo,
+                                                        Runtime);
 
             }
 
@@ -2533,7 +2543,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 result = AuthStartEVSEResult.NotAuthorized(AuthorizatorId,
                                                            response.Content.ProviderId,
                                                            response.Content.StatusCode.Description,
-                                                           response.Content.StatusCode.AdditionalInfo);
+                                                           response.Content.StatusCode.AdditionalInfo,
+                                                           Runtime);
 
 
             #region Send OnAuthorizeEVSEStarted event
@@ -2582,7 +2593,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<AuthStartChargingStationResult>
+        public override Task<AuthStartChargingStationResult>
 
             AuthorizeStart(EVSEOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
@@ -2675,7 +2686,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return result;
+            return Task.FromResult(result);
 
         }
 
@@ -2971,7 +2982,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="SessionId">The session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<AuthStopChargingStationResult>
+        public override Task<AuthStopChargingStationResult>
 
             AuthorizeStop(EVSEOperator_Id     OperatorId,
                           ChargingStation_Id  ChargingStationId,
@@ -3063,7 +3074,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return result;
+            return Task.FromResult(result);
 
         }
 
