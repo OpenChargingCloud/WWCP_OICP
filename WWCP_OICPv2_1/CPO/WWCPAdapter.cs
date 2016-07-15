@@ -1399,62 +1399,69 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
+            #region Send OnEVSEStatusPush event
+
+            try
+            {
+
+                OnPushEVSEStatusRequest?.Invoke(DateTime.Now,
+                                                Timestamp.Value,
+                                                this,
+                                                this.Id.ToString(),
+                                                EventTrackingId,
+                                                RoamingNetwork.Id,
+                                                ActionType,
+                                                GroupedEVSEStatus,
+                                                (UInt32) _NumberOfEVSEStatus,
+                                                RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusRequest));
+            }
+
+            #endregion
+
 
             if (_NumberOfEVSEStatus > 0)
             {
 
-                #region Send OnEVSEStatusPush event
+                var responses = (await CPORoaming.PushEVSEStatus(GroupedEVSEStatus.
+                                                                     ToDictionary(group => group.Key,
+                                                                                  group => group.AsEnumerable(). // Only send the latest EVSE status!
+                                                                                                 GroupBy(evsestatus      => evsestatus.Id).
+                                                                                                 Select (sameevseidgroup => sameevseidgroup.OrderByDescending(status => status.Timestamp).First())).
+                                                                     SelectMany(kvp => kvp.Value.Select(evsestatus => new EVSEStatusRecord(evsestatus.Id, evsestatus.Status.AsOICPEVSEStatus())), Tuple.Create).
+                                                                     ToLookup  (kvp => kvp.Item1.Key,
+                                                                                kvp => kvp.Item2), 
+                                                                 ActionType.AsOICPActionType(),
 
-                try
-                {
+                                                                 Timestamp,
+                                                                 CancellationToken,
+                                                                 EventTrackingId,
+                                                                 RequestTimeout)).
 
-                    OnPushEVSEStatusRequest?.Invoke(DateTime.Now,
-                                                    Timestamp.Value,
-                                                    this,
-                                                    this.Id.ToString(),
-                                                    EventTrackingId,
-                                                    RoamingNetwork.Id,
-                                                    ActionType,
-                                                    GroupedEVSEStatus,
-                                                    (UInt32) _NumberOfEVSEStatus,
-                                                    RequestTimeout);
+                Select(response => {
 
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusRequest));
-                }
+                    if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                        response.Content        != null              &&
+                        response.Content.Result == true)
+                    {
+                        return new Acknowledgement(true);
+                    }
 
-                #endregion
+                    else
+                        return new Acknowledgement(false,
+                                                   response.Content.StatusCode.Description,
+                                                   response.Content.StatusCode.AdditionalInfo);
 
-                var response = await CPORoaming.PushEVSEStatus(GroupedEVSEStatus.
-                                                                   ToDictionary(group => group.Key,
-                                                                                group => group.AsEnumerable(). // Only send the latest EVSE status!
-                                                                                               GroupBy(evsestatus      => evsestatus.Id).
-                                                                                               Select (sameevseidgroup => sameevseidgroup.OrderByDescending(status => status.Timestamp).First())).
-                                                                   SelectMany(kvp => kvp.Value.Select(evsestatus => new EVSEStatusRecord(evsestatus.Id, evsestatus.Status.AsOICPEVSEStatus())), Tuple.Create).
-                                                                   ToLookup  (kvp => kvp.Item1.Key,
-                                                                              kvp => kvp.Item2), 
-                                                               ActionType.AsOICPActionType(),
+                });
 
-                                                               Timestamp,
-                                                               CancellationToken,
-                                                               EventTrackingId,
-                                                               RequestTimeout);
-
-
-
-                if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                    response.Content        != null              &&
-                    response.Content.Result == true)
-                {
+                if (responses.All(response => response.Result))
                     result = new Acknowledgement(true);
-                }
-
                 else
-                    result = new Acknowledgement(false,
-                                                 response.Content.StatusCode.Description,
-                                                 response.Content.StatusCode.AdditionalInfo);
+                    result = responses.First(response => !response.Result);
 
             }
 
