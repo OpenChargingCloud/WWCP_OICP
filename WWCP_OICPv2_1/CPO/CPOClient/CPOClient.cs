@@ -383,6 +383,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             HTTPResponse<eRoamingAcknowledgement> result = null;
 
+            var _OICPAction = OICPAction;
+
             #endregion
 
             #region Send OnPushEVSEDataRequest event
@@ -427,7 +429,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     {
 
                         result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEDataXML(EVSEDataRecordGroup,
-                                                                                             OICPAction,
+                                                                                             _OICPAction,
                                                                                              EVSEOperator_Id.Parse("+49*822"),// EVSEDataRecordGroup.Key.Id,
                                                                                              EVSEOperatorNameSelector(EVSEDataRecordGroup.Key.Name)),
                                                          "eRoamingPushEvseData",
@@ -489,6 +491,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          #endregion
 
                                                         );
+
+                        if (_OICPAction == ActionType.fullLoad)
+                            _OICPAction = ActionType.insert;
 
                     }
 
@@ -691,6 +696,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             HTTPResponse<eRoamingAcknowledgement> result = null;
 
+            var _OICPAction = OICPAction;
+
             #endregion
 
             #region Send OnPushEVSEStatusRequest event
@@ -735,7 +742,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     {
 
                          result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEStatusXML(EVSEStatusRecordGroup,
-                                                                                                OICPAction,
+                                                                                                _OICPAction,
                                                                                                 EVSEOperator_Id.Parse("+49*822"),// EVSEStatusRecordGroup.Key.Id,
                                                                                                 EVSEOperatorNameSelector(EVSEStatusRecordGroup.Key.Name)),
                                                           "eRoamingPushEvseStatus",
@@ -800,6 +807,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          );
 
                     }
+
+                    if (_OICPAction == ActionType.fullLoad)
+                        _OICPAction = ActionType.insert;
 
                 }
 
