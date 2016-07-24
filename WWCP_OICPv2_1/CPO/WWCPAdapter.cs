@@ -808,73 +808,83 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             Acknowledgement result = null;
 
-            var NumberOfEVSEs = GroupedEVSEs.
-                                    Select(group => group.Count()).
-                                    Sum   ();
+            var _NumberOfEVSEs = GroupedEVSEs.
+                                     Where (group => group.Key != null).
+                                     Select(group => group.Count()).
+                                     Sum   ();
 
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
             #endregion
 
+            #region Send OnEVSEDataPush event
 
-            if (NumberOfEVSEs > 0)
+            try
             {
 
-                #region Send OnEVSEDataPush event
+                OnPushEVSEDataRequest?.Invoke(DateTime.Now,
+                                              Timestamp.Value,
+                                              this,
+                                              this.Id.ToString(),
+                                              EventTrackingId,
+                                              RoamingNetwork.Id,
+                                              ActionType,
+                                              GroupedEVSEs,
+                                              (UInt32) _NumberOfEVSEs,
+                                              RequestTimeout);
 
-                try
-                {
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusRequest));
+            }
 
-                    OnPushEVSEDataRequest?.Invoke(DateTime.Now,
-                                                  Timestamp.Value,
-                                                  this,
-                                                  this.Id.ToString(),
-                                                  EventTrackingId,
-                                                  RoamingNetwork.Id,
-                                                  ActionType,
-                                                  GroupedEVSEs,
-                                                  (UInt32) NumberOfEVSEs,
-                                                  RequestTimeout);
-
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusRequest));
-                }
-
-                #endregion
+            #endregion
 
 
-                var response = await CPORoaming.PushEVSEData(GroupedEVSEs.
-                                                                 ToDictionary(group => group.Key,
-                                                                              group => group.AsEnumerable()).
-                                                                 SelectMany  (kvp   => kvp.Value.Select(evse => evse.AsOICPEVSEDataRecord(_EVSE2EVSEDataRecord)), Tuple.Create).
-                                                                 ToLookup    (kvp   => kvp.Item1.Key,
-                                                                              kvp   => kvp.Item2),
-                                                             ActionType.AsOICPActionType(),
+            if (_NumberOfEVSEs > 0)
+            {
 
-                                                             Timestamp,
-                                                             CancellationToken,
-                                                             EventTrackingId,
-                                                             RequestTimeout);
+                var responses = (await CPORoaming.PushEVSEData(GroupedEVSEs.
+                                                                   Where       (group => group.Key != null).
+                                                                   ToDictionary(group => group.Key,
+                                                                                group => group.AsEnumerable()).
+                                                                   SelectMany  (kvp   => kvp.Value.Select(evse => evse.AsOICPEVSEDataRecord(_EVSE2EVSEDataRecord)), Tuple.Create).
+                                                                   ToLookup    (kvp   => kvp.Item1.Key,
+                                                                                kvp   => kvp.Item2),
+                                                               ActionType.AsOICPActionType(),
 
-                if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                    response.Content        != null              &&
-                    response.Content.Result == true)
-                {
-                    result = new Acknowledgement(true);
-                }
+                                                               Timestamp,
+                                                               CancellationToken,
+                                                               EventTrackingId,
+                                                               RequestTimeout)).
 
+                Select(response => {
+
+                    if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                        response.Content        != null              &&
+                        response.Content.Result == true)
+                    {
+                        return new Acknowledgement(ResultType.True);
+                    }
+
+                    else
+                        return new Acknowledgement(ResultType.False,
+                                                   response.Content.StatusCode.Description,
+                                                   response.Content.StatusCode.AdditionalInfo);
+
+                });
+
+                if (responses.All(response => response.Result == ResultType.True))
+                    result = new Acknowledgement(ResultType.True);
                 else
-                    result = new Acknowledgement(false,
-                                                 response.Content.StatusCode.Description,
-                                                 response.Content.StatusCode.AdditionalInfo);
+                    result = responses.First(response => response.Result != ResultType.True);
 
             }
 
             else
-                result = new Acknowledgement(true);
+                result = new Acknowledgement(ResultType.NoOperation);
 
 
             #region Send OnEVSEDataPushed event
@@ -890,7 +900,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                RoamingNetwork.Id,
                                                ActionType,
                                                GroupedEVSEs,
-                                               (UInt32) NumberOfEVSEs,
+                                               (UInt32) _NumberOfEVSEs,
                                                RequestTimeout,
                                                result,
                                                DateTime.Now - Timestamp.Value);
@@ -993,9 +1003,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Get effective number of EVSE status to upload
 
-            var _EVSEs = EVSEs.
-                             Where(evse => IncludeEVSEs(evse)).
-                             ToArray();
+            var _EVSEs = EVSEs.Where(evse => evse          != null &&
+                                             evse.Operator != null &&
+                                             IncludeEVSEs(evse)).
+                               ToArray();
 
             #endregion
 
@@ -1010,7 +1021,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                           EventTrackingId,
                                           RequestTimeout);
 
-            return new Acknowledgement(true);
+            return new Acknowledgement(ResultType.True);
 
         }
 
@@ -1391,6 +1402,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             Acknowledgement result = null;
 
             var _NumberOfEVSEStatus  = GroupedEVSEStatus.
+                                          Where (group => group.Key != null).
                                           Select(group => group.Count()).
                                           Sum();
 
@@ -1428,6 +1440,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 var responses = (await CPORoaming.PushEVSEStatus(GroupedEVSEStatus.
+                                                                     Where       (group => group.Key != null).
                                                                      ToDictionary(group => group.Key,
                                                                                   group => group.AsEnumerable(). // Only send the latest EVSE status!
                                                                                                  GroupBy(evsestatus      => evsestatus.Id).
@@ -1448,25 +1461,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         response.Content        != null              &&
                         response.Content.Result == true)
                     {
-                        return new Acknowledgement(true);
+                        return new Acknowledgement(ResultType.True);
                     }
 
                     else
-                        return new Acknowledgement(false,
+                        return new Acknowledgement(ResultType.False,
                                                    response.Content.StatusCode.Description,
                                                    response.Content.StatusCode.AdditionalInfo);
 
                 });
 
-                if (responses.All(response => response.Result))
-                    result = new Acknowledgement(true);
+                if (responses.All(response => response.Result == ResultType.True))
+                    result = new Acknowledgement(ResultType.True);
                 else
-                    result = responses.First(response => !response.Result);
+                    result = responses.First(response => response.Result != ResultType.True);
 
             }
 
             else
-                result = new Acknowledgement(true);
+                result = new Acknowledgement(ResultType.NoOperation);
 
 
             #region Send OnEVSEStatusPushed event
@@ -1575,14 +1588,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (EVSEStatus == null)
                 throw new ArgumentNullException(nameof(EVSEStatus),  "The given enumeration of EVSE status must not be null!");
 
-            var _EVSEStatus = EVSEStatus.ToArray();
+            var _EVSEStatus = EVSEStatus.Where (status => status != null).
+                                         Select(status => new {
+                                                              Status   = status,
+                                                              Operator = RoamingNetwork.GetEVSEOperatorbyId(status.Id.OperatorId)
+                                                          }).
+                                         Where (tuple  => tuple.Operator != null).
+                                         ToArray();
 
             #endregion
 
 
             if (_EVSEStatus.Length > 0)
-                return await PushEVSEStatus(_EVSEStatus.ToLookup(evsestatus => RoamingNetwork.GetEVSEOperatorbyId(evsestatus.Id.OperatorId),
-                                                                 evsestatus => evsestatus),
+                return await PushEVSEStatus(_EVSEStatus.ToLookup(evsestatus => evsestatus.Operator,
+                                                                 evsestatus => evsestatus.Status),
                                             ActionType,
 
                                             Timestamp,
@@ -1590,7 +1609,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                             EventTrackingId,
                                             RequestTimeout);
 
-            return new Acknowledgement(true);
+            return new Acknowledgement(ResultType.True);
 
         }
 
@@ -1630,7 +1649,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
             if (IncludeEVSEs != null && !IncludeEVSEs(EVSE))
-                return new Acknowledgement(true);
+                return new Acknowledgement(ResultType.NoOperation);
 
             return await PushEVSEStatus(EVSEStatus.Snapshot(EVSE),
                                         ActionType,
@@ -1690,8 +1709,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                             EventTrackingId,
                                             RequestTimeout);
 
-            else
-                return new Acknowledgement(true);
+            return new Acknowledgement(ResultType.NoOperation);
 
         }
 
@@ -1730,9 +1748,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEStatus(IncludeEVSEs != null
-                                            ? ChargingStation.EVSEs.Where(evse => IncludeEVSEs(evse)).Select(evse => EVSEStatus.Snapshot(evse))
-                                            : ChargingStation.EVSEs.                                  Select(evse => EVSEStatus.Snapshot(evse)),
+            return await PushEVSEStatus((IncludeEVSEs != null
+                                             ? ChargingStation.EVSEs.Where(evse => IncludeEVSEs(evse))
+                                             : ChargingStation.EVSEs).
+                                             Select(evse => EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -1777,9 +1796,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEStatus(IncludeEVSEs != null
-                                            ? ChargingStations.SelectMany(station => station.EVSEs.Where(evse => IncludeEVSEs(evse)).Select(evse => EVSEStatus.Snapshot(evse)))
-                                            : ChargingStations.SelectMany(station => station.EVSEs.                                  Select(evse => EVSEStatus.Snapshot(evse))),
+            return await PushEVSEStatus((IncludeEVSEs != null
+                                            ? ChargingStations.SelectMany(station => station.EVSEs.Where(evse => IncludeEVSEs(evse)))
+                                            : ChargingStations.SelectMany(station => station.EVSEs)).
+                                            Select(evse => EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -1824,9 +1844,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEStatus(IncludeEVSEs != null
-                                            ? ChargingPool.EVSEs.Where(evse => IncludeEVSEs(evse)).Select(evse => EVSEStatus.Snapshot(evse))
-                                            : ChargingPool.EVSEs.                                  Select(evse => EVSEStatus.Snapshot(evse)),
+            return await PushEVSEStatus((IncludeEVSEs != null
+                                            ? ChargingPool.EVSEs.Where(evse => IncludeEVSEs(evse))
+                                            : ChargingPool.EVSEs).
+                                            Select(evse => EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -1871,12 +1892,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEStatus(IncludeEVSEs != null
-                                            ? ChargingPools.SelectMany(pool    => pool.ChargingStations).
-                                                            SelectMany(station => station.EVSEs.Where (evse => IncludeEVSEs(evse)).
-                                                                                                Select(evse => EVSEStatus.Snapshot(evse)))
-                                            : ChargingPools.SelectMany(pool    => pool.ChargingStations).
-                                                            SelectMany(station => station.EVSEs.Select(evse => EVSEStatus.Snapshot(evse))),
+            return await PushEVSEStatus((IncludeEVSEs != null
+                                            ? ChargingPools.SelectMany(pool    => pool.   ChargingStations).
+                                                            SelectMany(station => station.EVSEs.
+                                                                                          Where(evse => IncludeEVSEs(evse)))
+                                            : ChargingPools.SelectMany(pool    => pool.   ChargingStations).
+                                                            SelectMany(station => station.EVSEs)).
+                                            Select(evse => EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -1921,9 +1943,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEStatus(IncludeEVSEs != null
-                                            ? EVSEOperator.EVSEs.Where(evse => IncludeEVSEs(evse)).Select(evse => EVSEStatus.Snapshot(evse))
-                                            : EVSEOperator.EVSEs.                                  Select(evse => EVSEStatus.Snapshot(evse)),
+            return await PushEVSEStatus((IncludeEVSEs != null
+                                            ? EVSEOperator.EVSEs.Where(evse => IncludeEVSEs(evse))
+                                            : EVSEOperator.EVSEs).
+                                            Select(evse => EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -1968,14 +1991,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEStatus(IncludeEVSEs != null
+            return await PushEVSEStatus((IncludeEVSEs != null
                                             ? EVSEOperators.SelectMany(evseoperator => evseoperator.ChargingPools).
-                                                            SelectMany(pool         => pool.ChargingStations).
-                                                            SelectMany(station      => station.EVSEs.Where (evse => IncludeEVSEs(evse)).
-                                                                                                     Select(evse => EVSEStatus.Snapshot(evse)))
+                                                            SelectMany(pool         => pool.        ChargingStations).
+                                                            SelectMany(station      => station.     EVSEs.
+                                                                                                    Where(evse => IncludeEVSEs(evse)))
                                             : EVSEOperators.SelectMany(evseoperator => evseoperator.ChargingPools).
-                                                            SelectMany(pool         => pool.ChargingStations).
-                                                            SelectMany(station      => station.EVSEs.Select(evse => EVSEStatus.Snapshot(evse))),
+                                                            SelectMany(pool         => pool.        ChargingStations).
+                                                            SelectMany(station      => station.     EVSEs)).
+                                            Select(evse => EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -2020,9 +2044,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEStatus(IncludeEVSEs != null
-                                            ? RoamingNetwork.EVSEs.Where(evse => IncludeEVSEs(evse)).Select(evse => EVSEStatus.Snapshot(evse))
-                                            : RoamingNetwork.EVSEs.                                  Select(evse => EVSEStatus.Snapshot(evse)),
+            return await PushEVSEStatus((IncludeEVSEs != null
+                                            ? RoamingNetwork.EVSEs.Where(evse => IncludeEVSEs(evse))
+                                            : RoamingNetwork.EVSEs).
+                                            Select(evse => EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,

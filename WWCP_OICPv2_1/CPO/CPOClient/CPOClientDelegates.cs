@@ -59,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         ILookup<EVSEOperator, EVSEDataRecord>   EVSEDataRecords,
                                                         UInt32                                  NumberOfEVSEs,
                                                         TimeSpan?                               RequestTimeout,
-                                                        eRoamingAcknowledgement                 Result,
+                                                        IEnumerable<eRoamingAcknowledgement>    Result,
                                                         TimeSpan                                Duration);
 
 

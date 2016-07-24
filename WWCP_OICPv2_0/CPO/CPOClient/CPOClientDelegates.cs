@@ -59,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                         ILookup<EVSEOperator, EVSEDataRecord>   EVSEDataRecords,
                                                         UInt32                                  NumberOfEVSEs,
                                                         TimeSpan?                               RequestTimeout,
-                                                        eRoamingAcknowledgement                 Result,
+                                                        IEnumerable<eRoamingAcknowledgement>    Result,
                                                         TimeSpan                                Duration);
 
 
@@ -88,7 +88,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                           ILookup<EVSEOperator, EVSEStatusRecord>  EVSEStatusRecords,
                                                           UInt32                                   NumberOfEVSEs,
                                                           TimeSpan?                                RequestTimeout,
-                                                          eRoamingAcknowledgement                  Result,
+                                                          IEnumerable<eRoamingAcknowledgement>     Result,
                                                           TimeSpan                                 Duration);
 
     #endregion

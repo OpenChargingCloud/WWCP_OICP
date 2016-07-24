@@ -798,7 +798,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<IEnumerable<HTTPResponse<eRoamingAcknowledgement>>>
 
             PushEVSEData(ILookup<EVSEOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
                          ActionType                             OICPAction         = ActionType.fullLoad,
@@ -832,7 +832,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<IEnumerable<HTTPResponse<eRoamingAcknowledgement>>>
 
             PushEVSEData(EVSEDataRecord                 EVSEDataRecord,
                          ActionType                     OICPAction              = ActionType.insert,
@@ -868,7 +868,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<IEnumerable<HTTPResponse<eRoamingAcknowledgement>>>
 
             PushEVSEData(IEnumerable<EVSEDataRecord>    EVSEDataRecords,
                          ActionType                     OICPAction              = ActionType.fullLoad,
@@ -898,7 +898,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="OICPAction">The OICP action.</param>
         /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<IEnumerable<HTTPResponse<eRoamingAcknowledgement>>>
 
             PushEVSEData(ActionType               OICPAction,
                          params EVSEDataRecord[]  EVSEDataRecords)

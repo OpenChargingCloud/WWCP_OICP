@@ -92,16 +92,16 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
                           ContinueWith(task =>
                           {
 
-                              var Acknowledgement = task.Result.Content;
+                              var Acknowledgement = task.Result.FirstOrDefault()?.Content;
 
                               if (Acknowledgement.Result)
                                   Console.WriteLine("success!");
 
                               else
                               {
-                                  Console.WriteLine(task.Result.Content.StatusCode.Code);
-                                  Console.WriteLine(task.Result.Content.StatusCode.Description);
-                                  Console.WriteLine(task.Result.Content.StatusCode.AdditionalInfo);
+                                  Console.WriteLine(task.Result.FirstOrDefault()?.Content.StatusCode.Code);
+                                  Console.WriteLine(task.Result.FirstOrDefault()?.Content.StatusCode.Description);
+                                  Console.WriteLine(task.Result.FirstOrDefault()?.Content.StatusCode.AdditionalInfo);
                               }
 
                           });
@@ -164,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
                           ContinueWith(task =>
                           {
 
-                              var Acknowledgement = task.Result.Content;
+                              var Acknowledgement = task.Result.Select(result => result.Content).FirstOrDefault();
 
                               if (Acknowledgement.Result)
                                   Console.WriteLine("success!");
