@@ -658,7 +658,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             _EMPClient  = new EMPClient(ClientId:         Identification,
                                         Hostname:         _Hostname,
-                                        TCPPort:          _TCPPort,
+                                        RemotePort:       _TCPPort,
                                         HTTPVirtualHost:  _HTTPVirtualHost,
                                         RequestTimeout:     QueryTimeout,
                                         DNSClient:        _DNSClient);
@@ -767,7 +767,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             _EMPClient  = new EMPClient(ClientId:         Identification,
                                         Hostname:         _Hostname,
-                                        TCPPort:          _TCPPort,
+                                        RemotePort:       _TCPPort,
                                         HTTPVirtualHost:  _HTTPVirtualHost,
                                         RequestTimeout:     QueryTimeout,
                                         DNSClient:        _DNSClient);
