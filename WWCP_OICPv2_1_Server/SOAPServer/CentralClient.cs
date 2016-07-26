@@ -48,7 +48,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The default HTTP user agent string.
         /// </summary>
-        public const String DefaultHTTPUserAgent = "GraphDefined OICP v2.0 Central Client";
+        public new const           String  DefaultHTTPUserAgent  = "GraphDefined OICP " + Version.Number + " Central Client";
+
+        /// <summary>
+        /// The default remote TCP port to connect to.
+        /// </summary>
+        public new static readonly IPPort  DefaultRemotePort     = IPPort.Parse(443);
 
         private readonly Random _Random;
 
@@ -97,7 +102,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ClientId">A unqiue identification of this client.</param>
         /// <param name="Hostname">The hostname of the remote OICP service.</param>
-        /// <param name="TCPPort">An optional TCP port of the remote OICP service.</param>
+        /// <param name="RemotePort">An optional TCP port of the remote OICP service.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
@@ -105,7 +110,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CentralClient(String                               ClientId,
                              String                               Hostname,
-                             IPPort                               TCPPort                     = null,
+                             IPPort                               RemotePort                  = null,
                              String                               HTTPVirtualHost             = null,
                              RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                              X509Certificate                      ClientCert                  = null,
@@ -116,7 +121,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             : base(ClientId,
                    Hostname,
-                   TCPPort,
+                   RemotePort ?? DefaultRemotePort,
                    RemoteCertificateValidator,
                    ClientCert,
                    HTTPVirtualHost,
@@ -164,7 +169,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Reservation",
                                                     RemoteCertificateValidator,
@@ -345,7 +350,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Reservation",
                                                     RemoteCertificateValidator,
@@ -485,7 +490,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Authorization",
                                                     RemoteCertificateValidator,
@@ -667,7 +672,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     _URIPrefix + "/Authorization",
                                                     RemoteCertificateValidator,

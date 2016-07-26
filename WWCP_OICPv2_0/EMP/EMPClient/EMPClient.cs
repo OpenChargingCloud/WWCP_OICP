@@ -47,7 +47,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// The default HTTP user agent string.
         /// </summary>
-        public const String DefaultHTTPUserAgent = "GraphDefined OICP " + Version.Number + " EMP Client";
+        public new const           String  DefaultHTTPUserAgent  = "GraphDefined OICP " + Version.Number + " EMP Client";
+
+        /// <summary>
+        /// The default remote TCP port to connect to.
+        /// </summary>
+        public new static readonly IPPort  DefaultRemotePort     = IPPort.Parse(443);
 
         #endregion
 
@@ -265,7 +270,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         /// <param name="ClientId">A unqiue identification of this client.</param>
         /// <param name="Hostname">The OICP hostname to connect to.</param>
-        /// <param name="TCPPort">An optional OICP TCP port to connect to.</param>
+        /// <param name="RemotePort">An optional OICP TCP port to connect to.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
@@ -276,7 +281,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPClient(String                               ClientId,
                          String                               Hostname,
-                         IPPort                               TCPPort                     = null,
+                         IPPort                               RemotePort                  = null,
                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                          X509Certificate                      ClientCert                  = null,
                          String                               HTTPVirtualHost             = null,
@@ -288,7 +293,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             : base(ClientId,
                    Hostname,
-                   TCPPort,
+                   RemotePort ?? DefaultRemotePort,
                    RemoteCertificateValidator,
                    ClientCert,
                    HTTPVirtualHost,
@@ -323,7 +328,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         /// <param name="ClientId">A unqiue identification of this client.</param>
         /// <param name="Hostname">The OICP hostname to connect to.</param>
-        /// <param name="TCPPort">An optional OICP TCP port to connect to.</param>
+        /// <param name="RemotePort">An optional OICP TCP port to connect to.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
@@ -333,7 +338,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public EMPClient(String                               ClientId,
                          EMPClientLogger                      Logger,
                          String                               Hostname,
-                         IPPort                               TCPPort                     = null,
+                         IPPort                               RemotePort                  = null,
                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                          X509Certificate                      ClientCert                  = null,
                          String                               HTTPVirtualHost             = null,
@@ -343,7 +348,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             : base(ClientId,
                    Hostname,
-                   TCPPort,
+                   RemotePort ?? DefaultRemotePort,
                    RemoteCertificateValidator,
                    ClientCert,
                    HTTPVirtualHost,
@@ -448,7 +453,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseData_V2.0",
                                                     RemoteCertificateValidator,
@@ -630,7 +635,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseSearch_V2.0",
                                                     RemoteCertificateValidator,
@@ -814,7 +819,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                     RemoteCertificateValidator,
@@ -987,7 +992,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingEvseStatus_V2.0",
                                                     RemoteCertificateValidator,
@@ -1154,7 +1159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthenticationData_V2.0",
                                                     RemoteCertificateValidator,
@@ -1377,7 +1382,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
                                                     RemoteCertificateValidator,
@@ -1566,7 +1571,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
                                                     RemoteCertificateValidator,
@@ -1746,7 +1751,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    TCPPort,
+                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     "/ibis/ws/eRoamingAuthorization_V2.0",
                                                     RemoteCertificateValidator,
