@@ -37,10 +37,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region PushEVSEDataXML  (EVSEDataRecordsGroup,   OICPAction = fullLoad, OperatorId = null, OperatorName = null)
 
-        public static XElement PushEVSEDataXML(IGrouping<EVSEOperator, EVSEDataRecord>  EVSEDataRecordsGroup,
-                                               ActionType                               OICPAction    = ActionType.fullLoad,
-                                               EVSEOperator_Id                          OperatorId    = null,
-                                               String                                   OperatorName  = null)
+        public static XElement PushEVSEDataXML(IGrouping<EVSEOperator, EVSEDataRecord>  EVSEDataRecords,
+                                               ActionType                             OICPAction    = ActionType.fullLoad,
+                                               EVSEOperator_Id                        OperatorId    = null,
+                                               String                                 OperatorName  = null)
         {
 
             #region Documentation
@@ -76,8 +76,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
-            if (EVSEDataRecordsGroup == null || !EVSEDataRecordsGroup.Any())
-                throw new ArgumentNullException(nameof(EVSEDataRecordsGroup),  "The given group of EVSE data records must not be null or empty!");
+            if (EVSEDataRecords == null || !EVSEDataRecords.Any())
+                throw new ArgumentNullException(nameof(EVSEDataRecords),  "The given group of EVSE data records must not be null or empty!");
+
+    //        if (OperatorId == null && EVSEDataRecords.Any())
+    //            OperatorId = EVSEDataRecords.FirstOrDefault()?.Key?.Id;
 
             #endregion
 
@@ -86,16 +89,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                           new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
-                                              new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId ?? EVSEDataRecordsGroup.Key.Id).OriginId),
+                                              new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId ?? EVSEDataRecords.Key.Id).OriginId),
 
-                                              (OperatorName.IsNotNullOrEmpty() || EVSEDataRecordsGroup.Key.Name.Any())
+                                              (OperatorName.IsNotNullOrEmpty() || EVSEDataRecords.Key.Name.Any())
                                                   ? new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName.IsNotNullOrEmpty()
                                                                                                         ? OperatorName
-                                                                                                        : EVSEDataRecordsGroup.Key.Name.First().Text))
+                                                                                                        : EVSEDataRecords.Key.Name.First().Text))
                                                   : null,
 
                                               // <EvseDataRecord> ... </EvseDataRecord>
-                                              EVSEDataRecordsGroup.
+                                              EVSEDataRecords.
                                                   Where (evsedatarecord => evsedatarecord != null).
                                                   Select(evsedatarecord => evsedatarecord.ToXML()).
                                                   ToArray()

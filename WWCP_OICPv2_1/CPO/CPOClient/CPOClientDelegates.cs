@@ -29,7 +29,6 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public delegate String  EVSEOperatorNameSelectorDelegate(I18NString        I18NText);
     public delegate Boolean IncludeEVSEStatusRecordsDelegate(EVSEStatusRecord  EVSEStatusRecord);
 
     #region OnPushEVSEData/-Status
@@ -59,7 +58,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         ILookup<EVSEOperator, EVSEDataRecord>   EVSEDataRecords,
                                                         UInt32                                  NumberOfEVSEs,
                                                         TimeSpan?                               RequestTimeout,
-                                                        IEnumerable<eRoamingAcknowledgement>    Result,
+                                                        eRoamingAcknowledgement                 Result,
                                                         TimeSpan                                Duration);
 
 
@@ -88,7 +87,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           ILookup<EVSEOperator, EVSEStatusRecord>  EVSEStatusRecords,
                                                           UInt32                                   NumberOfEVSEs,
                                                           TimeSpan?                                RequestTimeout,
-                                                          IEnumerable<eRoamingAcknowledgement>     Result,
+                                                          eRoamingAcknowledgement                  Result,
                                                           TimeSpan                                 Duration);
 
     #endregion

@@ -745,31 +745,37 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region PushEVSEData(GroupedEVSEDataRecords,    OICPAction = fullLoad, ...)
+        #region PushEVSEData(GroupedEVSEDataRecords, OICPAction = fullLoad, Operator = null, OperatorNameSelector = null, ...)
 
         /// <summary>
         /// Upload the given lookup of EVSE data records grouped by their EVSE operator.
         /// </summary>
         /// <param name="GroupedEVSEDataRecords">A lookup of EVSE data records grouped by their EVSE operator.</param>
         /// <param name="OICPAction">The server-side data management operation.</param>
+        /// <param name="Operator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<IEnumerable<HTTPResponse<eRoamingAcknowledgement>>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             PushEVSEData(ILookup<EVSEOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
-                         ActionType                             OICPAction         = ActionType.fullLoad,
+                         ActionType                             OICPAction            = ActionType.fullLoad,
+                         EVSEOperator                           Operator              = null,
+                         EVSEOperatorNameSelectorDelegate       OperatorNameSelector  = null,
 
-                         DateTime?                              Timestamp          = null,
-                         CancellationToken?                     CancellationToken  = null,
-                         EventTracking_Id                       EventTrackingId    = null,
-                         TimeSpan?                              RequestTimeout     = null)
+                         DateTime?                              Timestamp             = null,
+                         CancellationToken?                     CancellationToken     = null,
+                         EventTracking_Id                       EventTrackingId       = null,
+                         TimeSpan?                              RequestTimeout        = null)
 
 
             => await CPOClient.PushEVSEData(GroupedEVSEDataRecords,
                                             OICPAction,
+                                            Operator,
+                                            OperatorNameSelector,
 
                                             Timestamp,
                                             CancellationToken,
@@ -778,33 +784,39 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushEVSEData(EVSEDataRecord,  OICPAction = insert, IncludeEVSEDataRecords = null, ...)
+        #region PushEVSEData(EVSEDataRecord,         OICPAction = insert,   Operator = null, OperatorNameSelector = null, IncludeEVSEDataRecords = null, ...)
 
         /// <summary>
         /// Create a new task pushing a single EVSE data record onto the OICP server.
         /// </summary>
         /// <param name="EVSEDataRecord">An EVSE data record.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="OICPAction">The server-side data management operation.</param>
+        /// <param name="Operator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEDataRecords">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<IEnumerable<HTTPResponse<eRoamingAcknowledgement>>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushEVSEData(EVSEDataRecord                 EVSEDataRecord,
-                         ActionType                     OICPAction              = ActionType.insert,
-                         Func<EVSEDataRecord, Boolean>  IncludeEVSEDataRecords  = null,
+            PushEVSEData(EVSEDataRecord                    EVSEDataRecord,
+                         ActionType                        OICPAction              = ActionType.insert,
+                         EVSEOperator                      Operator                = null,
+                         EVSEOperatorNameSelectorDelegate  OperatorNameSelector    = null,
+                         Func<EVSEDataRecord, Boolean>     IncludeEVSEDataRecords  = null,
 
-                         DateTime?                      Timestamp               = null,
-                         CancellationToken?             CancellationToken       = null,
-                         EventTracking_Id               EventTrackingId         = null,
-                         TimeSpan?                      RequestTimeout          = null)
+                         DateTime?                         Timestamp               = null,
+                         CancellationToken?                CancellationToken       = null,
+                         EventTracking_Id                  EventTrackingId         = null,
+                         TimeSpan?                         RequestTimeout          = null)
 
 
             => await CPOClient.PushEVSEData(EVSEDataRecord,
                                             OICPAction,
+                                            Operator,
+                                            OperatorNameSelector,
                                             IncludeEVSEDataRecords,
 
                                             Timestamp,
@@ -814,33 +826,39 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushEVSEData(EVSEDataRecords, OICPAction = fullLoad, IncludeEVSEDataRecords = null, ...)
+        #region PushEVSEData(EVSEDataRecords,        OICPAction = fullLoad, Operator = null, OperatorNameSelector = null, IncludeEVSEDataRecords = null, ...)
 
         /// <summary>
         /// Upload the given enumeration of EVSE data records.
         /// </summary>
         /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="OICPAction">The server-side data management operation.</param>
+        /// <param name="Operator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEDataRecords">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<IEnumerable<HTTPResponse<eRoamingAcknowledgement>>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            PushEVSEData(IEnumerable<EVSEDataRecord>    EVSEDataRecords,
-                         ActionType                     OICPAction              = ActionType.fullLoad,
-                         Func<EVSEDataRecord, Boolean>  IncludeEVSEDataRecords  = null,
+            PushEVSEData(IEnumerable<EVSEDataRecord>       EVSEDataRecords,
+                         ActionType                        OICPAction              = ActionType.fullLoad,
+                         EVSEOperator                      Operator                = null,
+                         EVSEOperatorNameSelectorDelegate  OperatorNameSelector    = null,
+                         Func<EVSEDataRecord, Boolean>     IncludeEVSEDataRecords  = null,
 
-                         DateTime?                      Timestamp               = null,
-                         CancellationToken?             CancellationToken       = null,
-                         EventTracking_Id               EventTrackingId         = null,
-                         TimeSpan?                      RequestTimeout          = null)
+                         DateTime?                         Timestamp               = null,
+                         CancellationToken?                CancellationToken       = null,
+                         EventTracking_Id                  EventTrackingId         = null,
+                         TimeSpan?                         RequestTimeout          = null)
 
 
             => await CPOClient.PushEVSEData(EVSEDataRecords,
                                             OICPAction,
+                                            Operator,
+                                            OperatorNameSelector,
                                             IncludeEVSEDataRecords,
 
                                             Timestamp,
@@ -855,9 +873,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Create a new task pushing EVSE data records onto the OICP server.
         /// </summary>
-        /// <param name="OICPAction">The OICP action.</param>
+        /// <param name="OICPAction">The server-side data management operation.</param>
         /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
-        public async Task<IEnumerable<HTTPResponse<eRoamingAcknowledgement>>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             PushEVSEData(ActionType               OICPAction,
                          params EVSEDataRecord[]  EVSEDataRecords)
@@ -869,31 +887,37 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #endregion
 
 
-        #region PushEVSEStatus(GroupedEVSEStatusRecords,  OICPAction = fullLoad, ...)
+        #region PushEVSEStatus(GroupedEVSEStatusRecords,  OICPAction = fullLoad, Operator = null, OperatorNameSelector = null, ...)
 
         /// <summary>
         /// Upload the given enumeration of EVSE status records.
         /// </summary>
         /// <param name="GroupedEVSEStatusRecords">A lookup of EVSE status records grouped by their EVSE operator.</param>
         /// <param name="OICPAction">The server-side data management operation.</param>
+        /// <param name="Operator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<IEnumerable<HTTPResponse<eRoamingAcknowledgement>>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             PushEVSEStatus(ILookup<EVSEOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
-                           ActionType                               OICPAction         = ActionType.fullLoad,
+                           ActionType                               OICPAction            = ActionType.fullLoad,
+                           EVSEOperator                             Operator              = null,
+                           EVSEOperatorNameSelectorDelegate         OperatorNameSelector  = null,
 
-                           DateTime?                                Timestamp          = null,
-                           CancellationToken?                       CancellationToken  = null,
-                           EventTracking_Id                         EventTrackingId    = null,
-                           TimeSpan?                                RequestTimeout     = null)
+                           DateTime?                                Timestamp             = null,
+                           CancellationToken?                       CancellationToken     = null,
+                           EventTracking_Id                         EventTrackingId       = null,
+                           TimeSpan?                                RequestTimeout        = null)
 
 
             => await CPOClient.PushEVSEStatus(GroupedEVSEStatusRecords,
                                               OICPAction,
+                                              Operator,
+                                              OperatorNameSelector,
 
                                               Timestamp,
                                               CancellationToken,
@@ -902,13 +926,15 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushEVSEStatus(EVSEStatusRecord,          OICPAction = insert,   IncludeEVSEStatusRecords = null, ...)
+        #region PushEVSEStatus(EVSEStatusRecord,          OICPAction = insert,   Operator = null, OperatorNameSelector = null, IncludeEVSEStatusRecords = null, ...)
 
         /// <summary>
         /// Create a new task pushing a single EVSE status record onto the OICP server.
         /// </summary>
         /// <param name="EVSEStatusRecord">An EVSE status record.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="OICPAction">The server-side data management operation.</param>
+        /// <param name="Operator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEStatusRecords">An optional delegate for filtering EVSE status records before pushing them to the server.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -919,6 +945,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             PushEVSEStatus(EVSEStatusRecord                  EVSEStatusRecord,
                            ActionType                        OICPAction                = ActionType.insert,
+                           EVSEOperator                      Operator                  = null,
+                           EVSEOperatorNameSelectorDelegate  OperatorNameSelector      = null,
                            IncludeEVSEStatusRecordsDelegate  IncludeEVSEStatusRecords  = null,
 
                            DateTime?                         Timestamp                 = null,
@@ -929,6 +957,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             => await CPOClient.PushEVSEStatus(EVSEStatusRecord,
                                               OICPAction,
+                                              Operator,
+                                              OperatorNameSelector,
                                               IncludeEVSEStatusRecords,
 
                                               Timestamp,
@@ -938,23 +968,27 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #endregion
 
-        #region PushEVSEStatus(EVSEStatusRecords,         OICPAction = fullLoad, IncludeEVSEStatusRecords = null, ...)
+        #region PushEVSEStatus(EVSEStatusRecords,         OICPAction = fullLoad, Operator = null, OperatorNameSelector = null, IncludeEVSEStatusRecords = null, ...)
 
         /// <summary>
         /// Upload the given enumeration of EVSE status records.
         /// </summary>
         /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="OICPAction">The server-side data management operation.</param>
+        /// <param name="Operator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEStatusRecords">An optional delegate for filtering EVSE status records before pushing them to the server.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<IEnumerable<HTTPResponse<eRoamingAcknowledgement>>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             PushEVSEStatus(IEnumerable<EVSEStatusRecord>     EVSEStatusRecords,
                            ActionType                        OICPAction                = ActionType.fullLoad,
+                           EVSEOperator                      Operator                  = null,
+                           EVSEOperatorNameSelectorDelegate  OperatorNameSelector      = null,
                            IncludeEVSEStatusRecordsDelegate  IncludeEVSEStatusRecords  = null,
 
                            DateTime?                         Timestamp                 = null,
@@ -965,6 +999,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             => await CPOClient.PushEVSEStatus(EVSEStatusRecords,
                                               OICPAction,
+                                              Operator,
+                                              OperatorNameSelector,
                                               IncludeEVSEStatusRecords,
 
                                               Timestamp,
@@ -979,9 +1015,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Create a new task pushing EVSE status records onto the OICP server.
         /// </summary>
-        /// <param name="OICPAction">The OICP action.</param>
+        /// <param name="OICPAction">The server-side data management operation.</param>
         /// <param name="EVSEStatusRecords">An array of EVSE status records.</param>
-        public async Task<IEnumerable<HTTPResponse<eRoamingAcknowledgement>>>
+        public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             PushEVSEStatus(ActionType                 OICPAction,
                            params EVSEStatusRecord[]  EVSEStatusRecords)

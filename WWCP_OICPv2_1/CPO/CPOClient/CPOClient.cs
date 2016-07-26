@@ -530,7 +530,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                GroupedEVSEDataRecords,
                                                (UInt32) NumberOfEVSEDataRecords,
                                                RequestTimeout,
-                                               results.Select(result => result.Content),
+                                               results.Select(result => result.Content).First(),
                                                DateTime.Now - Timestamp.Value);
 
             }
@@ -858,7 +858,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                  GroupedEVSEStatusRecords,
                                                  (UInt32) NumberOfEVSEStatusRecords,
                                                  RequestTimeout,
-                                                 results.Select(result => result.Content),
+                                                 results.Select(result => result.Content).First(),
                                                  DateTime.Now - Timestamp.Value);
 
             }

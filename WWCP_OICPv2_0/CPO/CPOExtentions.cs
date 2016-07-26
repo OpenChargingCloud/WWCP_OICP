@@ -69,6 +69,8 @@ namespace org.GraphDefined.WWCP
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
+        /// <param name="DefaultOperator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
@@ -103,6 +105,8 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord         = null,
                                               OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML          = null,
 
+                                              EVSEOperator                          DefaultOperator             = null,
+                                              EVSEOperatorNameSelectorDelegate      OperatorNameSelector        = null,
                                               IncludeEVSEDelegate                   IncludeEVSEs                = null,
                                               TimeSpan?                             ServiceCheckEvery           = null,
                                               TimeSpan?                             StatusCheckEvery            = null,
@@ -154,6 +158,8 @@ namespace org.GraphDefined.WWCP
                                                                   EVSE2EVSEDataRecord,
                                                                   EVSEDataRecord2XML,
 
+                                                                  DefaultOperator,
+                                                                  OperatorNameSelector,
                                                                   IncludeEVSEs,
                                                                   ServiceCheckEvery,
                                                                   StatusCheckEvery,
@@ -201,6 +207,8 @@ namespace org.GraphDefined.WWCP
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
+        /// <param name="DefaultOperator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
@@ -233,6 +241,8 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_0.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord         = null,
                                               OICPv2_0.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML          = null,
 
+                                              EVSEOperator                          DefaultOperator             = null,
+                                              EVSEOperatorNameSelectorDelegate      OperatorNameSelector        = null,
                                               IncludeEVSEDelegate                   IncludeEVSEs                = null,
                                               TimeSpan?                             ServiceCheckEvery           = null,
                                               TimeSpan?                             StatusCheckEvery            = null,
@@ -289,6 +299,8 @@ namespace org.GraphDefined.WWCP
                                                                   EVSE2EVSEDataRecord,
                                                                   EVSEDataRecord2XML,
 
+                                                                  DefaultOperator,
+                                                                  OperatorNameSelector,
                                                                   IncludeEVSEs,
                                                                   ServiceCheckEvery,
                                                                   StatusCheckEvery,

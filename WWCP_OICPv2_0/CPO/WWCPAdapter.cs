@@ -44,9 +44,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
 
         #region Data
 
-        private readonly EVSE2EVSEDataRecordDelegate  _EVSE2EVSEDataRecord;
+        private readonly       EVSE2EVSEDataRecordDelegate       _EVSE2EVSEDataRecord;
 
-        private readonly EVSEDataRecord2XMLDelegate   _EVSEDataRecord2XML;
+        private readonly       EVSEDataRecord2XMLDelegate        _EVSEDataRecord2XML;
+
+        private readonly       EVSEOperatorNameSelectorDelegate  _OperatorNameSelector;
+
+        public static readonly EVSEOperatorNameSelectorDelegate  DefaultOperatorNameSelector = I18N => I18N.FirstText;
 
         #endregion
 
@@ -89,6 +93,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// </summary>
         public DNSClient DNSClient
             => CPORoaming.DNSClient;
+
+
+        /// <summary>
+        /// An optional default EVSE operator.
+        /// </summary>
+        public EVSEOperator DefaultOperator { get; }
 
         #endregion
 
@@ -209,22 +219,26 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
+        /// <param name="DefaultOperator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
         /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
-        public WWCPAdapter(RoamingProvider_Id           Id,
-                           I18NString                   Name,
-                           RoamingNetwork               RoamingNetwork,
+        public WWCPAdapter(RoamingProvider_Id                Id,
+                           I18NString                        Name,
+                           RoamingNetwork                    RoamingNetwork,
 
-                           CPORoaming                   CPORoaming,
-                           EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord  = null,
-                           EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML   = null,
+                           CPORoaming                        CPORoaming,
+                           EVSE2EVSEDataRecordDelegate       EVSE2EVSEDataRecord   = null,
+                           EVSEDataRecord2XMLDelegate        EVSEDataRecord2XML    = null,
 
-                           IncludeEVSEDelegate          IncludeEVSEs         = null,
-                           TimeSpan?                    ServiceCheckEvery    = null,
-                           TimeSpan?                    StatusCheckEvery     = null,
-                           Boolean                      DisableAutoUploads   = false)
+                           EVSEOperator                      DefaultOperator       = null,
+                           EVSEOperatorNameSelectorDelegate  OperatorNameSelector  = null,
+                           IncludeEVSEDelegate               IncludeEVSEs          = null,
+                           TimeSpan?                         ServiceCheckEvery     = null,
+                           TimeSpan?                         StatusCheckEvery      = null,
+                           Boolean                           DisableAutoUploads    = false)
 
             : base(Id,
                    Name,
@@ -244,9 +258,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
 
             #endregion
 
-            this.CPORoaming            = CPORoaming;
-            this._EVSE2EVSEDataRecord  = EVSE2EVSEDataRecord;
-            this._EVSEDataRecord2XML   = EVSEDataRecord2XML;
+            this.CPORoaming             = CPORoaming;
+            this._EVSE2EVSEDataRecord   = EVSE2EVSEDataRecord;
+            this._EVSEDataRecord2XML    = EVSEDataRecord2XML;
+            this.DefaultOperator        = DefaultOperator;
+            this._OperatorNameSelector  = OperatorNameSelector;
 
             // Link events...
 
@@ -439,26 +455,30 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
+        /// <param name="DefaultOperator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
         /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
-        public WWCPAdapter(RoamingProvider_Id            Id,
-                           I18NString                    Name,
-                           RoamingNetwork                RoamingNetwork,
+        public WWCPAdapter(RoamingProvider_Id                Id,
+                           I18NString                        Name,
+                           RoamingNetwork                    RoamingNetwork,
 
-                           CPOClient                     CPOClient,
-                           CPOServer                     CPOServer,
-                           String                        ServerLoggingContext  = CPOServerLogger.DefaultContext,
-                           Func<String, String, String>  LogFileCreator        = null,
+                           CPOClient                         CPOClient,
+                           CPOServer                         CPOServer,
+                           String                            ServerLoggingContext  = CPOServerLogger.DefaultContext,
+                           Func<String, String, String>      LogFileCreator        = null,
 
-                           EVSE2EVSEDataRecordDelegate   EVSE2EVSEDataRecord   = null,
-                           EVSEDataRecord2XMLDelegate    EVSEDataRecord2XML    = null,
+                           EVSE2EVSEDataRecordDelegate       EVSE2EVSEDataRecord   = null,
+                           EVSEDataRecord2XMLDelegate        EVSEDataRecord2XML    = null,
 
-                           IncludeEVSEDelegate           IncludeEVSEs          = null,
-                           TimeSpan?                     ServiceCheckEvery     = null,
-                           TimeSpan?                     StatusCheckEvery      = null,
-                           Boolean                       DisableAutoUploads    = false)
+                           EVSEOperator                      DefaultOperator       = null,
+                           EVSEOperatorNameSelectorDelegate  OperatorNameSelector  = null,
+                           IncludeEVSEDelegate               IncludeEVSEs          = null,
+                           TimeSpan?                         ServiceCheckEvery     = null,
+                           TimeSpan?                         StatusCheckEvery      = null,
+                           Boolean                           DisableAutoUploads    = false)
 
             : this(Id,
                    Name,
@@ -472,6 +492,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                    EVSE2EVSEDataRecord,
                    EVSEDataRecord2XML,
 
+                   DefaultOperator,
+                   OperatorNameSelector,
                    IncludeEVSEs,
                    ServiceCheckEvery,
                    StatusCheckEvery,
@@ -510,6 +532,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
+        /// <param name="DefaultOperator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
@@ -540,6 +564,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                            EVSE2EVSEDataRecordDelegate          EVSE2EVSEDataRecord         = null,
                            EVSEDataRecord2XMLDelegate           EVSEDataRecord2XML          = null,
 
+                           EVSEOperator                         DefaultOperator             = null,
+                           EVSEOperatorNameSelectorDelegate     OperatorNameSelector        = null,
                            IncludeEVSEDelegate                  IncludeEVSEs                = null,
                            TimeSpan?                            ServiceCheckEvery           = null,
                            TimeSpan?                            StatusCheckEvery            = null,
@@ -574,6 +600,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                    EVSE2EVSEDataRecord,
                    EVSEDataRecord2XML,
 
+                   DefaultOperator,
+                   OperatorNameSelector,
                    IncludeEVSEs,
                    ServiceCheckEvery,
                    StatusCheckEvery,
@@ -636,9 +664,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             Acknowledgement result = null;
 
             var _NumberOfEVSEs = GroupedEVSEs.
-                                     Where (group => group.Key != null).
-                                     Select(group => group.Count()).
-                                     Sum   ();
+                                     Where     (group => group.Key != null).
+                                     SelectMany(group => group.Where(evse => evse != null)).
+                                     Count();
 
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
@@ -673,40 +701,34 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             if (_NumberOfEVSEs > 0)
             {
 
-                var responses = (await CPORoaming.PushEVSEData(GroupedEVSEs.
-                                                                   Where       (group => group.Key != null).
-                                                                   ToDictionary(group => group.Key,
-                                                                                group => group.AsEnumerable()).
-                                                                   SelectMany  (kvp   => kvp.Value.Select(evse => evse.AsOICPEVSEDataRecord(_EVSE2EVSEDataRecord)), Tuple.Create).
-                                                                   ToLookup    (kvp   => kvp.Item1.Key,
-                                                                                kvp   => kvp.Item2),
-                                                               ActionType.AsOICPActionType(),
+                var response = await CPORoaming.PushEVSEData(GroupedEVSEs.
+                                                                 Where       (group => group.Key != null).
+                                                                 ToDictionary(group => group.Key,
+                                                                              group => group.AsEnumerable()).
+                                                                 SelectMany  (kvp   => kvp.Value.Select(evse => evse.AsOICPEVSEDataRecord(_EVSE2EVSEDataRecord)), Tuple.Create).
+                                                                 ToLookup    (kvp   => kvp.Item1.Key,
+                                                                              kvp   => kvp.Item2),
+                                                             ActionType.AsOICPActionType(),
+                                                             DefaultOperator,
+                                                             _OperatorNameSelector ?? DefaultOperatorNameSelector,
 
-                                                               Timestamp,
-                                                               CancellationToken,
-                                                               EventTrackingId,
-                                                               RequestTimeout)).
+                                                             Timestamp,
+                                                             CancellationToken,
+                                                             EventTrackingId,
+                                                             RequestTimeout);
 
-                Select(response => {
 
-                    if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                        response.Content        != null              &&
-                        response.Content.Result == true)
-                    {
-                        return new Acknowledgement(ResultType.True);
-                    }
-
-                    else
-                        return new Acknowledgement(ResultType.False,
-                                                   response.Content.StatusCode.Description,
-                                                   response.Content.StatusCode.AdditionalInfo);
-
-                });
-
-                if (responses.All(response => response.Result == ResultType.True))
+                if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                    response.Content        != null              &&
+                    response.Content.Result == true)
+                {
                     result = new Acknowledgement(ResultType.True);
+                }
+
                 else
-                    result = responses.First(response => response.Result != ResultType.True);
+                    result = new Acknowledgement(ResultType.False,
+                                                 response.Content.StatusCode.Description,
+                                                 response.Content.StatusCode.AdditionalInfo);
 
             }
 
@@ -1229,9 +1251,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             Acknowledgement result = null;
 
             var _NumberOfEVSEStatus  = GroupedEVSEStatus.
-                                          Where (group => group.Key != null).
-                                          Select(group => group.Count()).
-                                          Sum();
+                                          Where     (group => group.Key != null).
+                                          SelectMany(group => group.Where(evsestatus => evsestatus != null)).
+                                          Count();
 
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
@@ -1266,42 +1288,36 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             if (_NumberOfEVSEStatus > 0)
             {
 
-                var responses = (await CPORoaming.PushEVSEStatus(GroupedEVSEStatus.
-                                                                     Where       (group => group.Key != null).
-                                                                     ToDictionary(group => group.Key,
-                                                                                  group => group.AsEnumerable(). // Only send the latest EVSE status!
-                                                                                                 GroupBy(evsestatus      => evsestatus.Id).
-                                                                                                 Select (sameevseidgroup => sameevseidgroup.OrderByDescending(status => status.Timestamp).First())).
-                                                                     SelectMany(kvp => kvp.Value.Select(evsestatus => new EVSEStatusRecord(evsestatus.Id, evsestatus.Status.AsOICPEVSEStatus())), Tuple.Create).
-                                                                     ToLookup  (kvp => kvp.Item1.Key,
-                                                                                kvp => kvp.Item2), 
-                                                                 ActionType.AsOICPActionType(),
+                var response = await CPORoaming.PushEVSEStatus(GroupedEVSEStatus.
+                                                                   Where       (group => group.Key != null).
+                                                                   ToDictionary(group => group.Key,
+                                                                                group => group.AsEnumerable(). // Only send the latest EVSE status!
+                                                                                               GroupBy(evsestatus      => evsestatus.Id).
+                                                                                               Select (sameevseidgroup => sameevseidgroup.OrderByDescending(status => status.Timestamp).First())).
+                                                                   SelectMany(kvp => kvp.Value.Select(evsestatus => new EVSEStatusRecord(evsestatus.Id, evsestatus.Status.AsOICPEVSEStatus())), Tuple.Create).
+                                                                   ToLookup  (kvp => kvp.Item1.Key,
+                                                                              kvp => kvp.Item2), 
+                                                               ActionType.AsOICPActionType(),
+                                                               DefaultOperator,
+                                                               _OperatorNameSelector ?? DefaultOperatorNameSelector,
 
-                                                                 Timestamp,
-                                                                 CancellationToken,
-                                                                 EventTrackingId,
-                                                                 RequestTimeout)).
+                                                               Timestamp,
+                                                               CancellationToken,
+                                                               EventTrackingId,
+                                                               RequestTimeout);
 
-                Select(response => {
 
-                    if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                        response.Content        != null              &&
-                        response.Content.Result == true)
-                    {
-                        return new Acknowledgement(ResultType.True);
-                    }
-
-                    else
-                        return new Acknowledgement(ResultType.False,
-                                                   response.Content.StatusCode.Description,
-                                                   response.Content.StatusCode.AdditionalInfo);
-
-                });
-
-                if (responses.All(response => response.Result == ResultType.True))
+                if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                    response.Content        != null              &&
+                    response.Content.Result == true)
+                {
                     result = new Acknowledgement(ResultType.True);
+                }
+
                 else
-                    result = responses.First(response => response.Result != ResultType.True);
+                    result = new Acknowledgement(ResultType.False,
+                                                 response.Content.StatusCode.Description,
+                                                 response.Content.StatusCode.AdditionalInfo);
 
             }
 
