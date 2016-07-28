@@ -29,6 +29,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using System.Text.RegularExpressions;
 
 #endregion
 
@@ -47,6 +48,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         private readonly EVSE2EVSEDataRecordDelegate  _EVSE2EVSEDataRecord;
 
         private readonly EVSEDataRecord2XMLDelegate   _EVSEDataRecord2XML;
+
+        private readonly Regex                        pattern = new Regex(@"\s=\s");
 
         #endregion
 
@@ -269,10 +272,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 TimeSpan? Duration = null;
 
+                // Analyse the ChargingProductId field and apply the found key/value-pairs
                 if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
                 {
 
-                    var Elements = ChargingProductId.ToString().Split('|').ToArray();
+                    var Elements = pattern.Replace(ChargingProductId.ToString(), "=").Split('|').ToArray();
 
                     if (Elements.Length > 0)
                     {
@@ -288,6 +292,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             if (DurationText.EndsWith("min", StringComparison.InvariantCulture))
                                 Duration = TimeSpan.FromMinutes(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+
+                        }
+
+                        var ChargingProductText = Elements.FirstOrDefault(element => element.StartsWith("P=", StringComparison.InvariantCulture));
+                        if (ChargingProductText != null)
+                        {
+
+                            ChargingProductId = ChargingProduct_Id.Parse(DurationText.Substring(2));
 
                         }
 
