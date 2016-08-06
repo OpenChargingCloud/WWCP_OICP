@@ -269,11 +269,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            this.Logger = new CPOClientLogger(this,
-                                              LoggingContext,
-                                              LogFileCreator);
+            this.Logger                       = new CPOClientLogger(this,
+                                                                    LoggingContext,
+                                                                    LogFileCreator);
 
-            this.DefaultOperatorNameSelector = I18N => I18N.FirstText;
+            this.DefaultOperatorNameSelector  = I18N => I18N.FirstText;
 
         }
 
@@ -329,7 +329,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             #endregion
 
-            this.Logger                    = Logger;
+            this.Logger                       = Logger;
             this.DefaultOperatorNameSelector  = I18N => I18N.FirstText;
 
         }

@@ -35,12 +35,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public static class CPOClientXMLMethods
     {
 
-        #region PushEVSEDataXML  (EVSEDataRecordsGroup,   OICPAction = fullLoad, OperatorId = null, OperatorName = null)
+        #region PushEVSEDataXML  (GroupedEVSEDataRecords,   OICPAction = fullLoad, Operator = null, OperatorNameSelector = null)
 
-        public static XElement PushEVSEDataXML(IGrouping<EVSEOperator, EVSEDataRecord>  EVSEDataRecords,
-                                               ActionType                             OICPAction    = ActionType.fullLoad,
-                                               EVSEOperator_Id                        OperatorId    = null,
-                                               String                                 OperatorName  = null)
+        /// <summary>
+        /// Create an OICP PushEVSEData XML/SOAP request.
+        /// </summary>
+        /// <param name="GroupedEVSEDataRecords">EVSE data records grouped by their EVSE operator.</param>
+        /// <param name="OICPAction">The server-side data management operation.</param>
+        /// <param name="Operator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
+        public static XElement PushEVSEDataXML(ILookup<EVSEOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
+                                               ActionType                             OICPAction            = ActionType.fullLoad,
+                                               EVSEOperator                           Operator              = null,
+                                               EVSEOperatorNameSelectorDelegate       OperatorNameSelector  = null)
+
         {
 
             #region Documentation
@@ -76,47 +84,58 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
-            if (EVSEDataRecords == null || !EVSEDataRecords.Any())
-                throw new ArgumentNullException(nameof(EVSEDataRecords),  "The given group of EVSE data records must not be null or empty!");
+            if (GroupedEVSEDataRecords == null || !GroupedEVSEDataRecords.Any())
+                throw new ArgumentNullException(nameof(GroupedEVSEDataRecords),  "The given EVSE data lookup must not be null or empty!");
 
-    //        if (OperatorId == null && EVSEDataRecords.Any())
-    //            OperatorId = EVSEDataRecords.FirstOrDefault()?.Key?.Id;
+            if (Operator == null && GroupedEVSEDataRecords.Any())
+                Operator = GroupedEVSEDataRecords.FirstOrDefault()?.Key;
+
+            var OperatorName = OperatorNameSelector != null
+                                   ? OperatorNameSelector(Operator?.Name ?? GroupedEVSEDataRecords.FirstOrDefault()?.Key?.Name)
+                                   : (Operator ?? GroupedEVSEDataRecords.FirstOrDefault()?.Key).Name.FirstText;
 
             #endregion
 
+
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
-                                      new XElement(OICPNS.EVSEData + "ActionType", OICPAction.ToString()),
+                                          new XElement(OICPNS.EVSEData + "ActionType", OICPAction.ToString()),
 
-                                          new XElement(OICPNS.EVSEData + "OperatorEvseData",
+                                              new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
-                                              new XElement(OICPNS.EVSEData + "OperatorID", (OperatorId ?? EVSEDataRecords.Key.Id).OriginId),
+                                                  new XElement(OICPNS.EVSEData + "OperatorID", Operator.Id.OriginId),
 
-                                              (OperatorName.IsNotNullOrEmpty() || EVSEDataRecords.Key.Name.Any())
-                                                  ? new XElement(OICPNS.EVSEData + "OperatorName", (OperatorName.IsNotNullOrEmpty()
-                                                                                                        ? OperatorName
-                                                                                                        : EVSEDataRecords.Key.Name.First().Text))
-                                                  : null,
+                                                  OperatorName.IsNotNullOrEmpty()
+                                                          ? new XElement(OICPNS.EVSEData + "OperatorName", OperatorName)
+                                                          : null,
 
-                                              // <EvseDataRecord> ... </EvseDataRecord>
-                                              EVSEDataRecords.
-                                                  Where (evsedatarecord => evsedatarecord != null).
-                                                  Select(evsedatarecord => evsedatarecord.ToXML()).
-                                                  ToArray()
+                                                  // <EvseDataRecord> ... </EvseDataRecord>
+                                                  GroupedEVSEDataRecords.
+                                                      Where     (group => group.Key != null).
+                                                      SelectMany(group => group.Where (evsedatarecord => evsedatarecord != null).
+                                                                                Select(evsedatarecord => evsedatarecord.ToXML())).
+                                                      ToArray()
 
-                                          )
+                                              )
 
-                                      ));
+                                          ));
 
         }
 
         #endregion
 
-        #region PushEVSEStatusXML(EVSEStatusRecordsGroup, OICPAction = update,   OperatorId = null, OperatorName = null)
+        #region PushEVSEStatusXML(GroupedEVSEStatusRecords, OICPAction = update,   Operator = null, OperatorNameSelector = null)
 
-        public static XElement PushEVSEStatusXML(IGrouping<EVSEOperator, EVSEStatusRecord>  EVSEStatusRecordsGroup,
-                                                 ActionType                                 OICPAction    = ActionType.update,
-                                                 EVSEOperator_Id                            OperatorId    = null,
-                                                 String                                     OperatorName  = null)
+        /// <summary>
+        /// Create an OICP PushEVSEStatus XML/SOAP request.
+        /// </summary>
+        /// <param name="GroupedEVSEStatusRecords">EVSE status records grouped by their EVSE operator.</param>
+        /// <param name="OICPAction">The server-side data management operation.</param>
+        /// <param name="Operator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
+        public static XElement PushEVSEStatusXML(ILookup<EVSEOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
+                                                 ActionType                               OICPAction            = ActionType.update,
+                                                 EVSEOperator                             Operator              = null,
+                                                 EVSEOperatorNameSelectorDelegate         OperatorNameSelector  = null)
         {
 
             #region Documentation
@@ -151,32 +170,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
-            if (EVSEStatusRecordsGroup == null || !EVSEStatusRecordsGroup.Any())
-                throw new ArgumentNullException(nameof(EVSEStatusRecordsGroup),  "The given enumeration of EVSE status must not be null or empty!");
+            if (GroupedEVSEStatusRecords == null || !GroupedEVSEStatusRecords.Any())
+                throw new ArgumentNullException(nameof(GroupedEVSEStatusRecords),  "The given EVSE status lookup must not be null or empty!");
+
+            if (Operator == null && GroupedEVSEStatusRecords.Any())
+                Operator = GroupedEVSEStatusRecords.FirstOrDefault()?.Key;
+
+            var OperatorName = OperatorNameSelector != null
+                                   ? OperatorNameSelector(Operator?.Name ?? GroupedEVSEStatusRecords.FirstOrDefault()?.Key?.Name)
+                                   : (Operator ?? GroupedEVSEStatusRecords.FirstOrDefault()?.Key).Name.FirstText;
 
             #endregion
 
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
-                                      new XElement(OICPNS.EVSEStatus + "ActionType", OICPAction.ToString()),
+                                          new XElement(OICPNS.EVSEStatus + "ActionType",          OICPAction.ToString()),
 
-                                      new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
+                                          new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
-                                          new XElement(OICPNS.EVSEStatus + "OperatorID", (OperatorId ?? EVSEStatusRecordsGroup.Key.Id).OriginId),
+                                              new XElement(OICPNS.EVSEStatus + "OperatorID", Operator.Id.OriginId),
 
-                                          (OperatorName.IsNotNullOrEmpty() || EVSEStatusRecordsGroup.Key.Name.Any())
-                                                  ? new XElement(OICPNS.EVSEStatus + "OperatorName", (OperatorName.IsNotNullOrEmpty()
-                                                                                                         ? OperatorName
-                                                                                                         : EVSEStatusRecordsGroup.Key.Name.First().Text))
-                                                  : null,
+                                              OperatorName.IsNotNullOrEmpty()
+                                                      ? new XElement(OICPNS.EVSEStatus + "OperatorName", OperatorName)
+                                                      : null,
 
-                                          // <EvseStatusRecord> ... </EvseStatusRecord>
-                                          EVSEStatusRecordsGroup.
-                                              Where (evsestatusrecord => evsestatusrecord != null).
-                                              Select(evsestatusrecord => evsestatusrecord.ToXML()).
-                                              ToArray())
+                                              // <EvseStatusRecord> ... </EvseStatusRecord>
+                                              GroupedEVSEStatusRecords.
+                                                  Where     (group => group.Key != null).
+                                                  SelectMany(group => group.Where (evsestatusrecord => evsestatusrecord != null).
+                                                                            Select(evsestatusrecord => evsestatusrecord.ToXML())).
+                                                  ToArray()
 
-                                      ));
+                                          )
+                                       ));
 
         }
 
