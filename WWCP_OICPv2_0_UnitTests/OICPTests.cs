@@ -41,7 +41,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
         {
 
             var result = await HubjectCPO.
-                                   AuthorizeStart(EVSEOperator_Id.Parse("DE*GEF"),
+                                   AuthorizeStart(ChargingStationOperator_Id.Parse("DE*GEF"),
                                                   AuthToken,
                                                   EVSE_Id.        Parse("DE*GEF*E123456789*1"));
 
@@ -63,7 +63,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
         {
 
             var result = await HubjectCPO.
-                                   AuthorizeStop(EVSEOperator_Id.Parse("DE*GEF"),
+                                   AuthorizeStop(ChargingStationOperator_Id.Parse("DE*GEF"),
                                                  SessionId,
                                                  AuthToken,
                                                  EVSE_Id.        Parse("DE*GEF*E123456789*1"));
@@ -83,7 +83,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
         public async Task TestChargeDetailRecord(CPOClient HubjectCPO)
         {
 
-            var EVSEOperatorId  = EVSEOperator_Id.Parse("DE*GEF");
+            var EVSEOperatorId  = ChargingStationOperator_Id.Parse("DE*GEF");
             var EVSEId          = EVSE_Id.        Parse("DE*GEF*E123456789*1");
             var AuthToken       = Auth_Token.     Parse("08152305");
 

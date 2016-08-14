@@ -79,7 +79,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// Create a new OICP v2.0 EVSE search match.
         /// </summary>
         /// <param name="Distance">The distance of the matched EVSE to the search center.</param>
-        /// <param name="OperatorName">The name of an Electric Vehicle Supply Equipment Operator.</param>
+        /// <param name="OperatorName">The name of an Charging Station Operator.</param>
         /// <param name="EVSEDataRecord">The EVSE matched data record.</param>
         public EVSEMatch(Double          Distance,
                          EVSEDataRecord  EVSEDataRecord)

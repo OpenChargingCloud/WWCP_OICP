@@ -102,7 +102,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                   #region Data
 
-                                                  EVSEOperator     _EVSEOperator         = null;
+                                                  ChargingStationOperator     _EVSEOperator         = null;
                                                   ChargingPool     _ChargingPool         = null;
                                                   ChargingStation  _ChargingStation      = null;
                                                   EVSE             _EVSE                 = null;
@@ -121,8 +121,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                                                       #region Find a matching EVSE Operator and maybe update its properties... or create a new one!
 
-                                                      if (!RoamingNetwork.TryGetEVSEOperatorbyId(_OperatorEvseData.OperatorId, out _EVSEOperator))
-                                                          _EVSEOperator = RoamingNetwork.CreateNewEVSEOperator(_OperatorEvseData.OperatorId, _OperatorEvseData.OperatorName);
+                                                      if (!RoamingNetwork.TryGetChargingStationOperatorById(_OperatorEvseData.OperatorId, out _EVSEOperator))
+                                                          _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(_OperatorEvseData.OperatorId, _OperatorEvseData.OperatorName);
 
                                                       else
                                                       {

@@ -96,9 +96,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
 
 
         /// <summary>
-        /// An optional default EVSE operator.
+        /// An optional default Charging Station Operator.
         /// </summary>
-        public EVSEOperator DefaultOperator { get; }
+        public ChargingStationOperator DefaultOperator { get; }
 
         #endregion
 
@@ -209,7 +209,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         #region WWCPAdapter(Id, Name, RoamingNetwork, CPORoaming, EVSE2EVSEDataRecord = null)
 
         /// <summary>
-        /// Create a new WWCP wrapper for the OICP roaming client for EVSE operators/CPOs.
+        /// Create a new WWCP wrapper for the OICP roaming client for Charging Station Operators/CPOs.
         /// </summary>
         /// <param name="Id">The unique identification of the roaming provider.</param>
         /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
@@ -219,8 +219,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
-        /// <param name="DefaultOperator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
-        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
+        /// <param name="DefaultOperator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
@@ -233,7 +233,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                            EVSE2EVSEDataRecordDelegate       EVSE2EVSEDataRecord   = null,
                            EVSEDataRecord2XMLDelegate        EVSEDataRecord2XML    = null,
 
-                           EVSEOperator                      DefaultOperator       = null,
+                           ChargingStationOperator                      DefaultOperator       = null,
                            EVSEOperatorNameSelectorDelegate  OperatorNameSelector  = null,
                            IncludeEVSEDelegate               IncludeEVSEs          = null,
                            TimeSpan?                         ServiceCheckEvery     = null,
@@ -441,7 +441,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         #region WWCPAdapter(Id, Name, RoamingNetwork, CPOClient, CPOServer, EVSEDataRecordProcessing = null)
 
         /// <summary>
-        /// Create a new WWCP wrapper for the OICP roaming client for EVSE operators/CPOs.
+        /// Create a new WWCP wrapper for the OICP roaming client for Charging Station Operators/CPOs.
         /// </summary>
         /// <param name="Id">The unique identification of the roaming provider.</param>
         /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
@@ -455,8 +455,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
-        /// <param name="DefaultOperator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
-        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
+        /// <param name="DefaultOperator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
@@ -473,7 +473,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                            EVSE2EVSEDataRecordDelegate       EVSE2EVSEDataRecord   = null,
                            EVSEDataRecord2XMLDelegate        EVSEDataRecord2XML    = null,
 
-                           EVSEOperator                      DefaultOperator       = null,
+                           ChargingStationOperator                      DefaultOperator       = null,
                            EVSEOperatorNameSelectorDelegate  OperatorNameSelector  = null,
                            IncludeEVSEDelegate               IncludeEVSEs          = null,
                            TimeSpan?                         ServiceCheckEvery     = null,
@@ -506,7 +506,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         #region WWCPAdapter(Id, Name, RoamingNetwork, RemoteHostName, ...)
 
         /// <summary>
-        /// Create a new WWCP wrapper for the OICP roaming client for EVSE operators/CPOs.
+        /// Create a new WWCP wrapper for the OICP roaming client for Charging Station Operators/CPOs.
         /// </summary>
         /// <param name="Id">The unique identification of the roaming provider.</param>
         /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
@@ -532,8 +532,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
-        /// <param name="DefaultOperator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
-        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
+        /// <param name="DefaultOperator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
@@ -564,7 +564,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                            EVSE2EVSEDataRecordDelegate          EVSE2EVSEDataRecord         = null,
                            EVSEDataRecord2XMLDelegate           EVSEDataRecord2XML          = null,
 
-                           EVSEOperator                         DefaultOperator             = null,
+                           ChargingStationOperator                         DefaultOperator             = null,
                            EVSEOperatorNameSelectorDelegate     OperatorNameSelector        = null,
                            IncludeEVSEDelegate                  IncludeEVSEs                = null,
                            TimeSpan?                            ServiceCheckEvery           = null,
@@ -621,9 +621,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         #region PushEVSEData(GroupedEVSEs,     ActionType = fullLoad, ...)
 
         /// <summary>
-        /// Upload the EVSE data of the given lookup of EVSEs grouped by their EVSE operator.
+        /// Upload the EVSE data of the given lookup of EVSEs grouped by their Charging Station Operator.
         /// </summary>
-        /// <param name="GroupedEVSEs">A lookup of EVSEs grouped by their EVSE operator.</param>
+        /// <param name="GroupedEVSEs">A lookup of EVSEs grouped by their Charging Station Operator.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -632,7 +632,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<Acknowledgement>
 
-            PushEVSEData(ILookup<EVSEOperator, EVSE>  GroupedEVSEs,
+            PushEVSEData(ILookup<ChargingStationOperator, EVSE>  GroupedEVSEs,
                          WWCP.ActionType              ActionType         = WWCP.ActionType.fullLoad,
 
                          DateTime?                    Timestamp          = null,
@@ -1064,9 +1064,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         #region PushEVSEData(EVSEOperator,     ActionType = fullLoad, IncludeEVSEs = null, ...)
 
         /// <summary>
-        /// Upload the EVSE data of the given EVSE operator.
+        /// Upload the EVSE data of the given Charging Station Operator.
         /// </summary>
-        /// <param name="EVSEOperator">An EVSE operator.</param>
+        /// <param name="EVSEOperator">An Charging Station Operator.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
         /// 
@@ -1076,7 +1076,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<Acknowledgement>
 
-            PushEVSEData(EVSEOperator         EVSEOperator,
+            PushEVSEData(ChargingStationOperator         EVSEOperator,
                          WWCP.ActionType      ActionType         = WWCP.ActionType.fullLoad,
                          IncludeEVSEDelegate  IncludeEVSEs       = null,
 
@@ -1090,11 +1090,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             #region Initial checks
 
             if (EVSEOperator == null)
-                throw new ArgumentNullException(nameof(EVSEOperator), "The given EVSE operator must not be null!");
+                throw new ArgumentNullException(nameof(EVSEOperator), "The given Charging Station Operator must not be null!");
 
             #endregion
 
-            return await PushEVSEData(new EVSEOperator[] { EVSEOperator },
+            return await PushEVSEData(new ChargingStationOperator[] { EVSEOperator },
                                       ActionType,
                                       IncludeEVSEs,
 
@@ -1110,9 +1110,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         #region PushEVSEData(EVSEOperators,    ActionType = fullLoad, IncludeEVSEs = null, ...)
 
         /// <summary>
-        /// Upload the EVSE data of the given EVSE operators.
+        /// Upload the EVSE data of the given Charging Station Operators.
         /// </summary>
-        /// <param name="EVSEOperators">An enumeration of EVSE operators.</param>
+        /// <param name="EVSEOperators">An enumeration of Charging Station Operators.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
         /// 
@@ -1122,7 +1122,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<Acknowledgement>
 
-            PushEVSEData(IEnumerable<EVSEOperator>  EVSEOperators,
+            PushEVSEData(IEnumerable<ChargingStationOperator>  EVSEOperators,
                          WWCP.ActionType            ActionType         = WWCP.ActionType.fullLoad,
                          IncludeEVSEDelegate        IncludeEVSEs       = null,
 
@@ -1136,7 +1136,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             #region Initial checks
 
             if (EVSEOperators == null)
-                throw new ArgumentNullException(nameof(EVSEOperators),  "The given enumeration of EVSE operators must not be null!");
+                throw new ArgumentNullException(nameof(EVSEOperators),  "The given enumeration of Charging Station Operators must not be null!");
 
             #endregion
 
@@ -1208,9 +1208,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         #region PushEVSEStatus(GroupedEVSEStatus, ActionType = update, ...)
 
         /// <summary>
-        /// Upload the EVSE status of the given lookup of EVSE status types grouped by their EVSE operator.
+        /// Upload the EVSE status of the given lookup of EVSE status types grouped by their Charging Station Operator.
         /// </summary>
-        /// <param name="GroupedEVSEStatus">A lookup of EVSEs grouped by their EVSE operator.</param>
+        /// <param name="GroupedEVSEStatus">A lookup of EVSEs grouped by their Charging Station Operator.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -1219,7 +1219,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<Acknowledgement>
 
-            PushEVSEStatus(ILookup<EVSEOperator, EVSEStatus>  GroupedEVSEStatus,
+            PushEVSEStatus(ILookup<ChargingStationOperator, EVSEStatus>  GroupedEVSEStatus,
                            WWCP.ActionType                    ActionType         = WWCP.ActionType.update,
 
                            DateTime?                          Timestamp          = null,
@@ -1434,7 +1434,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             var _EVSEStatus = EVSEStatus.Where (status => status != null).
                                          Select(status => new {
                                                               Status   = status,
-                                                              Operator = RoamingNetwork.GetEVSEOperatorbyId(status.Id.OperatorId)
+                                                              Operator = RoamingNetwork.GetChargingStationOperatorById(status.Id.OperatorId)
                                                           }).
                                          Where (tuple  => tuple.Operator != null).
                                          ToArray();
@@ -1756,9 +1756,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         #region PushEVSEStatus(EVSEOperator,      ActionType = update, IncludeEVSEs = null, ...)
 
         /// <summary>
-        /// Upload all EVSE status of the given EVSE operator.
+        /// Upload all EVSE status of the given Charging Station Operator.
         /// </summary>
-        /// <param name="EVSEOperator">An EVSE operator.</param>
+        /// <param name="EVSEOperator">An Charging Station Operator.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
         /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
         /// 
@@ -1768,7 +1768,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<Acknowledgement>
 
-            PushEVSEStatus(EVSEOperator         EVSEOperator,
+            PushEVSEStatus(ChargingStationOperator         EVSEOperator,
                            WWCP.ActionType      ActionType         = WWCP.ActionType.update,
                            IncludeEVSEDelegate  IncludeEVSEs       = null,
 
@@ -1782,7 +1782,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             #region Initial checks
 
             if (EVSEOperator == null)
-                throw new ArgumentNullException(nameof(EVSEOperator),  "The given EVSE operator must not be null!");
+                throw new ArgumentNullException(nameof(EVSEOperator),  "The given Charging Station Operator must not be null!");
 
             #endregion
 
@@ -1804,7 +1804,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         #region PushEVSEStatus(EVSEOperators,     ActionType = update, IncludeEVSEs = null, ...)
 
         /// <summary>
-        /// Upload all EVSE status of the given enumeration of EVSE operators.
+        /// Upload all EVSE status of the given enumeration of Charging Station Operators.
         /// </summary>
         /// <param name="EVSEOperators">An enumeration of EVSES operators.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
@@ -1816,7 +1816,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<Acknowledgement>
 
-            PushEVSEStatus(IEnumerable<EVSEOperator>  EVSEOperators,
+            PushEVSEStatus(IEnumerable<ChargingStationOperator>  EVSEOperators,
                            WWCP.ActionType            ActionType         = WWCP.ActionType.update,
                            IncludeEVSEDelegate        IncludeEVSEs       = null,
 
@@ -1830,7 +1830,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             #region Initial checks
 
             if (EVSEOperators == null)
-                throw new ArgumentNullException(nameof(EVSEOperator),  "The given enumeration of EVSE operators must not be null!");
+                throw new ArgumentNullException(nameof(ChargingStationOperator),  "The given enumeration of Charging Station Operators must not be null!");
 
             #endregion
 
@@ -2031,14 +2031,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
         /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="OperatorId">An Charging Station Operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStartResult>
 
-            AuthorizeStart(EVSEOperator_Id     OperatorId,
+            AuthorizeStart(ChargingStationOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            ChargingProduct_Id  ChargingProductId  = null,
                            ChargingSession_Id  SessionId          = null,
@@ -2052,7 +2052,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId),  "The given Charging Station Operator identification must not be null!");
 
             if (AuthToken == null)
                 throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
@@ -2172,7 +2172,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
         /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="OperatorId">An Charging Station Operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="EVSEId">The unique identification of an EVSE.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
@@ -2180,7 +2180,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStartEVSEResult>
 
-            AuthorizeStart(EVSEOperator_Id     OperatorId,
+            AuthorizeStart(ChargingStationOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            EVSE_Id             EVSEId,
                            ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
@@ -2196,7 +2196,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId), "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId), "The given Charging Station Operator identification must not be null!");
 
             if (AuthToken == null)
                 throw new ArgumentNullException(nameof(AuthToken),  "The given authentication token must not be null!");
@@ -2321,7 +2321,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
         /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="OperatorId">An Charging Station Operator identification.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="ChargingStationId">The unique identification of a charging station.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
@@ -2329,7 +2329,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override Task<AuthStartChargingStationResult>
 
-            AuthorizeStart(EVSEOperator_Id     OperatorId,
+            AuthorizeStart(ChargingStationOperator_Id     OperatorId,
                            Auth_Token          AuthToken,
                            ChargingStation_Id  ChargingStationId,
                            ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
@@ -2345,7 +2345,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             #region Initial checks
 
             if (OperatorId        == null)
-                throw new ArgumentNullException(nameof(OperatorId),         "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId),         "The given Charging Station Operator identification must not be null!");
 
             if (AuthToken         == null)
                 throw new ArgumentNullException(nameof(AuthToken),          "The given authentication token must not be null!");
@@ -2445,7 +2445,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStopResult>
 
-            AuthorizeStop(EVSEOperator_Id     OperatorId,
+            AuthorizeStop(ChargingStationOperator_Id     OperatorId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
 
@@ -2458,7 +2458,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId),  "The given Charging Station Operator identification must not be null!");
 
             if (SessionId == null)
                 throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
@@ -2581,7 +2581,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStopEVSEResult>
 
-            AuthorizeStop(EVSEOperator_Id     OperatorId,
+            AuthorizeStop(ChargingStationOperator_Id     OperatorId,
                           EVSE_Id             EVSEId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
@@ -2595,7 +2595,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId),  "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId),  "The given Charging Station Operator identification must not be null!");
 
             if (EVSEId     == null)
                 throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
@@ -2711,14 +2711,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="CancellationToken">A token to cancel this request.</param>
         /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="OperatorId">An Charging Station Operator identification.</param>
         /// <param name="ChargingStationId">A charging station identification.</param>
         /// <param name="SessionId">The session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override Task<AuthStopChargingStationResult>
 
-            AuthorizeStop(EVSEOperator_Id     OperatorId,
+            AuthorizeStop(ChargingStationOperator_Id     OperatorId,
                           ChargingStation_Id  ChargingStationId,
                           ChargingSession_Id  SessionId,
                           Auth_Token          AuthToken,
@@ -2733,7 +2733,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             #region Initial checks
 
             if (OperatorId         == null)
-                throw new ArgumentNullException(nameof(OperatorId),         "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId),         "The given Charging Station Operator identification must not be null!");
 
             if (ChargingStationId  == null)
                 throw new ArgumentNullException(nameof(ChargingStationId),  "The given EVSE identification must not be null!");

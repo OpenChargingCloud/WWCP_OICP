@@ -40,13 +40,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Create an OICP PushEVSEData XML/SOAP request.
         /// </summary>
-        /// <param name="GroupedEVSEDataRecords">EVSE data records grouped by their EVSE operator.</param>
+        /// <param name="GroupedEVSEDataRecords">EVSE data records grouped by their Charging Station Operator.</param>
         /// <param name="OICPAction">The server-side data management operation.</param>
-        /// <param name="Operator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
-        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
-        public static XElement PushEVSEDataXML(ILookup<EVSEOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
+        /// <param name="Operator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
+        public static XElement PushEVSEDataXML(ILookup<ChargingStationOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
                                                ActionType                             OICPAction            = ActionType.fullLoad,
-                                               EVSEOperator                           Operator              = null,
+                                               ChargingStationOperator                           Operator              = null,
                                                EVSEOperatorNameSelectorDelegate       OperatorNameSelector  = null)
         {
 
@@ -127,13 +127,13 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Create an OICP PushEVSEStatus XML/SOAP request.
         /// </summary>
-        /// <param name="GroupedEVSEStatusRecords">EVSE status records grouped by their EVSE operator.</param>
+        /// <param name="GroupedEVSEStatusRecords">EVSE status records grouped by their Charging Station Operator.</param>
         /// <param name="OICPAction">The server-side data management operation.</param>
-        /// <param name="Operator">An optional EVSE operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
-        /// <param name="OperatorNameSelector">An optional delegate to select an EVSE operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
-        public static XElement PushEVSEStatusXML(ILookup<EVSEOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
+        /// <param name="Operator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
+        /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
+        public static XElement PushEVSEStatusXML(ILookup<ChargingStationOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
                                                  ActionType                               OICPAction            = ActionType.update,
-                                                 EVSEOperator                             Operator              = null,
+                                                 ChargingStationOperator                             Operator              = null,
                                                  EVSEOperatorNameSelectorDelegate         OperatorNameSelector  = null)
         {
 
@@ -219,7 +219,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        public static XElement AuthorizeStartXML(EVSEOperator_Id     OperatorId,
+        public static XElement AuthorizeStartXML(ChargingStationOperator_Id     OperatorId,
                                                  Auth_Token          AuthToken,
                                                  EVSE_Id             EVSEId            = null,   // OICP v2.0: Optional
                                                  ChargingProduct_Id  PartnerProductId  = null,   // OICP v2.0: Optional [100]
@@ -293,7 +293,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId), "The given EVSE operator identification must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId), "The given Charging Station Operator identification must not be null!");
 
             if (AuthToken  == null)
                 throw new ArgumentNullException(nameof(AuthToken),  "The given authentication token must not be null!");
@@ -332,12 +332,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Create an OICP AuthorizeStop XML request.
         /// </summary>
-        /// <param name="OperatorId">An EVSE operator identification.</param>
+        /// <param name="OperatorId">An Charging Station Operator identification.</param>
         /// <param name="SessionId">The session identification.</param>
         /// <param name="AuthToken">The (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        public static XElement AuthorizeStopXML(EVSEOperator_Id     OperatorId,
+        public static XElement AuthorizeStopXML(ChargingStationOperator_Id     OperatorId,
                                                 ChargingSession_Id  SessionId,
                                                 Auth_Token          AuthToken,
                                                 EVSE_Id             EVSEId            = null,
@@ -447,8 +447,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Create an OICP PullAuthenticationData XML request.
         /// </summary>
-        /// <param name="OperatorId">An EVSE operator identification.</param>
-        public static XElement PullAuthenticationDataXML(EVSEOperator_Id OperatorId)
+        /// <param name="OperatorId">An Charging Station Operator identification.</param>
+        public static XElement PullAuthenticationDataXML(ChargingStationOperator_Id OperatorId)
         {
 
             #region Documentation

@@ -102,9 +102,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
             }
 
             RoamingNetwork  = HTTPServer.
-                                  GetAllRoamingNetworks(HTTPRequest.Host).
-                                  Where(roamingnetwork => roamingnetwork.Id == RoamingNetworkId).
-                                  FirstOrDefault();
+                                  GetAllTenants(HTTPRequest.Host).
+                                  FirstOrDefault(roamingnetwork => roamingnetwork.Id == RoamingNetworkId);
 
             if (RoamingNetwork == null) {
 

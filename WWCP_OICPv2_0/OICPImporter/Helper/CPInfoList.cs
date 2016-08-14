@@ -39,9 +39,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region OperatorId
 
-        private readonly EVSEOperator_Id _OperatorId;
+        private readonly ChargingStationOperator_Id _OperatorId;
 
-        public EVSEOperator_Id OperatorId
+        public ChargingStationOperator_Id OperatorId
         {
             get
             {
@@ -69,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Constructor(s)
 
-        public CPInfoList(EVSEOperator_Id OperatorId)
+        public CPInfoList(ChargingStationOperator_Id OperatorId)
         {
 
             #region Initial checks

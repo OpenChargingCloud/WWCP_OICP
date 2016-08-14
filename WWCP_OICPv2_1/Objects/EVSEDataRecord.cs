@@ -128,7 +128,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public AccessibilityTypes   Accessibility               { get; }
 
         /// <summary>
-        /// The phone number of the EVSE operators hotline.
+        /// The phone number of the Charging Station Operators hotline.
         /// </summary>
         public String               HotlinePhoneNumber          { get; }
 
@@ -209,7 +209,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
         /// <param name="ValueAddedServices">A list of "value added services" this EVSE supports.</param>
         /// <param name="Accessibility">The accessibility of this EVSE.</param>
-        /// <param name="HotlinePhoneNumber">The phone number of the EVSE operators hotline.</param>
+        /// <param name="HotlinePhoneNumber">The phone number of the Charging Station Operators hotline.</param>
         /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
         /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
         /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
@@ -318,7 +318,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
         /// <param name="ValueAddedServices">A list of "value added services" this EVSE supports.</param>
         /// <param name="Accessibility">The accessibility of this EVSE.</param>
-        /// <param name="HotlinePhoneNumber">The phone number of the EVSE operators hotline.</param>
+        /// <param name="HotlinePhoneNumber">The phone number of the Charging Station Operators hotline.</param>
         /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
         /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
         /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
@@ -1154,7 +1154,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
             /// <param name="ValueAddedServices">A list of "value added services" this EVSE supports.</param>
             /// <param name="Accessibility">The accessibility of this EVSE.</param>
-            /// <param name="HotlinePhoneNumber">The phone number of the EVSE operators hotline.</param>
+            /// <param name="HotlinePhoneNumber">The phone number of the Charging Station Operators hotline.</param>
             /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
             /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
             /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
@@ -1264,7 +1264,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
             /// <param name="ValueAddedServices">A list of "value added services" this EVSE supports.</param>
             /// <param name="Accessibility">The accessibility of this EVSE.</param>
-            /// <param name="HotlinePhoneNumber">The phone number of the EVSE operators hotline.</param>
+            /// <param name="HotlinePhoneNumber">The phone number of the Charging Station Operators hotline.</param>
             /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
             /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
             /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
@@ -1276,7 +1276,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             public Builder(EVSE_Id              Id,
                            String               DeltaType,
                            DateTime?            LastUpdate,
-                           EVSEOperator         EVSEOperator,
+                           ChargingStationOperator         EVSEOperator,
                            String               ChargingStationId          = null,
                            I18NString           ChargingStationName        = null,
                            Address              Address                    = null,

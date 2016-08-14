@@ -42,7 +42,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         String                                  SenderId,
                                                         EventTracking_Id                        EventTrackingId,
                                                         ActionType                              ActionType,
-                                                        ILookup<EVSEOperator, EVSEDataRecord>   EVSEDataRecords,
+                                                        ILookup<ChargingStationOperator, EVSEDataRecord>   EVSEDataRecords,
                                                         UInt32                                  NumberOfEVSEs,
                                                         TimeSpan?                               RequestTimeout);
 
@@ -55,7 +55,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         String                                  SenderId,
                                                         EventTracking_Id                        EventTrackingId,
                                                         ActionType                              ActionType,
-                                                        ILookup<EVSEOperator, EVSEDataRecord>   EVSEDataRecords,
+                                                        ILookup<ChargingStationOperator, EVSEDataRecord>   EVSEDataRecords,
                                                         UInt32                                  NumberOfEVSEs,
                                                         TimeSpan?                               RequestTimeout,
                                                         eRoamingAcknowledgement                 Result,
@@ -71,7 +71,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           String                                   SenderId,
                                                           EventTracking_Id                         EventTrackingId,
                                                           ActionType                               ActionType,
-                                                          ILookup<EVSEOperator, EVSEStatusRecord>  EVSEStatusRecords,
+                                                          ILookup<ChargingStationOperator, EVSEStatusRecord>  EVSEStatusRecords,
                                                           UInt32                                   NumberOfEVSEs,
                                                           TimeSpan?                                RequestTimeout);
 
@@ -84,7 +84,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           String                                   SenderId,
                                                           EventTracking_Id                         EventTrackingId,
                                                           ActionType                               ActionType,
-                                                          ILookup<EVSEOperator, EVSEStatusRecord>  EVSEStatusRecords,
+                                                          ILookup<ChargingStationOperator, EVSEStatusRecord>  EVSEStatusRecords,
                                                           UInt32                                   NumberOfEVSEs,
                                                           TimeSpan?                                RequestTimeout,
                                                           eRoamingAcknowledgement                  Result,
@@ -101,7 +101,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                  DateTime                       RequestTimestamp,
                                                  CPOClient                      Sender,
                                                  String                         SenderId,
-                                                 EVSEOperator_Id                OperatorId,
+                                                 ChargingStationOperator_Id                OperatorId,
                                                  Auth_Token                     AuthToken,
                                                  EVSE_Id                        EVSEId,
                                                  ChargingSession_Id             SessionId,
@@ -115,7 +115,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public delegate Task OnAuthorizeStartedHandler(DateTime                     Timestamp,
                                                    CPOClient                    Sender,
                                                    String                       SenderId,
-                                                   EVSEOperator_Id              OperatorId,
+                                                   ChargingStationOperator_Id              OperatorId,
                                                    Auth_Token                   AuthToken,
                                                    EVSE_Id                      EVSEId,
                                                    ChargingSession_Id           SessionId,
@@ -133,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        DateTime                     RequestTimestamp,
                                                        CPOClient                    Sender,
                                                        String                       SenderId,
-                                                       EVSEOperator_Id              OperatorId,
+                                                       ChargingStationOperator_Id              OperatorId,
                                                        ChargingSession_Id           SessionId,
                                                        Auth_Token                   AuthToken,
                                                        EVSE_Id                      EVSEId,
@@ -146,7 +146,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public delegate Task OnAuthorizeStopResponseHandler(DateTime                    Timestamp,
                                                         CPOClient                   Sender,
                                                         String                      SenderId,
-                                                        EVSEOperator_Id             OperatorId,
+                                                        ChargingStationOperator_Id             OperatorId,
                                                         ChargingSession_Id          SessionId,
                                                         Auth_Token                  AuthToken,
                                                         EVSE_Id                     EVSEId,
@@ -195,7 +195,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                  CPOClient                    Sender,
                                                                  String                       SenderId,
                                                                  EventTracking_Id             EventTrackingId,
-                                                                 EVSEOperator_Id              OperatorId,
+                                                                 ChargingStationOperator_Id              OperatorId,
                                                                  TimeSpan?                    RequestTimeout);
 
     /// <summary>
@@ -205,7 +205,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                  CPOClient                    Sender,
                                                                  String                       SenderId,
                                                                  EventTracking_Id             EventTrackingId,
-                                                                 EVSEOperator_Id              OperatorId,
+                                                                 ChargingStationOperator_Id              OperatorId,
                                                                  TimeSpan?                    RequestTimeout,
                                                                  eRoamingAuthenticationData   Result,
                                                                  TimeSpan                     Duration);

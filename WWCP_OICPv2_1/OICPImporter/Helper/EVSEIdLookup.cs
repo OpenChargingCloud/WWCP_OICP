@@ -33,9 +33,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region EVSEOperatorId
 
-        private readonly EVSEOperator_Id _EVSEOperatorId;
+        private readonly ChargingStationOperator_Id _EVSEOperatorId;
 
-        public EVSEOperator_Id EVSEOperatorId
+        public ChargingStationOperator_Id EVSEOperatorId
         {
             get
             {
@@ -63,7 +63,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
-        public EVSEIdLookup(EVSEOperator_Id                OperatorId,
+        public EVSEIdLookup(ChargingStationOperator_Id                OperatorId,
                             IEnumerable<ChargingPoolInfo>  ChargingPoolInfos)
         {
 

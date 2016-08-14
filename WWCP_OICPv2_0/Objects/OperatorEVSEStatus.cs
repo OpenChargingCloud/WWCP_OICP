@@ -38,12 +38,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         #region Properties
 
         /// <summary>
-        /// The unique identification of an Electric Vehicle Supply Equipment Operator.
+        /// The unique identification of an Charging Station Operator.
         /// </summary>
-        public EVSEOperator_Id                OperatorId          { get; }
+        public ChargingStationOperator_Id                OperatorId          { get; }
 
         /// <summary>
-        /// The name of an Electric Vehicle Supply Equipment Operator.
+        /// The name of an Charging Station Operator.
         /// </summary>
         public String                         OperatorName        { get; }
 
@@ -59,10 +59,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <summary>
         /// Create a new group of OICP EVSE status records.
         /// </summary>
-        /// <param name="OperatorId">The unique identification of an Electric Vehicle Supply Equipment Operator.</param>
-        /// <param name="OperatorName">The name of an Electric Vehicle Supply Equipment Operator.</param>
+        /// <param name="OperatorId">The unique identification of an Charging Station Operator.</param>
+        /// <param name="OperatorName">The name of an Charging Station Operator.</param>
         /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
-        public OperatorEVSEStatus(EVSEOperator_Id                OperatorId,
+        public OperatorEVSEStatus(ChargingStationOperator_Id                OperatorId,
                                   String                         OperatorName,
                                   IEnumerable<EVSEStatusRecord>  EVSEStatusRecords)
         {
@@ -98,7 +98,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             try
             {
 
-                return new OperatorEVSEStatus(EVSEOperator_Id.Parse(OperatorEVSEStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "OperatorID", "Missing OperatorID!")),
+                return new OperatorEVSEStatus(ChargingStationOperator_Id.Parse(OperatorEVSEStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "OperatorID", "Missing OperatorID!")),
                                               OperatorEVSEStatusXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName", ""),
                                               OperatorEVSEStatusXML.Elements             (OICPNS.EVSEStatus + "EvseStatusRecord").
                                                                     SafeSelect(EvseStatusRecordXML => EVSEStatusRecord.Parse(EvseStatusRecordXML)).

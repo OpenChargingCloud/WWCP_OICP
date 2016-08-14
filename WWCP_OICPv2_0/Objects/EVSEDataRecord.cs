@@ -124,7 +124,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public AccessibilityTypes   Accessibility               { get; }
 
         /// <summary>
-        /// The phone number of the EVSE operators hotline.
+        /// The phone number of the Charging Station Operators hotline.
         /// </summary>
         public String               HotlinePhoneNumber          { get; }
 
@@ -204,7 +204,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="MaxCapacity">The maximum capacity this EVSE provides.</param>
         /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
         /// <param name="Accessibility">The accessibility of this EVSE.</param>
-        /// <param name="HotlinePhoneNumber">The phone number of the EVSE operators hotline.</param>
+        /// <param name="HotlinePhoneNumber">The phone number of the Charging Station Operators hotline.</param>
         /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
         /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
         /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
@@ -310,7 +310,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="MaxCapacity">The maximum capacity this EVSE provides.</param>
         /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
         /// <param name="Accessibility">The accessibility of this EVSE.</param>
-        /// <param name="HotlinePhoneNumber">The phone number of the EVSE operators hotline.</param>
+        /// <param name="HotlinePhoneNumber">The phone number of the Charging Station Operators hotline.</param>
         /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
         /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
         /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
@@ -1050,9 +1050,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             public EVSE_Id EVSEId { get; }
 
             /// <summary>
-            /// An EVSE operator.
+            /// An Charging Station Operator.
             /// </summary>
-            public EVSEOperator EVSEOperator { get; set; }
+            public ChargingStationOperator EVSEOperator { get; set; }
 
 
             public String DeltaType { get; set; }
@@ -1175,9 +1175,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             /// Create a new EVSE data record.
             /// </summary>
             /// <param name="EVSEId">A unique EVSE identification.</param>
-            /// <param name="EVSEOperator">An EVSE operator.</param>
+            /// <param name="EVSEOperator">An Charging Station Operator.</param>
             public Builder(EVSE_Id       EVSEId,
-                           EVSEOperator  EVSEOperator = null)
+                           ChargingStationOperator  EVSEOperator = null)
             {
 
                 #region Initial checks
@@ -1202,11 +1202,11 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             /// Create a new EVSE data record.
             /// </summary>
             /// <param name="EVSEId">A unique EVSE identification.</param>
-            /// <param name="EVSEOperator">An EVSE operator.</param>
+            /// <param name="EVSEOperator">An Charging Station Operator.</param>
             public Builder(EVSE_Id                           EVSEId,
                                   String                            DeltaType,
                                   DateTime?                         LastUpdate,
-                                  EVSEOperator                      EVSEOperator,
+                                  ChargingStationOperator                      EVSEOperator,
                                   String                            ChargingStationId           = null,
                                   I18NString                        ChargingStationName         = null,
                                   Address                           Address                     = null,

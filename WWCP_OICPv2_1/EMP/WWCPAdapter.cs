@@ -680,7 +680,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Data
 
-                EVSEOperator     _EVSEOperator                  = null;
+                ChargingStationOperator     _EVSEOperator                  = null;
                 CPInfoList       _CPInfoList                    = null;
                 EVSEIdLookup     _EVSEIdLookup                  = null;
                 EVSEInfo         _EVSEInfo                      = null;
@@ -698,10 +698,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     try
                     {
 
-                        #region Find EVSE operator, or create a new one...
+                        #region Find Charging Station Operator, or create a new one...
 
-                        if (!RoamingNetwork.TryGetEVSEOperatorbyId(operatorevsedata.OperatorId, out _EVSEOperator))
-                            _EVSEOperator = RoamingNetwork.CreateNewEVSEOperator(operatorevsedata.OperatorId, operatorevsedata.OperatorName);
+                        if (!RoamingNetwork.TryGetChargingStationOperatorById(operatorevsedata.OperatorId, out _EVSEOperator))
+                            _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(operatorevsedata.OperatorId, operatorevsedata.OperatorName);
 
                         else
                         {

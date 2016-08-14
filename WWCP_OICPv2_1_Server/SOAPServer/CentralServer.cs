@@ -314,11 +314,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         foreach (var SingleOperatorEvseStatusXML in OperatorEvseStatusXML)
                         {
 
-                            EVSEOperator_Id         OperatorId;
+                            ChargingStationOperator_Id         OperatorId;
                             String                  OperatorName;
                             IEnumerable<XElement>   EVSEStatusRecordsXML;
 
-                            if (!EVSEOperator_Id.TryParse(SingleOperatorEvseStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "OperatorID", "No OperatorID XML tag provided!"), out OperatorId))
+                            if (!ChargingStationOperator_Id.TryParse(SingleOperatorEvseStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "OperatorID", "No OperatorID XML tag provided!"), out OperatorId))
                                 throw new ApplicationException("Invalid OperatorID XML tag provided!");
 
                             OperatorName          = SingleOperatorEvseStatusXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName",     "");

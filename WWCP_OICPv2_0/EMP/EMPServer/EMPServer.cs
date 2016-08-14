@@ -363,7 +363,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 ChargingSession_Id         SessionId           = null;
                 ChargingSession_Id         PartnerSessionId    = null;
-                EVSEOperator_Id            OperatorId          = null;
+                ChargingStationOperator_Id            OperatorId          = null;
                 EVSE_Id                    EVSEId              = null;
                 ChargingProduct_Id         ChargingProductId   = null;
                 Auth_Token                 AuthToken           = null;
@@ -387,7 +387,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     if (PartnerSessionIdXML != null)
                         PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                    OperatorId               = EVSEOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
+                    OperatorId               = ChargingStationOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
 
                     EVSEIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "EVSEID");
                     if (EVSEIdXML != null)
@@ -564,7 +564,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
                 ChargingSession_Id        SessionId          = null;
                 ChargingSession_Id        PartnerSessionId   = null;
-                EVSEOperator_Id           OperatorId         = null;
+                ChargingStationOperator_Id           OperatorId         = null;
                 EVSE_Id                   EVSEId             = null;
                 Auth_Token                AuthToken          = null;
 
@@ -582,7 +582,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     if (PartnerSessionIdXML != null)
                         PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                    OperatorId        = EVSEOperator_Id.   Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
+                    OperatorId        = ChargingStationOperator_Id.   Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
                     EVSEId            = EVSE_Id.           Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",      "No EVSEID XML tag provided!"));
 
                     IdentificationXML = AuthorizeStopXML.Element(OICPNS.Authorization + "Identification");

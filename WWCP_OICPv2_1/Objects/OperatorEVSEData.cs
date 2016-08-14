@@ -38,12 +38,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Properties
 
         /// <summary>
-        /// The unique identification of an Electric Vehicle Supply Equipment Operator.
+        /// The unique identification of an Charging Station Operator.
         /// </summary>
-        public EVSEOperator_Id              OperatorId        { get; }
+        public ChargingStationOperator_Id              OperatorId        { get; }
 
         /// <summary>
-        /// The name of an Electric Vehicle Supply Equipment Operator.
+        /// The name of an Charging Station Operator.
         /// </summary>
         public I18NString                   OperatorName      { get; }
 
@@ -59,10 +59,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Create a new group of OICP EVSE data records.
         /// </summary>
-        /// <param name="OperatorId">The unique identification of an Electric Vehicle Supply Equipment Operator.</param>
-        /// <param name="OperatorName">The name of an Electric Vehicle Supply Equipment Operator.</param>
+        /// <param name="OperatorId">The unique identification of an Charging Station Operator.</param>
+        /// <param name="OperatorName">The name of an Charging Station Operator.</param>
         /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
-        public OperatorEVSEData(EVSEOperator_Id              OperatorId,
+        public OperatorEVSEData(ChargingStationOperator_Id              OperatorId,
                                 I18NString                   OperatorName,
                                 IEnumerable<EVSEDataRecord>  EVSEDataRecords)
         {
@@ -133,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             {
 
                 return new OperatorEVSEData(OperatorEVSEDataXML.MapValueOrFail(OICPNS.EVSEData + "OperatorID",
-                                                                               EVSEOperator_Id.Parse,
+                                                                               ChargingStationOperator_Id.Parse,
                                                                                "Missing OperatorID!"),
 
                                             OperatorEVSEDataXML.MapValueOrNull(OICPNS.EVSEData + "OperatorName",
