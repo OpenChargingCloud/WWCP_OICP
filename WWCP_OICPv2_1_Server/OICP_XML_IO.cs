@@ -22,6 +22,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
@@ -83,10 +84,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                                     ? new XElement(OICPNS.EVSEData + "OperatorName", group.Key.Name.FirstText)
                                                                     : null,
 
-                                                                new XElement(OICPPlusEVSEOperator + "DataLicense",
-                                                                    new XElement(OICPPlusEVSEOperator + "Id",           group.Key.DataLicense.AsShort()),
-                                                                    new XElement(OICPPlusEVSEOperator + "Description",  group.Key.DataLicense.AsText()),
-                                                                    new XElement(OICPPlusEVSEOperator + "URI",          group.Key.DataLicense.AsLink())
+                                                                new XElement(OICPPlusEVSEOperator + "DataLicenses",
+                                                                    group.Key.DataLicenses.SafeSelect(license => new XElement(OICPPlusEVSEOperator + "DataLicense",
+                                                                                                                     new XElement(OICPPlusEVSEOperator + "Id",           license.Id),
+                                                                                                                     new XElement(OICPPlusEVSEOperator + "Description",  license.Description),
+                                                                                                                     license.URIs.Any()
+                                                                                                                         ? new XElement(OICPPlusEVSEOperator + "DataLicenseURIs", 
+                                                                                                                               license.URIs.SafeSelect(uri => new XElement(OICPPlusEVSEOperator + "DataLicenseURI", uri)))
+                                                                                                                         : null
+                                                                                                                 ))
                                                                 ),
 
                                                                 // <EvseDataRecord> ... </EvseDataRecord>
@@ -154,10 +160,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                                     ? new XElement(OICPNS.EVSEStatus + "OperatorName", group.Key.Name.FirstText)
                                                                     : null,
 
-                                                                new XElement(OICPPlusEVSEOperator + "DataLicense",
-                                                                    new XElement(OICPPlusEVSEOperator + "Id",           group.Key.DataLicense.AsShort()),
-                                                                    new XElement(OICPPlusEVSEOperator + "Description",  group.Key.DataLicense.AsText()),
-                                                                    new XElement(OICPPlusEVSEOperator + "URI",          group.Key.DataLicense.AsLink())
+                                                                new XElement(OICPPlusEVSEOperator + "DataLicenses",
+                                                                    group.Key.DataLicenses.SafeSelect(license => new XElement(OICPPlusEVSEOperator + "DataLicense",
+                                                                                                                     new XElement(OICPPlusEVSEOperator + "Id",           license.Id),
+                                                                                                                     new XElement(OICPPlusEVSEOperator + "Description",  license.Description),
+                                                                                                                     license.URIs.Any()
+                                                                                                                         ? new XElement(OICPPlusEVSEOperator + "DataLicenseURIs", 
+                                                                                                                               license.URIs.SafeSelect(uri => new XElement(OICPPlusEVSEOperator + "DataLicenseURI", uri)))
+                                                                                                                         : null
+                                                                                                                 ))
                                                                 ),
 
                                                                 // <EvseStatusRecord> ... </EvseStatusRecord>
