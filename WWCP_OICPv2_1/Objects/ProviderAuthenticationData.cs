@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The unique identification of an Electric Vehicle Service Provider.
         /// </summary>
-        public EVSP_Id                                   ProviderId                    { get; }
+        public EMobilityProvider_Id                                   ProviderId                    { get; }
 
         /// <summary>
         /// An enumeration of authorization identifications records.
@@ -56,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ProviderId">The unique identification of an Electric Vehicle Service Provider.</param>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications records.</param>
-        public ProviderAuthenticationData(EVSP_Id                                   ProviderId,
+        public ProviderAuthenticationData(EMobilityProvider_Id                                   ProviderId,
                                           IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications)
         {
 
@@ -148,7 +148,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             {
 
                 return new ProviderAuthenticationData(ProviderAuthenticationDataXML.MapValueOrFail(OICPNS.AuthenticationData + "ProviderID",
-                                                                                                   EVSP_Id.Parse,
+                                                                                                   EMobilityProvider_Id.Parse,
                                                                                                    "Missing ProviderID!"),
 
                                                       ProviderAuthenticationDataXML.Elements(OICPNS.AuthenticationData + "AuthenticationDataRecord").

@@ -106,7 +106,7 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_1.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML          = null,
 
                                               ChargingStationOperator                          DefaultOperator             = null,
-                                              EVSEOperatorNameSelectorDelegate      OperatorNameSelector        = null,
+                                              ChargingStationOperatorNameSelectorDelegate      OperatorNameSelector        = null,
                                               IncludeEVSEDelegate                   IncludeEVSEs                = null,
                                               TimeSpan?                             ServiceCheckEvery           = null,
                                               TimeSpan?                             StatusCheckEvery            = null,
@@ -242,7 +242,7 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_1.EVSEDataRecord2XMLDelegate   EVSEDataRecord2XML          = null,
 
                                               ChargingStationOperator                          DefaultOperator             = null,
-                                              EVSEOperatorNameSelectorDelegate      OperatorNameSelector        = null,
+                                              ChargingStationOperatorNameSelectorDelegate      OperatorNameSelector        = null,
                                               IncludeEVSEDelegate                   IncludeEVSEs                = null,
                                               TimeSpan?                             ServiceCheckEvery           = null,
                                               TimeSpan?                             StatusCheckEvery            = null,

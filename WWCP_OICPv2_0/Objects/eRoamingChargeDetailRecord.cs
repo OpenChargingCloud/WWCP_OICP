@@ -269,10 +269,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region HubProviderId
 
-        private readonly EVSP_Id _HubProviderId;
+        private readonly EMobilityProvider_Id _HubProviderId;
 
         [Optional]
-        public EVSP_Id HubProviderId
+        public EMobilityProvider_Id HubProviderId
         {
             get
             {
@@ -320,7 +320,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                   Double?                      ConsumedEnergy        = null,
                                   String                       MeteringSignature     = null,
                                   HubOperator_Id               HubOperatorId         = null,
-                                  EVSP_Id                      HubProviderId         = null)
+                                  EMobilityProvider_Id                      HubProviderId         = null)
 
         {
 
@@ -526,7 +526,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                                                                             null),
 
                 eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubProviderID",
-                                                                                            EVSP_Id.Parse,
+                                                                                            EMobilityProvider_Id.Parse,
                                                                                             null));
 
         }

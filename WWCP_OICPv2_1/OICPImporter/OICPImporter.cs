@@ -55,7 +55,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             String                                                    Hostname,
                             IPPort                                                    TCPPort,
                             String                                                    HTTPVirtualHost,
-                            EVSP_Id                                                   ProviderId,
+                            EMobilityProvider_Id                                                   ProviderId,
                             DNSClient                                                 DNSClient                      = null,
 
                             TimeSpan?                                                 UpdateEVSEDataEvery            = null,
@@ -459,7 +459,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         private readonly String         _Hostname;
         private readonly IPPort         _TCPPort;
         private readonly String         _HTTPVirtualHost;
-        private readonly EVSP_Id        _ProviderId;
+        private readonly EMobilityProvider_Id        _ProviderId;
 
         private readonly TimeSpan       _UpdateEVSEDataEvery;
         private readonly TimeSpan       _UpdateEVSEDataTimeout;
@@ -577,7 +577,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             String                                                      Hostname,
                             IPPort                                                      TCPPort,
                             String                                                      HTTPVirtualHost,
-                            EVSP_Id                                                     ProviderId,
+                            EMobilityProvider_Id                                                     ProviderId,
                             DNSClient                                                   DNSClient                   = null,
                             TimeSpan?                                                   QueryTimeout                = null,
 
@@ -689,7 +689,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             String                                                      Hostname,
                             IPPort                                                      TCPPort,
                             String                                                      HTTPVirtualHost,
-                            EVSP_Id                                                     ProviderId,
+                            EMobilityProvider_Id                                                     ProviderId,
                             DNSClient                                                   DNSClient                   = null,
                             TimeSpan?                                                   QueryTimeout                = null,
 

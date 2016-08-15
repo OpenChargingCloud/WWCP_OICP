@@ -398,7 +398,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEVSEData>>
 
-            PullEVSEData(EVSP_Id             ProviderId,
+            PullEVSEData(EMobilityProvider_Id             ProviderId,
                          GeoCoordinate       SearchCenter       = null,
                          Double              DistanceKM         = 0.0,
                          DateTime?           LastCall           = null,
@@ -576,7 +576,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEvseSearchResult>>
 
-            SearchEVSE(EVSP_Id              ProviderId,
+            SearchEVSE(EMobilityProvider_Id              ProviderId,
                        GeoCoordinate        SearchCenter       = null,
                        Double               DistanceKM         = 0.0,
                        Address              Address            = null,
@@ -764,7 +764,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEVSEStatus>>
 
-            PullEVSEStatus(EVSP_Id             ProviderId,
+            PullEVSEStatus(EMobilityProvider_Id             ProviderId,
                            GeoCoordinate       SearchCenter       = null,
                            Double              DistanceKM         = 0.0,
                            EVSEStatusType?     EVSEStatusFilter   = null,
@@ -938,7 +938,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingEVSEStatusById>>
 
-            PullEVSEStatusById(EVSP_Id               ProviderId,
+            PullEVSEStatusById(EMobilityProvider_Id               ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
 
                                DateTime?             Timestamp          = null,
@@ -1278,7 +1278,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
-                                   EVSP_Id                                   ProviderId,
+                                   EMobilityProvider_Id                                   ProviderId,
                                    ActionType                                OICPAction         = ActionType.fullLoad,
 
                                    DateTime?                                 Timestamp          = null,
@@ -1317,7 +1317,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-            RemoteStart(EVSP_Id                 ProviderId,
+            RemoteStart(EMobilityProvider_Id                 ProviderId,
                         EVSE_Id                 EVSEId,
                         eMA_Id                  eMAId,
                         ChargingSession_Id      SessionId          = null,
@@ -1511,7 +1511,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             RemoteStop(ChargingSession_Id   SessionId,
-                       EVSP_Id              ProviderId,
+                       EMobilityProvider_Id              ProviderId,
                        EVSE_Id              EVSEId,
                        ChargingSession_Id   PartnerSessionId   = null,
 
@@ -1695,7 +1695,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<IEnumerable<ChargeDetailRecord>>>
 
-            GetChargeDetailRecords(EVSP_Id             ProviderId,
+            GetChargeDetailRecords(EMobilityProvider_Id             ProviderId,
                                    DateTime            From,
                                    DateTime?           To                 = null,
 

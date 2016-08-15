@@ -323,7 +323,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     ChargingSession_Id      SessionId           = null;
                     ChargingSession_Id      PartnerSessionId    = null;
-                    EVSP_Id                 ProviderId          = null;
+                    EMobilityProvider_Id                 ProviderId          = null;
                     EVSE_Id                 EVSEId              = null;
                     eMA_Id                  eMAId               = null;
                     ChargingProduct_Id      ChargingProductId   = null;
@@ -346,7 +346,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (PartnerSessionIdXML != null)
                             PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Reservation + "ProviderID", "No ProviderID XML tag provided!"));
+                        ProviderId               = EMobilityProvider_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Reservation + "ProviderID", "No ProviderID XML tag provided!"));
                         EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Reservation + "EVSEID",     "No EVSEID XML tag provided!"));
 
                         ChargingProductIdXML = RemoteStartXML.Element(OICPNS.Reservation + "PartnerProductID");
@@ -554,7 +554,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     ChargingSession_Id      SessionId         = null;
                     ChargingSession_Id      PartnerSessionId  = null;
-                    EVSP_Id                 ProviderId        = null;
+                    EMobilityProvider_Id                 ProviderId        = null;
                     EVSE_Id                 EVSEId            = null;
 
                     eRoamingAcknowledgement response          = null;
@@ -570,7 +570,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (PartnerSessionIdXML != null)
                             PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId        = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Reservation + "ProviderID", "No ProviderID XML tag provided!"));
+                        ProviderId        = EMobilityProvider_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Reservation + "ProviderID", "No ProviderID XML tag provided!"));
                         EVSEId            = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Reservation + "EVSEID",     "No EVSEID XML tag provided!"));
 
                     }
@@ -790,7 +790,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     ChargingSession_Id      SessionId           = null;
                     ChargingSession_Id      PartnerSessionId    = null;
-                    EVSP_Id                 ProviderId          = null;
+                    EMobilityProvider_Id                 ProviderId          = null;
                     EVSE_Id                 EVSEId              = null;
                     eMA_Id                  eMAId               = null;
                     ChargingProduct_Id      ChargingProductId   = null;
@@ -813,7 +813,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (PartnerSessionIdXML != null)
                             PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId               = EVSP_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        ProviderId               = EMobilityProvider_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
                         EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                         ChargingProductIdXML = RemoteStartXML.Element(OICPNS.Authorization + "PartnerProductID");
@@ -1022,7 +1022,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     ChargingSession_Id      SessionId         = null;
                     ChargingSession_Id      PartnerSessionId  = null;
-                    EVSP_Id                 ProviderId        = null;
+                    EMobilityProvider_Id                 ProviderId        = null;
                     EVSE_Id                 EVSEId            = null;
 
                     eRoamingAcknowledgement response          = null;
@@ -1038,7 +1038,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (PartnerSessionIdXML != null)
                             PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId        = EVSP_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        ProviderId        = EMobilityProvider_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
                         EVSEId            = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                     }

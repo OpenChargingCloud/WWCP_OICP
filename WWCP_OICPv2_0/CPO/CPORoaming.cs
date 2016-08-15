@@ -764,7 +764,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             PushEVSEData(ILookup<ChargingStationOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
                          ActionType                             OICPAction            = ActionType.fullLoad,
                          ChargingStationOperator                           Operator              = null,
-                         EVSEOperatorNameSelectorDelegate       OperatorNameSelector  = null,
+                         ChargingStationOperatorNameSelectorDelegate       OperatorNameSelector  = null,
 
                          DateTime?                              Timestamp             = null,
                          CancellationToken?                     CancellationToken     = null,
@@ -804,7 +804,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             PushEVSEData(EVSEDataRecord                    EVSEDataRecord,
                          ActionType                        OICPAction              = ActionType.insert,
                          ChargingStationOperator                      Operator                = null,
-                         EVSEOperatorNameSelectorDelegate  OperatorNameSelector    = null,
+                         ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector    = null,
                          Func<EVSEDataRecord, Boolean>     IncludeEVSEDataRecords  = null,
 
                          DateTime?                         Timestamp               = null,
@@ -846,7 +846,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             PushEVSEData(IEnumerable<EVSEDataRecord>       EVSEDataRecords,
                          ActionType                        OICPAction              = ActionType.fullLoad,
                          ChargingStationOperator                      Operator                = null,
-                         EVSEOperatorNameSelectorDelegate  OperatorNameSelector    = null,
+                         ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector    = null,
                          Func<EVSEDataRecord, Boolean>     IncludeEVSEDataRecords  = null,
 
                          DateTime?                         Timestamp               = null,
@@ -906,7 +906,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             PushEVSEStatus(ILookup<ChargingStationOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
                            ActionType                               OICPAction            = ActionType.fullLoad,
                            ChargingStationOperator                             Operator              = null,
-                           EVSEOperatorNameSelectorDelegate         OperatorNameSelector  = null,
+                           ChargingStationOperatorNameSelectorDelegate         OperatorNameSelector  = null,
 
                            DateTime?                                Timestamp             = null,
                            CancellationToken?                       CancellationToken     = null,
@@ -946,7 +946,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             PushEVSEStatus(EVSEStatusRecord                  EVSEStatusRecord,
                            ActionType                        OICPAction                = ActionType.insert,
                            ChargingStationOperator                      Operator                  = null,
-                           EVSEOperatorNameSelectorDelegate  OperatorNameSelector      = null,
+                           ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector      = null,
                            IncludeEVSEStatusRecordsDelegate  IncludeEVSEStatusRecords  = null,
 
                            DateTime?                         Timestamp                 = null,
@@ -988,7 +988,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             PushEVSEStatus(IEnumerable<EVSEStatusRecord>     EVSEStatusRecords,
                            ActionType                        OICPAction                = ActionType.fullLoad,
                            ChargingStationOperator                      Operator                  = null,
-                           EVSEOperatorNameSelectorDelegate  OperatorNameSelector      = null,
+                           ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector      = null,
                            IncludeEVSEStatusRecordsDelegate  IncludeEVSEStatusRecords  = null,
 
                            DateTime?                         Timestamp                 = null,

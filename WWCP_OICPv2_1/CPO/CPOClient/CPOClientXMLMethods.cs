@@ -47,7 +47,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static XElement PushEVSEDataXML(ILookup<ChargingStationOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
                                                ActionType                             OICPAction            = ActionType.fullLoad,
                                                ChargingStationOperator                           Operator              = null,
-                                               EVSEOperatorNameSelectorDelegate       OperatorNameSelector  = null)
+                                               ChargingStationOperatorNameSelectorDelegate       OperatorNameSelector  = null)
 
         {
 
@@ -135,7 +135,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static XElement PushEVSEStatusXML(ILookup<ChargingStationOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
                                                  ActionType                               OICPAction            = ActionType.update,
                                                  ChargingStationOperator                             Operator              = null,
-                                                 EVSEOperatorNameSelectorDelegate         OperatorNameSelector  = null)
+                                                 ChargingStationOperatorNameSelectorDelegate         OperatorNameSelector  = null)
         {
 
             #region Documentation
