@@ -113,7 +113,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
             var req2 = HubjectEMP.
 
-                          PullEVSEData(ProviderId:      EVSP_Id.Parse("DE*GDF"),
+                          PullEVSEData(ProviderId:      EMobilityProvider_Id.Parse("DE*GDF"),
                                        SearchCenter:    new GeoCoordinate(Latitude. Parse(49.731102),
                                                                           Longitude.Parse(10.142533)),
                                        DistanceKM:      100,
@@ -185,7 +185,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
 
             var req4 = HubjectEMP.
 
-                          PullEVSEStatus(ProviderId:        EVSP_Id.Parse("DE*GDF"),
+                          PullEVSEStatus(ProviderId:        EMobilityProvider_Id.Parse("DE*GDF"),
                                          SearchCenter:      new GeoCoordinate(Latitude. Parse(49.731102),
                                                                               Longitude.Parse(10.142533)),
                                          DistanceKM:        100,
@@ -225,7 +225,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
         {
 
             var req5 = HubjectEMP.
-                PullEVSEStatusById(ProviderId:      EVSP_Id.Parse("DE*GDF"),
+                PullEVSEStatusById(ProviderId:      EMobilityProvider_Id.Parse("DE*GDF"),
                                    EVSEIds:         Enumeration.Create(EVSE_Id.Parse("DE*GEF*E123456789*1"),
                                                                        EVSE_Id.Parse("+49*822*083431571*1")),
                                    RequestTimeout:  TimeSpan.FromSeconds(120)).
@@ -265,7 +265,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
             Task.Factory.StartNew(async () => {
 
                 var result = await HubjectEMP.
-                    SearchEVSE(EVSP_Id.Parse("DE*GDF"),
+                    SearchEVSE(EMobilityProvider_Id.Parse("DE*GDF"),
                                SearchCenter:    new GeoCoordinate(Latitude. Parse(49.731102),
                                                                   Longitude.Parse(10.142533)),
                                DistanceKM:      100,
@@ -305,7 +305,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
                                                     "1234") //DE**GDF*CAETE4*3"), "1234") //
 
                                            ),
-                                           ProviderId:     EVSP_Id.   Parse("DE*GDF"),
+                                           ProviderId:     EMobilityProvider_Id.   Parse("DE*GDF"),
                                            OICPAction:     ActionType.fullLoad,
                                            RequestTimeout: TimeSpan.  FromSeconds(120));
 
