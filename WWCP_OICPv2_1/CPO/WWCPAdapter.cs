@@ -325,16 +325,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                var response = await RoamingNetwork.Reserve(Timestamp,
-                                                            CancellationToken,
-                                                            EventTrackingId,
-                                                            EVSEId,
+                var response = await RoamingNetwork.Reserve(EVSEId,
                                                             Duration:           Duration,
                                                             ReservationId:      SessionId != null ? ChargingReservation_Id.Parse(SessionId.ToString()) : null,
                                                             ProviderId:         ProviderId,
                                                             eMAId:              eMAId,
                                                             ChargingProductId:  ChargingProductId,
                                                             eMAIds:             new eMA_Id[] { eMAId },
+                                                            Timestamp:          Timestamp,
+                                                            CancellationToken:  CancellationToken,
+                                                            EventTrackingId:    EventTrackingId,
                                                             RequestTimeout:     RequestTimeout);
 
                 #region Response mapping
@@ -399,13 +399,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               ProviderId,
                                                               RequestTimeout) => {
 
-                var response = await _RoamingNetwork.CancelReservation(Timestamp,
-                                                                       CancellationToken,
-                                                                       EventTrackingId,
-                                                                       ChargingReservation_Id.Parse(SessionId.ToString()),
+                var response = await _RoamingNetwork.CancelReservation(ChargingReservation_Id.Parse(SessionId.ToString()),
                                                                        ChargingReservationCancellationReason.Deleted,
                                                                        ProviderId,
                                                                        EVSEId,
+
+                                                                       Timestamp,
+                                                                       CancellationToken,
+                                                                       EventTrackingId,
                                                                        RequestTimeout);
 
                 #region Response mapping
