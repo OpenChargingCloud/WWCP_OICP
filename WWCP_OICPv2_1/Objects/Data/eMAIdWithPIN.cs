@@ -35,9 +35,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region eMAId
 
-        private readonly eMA_Id _eMAId;
+        private readonly eMobilityAccount_Id _eMAId;
 
-        public eMA_Id eMAId
+        public eMobilityAccount_Id eMAId
         {
             get
             {
@@ -95,7 +95,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region eMAIdWithPIN(eMAId, PIN)
 
-        public eMAIdWithPIN(eMA_Id  eMAId,
+        public eMAIdWithPIN(eMobilityAccount_Id  eMAId,
                             String  PIN)
         {
 
@@ -109,7 +109,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region eMAIdWithPIN(eMAId, HashedPIN, Function, Salt = "")
 
-        public eMAIdWithPIN(eMA_Id     eMAId,
+        public eMAIdWithPIN(eMobilityAccount_Id     eMAId,
                             String     HashedPIN,
                             PINCrypto  Function,
                             String     Salt = "")
@@ -163,7 +163,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             var _eMA_Id       = QRCodeIdentificationXML.MapValueOrFail(OICPNS.CommonTypes + "EVCOID",
-                                                                       eMA_Id.Parse,
+                                                                       eMobilityAccount_Id.Parse,
                                                                        "The 'EVCOID' XML tag could not be found!");
 
             var PINXML        = QRCodeIdentificationXML.Element(OICPNS.CommonTypes + "PIN");

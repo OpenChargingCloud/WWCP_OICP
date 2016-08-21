@@ -331,7 +331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                             ProviderId:         ProviderId,
                                                             eMAId:              eMAId,
                                                             ChargingProductId:  ChargingProductId,
-                                                            eMAIds:             new eMA_Id[] { eMAId },
+                                                            eMAIds:             new eMobilityAccount_Id[] { eMAId },
                                                             Timestamp:          Timestamp,
                                                             CancellationToken:  CancellationToken,
                                                             EventTrackingId:    EventTrackingId,

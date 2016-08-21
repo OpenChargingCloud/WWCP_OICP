@@ -646,7 +646,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerProductId">The ev charging product identification.</param>
         public static XElement AuthorizeRemoteReservationStartXML(EMobilityProvider_Id             ProviderId,
                                                                   EVSE_Id             EVSEId,
-                                                                  eMA_Id              eMAId,
+                                                                  eMobilityAccount_Id              eMAId,
                                                                   ChargingSession_Id  SessionId         = null,
                                                                   ChargingSession_Id  PartnerSessionId  = null,
                                                                   ChargingProduct_Id  PartnerProductId  = null)
@@ -843,7 +843,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerProductId">The ev charging product identification.</param>
         public static XElement AuthorizeRemoteStartXML(EMobilityProvider_Id             ProviderId,
                                                        EVSE_Id             EVSEId,
-                                                       eMA_Id              eMAId,
+                                                       eMobilityAccount_Id              eMAId,
                                                        ChargingSession_Id  SessionId         = null,
                                                        ChargingSession_Id  PartnerSessionId  = null,
                                                        ChargingProduct_Id  PartnerProductId  = null)

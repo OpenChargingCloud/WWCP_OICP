@@ -325,7 +325,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     ChargingSession_Id      PartnerSessionId    = null;
                     EMobilityProvider_Id                 ProviderId          = null;
                     EVSE_Id                 EVSEId              = null;
-                    eMA_Id                  eMAId               = null;
+                    eMobilityAccount_Id                  eMAId               = null;
                     ChargingProduct_Id      ChargingProductId   = null;
 
                     eRoamingAcknowledgement response            = null;
@@ -364,13 +364,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             throw new Exception("Neither a QRCodeIdentification, PlugAndChargeIdentification, nor a RemoteIdentification was provided!");
 
                         if      (QRCodeIdentificationXML != null)
-                            eMAId = eMA_Id.Parse(QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            eMAId = eMobilityAccount_Id.Parse(QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                         else if (PnCIdentificationXML != null)
-                            eMAId = eMA_Id.Parse(PnCIdentificationXML.   ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            eMAId = eMobilityAccount_Id.Parse(PnCIdentificationXML.   ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                         else if (RemoteIdentificationXML != null)
-                            eMAId = eMA_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            eMAId = eMobilityAccount_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                     }
                     catch (Exception e)
@@ -792,7 +792,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     ChargingSession_Id      PartnerSessionId    = null;
                     EMobilityProvider_Id                 ProviderId          = null;
                     EVSE_Id                 EVSEId              = null;
-                    eMA_Id                  eMAId               = null;
+                    eMobilityAccount_Id                  eMAId               = null;
                     ChargingProduct_Id      ChargingProductId   = null;
 
                     eRoamingAcknowledgement response            = null;
@@ -831,13 +831,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             throw new Exception("Neither a QRCodeIdentification, PlugAndChargeIdentification, nor a RemoteIdentification was provided!");
 
                         if      (QRCodeIdentificationXML != null)
-                            eMAId = eMA_Id.Parse(QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            eMAId = eMobilityAccount_Id.Parse(QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                         else if (PnCIdentificationXML != null)
-                            eMAId = eMA_Id.Parse(PnCIdentificationXML.   ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            eMAId = eMobilityAccount_Id.Parse(PnCIdentificationXML.   ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                         else if (RemoteIdentificationXML != null)
-                            eMAId = eMA_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            eMAId = eMobilityAccount_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                     }
                     catch (Exception e)

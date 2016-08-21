@@ -275,7 +275,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<eRoamingMobileAuthorizationStart>>
 
             MobileAuthorizeStart(EVSE_Id             EVSEId,
-                                 eMA_Id              eMAId,
+                                 eMobilityAccount_Id              eMAId,
                                  String              PIN,
                                  String              PartnerProductId   = null,
                                  Boolean?            GetNewSession      = null,
@@ -319,7 +319,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<eRoamingMobileAuthorizationStart>>
 
             MobileAuthorizeStart(EVSE_Id             EVSEId,
-                                 eMA_Id              eMAId,
+                                 eMobilityAccount_Id              eMAId,
                                  String              HashedPIN,
                                  PINCrypto           Function,
                                  String              Salt,

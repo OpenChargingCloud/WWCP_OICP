@@ -46,12 +46,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// An e-mobility account identification (PnC).
         /// </summary>
-        public eMA_Id        PlugAndChargeIdentification  { get; }
+        public eMobilityAccount_Id        PlugAndChargeIdentification  { get; }
 
         /// <summary>
         /// An e-mobility account identification.
         /// </summary>
-        public eMA_Id        RemoteIdentification         { get; }
+        public eMobilityAccount_Id        RemoteIdentification         { get; }
 
         #endregion
 
@@ -77,7 +77,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region (private) AuthorizationIdentification(PlugAndChargeIdentification, IsPnC)
 
-        private AuthorizationIdentification(eMA_Id PlugAndChargeIdentification,
+        private AuthorizationIdentification(eMobilityAccount_Id PlugAndChargeIdentification,
                                            Boolean IsPnC)
         {
             this.PlugAndChargeIdentification   = PlugAndChargeIdentification;
@@ -87,7 +87,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region (private) AuthorizationIdentification(RemoteIdentification)
 
-        private AuthorizationIdentification(eMA_Id RemoteIdentification)
+        private AuthorizationIdentification(eMobilityAccount_Id RemoteIdentification)
         {
             this.RemoteIdentification          = RemoteIdentification;
         }
@@ -128,7 +128,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region (static) FromQRCodeIdentification(eMAId, PIN)
 
-        public static AuthorizationIdentification FromQRCodeIdentification(eMA_Id  eMAId,
+        public static AuthorizationIdentification FromQRCodeIdentification(eMobilityAccount_Id  eMAId,
                                                                            String  PIN)
         {
             return new AuthorizationIdentification(new eMAIdWithPIN(eMAId, PIN));
@@ -147,7 +147,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region (static) FromPlugAndChargeIdentification(PlugAndChargeIdentification)
 
-        public static AuthorizationIdentification FromPlugAndChargeIdentification(eMA_Id PlugAndChargeIdentification)
+        public static AuthorizationIdentification FromPlugAndChargeIdentification(eMobilityAccount_Id PlugAndChargeIdentification)
         {
             return new AuthorizationIdentification(PlugAndChargeIdentification);
         }
@@ -156,7 +156,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region (static) FromRemoteIdentification(RemoteIdentification)
 
-        public static AuthorizationIdentification FromRemoteIdentification(eMA_Id RemoteIdentification)
+        public static AuthorizationIdentification FromRemoteIdentification(eMobilityAccount_Id RemoteIdentification)
         {
             return new AuthorizationIdentification(RemoteIdentification);
         }
@@ -194,7 +194,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (PlugAndChargeIdentificationXML != null)
             {
 
-                return new AuthorizationIdentification(eMA_Id.Parse(PlugAndChargeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes + "EVCOID")), true);
+                return new AuthorizationIdentification(eMobilityAccount_Id.Parse(PlugAndChargeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes + "EVCOID")), true);
 
             }
 
@@ -202,7 +202,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (RemoteIdentificationXML != null)
             {
 
-                return new AuthorizationIdentification(eMA_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes + "EVCOID")));
+                return new AuthorizationIdentification(eMobilityAccount_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes + "EVCOID")));
 
             }
 

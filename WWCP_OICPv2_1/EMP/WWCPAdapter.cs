@@ -1238,10 +1238,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     TimeSpan?                Duration           = null,
                     ChargingReservation_Id   ReservationId      = null,
                     EMobilityProvider_Id                  ProviderId         = null,
-                    eMA_Id                   eMAId              = null,
+                    eMobilityAccount_Id                   eMAId              = null,
                     ChargingProduct_Id       ChargingProductId  = null,
                     IEnumerable<Auth_Token>  AuthTokens         = null,
-                    IEnumerable<eMA_Id>      eMAIds             = null,
+                    IEnumerable<eMobilityAccount_Id>      eMAIds             = null,
                     IEnumerable<UInt32>      PINs               = null,
 
                     DateTime?                Timestamp          = null,
@@ -1309,11 +1309,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region Add the eMAId to the list of valid eMAIds
 
             if (eMAIds == null && eMAId != null)
-                eMAIds = new List<eMA_Id> { eMAId };
+                eMAIds = new List<eMobilityAccount_Id> { eMAId };
 
             if (eMAIds != null && !eMAIds.Contains(eMAId))
             {
-                var _eMAIds = new List<eMA_Id>(eMAIds);
+                var _eMAIds = new List<eMobilityAccount_Id>(eMAIds);
                 _eMAIds.Add(eMAId);
                 eMAIds = _eMAIds;
             }
@@ -1452,7 +1452,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         ChargingReservation_Id  ReservationId      = null,
                         ChargingSession_Id      SessionId          = null,
                         EMobilityProvider_Id                 ProviderId         = null,
-                        eMA_Id                  eMAId              = null,
+                        eMobilityAccount_Id                  eMAId              = null,
 
                         DateTime?               Timestamp          = null,
                         CancellationToken?      CancellationToken  = null,
@@ -1595,7 +1595,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                        ChargingSession_Id   SessionId,
                        ReservationHandling  ReservationHandling  = null,
                        EMobilityProvider_Id              ProviderId           = null,
-                       eMA_Id               eMAId                = null,
+                       eMobilityAccount_Id               eMAId                = null,
 
                        DateTime?            Timestamp            = null,
                        CancellationToken?   CancellationToken    = null,
