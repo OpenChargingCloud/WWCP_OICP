@@ -159,9 +159,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             AuthorizeRemoteReservationStart(ChargingSession_Id    SessionId,
-                                            EMobilityProvider_Id  ProviderId,
+                                            eMobilityProvider_Id  ProviderId,
                                             EVSE_Id               EVSEId,
-                                            eMA_Id                eMAId,
+                                            eMobilityAccount_Id                eMAId,
                                             ChargingProduct_Id    ChargingProductId  = null,
                                             ChargingSession_Id    PartnerSessionId   = null,
                                             TimeSpan?             QueryTimeout       = null)
@@ -342,7 +342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             AuthorizeRemoteReservationStop(ChargingSession_Id  SessionId,
-                                           EMobilityProvider_Id             ProviderId,
+                                           eMobilityProvider_Id             ProviderId,
                                            EVSE_Id             EVSEId,
                                            ChargingSession_Id  PartnerSessionId   = null,
                                            TimeSpan?           QueryTimeout       = null)
@@ -480,9 +480,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             AuthorizeRemoteStart(ChargingSession_Id  SessionId,
-                                 EMobilityProvider_Id             ProviderId,
+                                 eMobilityProvider_Id             ProviderId,
                                  EVSE_Id             EVSEId,
-                                 eMA_Id              eMAId,
+                                 eMobilityAccount_Id              eMAId,
                                  ChargingProduct_Id  ChargingProductId  = null,
                                  ChargingSession_Id  PartnerSessionId   = null,
                                  TimeSpan?           QueryTimeout       = null)
@@ -664,7 +664,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             AuthorizeRemoteStop(ChargingSession_Id  SessionId,
-                                EMobilityProvider_Id             ProviderId,
+                                eMobilityProvider_Id             ProviderId,
                                 EVSE_Id             EVSEId,
                                 ChargingSession_Id  PartnerSessionId   = null,
                                 TimeSpan?           QueryTimeout       = null)

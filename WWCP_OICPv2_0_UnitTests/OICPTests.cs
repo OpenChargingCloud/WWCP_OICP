@@ -151,7 +151,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
         {
 
             var result = await HubjectEMP.
-                                   GetChargeDetailRecords(EMobilityProvider_Id.Parse("DE*GDF"),
+                                   GetChargeDetailRecords(eMobilityProvider_Id.Parse("DE*GDF"),
                                                           new DateTime(2015, 10,  1),
                                                           new DateTime(2015, 10, 31));
 

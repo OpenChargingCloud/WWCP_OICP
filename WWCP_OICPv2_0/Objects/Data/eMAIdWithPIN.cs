@@ -162,7 +162,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         public static eMAIdWithPIN Parse(XElement QRCodeIdentificationXML)
         {
 
-            var _eMA_Id       = QRCodeIdentificationXML.MapValueOrFail(OICPNS.CommonTypes + "EVCOID",
+            var _eMobilityAccount_Id       = QRCodeIdentificationXML.MapValueOrFail(OICPNS.CommonTypes + "EVCOID",
                                                                        eMobilityAccount_Id.Parse,
                                                                        "The 'EVCOID' XML tag could not be found!");
 
@@ -170,7 +170,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             var HashedPINXML  = QRCodeIdentificationXML.Element(OICPNS.CommonTypes + "HashedPIN");
 
             if (PINXML != null)
-                return new eMAIdWithPIN(_eMA_Id,
+                return new eMAIdWithPIN(_eMobilityAccount_Id,
                                         PINXML.Value.IsNotNullOrEmpty() ? PINXML.Value : String.Empty);
 
 
@@ -184,7 +184,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             if (FunctionXML == null || (FunctionXML.Value != "MD5" && FunctionXML.Value != "SHA-1"))
                 throw new Exception("Invalid 'HashedPIN Function'!");
 
-            return new eMAIdWithPIN(_eMA_Id,
+            return new eMAIdWithPIN(_eMobilityAccount_Id,
                                     ValueXML.Value.IsNotNullOrEmpty() ? ValueXML.Value : String.Empty,
                                     FunctionXML.Value == "MD5" ? PINCrypto.MD5 : PINCrypto.SHA1,
                                     SaltXML != null ? SaltXML.Value : String.Empty);
