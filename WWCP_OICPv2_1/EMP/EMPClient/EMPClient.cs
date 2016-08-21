@@ -1365,8 +1365,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-<<<<<<< HEAD
-            ReservationStart(EMobilityProvider_Id  ProviderId,
+            ReservationStart(eMobilityProvider_Id  ProviderId,
                              EVSE_Id               EVSEId,
                              eMobilityAccount_Id   eMAId,
                              ChargingSession_Id    SessionId          = null,
@@ -1377,19 +1376,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                              CancellationToken?    CancellationToken  = null,
                              EventTracking_Id      EventTrackingId    = null,
                              TimeSpan?             RequestTimeout     = null)
-=======
-            ReservationStart(eMobilityProvider_Id             ProviderId,
-                             EVSE_Id             EVSEId,
-                             eMobilityAccount_Id              eMAId,
-                             ChargingSession_Id  SessionId          = null,
-                             ChargingSession_Id  PartnerSessionId   = null,
-                             ChargingProduct_Id  PartnerProductId   = null,
-
-                             DateTime?           Timestamp          = null,
-                             CancellationToken?  CancellationToken  = null,
-                             EventTracking_Id    EventTrackingId    = null,
-                             TimeSpan?           RequestTimeout     = null)
->>>>>>> 273b5c83553ea5e1e0290729e36bb8c87d72a5c2
 
         {
 
@@ -1571,17 +1557,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-<<<<<<< HEAD
             ReservationStop(ChargingSession_Id    SessionId,
-                            EMobilityProvider_Id  ProviderId,
+                            eMobilityProvider_Id  ProviderId,
                             EVSE_Id               EVSEId,
                             ChargingSession_Id    PartnerSessionId   = null,
-=======
-            ReservationStop(ChargingSession_Id  SessionId,
-                            eMobilityProvider_Id             ProviderId,
-                            EVSE_Id             EVSEId,
-                            ChargingSession_Id  PartnerSessionId   = null,
->>>>>>> 273b5c83553ea5e1e0290729e36bb8c87d72a5c2
 
                             DateTime?             Timestamp          = null,
                             CancellationToken?    CancellationToken  = null,
@@ -1766,21 +1745,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-<<<<<<< HEAD
-            RemoteStart(EMobilityProvider_Id  ProviderId,
+            RemoteStart(eMobilityProvider_Id  ProviderId,
                         EVSE_Id               EVSEId,
                         eMobilityAccount_Id   eMAId,
                         ChargingSession_Id    SessionId          = null,
                         ChargingSession_Id    PartnerSessionId   = null,
                         ChargingProduct_Id    PartnerProductId   = null,
-=======
-            RemoteStart(eMobilityProvider_Id                 ProviderId,
-                        EVSE_Id                 EVSEId,
-                        eMobilityAccount_Id                  eMAId,
-                        ChargingSession_Id      SessionId          = null,
-                        ChargingSession_Id      PartnerSessionId   = null,
-                        ChargingProduct_Id      PartnerProductId   = null,
->>>>>>> 273b5c83553ea5e1e0290729e36bb8c87d72a5c2
 
                         DateTime?             Timestamp          = null,
                         CancellationToken?    CancellationToken  = null,
@@ -1968,17 +1938,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-<<<<<<< HEAD
             RemoteStop(ChargingSession_Id    SessionId,
-                       EMobilityProvider_Id  ProviderId,
+                       eMobilityProvider_Id  ProviderId,
                        EVSE_Id               EVSEId,
                        ChargingSession_Id    PartnerSessionId   = null,
-=======
-            RemoteStop(ChargingSession_Id   SessionId,
-                       eMobilityProvider_Id              ProviderId,
-                       EVSE_Id              EVSEId,
-                       ChargingSession_Id   PartnerSessionId   = null,
->>>>>>> 273b5c83553ea5e1e0290729e36bb8c87d72a5c2
 
                        DateTime?             Timestamp          = null,
                        CancellationToken?    CancellationToken  = null,
@@ -2160,7 +2123,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<IEnumerable<ChargeDetailRecord>>>
 
-            GetChargeDetailRecords(EMobilityProvider_Id  ProviderId,
+            GetChargeDetailRecords(eMobilityProvider_Id  ProviderId,
                                    DateTime              From,
                                    DateTime?             To                 = null,
 

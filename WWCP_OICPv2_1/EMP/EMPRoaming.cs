@@ -1431,7 +1431,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
             ReservationStart(EVSE_Id               EVSEId,
-                             EMobilityProvider_Id  ProviderId,
+                             eMobilityProvider_Id  ProviderId,
                              eMobilityAccount_Id   eMAId,
                              ChargingSession_Id    SessionId          = null,
                              ChargingSession_Id    PartnerSessionId   = null,
@@ -1473,17 +1473,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-<<<<<<< HEAD
             ReservationStop(ChargingSession_Id    SessionId,
-                            EMobilityProvider_Id  ProviderId,
+                            eMobilityProvider_Id  ProviderId,
                             EVSE_Id               EVSEId,
                             ChargingSession_Id    PartnerSessionId   = null,
-=======
-            ReservationStop(ChargingSession_Id  SessionId,
-                            eMobilityProvider_Id             ProviderId,
-                            EVSE_Id             EVSEId,
-                            ChargingSession_Id  PartnerSessionId   = null,
->>>>>>> 273b5c83553ea5e1e0290729e36bb8c87d72a5c2
 
                             DateTime?             Timestamp          = null,
                             CancellationToken?    CancellationToken  = null,
@@ -1522,21 +1515,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-<<<<<<< HEAD
             RemoteStart(EVSE_Id               EVSEId,
-                        EMobilityProvider_Id  ProviderId,
+                        eMobilityProvider_Id  ProviderId,
                         eMobilityAccount_Id   eMAId,
                         ChargingSession_Id    SessionId          = null,
                         ChargingSession_Id    PartnerSessionId   = null,
                         ChargingProduct_Id    PartnerProductId   = null,
-=======
-            RemoteStart(EVSE_Id             EVSEId,
-                        eMobilityProvider_Id             ProviderId,
-                        eMobilityAccount_Id              eMAId,
-                        ChargingSession_Id  SessionId          = null,
-                        ChargingSession_Id  PartnerSessionId   = null,
-                        ChargingProduct_Id  PartnerProductId   = null,
->>>>>>> 273b5c83553ea5e1e0290729e36bb8c87d72a5c2
 
                         DateTime?             Timestamp          = null,
                         CancellationToken?    CancellationToken  = null,
@@ -1574,17 +1558,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<eRoamingAcknowledgement>>
 
-<<<<<<< HEAD
             RemoteStop(ChargingSession_Id    SessionId,
-                       EMobilityProvider_Id  ProviderId,
+                       eMobilityProvider_Id  ProviderId,
                        EVSE_Id               EVSEId,
                        ChargingSession_Id    PartnerSessionId   = null,
-=======
-            RemoteStop(ChargingSession_Id  SessionId,
-                       eMobilityProvider_Id             ProviderId,
-                       EVSE_Id             EVSEId,
-                       ChargingSession_Id  PartnerSessionId   = null,
->>>>>>> 273b5c83553ea5e1e0290729e36bb8c87d72a5c2
 
                        DateTime?             Timestamp          = null,
                        CancellationToken?    CancellationToken  = null,
@@ -1620,15 +1597,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<IEnumerable<ChargeDetailRecord>>>
 
-<<<<<<< HEAD
-            GetChargeDetailRecords(EMobilityProvider_Id  ProviderId,
+            GetChargeDetailRecords(eMobilityProvider_Id  ProviderId,
                                    DateTime              From,
                                    DateTime?             To                 = null,
-=======
-            GetChargeDetailRecords(eMobilityProvider_Id             ProviderId,
-                                   DateTime            From,
-                                   DateTime?           To                 = null,
->>>>>>> 273b5c83553ea5e1e0290729e36bb8c87d72a5c2
 
                                    DateTime?             Timestamp          = null,
                                    CancellationToken?    CancellationToken  = null,
