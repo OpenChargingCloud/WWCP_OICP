@@ -53,7 +53,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                          ChargingProduct_Id  ChargingProductId,
                                          ChargingSession_Id  SessionId,
                                          ChargingSession_Id  PartnerSessionId,
-                                         EMobilityProvider_Id             ProviderId,
+                                         eMobilityProvider_Id             ProviderId,
                                          eMobilityAccount_Id              eMAId,
                                          TimeSpan?           QueryTimeout  = null);
 
@@ -79,7 +79,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                         EVSE_Id              EVSEId,
                                         ChargingSession_Id   SessionId,
                                         ChargingSession_Id   PartnerSessionId,
-                                        EMobilityProvider_Id              ProviderId    = null,
+                                        eMobilityProvider_Id              ProviderId    = null,
                                         TimeSpan?            QueryTimeout  = null);
 
     /// <summary>
@@ -107,7 +107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                               ChargingProduct_Id  ChargingProductId,
                               ChargingSession_Id  SessionId,
                               ChargingSession_Id  PartnerSessionId,
-                              EMobilityProvider_Id             ProviderId,
+                              eMobilityProvider_Id             ProviderId,
                               eMobilityAccount_Id              eMAId,
                               TimeSpan?           QueryTimeout  = null);
 
@@ -133,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                              EVSE_Id              EVSEId,
                              ChargingSession_Id   SessionId,
                              ChargingSession_Id   PartnerSessionId,
-                             EMobilityProvider_Id              ProviderId    = null,
+                             eMobilityProvider_Id              ProviderId    = null,
                              TimeSpan?            QueryTimeout  = null);
 
 }

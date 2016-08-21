@@ -92,7 +92,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="GeoCoordinatesResponseFormat">An optional response format for the geo coordinates [default: DecimalDegree]</param>
-        public static XElement PullEVSEDataRequestXML(EMobilityProvider_Id                            ProviderId,
+        public static XElement PullEVSEDataRequestXML(eMobilityProvider_Id                            ProviderId,
                                                       GeoCoordinate                      SearchCenter                  = null,
                                                       Double                             DistanceKM                    = 0.0,
                                                       DateTime?                          LastCall                      = null,
@@ -198,7 +198,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatus">An optional EVSE status as filter criteria.</param>
-        public static XElement PullEVSEStatusRequestXML(EMobilityProvider_Id          ProviderId,
+        public static XElement PullEVSEStatusRequestXML(eMobilityProvider_Id          ProviderId,
                                                         GeoCoordinate    SearchCenter  = null,
                                                         Double           DistanceKM    = 0.0,
                                                         EVSEStatusType?  EVSEStatus    = null)
@@ -298,7 +298,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// </summary>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
-        public static XElement PullEVSEStatusByIdRequestXML(EMobilityProvider_Id               ProviderId,
+        public static XElement PullEVSEStatusByIdRequestXML(eMobilityProvider_Id               ProviderId,
                                                             IEnumerable<EVSE_Id>  EVSEIds)
         {
 
@@ -361,7 +361,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="Address">An optional address of the charging stations.</param>
         /// <param name="Plug">Optional plugs of the charging station.</param>
         /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
-        public static XElement SearchEvseRequestXML(EMobilityProvider_Id              ProviderId,
+        public static XElement SearchEvseRequestXML(eMobilityProvider_Id              ProviderId,
                                                     GeoCoordinate        SearchCenter      = null,
                                                     Double               DistanceKM        = 0.0,
                                                     Address              Address           = null,
@@ -644,7 +644,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="SessionId">A charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">The ev charging product identification.</param>
-        public static XElement AuthorizeRemoteStartXML(EMobilityProvider_Id             ProviderId,
+        public static XElement AuthorizeRemoteStartXML(eMobilityProvider_Id             ProviderId,
                                                        EVSE_Id             EVSEId,
                                                        eMobilityAccount_Id              eMAId,
                                                        ChargingSession_Id  SessionId         = null,
@@ -768,7 +768,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="EVSEId">The EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         public static XElement AuthorizeRemoteStopXML(ChargingSession_Id  SessionId,
-                                                      EMobilityProvider_Id             ProviderId,
+                                                      eMobilityProvider_Id             ProviderId,
                                                       EVSE_Id             EVSEId,
                                                       ChargingSession_Id  PartnerSessionId  = null)
         {
@@ -839,7 +839,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="From">The starting time.</param>
         /// <param name="To">The end time.</param>
-        public static XElement GetChargeDetailRecords(EMobilityProvider_Id   ProviderId,
+        public static XElement GetChargeDetailRecords(eMobilityProvider_Id   ProviderId,
                                                       DateTime  From,
                                                       DateTime  To)
         {
