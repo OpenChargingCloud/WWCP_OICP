@@ -296,18 +296,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        SessionId,
                                                        PartnerProductId,
                                                        PartnerSessionId,
-                                                       QueryTimeout) => {
+                                                       RequestTimeout) => {
 
 
-                var response = await RoamingNetwork.AuthorizeStart(Timestamp,
-                                                                   CancellationToken,
-                                                                   EventTrackingId,
-                                                                   OperatorId,
+                var response = await RoamingNetwork.AuthorizeStart(OperatorId,
                                                                    AuthToken,
                                                                    EVSEId,
                                                                    PartnerProductId,
                                                                    SessionId,
-                                                                   QueryTimeout);
+
+                                                                   Timestamp,
+                                                                   CancellationToken,
+                                                                   EventTrackingId,
+                                                                   RequestTimeout);
 
                 if (response != null)
                 {
@@ -374,19 +375,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                       OperatorId,
                                                       EVSEId,
                                                       AuthToken,
-                                                      QueryTimeout) => {
+                                                      RequestTimeout) => {
 
 
-                var response = await RoamingNetwork.AuthorizeStop(Timestamp,
-                                                                  CancellationToken,
-                                                                  EventTrackingId,
-                                                                  OperatorId,
+                var response = await RoamingNetwork.AuthorizeStop(OperatorId,
                                                                   SessionId,
                                                                   AuthToken,
                                                                   EVSEId,
-                                                                  QueryTimeout);
 
-                if (response != null)
+                                                                  Timestamp,
+                                                                  CancellationToken,
+                                                                  EventTrackingId,
+                                                                  RequestTimeout);
+
+                                                          if (response != null)
                 {
                     switch (response.Result)
                     {
@@ -436,7 +438,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                            CancellationToken,
                                                            EventTrackingId,
                                                            ChargeDetailRecord,
-                                                           QueryTimeout) => {
+                                                           RequestTimeout) => {
 
 
                 var response = await RoamingNetwork.SendChargeDetailRecord(DateTime.Now,
@@ -444,7 +446,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                            CancellationToken,
                                                                            EventTrackingId,
                                                                            OICPMapper.AsWWCPChargeDetailRecord(ChargeDetailRecord),
-                                                                           QueryTimeout);
+                                                                           RequestTimeout);
 
                 if (response != null)
                 {
@@ -558,7 +560,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
@@ -582,7 +584,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                            X509Certificate                      ClientCert                  = null,
                            String                               RemoteHTTPVirtualHost       = null,
                            String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
-                           TimeSpan?                            QueryTimeout                = null,
+                           TimeSpan?                            RequestTimeout                = null,
 
                            String                               ServerName                  = EMPServer.DefaultHTTPServerName,
                            IPPort                               ServerTCPPort               = null,
@@ -608,7 +610,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                   ClientCert,
                                   RemoteHTTPVirtualHost,
                                   HTTPUserAgent,
-                                  QueryTimeout,
+                                  RequestTimeout,
 
                                   ServerName,
                                   ServerTCPPort,
@@ -942,7 +944,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region SearchEVSE(ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null, QueryTimeout = null)
+        #region SearchEVSE(ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null, RequestTimeout = null)
 
         /// <summary>
         /// Create a new Search EVSE request.

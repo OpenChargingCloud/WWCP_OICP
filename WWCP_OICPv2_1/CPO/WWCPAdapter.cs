@@ -2222,15 +2222,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStartResult>
 
-            AuthorizeStart(ChargingStationOperator_Id     OperatorId,
-                           Auth_Token          AuthToken,
-                           ChargingProduct_Id  ChargingProductId  = null,
-                           ChargingSession_Id  SessionId          = null,
+            AuthorizeStart(ChargingStationOperator_Id  OperatorId,
+                           Auth_Token                  AuthToken,
+                           ChargingProduct_Id          ChargingProductId  = null,
+                           ChargingSession_Id          SessionId          = null,
 
-                           DateTime?           Timestamp          = null,
-                           CancellationToken?  CancellationToken  = null,
-                           EventTracking_Id    EventTrackingId    = null,
-                           TimeSpan?           RequestTimeout     = null)
+                           DateTime?                   Timestamp          = null,
+                           CancellationToken?          CancellationToken  = null,
+                           EventTracking_Id            EventTrackingId    = null,
+                           TimeSpan?                   RequestTimeout     = null)
         {
 
             #region Initial checks
@@ -2259,6 +2259,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeStart?.Invoke(DateTime.Now,
+                                         Timestamp.Value,
                                          this,
                                          EventTrackingId,
                                          RoamingNetwork.Id,
@@ -2323,6 +2324,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeStarted?.Invoke(Now,
+                                           Timestamp.Value,
                                            this,
                                            EventTrackingId,
                                            RoamingNetwork.Id,
@@ -2364,16 +2366,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStartEVSEResult>
 
-            AuthorizeStart(ChargingStationOperator_Id     OperatorId,
-                           Auth_Token          AuthToken,
-                           EVSE_Id             EVSEId,
-                           ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
-                           ChargingSession_Id  SessionId          = null,
+            AuthorizeStart(ChargingStationOperator_Id  OperatorId,
+                           Auth_Token                  AuthToken,
+                           EVSE_Id                     EVSEId,
+                           ChargingProduct_Id          ChargingProductId  = null,   // [maxlength: 100]
+                           ChargingSession_Id          SessionId          = null,
 
-                           DateTime?           Timestamp          = null,
-                           CancellationToken?  CancellationToken  = null,
-                           EventTracking_Id    EventTrackingId    = null,
-                           TimeSpan?           RequestTimeout     = null)
+                           DateTime?                   Timestamp          = null,
+                           CancellationToken?          CancellationToken  = null,
+                           EventTracking_Id            EventTrackingId    = null,
+                           TimeSpan?                   RequestTimeout     = null)
 
         {
 
@@ -2406,6 +2408,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeEVSEStart?.Invoke(DateTime.Now,
+                                             Timestamp.Value,
                                              this,
                                              EventTrackingId,
                                              RoamingNetwork.Id,
@@ -2471,6 +2474,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeEVSEStarted?.Invoke(DateTime.Now,
+                                               Timestamp.Value,
                                                this,
                                                EventTrackingId,
                                                RoamingNetwork.Id,
@@ -2513,16 +2517,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override Task<AuthStartChargingStationResult>
 
-            AuthorizeStart(ChargingStationOperator_Id     OperatorId,
-                           Auth_Token          AuthToken,
-                           ChargingStation_Id  ChargingStationId,
-                           ChargingProduct_Id  ChargingProductId  = null,   // [maxlength: 100]
-                           ChargingSession_Id  SessionId          = null,
+            AuthorizeStart(ChargingStationOperator_Id  OperatorId,
+                           Auth_Token                  AuthToken,
+                           ChargingStation_Id          ChargingStationId,
+                           ChargingProduct_Id          ChargingProductId  = null,   // [maxlength: 100]
+                           ChargingSession_Id          SessionId          = null,
 
-                           DateTime?           Timestamp          = null,
-                           CancellationToken?  CancellationToken  = null,
-                           EventTracking_Id    EventTrackingId    = null,
-                           TimeSpan?           RequestTimeout     = null)
+                           DateTime?                   Timestamp          = null,
+                           CancellationToken?          CancellationToken  = null,
+                           EventTracking_Id            EventTrackingId    = null,
+                           TimeSpan?                   RequestTimeout     = null)
 
         {
 
@@ -2555,6 +2559,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeChargingStationStart?.Invoke(DateTime.Now,
+                                                        Timestamp.Value,
                                                         this,
                                                         EventTrackingId,
                                                         RoamingNetwork.Id,
@@ -2584,6 +2589,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeChargingStationStarted?.Invoke(DateTime.Now,
+                                                          Timestamp.Value,
                                                           this,
                                                           EventTrackingId,
                                                           RoamingNetwork.Id,
@@ -2629,14 +2635,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStopResult>
 
-            AuthorizeStop(ChargingStationOperator_Id     OperatorId,
-                          ChargingSession_Id  SessionId,
-                          Auth_Token          AuthToken,
+            AuthorizeStop(ChargingStationOperator_Id  OperatorId,
+                          ChargingSession_Id          SessionId,
+                          Auth_Token                  AuthToken,
 
-                          DateTime?           Timestamp          = null,
-                          CancellationToken?  CancellationToken  = null,
-                          EventTracking_Id    EventTrackingId    = null,
-                          TimeSpan?           RequestTimeout     = null)
+                          DateTime?                   Timestamp          = null,
+                          CancellationToken?          CancellationToken  = null,
+                          EventTracking_Id            EventTrackingId    = null,
+                          TimeSpan?                   RequestTimeout     = null)
         {
 
             #region Initial checks
@@ -2668,6 +2674,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeStop?.Invoke(DateTime.Now,
+                                        Timestamp.Value,
                                         this,
                                         EventTrackingId,
                                         RoamingNetwork.Id,
@@ -2723,6 +2730,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeStopped?.Invoke(DateTime.Now,
+                                           Timestamp.Value,
                                            this,
                                            EventTrackingId,
                                            RoamingNetwork.Id,
@@ -2765,15 +2773,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<AuthStopEVSEResult>
 
-            AuthorizeStop(ChargingStationOperator_Id     OperatorId,
-                          EVSE_Id             EVSEId,
-                          ChargingSession_Id  SessionId,
-                          Auth_Token          AuthToken,
+            AuthorizeStop(ChargingStationOperator_Id  OperatorId,
+                          EVSE_Id                     EVSEId,
+                          ChargingSession_Id          SessionId,
+                          Auth_Token                  AuthToken,
 
-                          DateTime?           Timestamp          = null,
-                          CancellationToken?  CancellationToken  = null,
-                          EventTracking_Id    EventTrackingId    = null,
-                          TimeSpan?           RequestTimeout     = null)
+                          DateTime?                   Timestamp          = null,
+                          CancellationToken?          CancellationToken  = null,
+                          EventTracking_Id            EventTrackingId    = null,
+                          TimeSpan?                   RequestTimeout     = null)
         {
 
             #region Initial checks
@@ -2808,6 +2816,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeEVSEStop?.Invoke(DateTime.Now,
+                                            Timestamp.Value,
                                             this,
                                             EventTrackingId,
                                             RoamingNetwork.Id,
@@ -2863,6 +2872,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeEVSEStopped?.Invoke(DateTime.Now,
+                                               Timestamp.Value,
                                                this,
                                                EventTrackingId,
                                                RoamingNetwork.Id,
@@ -2902,15 +2912,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override Task<AuthStopChargingStationResult>
 
-            AuthorizeStop(ChargingStationOperator_Id     OperatorId,
-                          ChargingStation_Id  ChargingStationId,
-                          ChargingSession_Id  SessionId,
-                          Auth_Token          AuthToken,
+            AuthorizeStop(ChargingStationOperator_Id  OperatorId,
+                          ChargingStation_Id          ChargingStationId,
+                          ChargingSession_Id          SessionId,
+                          Auth_Token                  AuthToken,
 
-                          DateTime?           Timestamp          = null,
-                          CancellationToken?  CancellationToken  = null,
-                          EventTracking_Id    EventTrackingId    = null,
-                          TimeSpan?           RequestTimeout     = null)
+                          DateTime?                   Timestamp          = null,
+                          CancellationToken?          CancellationToken  = null,
+                          EventTracking_Id            EventTrackingId    = null,
+                          TimeSpan?                   RequestTimeout     = null)
 
         {
 
@@ -2946,6 +2956,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeChargingStationStop?.Invoke(DateTime.Now,
+                                                       Timestamp.Value,
                                                        this,
                                                        EventTrackingId,
                                                        RoamingNetwork.Id,
@@ -2974,6 +2985,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeChargingStationStopped?.Invoke(DateTime.Now,
+                                                          Timestamp.Value,
                                                           this,
                                                           EventTrackingId,
                                                           RoamingNetwork.Id,
