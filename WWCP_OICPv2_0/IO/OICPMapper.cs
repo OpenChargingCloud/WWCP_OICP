@@ -47,7 +47,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         {
 
             var _EVSEDataRecord = new EVSEDataRecord(EVSE,
-                                                     EVSE.ChargingStation.Id.ToFormat(IdFormatType.NEW).ToString(),
+                                                     EVSE.ChargingStation.Id.ToString(),
                                                      EVSE.ChargingStation.Name,
                                                      EVSE.ChargingStation.Address,
                                                      EVSE.ChargingStation.GeoLocation,
@@ -149,6 +149,33 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                     return EVSEStatusType.Unknown;
 
             }
+
+        }
+
+        #endregion
+
+        #region AsOICPEVSEStatus(this EVSEStatus)
+
+        /// <summary>
+        /// Create a new OICP EVSE status record based on the given WWCP EVSE status.
+        /// </summary>
+        /// <param name="EVSEStatus">The current status of an EVSE.</param>
+        public static EVSEStatusRecord AsOICPEVSEStatus(this EVSEStatus EVSEStatus)
+
+        {
+
+            #region Initial checks
+
+            if (EVSEStatus == null)
+                throw new ArgumentNullException(nameof(EVSEStatus), "The given EVSE status must not be null!");
+
+            if (!Definitions.EVSEIdRegExpr.IsMatch(EVSEStatus.Id.ToString()))
+                throw new ArgumentException("The given EVSE identification '" + EVSEStatus.Id + "' does not match the OICP definition!", nameof(EVSEStatus));
+
+            #endregion
+
+            return new EVSEStatusRecord(EVSEStatus.Id,
+                                        AsOICPEVSEStatus(EVSEStatus.Status));
 
         }
 

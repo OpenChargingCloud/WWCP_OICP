@@ -635,12 +635,12 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
         public override async Task<Acknowledgement>
 
             PushEVSEData(ILookup<ChargingStationOperator, EVSE>  GroupedEVSEs,
-                         WWCP.ActionType              ActionType         = WWCP.ActionType.fullLoad,
+                         WWCP.ActionType                         ActionType         = WWCP.ActionType.fullLoad,
 
-                         DateTime?                    Timestamp          = null,
-                         CancellationToken?           CancellationToken  = null,
-                         EventTracking_Id             EventTrackingId    = null,
-                         TimeSpan?                    RequestTimeout     = null)
+                         DateTime?                               Timestamp          = null,
+                         CancellationToken?                      CancellationToken  = null,
+                         EventTracking_Id                        EventTrackingId    = null,
+                         TimeSpan?                               RequestTimeout     = null)
 
         {
 
@@ -707,7 +707,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                                                                  Where       (group => group.Key != null).
                                                                  ToDictionary(group => group.Key,
                                                                               group => group.AsEnumerable()).
-                                                                 SelectMany  (kvp   => kvp.Value.Select(evse => evse.AsOICPEVSEDataRecord(_EVSE2EVSEDataRecord)), Tuple.Create).
+                                                                 SelectMany  (kvp   => kvp.Value.Select(evse => {
+
+                                                                     try
+                                                                     {
+                                                                         return evse.AsOICPEVSEDataRecord(_EVSE2EVSEDataRecord);
+                                                                     }
+                                                                     catch (Exception e)
+                                                                     {
+                                                                         DebugX.Log(e.Message);
+                                                                     }
+
+                                                                     return null;
+
+                                                                 }), Tuple.Create).
                                                                  ToLookup    (kvp   => kvp.Item1.Key,
                                                                               kvp   => kvp.Item2),
                                                              ActionType.AsOICPActionType(),
@@ -1296,8 +1309,21 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                                                                                 group => group.AsEnumerable(). // Only send the latest EVSE status!
                                                                                                GroupBy(evsestatus      => evsestatus.Id).
                                                                                                Select (sameevseidgroup => sameevseidgroup.OrderByDescending(status => status.Timestamp).First())).
-                                                                   SelectMany(kvp => kvp.Value.Select(evsestatus => new EVSEStatusRecord(evsestatus.Id, evsestatus.Status.AsOICPEVSEStatus())), Tuple.Create).
-                                                                   ToLookup  (kvp => kvp.Item1.Key,
+                                                                   SelectMany(kvp => kvp.Value.Select(evsestatus => {
+
+                                                                       try
+                                                                       {
+                                                                           return evsestatus.AsOICPEVSEStatus();
+                                                                       }
+                                                                       catch (Exception e)
+                                                                       {
+                                                                           DebugX.Log(e.Message);
+                                                                       }
+
+                                                                       return null;
+
+                                                                   }), Tuple.Create).
+                                                                   ToLookup(kvp => kvp.Item1.Key,
                                                                               kvp => kvp.Item2), 
                                                                ActionType.AsOICPActionType(),
                                                                DefaultOperator,

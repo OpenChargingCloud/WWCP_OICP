@@ -53,6 +53,7 @@
     <Compile Include="CPO\CPOExtentions.cs" />
     <Compile Include="CPO\WWCPAdapter.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
+    <Compile Include="Definitions.cs" />
     <Compile Include="EMP\EMPClient\EMPClientDelegates.cs" />
     <Compile Include="EMP\EMPClient\EMPClientLogger.cs" />
     <Compile Include="EMP\EMPDelegates.cs" />

@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
         #region Data
 
-        private static readonly Regex HotlinePhoneNumberRegExpr = new Regex("\\+[^0-9]");
+        private static readonly Regex HotlinePhoneNumberRegExpr  = new Regex("\\+[^0-9]");
 
         #endregion
 
@@ -280,6 +280,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
             if (Id == null)
                 throw new ArgumentNullException(nameof(Id),  "The given unique EVSE identification must not be null!");
+
+            if (!Definitions.EVSEIdRegExpr.IsMatch(Id.ToString()))
+                throw new ArgumentException("The given EVSE identification '" + Id + "' does not match the OICP definition!", nameof(Id));
 
             #endregion
 

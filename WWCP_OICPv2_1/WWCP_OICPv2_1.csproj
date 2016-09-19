@@ -60,6 +60,7 @@
     <Compile Include="MobileClient\MobileClientDelegates.cs" />
     <Compile Include="MobileClient\MobileClientLogger.cs" />
     <Compile Include="Objects\Data\StatusCodes.cs" />
+    <Compile Include="Definitions.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="EMP\EMPClient\EMPClient.cs" />
     <Compile Include="EMP\EMPClient\EMPClientDelegates.cs" />

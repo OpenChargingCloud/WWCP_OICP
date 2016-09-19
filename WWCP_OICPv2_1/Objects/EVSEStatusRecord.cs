@@ -20,6 +20,7 @@
 using System;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -33,6 +34,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// </summary>
     public class EVSEStatusRecord
     {
+
+        #region Data
+
+        private static readonly Regex EVSEIdRegExpr = new Regex("([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})  |  (\\+?[0-9]{1,3}\\*[0-9]{3,6}\\*[0-9\\*]{1,32})", RegexOptions.IgnorePatternWhitespace);
+
+        #endregion
 
         #region Properties
 
@@ -65,6 +72,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EVSE == null)
                 throw new ArgumentNullException(nameof(EVSE),  "The given EVSE must not be null!");
 
+            if (!EVSEIdRegExpr.IsMatch(EVSE.Id.ToString()))
+                throw new ArgumentException("The given EVSE identification '" + EVSE.Id + "' does not match the OICP definition!", nameof(EVSE));
+
             #endregion
 
             this.Id      = EVSE.Id;
@@ -74,29 +84,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region EVSEStatusRecord(EVSEStatus)
-
-        /// <summary>
-        /// Create a new OICP EVSE status record based on the given WWCP EVSE status.
-        /// </summary>
-        /// <param name="EVSEStatus">The current status of an EVSE.</param>
-        public EVSEStatusRecord(EVSEStatus EVSEStatus)
-
-        {
-
-            #region Initial checks
-
-            if (EVSEStatus == null)
-                throw new ArgumentNullException(nameof(EVSEStatus),  "The given EVSE status must not be null!");
-
-            #endregion
-
-            this.Id      = EVSEStatus.Id;
-            this.Status  = OICPMapper.AsOICPEVSEStatus(EVSEStatus.Status);
-
-        }
-
-        #endregion
+        
 
         #region EVSEStatusRecord(Id, Status)
 
@@ -114,6 +102,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             if (Id == null)
                 throw new ArgumentNullException(nameof(Id),  "The given unique identification of an EVSE must not be null!");
+
+            if (!EVSEIdRegExpr.IsMatch(Id.ToString()))
+                throw new ArgumentException("The given EVSE identification '" + Id + "' does not match the OICP definition!", nameof(Id));
 
             #endregion
 
