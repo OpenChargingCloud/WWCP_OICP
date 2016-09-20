@@ -82,39 +82,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                                                       ? _EVSEDataRecords.
                                                             ToLookup(evsedatarecord => evsedatarecord.EVSE?.Operator).
-                                                            Select(group => {
+                                                            Select(group => group.Any(evsedatarecord => evsedatarecord != null)
 
-                                                                return group.Any(evsedatarecord => evsedatarecord != null)
+                                                                       ? new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
-                                                                    ? new XElement(OICPNS.EVSEData + "OperatorEvseData",
+                                                                             new XElement(OICPNS.EVSEData + "OperatorID", group.Key.Id.OriginId),
 
-                                                                          new XElement(OICPNS.EVSEData + "OperatorID", group.Key.Id.OriginId),
+                                                                             group.Key.Name.Any()
+                                                                                 ? new XElement(OICPNS.EVSEData + "OperatorName", group.Key.Name.FirstText)
+                                                                                 : null,
 
-                                                                          group.Key.Name.Any()
-                                                                              ? new XElement(OICPNS.EVSEData + "OperatorName", group.Key.Name.FirstText)
-                                                                              : null,
+                                                                             new XElement(OICPPlusEVSEOperator + "DataLicenses",
+                                                                                 group.Key.DataLicenses.SafeSelect(license => new XElement(OICPPlusEVSEOperator + "DataLicense",
+                                                                                                                                  new XElement(OICPPlusEVSEOperator + "Id", license.Id),
+                                                                                                                                  new XElement(OICPPlusEVSEOperator + "Description", license.Description),
+                                                                                                                                  license.URIs.Any()
+                                                                                                                                      ? new XElement(OICPPlusEVSEOperator + "DataLicenseURIs",
+                                                                                                                                            license.URIs.SafeSelect(uri => new XElement(OICPPlusEVSEOperator + "DataLicenseURI", uri)))
+                                                                                                                                      : null
+                                                                                                                              ))
+                                                                             ),
 
-                                                                          new XElement(OICPPlusEVSEOperator + "DataLicenses",
-                                                                              group.Key.DataLicenses.SafeSelect(license => new XElement(OICPPlusEVSEOperator + "DataLicense",
-                                                                                                                               new XElement(OICPPlusEVSEOperator + "Id", license.Id),
-                                                                                                                               new XElement(OICPPlusEVSEOperator + "Description", license.Description),
-                                                                                                                               license.URIs.Any()
-                                                                                                                                   ? new XElement(OICPPlusEVSEOperator + "DataLicenseURIs",
-                                                                                                                                         license.URIs.SafeSelect(uri => new XElement(OICPPlusEVSEOperator + "DataLicenseURI", uri)))
-                                                                                                                                   : null
-                                                                                                                           ))
-                                                                          ),
+                                                                             // <EvseDataRecord> ... </EvseDataRecord>
+                                                                             group.Where(evsedatarecord => evsedatarecord != null).
+                                                                                   Select(evsedatarecord => EVSEDataRecord2XML(RoamingNetwork, evsedatarecord, evsedatarecord.ToXML())).
+                                                                                   ToArray()
 
-                                                                          // <EvseDataRecord> ... </EvseDataRecord>
-                                                                          group.Where(evsedatarecord => evsedatarecord != null).
-                                                                                Select(evsedatarecord => EVSEDataRecord2XML(RoamingNetwork, evsedatarecord, evsedatarecord.ToXML())).
-                                                                                ToArray()
+                                                                         )
 
-                                                                      )
+                                                                       : null
 
-                                                                  : null;
-
-                                                            }).ToArray()
+                                                            ).ToArray()
 
                                                         : null
 
@@ -143,8 +141,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                                      XMLPostProcessingDelegate     XMLPostProcessing     = null)
         {
 
-            //return CPOClient_XMLMethods.PushEVSEStatusXML();
-
             #region Initial checks
 
             if (EVSEs == null)
@@ -162,11 +158,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                        SOAP.Encapsulation(new XElement(OICPNS.EVSEStatus + "eRoamingEvseStatus",
                                               new XElement(OICPNS.EVSEStatus + "EvseStatuses",
 
-                                                  EVSEs.ToLookup(evse => evse.Operator, evse => new EVSEStatusRecord(evse)).
-                                                    Select(group =>
+                                                  EVSEs.ToLookup(evse => evse.Operator,
+                                                                 evse => {
 
-                                                      group.Any(evsestatusrecord => evsestatusrecord != null)
-                                                          ? new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
+                                                                     try
+                                                                     {
+                                                                         return new EVSEStatusRecord(evse);
+                                                                     }
+                                                                     catch (Exception)
+                                                                     { }
+
+                                                                     return null;
+
+                                                                 }).
+
+                                                        Select(group => group.Any(evsestatusrecord => evsestatusrecord != null)
+
+                                                            ? new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
                                                                 new XElement(OICPNS.EVSEStatus + "OperatorID", group.Key.Id.OriginId),
 
