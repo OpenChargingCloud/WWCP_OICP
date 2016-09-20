@@ -45,13 +45,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region Data
 
-        private        readonly  EVSE2EVSEDataRecordDelegate        _EVSE2EVSEDataRecord;
+        private        readonly  EVSE2EVSEDataRecordDelegate                   _EVSE2EVSEDataRecord;
 
-        private        readonly  EVSEDataRecord2XMLDelegate         _EVSEDataRecord2XML;
+        private        readonly  EVSEDataRecord2XMLDelegate                    _EVSEDataRecord2XML;
 
         private        readonly  ChargingStationOperatorNameSelectorDelegate   _OperatorNameSelector;
 
-        private static readonly  Regex                              pattern = new Regex(@"\s=\s");
+        private static readonly  Regex                                         pattern = new Regex(@"\s=\s");
 
         public  static readonly  ChargingStationOperatorNameSelectorDelegate   DefaultOperatorNameSelector = I18N => I18N.FirstText;
 
