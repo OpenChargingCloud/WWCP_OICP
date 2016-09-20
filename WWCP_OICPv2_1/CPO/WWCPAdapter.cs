@@ -936,7 +936,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 else
                     result = new Acknowledgement(ResultType.False,
                                                  response.HTTPStatusCode.ToString(),
-                                                 Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String()));
+                                                 response.HTTPBody != null
+                                                     ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
+                                                     : Warnings.AddAndReturnList("No HTTP body received!"));
 
             }
 
@@ -1549,7 +1551,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 else
                     result = new Acknowledgement(ResultType.False,
                                                  response.HTTPStatusCode.ToString(),
-                                                 Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String()));
+                                                 response.HTTPBody != null
+                                                     ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
+                                                     : Warnings.AddAndReturnList("No HTTP body received!"));
 
             }
 
