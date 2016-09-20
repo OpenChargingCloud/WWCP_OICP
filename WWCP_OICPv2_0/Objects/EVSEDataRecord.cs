@@ -997,10 +997,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0
 
 
         public Builder ToBuilder(EVSE_Id NewEVSEId = null)
-        {
 
-            return new Builder(NewEVSEId ?? this.Id)
-            {
+            => new Builder(NewEVSEId ?? this.Id) {
+
+                EVSE                      = EVSE,
 
                 DeltaType                 = DeltaType,
                 LastUpdate                = LastUpdate,
@@ -1027,8 +1027,6 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                 OpeningTime               = OpeningTime
 
             };
-
-        }
 
 
         /// <summary>
