@@ -193,6 +193,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// Create a new EVSE data record.
         /// </summary>
         /// <param name="EVSE">A WWCP EVSE.</param>
+        /// <param name="DeltaType">The delta type when this EVSE data record was just downloaded.</param>
+        /// <param name="LastUpdate">The last update timestamp of this EVSE data record.</param>
         /// <param name="ChargingStationId">The identification of the charging station hosting this EVSE.</param>
         /// <param name="ChargingStationName">The multi-language name of the charging station hosting this EVSE.</param>
         /// <param name="Address">The address of this EVSE.</param>
@@ -214,6 +216,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
         /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
         /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
         internal EVSEDataRecord(EVSE                              EVSE,
+                                String                            DeltaType,
+                                DateTime?                         LastUpdate,
                                 String                            ChargingStationId           = null,
                                 I18NString                        ChargingStationName         = null,
                                 Address                           Address                     = null,
@@ -222,7 +226,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                 ChargingFacilities                ChargingFacilities          = ChargingFacilities.Unspecified,
                                 ChargingModes                     ChargingModes               = ChargingModes.Unspecified,
                                 AuthenticationModes               AuthenticationModes         = AuthenticationModes.Unkown,
-                                Int32?                            MaxCapacity                 = null,
+                                Double?                           MaxCapacity                 = null,
                                 PaymentOptions                    PaymentOptions              = PaymentOptions.Unspecified,
                                 AccessibilityTypes                Accessibility               = AccessibilityTypes.Free_publicly_accessible,
                                 String                            HotlinePhoneNumber          = null,
@@ -236,8 +240,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0
                                 Boolean                           DynamicInfoAvailable        = true)
 
             : this(EVSE.Id,
-                   "",
-                   DateTime.Now,
+                   DeltaType,
+                   LastUpdate,
                    ChargingStationId,
                    ChargingStationName,
                    Address,
@@ -1293,34 +1297,38 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
 
+            #region Build()
+
+            /// <summary>
+            /// Return an immutable version of the EVSE data record.
+            /// </summary>
             public EVSEDataRecord Build()
-            {
 
-                return new EVSEDataRecord(EVSEId,
-                                          DeltaType,
-                                          LastUpdate,
-                                          ChargingStationId,
-                                          ChargingStationName,
-                                          Address,
-                                          GeoCoordinate,
-                                          Plugs,
-                                          ChargingFacilities,
-                                          ChargingModes,
-                                          AuthenticationModes,
-                                          MaxCapacity,
-                                          PaymentOptions,
-                                          Accessibility,
-                                          HotlinePhoneNumber,
-                                          AdditionalInfo,
-                                          GeoChargingPointEntrance,
-                                          IsOpen24Hours,
-                                          OpeningTime,
-                                          HubOperatorId,
-                                          ClearingHouseId,
-                                          IsHubjectCompatible,
-                                          DynamicInfoAvailable);
+                => new EVSEDataRecord(EVSE,
+                                      DeltaType,
+                                      LastUpdate,
+                                      ChargingStationId,
+                                      ChargingStationName,
+                                      Address,
+                                      GeoCoordinate,
+                                      Plugs,
+                                      ChargingFacilities,
+                                      ChargingModes,
+                                      AuthenticationModes,
+                                      MaxCapacity,
+                                      PaymentOptions,
+                                      Accessibility,
+                                      HotlinePhoneNumber,
+                                      AdditionalInfo,
+                                      GeoChargingPointEntrance,
+                                      IsOpen24Hours,
+                                      OpeningTime,
+                                      HubOperatorId,
+                                      ClearingHouseId,
+                                      IsHubjectCompatible,
+                                      DynamicInfoAvailable);
 
-          }
+            #endregion
 
         }
 

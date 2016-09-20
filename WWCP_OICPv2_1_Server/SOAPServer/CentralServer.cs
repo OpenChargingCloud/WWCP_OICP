@@ -31,7 +31,7 @@ using org.GraphDefined.Vanaheimr.Hermod.DNS;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.Server
 {
 
     /// <summary>

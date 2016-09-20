@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WWCP OICPv2_1 Server")]
-[assembly: AssemblyDescription("WWCP OICPv2_1 Server")]
+[assembly: AssemblyTitle("WWCP OICPv2_1 WebAPI")]
+[assembly: AssemblyDescription("WWCP OICPv2_1 WebAPI")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GraphDefined GmbH")]
-[assembly: AssemblyProduct("WWCP OICPv2_1 Server")]
+[assembly: AssemblyProduct("WWCP OICPv2_1 WebAPI")]
 [assembly: AssemblyCopyright("Copyright © 2014-2016 GraphDefined GmbH")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("6d76fddf-9029-41a3-bd6b-2061b32bac03")]
+[assembly: Guid("5fa539da-43de-4dae-89ca-9dc70608c927")]
 
 // Version information for an assembly consists of the following four values:
 //

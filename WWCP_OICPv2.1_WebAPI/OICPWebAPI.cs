@@ -19,6 +19,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -29,11 +30,11 @@ using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1.Server
+namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 {
 
-        /// <summary>
-    /// WWCP HTTP API extention methods.
+    /// <summary>
+    /// OICP HTTP API extention methods.
     /// </summary>
     public static class ExtentionMethods
     {
@@ -129,9 +130,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
 
     /// <summary>
-    /// A HTTP server providing OICP data structures.
+    /// A HTTP API providing OICP data structures.
     /// </summary>
-    public class OICPServer
+    public class OICPWebAPI
     {
 
         #region Data
@@ -139,22 +140,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         /// <summary>
         /// The name or identification string of this HTTP API.
         /// </summary>
-        public  const           String                                     ServerName             = "Belectric Drive OICP" + Version.Number + " HTTP API";
+        public  const     String                        ServerName  = "Belectric Drive OICP" + Version.Number + " WebAPI";
 
-        public  static readonly IEnumerable<KeyValuePair<String, String>>  HTTPLogins             = new KeyValuePair<String, String>[] {
-                                                                                                        new KeyValuePair<String, String>("bdrive",    "fgdpou/20f12§o"),
-                                                                                                        new KeyValuePair<String, String>("cirrantic", "sfgj9$q3f20"),
-                                                                                                        new KeyValuePair<String, String>("bmw",       "gr93ri2f03r"),
-                                                                                                    };
-
-        private const           String                                     BoschEBikeRNId         = "BoschEBike";
-        private const           String                                     BoschEBikeProviderId   = "DE*BSI";
-
-        private readonly        XMLNamespacesDelegate                      XMLNamespaces;
-        private readonly        EVSE2EVSEDataRecordDelegate                EVSE2EVSEDataRecord;
-        private readonly        EVSEDataRecord2XMLDelegate                 EVSEDataRecord2XML;
-        private readonly        EVSEStatusRecord2XMLDelegate               EVSEStatusRecord2XML;
-        private readonly        XMLPostProcessingDelegate                  XMLPostProcessing;
+        private readonly  XMLNamespacesDelegate         XMLNamespaces;
+        private readonly  EVSE2EVSEDataRecordDelegate   EVSE2EVSEDataRecord;
+        private readonly  EVSEDataRecord2XMLDelegate    EVSEDataRecord2XML;
+        private readonly  EVSEStatusRecord2XMLDelegate  EVSEStatusRecord2XML;
+        private readonly  XMLPostProcessingDelegate     XMLPostProcessing;
 
         #endregion
 
@@ -173,6 +165,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         }
 
         #endregion
+
+        public IEnumerable<KeyValuePair<String, String>> HTTPLogins { get; }
 
         #region URIPrefix
 
@@ -277,18 +271,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         #region Constructor(s)
 
         /// <summary>
-        /// Attach the Belectric Drive Bosch E-Bike API to the given HTTP server.
+        /// Attach the OICP API to the given HTTP server.
         /// </summary>
         /// <param name="RoamingNetwork">The Bosch E-Bike roaming network.</param>
         /// <param name="HTTPServer">A HTTP server.</param>
+        /// <param name="HTTPLogins">HTTP logins for Basic Auth.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="XMLNamespaces">An optional delegate to process the XML namespaces.</param>
         /// <param name="EVSE2EVSEDataRecord">An optional delegate to process an EVSE data record before converting it to XML.</param>
         /// <param name="EVSEDataRecord2XML">An optional delegate to process an EVSE data record XML before sending it somewhere.</param>
         /// <param name="EVSEStatusRecord2XML">An optional delegate to process an EVSE status record XML before sending it somewhere.</param>
         /// <param name="XMLPostProcessing">An optional delegate to process the XML after its final creation.</param>
-        public OICPServer(RoamingNetwork                               RoamingNetwork,
+        public OICPWebAPI(RoamingNetwork                               RoamingNetwork,
                           HTTPServer<RoamingNetworks, RoamingNetwork>  HTTPServer,
+                          IEnumerable<KeyValuePair<String, String>>    HTTPLogins,
                           String                                       URIPrefix             = "/ext/OICPPlus",
                           XMLNamespacesDelegate                        XMLNamespaces         = null,
                           EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
@@ -300,20 +296,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
             #region Initial checks
 
             if (RoamingNetwork == null)
-                throw new ArgumentNullException("RoamingNetwork", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(RoamingNetwork),  "The given parameter must not be null!");
 
             if (HTTPServer == null)
-                throw new ArgumentNullException("HTTPServer", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(HTTPServer),      "The given parameter must not be null!");
 
             if (URIPrefix.IsNullOrEmpty())
-                throw new ArgumentNullException("URIPrefix", "The given parameter must not be null or empty!");
+                throw new ArgumentNullException(nameof(URIPrefix),       "The given parameter must not be null or empty!");
 
-            if (!URIPrefix.StartsWith("/"))
+            if (!URIPrefix.StartsWith("/", StringComparison.Ordinal))
                 URIPrefix = "/" + URIPrefix;
 
             #endregion
 
             this._HTTPServer           = HTTPServer;
+            this.HTTPLogins            = HTTPLogins ?? new KeyValuePair<String, String>[0];
             this._URIPrefix            = URIPrefix;
             this._DNSClient            = HTTPServer.DNSClient;
 
@@ -321,6 +318,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
             this.EVSE2EVSEDataRecord   = EVSE2EVSEDataRecord;
             this.EVSEDataRecord2XML    = EVSEDataRecord2XML;
             this.EVSEStatusRecord2XML  = EVSEStatusRecord2XML;
+            this.XMLPostProcessing     = XMLPostProcessing;
 
             RegisterURITemplates();
 
@@ -353,7 +351,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                          HTTPMethod.GET,
                                          "/RNs/{RoamingNetworkId}" + _URIPrefix + "/EVSEs",
                                          HTTPContentType.XML_UTF8,
-                                         HTTPDelegate: async Request => {
+                                         HTTPDelegate: Request => {
 
                                              #region Check HTTP Basic Authentication
 
@@ -362,13 +360,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                                         kvp.Value == Request.Authorization.Password))
                                              {
 
-                                                 return new HTTPResponseBuilder(Request) {
-                                                     HTTPStatusCode   = HTTPStatusCode.Unauthorized,
-                                                     WWWAuthenticate  = @"Basic realm=""Belectric Drive OICPv2.0 Plus""",
-                                                     Server           = _HTTPServer.DefaultServerName,
-                                                     Date             = DateTime.Now,
-                                                     Connection       = "close"
-                                                 };
+                                                 return Task.FromResult(
+                                                     new HTTPResponseBuilder(Request) {
+                                                         HTTPStatusCode   = HTTPStatusCode.Unauthorized,
+                                                         WWWAuthenticate  = @"Basic realm=""Belectric Drive OICPv2.0 Plus""",
+                                                         Server           = _HTTPServer.DefaultServerName,
+                                                         Date             = DateTime.Now,
+                                                         Connection       = "close"
+                                                     }.AsImmutable());
 
                                              }
 
@@ -380,7 +379,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                              RoamingNetwork  _RoamingNetwork;
 
                                              if (!Request.ParseRoamingNetwork(_HTTPServer, out _RoamingNetwork, out _HTTPResponse))
-                                                 return _HTTPResponse;
+                                                 return Task.FromResult(_HTTPResponse);
 
                                              #endregion
 
@@ -388,26 +387,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                              var take   = Request.QueryString.GetUInt32("take");
 
                                              //ToDo: Getting the expected total is very expensive!
-                                             var _ExpectedCount = _RoamingNetwork.EVSEs.LongCount();
+                                             var _ExpectedCount = _RoamingNetwork.EVSEs.ULongCount();
 
-                                             return new HTTPResponseBuilder(Request) {
-                                                 HTTPStatusCode             = HTTPStatusCode.OK,
-                                                 Server                     = _HTTPServer.DefaultServerName,
-                                                 Date                       = DateTime.Now,
-                                                 AccessControlAllowOrigin   = "*",
-                                                 AccessControlAllowMethods  = "GET",
-                                                 AccessControlAllowHeaders  = "Content-Type, Authorization",
-                                                 ETag                       = "1",
-                                                 ContentType                = HTTPContentType.XML_UTF8,
-                                                 Content                    = _RoamingNetwork.EVSEs.
-                                                                                  OrderBy(evse => evse.Id).
-                                                                                  Skip(skip).
-                                                                                  Take(take).
-                                                                                  Select (evse => OICPMapper.AsOICPEVSEDataRecord(evse, EVSE2EVSEDataRecord)).
-                                                                                  ToXML  (_RoamingNetwork, XMLNamespaces, EVSEDataRecord2XML, XMLPostProcessing).
-                                                                                  ToUTF8Bytes()
-                                             }.Set(new HTTPHeaderField("X-ExpectedTotalNumberOfItems", typeof(UInt64), HeaderFieldType.Response, RequestPathSemantic.EndToEnd),
-                                                   _ExpectedCount);
+                                             return Task.FromResult(
+                                                 new HTTPResponseBuilder(Request) {
+                                                     HTTPStatusCode                = HTTPStatusCode.OK,
+                                                     Server                        = _HTTPServer.DefaultServerName,
+                                                     Date                          = DateTime.Now,
+                                                     AccessControlAllowOrigin      = "*",
+                                                     AccessControlAllowMethods     = "GET",
+                                                     AccessControlAllowHeaders     = "Content-Type, Authorization",
+                                                     ETag                          = "1",
+                                                     ContentType                   = HTTPContentType.XML_UTF8,
+                                                     Content                       = _RoamingNetwork.EVSEs.
+                                                                                         OrderBy(evse => evse.Id).
+                                                                                         Skip(skip).
+                                                                                         Take(take).
+                                                                                         Select (evse => {
+
+                                                                                             try
+                                                                                             {
+                                                                                                 return OICPMapper.AsOICPEVSEDataRecord(evse, EVSE2EVSEDataRecord);
+                                                                                             }
+                                                                                             catch (Exception e)
+                                                                                             {
+
+                                                                                             }
+
+                                                                                             return null;
+
+                                                                                         }).
+                                                                                         Where(evsedatarecord => evsedatarecord != null).
+                                                                                         ToXML(_RoamingNetwork, XMLNamespaces, EVSEDataRecord2XML, XMLPostProcessing).
+                                                                                         ToUTF8Bytes(),
+                                                     X_ExpectedTotalNumberOfItems  = _ExpectedCount
+                                                 }.AsImmutable());
 
                                          });
 
@@ -422,7 +436,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                          HTTPMethod.GET,
                                          "/RNs/{RoamingNetworkId}" + _URIPrefix + "/EVSEStatus",
                                          HTTPContentType.XML_UTF8,
-                                         HTTPDelegate: async Request => {
+                                         HTTPDelegate: Request => {
 
                                              #region Check HTTP Basic Authentication
 
@@ -431,13 +445,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                                         kvp.Value == Request.Authorization.Password))
                                              {
 
-                                                 return new HTTPResponseBuilder(Request) {
-                                                     HTTPStatusCode   = HTTPStatusCode.Unauthorized,
-                                                     WWWAuthenticate  = @"Basic realm=""Belectric Drive OICPv2.0 Plus""",
-                                                     Server           = _HTTPServer.DefaultServerName,
-                                                     Date             = DateTime.Now,
-                                                     Connection       = "close"
-                                                 };
+                                                 return Task.FromResult(
+                                                     new HTTPResponseBuilder(Request) {
+                                                         HTTPStatusCode   = HTTPStatusCode.Unauthorized,
+                                                         WWWAuthenticate  = @"Basic realm=""Belectric Drive OICPv2.0 Plus""",
+                                                         Server           = _HTTPServer.DefaultServerName,
+                                                         Date             = DateTime.Now,
+                                                         Connection       = "close"
+                                                     }.AsImmutable());
 
                                              }
 
@@ -449,7 +464,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                              RoamingNetwork  _RoamingNetwork;
 
                                              if (!Request.ParseRoamingNetwork(_HTTPServer, out _RoamingNetwork, out _HTTPResponse))
-                                                 return _HTTPResponse;
+                                                 return Task.FromResult(_HTTPResponse);
 
                                              #endregion
 
@@ -457,25 +472,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                              var take   = Request.QueryString.GetUInt32("take");
 
                                              //ToDo: Getting the expected total is very expensive!
-                                             var _ExpectedCount = _RoamingNetwork.EVSEStatus.LongCount();
+                                             var _ExpectedCount = _RoamingNetwork.EVSEStatus.ULongCount();
 
-                                             return new HTTPResponseBuilder(Request) {
-                                                 HTTPStatusCode             = HTTPStatusCode.OK,
-                                                 Server                     = _HTTPServer.DefaultServerName,
-                                                 Date                       = DateTime.Now,
-                                                 AccessControlAllowOrigin   = "*",
-                                                 AccessControlAllowMethods  = "GET",
-                                                 AccessControlAllowHeaders  = "Content-Type, Authorization",
-                                                 ETag                       = "1",
-                                                 ContentType                = HTTPContentType.XML_UTF8,
-                                                 Content                    = _RoamingNetwork.EVSEs.
-                                                                                  OrderBy(evse => evse.Id).
-                                                                                  Skip(skip).
-                                                                                  Take(take).
-                                                                                  ToXML(_RoamingNetwork, XMLNamespaces, EVSEStatusRecord2XML, XMLPostProcessing).
-                                                                                  ToUTF8Bytes()
-                                             }.Set(new HTTPHeaderField("X-ExpectedTotalNumberOfItems", typeof(UInt64), HeaderFieldType.Response, RequestPathSemantic.EndToEnd),
-                                                   _ExpectedCount);
+                                             return Task.FromResult(
+                                                 new HTTPResponseBuilder(Request) {
+                                                     HTTPStatusCode                = HTTPStatusCode.OK,
+                                                     Server                        = _HTTPServer.DefaultServerName,
+                                                     Date                          = DateTime.Now,
+                                                     AccessControlAllowOrigin      = "*",
+                                                     AccessControlAllowMethods     = "GET",
+                                                     AccessControlAllowHeaders     = "Content-Type, Authorization",
+                                                     ETag                          = "1",
+                                                     ContentType                   = HTTPContentType.XML_UTF8,
+                                                     Content                       = _RoamingNetwork.EVSEs.
+                                                                                         OrderBy(evse => evse.Id).
+                                                                                         Skip(skip).
+                                                                                         Take(take).
+                                                                                         ToXML(_RoamingNetwork, XMLNamespaces, EVSEStatusRecord2XML, XMLPostProcessing).
+                                                                                         ToUTF8Bytes(),
+                                                     X_ExpectedTotalNumberOfItems  = _ExpectedCount
+                                                }.AsImmutable());
 
                                          });
 
@@ -484,86 +500,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         }
 
         #endregion
-
-
-
-
-        //#region GetAllRoamingNetworks(Hostname)
-
-        ///// <summary>
-        ///// Return all roaming networks available for the given hostname.
-        ///// </summary>
-        ///// <param name="Hostname">The HTTP hostname.</param>
-        //public IEnumerable<RoamingNetwork> GetAllRoamingNetworks(HTTPHostname  Hostname)
-        //{
-
-        //    RoamingNetworks RoamingNetworks = null;
-
-        //    var Set = new HashSet<RoamingNetwork>();
-
-        //    if (_Multitenancy.TryGetValue(Hostname, out RoamingNetworks))
-        //        foreach (var RoamingNetwork in RoamingNetworks)
-        //            Set.Add(RoamingNetwork);
-
-        //    if (_Multitenancy.TryGetValue(Hostname.AnyHost, out RoamingNetworks))
-        //        foreach (var RoamingNetwork in RoamingNetworks)
-        //            Set.Add(RoamingNetwork);
-
-        //    if (_Multitenancy.TryGetValue(Hostname.AnyPort, out RoamingNetworks))
-        //        foreach (var RoamingNetwork in RoamingNetworks)
-        //            Set.Add(RoamingNetwork);
-
-        //    if (_Multitenancy.TryGetValue(Vanaheimr.Hermod.HTTP.HTTPHostname.Any, out RoamingNetworks))
-        //        foreach (var RoamingNetwork in RoamingNetworks)
-        //            Set.Add(RoamingNetwork);
-
-        //    return Set.OrderBy(rn => rn.Id);
-
-        //}
-
-        //#endregion
-
-        //#region GetRoamingNetwork(Hostname, RoamingNetworkId)
-
-        ///// <summary>
-        ///// Return all roaming networks available for the given hostname.
-        ///// </summary>
-        ///// <param name="Hostname">The HTTP hostname.</param>
-        ///// <param name="RoamingNetworkId">The unique identification of the new roaming network.</param>
-        //public RoamingNetwork GetRoamingNetwork(HTTPHostname       Hostname,
-        //                                        RoamingNetwork_Id  RoamingNetworkId)
-        //{
-
-        //    return GetAllRoamingNetworks(Hostname).
-        //               Where(roamingnetwork => roamingnetwork.Id == RoamingNetworkId).
-        //               FirstOrDefault();
-
-        //}
-
-        //#endregion
-
-        //#region TryGetRoamingNetwork(Hostname, RoamingNetworkId, out RoamingNetwork)
-
-        ///// <summary>
-        /////Try to return all roaming networks available for the given hostname.
-        ///// </summary>
-        ///// <param name="Hostname">The HTTP hostname.</param>
-        ///// <param name="RoamingNetworkId">The unique identification of the new roaming network.</param>
-        ///// <param name="RoamingNetwork">A roaming network.</param>
-        //public Boolean TryGetRoamingNetwork(HTTPHostname        Hostname,
-        //                                    RoamingNetwork_Id   RoamingNetworkId,
-        //                                    out RoamingNetwork  RoamingNetwork)
-        //{
-
-        //    RoamingNetwork  = GetAllRoamingNetworks(Hostname).
-        //                          Where(roamingnetwork => roamingnetwork.Id == RoamingNetworkId).
-        //                          FirstOrDefault();
-
-        //    return RoamingNetwork != null;
-
-        //}
-
-        //#endregion
 
 
     }

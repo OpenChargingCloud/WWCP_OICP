@@ -47,6 +47,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             var _EVSEDataRecord = new EVSEDataRecord(EVSE,
+                                                     "",
+                                                     DateTime.Now,
                                                      EVSE.ChargingStation.Id.ToString(),
                                                      EVSE.ChargingStation.Name,
                                                      EVSE.ChargingStation.Address,

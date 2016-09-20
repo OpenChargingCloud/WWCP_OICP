@@ -27,7 +27,7 @@ using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1.Server
+namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 {
 
     /// <summary>
@@ -36,15 +36,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
     public static class OICP_XML_IO
     {
 
-        public static XNamespace OICPPlusEVSEOperator = "http://ld.graphdefined.org/e-Mobility/OICPPlus/EVSEOperator/v2.0";
+        public static XNamespace OICPPlusCommonTypes  = "http://ld.graphdefined.org/e-Mobility/OICPPlus/CommonTypes/v2.1";
+        public static XNamespace OICPPlusEVSEOperator = "http://ld.graphdefined.org/e-Mobility/OICPPlus/EVSEOperator/v2.1";
+        public static XNamespace OICPPlusEVSEData     = "http://ld.graphdefined.org/e-Mobility/OICPPlus/EVSEData/v2.1";
+        public static XNamespace OICPPlusEVSEStatus   = "http://ld.graphdefined.org/e-Mobility/OICPPlus/EVSEStatus/v2.1";
 
 
-        #region ToXML(this EVSEDataRecords, XMLNamespaces = null, EVSEDataRecord2XML = null, XMLPostProcessing = null)
+        #region ToXML(this EVSEDataRecords, RoamingNetwork, XMLNamespaces = null, EVSEDataRecord2XML = null, XMLPostProcessing = null)
 
         /// <summary>
         /// Convert the given enumeration of EVSE data records to XML.
         /// </summary>
         /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
+        /// <param name="RoamingNetwork">The WWCP roaming network.</param>
         /// <param name="XMLNamespaces">An optional delegate to process the XML namespaces.</param>
         /// <param name="EVSEDataRecord2XML">An optional delegate to process an EVSE data record XML before sending it somewhere.</param>
         /// <param name="XMLPostProcessing">An optional delegate to process the XML after its final creation.</param>
@@ -60,6 +64,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
             if (EVSEDataRecords == null)
                 throw new ArgumentNullException(nameof(EVSEDataRecords), "The given enumeration of EVSE data records must not be null!");
 
+            var _EVSEDataRecords = EVSEDataRecords.ToArray();
+
             if (EVSEDataRecord2XML == null)
                 EVSEDataRecord2XML = (rn, evsedatarecord, xml) => xml;
 
@@ -72,38 +78,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                        SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingEvseData",
                                               new XElement(OICPNS.EVSEData + "EvseData",
 
-                                                  EVSEDataRecords.ToLookup(evsedatarecord => evsedatarecord.EVSE?.Operator).
-                                                    Select(group =>
+                                                  _EVSEDataRecords.Any()
 
-                                                      group.Any(evsedatarecord => evsedatarecord != null)
-                                                          ? new XElement(OICPNS.EVSEData + "OperatorEvseData",
+                                                      ? _EVSEDataRecords.
+                                                            ToLookup(evsedatarecord => evsedatarecord.EVSE?.Operator).
+                                                            Select(group => {
 
-                                                                new XElement(OICPNS.EVSEData + "OperatorID", group.Key.Id.OriginId),
+                                                                return group.Any(evsedatarecord => evsedatarecord != null)
 
-                                                                group.Key.Name.Any()
-                                                                    ? new XElement(OICPNS.EVSEData + "OperatorName", group.Key.Name.FirstText)
-                                                                    : null,
+                                                                    ? new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
-                                                                new XElement(OICPPlusEVSEOperator + "DataLicenses",
-                                                                    group.Key.DataLicenses.SafeSelect(license => new XElement(OICPPlusEVSEOperator + "DataLicense",
-                                                                                                                     new XElement(OICPPlusEVSEOperator + "Id",           license.Id),
-                                                                                                                     new XElement(OICPPlusEVSEOperator + "Description",  license.Description),
-                                                                                                                     license.URIs.Any()
-                                                                                                                         ? new XElement(OICPPlusEVSEOperator + "DataLicenseURIs", 
-                                                                                                                               license.URIs.SafeSelect(uri => new XElement(OICPPlusEVSEOperator + "DataLicenseURI", uri)))
-                                                                                                                         : null
-                                                                                                                 ))
-                                                                ),
+                                                                          new XElement(OICPNS.EVSEData + "OperatorID", group.Key.Id.OriginId),
 
-                                                                // <EvseDataRecord> ... </EvseDataRecord>
-                                                                group.Where (evsedatarecord => evsedatarecord != null).
-                                                                      Select(evsedatarecord => EVSEDataRecord2XML(RoamingNetwork, evsedatarecord, evsedatarecord.ToXML())).
-                                                                      ToArray()
+                                                                          group.Key.Name.Any()
+                                                                              ? new XElement(OICPNS.EVSEData + "OperatorName", group.Key.Name.FirstText)
+                                                                              : null,
 
-                                                            )
-                                                          : null
+                                                                          new XElement(OICPPlusEVSEOperator + "DataLicenses",
+                                                                              group.Key.DataLicenses.SafeSelect(license => new XElement(OICPPlusEVSEOperator + "DataLicense",
+                                                                                                                               new XElement(OICPPlusEVSEOperator + "Id", license.Id),
+                                                                                                                               new XElement(OICPPlusEVSEOperator + "Description", license.Description),
+                                                                                                                               license.URIs.Any()
+                                                                                                                                   ? new XElement(OICPPlusEVSEOperator + "DataLicenseURIs",
+                                                                                                                                         license.URIs.SafeSelect(uri => new XElement(OICPPlusEVSEOperator + "DataLicenseURI", uri)))
+                                                                                                                                   : null
+                                                                                                                           ))
+                                                                          ),
 
-                                                      ).ToArray()
+                                                                          // <EvseDataRecord> ... </EvseDataRecord>
+                                                                          group.Where(evsedatarecord => evsedatarecord != null).
+                                                                                Select(evsedatarecord => EVSEDataRecord2XML(RoamingNetwork, evsedatarecord, evsedatarecord.ToXML())).
+                                                                                ToArray()
+
+                                                                      )
+
+                                                                  : null;
+
+                                                            }).ToArray()
+
+                                                        : null
 
                                                   )
                                               ),
@@ -119,6 +132,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         /// Convert the given enumeration of EVSEs into an EVSE status records XML.
         /// </summary>
         /// <param name="EVSEs">An enumeration of EVSEs.</param>
+        /// <param name="RoamingNetwork">The WWCP roaming network.</param>
         /// <param name="XMLNamespaces">An optional delegate to process the XML namespaces.</param>
         /// <param name="EVSEStatusRecord2XML">An optional delegate to process an EVSE status record XML before sending it somewhere.</param>
         /// <param name="XMLPostProcessing">An optional delegate to process the XML after its final creation.</param>
