@@ -737,17 +737,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
 
 
                 if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                    response.Content        != null              &&
-                    response.Content.Result == true)
+                    response.Content        != null)
                 {
-                    result = new Acknowledgement(ResultType.True,
-                                                 AdditionalInfo: Warnings.Any() ? Warnings.AggregateWith(";") : null);
-                }
 
+                    if (response.Content.Result == true)
+                        result = new Acknowledgement(ResultType.True,
+                                                     response.Content.StatusCode.Description,
+                                                     Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
+
+                    else
+                        result = new Acknowledgement(ResultType.False,
+                                                     response.Content.StatusCode.Description,
+                                                     Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
+
+                }
                 else
                     result = new Acknowledgement(ResultType.False,
-                                                 response.Content.StatusCode.Description,
-                                                 response.Content.StatusCode.AdditionalInfo);
+                                                 response.HTTPStatusCode.ToString(),
+                                                 Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String()));
 
             }
 
@@ -1307,6 +1314,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
             if (_NumberOfEVSEStatus > 0)
             {
 
+                var Warnings = new List<String>();
+
                 var response = await CPORoaming.PushEVSEStatus(GroupedEVSEStatus.
                                                                    Where       (group => group.Key != null).
                                                                    ToDictionary(group => group.Key,
@@ -1322,13 +1331,14 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                                                                        catch (Exception e)
                                                                        {
                                                                            DebugX.Log(e.Message);
+                                                                           Warnings.Add(e.Message);
                                                                        }
 
                                                                        return null;
 
                                                                    }), Tuple.Create).
                                                                    ToLookup(kvp => kvp.Item1.Key,
-                                                                              kvp => kvp.Item2), 
+                                                                            kvp => kvp.Item2), 
                                                                ActionType.AsOICPActionType(),
                                                                DefaultOperator,
                                                                _OperatorNameSelector ?? DefaultOperatorNameSelector,
@@ -1340,16 +1350,24 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
 
 
                 if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                    response.Content        != null              &&
-                    response.Content.Result == true)
+                    response.Content        != null)
                 {
-                    result = new Acknowledgement(ResultType.True);
-                }
 
+                    if (response.Content.Result == true)
+                        result = new Acknowledgement(ResultType.True,
+                                                     response.Content.StatusCode.Description,
+                                                     Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
+
+                    else
+                        result = new Acknowledgement(ResultType.False,
+                                                     response.Content.StatusCode.Description,
+                                                     Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
+
+                }
                 else
                     result = new Acknowledgement(ResultType.False,
-                                                 response.Content.StatusCode.Description,
-                                                 response.Content.StatusCode.AdditionalInfo);
+                                                 response.HTTPStatusCode.ToString(),
+                                                 Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String()));
 
             }
 
