@@ -885,6 +885,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (_NumberOfEVSEs > 0)
             {
 
+                var Warnings = new List<String>();
+
                 var response = await CPORoaming.PushEVSEData(GroupedEVSEs.
                                                                  Where       (group => group.Key != null).
                                                                  ToDictionary(group => group.Key,
@@ -898,13 +900,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                      catch (Exception e)
                                                                      {
                                                                          DebugX.Log(e.Message);
+                                                                         Warnings.Add(e.Message);
                                                                      }
 
                                                                      return null;
 
                                                                  }), Tuple.Create).
-                                                                 ToLookup    (kvp   => kvp.Item1.Key,
-                                                                              kvp   => kvp.Item2),
+                                                                 ToLookup(kvp => kvp.Item1.Key,
+                                                                          kvp => kvp.Item2),
                                                              ActionType.AsOICPActionType(),
                                                              DefaultOperator,
                                                              _OperatorNameSelector ?? DefaultOperatorNameSelector,
@@ -919,7 +922,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     response.Content        != null              &&
                     response.Content.Result == true)
                 {
-                    result = new Acknowledgement(ResultType.True);
+                    result = new Acknowledgement(ResultType.True,
+                                                 AdditionalInfo: Warnings.Any() ? Warnings.AggregateWith(";") : null);
                 }
 
                 else
