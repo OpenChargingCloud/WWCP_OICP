@@ -1511,7 +1511,7 @@ namespace org.GraphDefined.WWCP.OICPv2_0
             #endregion
 
 
-            if (result != null)
+            if (result == null)
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
