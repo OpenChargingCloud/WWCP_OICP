@@ -3133,7 +3133,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             }
 
-            return SendCDRResult.NotForwared(AuthorizatorId);
+            return SendCDRResult.NotForwared(AuthorizatorId,
+                                             response?.Content?.StatusCode?.Description);
+
 
         }
 
