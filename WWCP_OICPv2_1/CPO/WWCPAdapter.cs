@@ -3188,7 +3188,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                    response?.Content?.StatusCode?.Description);
 
 
-            #region Send OnAuthorizeStopped event
+            #region Send OnSendCDRResponse event
 
             try
             {
@@ -3206,7 +3206,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeStopped));
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnSendCDRResponse));
             }
 
             #endregion
