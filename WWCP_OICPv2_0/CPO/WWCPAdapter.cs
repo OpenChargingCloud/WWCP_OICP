@@ -202,6 +202,20 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
 
         #endregion
 
+        #region OnSendCDRRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a charge detail record will be send upstream.
+        /// </summary>
+        public override event OnSendCDRRequestDelegate   OnSendCDRRequest;
+
+        /// <summary>
+        /// An event fired whenever a charge detail record had been sent upstream.
+        /// </summary>
+        public override event OnSendCDRResponseDelegate  OnSendCDRResponse;
+
+        #endregion
+
         #endregion
 
         #region Constructor(s)
@@ -2574,6 +2588,9 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                                                           RequestTimeout);
 
 
+            var Now     = DateTime.Now;
+            var Runtime = Now - Timestamp.Value;
+
             AuthStopResult result = null;
 
             if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
@@ -2608,7 +2625,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                                            SessionId,
                                            AuthToken,
                                            RequestTimeout,
-                                           result);
+                                           result,
+                                           Runtime);
 
             }
             catch (Exception e)
@@ -2716,6 +2734,10 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                                                            EventTrackingId,
                                                            RequestTimeout);
 
+
+            var Now     = DateTime.Now;
+            var Runtime = Now - Timestamp.Value;
+
             AuthStopEVSEResult result = null;
 
             if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
@@ -2751,7 +2773,8 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                                                SessionId,
                                                AuthToken,
                                                RequestTimeout,
-                                               result);
+                                               result,
+                                               Runtime);
 
             }
             catch (Exception e)
@@ -2920,6 +2943,28 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
 
             #endregion
 
+            #region Send OnAuthorizeStop event
+
+            try
+            {
+
+                OnSendCDRRequest?.Invoke(DateTime.Now,
+                                         Timestamp.Value,
+                                         this,
+                                         EventTrackingId,
+                                         RoamingNetwork.Id,
+                                         ChargeDetailRecord,
+                                         RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnSendCDRRequest));
+            }
+
+            #endregion
+
+
             var response = await CPORoaming.SendChargeDetailRecord(new ChargeDetailRecord(
                                                                        ChargeDetailRecord.EVSEId,
                                                                        ChargeDetailRecord.SessionId,
@@ -2942,17 +2987,49 @@ namespace org.GraphDefined.WWCP.OICPv2_0.CPO
                                                                    RequestTimeout);
 
 
+            var Now     = DateTime.Now;
+            var Runtime = Now - Timestamp.Value;
+
+            SendCDRResult result = null;
+
             if (response.HTTPStatusCode == HTTPStatusCode.OK &&
                 response.Content        != null              &&
                 response.Content.Result)
             {
 
-                return SendCDRResult.Forwarded(AuthorizatorId);
+                result = SendCDRResult.Forwarded(AuthorizatorId);
 
             }
 
-            return SendCDRResult.NotForwared(AuthorizatorId,
-                                             response?.Content?.StatusCode?.Description);
+            else
+                result = SendCDRResult.NotForwared(AuthorizatorId,
+                                                   response?.Content?.StatusCode?.Description);
+
+
+            #region Send OnAuthorizeStopped event
+
+            try
+            {
+
+                OnSendCDRResponse?.Invoke(DateTime.Now,
+                                          Timestamp.Value,
+                                          this,
+                                          EventTrackingId,
+                                          RoamingNetwork.Id,
+                                          ChargeDetailRecord,
+                                          RequestTimeout,
+                                          result,
+                                          Runtime);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeStopped));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
