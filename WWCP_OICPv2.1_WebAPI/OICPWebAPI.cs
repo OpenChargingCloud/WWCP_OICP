@@ -472,7 +472,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                                              var take   = Request.QueryString.GetUInt32("take");
 
                                              //ToDo: Getting the expected total is very expensive!
-                                             var _ExpectedCount = _RoamingNetwork.EVSEStatus.ULongCount();
+                                             var _ExpectedCount = _RoamingNetwork.EVSEStatus(1).ULongCount();
 
                                              return Task.FromResult(
                                                  new HTTPResponseBuilder(Request) {
