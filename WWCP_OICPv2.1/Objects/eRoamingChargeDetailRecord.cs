@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.1 charge detail record.
+    /// An OICP charge detail record.
     /// </summary>
     public class ChargeDetailRecord : IEquatable <ChargeDetailRecord>,
                                       IComparable<ChargeDetailRecord>,
@@ -39,248 +39,101 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region EVSEId
-
-        private readonly EVSE_Id _EVSEId;
-
-        [Mandatory]
-        public EVSE_Id EVSEId
-        {
-            get
-            {
-                return _EVSEId;
-            }
-        }
-
-        #endregion
-
-        #region SessionId
-
-        private readonly ChargingSession_Id _SessionId;
-
         /// <summary>
-        /// The charging session identification from the Authorize Start request.
+        /// An EVSE identification.
         /// </summary>
         [Mandatory]
-        public ChargingSession_Id SessionId
-        {
-            get
-            {
-                return _SessionId;
-            }
-        }
+        public EVSE_Id                      EVSEId                  { get; }
 
-        #endregion
-
-        #region PartnerProductId
-
-        private readonly ChargingProduct_Id   _PartnerProductId;
-
+        /// <summary>
+        /// A charging session identification.
+        /// </summary>
         [Mandatory]
-        public ChargingProduct_Id PartnerProductId
-        {
-            get
-            {
-                return _PartnerProductId;
-            }
-        }
+        public ChargingSession_Id           SessionId               { get; }
 
-        #endregion
-
-        #region SessionStart
-
-        private readonly DateTime _SessionStart;
-
+        /// <summary>
+        /// The timestamp of the session start.
+        /// </summary>
         [Mandatory]
-        public DateTime SessionStart
-        {
-            get
-            {
-                return _SessionStart;
-            }
-        }
+        public DateTime                     SessionStart            { get; }
 
-        #endregion
-
-        #region SessionEnd
-
-        private readonly DateTime _SessionEnd;
-
+        /// <summary>
+        /// The timestamp of the session end.
+        /// </summary>
         [Mandatory]
-        public DateTime SessionEnd
-        {
-            get
-            {
-                return _SessionEnd;
-            }
-        }
+        public DateTime                     SessionEnd              { get; }
 
-        #endregion
-
-        #region Identification
-
-        private readonly AuthorizationIdentification _Identification;
-
+        /// <summary>
+        /// An identification.
+        /// </summary>
         [Optional]
-        public AuthorizationIdentification Identification
-        {
-            get
-            {
-                return _Identification;
-            }
-        }
+        public AuthorizationIdentification  Identification          { get; }
 
-        #endregion
+        /// <summary>
+        /// An unqiue identification for the consumed charging product.
+        /// </summary>
+        [Mandatory]
+        public ChargingProduct_Id           PartnerProductId        { get; }
 
-        #region PartnerSessionId
-
-        private readonly ChargingSession_Id _PartnerSessionId;
-
+        /// <summary>
+        /// An optional partner session identification.
+        /// </summary>
         [Optional]
-        public ChargingSession_Id PartnerSessionId
-        {
-            get
-            {
-                return _PartnerSessionId;
-            }
-        }
+        public ChargingSession_Id           PartnerSessionId        { get; }
 
-        #endregion
-
-        #region ChargingStart
-
-        private readonly DateTime? _ChargingStart;
-
+        /// <summary>
+        /// An optional charging start timestamp.
+        /// </summary>
         [Optional]
-        public DateTime? ChargingStart
-        {
-            get
-            {
-                return _ChargingStart;
-            }
-        }
+        public DateTime?                    ChargingStart           { get; }
 
-        #endregion
-
-        #region ChargingEnd
-
-        private readonly DateTime? _ChargingEnd;
-
+        /// <summary>
+        /// An optional charging end timestamp.
+        /// </summary>
         [Optional]
-        public DateTime? ChargingEnd
-        {
-            get
-            {
-                return _ChargingEnd;
-            }
-        }
+        public DateTime?                    ChargingEnd             { get; }
 
-        #endregion
-
-        #region MeterValueStart
-
-        private readonly Double? _MeterValueStart;
-
+        /// <summary>
+        /// An optional initial value of the energy meter.
+        /// </summary>
         [Optional]
-        public Double? MeterValueStart
-        {
-            get
-            {
-                return _MeterValueStart;
-            }
-        }
+        public Double?                      MeterValueStart         { get; }
 
-        #endregion
-
-        #region MeterValueEnd
-
-        private readonly Double? _MeterValueEnd;
-
+        /// <summary>
+        /// An optional final value of the energy meter.
+        /// </summary>
         [Optional]
-        public Double? MeterValueEnd
-        {
-            get
-            {
-                return _MeterValueEnd;
-            }
-        }
+        public Double?                      MeterValueEnd           { get; }
 
-        #endregion
-
-        #region MeterValuesInBetween
-
-        private readonly IEnumerable<Double>  _MeterValuesInBetween;
-
+        /// <summary>
+        /// An optional enumeration of meter values during the charging session.
+        /// </summary>
         [Optional]
-        public IEnumerable<Double> MeterValuesInBetween
-        {
-            get
-            {
-                return _MeterValuesInBetween;
-            }
-        }
+        public IEnumerable<Double>          MeterValuesInBetween    { get; }
 
-        #endregion
-
-        #region ConsumedEnergy
-
-        private readonly Double? _ConsumedEnergy;
-
+        /// <summary>
+        /// The optional amount of consumed energy.
+        /// </summary>
         [Optional]
-        public Double? ConsumedEnergy
-        {
-            get
-            {
-                return _ConsumedEnergy;
-            }
-        }
+        public Double?                      ConsumedEnergy          { get; }
 
-        #endregion
-
-        #region MeteringSignature
-
-        private readonly String _MeteringSignature;
-
+        /// <summary>
+        /// An optional signature for the metering values.
+        /// </summary>
         [Optional]
-        public String MeteringSignature
-        {
-            get
-            {
-                return _MeteringSignature;
-            }
-        }
+        public String                       MeteringSignature       { get; }
 
-        #endregion
-
-        #region HubOperatorId
-
-        private readonly HubOperator_Id _HubOperatorId;
-
+        /// <summary>
+        /// An optional identification of the hub operator.
+        /// </summary>
         [Optional]
-        public HubOperator_Id HubOperatorId
-        {
-            get
-            {
-                return _HubOperatorId;
-            }
-        }
+        public HubOperator_Id               HubOperatorId           { get; }
 
-        #endregion
-
-        #region HubProviderId
-
-        private readonly eMobilityProvider_Id _HubProviderId;
-
+        /// <summary>
+        /// An optional identification of the hub provider.
+        /// </summary>
         [Optional]
-        public eMobilityProvider_Id HubProviderId
-        {
-            get
-            {
-                return _HubProviderId;
-            }
-        }
-
-        #endregion
+        public eMobilityProvider_Id         HubProviderId           { get; }
 
         #endregion
 
@@ -290,7 +143,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a charge detail record.
         /// </summary>
         /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="SessionId">The charging session identification from the Authorize Start request.</param>
+        /// <param name="SessionId">A charging session identification.</param>
         /// <param name="SessionStart">The timestamp of the session start.</param>
         /// <param name="SessionEnd">The timestamp of the session end.</param>
         /// <param name="Identification">An identification.</param>
@@ -320,7 +173,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                   Double?                      ConsumedEnergy        = null,
                                   String                       MeteringSignature     = null,
                                   HubOperator_Id               HubOperatorId         = null,
-                                  eMobilityProvider_Id                      HubProviderId         = null)
+                                  eMobilityProvider_Id         HubProviderId         = null)
 
         {
 
@@ -334,31 +187,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            this._EVSEId                = EVSEId;
-            this._SessionId             = SessionId;
-            this._SessionStart          = SessionStart;
-            this._SessionEnd            = SessionEnd;
-            this._Identification        = Identification;
-            this._PartnerProductId      = PartnerProductId;
-            this._PartnerSessionId      = PartnerSessionId;
-            this._ChargingStart         = ChargingStart;
-            this._ChargingEnd           = ChargingEnd;
-            this._MeterValueStart       = MeterValueStart;
-            this._MeterValueEnd         = MeterValueEnd;
-            this._MeterValuesInBetween  = MeterValuesInBetween;
-            this._ConsumedEnergy        = ConsumedEnergy;
-            this._MeteringSignature     = MeteringSignature;
-            this._HubOperatorId         = HubOperatorId;
-            this._HubProviderId         = HubProviderId;
+            this.EVSEId                = EVSEId;
+            this.SessionId             = SessionId;
+            this.SessionStart          = SessionStart;
+            this.SessionEnd            = SessionEnd;
+            this.Identification        = Identification;
+            this.PartnerProductId      = PartnerProductId;
+            this.PartnerSessionId      = PartnerSessionId;
+            this.ChargingStart         = ChargingStart;
+            this.ChargingEnd           = ChargingEnd;
+            this.MeterValueStart       = MeterValueStart;
+            this.MeterValueEnd         = MeterValueEnd;
+            this.MeterValuesInBetween  = MeterValuesInBetween;
+            this.ConsumedEnergy        = ConsumedEnergy;
+            this.MeteringSignature     = MeteringSignature;
+            this.HubOperatorId         = HubOperatorId;
+            this.HubProviderId         = HubProviderId;
 
         }
 
         #endregion
 
 
-        #region (static) Parse(eRoamingChargeDetailRecordXML, OnException = null)
+        #region (static) Parse(ChargeDetailRecordXML, OnException = null)
 
-        public static ChargeDetailRecord Parse(XElement             eRoamingChargeDetailRecordXML,
+        /// <summary>
+        /// Parse the givem XML as an OICP charge detail record.
+        /// </summary>
+        /// <param name="ChargeDetailRecordXML">A XML representation of an OICP charge detail record.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static ChargeDetailRecord Parse(XElement             ChargeDetailRecordXML,
                                                OnExceptionDelegate  OnException  = null)
         {
 
@@ -460,10 +318,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
-            if (eRoamingChargeDetailRecordXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecord")
+            if (ChargeDetailRecordXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecord")
                 throw new Exception("Invalid eRoamingChargeDetailRecord XML!");
 
-            var Identification = eRoamingChargeDetailRecordXML.MapElementOrFail(OICPNS.Authorization + "Identification",
+            var Identification = ChargeDetailRecordXML.MapElementOrFail(OICPNS.Authorization + "Identification",
                                                                                 "The Identification is invalid!",
                                                                                 AuthorizationIdentification.Parse,
                                                                                 OnException);
@@ -471,63 +329,63 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return new ChargeDetailRecord(
 
-                eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "EvseID",
-                                                                    EVSE_Id.Parse,
-                                                                    "The EvseID is invalid!"),
+                ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "EvseID",
+                                                            EVSE_Id.Parse,
+                                                            "The EvseID is invalid!"),
 
-                eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionID",
-                                                                    ChargingSession_Id.Parse,
-                                                                    "The SessionID is invalid!"),
+                ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionID",
+                                                            ChargingSession_Id.Parse,
+                                                            "The SessionID is invalid!"),
 
-                eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionStart",
-                                                                    DateTime.Parse,
-                                                                    "The SessionStart is invalid!"),
+                ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionStart",
+                                                            DateTime.Parse,
+                                                            "The SessionStart is invalid!"),
 
-                eRoamingChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionEnd",
-                                                                    DateTime.Parse,
-                                                                    "The SessionStart is invalid!"),
+                ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionEnd",
+                                                            DateTime.Parse,
+                                                            "The SessionStart is invalid!"),
 
                 Identification,
 
-                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerProductID",
-                                                                    ChargingProduct_Id.Parse),
+                ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerProductID",
+                                                            ChargingProduct_Id.Parse),
 
-                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerSessionID",
-                                                                    ChargingSession_Id.Parse),
+                ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerSessionID",
+                                                            ChargingSession_Id.Parse),
 
-                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "ChargingStart",
-                                                                    v => new Nullable<DateTime>(DateTime.Parse(v)),
-                                                                    null),
+                ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "ChargingStart",
+                                                            v => new DateTime?(DateTime.Parse(v)),
+                                                            null),
 
-                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "ChargingEnd",
-                                                                    v => new Nullable<DateTime>(DateTime.Parse(v)),
-                                                                    null),
+                ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "ChargingEnd",
+                                                            v => new DateTime?(DateTime.Parse(v)),
+                                                            null),
 
-                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "MeterValueStart",
-                                                                    v => new Nullable<Double>(Double.Parse(v)),
-                                                                    null),
+                ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "MeterValueStart",
+                                                            v => new Double?(Double.Parse(v)),
+                                                            null),
 
-                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "MeterValueEnd",
-                                                                    v => new Nullable<Double>(Double.Parse(v)),
-                                                                    null),
+                ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "MeterValueEnd",
+                                                            v => new Double?(Double.Parse(v)),
+                                                            null),
 
-                eRoamingChargeDetailRecordXML.MapValues            (OICPNS.Authorization + "MeterValuesInBetween",
-                                                                    OICPNS.Authorization + "MeterValue",
-                                                                    Double.Parse),
+                ChargeDetailRecordXML.MapValues            (OICPNS.Authorization + "MeterValuesInBetween",
+                                                            OICPNS.Authorization + "MeterValue",
+                                                            Double.Parse),
 
-                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "ConsumedEnergy",
-                                                                    v => new Nullable<Double>(Double.Parse(v)),
-                                                                    null),
+                ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "ConsumedEnergy",
+                                                            v => new Double?(Double.Parse(v)),
+                                                            null),
 
-                eRoamingChargeDetailRecordXML.ElementValueOrDefault(OICPNS.Authorization + "MeteringSignature"),
+                ChargeDetailRecordXML.ElementValueOrDefault(OICPNS.Authorization + "MeteringSignature"),
 
-                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubOperatorID",
-                                                                                            HubOperator_Id.Parse,
-                                                                                            null),
+                ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubOperatorID",
+                                                            HubOperator_Id.Parse,
+                                                            null),
 
-                eRoamingChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubProviderID",
-                                                                                            eMobilityProvider_Id.Parse,
-                                                                                            null));
+                ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubProviderID",
+                                                            eMobilityProvider_Id.Parse,
+                                                            null));
 
         }
 
@@ -615,26 +473,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+        /// <summary>
+        /// Get a XML representation of this object.
+        /// </summary>
         public XElement ToXML()
-        {
 
-            return new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
+            => new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
 
                 new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
-                (PartnerSessionId != null) ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
-                (PartnerProductId != null) ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString()) : null,
+                PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+                PartnerProductId != null ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString()) : null,
                 new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
 
                 Identification.ToXML(OICPNS.Authorization),
 
-                (ChargingStart.  HasValue) ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
-                (ChargingEnd.    HasValue) ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
+                ChargingStart.HasValue ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
+                ChargingEnd.  HasValue ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
 
                 new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
                 new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
 
-                (MeterValueStart.HasValue) ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
-                (MeterValueEnd.  HasValue) ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", ".")) : null,
+                MeterValueStart.HasValue ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
+                MeterValueEnd.  HasValue ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", ".")) : null,
 
                 MeterValuesInBetween != null
                     ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
@@ -652,12 +512,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             );
 
-        }
-
         #endregion
 
 
-        #region IComparable<OICPChargeDetailRecord> Members
+        #region IComparable<ChargeDetailRecord> Members
 
         #region CompareTo(Object)
 
@@ -669,7 +527,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             if (Object == null)
-                throw new ArgumentNullException("The given object must not be null!");
+                throw new ArgumentNullException(nameof(Object),  "The given object must not be null!");
 
             // Check if the given object is a charge detail record.
             var OICPChargeDetailRecord = Object as ChargeDetailRecord;
@@ -682,19 +540,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region CompareTo(OICPChargeDetailRecord)
+        #region CompareTo(ChargeDetailRecord)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="OICPChargeDetailRecord">A charge detail record object to compare with.</param>
-        public Int32 CompareTo(ChargeDetailRecord OICPChargeDetailRecord)
+        /// <param name="ChargeDetailRecord">A charge detail record object to compare with.</param>
+        public Int32 CompareTo(ChargeDetailRecord ChargeDetailRecord)
         {
 
-            if ((Object) OICPChargeDetailRecord == null)
-                throw new ArgumentNullException("The given charge detail record must not be null!");
+            if ((Object) ChargeDetailRecord == null)
+                throw new ArgumentNullException(nameof(ChargeDetailRecord),  "The given charge detail record must not be null!");
 
-            return SessionId.CompareTo(OICPChargeDetailRecord.SessionId);
+            return SessionId.CompareTo(ChargeDetailRecord.SessionId);
 
         }
 
@@ -702,7 +560,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region IEquatable<OICPChargeDetailRecord> Members
+        #region IEquatable<ChargeDetailRecord> Members
 
         #region Equals(Object)
 
@@ -728,20 +586,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region Equals(OICPChargeDetailRecord)
+        #region Equals(ChargeDetailRecord)
 
         /// <summary>
         /// Compares two charge detail records for equality.
         /// </summary>
-        /// <param name="OICPChargeDetailRecord">A charge detail record to compare with.</param>
+        /// <param name="ChargeDetailRecord">A charge detail record to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(ChargeDetailRecord OICPChargeDetailRecord)
+        public Boolean Equals(ChargeDetailRecord ChargeDetailRecord)
         {
 
-            if ((Object) OICPChargeDetailRecord == null)
+            if ((Object) ChargeDetailRecord == null)
                 return false;
 
-            return SessionId.Equals(OICPChargeDetailRecord.SessionId);
+            return SessionId.Equals(ChargeDetailRecord.SessionId);
 
         }
 
@@ -755,9 +613,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Get the hashcode of this object.
         /// </summary>
         public override Int32 GetHashCode()
-        {
-            return SessionId.GetHashCode();
-        }
+            => SessionId.GetHashCode();
 
         #endregion
 
@@ -767,9 +623,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Get a string representation of this object.
         /// </summary>
         public override String ToString()
-        {
-            return SessionId.ToString();
-        }
+            => SessionId.ToString();
 
         #endregion
 

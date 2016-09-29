@@ -28,7 +28,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
+namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 {
 
     public class OICPTests

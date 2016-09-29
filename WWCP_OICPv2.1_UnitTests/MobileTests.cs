@@ -26,7 +26,7 @@ using System.Xml.Linq;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_0.UnitTests
+namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 {
 
     public class MobileTests

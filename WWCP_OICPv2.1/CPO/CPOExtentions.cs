@@ -79,7 +79,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public static AEVSEOperatorRoamingProvider
+        public static AChargingStationOperatorRoamingProvider
 
             CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork                   RoamingNetwork,
                                               RoamingProvider_Id                    Id,
@@ -113,7 +113,7 @@ namespace org.GraphDefined.WWCP
                                               Boolean                               DisableAutoUploads          = false,
 
                                               Action<OICPv2_1.CPO.WWCPAdapter>      OICPConfigurator            = null,
-                                              Action<AEVSEOperatorRoamingProvider>  Configurator                = null,
+                                              Action<AChargingStationOperatorRoamingProvider>  Configurator                = null,
                                               DNSClient                             DNSClient                   = null)
 
         {
@@ -217,7 +217,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public static AEVSEOperatorRoamingProvider
+        public static AChargingStationOperatorRoamingProvider
 
             CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork                   RoamingNetwork,
                                               RoamingProvider_Id                    Id,
@@ -249,7 +249,7 @@ namespace org.GraphDefined.WWCP
                                               Boolean                               DisableAutoUploads          = false,
 
                                               Action<OICPv2_1.CPO.WWCPAdapter>      OICPConfigurator            = null,
-                                              Action<AEVSEOperatorRoamingProvider>  Configurator                = null,
+                                              Action<AChargingStationOperatorRoamingProvider>  Configurator                = null,
                                               DNSClient                             DNSClient                   = null)
 
         {

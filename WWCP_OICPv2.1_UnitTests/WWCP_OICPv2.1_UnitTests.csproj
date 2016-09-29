@@ -7,8 +7,8 @@
     <ProjectGuid>{CB25F973-FED9-497B-A3A6-A6249ACDF910}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>org.GraphDefined.WWCP.OICPv2_0.UnitTests</RootNamespace>
-    <AssemblyName>org.GraphDefined.WWCP.OICPv2_0.UnitTests</AssemblyName>
+    <RootNamespace>org.GraphDefined.WWCP.OICPv2_1.UnitTests</RootNamespace>
+    <AssemblyName>org.GraphDefined.WWCP.OICPv2_1.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\org.GraphDefined.WWCP.OICPv2_0.UnitTests.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\org.GraphDefined.WWCP.OICPv2_1.UnitTests.xml</DocumentationFile>
     <CodeAnalysisRuleSet>..\..\WWCP_Core\WWCP.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -80,9 +80,9 @@
       <Project>{c07ea868-fcf7-4919-ac03-7b6d97f81040}</Project>
       <Name>WWCP_Core_UnitTests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WWCP_OICPv2_0\WWCP_OICPv2_0.csproj">
-      <Project>{4bb02c38-48c3-41cb-99f6-a1888881b942}</Project>
-      <Name>WWCP_OICPv2_0</Name>
+    <ProjectReference Include="..\WWCP_OICPv2.1\WWCP_OICPv2.1.csproj">
+      <Project>{a01e9361-39c7-4705-9173-7cea79364dd0}</Project>
+      <Name>WWCP_OICPv2_1</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
