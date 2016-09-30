@@ -25,10 +25,10 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -770,7 +770,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                  DNSClient,
                                  false),
 
-    //               ClientLoggingContext,
                    ServerLoggingContext,
                    LogFileCreator)
 
@@ -800,10 +799,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(ILookup<ChargingStationOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
-                         ActionType                             OICPAction            = ActionType.fullLoad,
+                         ActionType                                        OICPAction            = ActionType.fullLoad,
                          ChargingStationOperator                           Operator              = null,
                          ChargingStationOperatorNameSelectorDelegate       OperatorNameSelector  = null,
 
@@ -840,18 +839,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
-            PushEVSEData(EVSEDataRecord                    EVSEDataRecord,
-                         ActionType                        OICPAction              = ActionType.insert,
+            PushEVSEData(EVSEDataRecord                               EVSEDataRecord,
+                         ActionType                                   OICPAction              = ActionType.insert,
                          ChargingStationOperator                      Operator                = null,
                          ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector    = null,
-                         Func<EVSEDataRecord, Boolean>     IncludeEVSEDataRecords  = null,
+                         Func<EVSEDataRecord, Boolean>                IncludeEVSEDataRecords  = null,
 
-                         DateTime?                         Timestamp               = null,
-                         CancellationToken?                CancellationToken       = null,
-                         EventTracking_Id                  EventTrackingId         = null,
-                         TimeSpan?                         RequestTimeout          = null)
+                         DateTime?                                    Timestamp               = null,
+                         CancellationToken?                           CancellationToken       = null,
+                         EventTracking_Id                             EventTrackingId         = null,
+                         TimeSpan?                                    RequestTimeout          = null)
 
 
             => await CPOClient.PushEVSEData(EVSEDataRecord,
@@ -882,18 +881,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
-            PushEVSEData(IEnumerable<EVSEDataRecord>       EVSEDataRecords,
-                         ActionType                        OICPAction              = ActionType.fullLoad,
+            PushEVSEData(IEnumerable<EVSEDataRecord>                  EVSEDataRecords,
+                         ActionType                                   OICPAction              = ActionType.fullLoad,
                          ChargingStationOperator                      Operator                = null,
                          ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector    = null,
-                         Func<EVSEDataRecord, Boolean>     IncludeEVSEDataRecords  = null,
+                         Func<EVSEDataRecord, Boolean>                IncludeEVSEDataRecords  = null,
 
-                         DateTime?                         Timestamp               = null,
-                         CancellationToken?                CancellationToken       = null,
-                         EventTracking_Id                  EventTrackingId         = null,
-                         TimeSpan?                         RequestTimeout          = null)
+                         DateTime?                                    Timestamp               = null,
+                         CancellationToken?                           CancellationToken       = null,
+                         EventTracking_Id                             EventTrackingId         = null,
+                         TimeSpan?                                    RequestTimeout          = null)
 
 
             => await CPOClient.PushEVSEData(EVSEDataRecords,
@@ -916,7 +915,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="OICPAction">The server-side data management operation.</param>
         /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(ActionType               OICPAction,
                          params EVSEDataRecord[]  EVSEDataRecords)
@@ -942,17 +941,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(ILookup<ChargingStationOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
-                           ActionType                               OICPAction            = ActionType.fullLoad,
+                           ActionType                                          OICPAction            = ActionType.fullLoad,
                            ChargingStationOperator                             Operator              = null,
                            ChargingStationOperatorNameSelectorDelegate         OperatorNameSelector  = null,
 
-                           DateTime?                                Timestamp             = null,
-                           CancellationToken?                       CancellationToken     = null,
-                           EventTracking_Id                         EventTrackingId       = null,
-                           TimeSpan?                                RequestTimeout        = null)
+                           DateTime?                                           Timestamp             = null,
+                           CancellationToken?                                  CancellationToken     = null,
+                           EventTracking_Id                                    EventTrackingId       = null,
+                           TimeSpan?                                           RequestTimeout        = null)
 
 
             => await CPOClient.PushEVSEStatus(GroupedEVSEStatusRecords,
@@ -982,18 +981,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
-            PushEVSEStatus(EVSEStatusRecord                  EVSEStatusRecord,
-                           ActionType                        OICPAction                = ActionType.insert,
+            PushEVSEStatus(EVSEStatusRecord                             EVSEStatusRecord,
+                           ActionType                                   OICPAction                = ActionType.insert,
                            ChargingStationOperator                      Operator                  = null,
                            ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector      = null,
-                           IncludeEVSEStatusRecordsDelegate  IncludeEVSEStatusRecords  = null,
+                           IncludeEVSEStatusRecordsDelegate             IncludeEVSEStatusRecords  = null,
 
-                           DateTime?                         Timestamp                 = null,
-                           CancellationToken?                CancellationToken         = null,
-                           EventTracking_Id                  EventTrackingId           = null,
-                           TimeSpan?                         RequestTimeout            = null)
+                           DateTime?                                    Timestamp                 = null,
+                           CancellationToken?                           CancellationToken         = null,
+                           EventTracking_Id                             EventTrackingId           = null,
+                           TimeSpan?                                    RequestTimeout            = null)
 
 
             => await CPOClient.PushEVSEStatus(EVSEStatusRecord,
@@ -1024,18 +1023,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
-            PushEVSEStatus(IEnumerable<EVSEStatusRecord>     EVSEStatusRecords,
-                           ActionType                        OICPAction                = ActionType.fullLoad,
+            PushEVSEStatus(IEnumerable<EVSEStatusRecord>                EVSEStatusRecords,
+                           ActionType                                   OICPAction                = ActionType.fullLoad,
                            ChargingStationOperator                      Operator                  = null,
                            ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector      = null,
-                           IncludeEVSEStatusRecordsDelegate  IncludeEVSEStatusRecords  = null,
+                           IncludeEVSEStatusRecordsDelegate             IncludeEVSEStatusRecords  = null,
 
-                           DateTime?                         Timestamp                 = null,
-                           CancellationToken?                CancellationToken         = null,
-                           EventTracking_Id                  EventTrackingId           = null,
-                           TimeSpan?                         RequestTimeout            = null)
+                           DateTime?                                    Timestamp                 = null,
+                           CancellationToken?                           CancellationToken         = null,
+                           EventTracking_Id                             EventTrackingId           = null,
+                           TimeSpan?                                    RequestTimeout            = null)
 
 
             => await CPOClient.PushEVSEStatus(EVSEStatusRecords,
@@ -1058,7 +1057,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="OICPAction">The server-side data management operation.</param>
         /// <param name="EVSEStatusRecords">An array of EVSE status records.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(ActionType                 OICPAction,
                            params EVSEStatusRecord[]  EVSEStatusRecords)
@@ -1086,19 +1085,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAuthorizationStart>>
+        public async Task<HTTPResponse<AuthorizationStart>>
 
-            AuthorizeStart(ChargingStationOperator_Id     OperatorId,
-                           Auth_Token          AuthToken,
-                           EVSE_Id             EVSEId             = null,
-                           ChargingSession_Id  SessionId          = null,
-                           ChargingProduct_Id  PartnerProductId   = null,
-                           ChargingSession_Id  PartnerSessionId   = null,
+            AuthorizeStart(ChargingStationOperator_Id  OperatorId,
+                           Auth_Token                  AuthToken,
+                           EVSE_Id                     EVSEId             = null,
+                           ChargingSession_Id          SessionId          = null,
+                           ChargingProduct_Id          PartnerProductId   = null,
+                           ChargingSession_Id          PartnerSessionId   = null,
 
-                           DateTime?           Timestamp          = null,
-                           CancellationToken?  CancellationToken  = null,
-                           EventTracking_Id    EventTrackingId    = null,
-                           TimeSpan?           RequestTimeout     = null)
+                           DateTime?                   Timestamp          = null,
+                           CancellationToken?          CancellationToken  = null,
+                           EventTracking_Id            EventTrackingId    = null,
+                           TimeSpan?                   RequestTimeout     = null)
 
 
             => await CPOClient.AuthorizeStart(OperatorId,
@@ -1134,18 +1133,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAuthorizationStop>>
+        public async Task<HTTPResponse<AuthorizationStop>>
 
-            AuthorizeStop(ChargingStationOperator_Id     OperatorId,
-                          ChargingSession_Id  SessionId,
-                          Auth_Token          AuthToken,
-                          EVSE_Id             EVSEId             = null,
-                          ChargingSession_Id  PartnerSessionId   = null,
+            AuthorizeStop(ChargingStationOperator_Id  OperatorId,
+                          ChargingSession_Id          SessionId,
+                          Auth_Token                  AuthToken,
+                          EVSE_Id                     EVSEId             = null,
+                          ChargingSession_Id          PartnerSessionId   = null,
 
-                          DateTime?           Timestamp          = null,
-                          CancellationToken?  CancellationToken  = null,
-                          EventTracking_Id    EventTrackingId    = null,
-                          TimeSpan?           RequestTimeout     = null)
+                          DateTime?                   Timestamp          = null,
+                          CancellationToken?          CancellationToken  = null,
+                          EventTracking_Id            EventTrackingId    = null,
+                          TimeSpan?                   RequestTimeout     = null)
 
 
             => await CPOClient.AuthorizeStop(OperatorId,
@@ -1172,7 +1171,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
 
@@ -1203,14 +1202,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAuthenticationData>>
+        public async Task<HTTPResponse<AuthenticationData>>
 
-            PullAuthenticationData(ChargingStationOperator_Id     OperatorId,
+            PullAuthenticationData(ChargingStationOperator_Id  OperatorId,
 
-                                   DateTime?           Timestamp          = null,
-                                   CancellationToken?  CancellationToken  = null,
-                                   EventTracking_Id    EventTrackingId    = null,
-                                   TimeSpan?           RequestTimeout     = null)
+                                   DateTime?                   Timestamp          = null,
+                                   CancellationToken?          CancellationToken  = null,
+                                   EventTracking_Id            EventTrackingId    = null,
+                                   TimeSpan?                   RequestTimeout     = null)
 
 
             => await CPOClient.PullAuthenticationData(OperatorId,

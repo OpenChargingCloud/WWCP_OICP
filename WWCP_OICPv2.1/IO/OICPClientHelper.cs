@@ -30,15 +30,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region IsHubjectError(XML)
 
-        public static Boolean IsHubjectError(XElement XML,
-                                             out OICPException OICPException,
-                                             Action<DateTime, Object, Exception> OnError)
+        public static Boolean IsHubjectError(XElement                             XML,
+                                             out OICPException                    OICPException,
+                                             Action<DateTime, Object, Exception>  OnError)
         {
 
             #region Initial checks
 
             if (OnError == null)
-                throw new ArgumentNullException("The given OnError-delegate must not be null!");
+                throw new ArgumentNullException(nameof(OnError),  "The given OnError-delegate must not be null!");
 
             #endregion
 

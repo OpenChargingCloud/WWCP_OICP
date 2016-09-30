@@ -32,85 +32,88 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// A delegate called whenever a MobileAuthorizeStart request will be send.
     /// </summary>
-    public delegate Task OnMobileAuthorizeStartRequestDelegate (DateTime                                LogTimestamp,
-                                                                DateTime                                RequestTimestamp,
-                                                                MobileClient                            Sender,
-                                                                String                                  SenderId,
-                                                                EventTracking_Id                        EventTrackingId,
-                                                                EVSE_Id                                 EVSEId,
-                                                                eMAIdWithPIN                            eMAIdWithPIN,
-                                                                String                                  ProductId,
-                                                                Boolean?                                GetNewSession,
-                                                                TimeSpan?                               RequestTimeout);
+    public delegate Task OnMobileAuthorizeStartRequestDelegate (DateTime                   LogTimestamp,
+                                                                DateTime                   RequestTimestamp,
+                                                                MobileClient               Sender,
+                                                                String                     SenderId,
+                                                                EventTracking_Id           EventTrackingId,
+                                                                EVSE_Id                    EVSEId,
+                                                                eMAIdWithPIN               eMAIdWithPIN,
+                                                                String                     ProductId,
+                                                                Boolean?                   GetNewSession,
+                                                                TimeSpan?                  RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a MobileAuthorizeStart request had been received.
     /// </summary>
-    public delegate Task OnMobileAuthorizeStartResponseDelegate(DateTime                                LogTimestamp,
-                                                                DateTime                                RequestTimestamp,
-                                                                MobileClient                            Sender,
-                                                                String                                  SenderId,
-                                                                EventTracking_Id                        EventTrackingId,
-                                                                EVSE_Id                                 EVSEId,
-                                                                eMAIdWithPIN                            eMAIdWithPIN,
-                                                                String                                  ProductId,
-                                                                Boolean?                                GetNewSession,
-                                                                TimeSpan?                               RequestTimeout,
-                                                                eRoamingMobileAuthorizationStart        Result,
-                                                                TimeSpan                                Duration);
+    public delegate Task OnMobileAuthorizeStartResponseDelegate(DateTime                   LogTimestamp,
+                                                                DateTime                   RequestTimestamp,
+                                                                MobileClient               Sender,
+                                                                String                     SenderId,
+                                                                EventTracking_Id           EventTrackingId,
+                                                                EVSE_Id                    EVSEId,
+                                                                eMAIdWithPIN               eMAIdWithPIN,
+                                                                String                     ProductId,
+                                                                Boolean?                   GetNewSession,
+                                                                TimeSpan?                  RequestTimeout,
+                                                                MobileAuthorizationStart   Result,
+                                                                TimeSpan                   Duration);
 
     #endregion
 
-    #region OnMobileRemoteStart/-Stop
+    #region OnMobileRemoteStart
 
     /// <summary>
     /// A delegate called whenever a MobileAuthorizeStart request will be send.
     /// </summary>
-    public delegate Task OnMobileRemoteStartRequestDelegate (DateTime                  LogTimestamp,
-                                                             DateTime                  RequestTimestamp,
-                                                             MobileClient              Sender,
-                                                             String                    SenderId,
-                                                             EventTracking_Id          EventTrackingId,
-                                                             ChargingSession_Id        SessionId,
-                                                             TimeSpan?                 RequestTimeout);
+    public delegate Task OnMobileRemoteStartRequestDelegate (DateTime             LogTimestamp,
+                                                             DateTime             RequestTimestamp,
+                                                             MobileClient         Sender,
+                                                             String               SenderId,
+                                                             EventTracking_Id     EventTrackingId,
+                                                             ChargingSession_Id   SessionId,
+                                                             TimeSpan?            RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a MobileAuthorizeStart request had been received.
     /// </summary>
-    public delegate Task OnMobileRemoteStartResponseDelegate(DateTime                  LogTimestamp,
-                                                             DateTime                  RequestTimestamp,
-                                                             MobileClient              Sender,
-                                                             String                    SenderId,
-                                                             EventTracking_Id          EventTrackingId,
-                                                             ChargingSession_Id        SessionId,
-                                                             TimeSpan?                 RequestTimeout,
-                                                             eRoamingAcknowledgement   Result,
-                                                             TimeSpan                  Duration);
+    public delegate Task OnMobileRemoteStartResponseDelegate(DateTime             LogTimestamp,
+                                                             DateTime             RequestTimestamp,
+                                                             MobileClient         Sender,
+                                                             String               SenderId,
+                                                             EventTracking_Id     EventTrackingId,
+                                                             ChargingSession_Id   SessionId,
+                                                             TimeSpan?            RequestTimeout,
+                                                             Acknowledgement      Result,
+                                                             TimeSpan             Duration);
 
+    #endregion
+
+    #region OnMobileRemoteStop
 
     /// <summary>
     /// A delegate called whenever a MobileAuthorizeStart request will be send.
     /// </summary>
-    public delegate Task OnMobileRemoteStopRequestDelegate (DateTime                  LogTimestamp,
-                                                            DateTime                  RequestTimestamp,
-                                                            MobileClient              Sender,
-                                                            String                    SenderId,
-                                                            EventTracking_Id          EventTrackingId,
-                                                            ChargingSession_Id        SessionId,
-                                                            TimeSpan?                 RequestTimeout);
+    public delegate Task OnMobileRemoteStopRequestDelegate (DateTime              LogTimestamp,
+                                                            DateTime              RequestTimestamp,
+                                                            MobileClient          Sender,
+                                                            String                SenderId,
+                                                            EventTracking_Id      EventTrackingId,
+                                                            ChargingSession_Id    SessionId,
+                                                            TimeSpan?             RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a MobileAuthorizeStart request had been received.
     /// </summary>
-    public delegate Task OnMobileRemoteStopResponseDelegate(DateTime                  LogTimestamp,
-                                                            DateTime                  RequestTimestamp,
-                                                            MobileClient              Sender,
-                                                            String                    SenderId,
-                                                            EventTracking_Id          EventTrackingId,
-                                                            ChargingSession_Id        SessionId,
-                                                            TimeSpan?                 RequestTimeout,
-                                                            eRoamingAcknowledgement   Result,
-                                                            TimeSpan                  Duration);
+    public delegate Task OnMobileRemoteStopResponseDelegate(DateTime              LogTimestamp,
+                                                            DateTime              RequestTimestamp,
+                                                            MobileClient          Sender,
+                                                            String                SenderId,
+                                                            EventTracking_Id      EventTrackingId,
+                                                            ChargingSession_Id    SessionId,
+                                                            TimeSpan?             RequestTimeout,
+                                                            Acknowledgement       Result,
+                                                            TimeSpan              Duration);
 
     #endregion
 

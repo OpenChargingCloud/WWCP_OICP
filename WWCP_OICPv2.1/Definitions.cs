@@ -25,12 +25,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// OICP definitions.
+    /// Common OICP definitions.
     /// </summary>
     public static class Definitions
     {
 
-        public static readonly Regex EVSEIdRegExpr = new Regex("([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})  |  (\\+?[0-9]{1,3}\\*[0-9]{3,6}\\*[0-9\\*]{1,32})", RegexOptions.IgnorePatternWhitespace);
+        /// <summary>
+        /// An regular expression to verify an OICP EVSE identification.
+        /// </summary>
+        public static readonly Regex EVSEIdRegExpr = new Regex("([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})  |  (\\+?[0-9]{1,3}\\*[0-9]{3,6}\\*[0-9\\*]{1,32})",
+                                                               RegexOptions.IgnorePatternWhitespace);
 
     }
 

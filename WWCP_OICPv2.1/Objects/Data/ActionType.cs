@@ -23,10 +23,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// </summary>
     public enum ActionType
     {
+
+        /// <summary>
+        /// Replace all server-side data with the new data.
+        /// </summary>
         fullLoad,
-        update,     // will act like an 'upsert' for dynamic EVSE states!
+
+        /// <summary>
+        /// Update the server-side data with the given data.
+        /// Will act like an 'upsert' for dynamic EVSE states!
+        /// </summary>
+        update,
+
+        /// <summary>
+        /// Insert the given data into the server-side data.
+        /// Will fail if it already exists!
+        /// </summary>
         insert,
+
+        /// <summary>
+        /// Delete the given data from the server-side data set.
+        /// </summary>
         delete
+
     }
 
 }

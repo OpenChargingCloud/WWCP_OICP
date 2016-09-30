@@ -272,7 +272,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingMobileAuthorizationStart>>
+        public async Task<HTTPResponse<MobileAuthorizationStart>>
 
             MobileAuthorizeStart(EVSE_Id              EVSEId,
                                  eMobilityAccount_Id  eMAId,
@@ -316,7 +316,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingMobileAuthorizationStart>>
+        public async Task<HTTPResponse<MobileAuthorizationStart>>
 
             MobileAuthorizeStart(EVSE_Id              EVSEId,
                                  eMobilityAccount_Id  eMAId,
@@ -359,7 +359,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingMobileAuthorizationStart>>
+        public async Task<HTTPResponse<MobileAuthorizationStart>>
 
             MobileAuthorizeStart(EVSE_Id             EVSEId,
                                  eMAIdWithPIN        eMAIdWithPIN,
@@ -442,7 +442,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingMobileAuthorizationStart.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(MobileAuthorizationStart.Parse),
 
                                                      #endregion
 
@@ -452,10 +452,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                         return new HTTPResponse<eRoamingMobileAuthorizationStart>(httpresponse,
-                                                                                                                   new eRoamingMobileAuthorizationStart(StatusCodes.SystemError,
-                                                                                                                                                        httpresponse.Content.ToString()),
-                                                                                                                   IsFault: true);
+                                                         return new HTTPResponse<MobileAuthorizationStart>(httpresponse,
+                                                                                                           new MobileAuthorizationStart(StatusCodes.SystemError,
+                                                                                                                                        httpresponse.Content.ToString()),
+                                                                                                           IsFault: true);
 
                                                      },
 
@@ -467,11 +467,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                         return new HTTPResponse<eRoamingMobileAuthorizationStart>(httpresponse,
-                                                                                                                   new eRoamingMobileAuthorizationStart(StatusCodes.SystemError,
-                                                                                                                                                        httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                                        httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                                   IsFault: true);
+                                                         return new HTTPResponse<MobileAuthorizationStart>(httpresponse,
+                                                                                                           new MobileAuthorizationStart(StatusCodes.SystemError,
+                                                                                                                                                httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                                httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                           IsFault: true);
 
                                                      },
 
@@ -483,10 +483,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<eRoamingMobileAuthorizationStart>.ExceptionThrown(new eRoamingMobileAuthorizationStart(StatusCodes.SystemError,
-                                                                                                                                                                    exception.Message,
-                                                                                                                                                                    exception.StackTrace),
-                                                                                                                               Exception: exception);
+                                                         return HTTPResponse<MobileAuthorizationStart>.ExceptionThrown(new MobileAuthorizationStart(StatusCodes.SystemError,
+                                                                                                                                                    exception.Message,
+                                                                                                                                                    exception.StackTrace),
+                                                                                                                       Exception: exception);
 
                                                      }
 
@@ -542,7 +542,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             MobileRemoteStart(ChargingSession_Id  SessionId,
 
@@ -613,7 +613,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
 
                                                      #endregion
 
@@ -623,10 +623,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError,
-                                                                                                                                      httpresponse.Content.ToString()),
-                                                                                                          IsFault: true);
+                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                  new Acknowledgement(StatusCodes.SystemError,
+                                                                                                                      httpresponse.Content.ToString()),
+                                                                                                  IsFault: true);
 
                                                      },
 
@@ -638,11 +638,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError,
-                                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                          IsFault: true);
+                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                  new Acknowledgement(StatusCodes.SystemError,
+                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                  IsFault: true);
 
                                                      },
 
@@ -654,11 +654,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
-                                                                                                                                                  exception.Message,
-                                                                                                                                                  exception.StackTrace,
-                                                                                                                                                  SessionId),
-                                                                                                                      Exception: exception);
+                                                         return HTTPResponse<Acknowledgement>.ExceptionThrown(new Acknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                  exception.Message,
+                                                                                                                                  exception.StackTrace,
+                                                                                                                                  SessionId),
+                                                                                                              Exception: exception);
 
                                                      }
 
@@ -710,7 +710,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             MobileRemoteStop(ChargingSession_Id  SessionId,
 
@@ -781,7 +781,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
 
                                                      #endregion
 
@@ -791,10 +791,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError,
-                                                                                                                                      httpresponse.Content.ToString()),
-                                                                                                          IsFault: true);
+                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                  new Acknowledgement(StatusCodes.SystemError,
+                                                                                                                      httpresponse.Content.ToString()),
+                                                                                                  IsFault: true);
 
                                                      },
 
@@ -806,11 +806,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError,
-                                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                          IsFault: true);
+                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                  new Acknowledgement(StatusCodes.SystemError,
+                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                  IsFault: true);
 
                                                      },
 
@@ -822,11 +822,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
-                                                                                                                                                  exception.Message,
-                                                                                                                                                  exception.StackTrace,
-                                                                                                                                                  SessionId),
-                                                                                                                      Exception: exception);
+                                                         return HTTPResponse<Acknowledgement>.ExceptionThrown(new Acknowledgement(StatusCodes.ServiceNotAvailable,
+                                                                                                                                  exception.Message,
+                                                                                                                                  exception.StackTrace,
+                                                                                                                                  SessionId),
+                                                                                                              Exception: exception);
 
                                                      }
 

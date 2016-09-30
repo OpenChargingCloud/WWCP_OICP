@@ -18,10 +18,22 @@
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    /// <summary>
+    /// The result of an authorization.
+    /// </summary>
     public enum AuthorizationStatusType
     {
+
+        /// <summary>
+        /// Authorized.
+        /// </summary>
         Authorized,
+
+        /// <summary>
+        /// Not authorized.
+        /// </summary>
         NotAuthorized
+
     }
 
 }

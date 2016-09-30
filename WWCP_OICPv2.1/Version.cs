@@ -25,13 +25,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The OICP version.
+    /// The current OICP version.
     /// </summary>
     public static class Version
     {
 
         /// <summary>
-        /// The OICP version.
+        /// The current OICP version.
         /// </summary>
         public const String Number = "v2.1";
 

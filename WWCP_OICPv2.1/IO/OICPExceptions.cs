@@ -25,7 +25,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// OICP v2.0 exceptions.
+    /// OICP exceptions.
     /// </summary>
     public class OICPException : ApplicationException
     {
@@ -33,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         private readonly StatusCode _StatusCode;
 
         /// <summary>
-        /// Create a new OICP v2.0 exception for the given status code.
+        /// Create a new OICP exception for the given status code.
         /// </summary>
         /// <param name="StatusCode"></param>
         public OICPException(StatusCode  StatusCode)

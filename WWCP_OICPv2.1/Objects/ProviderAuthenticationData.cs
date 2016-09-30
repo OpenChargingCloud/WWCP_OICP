@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP v2.0 provider authentication data record.
+    /// An OICP Provider Authentication Data Record.
     /// </summary>
     public class ProviderAuthenticationData
     {
@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The unique identification of an Electric Vehicle Service Provider.
         /// </summary>
-        public eMobilityProvider_Id                                   ProviderId                    { get; }
+        public eMobilityProvider_Id                      ProviderId                    { get; }
 
         /// <summary>
         /// An enumeration of authorization identifications records.
@@ -52,11 +52,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new OICP v2.0 provider authentication data record.
+        /// Create a new OICP provider authentication data record.
         /// </summary>
         /// <param name="ProviderId">The unique identification of an Electric Vehicle Service Provider.</param>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications records.</param>
-        public ProviderAuthenticationData(eMobilityProvider_Id                                   ProviderId,
+        public ProviderAuthenticationData(eMobilityProvider_Id                      ProviderId,
                                           IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications)
         {
 
@@ -68,15 +68,76 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             this.ProviderId                    = ProviderId;
-            this.AuthorizationIdentifications  = AuthorizationIdentifications != null ? AuthorizationIdentifications : new AuthorizationIdentification[0];
+            this.AuthorizationIdentifications  = AuthorizationIdentifications ?? new AuthorizationIdentification[0];
 
         }
 
         #endregion
 
 
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
+        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        // 
+        //  [...]
+        // 
+        //    <!--Zero or more repetitions:-->
+        //    <AuthenticationData:ProviderAuthenticationData>
+        // 
+        //       <AuthenticationData:ProviderID>DE*GDF</AuthenticationData:ProviderID>
+        // 
+        //       <!--Zero or more repetitions:-->
+        //       <AuthenticationData:AuthenticationDataRecord>
+        //          <AuthenticationData:Identification>
+        // 
+        //             <!--You have a CHOICE of the next 4 items at this level-->
+        //             <CommonTypes:RFIDmifarefamilyIdentification>
+        //                <CommonTypes:UID>08152305</CommonTypes:UID>
+        //             </CommonTypes:RFIDmifarefamilyIdentification>
+        // 
+        //             <CommonTypes:QRCodeIdentification>
+        // 
+        //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        // 
+        //                <!--You have a CHOICE of the next 2 items at this level-->
+        //                <CommonTypes:PIN>?</CommonTypes:PIN>
+        // 
+        //                <CommonTypes:HashedPIN>
+        //                   <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
+        //                   <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
+        //                   <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
+        //                </CommonTypes:HashedPIN>
+        // 
+        //             </CommonTypes:QRCodeIdentification>
+        // 
+        //             <CommonTypes:PlugAndChargeIdentification>
+        //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        //             </CommonTypes:PlugAndChargeIdentification>
+        // 
+        //             <CommonTypes:RemoteIdentification>
+        //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        //             </CommonTypes:RemoteIdentification>
+        // 
+        //          </AuthenticationData:Identification>
+        //       </AuthenticationData:AuthenticationDataRecord>
+        // 
+        //    </AuthenticationData:ProviderAuthenticationData>
+        // 
+        //  [...]
+        // 
+        // </soapenv:Envelope>
+
+        #endregion
+
         #region (static) Parse(ProviderAuthenticationDataXML, OnException = null)
 
+        /// <summary>
+        /// Parse the givem XML as an OICP Provider Authentication Data Record.
+        /// </summary>
+        /// <param name="ProviderAuthenticationDataXML">A XML representation of an enumeration of OICP Provider Authentication Data Record.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static ProviderAuthenticationData Parse(XElement             ProviderAuthenticationDataXML,
                                                        OnExceptionDelegate  OnException = null)
         {
@@ -85,62 +146,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             if (ProviderAuthenticationDataXML == null)
                 return null;
-
-            #endregion
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
-            //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            // 
-            //  [...]
-            // 
-            //    <!--Zero or more repetitions:-->
-            //    <AuthenticationData:ProviderAuthenticationData>
-            // 
-            //       <AuthenticationData:ProviderID>DE*GDF</AuthenticationData:ProviderID>
-            // 
-            //       <!--Zero or more repetitions:-->
-            //       <AuthenticationData:AuthenticationDataRecord>
-            //          <AuthenticationData:Identification>
-            // 
-            //             <!--You have a CHOICE of the next 4 items at this level-->
-            //             <CommonTypes:RFIDmifarefamilyIdentification>
-            //                <CommonTypes:UID>08152305</CommonTypes:UID>
-            //             </CommonTypes:RFIDmifarefamilyIdentification>
-            // 
-            //             <CommonTypes:QRCodeIdentification>
-            // 
-            //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-            // 
-            //                <!--You have a CHOICE of the next 2 items at this level-->
-            //                <CommonTypes:PIN>?</CommonTypes:PIN>
-            // 
-            //                <CommonTypes:HashedPIN>
-            //                   <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
-            //                   <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
-            //                   <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
-            //                </CommonTypes:HashedPIN>
-            // 
-            //             </CommonTypes:QRCodeIdentification>
-            // 
-            //             <CommonTypes:PlugAndChargeIdentification>
-            //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-            //             </CommonTypes:PlugAndChargeIdentification>
-            // 
-            //             <CommonTypes:RemoteIdentification>
-            //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-            //             </CommonTypes:RemoteIdentification>
-            // 
-            //          </AuthenticationData:Identification>
-            //       </AuthenticationData:AuthenticationDataRecord>
-            // 
-            //    </AuthenticationData:ProviderAuthenticationData>
-            // 
-            //  [...]
-            // 
-            // </soapenv:Envelope>
 
             #endregion
 
@@ -163,8 +168,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                if (OnException != null)
-                    OnException(DateTime.Now, ProviderAuthenticationDataXML, e);
+                OnException?.Invoke(DateTime.Now, ProviderAuthenticationDataXML, e);
 
                 return null;
 
@@ -174,8 +178,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+
         #region (static) Parse(ProviderAuthenticationDataXMLs, OnException = null)
 
+        /// <summary>
+        /// Parse the givem XML as an OICP Provider Authentication Data Record.
+        /// </summary>
+        /// <param name="ProviderAuthenticationDataXMLs">A XML representation of an enumeration of OICP Provider Authentication Data Record.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static IEnumerable<ProviderAuthenticationData> Parse(IEnumerable<XElement>  ProviderAuthenticationDataXMLs,
                                                                     OnExceptionDelegate    OnException = null)
         {
@@ -199,6 +209,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
+
 
     }
 

@@ -172,19 +172,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML() => new XElement(OICPNS.CommonTypes + "StatusCode",
+        public XElement ToXML()
 
-                                       new XElement(OICPNS.CommonTypes + "Code",  ((Int32) Code).ToString("D3")),
+            => new XElement(OICPNS.CommonTypes + "StatusCode",
 
-                                       Description.IsNotNullOrEmpty()
-                                           ? new XElement(OICPNS.CommonTypes + "Description",     Description)
-                                           : null,
+                   new XElement(OICPNS.CommonTypes + "Code",  ((Int32) Code).ToString("D3")),
 
-                                       AdditionalInfo.IsNotNullOrEmpty()
-                                           ? new XElement(OICPNS.CommonTypes + "AdditionalInfo",  AdditionalInfo)
-                                           : null
+                   Description.IsNotNullOrEmpty()
+                       ? new XElement(OICPNS.CommonTypes + "Description",     Description)
+                       : null,
 
-                                   );
+                   AdditionalInfo.IsNotNullOrEmpty()
+                       ? new XElement(OICPNS.CommonTypes + "AdditionalInfo",  AdditionalInfo)
+                       : null
+
+               );
 
         #endregion
 
@@ -195,6 +197,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Return a string representation of this object.
         /// </summary>
         public override String ToString()
+
             => String.Concat("StatusCode: ", ((Int32) Code), ", Description: ", Description, ", Additional Info: ", AdditionalInfo);
 
         #endregion

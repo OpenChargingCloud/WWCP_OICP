@@ -18,10 +18,7 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Xml.Linq;
-using System.Globalization;
-using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
@@ -32,7 +29,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// OICP v2.0 XML management methods.
+    /// OICP XML management methods.
     /// </summary>
     public static class XMLMethods
     {

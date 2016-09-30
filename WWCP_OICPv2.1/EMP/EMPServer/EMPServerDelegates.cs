@@ -42,7 +42,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="PartnerProductId">An optional partner product identification.</param>
     /// <param name="PartnerSessionId">An optional partner session identification.</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
-    public delegate Task<eRoamingAuthorizationStart>
+    public delegate Task<AuthorizationStart>
 
         OnAuthorizeStartDelegate(DateTime            Timestamp,
                                  EMPServer           Sender,
@@ -70,7 +70,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="AuthToken">A (RFID) user identification.</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
-    public delegate Task<eRoamingAuthorizationStop>
+    public delegate Task<AuthorizationStop>
 
         OnAuthorizeStopDelegate(DateTime            Timestamp,
                                 EMPServer           Sender,
@@ -93,7 +93,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="ChargeDetailRecord">A charge detail record.</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
-    public delegate Task<eRoamingAcknowledgement>
+    public delegate Task<Acknowledgement>
 
         OnChargeDetailRecordDelegate(DateTime            Timestamp,
                                      EMPServer           Sender,

@@ -43,7 +43,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="eMAId">The unique identification of the e-mobility account.</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
-    public delegate Task<eRoamingAcknowledgement>
+    public delegate Task<Acknowledgement>
 
         OnRemoteReservationStartDelegate(DateTime            Timestamp,
                                          CPOServer           Sender,
@@ -70,7 +70,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="PartnerSessionId">The unique identification for this charging session on the partner side.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender..</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
-    public delegate Task<eRoamingAcknowledgement>
+    public delegate Task<Acknowledgement>
 
         OnRemoteReservationStopDelegate(DateTime             Timestamp,
                                         CPOServer            Sender,
@@ -97,7 +97,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="eMAId">The unique identification of the e-mobility account.</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
-    public delegate Task<eRoamingAcknowledgement>
+    public delegate Task<Acknowledgement>
 
         OnRemoteStartDelegate(DateTime            Timestamp,
                               CPOServer           Sender,
@@ -124,7 +124,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="PartnerSessionId">The unique identification for this charging session on the partner side.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender..</param>
     /// <param name="QueryTimeout">An optional timeout for this request.</param>
-    public delegate Task<eRoamingAcknowledgement>
+    public delegate Task<Acknowledgement>
 
         OnRemoteStopDelegate(DateTime             Timestamp,
                              CPOServer            Sender,

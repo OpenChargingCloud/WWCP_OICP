@@ -20,6 +20,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -163,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new OICP EVSE status record based on the given WWCP EVSE status.
         /// </summary>
         /// <param name="EVSEStatus">The current status of an EVSE.</param>
-        public static EVSEStatusRecord AsOICPEVSEStatus(this EVSEStatus EVSEStatus)
+        public static EVSEStatusRecord AsOICPEVSEStatus(this WWCP.EVSEStatus EVSEStatus)
 
         {
 
@@ -183,6 +184,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
+
 
 
         #region AsWWCPActionType(this Action)
@@ -1636,7 +1638,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
-
 
 
     }

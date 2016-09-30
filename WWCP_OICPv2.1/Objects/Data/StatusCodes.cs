@@ -19,7 +19,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP status code.
+    /// OICP status codes.
     /// </summary>
     public enum StatusCodes
     {

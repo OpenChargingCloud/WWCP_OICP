@@ -368,7 +368,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 ChargingProduct_Id         ChargingProductId   = null;
                 Auth_Token                 AuthToken           = null;
 
-                eRoamingAuthorizationStart response            = null;
+                AuthorizationStart response            = null;
 
                 try
                 {
@@ -420,7 +420,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 catch (Exception e)
                 {
 
-                    response = new eRoamingAuthorizationStart(StatusCodes.DataError,
+                    response = new AuthorizationStart(StatusCodes.DataError,
                                                               "The AuthorizeStart request led to an exception!",
                                                               e.Message,
                                                               SessionId,
@@ -461,7 +461,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     }
 
                     if (results.Length == 0 || response == null)
-                        response = new eRoamingAuthorizationStart(StatusCodes.SystemError,
+                        response = new AuthorizationStart(StatusCodes.SystemError,
                                                                   "Could not process the incoming AuthorizationStart request!",
                                                                   null,
                                                                   SessionId,
@@ -568,7 +568,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 EVSE_Id                   EVSEId             = null;
                 Auth_Token                AuthToken          = null;
 
-                eRoamingAuthorizationStop response           = null;
+                AuthorizationStop response           = null;
 
                 try
                 {
@@ -607,7 +607,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 catch (Exception e)
                 {
 
-                    response = new eRoamingAuthorizationStop(StatusCodes.DataError,
+                    response = new AuthorizationStop(StatusCodes.DataError,
                                                              "The AuthorizeStop request led to an exception!",
                                                              e.Message,
                                                              SessionId,
@@ -647,7 +647,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     }
 
                     if (results.Length == 0 || response == null)
-                        response = new eRoamingAuthorizationStop(StatusCodes.SystemError,
+                        response = new AuthorizationStop(StatusCodes.SystemError,
                                                                  "Could not process the incoming AuthorizeStop request!",
                                                                  null,
                                                                  SessionId,
@@ -723,7 +723,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     #region Parse request parameters
 
                     ChargeDetailRecord      CDR       = null;
-                    eRoamingAcknowledgement response  = null;
+                    Acknowledgement response  = null;
 
                     try
                     {
@@ -733,7 +733,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     }
                     catch (Exception e)
                     {
-                        response = new eRoamingAcknowledgement(StatusCodes.DataError,
+                        response = new Acknowledgement(StatusCodes.DataError,
                                                                "The ChargeDetailRecord request led to an exception!",
                                                                e.Message);
                     }
@@ -766,7 +766,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         }
 
                         if (results.Length == 0 || response == null)
-                            response = new eRoamingAcknowledgement(StatusCodes.SystemError,
+                            response = new Acknowledgement(StatusCodes.SystemError,
                                                                    "Could not process the incoming request!");
 
                     }

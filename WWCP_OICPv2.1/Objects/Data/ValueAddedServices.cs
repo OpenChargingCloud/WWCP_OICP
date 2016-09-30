@@ -31,39 +31,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// There are no value added services available.
         /// </summary>
-        None                        =  0,
+        None                        = 0,
 
         /// <summary>
         /// Can an EV driver reserve the charging spot
         /// via remote services?
         /// </summary>
-        Reservation                 =  1,
+        Reservation                 = 1,
 
         /// <summary>
         /// Does the EVSE support dynamic pricing? 
         /// </summary>
-        DynamicPricing              =  2,
+        DynamicPricing              = 1 << 1,
 
         /// <summary>
         /// Is for this EVSE a dynamic status of the corresponding
         /// parking lot in front of the EVSE available?
         /// </summary>
-        ParkingSensors              =  4,
+        ParkingSensors              = 1 << 2,
 
         /// <summary>
         /// Does the EVSE offer a dynamic maximum power charging?
         /// </summary>
-        MaximumPowerCharging        =  8,
+        MaximumPowerCharging        = 1 << 3,
 
         /// <summary>
         /// Is for the EVSE a predictive usage statistic available?
         /// </summary>
-        PredictiveChargePointUsage  = 16,
+        PredictiveChargePointUsage  = 1 << 4,
 
         /// <summary>
         /// Does the EVSE offer charging plans, e.g. ISO 15118-2?
         /// </summary>
-        ChargingPlans               = 32
+        ChargingPlans               = 1 << 5
 
     }
 

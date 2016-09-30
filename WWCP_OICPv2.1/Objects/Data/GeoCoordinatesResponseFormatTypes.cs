@@ -23,9 +23,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// </summary>
     public enum GeoCoordinatesResponseFormatTypes
     {
+
+        /// <summary>
+        /// Google format.
+        /// </summary>
         Google,
+
+        /// <summary>
+        /// e.g. 42° 23' 5''.
+        /// </summary>
         DegreeMinuteSeconds,
+
+        /// <summary>
+        /// e.g. 51.23234°.
+        /// </summary>
         DecimalDegree
+
     }
 
 }

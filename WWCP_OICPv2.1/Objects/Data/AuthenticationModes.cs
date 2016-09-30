@@ -24,16 +24,42 @@ using System;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    /// <summary>
+    /// The supported ways of ev driver authentication.
+    /// </summary>
     [Flags]
     public enum AuthenticationModes
     {
 
+        /// <summary>
+        /// Unknown.
+        /// </summary>
         Unkown              =  0,
+
+        /// <summary>
+        /// Using MiFare classic RFID cards.
+        /// </summary>
         NFC_RFID_Classic    =  1,
+
+        /// <summary>
+        /// Using MiFare DESFire RFID cards.
+        /// </summary>
         NFC_RFID_DESFire    =  2,
-        PnC                 =  4,   // ISO/IEC 15118 PLC
-        REMOTE              =  8,   // App, QR-Code, Phone
-        DirectPayment       = 16    // Remote use via direct payment. E.g. intercharge direct
+
+        /// <summary>
+        /// Using ISO/IEC 15118 Plug-and-Charge (PnC)
+        /// </summary>
+        PnC                 =  4,
+
+        /// <summary>
+        /// Using an eMAId/EVCOId via an app, QR-code or phone.
+        /// </summary>
+        REMOTE              =  8,
+
+        /// <summary>
+        /// Direct payment, e.g. via InterCharge Direct.
+        /// </summary>
+        DirectPayment       = 16
 
     }
 

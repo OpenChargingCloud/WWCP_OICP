@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The unique identification of an Charging Station Operator.
         /// </summary>
-        public ChargingStationOperator_Id                OperatorId          { get; }
+        public ChargingStationOperator_Id     OperatorId          { get; }
 
         /// <summary>
         /// The name of an Charging Station Operator.
@@ -62,7 +62,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">The unique identification of an Charging Station Operator.</param>
         /// <param name="OperatorName">The name of an Charging Station Operator.</param>
         /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
-        public OperatorEVSEStatus(ChargingStationOperator_Id                OperatorId,
+        public OperatorEVSEStatus(ChargingStationOperator_Id     OperatorId,
                                   String                         OperatorName,
                                   IEnumerable<EVSEStatusRecord>  EVSEStatusRecords)
         {
@@ -70,13 +70,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId),  "The given operator identification must not be null!");
 
             #endregion
 
             this.OperatorId         = OperatorId;
-            this.OperatorName       = OperatorName      != null ? OperatorName      : "";
-            this.EVSEStatusRecords  = EVSEStatusRecords != null ? EVSEStatusRecords : new EVSEStatusRecord[0];
+            this.OperatorName       = OperatorName      ?? "";
+            this.EVSEStatusRecords  = EVSEStatusRecords ?? new EVSEStatusRecord[0];
 
         }
 
@@ -113,6 +113,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
+
 
         #region (static) Parse(OperatorEVSEDataXMLs)
 

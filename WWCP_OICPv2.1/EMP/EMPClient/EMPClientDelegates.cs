@@ -57,7 +57,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        Double             DistanceKM,
                                                        DateTime?          LastCall,
                                                        TimeSpan?          RequestTimeout,
-                                                       eRoamingEVSEData   Result,
+                                                       EVSEData   Result,
                                                        TimeSpan           Duration);
 
     #endregion
@@ -94,7 +94,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      PlugTypes?                 Plug,
                                                      ChargingFacilities?        ChargingFacility,
                                                      TimeSpan?                  RequestTimeout,
-                                                     eRoamingEvseSearchResult   Result,
+                                                     EVSESearchResult   Result,
                                                      TimeSpan                   Duration);
 
     #endregion
@@ -127,7 +127,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          Double               DistanceKM,
                                                          EVSEStatusType?      EVSEStatusFilter,
                                                          TimeSpan?            RequestTimeout,
-                                                         eRoamingEVSEStatus   Result,
+                                                         EVSEStatus   Result,
                                                          TimeSpan             Duration);
 
     #endregion
@@ -156,7 +156,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                              eMobilityProvider_Id                  ProviderId,
                                                              IEnumerable<EVSE_Id>     EVSEIds,
                                                              TimeSpan?                RequestTimeout,
-                                                             eRoamingEVSEStatusById   Result,
+                                                             EVSEStatusById   Result,
                                                              TimeSpan                 Duration);
 
     #endregion
@@ -185,7 +185,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                  IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
                                                                  ActionType                               OICPAction,
                                                                  TimeSpan?                                RequestTimeout,
-                                                                 eRoamingAcknowledgement                  Result,
+                                                                 Acknowledgement                  Result,
                                                                  TimeSpan                                 Duration);
 
     #endregion
@@ -222,7 +222,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            ChargingSession_Id        PartnerSessionId,
                                                            ChargingProduct_Id        PartnerProductId,
                                                            TimeSpan?                 RequestTimeout,
-                                                           eRoamingAcknowledgement   Result,
+                                                           Acknowledgement   Result,
                                                            TimeSpan                  Duration);
 
 
@@ -252,7 +252,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            EVSE_Id                   EVSEId,
                                                            ChargingSession_Id        PartnerSessionId,
                                                            TimeSpan?                 RequestTimeout,
-                                                           eRoamingAcknowledgement   Result,
+                                                           Acknowledgement   Result,
                                                            TimeSpan                  Duration);
 
     #endregion
@@ -289,7 +289,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                ChargingSession_Id        PartnerSessionId,
                                                                ChargingProduct_Id        PartnerProductId,
                                                                TimeSpan?                 RequestTimeout,
-                                                               eRoamingAcknowledgement   Result,
+                                                               Acknowledgement   Result,
                                                                TimeSpan                  Duration);
 
 
@@ -319,7 +319,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                EVSE_Id                   EVSEId,
                                                                ChargingSession_Id        PartnerSessionId,
                                                                TimeSpan?                 RequestTimeout,
-                                                               eRoamingAcknowledgement   Result,
+                                                               Acknowledgement   Result,
                                                                TimeSpan                  Duration);
 
     #endregion

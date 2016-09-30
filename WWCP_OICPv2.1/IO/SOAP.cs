@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// SOAP helpers.
+    /// OICP SOAP helpers.
     /// </summary>
     public static class SOAP
     {

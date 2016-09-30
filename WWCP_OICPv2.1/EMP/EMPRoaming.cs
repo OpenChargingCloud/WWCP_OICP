@@ -1198,7 +1198,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingEVSEData>>
+        public async Task<HTTPResponse<EVSEData>>
 
             PullEVSEData(eMobilityProvider_Id             ProviderId,
                          GeoCoordinate       SearchCenter       = null,
@@ -1239,7 +1239,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingEvseSearchResult>>
+        public async Task<HTTPResponse<EVSESearchResult>>
 
             SearchEVSE(eMobilityProvider_Id              ProviderId,
                        GeoCoordinate        SearchCenter       = null,
@@ -1283,7 +1283,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingEVSEStatus>>
+        public async Task<HTTPResponse<EVSEStatus>>
 
             PullEVSEStatus(eMobilityProvider_Id             ProviderId,
                            GeoCoordinate       SearchCenter       = null,
@@ -1320,7 +1320,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingEVSEStatusById>>
+        public async Task<HTTPResponse<EVSEStatusById>>
 
             PullEVSEStatusById(eMobilityProvider_Id               ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
@@ -1354,7 +1354,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
                                    ActionType                               OICPAction         = ActionType.fullLoad,
@@ -1388,7 +1388,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
                                    eMobilityProvider_Id                                   ProviderId,
@@ -1428,7 +1428,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             ReservationStart(EVSE_Id               EVSEId,
                              eMobilityProvider_Id  ProviderId,
@@ -1471,7 +1471,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             ReservationStop(ChargingSession_Id    SessionId,
                             eMobilityProvider_Id  ProviderId,
@@ -1513,7 +1513,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             RemoteStart(EVSE_Id               EVSEId,
                         eMobilityProvider_Id  ProviderId,
@@ -1556,7 +1556,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             RemoteStop(ChargingSession_Id    SessionId,
                        eMobilityProvider_Id  ProviderId,

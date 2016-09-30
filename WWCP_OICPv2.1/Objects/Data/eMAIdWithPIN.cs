@@ -17,77 +17,45 @@
 
 #region Usings
 
-using org.GraphDefined.Vanaheimr.Illias;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
+
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public class eMAIdWithPIN
+    /// <summary>
+    /// An e-mobility account identification with (hashed) pin.
+    /// </summary>
+    public class eMAIdWithPIN : IEquatable <eMAIdWithPIN>,
+                                IComparable<eMAIdWithPIN>,
+                                IComparable
     {
 
         #region Properties
 
-        #region eMAId
+        /// <summary>
+        /// An e-mobility account identification.
+        /// </summary>
+        public eMobilityAccount_Id  eMAId       { get; }
 
-        private readonly eMobilityAccount_Id _eMAId;
+        /// <summary>
+        /// A pin.
+        /// </summary>
+        public String               PIN         { get; }
 
-        public eMobilityAccount_Id eMAId
-        {
-            get
-            {
-                return _eMAId;
-            }
-        }
+        /// <summary>
+        /// A crypto function.
+        /// </summary>
+        public PINCrypto            Function    { get; }
 
-        #endregion
-
-        #region PIN
-
-        private readonly String _PIN;
-
-        public String PIN
-        {
-            get
-            {
-                return _PIN;
-            }
-        }
-
-        #endregion
-
-        #region Function
-
-        private readonly PINCrypto _Function;
-
-        public PINCrypto Function
-        {
-            get
-            {
-                return _Function;
-            }
-        }
-
-        #endregion
-
-        #region Salt
-
-        private readonly String _Salt;
-
-        public String Salt
-        {
-            get
-            {
-                return _Salt;
-            }
-        }
-
-        #endregion
+        /// <summary>
+        /// The salt for the crypto function.
+        /// </summary>
+        public String               Salt        { get; }
 
         #endregion
 
@@ -95,13 +63,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region eMAIdWithPIN(eMAId, PIN)
 
+        /// <summary>
+        /// Create a new e-mobility account identification with pin.
+        /// </summary>
+        /// <param name="eMAId">The e-mobility account identification.</param>
+        /// <param name="PIN">The pin.</param>
         public eMAIdWithPIN(eMobilityAccount_Id  eMAId,
-                            String  PIN)
+                            String               PIN)
         {
 
-            this._eMAId     = eMAId;
-            this._PIN       = PIN;
-            this._Function  = PINCrypto.none;
+            this.eMAId     = eMAId;
+            this.PIN       = PIN;
+            this.Function  = PINCrypto.none;
 
         }
 
@@ -109,23 +82,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region eMAIdWithPIN(eMAId, HashedPIN, Function, Salt = "")
 
-        public eMAIdWithPIN(eMobilityAccount_Id     eMAId,
-                            String     HashedPIN,
-                            PINCrypto  Function,
-                            String     Salt = "")
+        /// <summary>
+        /// Create a new e-mobility account identification with a hashed pin.
+        /// </summary>
+        /// <param name="eMAId">The e-mobility account identification.</param>
+        /// <param name="HashedPIN">The hashed pin.</param>
+        /// <param name="Function">The crypto function.</param>
+        /// <param name="Salt">The salt of the crypto function.</param>
+        public eMAIdWithPIN(eMobilityAccount_Id  eMAId,
+                            String               HashedPIN,
+                            PINCrypto            Function,
+                            String               Salt = "")
         {
 
-            this._eMAId     = eMAId;
-            this._PIN       = HashedPIN;
-            this._Function  = Function;
-            this._Salt      = Salt;
+            this.eMAId     = eMAId;
+            this.PIN       = HashedPIN;
+            this.Function  = Function;
+            this.Salt      = Salt;
 
         }
 
         #endregion
 
         #endregion
-
 
 
         #region Documentation
@@ -157,17 +136,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse(QRCodeIdentificationXML)
+        #region (static) Parse(QRCodeIdentificationXML, OnException = null)
 
-        public static eMAIdWithPIN Parse(XElement QRCodeIdentificationXML)
+        /// <summary>
+        /// Parse the givem XML as an e-mobility account identification with (hashed) pin.
+        /// </summary>
+        /// <param name="eMAIdWithPinXML">A XML representation of an e-mobility account identification with (hashed) pin.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static eMAIdWithPIN Parse(XElement             eMAIdWithPinXML,
+                                         OnExceptionDelegate  OnException  = null)
         {
 
-            var _eMobilityAccount_Id       = QRCodeIdentificationXML.MapValueOrFail(OICPNS.CommonTypes + "EVCOID",
-                                                                       eMobilityAccount_Id.Parse,
-                                                                       "The 'EVCOID' XML tag could not be found!");
+            var _eMobilityAccount_Id       = eMAIdWithPinXML.MapValueOrFail(OICPNS.CommonTypes + "EVCOID",
+                                                                            eMobilityAccount_Id.Parse,
+                                                                            "The 'EVCOID' XML tag could not be found!");
 
-            var PINXML        = QRCodeIdentificationXML.Element(OICPNS.CommonTypes + "PIN");
-            var HashedPINXML  = QRCodeIdentificationXML.Element(OICPNS.CommonTypes + "HashedPIN");
+            var PINXML        = eMAIdWithPinXML.Element(OICPNS.CommonTypes + "PIN");
+            var HashedPINXML  = eMAIdWithPinXML.Element(OICPNS.CommonTypes + "HashedPIN");
 
             if (PINXML != null)
                 return new eMAIdWithPIN(_eMobilityAccount_Id,
@@ -195,43 +180,170 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region ToXML(Namespace = null)
 
+        /// <summary>
+        /// Return a XML representation of this object.
+        /// </summary>
+        /// <param name="XMLNamespace">The XML namespace to use.</param>
         public XElement ToXML(XNamespace Namespace = null)
+
+            => new XElement((Namespace ?? OICPNS.CommonTypes) + "QRCodeIdentification",
+
+                   new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString()),
+
+                   Function == PINCrypto.none
+
+                       ? new XElement(OICPNS.CommonTypes + "PIN", PIN)
+
+                       : new XElement(OICPNS.CommonTypes + "HashedPIN",
+                             new XElement(OICPNS.CommonTypes + "Value",      PIN),
+                             new XElement(OICPNS.CommonTypes + "Function",   Function == PINCrypto.MD5 ? "MD5" : "SHA-1"),
+                             new XElement(OICPNS.CommonTypes + "Salt",       Salt))
+
+                   );
+
+        #endregion
+
+
+
+        #region IComparable<eMAIdWithPIN> Members
+
+        #region CompareTo(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        public Int32 CompareTo(Object Object)
         {
 
-            if (Namespace == null)
-                Namespace = OICPNS.CommonTypes;
+            if (Object == null)
+                throw new ArgumentNullException(nameof(Object),  "The given object must not be null!");
 
-            return new XElement(Namespace + "QRCodeIdentification",
+            // Check if the given object is an e-mobility account identification with (hashed) pin.
+            var eMAIdWithPIN = Object as eMAIdWithPIN;
+            if ((Object) eMAIdWithPIN == null)
+                throw new ArgumentException("The given object is not an e-mobility account identification with (hashed) pin!");
 
-                          new XElement(OICPNS.CommonTypes + "EVCOID", _eMAId.ToString()),
-
-                          _Function == PINCrypto.none
-
-                              ? new XElement(OICPNS.CommonTypes + "PIN", _PIN)
-
-                              : new XElement(OICPNS.CommonTypes + "HashedPIN",
-                                    new XElement(OICPNS.CommonTypes + "Value",      _PIN),
-                                    new XElement(OICPNS.CommonTypes + "Function",   _Function == PINCrypto.MD5 ? "MD5" : "SHA-1"),
-                                    new XElement(OICPNS.CommonTypes + "Salt",       _Salt))
-
-                          );
+            return CompareTo(eMAIdWithPIN);
 
         }
 
         #endregion
 
+        #region CompareTo(eMAIdWithPIN)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="eMAIdWithPIN">An e-mobility account identification with (hashed) pin object to compare with.</param>
+        public Int32 CompareTo(eMAIdWithPIN eMAIdWithPIN)
+        {
+
+            if ((Object) eMAIdWithPIN == null)
+                throw new ArgumentNullException(nameof(eMAIdWithPIN),  "The given e-mobility account identification with (hashed) pin must not be null!");
+
+            var result = eMAId.CompareTo(eMAIdWithPIN.eMAId);
+            if (result != 0)
+                return result;
+
+            result = String.Compare(PIN, eMAIdWithPIN.PIN, StringComparison.Ordinal);
+            if (result != 0)
+                return result;
+
+            result = Function.CompareTo(eMAIdWithPIN.Function);
+            if (result != 0)
+                return result;
+
+            return String.Compare(Salt, eMAIdWithPIN.Salt, StringComparison.Ordinal);
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region IEquatable<ChargeDetailRecord> Members
+
+        #region Equals(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        /// <returns>true|false</returns>
+        public override Boolean Equals(Object Object)
+        {
+
+            if (Object == null)
+                return false;
+
+            // Check if the given object is an e-mobility account identification with (hashed) pin.
+            var eMAIdWithPIN = Object as eMAIdWithPIN;
+            if ((Object) eMAIdWithPIN == null)
+                return false;
+
+            return this.Equals(eMAIdWithPIN);
+
+        }
+
+        #endregion
+
+        #region Equals(eMAIdWithPIN)
+
+        /// <summary>
+        /// Compares two e-mobility account identifications with (hashed) pins for equality.
+        /// </summary>
+        /// <param name="eMAIdWithPIN">An e-mobility account identification with (hashed) pin to compare with.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public Boolean Equals(eMAIdWithPIN eMAIdWithPIN)
+        {
+
+            if ((Object) eMAIdWithPIN == null)
+                return false;
+
+            if (!eMAId.Equals(eMAIdWithPIN.eMAId))
+                return false;
+
+            if (!PIN.Equals(eMAIdWithPIN.PIN))
+                return false;
+
+            if (!Function.Equals(eMAIdWithPIN.Function))
+                return false;
+
+            return Salt.Equals(eMAIdWithPIN.Salt);
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Get the hashcode of this object.
+        /// </summary>
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+                return eMAId.GetHashCode() * 23 ^ PIN.GetHashCode() * 17 ^ Function.GetHashCode() * 7 ^ Salt.GetHashCode();
+            }
+        }
+
+        #endregion
 
         #region (override) ToString()
 
         /// <summary>
-        /// Get a string representation of this object.
+        /// Return a string representation of this object.
         /// </summary>
         public override String ToString()
-        {
-            return String.Concat(_eMAId.ToString(), " -", _Function != PINCrypto.none ? _Function.ToString(): "", "-> ", _PIN );
-        }
+
+            => String.Concat(eMAId.ToString(), " -", Function != PINCrypto.none ? Function.ToString(): "", "-> ", PIN );
 
         #endregion
+
     }
 
 }

@@ -328,7 +328,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     eMobilityAccount_Id                  eMAId               = null;
                     ChargingProduct_Id      ChargingProductId   = null;
 
-                    eRoamingAcknowledgement response            = null;
+                    Acknowledgement response            = null;
 
                     try
                     {
@@ -376,7 +376,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     catch (Exception e)
                     {
 
-                        response = new eRoamingAcknowledgement(StatusCodes.DataError,
+                        response = new Acknowledgement(StatusCodes.DataError,
                                                                "Request led to an exception!",
                                                                e.Message);
 
@@ -452,7 +452,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         }
 
                         if (results.Length == 0 || response == null)
-                            response = new eRoamingAcknowledgement(StatusCodes.SystemError,
+                            response = new Acknowledgement(StatusCodes.SystemError,
                                                                    "Could not process the incoming AuthorizeRemoteReservationStart request!",
                                                                    null,
                                                                    SessionId,
@@ -557,7 +557,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     eMobilityProvider_Id                 ProviderId        = null;
                     EVSE_Id                 EVSEId            = null;
 
-                    eRoamingAcknowledgement response          = null;
+                    Acknowledgement response          = null;
 
                     try
                     {
@@ -577,7 +577,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     catch (Exception e)
                     {
 
-                        response = new eRoamingAcknowledgement(StatusCodes.DataError,
+                        response = new Acknowledgement(StatusCodes.DataError,
                                                                "Request led to an exception!",
                                                                e.Message);
 
@@ -651,7 +651,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         }
 
                         if (results.Length == 0 || response == null)
-                            response = new eRoamingAcknowledgement(StatusCodes.SystemError,
+                            response = new Acknowledgement(StatusCodes.SystemError,
                                                                    "Could not process the incoming AuthorizeRemoteReservationStop request!",
                                                                    null,
                                                                    SessionId,
@@ -795,7 +795,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     eMobilityAccount_Id                  eMAId               = null;
                     ChargingProduct_Id      ChargingProductId   = null;
 
-                    eRoamingAcknowledgement response            = null;
+                    Acknowledgement response            = null;
 
                     try
                     {
@@ -843,7 +843,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     catch (Exception e)
                     {
 
-                        response = new eRoamingAcknowledgement(StatusCodes.DataError,
+                        response = new Acknowledgement(StatusCodes.DataError,
                                                                "Request led to an exception!",
                                                                e.Message);
 
@@ -919,7 +919,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         }
 
                         if (results.Length == 0 || response == null)
-                            response = new eRoamingAcknowledgement(StatusCodes.SystemError,
+                            response = new Acknowledgement(StatusCodes.SystemError,
                                                                    "Could not process the incoming AuthorizeRemoteStart request!",
                                                                    null,
                                                                    SessionId,
@@ -1025,7 +1025,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     eMobilityProvider_Id                 ProviderId        = null;
                     EVSE_Id                 EVSEId            = null;
 
-                    eRoamingAcknowledgement response          = null;
+                    Acknowledgement response          = null;
 
                     try
                     {
@@ -1045,7 +1045,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     catch (Exception e)
                     {
 
-                        response = new eRoamingAcknowledgement(StatusCodes.DataError,
+                        response = new Acknowledgement(StatusCodes.DataError,
                                                                "Request led to an exception!",
                                                                e.Message);
 
@@ -1119,7 +1119,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         }
 
                         if (results.Length == 0 || response == null)
-                            response = new eRoamingAcknowledgement(StatusCodes.SystemError,
+                            response = new Acknowledgement(StatusCodes.SystemError,
                                                                    "Could not process the incoming AuthorizeRemoteStop request!",
                                                                    null,
                                                                    SessionId,

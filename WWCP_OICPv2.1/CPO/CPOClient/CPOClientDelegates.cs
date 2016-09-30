@@ -57,7 +57,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         ILookup<ChargingStationOperator, EVSEDataRecord>   EVSEDataRecords,
                                                         UInt32                                  NumberOfEVSEs,
                                                         TimeSpan?                               RequestTimeout,
-                                                        eRoamingAcknowledgement                 Result,
+                                                        Acknowledgement                 Result,
                                                         TimeSpan                                Duration);
 
 
@@ -86,7 +86,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           ILookup<ChargingStationOperator, EVSEStatusRecord>  EVSEStatusRecords,
                                                           UInt32                                   NumberOfEVSEs,
                                                           TimeSpan?                                RequestTimeout,
-                                                          eRoamingAcknowledgement                  Result,
+                                                          Acknowledgement                  Result,
                                                           TimeSpan                                 Duration);
 
     #endregion
@@ -121,7 +121,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    ChargingProduct_Id           PartnerProductId,
                                                    ChargingSession_Id           PartnerSessionId,
                                                    TimeSpan?                    RequestTimeout,
-                                                   eRoamingAuthorizationStart   Result,
+                                                   AuthorizationStart   Result,
                                                    TimeSpan                     Duration);
 
 
@@ -151,7 +151,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         EVSE_Id                     EVSEId,
                                                         ChargingSession_Id          PartnerSessionId,
                                                         TimeSpan?                   RequestTimeout,
-                                                        eRoamingAuthorizationStop   Result,
+                                                        AuthorizationStop   Result,
                                                         TimeSpan                    Duration);
 
     #endregion
@@ -179,7 +179,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                  EventTracking_Id          EventTrackingId,
                                                                  ChargeDetailRecord        ChargeDetailRecord,
                                                                  TimeSpan?                 RequestTimeout,
-                                                                 eRoamingAcknowledgement   Result,
+                                                                 Acknowledgement   Result,
                                                                  TimeSpan                  Duration);
 
     #endregion
@@ -206,7 +206,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                  EventTracking_Id             EventTrackingId,
                                                                  ChargingStationOperator_Id              OperatorId,
                                                                  TimeSpan?                    RequestTimeout,
-                                                                 eRoamingAuthenticationData   Result,
+                                                                 AuthenticationData   Result,
                                                                  TimeSpan                     Duration);
 
     #endregion

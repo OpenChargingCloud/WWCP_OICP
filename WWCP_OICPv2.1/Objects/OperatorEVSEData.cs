@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// A group of OICP EVSE data records.
+    /// A group of OICP EVSE Data Records.
     /// </summary>
     public class OperatorEVSEData
     {
@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The unique identification of an Charging Station Operator.
         /// </summary>
-        public ChargingStationOperator_Id              OperatorId        { get; }
+        public ChargingStationOperator_Id   OperatorId        { get; }
 
         /// <summary>
         /// The name of an Charging Station Operator.
@@ -62,7 +62,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">The unique identification of an Charging Station Operator.</param>
         /// <param name="OperatorName">The name of an Charging Station Operator.</param>
         /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
-        public OperatorEVSEData(ChargingStationOperator_Id              OperatorId,
+        public OperatorEVSEData(ChargingStationOperator_Id   OperatorId,
                                 I18NString                   OperatorName,
                                 IEnumerable<EVSEDataRecord>  EVSEDataRecords)
         {
@@ -70,21 +70,59 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId),  "The given operator identification must not be null!");
 
             #endregion
 
             this.OperatorId       = OperatorId;
-            this.OperatorName     = OperatorName    != null ? OperatorName    : new I18NString();
-            this.EVSEDataRecords  = EVSEDataRecords != null ? EVSEDataRecords : new EVSEDataRecord[0];
+            this.OperatorName     = OperatorName    ?? new I18NString();
+            this.EVSEDataRecords  = EVSEDataRecords ?? new EVSEDataRecord[0];
 
         }
 
         #endregion
 
 
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        // 
+        //    <soapenv:Header/>
+        // 
+        //    <soapenv:Body>
+        // 
+        //      <!--Zero or more repetitions:-->
+        //      <EVSEData:OperatorEvseData>
+        // 
+        //         <EVSEData:OperatorID>?</EVSEData:OperatorID>
+        // 
+        //         <!--Optional:-->
+        //         <EVSEData:OperatorName>?</EVSEData:OperatorName>
+        // 
+        //         <!--Zero or more repetitions:-->
+        //         <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
+        //            [...]
+        //         </EVSEData:EvseDataRecord>
+        // 
+        //      </EVSEData:OperatorEvseData>
+        //
+        // [...]
+        //
+        //    </soapenv:Body>
+        // 
+        // </soapenv:Envelope>
+
+        #endregion
+
         #region (static) Parse(OperatorEVSEDataXML, OnException = null)
 
+        /// <summary>
+        /// Parse the givem XML as an eumeration of OICP EVSE Data Records.
+        /// </summary>
+        /// <param name="OperatorEVSEDataXML">A XML representation of an enumeration of OICP EVSE Data Records.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static OperatorEVSEData Parse(XElement             OperatorEVSEDataXML,
                                              OnExceptionDelegate  OnException = null)
         {
@@ -93,39 +131,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             if (OperatorEVSEDataXML == null)
                 return null;
-
-            #endregion
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            // 
-            //    <soapenv:Header/>
-            // 
-            //    <soapenv:Body>
-            // 
-            //      <!--Zero or more repetitions:-->
-            //      <EVSEData:OperatorEvseData>
-            // 
-            //         <EVSEData:OperatorID>?</EVSEData:OperatorID>
-            // 
-            //         <!--Optional:-->
-            //         <EVSEData:OperatorName>?</EVSEData:OperatorName>
-            // 
-            //         <!--Zero or more repetitions:-->
-            //         <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
-            //            [...]
-            //         </EVSEData:EvseDataRecord>
-            // 
-            //      </EVSEData:OperatorEvseData>
-            //
-            // [...]
-            //
-            //    </soapenv:Body>
-            // 
-            // </soapenv:Envelope>
 
             #endregion
 
@@ -159,8 +164,49 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        // 
+        //    <soapenv:Header/>
+        // 
+        //    <soapenv:Body>
+        // 
+        //      <EVSEData:EvseData>
+        //         <!--Zero or more repetitions:-->
+        //         <EVSEData:OperatorEvseData>
+        // 
+        //            <EVSEData:OperatorID>?</EVSEData:OperatorID>
+        // 
+        //            <!--Optional:-->
+        //            <EVSEData:OperatorName>?</EVSEData:OperatorName>
+        // 
+        //            <!--Zero or more repetitions:-->
+        //            <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
+        //               [...]
+        //            </EVSEData:EvseDataRecord>
+        // 
+        //         </EVSEData:OperatorEvseData>
+        //      </EVSEData:EvseData>
+        //
+        // [...]
+        //
+        //    </soapenv:Body>
+        // 
+        // </soapenv:Envelope>
+
+        #endregion
+
         #region (static) Parse(OperatorEVSEDataXMLs, OnException = null)
 
+        /// <summary>
+        /// Parse the givem XML as an enumeration of OICP EVSE Data Records.
+        /// </summary>
+        /// <param name="OperatorEVSEDataXMLs">A XML representation of an enumeration of OICP EVSE Data Records.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static IEnumerable<OperatorEVSEData> Parse(IEnumerable<XElement>  OperatorEVSEDataXMLs,
                                                           OnExceptionDelegate    OnException = null)
         {
@@ -174,41 +220,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             if (_OperatorEVSEDataXMLs.Length == 0)
                 return new OperatorEVSEData[0];
-
-            #endregion
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-            //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            // 
-            //    <soapenv:Header/>
-            // 
-            //    <soapenv:Body>
-            // 
-            //      <EVSEData:EvseData>
-            //         <!--Zero or more repetitions:-->
-            //         <EVSEData:OperatorEvseData>
-            // 
-            //            <EVSEData:OperatorID>?</EVSEData:OperatorID>
-            // 
-            //            <!--Optional:-->
-            //            <EVSEData:OperatorName>?</EVSEData:OperatorName>
-            // 
-            //            <!--Zero or more repetitions:-->
-            //            <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
-            //               [...]
-            //            </EVSEData:EvseDataRecord>
-            // 
-            //         </EVSEData:OperatorEvseData>
-            //      </EVSEData:EvseData>
-            //
-            // [...]
-            //
-            //    </soapenv:Body>
-            // 
-            // </soapenv:Envelope>
 
             #endregion
 

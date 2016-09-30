@@ -25,7 +25,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// (OICP) XML Namespaces
+    /// OICP XML Namespaces
     /// </summary>
     public static class OICPNS
     {

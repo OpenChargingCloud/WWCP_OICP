@@ -27,6 +27,9 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    /// <summary>
+    /// An OICP Mobile client.
+    /// </summary>
     public partial class MobileClient
     {
 
@@ -84,7 +87,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region MobileClientLogger(MobileClient, Context, ... Logging delegates ...)
 
             /// <summary>
-            /// Create a new OICP CPO client logger using the given logging delegates.
+            /// Create a new OICP Mobile client logger using the given logging delegates.
             /// </summary>
             /// <param name="MobileClient">A OICP Mobile client.</param>
             /// <param name="Context">A context of this API.</param>
@@ -157,96 +160,49 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Register EVSE data/status push log events
 
-                //RegisterEvent("EVSEDataPush",
-                //handler => MobileClient.OnPushEVSEDataSOAPRequest    += handler,
-                //handler => MobileClient.OnPushEVSEDataSOAPRequest    -= handler,
-                //"EVSE", "EVSEData", "Request", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("MobileAuthorizeStart",
+                handler => MobileClient.OnMobileAuthorizeStartSOAPRequest  += handler,
+                handler => MobileClient.OnMobileAuthorizeStartSOAPRequest  -= handler,
+                "Mobile", "Authorize", "AuthorizeStart", "Request", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("EVSEDataPushed",
-                //handler => MobileClient.OnPushEVSEDataSOAPResponse   += handler,
-                //handler => MobileClient.OnPushEVSEDataSOAPResponse   -= handler,
-                //"EVSE", "EVSEData", "Response", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
-
-
-                //RegisterEvent("EVSEStatusPush",
-                //handler => MobileClient.OnPushEVSEStatusSOAPRequest  += handler,
-                //handler => MobileClient.OnPushEVSEStatusSOAPRequest  -= handler,
-                //"EVSE", "EVSEStatus", "Request", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
-
-                //RegisterEvent("EVSEStatusPushed",
-                //handler => MobileClient.OnPushEVSEStatusSOAPResponse += handler,
-                //handler => MobileClient.OnPushEVSEStatusSOAPResponse -= handler,
-                //"EVSE", "EVSEStatus", "Response", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("MobileAuthorizeStarted",
+                handler => MobileClient.OnMobileAuthorizeStartSOAPResponse += handler,
+                handler => MobileClient.OnMobileAuthorizeStartSOAPResponse -= handler,
+                "Mobile", "Authorize", "AuthorizeStart", "Response", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
 
+                RegisterEvent("MobileRemoteStart",
+                handler => MobileClient.OnMobileRemoteStartSOAPRequest += handler,
+                handler => MobileClient.OnMobileRemoteStartSOAPRequest -= handler,
+                "Mobile", "Remote", "RemoteStart", "Request", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("AuthorizeStart",
-                //handler => MobileClient.OnAuthorizeStartSOAPRequest += handler,
-                //handler => MobileClient.OnAuthorizeStartSOAPRequest -= handler,
-                //"Authorize", "Request", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
-
-                //RegisterEvent("AuthorizeStarted",
-                //handler => MobileClient.OnAuthorizeStartSOAPResponse += handler,
-                //handler => MobileClient.OnAuthorizeStartSOAPResponse -= handler,
-                //"Authorize", "Response", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
-
-
-                //RegisterEvent("AuthorizeStop",
-                //handler => MobileClient.OnAuthorizeStopSOAPRequest += handler,
-                //handler => MobileClient.OnAuthorizeStopSOAPRequest -= handler,
-                //"Authorize", "Request", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
-
-                //RegisterEvent("AuthorizeStopped",
-                //handler => MobileClient.OnAuthorizeStopSOAPResponse += handler,
-                //handler => MobileClient.OnAuthorizeStopSOAPResponse -= handler,
-                //"Authorize", "Response", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("MobileRemoteStarted",
+                handler => MobileClient.OnMobileRemoteStartSOAPResponse += handler,
+                handler => MobileClient.OnMobileRemoteStartSOAPResponse -= handler,
+                "Mobile", "Remote", "RemoteStart", "Response", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
 
+                RegisterEvent("MobileRemoteStop",
+                handler => MobileClient.OnMobileRemoteStopSOAPRequest += handler,
+                handler => MobileClient.OnMobileRemoteStopSOAPRequest -= handler,
+                "Mobile", "Remote", "RemoteStop", "Request", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("SendChargeDetailRecord",
-                //handler => MobileClient.OnSendChargeDetailRecordSOAPRequest += handler,
-                //handler => MobileClient.OnSendChargeDetailRecordSOAPRequest -= handler,
-                //"ChargeDetailRecord", "CDR", "Request", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
-
-                //RegisterEvent("ChargeDetailRecordSent",
-                //handler => MobileClient.OnSendChargeDetailRecordSOAPResponse += handler,
-                //handler => MobileClient.OnSendChargeDetailRecordSOAPResponse -= handler,
-                //"ChargeDetailRecord", "CDR", "Response", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
-
-
-                //RegisterEvent("PullAuthenticationData",
-                //handler => MobileClient.OnPullAuthenticationDataSOAPRequest += handler,
-                //handler => MobileClient.OnPullAuthenticationDataSOAPRequest -= handler,
-                //"AuthenticationData", "Request", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
-
-                //RegisterEvent("AuthenticationDataPulled",
-                //handler => MobileClient.OnPullAuthenticationDataSOAPResponse += handler,
-                //handler => MobileClient.OnPullAuthenticationDataSOAPResponse -= handler,
-                //"AuthenticationData", "Response", "All").
-                //RegisterDefaultConsoleLogTarget(this).
-                //RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("MobileRemoteStopped",
+                handler => MobileClient.OnMobileRemoteStopSOAPResponse += handler,
+                handler => MobileClient.OnMobileRemoteStopSOAPResponse -= handler,
+                "Mobile", "Remote", "RemoteStop", "Response", "All").
+                RegisterDefaultConsoleLogTarget(this).
+                RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 

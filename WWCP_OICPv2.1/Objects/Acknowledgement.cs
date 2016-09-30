@@ -29,9 +29,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP acknowledgement.
+    /// An OICP Acknowledgement.
     /// </summary>
-    public class eRoamingAcknowledgement
+    public class Acknowledgement
     {
 
         #region Properties
@@ -62,7 +62,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
-        #region (private) eRoamingAcknowledgement(Result, StatusCode, ...)
+        #region (private) Acknowledgement(Result, StatusCode, ...)
 
         /// <summary>
         /// Create a new OICP acknowledgement.
@@ -71,10 +71,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="StatusCode">The status code of the operation.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
-        private eRoamingAcknowledgement(Boolean             Result,
-                                        StatusCode          StatusCode,
-                                        ChargingSession_Id  SessionId         = null,
-                                        ChargingSession_Id  PartnerSessionId  = null)
+        private Acknowledgement(Boolean             Result,
+                                StatusCode          StatusCode,
+                                ChargingSession_Id  SessionId         = null,
+                                ChargingSession_Id  PartnerSessionId  = null)
         {
 
             this.Result            = Result;
@@ -86,7 +86,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region eRoamingAcknowledgement(SessionId, ...)
+        #region Acknowledgement(SessionId, ...)
 
         /// <summary>
         /// Create a new OICP 'positive' acknowledgement.
@@ -95,10 +95,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        public eRoamingAcknowledgement(ChargingSession_Id  SessionId,
-                                       ChargingSession_Id  PartnerSessionId          = null,
-                                       String              StatusCodeDescription     = null,
-                                       String              StatusCodeAdditionalInfo  = null)
+        public Acknowledgement(ChargingSession_Id  SessionId,
+                               ChargingSession_Id  PartnerSessionId          = null,
+                               String              StatusCodeDescription     = null,
+                               String              StatusCodeAdditionalInfo  = null)
 
             : this(true,
                    new StatusCode(StatusCodes.Success,
@@ -111,7 +111,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region eRoamingAcknowledgement(StatusCode, ...)
+        #region Acknowledgement(StatusCode, ...)
 
         /// <summary>
         /// Create a new OICP 'negative' acknowledgement.
@@ -121,11 +121,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
-        public eRoamingAcknowledgement(StatusCodes         StatusCode,
-                                       String              StatusCodeDescription     = null,
-                                       String              StatusCodeAdditionalInfo  = null,
-                                       ChargingSession_Id  SessionId                 = null,
-                                       ChargingSession_Id  PartnerSessionId          = null)
+        public Acknowledgement(StatusCodes         StatusCode,
+                               String              StatusCodeDescription     = null,
+                               String              StatusCodeAdditionalInfo  = null,
+                               ChargingSession_Id  SessionId                 = null,
+                               ChargingSession_Id  PartnerSessionId          = null)
 
             : this(false,
                    new StatusCode(StatusCode,
@@ -217,10 +217,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Try to parse the given XML representation of an OICP acknowledgement.
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
-        public static eRoamingAcknowledgement Parse(XElement XML)
+        public static Acknowledgement Parse(XElement XML)
         {
 
-            eRoamingAcknowledgement _Acknowledgement;
+            Acknowledgement _Acknowledgement;
 
             if (TryParse(XML, out _Acknowledgement))
                 return _Acknowledgement;
@@ -238,7 +238,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement</param>
-        public static Boolean TryParse(XElement XML, out eRoamingAcknowledgement Acknowledgement)
+        public static Boolean TryParse(XElement XML, out Acknowledgement Acknowledgement)
         {
 
 
@@ -247,22 +247,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
-                var AcknowledgementXML  = XML.Descendants(OICPNS.CommonTypes + "eRoamingAcknowledgement").
+                var AcknowledgementXML  = XML.Descendants(OICPNS.CommonTypes + "Acknowledgement").
                                               FirstOrDefault();
 
-                if (AcknowledgementXML == null && XML.Name == OICPNS.CommonTypes + "eRoamingAcknowledgement")
+                if (AcknowledgementXML == null && XML.Name == OICPNS.CommonTypes + "Acknowledgement")
                     AcknowledgementXML = XML;
 
                 if (AcknowledgementXML == null)
                     return false;
 
-                Acknowledgement = new eRoamingAcknowledgement((AcknowledgementXML.ElementValueOrFail(OICPNS.CommonTypes + "Result", "Missing 'Result'-XML-tag!") == "true")
-                                                                  ? true
-                                                                  : false,
-                                                              StatusCode.Parse(AcknowledgementXML.ElementOrFail(OICPNS.CommonTypes + "StatusCode",
-                                                                                                                "Missing 'StatusCode'-XML-tag!")),
-                                                              AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "SessionID", ChargingSession_Id.Parse),
-                                                              AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "PartnerSessionID", ChargingSession_Id.Parse));
+                Acknowledgement = new Acknowledgement((AcknowledgementXML.ElementValueOrFail(OICPNS.CommonTypes + "Result", "Missing 'Result'-XML-tag!") == "true")
+                                                          ? true
+                                                          : false,
+                                                      StatusCode.Parse(AcknowledgementXML.ElementOrFail(OICPNS.CommonTypes + "StatusCode",
+                                                                                                        "Missing 'StatusCode'-XML-tag!")),
+                                                      AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "SessionID", ChargingSession_Id.Parse),
+                                                      AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "PartnerSessionID", ChargingSession_Id.Parse));
 
                 return true;
 
@@ -276,26 +276,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToXML
+        #region ToXML()
 
         /// <summary>
         /// Return a XML-representation of this object.
         /// </summary>
-        public XElement ToXML() => new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+        public XElement ToXML()
 
-                                       new XElement(OICPNS.CommonTypes + "Result", Result),
+            => new XElement(OICPNS.CommonTypes + "Acknowledgement",
 
-                                       StatusCode.ToXML(),
+                   new XElement(OICPNS.CommonTypes + "Result", Result),
 
-                                       SessionId != null
-                                           ? new XElement(OICPNS.CommonTypes + "SessionID",         SessionId.ToString())
-                                           : null,
+                   StatusCode.ToXML(),
 
-                                       PartnerSessionId != null
-                                           ? new XElement(OICPNS.CommonTypes + "PartnerSessionID",  PartnerSessionId.ToString())
-                                           : null
+                   SessionId != null
+                       ? new XElement(OICPNS.CommonTypes + "SessionID",         SessionId.ToString())
+                       : null,
 
-                                 );
+                   PartnerSessionId != null
+                       ? new XElement(OICPNS.CommonTypes + "PartnerSessionID",  PartnerSessionId.ToString())
+                       : null
+
+             );
 
         #endregion
 
@@ -306,6 +308,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Return a string representation of this object.
         /// </summary>
         public override String ToString()
+
             => String.Concat("Result: " + Result + "; " + StatusCode.Code, " / ", StatusCode.Description, " / ", StatusCode.AdditionalInfo);
 
         #endregion

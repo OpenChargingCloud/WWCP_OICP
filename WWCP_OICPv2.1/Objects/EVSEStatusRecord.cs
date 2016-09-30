@@ -20,7 +20,6 @@
 using System;
 using System.Xml.Linq;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -30,16 +29,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The current status of an OICP Electric Vehicle Supply Equipment.
+    /// The current dynamic status of an OICP Electric Vehicle Supply Equipment.
     /// </summary>
     public class EVSEStatusRecord
     {
-
-        #region Data
-
-        private static readonly Regex EVSEIdRegExpr = new Regex("([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})  |  (\\+?[0-9]{1,3}\\*[0-9]{3,6}\\*[0-9\\*]{1,32})", RegexOptions.IgnorePatternWhitespace);
-
-        #endregion
 
         #region Properties
 
@@ -72,7 +65,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EVSE == null)
                 throw new ArgumentNullException(nameof(EVSE),  "The given EVSE must not be null!");
 
-            if (!EVSEIdRegExpr.IsMatch(EVSE.Id.ToString()))
+            if (!Definitions.EVSEIdRegExpr.IsMatch(EVSE.Id.ToString()))
                 throw new ArgumentException("The given EVSE identification '" + EVSE.Id + "' does not match the OICP definition!", nameof(EVSE));
 
             #endregion
@@ -83,8 +76,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
-
-        
 
         #region EVSEStatusRecord(Id, Status)
 
@@ -103,7 +94,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Id == null)
                 throw new ArgumentNullException(nameof(Id),  "The given unique identification of an EVSE must not be null!");
 
-            if (!EVSEIdRegExpr.IsMatch(Id.ToString()))
+            if (!Definitions.EVSEIdRegExpr.IsMatch(Id.ToString()))
                 throw new ArgumentException("The given EVSE identification '" + Id + "' does not match the OICP definition!", nameof(Id));
 
             #endregion
@@ -118,6 +109,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
+        #region Parse(KeyValuePair)
+
+        /// <summary>
+        /// Convert the given key-value-pair into an EVSE status record.
+        /// </summary>
+        public static EVSEStatusRecord Parse(KeyValuePair<EVSE_Id, EVSEStatusType> KeyValuePair)
+
+            => new EVSEStatusRecord(KeyValuePair.Key, KeyValuePair.Value);
+
+        #endregion
+
+        #region ToKeyValuePair()
+
+        /// <summary>
+        /// Conversion this EVSE status record to a key-value-pair.
+        /// </summary>
+        public KeyValuePair<EVSE_Id, EVSEStatusType> ToKeyValuePair()
+
+            => new KeyValuePair<EVSE_Id, EVSEStatusType>(Id, Status);
+
+        #endregion
+
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv    = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
+        //
+        // [...]
+        //
+        //   <EVSEStatus:EvseStatusRecord>
+        //      <EVSEStatus:EvseId>?</EVSEData:EvseId>
+        //      <EVSEStatus:EvseStatus>?</EVSEData:EvseStatus>
+        //   </EVSEStatus:EvseStatusRecord>
+        //
+        // [...]
+
+        #endregion
+
         #region Parse(EVSEStatusRecordXML)
 
         /// <summary>
@@ -126,22 +156,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSEStatusRecordXML">An OICP XML.</param>
         public static EVSEStatusRecord Parse(XElement EVSEStatusRecordXML)
         {
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:EVSEStatus  = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
-            //
-            // [...]
-            //
-            //    <EVSEStatus:EvseStatusRecord>
-            //       <EVSEStatus:EvseId>?</EVSEStatus:EvseId>
-            //       <EVSEStatus:EvseStatus>?</EVSEStatus:EvseStatus>
-            //    </EVSEStatus:EvseStatusRecord>
-            //
-            // [...]
-
-            #endregion
 
             try
             {
@@ -164,30 +178,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region Parse(KeyValuePair)
-
-        /// <summary>
-        /// Convert the given key-value-pair into an EVSE status record.
-        /// </summary>
-        public static EVSEStatusRecord Parse(KeyValuePair<EVSE_Id, EVSEStatusType> KeyValuePair)
-        {
-            return new EVSEStatusRecord(KeyValuePair.Key, KeyValuePair.Value);
-        }
-
-        #endregion
-
-
-        #region AsWWCPEVSEStatus()
-
-        public EVSEStatus AsWWCPEVSEStatus()
-
-            => new EVSEStatus(Id,
-                              OICPMapper.AsWWCPEVSEStatus(Status),
-                              DateTime.Now);
-
-        #endregion
-
-
         #region ToXML()
 
         /// <summary>
@@ -195,44 +185,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <returns></returns>
         public XElement ToXML()
-        {
 
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv    = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
-            //
-            // [...]
-            //
-            //   <EVSEStatus:EvseStatusRecord>
-            //      <EVSEStatus:EvseId>?</EVSEData:EvseId>
-            //      <EVSEStatus:EvseStatus>?</EVSEData:EvseStatus>
-            //   </EVSEStatus:EvseStatusRecord>
-            //
-            // [...]
-
-            #endregion
-
-            return new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
-                       new XElement(OICPNS.EVSEStatus + "EvseId",     Id.    OriginId),
-                       new XElement(OICPNS.EVSEStatus + "EvseStatus", Status.ToString())
-                   );
-
-        }
+            => new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
+                   new XElement(OICPNS.EVSEStatus + "EvseId",     Id.    OriginId),
+                   new XElement(OICPNS.EVSEStatus + "EvseStatus", Status.ToString())
+               );
 
         #endregion
 
-        #region ToKeyValuePair()
-
-        /// <summary>
-        /// Conversion this EVSE status record to a key-value-pair.
-        /// </summary>
-        public KeyValuePair<EVSE_Id, EVSEStatusType> ToKeyValuePair()
-        {
-            return new KeyValuePair<EVSE_Id, EVSEStatusType>(Id, Status);
-        }
-
-        #endregion
 
     }
 

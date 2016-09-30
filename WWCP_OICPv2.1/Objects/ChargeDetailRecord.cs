@@ -209,6 +209,90 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
+        #region Documentation
+
+        // [...]
+        // <Authorization:eRoamingChargeDetailRecord>
+        // 
+        //    <Authorization:SessionID>de164e08-1c88-1293-537b-be355041070e</Authorization:SessionID>
+        // 
+        //    <!--Optional:-->
+        //    <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+        // 
+        //    <!--Optional:-->
+        //    <Authorization:PartnerProductID>AC1</Authorization:PartnerProductID>
+        // 
+        //    <Authorization:EvseID>DE*GEF*E123456789*1</Authorization:EvseID>
+        // 
+        //    <Authorization:Identification>
+        //      <!--You have a CHOICE of the next 4 items at this level-->
+        // 
+        //      <CommonTypes:RFIDmifarefamilyIdentification>
+        //         <CommonTypes:UID>08152305</CommonTypes:UID>
+        //      </CommonTypes:RFIDmifarefamilyIdentification>
+        // 
+        //      <CommonTypes:QRCodeIdentification>
+        // 
+        //         <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        // 
+        //         <!--You have a CHOICE of the next 2 items at this level-->
+        //         <CommonTypes:PIN>1234</CommonTypes:PIN>
+        // 
+        //         <CommonTypes:HashedPIN>
+        //            <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
+        //            <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
+        //            <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
+        //         </CommonTypes:HashedPIN>
+        // 
+        //      </CommonTypes:QRCodeIdentification>
+        // 
+        //      <CommonTypes:PlugAndChargeIdentification>
+        //         <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        //      </CommonTypes:PlugAndChargeIdentification>
+        // 
+        //      <CommonTypes:RemoteIdentification>
+        //         <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        //      </CommonTypes:RemoteIdentification>
+        // 
+        //    </Authorization:Identification>
+        // 
+        //    <!--Optional:-->
+        //    <Authorization:ChargingStart>2015-10-23T15:45:30.000Z</Authorization:ChargingStart>
+        //    <!--Optional:-->
+        //    <Authorization:ChargingEnd>2015-10-23T16:59:31.000Z</Authorization:ChargingEnd>
+        // 
+        //    <Authorization:SessionStart>2015-10-23T15:45:00.000Z</Authorization:SessionStart>
+        //    <Authorization:SessionEnd>2015-10-23T17:45:00.000Z</Authorization:SessionEnd>
+        // 
+        //    <!--Optional: \d\.\d{0,3} -->
+        //    <Authorization:MeterValueStart>123.456</Authorization:MeterValueStart>
+        //    <!--Optional: \d\.\d{0,3} -->
+        //    <Authorization:MeterValueEnd>234.567</Authorization:MeterValueEnd>
+        //    <!--Optional:-->
+        //    <Authorization:MeterValueInBetween>
+        //      <!--1 or more repetitions: \d\.\d{0,3} -->
+        //      <Authorization:MeterValue>123.456</Authorization:MeterValue>
+        //      <Authorization:MeterValue>189.768</Authorization:MeterValue>
+        //      <Authorization:MeterValue>223.312</Authorization:MeterValue>
+        //      <Authorization:MeterValue>234.560</Authorization:MeterValue>
+        //      <Authorization:MeterValue>234.567</Authorization:MeterValue>
+        //    </Authorization:MeterValueInBetween>
+        // 
+        //    <!--Optional:-->
+        //    <Authorization:ConsumedEnergy>111.111</Authorization:ConsumedEnergy>
+        //    <!--Optional:-->
+        //    <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
+        // 
+        //    <!--Optional:-->
+        //    <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
+        //    <!--Optional:-->
+        //    <Authorization:HubProviderID>?</Authorization:HubProviderID>
+        // 
+        // </Authorization:eRoamingChargeDetailRecord>
+        // [...]
+
+        #endregion
+
         #region (static) Parse(ChargeDetailRecordXML, OnException = null)
 
         /// <summary>
@@ -220,104 +304,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                OnExceptionDelegate  OnException  = null)
         {
 
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            // 
-            //    <soapenv:Header/>
-            // 
-            //    <soapenv:Body>
-            //       <Authorization:eRoamingChargeDetailRecords>
-            // 
-            //          <!--Zero or more repetitions:-->
-            //          <Authorization:eRoamingChargeDetailRecord>
-            // 
-            //             <Authorization:SessionID>de164e08-1c88-1293-537b-be355041070e</Authorization:SessionID>
-            // 
-            //             <!--Optional:-->
-            //             <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
-            // 
-            //             <!--Optional:-->
-            //             <Authorization:PartnerProductID>AC1</Authorization:PartnerProductID>
-            // 
-            //             <Authorization:EvseID>DE*GEF*E123456789*1</Authorization:EvseID>
-            // 
-            //             <Authorization:Identification>
-            //               <!--You have a CHOICE of the next 4 items at this level-->
-            // 
-            //               <CommonTypes:RFIDmifarefamilyIdentification>
-            //                  <CommonTypes:UID>08152305</CommonTypes:UID>
-            //               </CommonTypes:RFIDmifarefamilyIdentification>
-            // 
-            //               <CommonTypes:QRCodeIdentification>
-            // 
-            //                  <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-            // 
-            //                  <!--You have a CHOICE of the next 2 items at this level-->
-            //                  <CommonTypes:PIN>1234</CommonTypes:PIN>
-            // 
-            //                  <CommonTypes:HashedPIN>
-            //                     <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
-            //                     <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
-            //                     <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
-            //                  </CommonTypes:HashedPIN>
-            // 
-            //               </CommonTypes:QRCodeIdentification>
-            // 
-            //               <CommonTypes:PlugAndChargeIdentification>
-            //                  <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-            //               </CommonTypes:PlugAndChargeIdentification>
-            // 
-            //               <CommonTypes:RemoteIdentification>
-            //                  <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-            //               </CommonTypes:RemoteIdentification>
-            // 
-            //             </Authorization:Identification>
-            // 
-            //             <!--Optional:-->
-            //             <Authorization:ChargingStart>2015-10-23T15:45:30.000Z</Authorization:ChargingStart>
-            //             <!--Optional:-->
-            //             <Authorization:ChargingEnd>2015-10-23T16:59:31.000Z</Authorization:ChargingEnd>
-            // 
-            //             <Authorization:SessionStart>2015-10-23T15:45:00.000Z</Authorization:SessionStart>
-            //             <Authorization:SessionEnd>2015-10-23T17:45:00.000Z</Authorization:SessionEnd>
-            // 
-            //             <!--Optional: \d\.\d{0,3} -->
-            //             <Authorization:MeterValueStart>123.456</Authorization:MeterValueStart>
-            //             <!--Optional: \d\.\d{0,3} -->
-            //             <Authorization:MeterValueEnd>234.567</Authorization:MeterValueEnd>
-            //             <!--Optional:-->
-            //             <Authorization:MeterValueInBetween>
-            //               <!--1 or more repetitions: \d\.\d{0,3} -->
-            //               <Authorization:MeterValue>123.456</Authorization:MeterValue>
-            //               <Authorization:MeterValue>189.768</Authorization:MeterValue>
-            //               <Authorization:MeterValue>223.312</Authorization:MeterValue>
-            //               <Authorization:MeterValue>234.560</Authorization:MeterValue>
-            //               <Authorization:MeterValue>234.567</Authorization:MeterValue>
-            //             </Authorization:MeterValueInBetween>
-            // 
-            //             <!--Optional:-->
-            //             <Authorization:ConsumedEnergy>111.111</Authorization:ConsumedEnergy>
-            //             <!--Optional:-->
-            //             <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
-            // 
-            //             <!--Optional:-->
-            //             <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
-            //             <!--Optional:-->
-            //             <Authorization:HubProviderID>?</Authorization:HubProviderID>
-            // 
-            //          </Authorization:eRoamingChargeDetailRecord>
-            // 
-            //       </Authorization:eRoamingChargeDetailRecords>
-            //    </soapenv:Body>
-            // 
-            // </soapenv:Envelope>
-
-            #endregion
-
-
             if (ChargeDetailRecordXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecord")
                 throw new Exception("Invalid eRoamingChargeDetailRecord XML!");
 
@@ -325,7 +311,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                 "The Identification is invalid!",
                                                                                 AuthorizationIdentification.Parse,
                                                                                 OnException);
-
 
             return new ChargeDetailRecord(
 
@@ -393,122 +378,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region ToXML()
 
-        #region Documentation
-
-        // [...]
-        // <Authorization:eRoamingChargeDetailRecord>
-        // 
-        //    <Authorization:SessionID>?</Authorization:SessionID>
-        // 
-        //    <!--Optional:-->
-        //    <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
-        // 
-        //    <!--Optional:-->
-        //    <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
-        // 
-        //    <Authorization:EvseID>?</Authorization:EvseID>
-        // 
-        //    <Authorization:Identification>
-        // 
-        //       <!--You have a CHOICE of the next 4 items at this level-->
-        //       <CommonTypes:RFIDmifarefamilyIdentification>
-        //          <CommonTypes:UID>?</CommonTypes:UID>
-        //       </CommonTypes:RFIDmifarefamilyIdentification>
-        // 
-        //       <CommonTypes:QRCodeIdentification>
-        // 
-        //          <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        // 
-        //          <!--You have a CHOICE of the next 2 items at this level-->
-        //          <CommonTypes:PIN>?</CommonTypes:PIN>
-        // 
-        //          <CommonTypes:HashedPIN>
-        //             <CommonTypes:Value>?</CommonTypes:Value>
-        //             <CommonTypes:Function>?</CommonTypes:Function>
-        //             <CommonTypes:Salt>?</CommonTypes:Salt>
-        //          </CommonTypes:HashedPIN>
-        // 
-        //       </CommonTypes:QRCodeIdentification>
-        // 
-        //       <CommonTypes:PlugAndChargeIdentification>
-        //          <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //       </CommonTypes:PlugAndChargeIdentification>
-        // 
-        //       <CommonTypes:RemoteIdentification>
-        //          <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //       </CommonTypes:RemoteIdentification>
-        // 
-        //    </Authorization:Identification>
-        // 
-        //    <!--Optional:-->
-        //    <Authorization:ChargingStart>?</Authorization:ChargingStart>
-        //    <!--Optional:-->
-        //    <Authorization:ChargingEnd>?</Authorization:ChargingEnd>
-        //    <Authorization:SessionStart>?</Authorization:SessionStart>
-        //    <Authorization:SessionEnd>?</Authorization:SessionEnd>
-        //
-        //    <!--Optional:-->
-        //    <Authorization:MeterValueStart>?</Authorization:MeterValueStart>
-        //    <!--Optional:-->
-        //    <Authorization:MeterValueEnd>?</Authorization:MeterValueEnd>
-        //
-        //    <!--Optional:-->
-        //    <Authorization:MeterValueInBetween>
-        //       <!--1 or more repetitions:-->
-        //       <Authorization:MeterValue>?</Authorization:MeterValue>
-        //    </Authorization:MeterValueInBetween>
-        //
-        //    <!--Optional:-->
-        //    <Authorization:ConsumedEnergy>?</Authorization:ConsumedEnergy>
-        //    <!--Optional:-->
-        //    <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
-        //
-        //    <!--Optional:-->
-        //    <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
-        //    <!--Optional:-->
-        //    <Authorization:HubProviderID>?</Authorization:HubProviderID>
-        // 
-        // </Authorization:eRoamingChargeDetailRecord>
-        // [...]
-
-        #endregion
-
         /// <summary>
-        /// Get a XML representation of this object.
+        /// Return a XML representation of this object.
         /// </summary>
         public XElement ToXML()
 
             => new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
 
-                new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
-                PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
-                PartnerProductId != null ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString()) : null,
-                new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
+                   new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
+                   PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+                   PartnerProductId != null ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString()) : null,
+                   new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
 
-                Identification.ToXML(OICPNS.Authorization),
+                   Identification.ToXML(OICPNS.Authorization),
 
-                ChargingStart.HasValue ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
-                ChargingEnd.  HasValue ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
+                   ChargingStart.HasValue ? new XElement(OICPNS.Authorization + "ChargingStart",    ChargingStart.  Value.ToIso8601()) : null,
+                   ChargingEnd.  HasValue ? new XElement(OICPNS.Authorization + "ChargingEnd",      ChargingEnd.    Value.ToIso8601()) : null,
 
-                new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
-                new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
+                   new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
+                   new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
 
-                MeterValueStart.HasValue ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
-                MeterValueEnd.  HasValue ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", ".")) : null,
+                   MeterValueStart.HasValue ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", ".")) : null,
+                   MeterValueEnd.  HasValue ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", ".")) : null,
 
-                MeterValuesInBetween != null
-                    ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
-                          MeterValuesInBetween.
-                              SafeSelect(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
-                              ToArray()
-                      )
-                    : null,
+                   MeterValuesInBetween != null
+                       ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
+                             MeterValuesInBetween.
+                                 SafeSelect(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
+                                 ToArray()
+                         )
+                       : null,
 
-                ConsumedEnergy    != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", ".")) : null,
-                MeteringSignature != null ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)        : null,
+                   ConsumedEnergy    != null ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", ".")) : null,
+                   MeteringSignature != null ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)        : null,
 
-                HubOperatorId     != null ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString()) : null,
-                HubProviderId     != null ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString()) : null
+                   HubOperatorId     != null ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString()) : null,
+                   HubProviderId     != null ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString()) : null
 
             );
 
@@ -620,7 +525,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region (override) ToString()
 
         /// <summary>
-        /// Get a string representation of this object.
+        /// Return a string representation of this object.
         /// </summary>
         public override String ToString()
             => SessionId.ToString();

@@ -316,7 +316,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     {
 
                         case AuthStartEVSEResultType.Authorized:
-                            return new eRoamingAuthorizationStart(response.SessionId,
+                            return new AuthorizationStart(response.SessionId,
                                                                   null,
                                                                   response.ProviderId,
                                                                   "Ready to charge!",
@@ -325,37 +325,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                       SafeSelect(token => new AuthorizationIdentification(AuthInfo.FromAuthToken(token))));
 
                         case AuthStartEVSEResultType.NotAuthorized:
-                            return new eRoamingAuthorizationStart(StatusCodes.RFIDAuthenticationfailed_InvalidUID,
+                            return new AuthorizationStart(StatusCodes.RFIDAuthenticationfailed_InvalidUID,
                                                                   "RFID Authentication failed - invalid UID");
 
                         case AuthStartEVSEResultType.InvalidSessionId:
-                            return new eRoamingAuthorizationStart(StatusCodes.SessionIsInvalid,
+                            return new AuthorizationStart(StatusCodes.SessionIsInvalid,
                                                                   "Session is invalid");
 
                         case AuthStartEVSEResultType.CommunicationTimeout:
-                            return new eRoamingAuthorizationStart(StatusCodes.CommunicationToEVSEFailed,
+                            return new AuthorizationStart(StatusCodes.CommunicationToEVSEFailed,
                                                                   "Communication to EVSE failed!");
 
                         case AuthStartEVSEResultType.StartChargingTimeout:
-                            return new eRoamingAuthorizationStart(StatusCodes.NoEVConnectedToEVSE,
+                            return new AuthorizationStart(StatusCodes.NoEVConnectedToEVSE,
                                                                   "No EV connected to EVSE!");
 
                         case AuthStartEVSEResultType.Reserved:
-                            return new eRoamingAuthorizationStart(StatusCodes.EVSEAlreadyReserved,
+                            return new AuthorizationStart(StatusCodes.EVSEAlreadyReserved,
                                                                   "EVSE already reserved!");
 
                         case AuthStartEVSEResultType.UnknownEVSE:
-                            return new eRoamingAuthorizationStart(StatusCodes.UnknownEVSEID,
+                            return new AuthorizationStart(StatusCodes.UnknownEVSEID,
                                                                   "Unknown EVSE ID!");
 
                         case AuthStartEVSEResultType.OutOfService:
-                            return new eRoamingAuthorizationStart(StatusCodes.EVSEOutOfService,
+                            return new AuthorizationStart(StatusCodes.EVSEOutOfService,
                                                                   "EVSE out of service!");
 
                     }
                 }
 
-                return new eRoamingAuthorizationStart(StatusCodes.ServiceNotAvailable,
+                return new AuthorizationStart(StatusCodes.ServiceNotAvailable,
                                                       "Service not available!",
                                                       SessionId:  response?.SessionId ?? SessionId,
                                                       ProviderId: response?.ProviderId);
@@ -394,35 +394,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     {
 
                         case AuthStopEVSEResultType.Authorized:
-                            return new eRoamingAuthorizationStop(response.SessionId,
+                            return new AuthorizationStop(response.SessionId,
                                                                  response.ProviderId,
                                                                  null,
                                                                  "Ready to stop charging!");
 
                         case AuthStopEVSEResultType.InvalidSessionId:
-                            return new eRoamingAuthorizationStop(StatusCodes.SessionIsInvalid,
+                            return new AuthorizationStop(StatusCodes.SessionIsInvalid,
                                                                  "Session is invalid");
 
                         case AuthStopEVSEResultType.EVSECommunicationTimeout:
-                            return new eRoamingAuthorizationStop(StatusCodes.CommunicationToEVSEFailed,
+                            return new AuthorizationStop(StatusCodes.CommunicationToEVSEFailed,
                                                                  "Communication to EVSE failed!");
 
                         case AuthStopEVSEResultType.StopChargingTimeout:
-                            return new eRoamingAuthorizationStop(StatusCodes.NoEVConnectedToEVSE,
+                            return new AuthorizationStop(StatusCodes.NoEVConnectedToEVSE,
                                                                  "No EV connected to EVSE!");
 
                         case AuthStopEVSEResultType.UnknownEVSE:
-                            return new eRoamingAuthorizationStop(StatusCodes.UnknownEVSEID,
+                            return new AuthorizationStop(StatusCodes.UnknownEVSEID,
                                                                  "Unknown EVSE ID!");
 
                         case AuthStopEVSEResultType.OutOfService:
-                            return new eRoamingAuthorizationStop(StatusCodes.EVSEOutOfService,
+                            return new AuthorizationStop(StatusCodes.EVSEOutOfService,
                                                                  "EVSE out of service!");
 
                     }
                 }
 
-                return new eRoamingAuthorizationStop(StatusCodes.ServiceNotAvailable,
+                return new AuthorizationStop(StatusCodes.ServiceNotAvailable,
                                                      "Service not available!",
                                                      SessionId:  response?.SessionId ?? SessionId,
                                                      ProviderId: response?.ProviderId);
@@ -454,35 +454,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     {
 
                         case SendCDRResultType.Forwarded:
-                            return new eRoamingAcknowledgement(StatusCodes.Success,
+                            return new Acknowledgement(StatusCodes.Success,
                                                                "Charge detail record forwarded!",
                                                                null,
                                                                ChargeDetailRecord?.SessionId,
                                                                ChargeDetailRecord?.PartnerSessionId);
 
                         case SendCDRResultType.NotForwared:
-                            return new eRoamingAcknowledgement(StatusCodes.SystemError,
+                            return new Acknowledgement(StatusCodes.SystemError,
                                                                "Communication to EVSE failed!",
                                                                null,
                                                                ChargeDetailRecord?.SessionId,
                                                                ChargeDetailRecord?.PartnerSessionId);
 
                         case SendCDRResultType.InvalidSessionId:
-                            return new eRoamingAcknowledgement(StatusCodes.SessionIsInvalid,
+                            return new Acknowledgement(StatusCodes.SessionIsInvalid,
                                                                "Session is invalid",
                                                                null,
                                                                ChargeDetailRecord?.SessionId,
                                                                ChargeDetailRecord?.PartnerSessionId);
 
                         case SendCDRResultType.UnknownEVSE:
-                            return new eRoamingAcknowledgement(StatusCodes.UnknownEVSEID,
+                            return new Acknowledgement(StatusCodes.UnknownEVSEID,
                                                                "Unknown EVSE ID!",
                                                                null,
                                                                ChargeDetailRecord?.SessionId,
                                                                ChargeDetailRecord?.PartnerSessionId);
 
                         case SendCDRResultType.Error:
-                            return new eRoamingAcknowledgement(StatusCodes.DataError,
+                            return new Acknowledgement(StatusCodes.DataError,
                                                                "Data Error!",
                                                                null,
                                                                ChargeDetailRecord?.SessionId,
@@ -491,7 +491,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     }
                 }
 
-                return new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                return new Acknowledgement(StatusCodes.ServiceNotAvailable,
                                                    "Service not available!",
                                                    null,
                                                    ChargeDetailRecord?.SessionId);
@@ -960,7 +960,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<eRoamingEvseSearchResult>
+        public async Task<EVSESearchResult>
 
             SearchEVSE(eMobilityProvider_Id              ProviderId,
                        GeoCoordinate        SearchCenter       = null,
@@ -1017,7 +1017,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<IEnumerable<EVSEStatus>>
+        public async Task<IEnumerable<WWCP.EVSEStatus>>
 
             PullEVSEStatus(GeoCoordinate       SearchCenter       = null,
                            Double              DistanceKM         = 0.0,
@@ -1047,13 +1047,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 return result.Content.OperatorEVSEStatus.
                            SelectMany(operatorevsestatus => operatorevsestatus.EVSEStatusRecords).
-                           SafeSelect(evsestatusrecord   => new EVSEStatus(evsestatusrecord.Id,
+                           SafeSelect(evsestatusrecord   => new WWCP.EVSEStatus(evsestatusrecord.Id,
                                                                            OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
                                                                            result.Timestamp));
 
             }
 
-            return new EVSEStatus[0];
+            return new WWCP.EVSEStatus[0];
 
         }
 
@@ -1071,7 +1071,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<IEnumerable<EVSEStatus>>
+        public async Task<IEnumerable<WWCP.EVSEStatus>>
 
             PullEVSEStatusById(IEnumerable<EVSE_Id>  EVSEIds,
                                eMobilityProvider_Id               ProviderId         = null,
@@ -1083,7 +1083,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            var _EVSEStatus = new List<EVSEStatus>();
+            var _EVSEStatus = new List<WWCP.EVSEStatus>();
 
             // Hubject has a limit of 100 EVSEIds per request!
             // Do not make concurrent requests!
@@ -1103,7 +1103,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 {
 
                     _EVSEStatus.AddRange(result.Content.EVSEStatusRecords.
-                                                SafeSelect(evsestatusrecord => new EVSEStatus(evsestatusrecord.Id,
+                                                SafeSelect(evsestatusrecord => new WWCP.EVSEStatus(evsestatusrecord.Id,
                                                                                               OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
                                                                                               result.Timestamp)));
 
@@ -1130,7 +1130,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<eRoamingAcknowledgement>
+        public async Task<Acknowledgement>
 
             PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
                                    ActionType                               OICPAction         = ActionType.fullLoad,
@@ -1177,7 +1177,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<eRoamingAcknowledgement>
+        public async Task<Acknowledgement>
 
             PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
                                    ActionType                                OICPAction         = ActionType.fullLoad,

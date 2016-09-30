@@ -353,7 +353,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(ILookup<ChargingStationOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
                          ActionType                                        OICPAction            = ActionType.fullLoad,
@@ -391,7 +391,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                 SelectMany(group => group.Where(evsedatarecord => evsedatarecord != null)).
                                                 Count();
 
-            HTTPResponse<eRoamingAcknowledgement> result = null;
+            HTTPResponse<Acknowledgement> result = null;
 
             var _OICPAction = OICPAction;
 
@@ -447,7 +447,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
 
                                                      #endregion
 
@@ -457,8 +457,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError),
+                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                          new Acknowledgement(StatusCodes.SystemError),
                                                                                                           IsFault: true);
 
                                                      },
@@ -471,8 +471,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendHTTPError(timestamp, this, httpresponse);
 
-                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                          new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                       httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                       httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                           IsFault: true);
@@ -487,7 +487,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                         return HTTPResponse<Acknowledgement>.ExceptionThrown(new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                                   exception.Message,
                                                                                                                                                   exception.StackTrace),
                                                                                                                       Exception:  exception);
@@ -504,7 +504,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
             if (result == null)
-                result = HTTPResponse<eRoamingAcknowledgement>.OK(new eRoamingAcknowledgement(StatusCodes.Success, "Nothing to upload!"));
+                result = HTTPResponse<Acknowledgement>.OK(new Acknowledgement(StatusCodes.Success, "Nothing to upload!"));
 
 
             #region Send OnPushEVSEDataResponse event
@@ -554,7 +554,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(EVSEDataRecord                               EVSEDataRecord,
                          ActionType                                   OICPAction              = ActionType.insert,
@@ -596,7 +596,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(IEnumerable<EVSEDataRecord>                  EVSEDataRecords,
                          ActionType                                   OICPAction              = ActionType.fullLoad,
@@ -637,7 +637,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                           RequestTimeout);
 
 
-            return HTTPResponse<eRoamingAcknowledgement>.OK(new eRoamingAcknowledgement(StatusCodes.Success));
+            return HTTPResponse<Acknowledgement>.OK(new Acknowledgement(StatusCodes.Success));
 
         }
 
@@ -650,7 +650,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="OICPAction">The server-side data management operation.</param>
         /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(ActionType               OICPAction,
                          params EVSEDataRecord[]  EVSEDataRecords)
@@ -676,7 +676,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(ILookup<ChargingStationOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
                            ActionType                                          OICPAction            = ActionType.update,
@@ -714,7 +714,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                 SelectMany(group => group.Where(evsestatusrecord => evsestatusrecord != null)).
                                                 Count();
 
-            HTTPResponse<eRoamingAcknowledgement> result = null;
+            HTTPResponse<Acknowledgement> result = null;
 
             var _OICPAction = OICPAction;
 
@@ -770,7 +770,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                       #region OnSuccess
 
-                                                      OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
+                                                      OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
 
                                                       #endregion
 
@@ -780,9 +780,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                           SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                          return new HTTPResponse<eRoamingAcknowledgement>(
+                                                          return new HTTPResponse<Acknowledgement>(
                                                               httpresponse,
-                                                              new eRoamingAcknowledgement(StatusCodes.SystemError),
+                                                              new Acknowledgement(StatusCodes.SystemError),
                                                               IsFault: true);
 
                                                       },
@@ -795,8 +795,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                           SendHTTPError(timestamp, this, httpresponse);
 
-                                                          return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                           new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                          return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                           new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                        httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                        httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                            IsFault: true);
@@ -811,7 +811,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                           SendException(timestamp, sender, exception);
 
-                                                          return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                          return HTTPResponse<Acknowledgement>.ExceptionThrown(new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                                    exception.Message,
                                                                                                                                                    exception.StackTrace),
                                                                                                                        Exception: exception);
@@ -827,7 +827,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
 
             if (result == null)
-                result = HTTPResponse<eRoamingAcknowledgement>.OK(new eRoamingAcknowledgement(StatusCodes.Success, "Nothing to upload!"));
+                result = HTTPResponse<Acknowledgement>.OK(new Acknowledgement(StatusCodes.Success, "Nothing to upload!"));
 
 
             #region Send OnPushEVSEDataResponse event
@@ -876,7 +876,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(EVSEStatusRecord                             EVSEStatusRecord,
                            ActionType                                   OICPAction                = ActionType.insert,
@@ -918,7 +918,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(IEnumerable<EVSEStatusRecord>                EVSEStatusRecords,
                            ActionType                                   OICPAction                = ActionType.update,
@@ -958,7 +958,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                             EventTrackingId,
                                             RequestTimeout);
 
-            return HTTPResponse<eRoamingAcknowledgement>.OK(new eRoamingAcknowledgement(StatusCodes.Success, "Nothing to upload!"));
+            return HTTPResponse<Acknowledgement>.OK(new Acknowledgement(StatusCodes.Success, "Nothing to upload!"));
 
         }
 
@@ -971,7 +971,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="OICPAction">The server-side data management operation.</param>
         /// <param name="EVSEStatusRecords">An array of EVSE status records.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(ActionType                 OICPAction,
                            params EVSEStatusRecord[]  EVSEStatusRecords)
@@ -999,7 +999,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAuthorizationStart>>
+        public async Task<HTTPResponse<AuthorizationStart>>
 
             AuthorizeStart(ChargingStationOperator_Id  OperatorId,
                            Auth_Token                  AuthToken,
@@ -1062,17 +1062,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Verify length of AuthToken
 
-            HTTPResponse<eRoamingAuthorizationStart> result = null;
+            HTTPResponse<AuthorizationStart> result = null;
 
             if (AuthToken.Length !=  8 &&
                 AuthToken.Length != 14 &&
                 AuthToken.Length != 20)
             {
 
-                result = new HTTPResponse<eRoamingAuthorizationStart>(HTTPResponse.BadRequest,
-                                                                      new eRoamingAuthorizationStart(StatusCodes.DataError,
-                                                                                                     "OICP " + Version.Number + " only allows a 8, 14 or 20 hex-character authentication token!"),
-                                                                      IsFault: true);
+                result = new HTTPResponse<AuthorizationStart>(HTTPResponse.BadRequest,
+                                                              new AuthorizationStart(StatusCodes.DataError,
+                                                                                     "OICP " + Version.Number + " only allows a 8, 14 or 20 hex-character authentication token!"),
+                                                              IsFault: true);
 
             }
 
@@ -1107,7 +1107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAuthorizationStart.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(AuthorizationStart.Parse),
 
                                                      #endregion
 
@@ -1117,10 +1117,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                         return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
-                                                                                                             new eRoamingAuthorizationStart(StatusCodes.DataError,
-                                                                                                                                            httpresponse.Content.ToString()),
-                                                                                                             IsFault: true);
+                                                         return new HTTPResponse<AuthorizationStart>(httpresponse,
+                                                                                                     new AuthorizationStart(StatusCodes.DataError,
+                                                                                                                            httpresponse.Content.ToString()),
+                                                                                                     IsFault: true);
 
                                                      },
 
@@ -1132,11 +1132,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendHTTPError(timestamp, this, httpresponse);
 
-                                                         return new HTTPResponse<eRoamingAuthorizationStart>(httpresponse,
-                                                                                                             new eRoamingAuthorizationStart(StatusCodes.DataError,
-                                                                                                                                            httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                            httpresponse.HTTPBody.ToUTF8String()),
-                                                                                                             IsFault: true);
+                                                         return new HTTPResponse<AuthorizationStart>(httpresponse,
+                                                                                                     new AuthorizationStart(StatusCodes.DataError,
+                                                                                                                            httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                            httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                     IsFault: true);
 
                                                      },
 
@@ -1148,10 +1148,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<eRoamingAuthorizationStart>.ExceptionThrown(new eRoamingAuthorizationStart(StatusCodes.SystemError,
-                                                                                                                                                        exception.Message,
-                                                                                                                                                        exception.StackTrace),
-                                                                                                                         Exception: exception);
+                                                         return HTTPResponse<AuthorizationStart>.ExceptionThrown(new AuthorizationStart(StatusCodes.SystemError,
+                                                                                                                                        exception.Message,
+                                                                                                                                        exception.StackTrace),
+                                                                                                                 Exception: exception);
 
                                                      }
 
@@ -1215,7 +1215,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAuthorizationStop>>
+        public async Task<HTTPResponse<AuthorizationStop>>
 
             AuthorizeStop(ChargingStationOperator_Id  OperatorId,
                           ChargingSession_Id          SessionId,
@@ -1279,15 +1279,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Verify length of AuthToken
 
-            HTTPResponse<eRoamingAuthorizationStop> result = null;
+            HTTPResponse<AuthorizationStop> result = null;
 
             if (AuthToken.Length !=  8 &&
                 AuthToken.Length != 14 &&
                 AuthToken.Length != 20)
             {
 
-                result = new HTTPResponse<eRoamingAuthorizationStop>(HTTPResponse.BadRequest,
-                                                                     new eRoamingAuthorizationStop(StatusCodes.DataError,
+                result = new HTTPResponse<AuthorizationStop>(HTTPResponse.BadRequest,
+                                                                     new AuthorizationStop(StatusCodes.DataError,
                                                                                                    "OICP " + Version.Number + " only allows a 8, 14 or 20 hex-character authentication token!"),
                                                                      IsFault: true);
 
@@ -1323,7 +1323,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAuthorizationStop.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(AuthorizationStop.Parse),
 
                                                      #endregion
 
@@ -1333,8 +1333,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                         return new HTTPResponse<eRoamingAuthorizationStop>(httpresponse,
-                                                                                                            new eRoamingAuthorizationStop(StatusCodes.DataError,
+                                                         return new HTTPResponse<AuthorizationStop>(httpresponse,
+                                                                                                            new AuthorizationStop(StatusCodes.DataError,
                                                                                                                                           httpresponse.Content.ToString()),
                                                                                                             IsFault: true);
 
@@ -1348,8 +1348,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendHTTPError(timestamp, this, httpresponse);
 
-                                                         return new HTTPResponse<eRoamingAuthorizationStop>(httpresponse,
-                                                                                                            new eRoamingAuthorizationStop(StatusCodes.DataError,
+                                                         return new HTTPResponse<AuthorizationStop>(httpresponse,
+                                                                                                            new AuthorizationStop(StatusCodes.DataError,
                                                                                                                                           httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                           httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                             IsFault: true);
@@ -1364,7 +1364,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<eRoamingAuthorizationStop>.ExceptionThrown(new eRoamingAuthorizationStop(StatusCodes.SystemError,
+                                                         return HTTPResponse<AuthorizationStop>.ExceptionThrown(new AuthorizationStop(StatusCodes.SystemError,
                                                                                                                                                       exception.Message,
                                                                                                                                                       exception.StackTrace),
                                                                                                                         Exception: exception);
@@ -1422,7 +1422,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
 
@@ -1493,7 +1493,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Verify length of AuthToken, if present...
 
-            HTTPResponse<eRoamingAcknowledgement> result = null;
+            HTTPResponse<Acknowledgement> result = null;
 
             if (ChargeDetailRecord?.Identification?.AuthToken         != null &&
                 ChargeDetailRecord?.Identification?.AuthToken.Length  !=    8 &&
@@ -1501,8 +1501,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 ChargeDetailRecord?.Identification?.AuthToken.Length  !=   20)
             {
 
-                result = new HTTPResponse<eRoamingAcknowledgement>(HTTPResponse.BadRequest,
-                                                                   new eRoamingAcknowledgement(StatusCodes.DataError,
+                result = new HTTPResponse<Acknowledgement>(HTTPResponse.BadRequest,
+                                                                   new Acknowledgement(StatusCodes.DataError,
                                                                                                "OICP " + Version.Number + " only allows a 8, 14 or 20 hex-character authentication token!"),
                                                                    IsFault: true);
 
@@ -1534,7 +1534,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
 
                                                      #endregion
 
@@ -1546,8 +1546,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                          new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                       httpresponse.Content.ToString()),
                                                                                                           IsFault: true);
 
@@ -1563,8 +1563,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendHTTPError(timestamp, this, httpresponse);
 
-                                                         return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                          new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                          new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                       httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                       httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                           IsFault: true);
@@ -1581,7 +1581,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<eRoamingAcknowledgement>.ExceptionThrown(new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
+                                                         return HTTPResponse<Acknowledgement>.ExceptionThrown(new Acknowledgement(StatusCodes.ServiceNotAvailable,
                                                                                                                                                   exception.Message,
                                                                                                                                                   exception.StackTrace,
                                                                                                                                                   ChargeDetailRecord.SessionId),
@@ -1639,7 +1639,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<eRoamingAuthenticationData>>
+        public async Task<HTTPResponse<AuthenticationData>>
 
             PullAuthenticationData(ChargingStationOperator_Id  OperatorId,
 
@@ -1708,7 +1708,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(eRoamingAuthenticationData.Parse),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(AuthenticationData.Parse),
 
                                                      #endregion
 
@@ -1718,7 +1718,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                         return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
+                                                         return new HTTPResponse<AuthenticationData>(httpresponse,
                                                                                                              IsFault: true);
 
                                                      },
@@ -1731,7 +1731,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendHTTPError(timestamp, this, httpresponse);
 
-                                                         return new HTTPResponse<eRoamingAuthenticationData>(httpresponse,
+                                                         return new HTTPResponse<AuthenticationData>(httpresponse,
                                                                                                              IsFault: true);
 
                                                      },
@@ -1744,7 +1744,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                          SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<eRoamingAuthenticationData>.ExceptionThrown(new eRoamingAuthenticationData(StatusCodes.SystemError,
+                                                         return HTTPResponse<AuthenticationData>.ExceptionThrown(new AuthenticationData(StatusCodes.SystemError,
                                                                                                                                                         exception.Message,
                                                                                                                                                         exception.StackTrace),
                                                                                                                          Exception: exception);

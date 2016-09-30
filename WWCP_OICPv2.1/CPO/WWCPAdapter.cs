@@ -242,20 +242,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
         /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
-        public WWCPAdapter(RoamingProvider_Id                Id,
-                           I18NString                        Name,
-                           RoamingNetwork                    RoamingNetwork,
+        public WWCPAdapter(RoamingProvider_Id                           Id,
+                           I18NString                                   Name,
+                           RoamingNetwork                               RoamingNetwork,
 
-                           CPORoaming                        CPORoaming,
-                           EVSE2EVSEDataRecordDelegate       EVSE2EVSEDataRecord   = null,
-                           EVSEDataRecord2XMLDelegate        EVSEDataRecord2XML    = null,
+                           CPORoaming                                   CPORoaming,
+                           EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
+                           EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML    = null,
 
                            ChargingStationOperator                      DefaultOperator       = null,
                            ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector  = null,
-                           IncludeEVSEDelegate               IncludeEVSEs          = null,
-                           TimeSpan?                         ServiceCheckEvery     = null,
-                           TimeSpan?                         StatusCheckEvery      = null,
-                           Boolean                           DisableAutoUploads    = false)
+                           IncludeEVSEDelegate                          IncludeEVSEs          = null,
+                           TimeSpan?                                    ServiceCheckEvery     = null,
+                           TimeSpan?                                    StatusCheckEvery      = null,
+                           Boolean                                      DisableAutoUploads    = false)
 
             : base(Id,
                    Name,
@@ -359,41 +359,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case ReservationResultType.Success:
-                            return new eRoamingAcknowledgement(ChargingSession_Id.Parse(response.Reservation.Id.ToString()),
-                                                               StatusCodeDescription: "Ready to charge!");
+                            return new Acknowledgement(ChargingSession_Id.Parse(response.Reservation.Id.ToString()),
+                                                       StatusCodeDescription: "Ready to charge!");
 
                         case ReservationResultType.InvalidCredentials:
-                            return new eRoamingAcknowledgement(StatusCodes.SessionIsInvalid,
-                                                               "Session is invalid",
-                                                               SessionId: ChargingSession_Id.Parse(response.Reservation.Id.ToString()));
+                            return new Acknowledgement(StatusCodes.SessionIsInvalid,
+                                                       "Session is invalid",
+                                                       SessionId: ChargingSession_Id.Parse(response.Reservation.Id.ToString()));
 
                         case ReservationResultType.Timeout:
                         case ReservationResultType.CommunicationError:
-                            return new eRoamingAcknowledgement(StatusCodes.CommunicationToEVSEFailed,
-                                                               "Communication to EVSE failed!");
+                            return new Acknowledgement(StatusCodes.CommunicationToEVSEFailed,
+                                                       "Communication to EVSE failed!");
 
                         case ReservationResultType.AlreadyReserved:
-                            return new eRoamingAcknowledgement(StatusCodes.EVSEAlreadyReserved,
-                                                               "EVSE already reserved!");
+                            return new Acknowledgement(StatusCodes.EVSEAlreadyReserved,
+                                                       "EVSE already reserved!");
 
                         case ReservationResultType.AlreadyInUse:
-                            return new eRoamingAcknowledgement(StatusCodes.EVSEAlreadyInUse_WrongToken,
-                                                               "EVSE is already in use!");
+                            return new Acknowledgement(StatusCodes.EVSEAlreadyInUse_WrongToken,
+                                                       "EVSE is already in use!");
 
                         case ReservationResultType.UnknownEVSE:
-                            return new eRoamingAcknowledgement(StatusCodes.UnknownEVSEID,
-                                                               "Unknown EVSE ID!");
+                            return new Acknowledgement(StatusCodes.UnknownEVSEID,
+                                                       "Unknown EVSE ID!");
 
                         case ReservationResultType.OutOfService:
-                            return new eRoamingAcknowledgement(StatusCodes.EVSEOutOfService,
-                                                               "EVSE out of service!");
+                            return new Acknowledgement(StatusCodes.EVSEOutOfService,
+                                                       "EVSE out of service!");
 
                     }
                 }
 
-                return new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
-                                                   "Service not available!",
-                                                   SessionId: ChargingSession_Id.Parse(response.Reservation.Id.ToString()));
+                return new Acknowledgement(StatusCodes.ServiceNotAvailable,
+                                           "Service not available!",
+                                           SessionId: ChargingSession_Id.Parse(response.Reservation.Id.ToString()));
 
                 #endregion
 
@@ -431,34 +431,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case CancelReservationResultType.Success:
-                            return new eRoamingAcknowledgement(ChargingSession_Id.Parse(response.ReservationId.ToString()),
-                                                               StatusCodeDescription: "Reservation deleted!");
+                            return new Acknowledgement(ChargingSession_Id.Parse(response.ReservationId.ToString()),
+                                                       StatusCodeDescription: "Reservation deleted!");
 
                         case CancelReservationResultType.UnknownReservationId:
-                            return new eRoamingAcknowledgement(StatusCodes.SessionIsInvalid,
-                                                               "Session is invalid!",
-                                                               SessionId: SessionId);
+                            return new Acknowledgement(StatusCodes.SessionIsInvalid,
+                                                       "Session is invalid!",
+                                                       SessionId: SessionId);
 
                         case CancelReservationResultType.Offline:
                         case CancelReservationResultType.Timeout:
                         case CancelReservationResultType.CommunicationError:
-                            return new eRoamingAcknowledgement(StatusCodes.CommunicationToEVSEFailed,
-                                                               "Communication to EVSE failed!");
+                            return new Acknowledgement(StatusCodes.CommunicationToEVSEFailed,
+                                                       "Communication to EVSE failed!");
 
                         case CancelReservationResultType.UnknownEVSE:
-                            return new eRoamingAcknowledgement(StatusCodes.UnknownEVSEID,
-                                                               "Unknown EVSE ID!");
+                            return new Acknowledgement(StatusCodes.UnknownEVSEID,
+                                                       "Unknown EVSE ID!");
 
                         case CancelReservationResultType.OutOfService:
-                            return new eRoamingAcknowledgement(StatusCodes.EVSEOutOfService,
-                                                               "EVSE out of service!");
+                            return new Acknowledgement(StatusCodes.EVSEOutOfService,
+                                                       "EVSE out of service!");
 
                     }
                 }
 
-                return new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
-                                                   "Service not available!",
-                                                   SessionId: SessionId);
+                return new Acknowledgement(StatusCodes.ServiceNotAvailable,
+                                           "Service not available!",
+                                           SessionId: SessionId);
 
                 #endregion
 
@@ -520,49 +520,49 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case RemoteStartEVSEResultType.Success:
-                            return new eRoamingAcknowledgement(response.Session.Id,
-                                                               StatusCodeDescription: "Ready to charge!");
+                            return new Acknowledgement(response.Session.Id,
+                                                       StatusCodeDescription: "Ready to charge!");
 
                         case RemoteStartEVSEResultType.InvalidSessionId:
-                            return new eRoamingAcknowledgement(StatusCodes.SessionIsInvalid,
-                                                               "Session is invalid!",
-                                                               SessionId: SessionId);
+                            return new Acknowledgement(StatusCodes.SessionIsInvalid,
+                                                       "Session is invalid!",
+                                                       SessionId: SessionId);
 
                         case RemoteStartEVSEResultType.InvalidCredentials:
-                            return new eRoamingAcknowledgement(StatusCodes.NoValidContract,
-                                                               "No valid contract!");
+                            return new Acknowledgement(StatusCodes.NoValidContract,
+                                                       "No valid contract!");
 
                         case RemoteStartEVSEResultType.Offline:
-                            return new eRoamingAcknowledgement(StatusCodes.CommunicationToEVSEFailed,
-                                                               "Communication to EVSE failed!");
+                            return new Acknowledgement(StatusCodes.CommunicationToEVSEFailed,
+                                                       "Communication to EVSE failed!");
 
                         case RemoteStartEVSEResultType.Timeout:
                         case RemoteStartEVSEResultType.CommunicationError:
-                            return new eRoamingAcknowledgement(StatusCodes.CommunicationToEVSEFailed,
-                                                               "Communication to EVSE failed!");
+                            return new Acknowledgement(StatusCodes.CommunicationToEVSEFailed,
+                                                       "Communication to EVSE failed!");
 
                         case RemoteStartEVSEResultType.Reserved:
-                            return new eRoamingAcknowledgement(StatusCodes.EVSEAlreadyReserved,
-                                                               "EVSE already reserved!");
+                            return new Acknowledgement(StatusCodes.EVSEAlreadyReserved,
+                                                       "EVSE already reserved!");
 
                         case RemoteStartEVSEResultType.AlreadyInUse:
-                            return new eRoamingAcknowledgement(StatusCodes.EVSEAlreadyInUse_WrongToken,
-                                                               "EVSE is already in use!");
+                            return new Acknowledgement(StatusCodes.EVSEAlreadyInUse_WrongToken,
+                                                       "EVSE is already in use!");
 
                         case RemoteStartEVSEResultType.UnknownEVSE:
-                            return new eRoamingAcknowledgement(StatusCodes.UnknownEVSEID,
-                                                               "Unknown EVSE ID!");
+                            return new Acknowledgement(StatusCodes.UnknownEVSEID,
+                                                       "Unknown EVSE ID!");
 
                         case RemoteStartEVSEResultType.OutOfService:
-                            return new eRoamingAcknowledgement(StatusCodes.EVSEOutOfService,
-                                                               "EVSE out of service!");
+                            return new Acknowledgement(StatusCodes.EVSEOutOfService,
+                                                       "EVSE out of service!");
 
                     }
                 }
 
-                return new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
-                                                   "Service not available!",
-                                                   SessionId: SessionId);
+                return new Acknowledgement(StatusCodes.ServiceNotAvailable,
+                                           "Service not available!",
+                                           SessionId: SessionId);
 
                 #endregion
 
@@ -601,34 +601,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case RemoteStopEVSEResultType.Success:
-                            return new eRoamingAcknowledgement(response.SessionId,
-                                                               StatusCodeDescription: "Ready to stop charging!");
+                            return new Acknowledgement(response.SessionId,
+                                                       StatusCodeDescription: "Ready to stop charging!");
 
                         case RemoteStopEVSEResultType.InvalidSessionId:
-                            return new eRoamingAcknowledgement(StatusCodes.SessionIsInvalid,
-                                                               "Session is invalid!",
-                                                               SessionId: SessionId);
+                            return new Acknowledgement(StatusCodes.SessionIsInvalid,
+                                                       "Session is invalid!",
+                                                       SessionId: SessionId);
 
                         case RemoteStopEVSEResultType.Offline:
                         case RemoteStopEVSEResultType.Timeout:
                         case RemoteStopEVSEResultType.CommunicationError:
-                            return new eRoamingAcknowledgement(StatusCodes.CommunicationToEVSEFailed,
-                                                               "Communication to EVSE failed!");
+                            return new Acknowledgement(StatusCodes.CommunicationToEVSEFailed,
+                                                       "Communication to EVSE failed!");
 
                         case RemoteStopEVSEResultType.UnknownEVSE:
-                            return new eRoamingAcknowledgement(StatusCodes.UnknownEVSEID,
-                                                               "Unknown EVSE ID!");
+                            return new Acknowledgement(StatusCodes.UnknownEVSEID,
+                                                       "Unknown EVSE ID!");
 
                         case RemoteStopEVSEResultType.OutOfService:
-                            return new eRoamingAcknowledgement(StatusCodes.EVSEOutOfService,
-                                                               "EVSE out of service!");
+                            return new Acknowledgement(StatusCodes.EVSEOutOfService,
+                                                       "EVSE out of service!");
 
                     }
                 }
 
-                return new eRoamingAcknowledgement(StatusCodes.ServiceNotAvailable,
-                                                   "Service not available!",
-                                                   SessionId: SessionId);
+                return new Acknowledgement(StatusCodes.ServiceNotAvailable,
+                                           "Service not available!",
+                                           SessionId: SessionId);
 
                 #endregion
 
@@ -661,24 +661,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
         /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
-        public WWCPAdapter(RoamingProvider_Id                Id,
-                           I18NString                        Name,
-                           RoamingNetwork                    RoamingNetwork,
+        public WWCPAdapter(RoamingProvider_Id                           Id,
+                           I18NString                                   Name,
+                           RoamingNetwork                               RoamingNetwork,
 
-                           CPOClient                         CPOClient,
-                           CPOServer                         CPOServer,
-                           String                            ServerLoggingContext  = CPOServerLogger.DefaultContext,
-                           Func<String, String, String>      LogFileCreator        = null,
+                           CPOClient                                    CPOClient,
+                           CPOServer                                    CPOServer,
+                           String                                       ServerLoggingContext  = CPOServerLogger.DefaultContext,
+                           Func<String, String, String>                 LogFileCreator        = null,
 
-                           EVSE2EVSEDataRecordDelegate       EVSE2EVSEDataRecord   = null,
-                           EVSEDataRecord2XMLDelegate        EVSEDataRecord2XML    = null,
+                           EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
+                           EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML    = null,
 
                            ChargingStationOperator                      DefaultOperator       = null,
                            ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector  = null,
-                           IncludeEVSEDelegate               IncludeEVSEs          = null,
-                           TimeSpan?                         ServiceCheckEvery     = null,
-                           TimeSpan?                         StatusCheckEvery      = null,
-                           Boolean                           DisableAutoUploads    = false)
+                           IncludeEVSEDelegate                          IncludeEVSEs          = null,
+                           TimeSpan?                                    ServiceCheckEvery     = null,
+                           TimeSpan?                                    StatusCheckEvery      = null,
+                           Boolean                                      DisableAutoUploads    = false)
 
             : this(Id,
                    Name,
@@ -738,38 +738,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public WWCPAdapter(RoamingProvider_Id                   Id,
-                           I18NString                           Name,
-                           RoamingNetwork                       RoamingNetwork,
+        public WWCPAdapter(RoamingProvider_Id                           Id,
+                           I18NString                                   Name,
+                           RoamingNetwork                               RoamingNetwork,
 
-                           String                               RemoteHostname,
-                           IPPort                               RemoteTCPPort               = null,
-                           RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                           X509Certificate                      ClientCert                  = null,
-                           String                               RemoteHTTPVirtualHost       = null,
-                           String                               HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
-                           TimeSpan?                            RequestTimeout              = null,
+                           String                                       RemoteHostname,
+                           IPPort                                       RemoteTCPPort               = null,
+                           RemoteCertificateValidationCallback          RemoteCertificateValidator  = null,
+                           X509Certificate                              ClientCert                  = null,
+                           String                                       RemoteHTTPVirtualHost       = null,
+                           String                                       HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
+                           TimeSpan?                                    RequestTimeout              = null,
 
-                           String                               ServerName                  = CPOServer.DefaultHTTPServerName,
-                           IPPort                               ServerTCPPort               = null,
-                           String                               ServerURIPrefix             = "",
-                           Boolean                              ServerAutoStart             = false,
+                           String                                       ServerName                  = CPOServer.DefaultHTTPServerName,
+                           IPPort                                       ServerTCPPort               = null,
+                           String                                       ServerURIPrefix             = "",
+                           Boolean                                      ServerAutoStart             = false,
 
-                           String                               ClientLoggingContext        = CPOClient.CPOClientLogger.DefaultContext,
-                           String                               ServerLoggingContext        = CPOServerLogger.DefaultContext,
-                           Func<String, String, String>         LogFileCreator              = null,
+                           String                                       ClientLoggingContext        = CPOClient.CPOClientLogger.DefaultContext,
+                           String                                       ServerLoggingContext        = CPOServerLogger.DefaultContext,
+                           Func<String, String, String>                 LogFileCreator              = null,
 
-                           EVSE2EVSEDataRecordDelegate          EVSE2EVSEDataRecord         = null,
-                           EVSEDataRecord2XMLDelegate           EVSEDataRecord2XML          = null,
+                           EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord         = null,
+                           EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML          = null,
 
-                           ChargingStationOperator                         DefaultOperator             = null,
-                           ChargingStationOperatorNameSelectorDelegate     OperatorNameSelector        = null,
-                           IncludeEVSEDelegate                  IncludeEVSEs                = null,
-                           TimeSpan?                            ServiceCheckEvery           = null,
-                           TimeSpan?                            StatusCheckEvery            = null,
-                           Boolean                              DisableAutoUploads          = false,
+                           ChargingStationOperator                      DefaultOperator             = null,
+                           ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector        = null,
+                           IncludeEVSEDelegate                          IncludeEVSEs                = null,
+                           TimeSpan?                                    ServiceCheckEvery           = null,
+                           TimeSpan?                                    StatusCheckEvery            = null,
+                           Boolean                                      DisableAutoUploads          = false,
 
-                           DNSClient                            DNSClient                   = null)
+                           DNSClient                                    DNSClient                   = null)
 
             : this(Id,
                    Name,
@@ -828,7 +828,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEData(ILookup<ChargingStationOperator, EVSE>  GroupedEVSEs,
                          WWCP.ActionType                         ActionType         = WWCP.ActionType.fullLoad,
@@ -859,7 +859,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Get effective number of EVSE data records to upload
 
-            Acknowledgement result = null;
+            WWCP.Acknowledgement result = null;
 
             var _NumberOfEVSEs = GroupedEVSEs.
                                      Where     (group => group.Key != null).
@@ -937,18 +937,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 {
 
                     if (response.Content.Result == true)
-                        result = new Acknowledgement(ResultType.True,
+                        result = new WWCP.Acknowledgement(ResultType.True,
                                                      response.Content.StatusCode.Description,
                                                      Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
 
                     else
-                        result = new Acknowledgement(ResultType.False,
+                        result = new WWCP.Acknowledgement(ResultType.False,
                                                      response.Content.StatusCode.Description,
                                                      Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
 
                 }
                 else
-                    result = new Acknowledgement(ResultType.False,
+                    result = new WWCP.Acknowledgement(ResultType.False,
                                                  response.HTTPStatusCode.ToString(),
                                                  response.HTTPBody != null
                                                      ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
@@ -957,7 +957,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
 
             else
-                result = new Acknowledgement(ResultType.NoOperation);
+                result = new WWCP.Acknowledgement(ResultType.NoOperation);
 
 
             #region Send OnEVSEDataPushed event
@@ -1006,7 +1006,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEData(EVSE                 EVSE,
                          WWCP.ActionType      ActionType         = WWCP.ActionType.insert,
@@ -1051,7 +1051,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEData(IEnumerable<EVSE>    EVSEs,
                          WWCP.ActionType      ActionType         = WWCP.ActionType.fullLoad,
@@ -1094,7 +1094,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                           EventTrackingId,
                                           RequestTimeout);
 
-            return new Acknowledgement(ResultType.True);
+            return new WWCP.Acknowledgement(ResultType.True);
 
         }
 
@@ -1113,7 +1113,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEData(ChargingStation      ChargingStation,
                          WWCP.ActionType      ActionType         = WWCP.ActionType.fullLoad,
@@ -1159,7 +1159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEData(IEnumerable<ChargingStation>  ChargingStations,
                          WWCP.ActionType               ActionType         = WWCP.ActionType.fullLoad,
@@ -1205,7 +1205,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEData(ChargingPool         ChargingPool,
                          WWCP.ActionType      ActionType         = WWCP.ActionType.fullLoad,
@@ -1251,7 +1251,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEData(IEnumerable<ChargingPool>  ChargingPools,
                          WWCP.ActionType            ActionType         = WWCP.ActionType.fullLoad,
@@ -1298,7 +1298,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEData(ChargingStationOperator         EVSEOperator,
                          WWCP.ActionType      ActionType         = WWCP.ActionType.fullLoad,
@@ -1344,7 +1344,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEData(IEnumerable<ChargingStationOperator>  EVSEOperators,
                          WWCP.ActionType            ActionType         = WWCP.ActionType.fullLoad,
@@ -1392,7 +1392,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEData(RoamingNetwork       RoamingNetwork,
                          WWCP.ActionType      ActionType         = WWCP.ActionType.fullLoad,
@@ -1441,9 +1441,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
-            PushEVSEStatus(ILookup<ChargingStationOperator, EVSEStatus>  GroupedEVSEStatus,
+            PushEVSEStatus(ILookup<ChargingStationOperator, WWCP.EVSEStatus>  GroupedEVSEStatus,
                            WWCP.ActionType                               ActionType         = WWCP.ActionType.update,
 
                            DateTime?                                     Timestamp          = null,
@@ -1472,7 +1472,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Get effective number of EVSE status to upload
 
-            Acknowledgement result = null;
+            WWCP.Acknowledgement result = null;
 
             var _NumberOfEVSEStatus  = GroupedEVSEStatus.
                                           Where     (group => group.Key != null).
@@ -1552,18 +1552,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 {
 
                     if (response.Content.Result == true)
-                        result = new Acknowledgement(ResultType.True,
+                        result = new WWCP.Acknowledgement(ResultType.True,
                                                      response.Content.StatusCode.Description,
                                                      Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
 
                     else
-                        result = new Acknowledgement(ResultType.False,
+                        result = new WWCP.Acknowledgement(ResultType.False,
                                                      response.Content.StatusCode.Description,
                                                      Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
 
                 }
                 else
-                    result = new Acknowledgement(ResultType.False,
+                    result = new WWCP.Acknowledgement(ResultType.False,
                                                  response.HTTPStatusCode.ToString(),
                                                  response.HTTPBody != null
                                                      ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
@@ -1572,7 +1572,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
 
             else
-                result = new Acknowledgement(ResultType.NoOperation);
+                result = new WWCP.Acknowledgement(ResultType.NoOperation);
 
 
             #region Send OnEVSEStatusPushed event
@@ -1621,9 +1621,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
-            PushEVSEStatus(EVSEStatus          EVSEStatus,
+            PushEVSEStatus(WWCP.EVSEStatus          EVSEStatus,
                            WWCP.ActionType     ActionType         = WWCP.ActionType.update,
 
                            DateTime?           Timestamp          = null,
@@ -1640,7 +1640,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEStatus(new EVSEStatus[] { EVSEStatus },
+            return await PushEVSEStatus(new WWCP.EVSEStatus[] { EVSEStatus },
                                         ActionType,
 
                                         Timestamp,
@@ -1664,9 +1664,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
-            PushEVSEStatus(IEnumerable<EVSEStatus>  EVSEStatus,
+            PushEVSEStatus(IEnumerable<WWCP.EVSEStatus>  EVSEStatus,
                            WWCP.ActionType          ActionType         = WWCP.ActionType.update,
 
                            DateTime?                Timestamp          = null,
@@ -1702,7 +1702,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                             EventTrackingId,
                                             RequestTimeout);
 
-            return new Acknowledgement(ResultType.True);
+            return new WWCP.Acknowledgement(ResultType.True);
 
         }
 
@@ -1721,7 +1721,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(EVSE                 EVSE,
                            WWCP.ActionType      ActionType         = WWCP.ActionType.update,
@@ -1742,9 +1742,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
             if (IncludeEVSEs != null && !IncludeEVSEs(EVSE))
-                return new Acknowledgement(ResultType.NoOperation);
+                return new WWCP.Acknowledgement(ResultType.NoOperation);
 
-            return await PushEVSEStatus(EVSEStatus.Snapshot(EVSE),
+            return await PushEVSEStatus(WWCP.EVSEStatus.Snapshot(EVSE),
                                         ActionType,
 
                                         Timestamp,
@@ -1769,7 +1769,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(IEnumerable<EVSE>    EVSEs,
                            WWCP.ActionType      ActionType         = WWCP.ActionType.update,
@@ -1794,7 +1794,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
             if (_EVSEs.Length > 0)
-                return await PushEVSEStatus(EVSEs.Select(evse => EVSEStatus.Snapshot(evse)),
+                return await PushEVSEStatus(EVSEs.Select(evse => WWCP.EVSEStatus.Snapshot(evse)),
                                             ActionType,
 
                                             Timestamp,
@@ -1802,7 +1802,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                             EventTrackingId,
                                             RequestTimeout);
 
-            return new Acknowledgement(ResultType.NoOperation);
+            return new WWCP.Acknowledgement(ResultType.NoOperation);
 
         }
 
@@ -1821,7 +1821,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(ChargingStation      ChargingStation,
                            WWCP.ActionType      ActionType         = WWCP.ActionType.update,
@@ -1844,7 +1844,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             return await PushEVSEStatus((IncludeEVSEs != null
                                              ? ChargingStation.EVSEs.Where(evse => IncludeEVSEs(evse))
                                              : ChargingStation.EVSEs).
-                                             Select(evse => EVSEStatus.Snapshot(evse)),
+                                             Select(evse => WWCP.EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -1869,7 +1869,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(IEnumerable<ChargingStation>  ChargingStations,
                            WWCP.ActionType               ActionType         = WWCP.ActionType.update,
@@ -1892,7 +1892,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             return await PushEVSEStatus((IncludeEVSEs != null
                                             ? ChargingStations.SelectMany(station => station.EVSEs.Where(evse => IncludeEVSEs(evse)))
                                             : ChargingStations.SelectMany(station => station.EVSEs)).
-                                            Select(evse => EVSEStatus.Snapshot(evse)),
+                                            Select(evse => WWCP.EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -1917,7 +1917,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(ChargingPool         ChargingPool,
                            WWCP.ActionType      ActionType         = WWCP.ActionType.update,
@@ -1940,7 +1940,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             return await PushEVSEStatus((IncludeEVSEs != null
                                             ? ChargingPool.EVSEs.Where(evse => IncludeEVSEs(evse))
                                             : ChargingPool.EVSEs).
-                                            Select(evse => EVSEStatus.Snapshot(evse)),
+                                            Select(evse => WWCP.EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -1965,7 +1965,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(IEnumerable<ChargingPool>  ChargingPools,
                            WWCP.ActionType            ActionType         = WWCP.ActionType.update,
@@ -1991,7 +1991,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                           Where(evse => IncludeEVSEs(evse)))
                                             : ChargingPools.SelectMany(pool    => pool.   ChargingStations).
                                                             SelectMany(station => station.EVSEs)).
-                                            Select(evse => EVSEStatus.Snapshot(evse)),
+                                            Select(evse => WWCP.EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -2016,7 +2016,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(ChargingStationOperator         EVSEOperator,
                            WWCP.ActionType      ActionType         = WWCP.ActionType.update,
@@ -2039,7 +2039,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             return await PushEVSEStatus((IncludeEVSEs != null
                                             ? EVSEOperator.EVSEs.Where(evse => IncludeEVSEs(evse))
                                             : EVSEOperator.EVSEs).
-                                            Select(evse => EVSEStatus.Snapshot(evse)),
+                                            Select(evse => WWCP.EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -2064,7 +2064,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(IEnumerable<ChargingStationOperator>  EVSEOperators,
                            WWCP.ActionType            ActionType         = WWCP.ActionType.update,
@@ -2092,7 +2092,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                             : EVSEOperators.SelectMany(evseoperator => evseoperator.ChargingPools).
                                                             SelectMany(pool         => pool.        ChargingStations).
                                                             SelectMany(station      => station.     EVSEs)).
-                                            Select(evse => EVSEStatus.Snapshot(evse)),
+                                            Select(evse => WWCP.EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,
@@ -2117,7 +2117,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<Acknowledgement>
+        public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(RoamingNetwork       RoamingNetwork,
                            WWCP.ActionType      ActionType         = WWCP.ActionType.update,
@@ -2140,7 +2140,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             return await PushEVSEStatus((IncludeEVSEs != null
                                             ? RoamingNetwork.EVSEs.Where(evse => IncludeEVSEs(evse))
                                             : RoamingNetwork.EVSEs).
-                                            Select(evse => EVSEStatus.Snapshot(evse)),
+                                            Select(evse => WWCP.EVSEStatus.Snapshot(evse)),
                                         ActionType,
 
                                         Timestamp,

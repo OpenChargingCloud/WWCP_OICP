@@ -19,7 +19,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The current status of an OICP v2.0 Electric Vehicle Supply Equipment.
+    /// The current dynamic status of an OICP Electric Vehicle Supply Equipment.
     /// </summary>
     public enum EVSEStatusType
     {
