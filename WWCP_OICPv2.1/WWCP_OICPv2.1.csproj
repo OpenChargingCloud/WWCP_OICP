@@ -7,8 +7,8 @@
     <ProjectGuid>{A01E9361-39C7-4705-9173-7CEA79364DD0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WWCP_OICPv2_1</RootNamespace>
-    <AssemblyName>WWCP_OICPv2_1</AssemblyName>
+    <RootNamespace>org.GraphDefined.WWCP.OICPv2_1</RootNamespace>
+    <AssemblyName>org.GraphDefined.WWCP.OICPv2_1</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -79,7 +79,7 @@
     <Compile Include="IO\SOAP.cs" />
     <Compile Include="MobileClient\MobileClient.cs" />
     <Compile Include="MobileClient\MobileClient_XMLMethods.cs" />
-    <Compile Include="Objects\Data\ActionType.cs" />
+    <Compile Include="Objects\Data\ActionTypes.cs" />
     <Compile Include="Objects\Data\ChargingFacilities.cs" />
     <Compile Include="Objects\Data\PlugTypes.cs" />
     <Compile Include="Objects\Data\ChargingModes.cs" />
@@ -87,9 +87,9 @@
     <Compile Include="Objects\Data\ValueAddedServices.cs" />
     <Compile Include="Objects\Data\AuthenticationModes.cs" />
     <Compile Include="Objects\Data\AuthorizationIdentification.cs" />
-    <Compile Include="Objects\Data\AuthorizationStatusType.cs" />
+    <Compile Include="Objects\Data\AuthorizationStatusTypes.cs" />
     <Compile Include="Objects\Data\eMAIdWithPIN.cs" />
-    <Compile Include="Objects\Data\EVSEStatusType.cs" />
+    <Compile Include="Objects\Data\EVSEStatusTypes.cs" />
     <Compile Include="Objects\Data\GeoCoordinatesResponseFormatTypes.cs" />
     <Compile Include="IO\OICPMapper.cs" />
     <Compile Include="IO\XMLMethods.cs" />

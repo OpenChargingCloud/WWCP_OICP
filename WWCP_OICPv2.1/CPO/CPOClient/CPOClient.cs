@@ -61,9 +61,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The attached OICP CPO client (HTTP/SOAP client) logger.
         /// </summary>
-        public CPOClientLogger                   Logger                       { get; }
+        public CPOClientLogger                              Logger                       { get; }
 
-        public RoamingNetwork                    RoamingNetwork               { get; }
+        public RoamingNetwork                               RoamingNetwork               { get; }
 
         public ChargingStationOperatorNameSelectorDelegate  DefaultOperatorNameSelector  { get; }
 
@@ -219,7 +219,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
-        #region CPOClient(ClientId, Hostname, ..., LoggingContext = EMPClientLogger.DefaultContext, ...)
+        #region CPOClient(ClientId, Hostname, ..., LoggingContext = CPOClientLogger.DefaultContext, ...)
 
         /// <summary>
         /// Create a new OICP CPO Client.
@@ -356,7 +356,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(ILookup<ChargingStationOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
-                         ActionType                                        OICPAction            = ActionType.fullLoad,
+                         ActionTypes                                        OICPAction            = ActionTypes.fullLoad,
                          ChargingStationOperator                           Operator              = null,
                          ChargingStationOperatorNameSelectorDelegate       OperatorNameSelector  = null,
 
@@ -458,8 +458,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
                                                          return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                                          new Acknowledgement(StatusCodes.SystemError),
-                                                                                                          IsFault: true);
+                                                                                                  new Acknowledgement(StatusCodes.SystemError),
+                                                                                                  IsFault: true);
 
                                                      },
 
@@ -472,10 +472,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendHTTPError(timestamp, this, httpresponse);
 
                                                          return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                                          new Acknowledgement(StatusCodes.SystemError,
-                                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                          IsFault: true);
+                                                                                                  new Acknowledgement(StatusCodes.SystemError,
+                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                  IsFault: true);
 
                                                      },
 
@@ -488,9 +488,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendException(timestamp, sender, exception);
 
                                                          return HTTPResponse<Acknowledgement>.ExceptionThrown(new Acknowledgement(StatusCodes.SystemError,
-                                                                                                                                                  exception.Message,
-                                                                                                                                                  exception.StackTrace),
-                                                                                                                      Exception:  exception);
+                                                                                                                                  exception.Message,
+                                                                                                                                  exception.StackTrace),
+                                                                                                              Exception:  exception);
 
                                                      }
 
@@ -557,7 +557,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(EVSEDataRecord                               EVSEDataRecord,
-                         ActionType                                   OICPAction              = ActionType.insert,
+                         ActionTypes                                  OICPAction              = ActionTypes.insert,
                          ChargingStationOperator                      Operator                = null,
                          ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector    = null,
                          Func<EVSEDataRecord, Boolean>                IncludeEVSEDataRecords  = null,
@@ -599,7 +599,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(IEnumerable<EVSEDataRecord>                  EVSEDataRecords,
-                         ActionType                                   OICPAction              = ActionType.fullLoad,
+                         ActionTypes                                  OICPAction              = ActionTypes.fullLoad,
                          ChargingStationOperator                      Operator                = null,
                          ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector    = null,
                          Func<EVSEDataRecord, Boolean>                IncludeEVSEDataRecords  = null,
@@ -652,7 +652,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            PushEVSEData(ActionType               OICPAction,
+            PushEVSEData(ActionTypes              OICPAction,
                          params EVSEDataRecord[]  EVSEDataRecords)
 
 
@@ -679,7 +679,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(ILookup<ChargingStationOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
-                           ActionType                                          OICPAction            = ActionType.update,
+                           ActionTypes                                         OICPAction            = ActionTypes.update,
                            ChargingStationOperator                             Operator              = null,
                            ChargingStationOperatorNameSelectorDelegate         OperatorNameSelector  = null,
 
@@ -780,10 +780,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                           SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                          return new HTTPResponse<Acknowledgement>(
-                                                              httpresponse,
-                                                              new Acknowledgement(StatusCodes.SystemError),
-                                                              IsFault: true);
+                                                          return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                   new Acknowledgement(StatusCodes.SystemError),
+                                                                                                   IsFault: true);
 
                                                       },
 
@@ -796,10 +795,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           SendHTTPError(timestamp, this, httpresponse);
 
                                                           return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                                           new Acknowledgement(StatusCodes.SystemError,
-                                                                                                                                       httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                       httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                           IsFault: true);
+                                                                                                   new Acknowledgement(StatusCodes.SystemError,
+                                                                                                                       httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                       httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                   IsFault: true);
 
                                                       },
 
@@ -812,9 +811,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           SendException(timestamp, sender, exception);
 
                                                           return HTTPResponse<Acknowledgement>.ExceptionThrown(new Acknowledgement(StatusCodes.SystemError,
-                                                                                                                                                   exception.Message,
-                                                                                                                                                   exception.StackTrace),
-                                                                                                                       Exception: exception);
+                                                                                                                                   exception.Message,
+                                                                                                                                   exception.StackTrace),
+                                                                                                               Exception: exception);
 
                                                       }
 
@@ -879,7 +878,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(EVSEStatusRecord                             EVSEStatusRecord,
-                           ActionType                                   OICPAction                = ActionType.insert,
+                           ActionTypes                                  OICPAction                = ActionTypes.insert,
                            ChargingStationOperator                      Operator                  = null,
                            ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector      = null,
                            IncludeEVSEStatusRecordsDelegate             IncludeEVSEStatusRecords  = null,
@@ -921,7 +920,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(IEnumerable<EVSEStatusRecord>                EVSEStatusRecords,
-                           ActionType                                   OICPAction                = ActionType.update,
+                           ActionTypes                                  OICPAction                = ActionTypes.update,
                            ChargingStationOperator                      Operator                  = null,
                            ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector      = null,
                            IncludeEVSEStatusRecordsDelegate             IncludeEVSEStatusRecords  = null,
@@ -973,7 +972,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSEStatusRecords">An array of EVSE status records.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            PushEVSEStatus(ActionType                 OICPAction,
+            PushEVSEStatus(ActionTypes                OICPAction,
                            params EVSEStatusRecord[]  EVSEStatusRecords)
 
 
@@ -1334,9 +1333,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
                                                          return new HTTPResponse<AuthorizationStop>(httpresponse,
-                                                                                                            new AuthorizationStop(StatusCodes.DataError,
-                                                                                                                                          httpresponse.Content.ToString()),
-                                                                                                            IsFault: true);
+                                                                                                    new AuthorizationStop(StatusCodes.DataError,
+                                                                                                                          httpresponse.Content.ToString()),
+                                                                                                    IsFault: true);
 
                                                      },
 
@@ -1349,10 +1348,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendHTTPError(timestamp, this, httpresponse);
 
                                                          return new HTTPResponse<AuthorizationStop>(httpresponse,
-                                                                                                            new AuthorizationStop(StatusCodes.DataError,
-                                                                                                                                          httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                          httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                            IsFault: true);
+                                                                                                    new AuthorizationStop(StatusCodes.DataError,
+                                                                                                                          httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                          httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                    IsFault: true);
 
                                                      },
 
@@ -1365,9 +1364,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendException(timestamp, sender, exception);
 
                                                          return HTTPResponse<AuthorizationStop>.ExceptionThrown(new AuthorizationStop(StatusCodes.SystemError,
-                                                                                                                                                      exception.Message,
-                                                                                                                                                      exception.StackTrace),
-                                                                                                                        Exception: exception);
+                                                                                                                                      exception.Message,
+                                                                                                                                      exception.StackTrace),
+                                                                                                                Exception: exception);
 
                                                      }
 
@@ -1547,9 +1546,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
                                                          return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                                          new Acknowledgement(StatusCodes.SystemError,
-                                                                                                                                      httpresponse.Content.ToString()),
-                                                                                                          IsFault: true);
+                                                                                                  new Acknowledgement(StatusCodes.SystemError,
+                                                                                                                      httpresponse.Content.ToString()),
+                                                                                                  IsFault: true);
 
                                                      },
 
@@ -1564,10 +1563,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendHTTPError(timestamp, this, httpresponse);
 
                                                          return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                                          new Acknowledgement(StatusCodes.SystemError,
-                                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                          IsFault: true);
+                                                                                                  new Acknowledgement(StatusCodes.SystemError,
+                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                  IsFault: true);
 
                                                      },
 
@@ -1582,10 +1581,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendException(timestamp, sender, exception);
 
                                                          return HTTPResponse<Acknowledgement>.ExceptionThrown(new Acknowledgement(StatusCodes.ServiceNotAvailable,
-                                                                                                                                                  exception.Message,
-                                                                                                                                                  exception.StackTrace,
-                                                                                                                                                  ChargeDetailRecord.SessionId),
-                                                                                                                      Exception:  exception);
+                                                                                                                                  exception.Message,
+                                                                                                                                  exception.StackTrace,
+                                                                                                                                  ChargeDetailRecord.SessionId),
+                                                                                                              Exception:  exception);
 
                                                      }
 
@@ -1719,7 +1718,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendSOAPError(timestamp, this, httpresponse.Content);
 
                                                          return new HTTPResponse<AuthenticationData>(httpresponse,
-                                                                                                             IsFault: true);
+                                                                                                     IsFault: true);
 
                                                      },
 
@@ -1732,7 +1731,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendHTTPError(timestamp, this, httpresponse);
 
                                                          return new HTTPResponse<AuthenticationData>(httpresponse,
-                                                                                                             IsFault: true);
+                                                                                                     IsFault: true);
 
                                                      },
 
@@ -1745,9 +1744,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          SendException(timestamp, sender, exception);
 
                                                          return HTTPResponse<AuthenticationData>.ExceptionThrown(new AuthenticationData(StatusCodes.SystemError,
-                                                                                                                                                        exception.Message,
-                                                                                                                                                        exception.StackTrace),
-                                                                                                                         Exception: exception);
+                                                                                                                                        exception.Message,
+                                                                                                                                        exception.StackTrace),
+                                                                                                                 Exception: exception);
 
                                                      }
 

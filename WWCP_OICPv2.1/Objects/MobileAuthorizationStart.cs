@@ -39,7 +39,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The authorization status, e.g. "Authorized".
         /// </summary>
-        public AuthorizationStatusType  AuthorizationStatus     { get; }
+        public AuthorizationStatusTypes  AuthorizationStatus     { get; }
 
         /// <summary>
         /// The geo coordinate of the EVSE.
@@ -93,7 +93,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="StatusCode">An optional status code for the mobile authorization request.</param>
         /// <param name="TermsOfUse">An optional multilingual term-of-use text.</param>
         /// <param name="AdditionalInfo">Optional additional information.</param>
-        public MobileAuthorizationStart(AuthorizationStatusType  AuthorizationStatus,
+        public MobileAuthorizationStart(AuthorizationStatusTypes  AuthorizationStatus,
                                         GeoCoordinate            GeoCoordinates,
                                         I18NString               ChargingStationName  = null,
                                         Address                  Address              = null,
@@ -134,7 +134,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         String       AdditionalInfo  = null)
         {
 
-            this.AuthorizationStatus  = AuthorizationStatusType.NotAuthorized;
+            this.AuthorizationStatus  = AuthorizationStatusTypes.NotAuthorized;
             this.StatusCode           = new StatusCode(StatusCode, Description, AdditionalInfo);
             this.GeoCoordinates       = GeoCoordinate.Zero;
 
@@ -256,7 +256,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             MobileAuthorizationStartXML.UseValue(OICPNS.MobileAuthorization + "AdditionalInfo",        v => AdditionalInfo.Add(Languages.de, v));
             MobileAuthorizationStartXML.UseValue(OICPNS.MobileAuthorization + "EnAdditionalInfo",      v => AdditionalInfo.Add(Languages.en, v));
 
-            return new MobileAuthorizationStart((AuthorizationStatusType) Enum.Parse(typeof(AuthorizationStatusType), MobileAuthorizationStartXML.ElementValueOrFail(OICPNS.MobileAuthorization + "AuthorizationStatus")),
+            return new MobileAuthorizationStart((AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), MobileAuthorizationStartXML.ElementValueOrFail(OICPNS.MobileAuthorization + "AuthorizationStatus")),
                                                 GeoCoordinates:       XMLMethods.ParseGeoCoordinatesXML(MobileAuthorizationStartXML.ElementOrFail(OICPNS.MobileAuthorization + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
                                                 ChargingStationName:  ChargingStationName,
                                                 Address:              MobileAuthorizationStartXML.MapElement       (OICPNS.MobileAuthorization + "Address",    XMLMethods.ParseAddressXML, null),

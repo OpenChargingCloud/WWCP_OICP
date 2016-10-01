@@ -112,7 +112,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          eMobilityProvider_Id              ProviderId,
                                                          GeoCoordinate        SearchCenter,
                                                          Double               DistanceKM,
-                                                         EVSEStatusType?      EVSEStatusFilter,
+                                                         EVSEStatusTypes?      EVSEStatusFilter,
                                                          TimeSpan?            RequestTimeout);
 
     /// <summary>
@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                          eMobilityProvider_Id              ProviderId,
                                                          GeoCoordinate        SearchCenter,
                                                          Double               DistanceKM,
-                                                         EVSEStatusType?      EVSEStatusFilter,
+                                                         EVSEStatusTypes?      EVSEStatusFilter,
                                                          TimeSpan?            RequestTimeout,
                                                          EVSEStatus   Result,
                                                          TimeSpan             Duration);
@@ -172,7 +172,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                  String                                   SenderId,
                                                                  EventTracking_Id                         EventTrackingId,
                                                                  IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
-                                                                 ActionType                               OICPAction,
+                                                                 ActionTypes                               OICPAction,
                                                                  TimeSpan?                                RequestTimeout);
 
     /// <summary>
@@ -183,7 +183,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                  String                                   SenderId,
                                                                  EventTracking_Id                         EventTrackingId,
                                                                  IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
-                                                                 ActionType                               OICPAction,
+                                                                 ActionTypes                               OICPAction,
                                                                  TimeSpan?                                RequestTimeout,
                                                                  Acknowledgement                  Result,
                                                                  TimeSpan                                 Duration);

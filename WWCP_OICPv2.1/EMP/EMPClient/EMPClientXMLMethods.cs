@@ -201,7 +201,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static XElement PullEVSEStatusRequestXML(eMobilityProvider_Id          ProviderId,
                                                         GeoCoordinate    SearchCenter  = null,
                                                         Double           DistanceKM    = 0.0,
-                                                        EVSEStatusType?  EVSEStatus    = null)
+                                                        EVSEStatusTypes?  EVSEStatus    = null)
         {
 
             #region Documentation
@@ -516,7 +516,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
         public static XElement PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
-                                                      ActionType                               OICPAction  = ActionType.fullLoad)
+                                                      ActionTypes                               OICPAction  = ActionTypes.fullLoad)
         {
 
             #region Documentation

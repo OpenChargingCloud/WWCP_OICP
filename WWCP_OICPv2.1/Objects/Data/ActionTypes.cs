@@ -19,20 +19,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The result of an authorization.
+    /// The type of data management action when updating remote data.
     /// </summary>
-    public enum AuthorizationStatusType
+    public enum ActionTypes
     {
 
         /// <summary>
-        /// Authorized.
+        /// Replace all server-side data with the new data.
         /// </summary>
-        Authorized,
+        fullLoad,
 
         /// <summary>
-        /// Not authorized.
+        /// Update the server-side data with the given data.
+        /// Will act like an 'upsert' for dynamic EVSE states!
         /// </summary>
-        NotAuthorized
+        update,
+
+        /// <summary>
+        /// Insert the given data into the server-side data.
+        /// Will fail if it already exists!
+        /// </summary>
+        insert,
+
+        /// <summary>
+        /// Delete the given data from the server-side data set.
+        /// </summary>
+        delete
 
     }
 

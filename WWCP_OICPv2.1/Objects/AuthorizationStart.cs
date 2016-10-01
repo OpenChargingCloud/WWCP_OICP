@@ -55,7 +55,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The authorization status, e.g. "Authorized".
         /// </summary>
-        public AuthorizationStatusType                   AuthorizationStatus                 { get; }
+        public AuthorizationStatusTypes                   AuthorizationStatus                 { get; }
 
         /// <summary>
         /// The authorization status code.
@@ -82,7 +82,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
         /// <param name="StatusCode">An optional status code.</param>
         /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
-        private AuthorizationStart(AuthorizationStatusType                   AuthorizationStatus,
+        private AuthorizationStart(AuthorizationStatusTypes                   AuthorizationStatus,
                                            ChargingSession_Id                        SessionId                         = null,
                                            ChargingSession_Id                        PartnerSessionId                  = null,
                                            eMobilityProvider_Id                      ProviderId                        = null,
@@ -119,7 +119,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                           String                                    StatusCodeAdditionalInfo          = null,
                                           IEnumerable<AuthorizationIdentification>  AuthorizationStopIdentifications  = null)
 
-            : this(AuthorizationStatusType.Authorized,
+            : this(AuthorizationStatusTypes.Authorized,
                    SessionId,
                    PartnerSessionId,
                    ProviderId,
@@ -150,7 +150,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                           ChargingSession_Id    PartnerSessionId          = null,
                                           eMobilityProvider_Id  ProviderId                = null)
 
-            : this(AuthorizationStatusType.NotAuthorized,
+            : this(AuthorizationStatusTypes.NotAuthorized,
                    SessionId,
                    PartnerSessionId,
                    ProviderId,
@@ -319,7 +319,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 throw new ArgumentException("Invalid eRoamingAuthorizationStart XML");
 
             return new AuthorizationStart(
-                           (AuthorizationStatusType) Enum.Parse(typeof(AuthorizationStatusType), AuthorizationStartXML.ElementValueOrFail(OICPNS.Authorization + "AuthorizationStatus")),
+                           (AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), AuthorizationStartXML.ElementValueOrFail(OICPNS.Authorization + "AuthorizationStatus")),
                            AuthorizationStartXML.MapValueOrNull(OICPNS.Authorization + "SessionID",                        ChargingSession_Id.         Parse),
                            AuthorizationStartXML.MapValueOrNull(OICPNS.Authorization + "PartnerSessionID",                 ChargingSession_Id.         Parse),
                            AuthorizationStartXML.MapValueOrNull(OICPNS.Authorization + "ProviderID",                       eMobilityProvider_Id.                    Parse),

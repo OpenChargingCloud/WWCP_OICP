@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Operator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
         /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         public static XElement PushEVSEDataXML(ILookup<ChargingStationOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
-                                               ActionType                             OICPAction            = ActionType.fullLoad,
+                                               ActionTypes                             OICPAction            = ActionTypes.fullLoad,
                                                ChargingStationOperator                           Operator              = null,
                                                ChargingStationOperatorNameSelectorDelegate       OperatorNameSelector  = null)
 
@@ -133,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Operator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
         /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         public static XElement PushEVSEStatusXML(ILookup<ChargingStationOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
-                                                 ActionType                               OICPAction            = ActionType.update,
+                                                 ActionTypes                               OICPAction            = ActionTypes.update,
                                                  ChargingStationOperator                             Operator              = null,
                                                  ChargingStationOperatorNameSelectorDelegate         OperatorNameSelector  = null)
         {

@@ -1021,7 +1021,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             PullEVSEStatus(GeoCoordinate       SearchCenter       = null,
                            Double              DistanceKM         = 0.0,
-                           EVSEStatusType?     EVSEStatusFilter   = null,
+                           EVSEStatusTypes?     EVSEStatusFilter   = null,
                            eMobilityProvider_Id             ProviderId         = null,
 
                            DateTime?           Timestamp          = null,
@@ -1133,7 +1133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public async Task<Acknowledgement>
 
             PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
-                                   ActionType                               OICPAction         = ActionType.fullLoad,
+                                   ActionTypes                               OICPAction         = ActionTypes.fullLoad,
 
                                    DateTime?                                Timestamp          = null,
                                    CancellationToken?                       CancellationToken  = null,
@@ -1180,7 +1180,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public async Task<Acknowledgement>
 
             PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
-                                   ActionType                                OICPAction         = ActionType.fullLoad,
+                                   ActionTypes                                OICPAction         = ActionTypes.fullLoad,
                                    eMobilityProvider_Id                                   ProviderId         = null,
 
                                    DateTime?                                 Timestamp          = null,

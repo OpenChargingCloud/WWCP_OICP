@@ -2364,7 +2364,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
                 response.Content                     != null              &&
-                response.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
             {
 
                 result = AuthStartResult.Authorized(AuthorizatorId,
@@ -2514,7 +2514,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
                 response.Content                     != null              &&
-                response.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
             {
 
                 result = AuthStartEVSEResult.Authorized(AuthorizatorId,
@@ -2777,7 +2777,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
                 response.Content                     != null              &&
-                response.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
             {
 
                 result = AuthStopResult.Authorized(AuthorizatorId,
@@ -2924,7 +2924,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
                 response.Content                     != null              &&
-                response.Content.AuthorizationStatus == AuthorizationStatusType.Authorized)
+                response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
             {
 
                 result = AuthStopEVSEResult.Authorized(AuthorizatorId,

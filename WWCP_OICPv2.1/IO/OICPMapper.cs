@@ -91,25 +91,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEStatus">An OICP v2.0 EVSE status.</param>
         /// <returns>The corresponding WWCP EVSE status.</returns>
-        public static WWCP.EVSEStatusType AsWWCPEVSEStatus(this EVSEStatusType EVSEStatus)
+        public static WWCP.EVSEStatusType AsWWCPEVSEStatus(this EVSEStatusTypes EVSEStatus)
         {
 
             switch (EVSEStatus)
             {
 
-                case EVSEStatusType.Available:
+                case EVSEStatusTypes.Available:
                     return WWCP.EVSEStatusType.Available;
 
-                case EVSEStatusType.Reserved:
+                case EVSEStatusTypes.Reserved:
                     return WWCP.EVSEStatusType.Reserved;
 
-                case EVSEStatusType.Occupied:
+                case EVSEStatusTypes.Occupied:
                     return WWCP.EVSEStatusType.Charging;
 
-                case EVSEStatusType.OutOfService:
+                case EVSEStatusTypes.OutOfService:
                     return WWCP.EVSEStatusType.OutOfService;
 
-                case EVSEStatusType.EvseNotFound:
+                case EVSEStatusTypes.EvseNotFound:
                     return WWCP.EVSEStatusType.UnknownEVSE;
 
                 default:
@@ -128,29 +128,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEStatus">An WWCP EVSE status.</param>
         /// <returns>The corresponding OICP EVSE status.</returns>
-        public static EVSEStatusType AsOICPEVSEStatus(this WWCP.EVSEStatusType EVSEStatus)
+        public static EVSEStatusTypes AsOICPEVSEStatus(this WWCP.EVSEStatusType EVSEStatus)
         {
 
             switch (EVSEStatus)
             {
 
                 case WWCP.EVSEStatusType.Available:
-                    return EVSEStatusType.Available;
+                    return EVSEStatusTypes.Available;
 
                 case WWCP.EVSEStatusType.Reserved:
-                    return EVSEStatusType.Reserved;
+                    return EVSEStatusTypes.Reserved;
 
                 case WWCP.EVSEStatusType.Charging:
-                    return EVSEStatusType.Occupied;
+                    return EVSEStatusTypes.Occupied;
 
                 case WWCP.EVSEStatusType.OutOfService:
-                    return EVSEStatusType.OutOfService;
+                    return EVSEStatusTypes.OutOfService;
 
                 case WWCP.EVSEStatusType.UnknownEVSE:
-                    return EVSEStatusType.EvseNotFound;
+                    return EVSEStatusTypes.EvseNotFound;
 
                 default:
-                    return EVSEStatusType.Unknown;
+                    return EVSEStatusTypes.Unknown;
 
             }
 
@@ -194,22 +194,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ActionType">An OICP v2.0 action type.</param>
         /// <returns>The corresponding WWCP action type.</returns>
-        public static WWCP.ActionType AsWWCPActionType(this ActionType ActionType)
+        public static WWCP.ActionType AsWWCPActionType(this ActionTypes ActionType)
         {
 
             switch (ActionType)
             {
 
-                case ActionType.fullLoad:
+                case ActionTypes.fullLoad:
                     return WWCP.ActionType.fullLoad;
 
-                case ActionType.update:
+                case ActionTypes.update:
                     return WWCP.ActionType.update;
 
-                case ActionType.insert:
+                case ActionTypes.insert:
                     return WWCP.ActionType.insert;
 
-                case ActionType.delete:
+                case ActionTypes.delete:
                     return WWCP.ActionType.delete;
 
                 default:
@@ -228,26 +228,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ActionType">An WWCP action type.</param>
         /// <returns>The corresponding OICP v2.0 action type.</returns>
-        public static ActionType AsOICPActionType(this WWCP.ActionType ActionType)
+        public static ActionTypes AsOICPActionType(this WWCP.ActionType ActionType)
         {
 
             switch (ActionType)
             {
 
                 case WWCP.ActionType.fullLoad:
-                    return OICPv2_1.ActionType.fullLoad;
+                    return OICPv2_1.ActionTypes.fullLoad;
 
                 case WWCP.ActionType.update:
-                    return OICPv2_1.ActionType.update;
+                    return OICPv2_1.ActionTypes.update;
 
                 case WWCP.ActionType.insert:
-                    return OICPv2_1.ActionType.insert;
+                    return OICPv2_1.ActionTypes.insert;
 
                 case WWCP.ActionType.delete:
-                    return OICPv2_1.ActionType.delete;
+                    return OICPv2_1.ActionTypes.delete;
 
                 default:
-                    return OICPv2_1.ActionType.fullLoad;
+                    return OICPv2_1.ActionTypes.fullLoad;
 
             }
 

@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\..\OpenChargingCloud\test.charging.cloud\libs\WWCP_Core\WWCP.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\WWCP_Core\WWCP.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Debug\org.GraphDefined.WWCP.OICPv2_1.WebAPI.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -82,7 +82,7 @@
     </ProjectReference>
     <ProjectReference Include="..\WWCP_OICPv2.1\WWCP_OICPv2.1.csproj">
       <Project>{a01e9361-39c7-4705-9173-7cea79364dd0}</Project>
-      <Name>WWCP_OICPv2_1</Name>
+      <Name>WWCP_OICPv2.1</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

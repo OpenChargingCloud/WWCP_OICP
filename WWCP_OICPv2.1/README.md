@@ -1,4 +1,4 @@
-WWCP OICP v2.0-Bindings
+WWCP OICP v2.1-Bindings
 =======================
 
 This software will allow the communication between WWCP entities and

@@ -802,7 +802,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(ILookup<ChargingStationOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
-                         ActionType                                        OICPAction            = ActionType.fullLoad,
+                         ActionTypes                                        OICPAction            = ActionTypes.fullLoad,
                          ChargingStationOperator                           Operator              = null,
                          ChargingStationOperatorNameSelectorDelegate       OperatorNameSelector  = null,
 
@@ -842,7 +842,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(EVSEDataRecord                               EVSEDataRecord,
-                         ActionType                                   OICPAction              = ActionType.insert,
+                         ActionTypes                                   OICPAction              = ActionTypes.insert,
                          ChargingStationOperator                      Operator                = null,
                          ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector    = null,
                          Func<EVSEDataRecord, Boolean>                IncludeEVSEDataRecords  = null,
@@ -884,7 +884,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEData(IEnumerable<EVSEDataRecord>                  EVSEDataRecords,
-                         ActionType                                   OICPAction              = ActionType.fullLoad,
+                         ActionTypes                                   OICPAction              = ActionTypes.fullLoad,
                          ChargingStationOperator                      Operator                = null,
                          ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector    = null,
                          Func<EVSEDataRecord, Boolean>                IncludeEVSEDataRecords  = null,
@@ -917,7 +917,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            PushEVSEData(ActionType               OICPAction,
+            PushEVSEData(ActionTypes               OICPAction,
                          params EVSEDataRecord[]  EVSEDataRecords)
 
 
@@ -944,7 +944,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(ILookup<ChargingStationOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
-                           ActionType                                          OICPAction            = ActionType.fullLoad,
+                           ActionTypes                                          OICPAction            = ActionTypes.fullLoad,
                            ChargingStationOperator                             Operator              = null,
                            ChargingStationOperatorNameSelectorDelegate         OperatorNameSelector  = null,
 
@@ -984,7 +984,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(EVSEStatusRecord                             EVSEStatusRecord,
-                           ActionType                                   OICPAction                = ActionType.insert,
+                           ActionTypes                                   OICPAction                = ActionTypes.insert,
                            ChargingStationOperator                      Operator                  = null,
                            ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector      = null,
                            IncludeEVSEStatusRecordsDelegate             IncludeEVSEStatusRecords  = null,
@@ -1026,7 +1026,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushEVSEStatus(IEnumerable<EVSEStatusRecord>                EVSEStatusRecords,
-                           ActionType                                   OICPAction                = ActionType.fullLoad,
+                           ActionTypes                                   OICPAction                = ActionTypes.fullLoad,
                            ChargingStationOperator                      Operator                  = null,
                            ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector      = null,
                            IncludeEVSEStatusRecordsDelegate             IncludeEVSEStatusRecords  = null,
@@ -1059,7 +1059,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSEStatusRecords">An array of EVSE status records.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            PushEVSEStatus(ActionType                 OICPAction,
+            PushEVSEStatus(ActionTypes                 OICPAction,
                            params EVSEStatusRecord[]  EVSEStatusRecords)
 
 

@@ -46,7 +46,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
 
 
-            if (MobileAuthorizationStart.Content.AuthorizationStatus != AuthorizationStatusType.Authorized)
+            if (MobileAuthorizationStart.Content.AuthorizationStatus != AuthorizationStatusTypes.Authorized)
             {
                 Console.WriteLine(MobileAuthorizationStart.Content.StatusCode.Code);
                 Console.WriteLine(MobileAuthorizationStart.Content.StatusCode.Description);

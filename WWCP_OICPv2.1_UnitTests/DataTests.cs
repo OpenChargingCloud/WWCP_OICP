@@ -86,7 +86,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
             var req1 = HubjectCPO.
 
                           PushEVSEData(EVSEDataRecords,
-                                       ActionType.insert,
+                                       ActionTypes.insert,
                                        IncludeEVSEDataRecords: evse => evse.Id.ToString().StartsWith("DE")).
 
                           ContinueWith(task =>
@@ -152,13 +152,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
         {
 
             var EVSEStatus = new List<EVSEStatusRecord>();
-            EVSEStatus.Add(new EVSEStatusRecord(EVSE_Id.Parse("DE*GEF*E123456789*1"), EVSEStatusType.Available));
-            EVSEStatus.Add(new EVSEStatusRecord(EVSE_Id.Parse("DE*GEF*E123456789*2"), EVSEStatusType.Occupied));
+            EVSEStatus.Add(new EVSEStatusRecord(EVSE_Id.Parse("DE*GEF*E123456789*1"), EVSEStatusTypes.Available));
+            EVSEStatus.Add(new EVSEStatusRecord(EVSE_Id.Parse("DE*GEF*E123456789*2"), EVSEStatusTypes.Occupied));
 
             var req3 = HubjectCPO.
 
                           PushEVSEStatus(EVSEStatus,
-                                         ActionType.insert,
+                                         ActionTypes.insert,
                                          RequestTimeout:  TimeSpan.FromSeconds(120)).
 
                           ContinueWith(task =>
@@ -189,7 +189,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                                          SearchCenter:      new GeoCoordinate(Latitude. Parse(49.731102),
                                                                               Longitude.Parse(10.142533)),
                                          DistanceKM:        100,
-                                         EVSEStatusFilter:  EVSEStatusType.Available,
+                                         EVSEStatusFilter:  EVSEStatusTypes.Available,
                                          RequestTimeout:    TimeSpan.FromSeconds(120)).
 
                           ContinueWith(task =>
@@ -306,7 +306,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
                                            ),
                                            ProviderId:     eMobilityProvider_Id.   Parse("DE*GDF"),
-                                           OICPAction:     ActionType.fullLoad,
+                                           OICPAction:     ActionTypes.fullLoad,
                                            RequestTimeout: TimeSpan.  FromSeconds(120));
 
 

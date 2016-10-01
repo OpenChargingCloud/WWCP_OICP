@@ -44,7 +44,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The current status of an EVSE.
         /// </summary>
-        public EVSEStatusType  Status   { get; }
+        public EVSEStatusTypes  Status   { get; }
 
         #endregion
 
@@ -85,7 +85,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Id">The unique identification of an EVSE.</param>
         /// <param name="Status">The current status of an EVSE.</param>
         public EVSEStatusRecord(EVSE_Id         Id,
-                                EVSEStatusType  Status)
+                                EVSEStatusTypes  Status)
 
         {
 
@@ -114,7 +114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Convert the given key-value-pair into an EVSE status record.
         /// </summary>
-        public static EVSEStatusRecord Parse(KeyValuePair<EVSE_Id, EVSEStatusType> KeyValuePair)
+        public static EVSEStatusRecord Parse(KeyValuePair<EVSE_Id, EVSEStatusTypes> KeyValuePair)
 
             => new EVSEStatusRecord(KeyValuePair.Key, KeyValuePair.Value);
 
@@ -125,9 +125,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Conversion this EVSE status record to a key-value-pair.
         /// </summary>
-        public KeyValuePair<EVSE_Id, EVSEStatusType> ToKeyValuePair()
+        public KeyValuePair<EVSE_Id, EVSEStatusTypes> ToKeyValuePair()
 
-            => new KeyValuePair<EVSE_Id, EVSEStatusType>(Id, Status);
+            => new KeyValuePair<EVSE_Id, EVSEStatusTypes>(Id, Status);
 
         #endregion
 
@@ -165,7 +165,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 return new EVSEStatusRecord(
                     EVSE_Id.Parse(EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseId")),
-                    (EVSEStatusType) Enum.Parse(typeof(EVSEStatusType), EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus"))
+                    (EVSEStatusTypes) Enum.Parse(typeof(EVSEStatusTypes), EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus"))
                 );
 
             }
