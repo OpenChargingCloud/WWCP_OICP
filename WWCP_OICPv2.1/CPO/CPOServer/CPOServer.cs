@@ -204,26 +204,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                          HTTPMethod.GET,
                                          new String[] { "/", URIPrefix + "/" },
                                          HTTPContentType.TEXT_UTF8,
-                                         HTTPDelegate: async Request => {
+                                         HTTPDelegate: Request => {
 
-                                             return new HTTPResponseBuilder(Request) {
+                                             return Task.FromResult(
+                                                 new HTTPResponseBuilder(Request) {
 
-                                                 HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                                 ContentType     = HTTPContentType.TEXT_UTF8,
-                                                 Content         = ("Welcome at " + DefaultHTTPServerName + Environment.NewLine +
-                                                                    "This is a HTTP/SOAP/XML endpoint!" + Environment.NewLine + Environment.NewLine +
-                                                                    "Defined endpoints: " + Environment.NewLine + Environment.NewLine +
-                                                                    SOAPServer.
-                                                                        SOAPDispatchers.
-                                                                        Select(group => " - " + group.Key + Environment.NewLine +
-                                                                                        "   " + group.SelectMany(dispatcher => dispatcher.SOAPDispatches).
-                                                                                                      Select    (dispatch   => dispatch.  Description).
-                                                                                                      AggregateWith(", ")
-                                                                              ).AggregateWith(Environment.NewLine + Environment.NewLine)
-                                                                   ).ToUTF8Bytes(),
-                                                 Connection      = "close"
+                                                     HTTPStatusCode  = HTTPStatusCode.BadGateway,
+                                                     ContentType     = HTTPContentType.TEXT_UTF8,
+                                                     Content         = ("Welcome at " + DefaultHTTPServerName + Environment.NewLine +
+                                                                        "This is a HTTP/SOAP/XML endpoint!" + Environment.NewLine + Environment.NewLine +
+                                                                        "Defined endpoints: " + Environment.NewLine + Environment.NewLine +
+                                                                        SOAPServer.
+                                                                            SOAPDispatchers.
+                                                                            Select(group => " - " + group.Key + Environment.NewLine +
+                                                                                            "   " + group.SelectMany(dispatcher => dispatcher.SOAPDispatches).
+                                                                                                          Select    (dispatch   => dispatch.  Description).
+                                                                                                          AggregateWith(", ")
+                                                                                  ).AggregateWith(Environment.NewLine + Environment.NewLine)
+                                                                       ).ToUTF8Bytes(),
+                                                     Connection      = "close"
 
-                                             };
+                                                 }.AsImmutable());
 
                                          },
                                          AllowReplacement: URIReplacement.Allow);
