@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OICPWebAPI.cs" />
+    <Compile Include="OICPPlusNS.cs" />
     <Compile Include="OICP_XML_IO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Version.cs" />
