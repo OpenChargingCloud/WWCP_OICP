@@ -247,10 +247,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
-                var AcknowledgementXML  = XML.Descendants(OICPNS.CommonTypes + "Acknowledgement").
+                var AcknowledgementXML  = XML.Descendants(OICPNS.CommonTypes + "eRoamingAcknowledgement").
                                               FirstOrDefault();
 
-                if (AcknowledgementXML == null && XML.Name == OICPNS.CommonTypes + "Acknowledgement")
+                if (AcknowledgementXML == null && XML.Name == OICPNS.CommonTypes + "eRoamingAcknowledgement")
                     AcknowledgementXML = XML;
 
                 if (AcknowledgementXML == null)
