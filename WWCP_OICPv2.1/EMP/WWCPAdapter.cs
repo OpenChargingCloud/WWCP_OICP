@@ -1383,15 +1383,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            #region Copy the 'StartTime' value into the PartnerProductId
+            #region Copy the 'ReservationStartTime' value into the PartnerProductId
 
-            if (StartTime.HasValue)
+            if (ReservationStartTime.HasValue)
             {
 
                 if (!PartnerProductIdElements.ContainsKey("S"))
-                    PartnerProductIdElements.Add("S", StartTime.Value.ToIso8601());
+                    PartnerProductIdElements.Add("S", ReservationStartTime.Value.ToIso8601());
                 else
-                    PartnerProductIdElements["S"] = StartTime.Value.ToIso8601();
+                    PartnerProductIdElements["S"] = ReservationStartTime.Value.ToIso8601();
 
             }
 
