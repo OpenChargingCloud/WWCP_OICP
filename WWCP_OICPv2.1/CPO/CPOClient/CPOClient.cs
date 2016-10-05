@@ -1077,6 +1077,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+            //ToDO: Check SessionId: "[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}"
+
 
             if (result == null)
             {

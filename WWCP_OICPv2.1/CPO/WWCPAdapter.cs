@@ -849,11 +849,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
+
+
+            var StartTime  = DateTime.Now;
+            var Now        = StartTime;
+            var Runtime    = TimeSpan.Zero;
 
             #endregion
 
@@ -876,7 +884,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnPushEVSEDataRequest?.Invoke(DateTime.Now,
+                OnPushEVSEDataRequest?.Invoke(StartTime,
                                               Timestamp.Value,
                                               this,
                                               this.Id.ToString(),
@@ -932,19 +940,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                              RequestTimeout);
 
 
+                Now     = DateTime.Now;
+                Runtime = Now - Timestamp.Value;
+
                 if (response.HTTPStatusCode == HTTPStatusCode.OK &&
                     response.Content        != null)
                 {
 
                     if (response.Content.Result == true)
                         result = new WWCP.Acknowledgement(ResultType.True,
-                                                     response.Content.StatusCode.Description,
-                                                     Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
+                                                          response.Content.StatusCode.Description,
+                                                          Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
+                                                          Runtime);
 
                     else
                         result = new WWCP.Acknowledgement(ResultType.False,
-                                                     response.Content.StatusCode.Description,
-                                                     Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
+                                                          response.Content.StatusCode.Description,
+                                                          Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
+                                                          Runtime);
 
                 }
                 else
@@ -952,12 +965,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  response.HTTPStatusCode.ToString(),
                                                  response.HTTPBody != null
                                                      ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
-                                                     : Warnings.AddAndReturnList("No HTTP body received!"));
+                                                     : Warnings.AddAndReturnList("No HTTP body received!"),
+                                                 Runtime);
 
             }
 
             else
-                result = new WWCP.Acknowledgement(ResultType.NoOperation);
+                result = new WWCP.Acknowledgement(ResultType.NoOperation,
+                                                  Runtime:  Runtime);
 
 
             #region Send OnEVSEDataPushed event
@@ -965,7 +980,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnPushEVSEDataResponse?.Invoke(DateTime.Now,
+                OnPushEVSEDataResponse?.Invoke(Now,
                                                Timestamp.Value,
                                                this,
                                                this.Id.ToString(),
@@ -976,7 +991,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                (UInt32) _NumberOfEVSEs,
                                                RequestTimeout,
                                                result,
-                                               DateTime.Now - Timestamp.Value);
+                                               Runtime);
 
             }
             catch (Exception e)
@@ -1462,11 +1477,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
+
+
+            var StartTime  = DateTime.Now;
+            var Now        = StartTime;
+            var Runtime    = TimeSpan.Zero;
 
             #endregion
 
@@ -1489,7 +1512,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnPushEVSEStatusRequest?.Invoke(DateTime.Now,
+                OnPushEVSEStatusRequest?.Invoke(StartTime,
                                                 Timestamp.Value,
                                                 this,
                                                 this.Id.ToString(),
@@ -1547,32 +1570,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                RequestTimeout);
 
 
+                Now     = DateTime.Now;
+                Runtime = Now - Timestamp.Value;
+
                 if (response.HTTPStatusCode == HTTPStatusCode.OK &&
                     response.Content        != null)
                 {
 
                     if (response.Content.Result == true)
                         result = new WWCP.Acknowledgement(ResultType.True,
-                                                     response.Content.StatusCode.Description,
-                                                     Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
+                                                          response.Content.StatusCode.Description,
+                                                          Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
+                                                          Runtime);
 
                     else
                         result = new WWCP.Acknowledgement(ResultType.False,
-                                                     response.Content.StatusCode.Description,
-                                                     Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo));
+                                                          response.Content.StatusCode.Description,
+                                                          Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
+                                                          Runtime);
 
                 }
                 else
                     result = new WWCP.Acknowledgement(ResultType.False,
-                                                 response.HTTPStatusCode.ToString(),
-                                                 response.HTTPBody != null
-                                                     ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
-                                                     : Warnings.AddAndReturnList("No HTTP body received!"));
+                                                      response.HTTPStatusCode.ToString(),
+                                                      response.HTTPBody != null
+                                                          ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
+                                                          : Warnings.AddAndReturnList("No HTTP body received!"),
+                                                      Runtime);
 
             }
 
             else
-                result = new WWCP.Acknowledgement(ResultType.NoOperation);
+                result = new WWCP.Acknowledgement(ResultType.NoOperation,
+                                                  Runtime:  Runtime);
 
 
             #region Send OnEVSEStatusPushed event
@@ -1580,7 +1610,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnPushEVSEStatusResponse?.Invoke(DateTime.Now,
+                OnPushEVSEStatusResponse?.Invoke(Now,
                                                  Timestamp.Value,
                                                  this,
                                                  this.Id.ToString(),
@@ -1591,7 +1621,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  (UInt32) _NumberOfEVSEStatus,
                                                  RequestTimeout,
                                                  result,
-                                                 DateTime.Now - Timestamp.Value);
+                                                 Runtime);
 
             }
             catch (Exception e)
@@ -2311,11 +2341,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
+
+
+            var StartTime = DateTime.Now;
 
             #endregion
 
@@ -2324,7 +2360,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStart?.Invoke(DateTime.Now,
+                OnAuthorizeStart?.Invoke(StartTime,
                                          Timestamp.Value,
                                          this,
                                          EventTrackingId,
@@ -2460,11 +2496,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
+
+
+            var StartTime = DateTime.Now;
 
             #endregion
 
@@ -2473,7 +2515,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeEVSEStart?.Invoke(DateTime.Now,
+                OnAuthorizeEVSEStart?.Invoke(StartTime,
                                              Timestamp.Value,
                                              this,
                                              EventTrackingId,
@@ -2539,7 +2581,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeEVSEStarted?.Invoke(DateTime.Now,
+                OnAuthorizeEVSEStarted?.Invoke(Now,
                                                Timestamp.Value,
                                                this,
                                                EventTrackingId,
@@ -2551,7 +2593,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                SessionId,
                                                RequestTimeout,
                                                result,
-                                               DateTime.Now - Timestamp.Value);
+                                               Runtime);
 
             }
             catch (Exception e)
@@ -2611,11 +2653,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
+
+
+            var StartTime = DateTime.Now;
 
             #endregion
 
@@ -2624,7 +2672,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeChargingStationStart?.Invoke(DateTime.Now,
+                OnAuthorizeChargingStationStart?.Invoke(StartTime,
                                                         Timestamp.Value,
                                                         this,
                                                         EventTrackingId,
@@ -2726,11 +2774,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
+
+
+            var StartTime = DateTime.Now;
 
             #endregion
 
@@ -2739,7 +2793,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStop?.Invoke(DateTime.Now,
+                OnAuthorizeStop?.Invoke(StartTime,
                                         Timestamp.Value,
                                         this,
                                         EventTrackingId,
@@ -2798,7 +2852,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStopped?.Invoke(DateTime.Now,
+                OnAuthorizeStopped?.Invoke(Now,
                                            Timestamp.Value,
                                            this,
                                            EventTrackingId,
@@ -2872,11 +2926,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
+
+
+            var StartTime = DateTime.Now;
 
             #endregion
 
@@ -2885,7 +2945,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeEVSEStop?.Invoke(DateTime.Now,
+                OnAuthorizeEVSEStop?.Invoke(StartTime,
                                             Timestamp.Value,
                                             this,
                                             EventTrackingId,
@@ -2945,7 +3005,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeEVSEStopped?.Invoke(DateTime.Now,
+                OnAuthorizeEVSEStopped?.Invoke(Now,
                                                Timestamp.Value,
                                                this,
                                                EventTrackingId,
@@ -3017,11 +3077,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
+
+
+            var StartTime = DateTime.Now;
 
             #endregion
 
@@ -3030,7 +3096,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeChargingStationStop?.Invoke(DateTime.Now,
+                OnAuthorizeChargingStationStop?.Invoke(StartTime,
                                                        Timestamp.Value,
                                                        this,
                                                        EventTrackingId,
@@ -3117,11 +3183,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
             if (EventTrackingId == null)
                 EventTrackingId = EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
+
+
+            var StartTime = DateTime.Now;
 
             #endregion
 
@@ -3130,7 +3202,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnSendCDRRequest?.Invoke(DateTime.Now,
+                OnSendCDRRequest?.Invoke(StartTime,
                                          Timestamp.Value,
                                          this,
                                          EventTrackingId,
