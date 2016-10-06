@@ -99,7 +99,7 @@ namespace org.GraphDefined.WWCP
 
                                               DNSClient                             DNSClient                   = null,
 
-                                              Action<OICPv2_1.EMP.WWCPAdapter>      OICPConfigurator            = null,
+                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>      OICPConfigurator            = null,
                                               Action<AEMPRoamingProvider>           Configurator                = null)
 
         {
@@ -120,7 +120,7 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_1.EMP.WWCPAdapter(Id,
+            var NewRoamingProvider = new OICPv2_1.EMP.WWCPEMPAdapter(Id,
                                                                   Name,
                                                                   RoamingNetwork,
 
@@ -212,7 +212,7 @@ namespace org.GraphDefined.WWCP
 
                                               DNSClient                             DNSClient                   = null,
 
-                                              Action<OICPv2_1.EMP.WWCPAdapter>      OICPConfigurator            = null,
+                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>      OICPConfigurator            = null,
                                               Action<AEMPRoamingProvider>           Configurator                = null)
 
         {
@@ -237,7 +237,7 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_1.EMP.WWCPAdapter(Id,
+            var NewRoamingProvider = new OICPv2_1.EMP.WWCPEMPAdapter(Id,
                                                                   Name,
                                                                   RoamingNetwork,
 

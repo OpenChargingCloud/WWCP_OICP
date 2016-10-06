@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// A WWCP wrapper for the OICP EMP Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class WWCPAdapter : AEMPRoamingProvider
+    public class WWCPEMPAdapter : AEMPRoamingProvider
     {
 
         #region Data
@@ -298,7 +298,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Constructor(s)
 
-        #region WWCPAdapter(Id, Name, RoamingNetwork, EMPRoaming, EVSEDataRecord2EVSE = null)
+        #region WWCPEMPAdapter(Id, Name, RoamingNetwork, EMPRoaming, EVSEDataRecord2EVSE = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP EMP Roaming client for e-mobility providers/EMPs.
@@ -309,12 +309,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// 
         /// <param name="EMPRoaming">A OICP EMP roaming object to be mapped to WWCP.</param>
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
-        public WWCPAdapter(RoamingProvider_Id           Id,
-                           I18NString                   Name,
-                           RoamingNetwork               RoamingNetwork,
+        public WWCPEMPAdapter(RoamingProvider_Id           Id,
+                              I18NString                   Name,
+                              RoamingNetwork               RoamingNetwork,
 
-                           EMPRoaming                   EMPRoaming,
-                           EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE = null)
+                              EMPRoaming                   EMPRoaming,
+                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE = null)
 
             : base(Id,
                    Name,
@@ -563,7 +563,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region WWCPAdapter(Id, Name, RoamingNetwork, EMPClient, EMPServer, Context = EMPRoaming.DefaultLoggingContext, LogFileCreator = null)
+        #region WWCPEMPAdapter(Id, Name, RoamingNetwork, EMPClient, EMPServer, Context = EMPRoaming.DefaultLoggingContext, LogFileCreator = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP EMP Roaming client for e-mobility providers/EMPs.
@@ -578,16 +578,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
-        public WWCPAdapter(RoamingProvider_Id            Id,
-                           I18NString                    Name,
-                           RoamingNetwork                RoamingNetwork,
+        public WWCPEMPAdapter(RoamingProvider_Id            Id,
+                              I18NString                    Name,
+                              RoamingNetwork                RoamingNetwork,
 
-                           EMPClient                     EMPClient,
-                           EMPServer                     EMPServer,
-                           String                        ServerLoggingContext  = EMPServerLogger.DefaultContext,
-                           Func<String, String, String>  LogFileCreator        = null,
+                              EMPClient                     EMPClient,
+                              EMPServer                     EMPServer,
+                              String                        ServerLoggingContext  = EMPServerLogger.DefaultContext,
+                              Func<String, String, String>  LogFileCreator        = null,
 
-                           EVSEDataRecord2EVSEDelegate   EVSEDataRecord2EVSE   = null)
+                              EVSEDataRecord2EVSEDelegate   EVSEDataRecord2EVSE   = null)
 
             : this(Id,
                    Name,
@@ -604,7 +604,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region WWCPAdapter(Id, Name, RoamingNetwork, RemoteHostName, ...)
+        #region WWCPEMPAdapter(Id, Name, RoamingNetwork, RemoteHostName, ...)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP EMP Roaming client for e-mobility providers/EMPs.
@@ -633,30 +633,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public WWCPAdapter(RoamingProvider_Id                   Id,
-                           I18NString                           Name,
-                           RoamingNetwork                       RoamingNetwork,
+        public WWCPEMPAdapter(RoamingProvider_Id                   Id,
+                              I18NString                           Name,
+                              RoamingNetwork                       RoamingNetwork,
 
-                           String                               RemoteHostname,
-                           IPPort                               RemoteTCPPort               = null,
-                           RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                           X509Certificate                      ClientCert                  = null,
-                           String                               RemoteHTTPVirtualHost       = null,
-                           String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
-                           TimeSpan?                            RequestTimeout                = null,
+                              String                               RemoteHostname,
+                              IPPort                               RemoteTCPPort               = null,
+                              RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
+                              X509Certificate                      ClientCert                  = null,
+                              String                               RemoteHTTPVirtualHost       = null,
+                              String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
+                              TimeSpan?                            RequestTimeout                = null,
 
-                           String                               ServerName                  = EMPServer.DefaultHTTPServerName,
-                           IPPort                               ServerTCPPort               = null,
-                           String                               ServerURIPrefix             = "",
-                           Boolean                              ServerAutoStart             = false,
+                              String                               ServerName                  = EMPServer.DefaultHTTPServerName,
+                              IPPort                               ServerTCPPort               = null,
+                              String                               ServerURIPrefix             = "",
+                              Boolean                              ServerAutoStart             = false,
 
-                           String                               ClientLoggingContext        = EMPClient.EMPClientLogger.DefaultContext,
-                           String                               ServerLoggingContext        = EMPServerLogger.DefaultContext,
-                           Func<String, String, String>         LogFileCreator              = null,
+                              String                               ClientLoggingContext        = EMPClient.EMPClientLogger.DefaultContext,
+                              String                               ServerLoggingContext        = EMPServerLogger.DefaultContext,
+                              Func<String, String, String>         LogFileCreator              = null,
 
-                           EVSEDataRecord2EVSEDelegate          EVSEDataRecord2EVSE         = null,
+                              EVSEDataRecord2EVSEDelegate          EVSEDataRecord2EVSE         = null,
 
-                           DNSClient                            DNSClient                   = null)
+                              DNSClient                            DNSClient                   = null)
 
             : this(Id,
                    Name,
@@ -1361,7 +1361,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnReserveEVSERequest));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnReserveEVSERequest));
             }
 
             #endregion
@@ -1555,7 +1555,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnCancelReservationRequest));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnCancelReservationRequest));
             }
 
             #endregion
@@ -1668,7 +1668,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnRemoteStartEVSERequest));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnRemoteStartEVSERequest));
             }
 
             #endregion
@@ -1867,7 +1867,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnRemoteStopEVSERequest));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnRemoteStopEVSERequest));
             }
 
             #endregion

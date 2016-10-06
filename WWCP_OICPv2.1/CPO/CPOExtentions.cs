@@ -112,7 +112,7 @@ namespace org.GraphDefined.WWCP
                                               TimeSpan?                             StatusCheckEvery            = null,
                                               Boolean                               DisableAutoUploads          = false,
 
-                                              Action<OICPv2_1.CPO.WWCPAdapter>      OICPConfigurator            = null,
+                                              Action<OICPv2_1.CPO.WWCPCPOAdapter>      OICPConfigurator            = null,
                                               Action<AChargingStationOperatorRoamingProvider>  Configurator                = null,
                                               DNSClient                             DNSClient                   = null)
 
@@ -134,7 +134,7 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_1.CPO.WWCPAdapter(Id,
+            var NewRoamingProvider = new OICPv2_1.CPO.WWCPCPOAdapter(Id,
                                                                   Name,
                                                                   RoamingNetwork,
 
@@ -248,7 +248,7 @@ namespace org.GraphDefined.WWCP
                                               TimeSpan?                             StatusCheckEvery            = null,
                                               Boolean                               DisableAutoUploads          = false,
 
-                                              Action<OICPv2_1.CPO.WWCPAdapter>      OICPConfigurator            = null,
+                                              Action<OICPv2_1.CPO.WWCPCPOAdapter>      OICPConfigurator            = null,
                                               Action<AChargingStationOperatorRoamingProvider>  Configurator                = null,
                                               DNSClient                             DNSClient                   = null)
 
@@ -274,7 +274,7 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_1.CPO.WWCPAdapter(Id,
+            var NewRoamingProvider = new OICPv2_1.CPO.WWCPCPOAdapter(Id,
                                                                   Name,
                                                                   RoamingNetwork,
 

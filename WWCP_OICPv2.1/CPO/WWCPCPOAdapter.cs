@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class WWCPAdapter : AChargingStationOperatorRoamingProvider
+    public class WWCPCPOAdapter : AChargingStationOperatorRoamingProvider
     {
 
         #region Data
@@ -223,7 +223,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region Constructor(s)
 
-        #region WWCPAdapter(Id, Name, RoamingNetwork, CPORoaming, EVSE2EVSEDataRecord = null)
+        #region WWCPCPOAdapter(Id, Name, RoamingNetwork, CPORoaming, EVSE2EVSEDataRecord = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for Charging Station Operators/CPOs.
@@ -242,20 +242,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
         /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
-        public WWCPAdapter(RoamingProvider_Id                           Id,
-                           I18NString                                   Name,
-                           RoamingNetwork                               RoamingNetwork,
+        public WWCPCPOAdapter(RoamingProvider_Id                           Id,
+                              I18NString                                   Name,
+                              RoamingNetwork                               RoamingNetwork,
 
-                           CPORoaming                                   CPORoaming,
-                           EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
-                           EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML    = null,
+                              CPORoaming                                   CPORoaming,
+                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
+                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML    = null,
 
-                           ChargingStationOperator                      DefaultOperator       = null,
-                           ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector  = null,
-                           IncludeEVSEDelegate                          IncludeEVSEs          = null,
-                           TimeSpan?                                    ServiceCheckEvery     = null,
-                           TimeSpan?                                    StatusCheckEvery      = null,
-                           Boolean                                      DisableAutoUploads    = false)
+                              ChargingStationOperator                      DefaultOperator       = null,
+                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector  = null,
+                              IncludeEVSEDelegate                          IncludeEVSEs          = null,
+                              TimeSpan?                                    ServiceCheckEvery     = null,
+                              TimeSpan?                                    StatusCheckEvery      = null,
+                              Boolean                                      DisableAutoUploads    = false)
 
             : base(Id,
                    Name,
@@ -640,7 +640,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region WWCPAdapter(Id, Name, RoamingNetwork, CPOClient, CPOServer, EVSEDataRecordProcessing = null)
+        #region WWCPCPOAdapter(Id, Name, RoamingNetwork, CPOClient, CPOServer, EVSEDataRecordProcessing = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for Charging Station Operators/CPOs.
@@ -661,24 +661,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
         /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
-        public WWCPAdapter(RoamingProvider_Id                           Id,
-                           I18NString                                   Name,
-                           RoamingNetwork                               RoamingNetwork,
+        public WWCPCPOAdapter(RoamingProvider_Id                           Id,
+                              I18NString                                   Name,
+                              RoamingNetwork                               RoamingNetwork,
 
-                           CPOClient                                    CPOClient,
-                           CPOServer                                    CPOServer,
-                           String                                       ServerLoggingContext  = CPOServerLogger.DefaultContext,
-                           Func<String, String, String>                 LogFileCreator        = null,
+                              CPOClient                                    CPOClient,
+                              CPOServer                                    CPOServer,
+                              String                                       ServerLoggingContext  = CPOServerLogger.DefaultContext,
+                              Func<String, String, String>                 LogFileCreator        = null,
 
-                           EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
-                           EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML    = null,
+                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
+                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML    = null,
 
-                           ChargingStationOperator                      DefaultOperator       = null,
-                           ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector  = null,
-                           IncludeEVSEDelegate                          IncludeEVSEs          = null,
-                           TimeSpan?                                    ServiceCheckEvery     = null,
-                           TimeSpan?                                    StatusCheckEvery      = null,
-                           Boolean                                      DisableAutoUploads    = false)
+                              ChargingStationOperator                      DefaultOperator       = null,
+                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector  = null,
+                              IncludeEVSEDelegate                          IncludeEVSEs          = null,
+                              TimeSpan?                                    ServiceCheckEvery     = null,
+                              TimeSpan?                                    StatusCheckEvery      = null,
+                              Boolean                                      DisableAutoUploads    = false)
 
             : this(Id,
                    Name,
@@ -703,7 +703,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region WWCPAdapter(Id, Name, RoamingNetwork, RemoteHostName, ...)
+        #region WWCPCPOAdapter(Id, Name, RoamingNetwork, RemoteHostName, ...)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for Charging Station Operators/CPOs.
@@ -738,38 +738,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public WWCPAdapter(RoamingProvider_Id                           Id,
-                           I18NString                                   Name,
-                           RoamingNetwork                               RoamingNetwork,
+        public WWCPCPOAdapter(RoamingProvider_Id                           Id,
+                              I18NString                                   Name,
+                              RoamingNetwork                               RoamingNetwork,
 
-                           String                                       RemoteHostname,
-                           IPPort                                       RemoteTCPPort               = null,
-                           RemoteCertificateValidationCallback          RemoteCertificateValidator  = null,
-                           X509Certificate                              ClientCert                  = null,
-                           String                                       RemoteHTTPVirtualHost       = null,
-                           String                                       HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
-                           TimeSpan?                                    RequestTimeout              = null,
+                              String                                       RemoteHostname,
+                              IPPort                                       RemoteTCPPort               = null,
+                              RemoteCertificateValidationCallback          RemoteCertificateValidator  = null,
+                              X509Certificate                              ClientCert                  = null,
+                              String                                       RemoteHTTPVirtualHost       = null,
+                              String                                       HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
+                              TimeSpan?                                    RequestTimeout              = null,
 
-                           String                                       ServerName                  = CPOServer.DefaultHTTPServerName,
-                           IPPort                                       ServerTCPPort               = null,
-                           String                                       ServerURIPrefix             = "",
-                           Boolean                                      ServerAutoStart             = false,
+                              String                                       ServerName                  = CPOServer.DefaultHTTPServerName,
+                              IPPort                                       ServerTCPPort               = null,
+                              String                                       ServerURIPrefix             = "",
+                              Boolean                                      ServerAutoStart             = false,
 
-                           String                                       ClientLoggingContext        = CPOClient.CPOClientLogger.DefaultContext,
-                           String                                       ServerLoggingContext        = CPOServerLogger.DefaultContext,
-                           Func<String, String, String>                 LogFileCreator              = null,
+                              String                                       ClientLoggingContext        = CPOClient.CPOClientLogger.DefaultContext,
+                              String                                       ServerLoggingContext        = CPOServerLogger.DefaultContext,
+                              Func<String, String, String>                 LogFileCreator              = null,
 
-                           EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord         = null,
-                           EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML          = null,
+                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord         = null,
+                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML          = null,
 
-                           ChargingStationOperator                      DefaultOperator             = null,
-                           ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector        = null,
-                           IncludeEVSEDelegate                          IncludeEVSEs                = null,
-                           TimeSpan?                                    ServiceCheckEvery           = null,
-                           TimeSpan?                                    StatusCheckEvery            = null,
-                           Boolean                                      DisableAutoUploads          = false,
+                              ChargingStationOperator                      DefaultOperator             = null,
+                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector        = null,
+                              IncludeEVSEDelegate                          IncludeEVSEs                = null,
+                              TimeSpan?                                    ServiceCheckEvery           = null,
+                              TimeSpan?                                    StatusCheckEvery            = null,
+                              Boolean                                      DisableAutoUploads          = false,
 
-                           DNSClient                                    DNSClient                   = null)
+                              DNSClient                                    DNSClient                   = null)
 
             : this(Id,
                    Name,
@@ -898,7 +898,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusRequest));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEStatusRequest));
             }
 
             #endregion
@@ -996,7 +996,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusResponse));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEStatusResponse));
             }
 
             #endregion
@@ -1526,7 +1526,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusRequest));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEStatusRequest));
             }
 
             #endregion
@@ -1626,7 +1626,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnPushEVSEStatusResponse));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEStatusResponse));
             }
 
             #endregion
@@ -2374,7 +2374,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeStart));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStart));
             }
 
             #endregion
@@ -2441,7 +2441,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeStarted));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStarted));
             }
 
             #endregion
@@ -2530,7 +2530,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeEVSEStart));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStart));
             }
 
             #endregion
@@ -2598,7 +2598,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeEVSEStarted));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStarted));
             }
 
             #endregion
@@ -2687,7 +2687,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeChargingStationStart));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStart));
             }
 
             #endregion
@@ -2719,7 +2719,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeChargingStationStarted));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStarted));
             }
 
             #endregion
@@ -2806,7 +2806,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeStop));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStop));
             }
 
             #endregion
@@ -2867,7 +2867,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeStopped));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStopped));
             }
 
             #endregion
@@ -2959,7 +2959,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeEVSEStop));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStop));
             }
 
             #endregion
@@ -3021,7 +3021,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeEVSEStopped));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStopped));
             }
 
             #endregion
@@ -3110,7 +3110,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeChargingStationStop));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStop));
             }
 
             #endregion
@@ -3140,7 +3140,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnAuthorizeChargingStationStopped));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStopped));
             }
 
             #endregion
@@ -3213,7 +3213,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnSendCDRRequest));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
             }
 
             #endregion
@@ -3278,7 +3278,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPAdapter) + "." + nameof(OnSendCDRResponse));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRResponse));
             }
 
             #endregion

@@ -53,7 +53,7 @@
     <Compile Include="CPO\CPODelegates.cs" />
     <Compile Include="CPO\CPOExtentions.cs" />
     <Compile Include="CPO\CPORoaming.cs" />
-    <Compile Include="CPO\WWCPAdapter.cs" />
+    <Compile Include="CPO\WWCPCPOAdapter.cs" />
     <Compile Include="CPO\CPOServer\CPOServer.cs" />
     <Compile Include="CPO\CPOServer\CPOServerDelegates.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
@@ -69,7 +69,7 @@
     <Compile Include="EMP\EMPDelegates.cs" />
     <Compile Include="EMP\EMPExtentions.cs" />
     <Compile Include="EMP\EMPRoaming.cs" />
-    <Compile Include="EMP\WWCPAdapter.cs" />
+    <Compile Include="EMP\WWCPEMPAdapter.cs" />
     <Compile Include="EMP\EMPServer\EMPServer.cs" />
     <Compile Include="EMP\EMPServer\EMPServerDelegates.cs" />
     <Compile Include="EMP\EMPServer\EMPServerLogger.cs" />
