@@ -532,14 +532,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
             Func<EVSE, String> EVSEStatusColorSelector = evse =>
             {
-                switch (evse.Status.Value)
+                switch (evse.Status.Value.AsOICPEVSEStatus())
                 {
 
-                    case EVSEStatusType.Available:
+                    case EVSEStatusTypes.Available:
                         return @"style=""background-color: rgba(170, 232, 170, 0.55);""";
 
-                    case EVSEStatusType.Charging:
+                    case EVSEStatusTypes.Reserved:
+                        return @"style=""background-color: rgba(170, 170, 232, 0.55);""";
+
+                    case EVSEStatusTypes.Occupied:
                         return @"style=""background-color: rgba(232, 170, 170, 0.55);""";
+
+                    case EVSEStatusTypes.OutOfService:
+                        return @"style=""background-color: rgba(170, 232, 232, 0.55);""";
 
                     default:
                         return @"style=""background-color: rgba(100, 100, 100, 0.55);""";
