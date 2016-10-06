@@ -91,9 +91,9 @@
     <EmbeddedResource Include="HTTPRoot\styles.css">
       <DependentUpon>styles.scss</DependentUpon>
     </EmbeddedResource>
-    <Content Include="HTTPRoot\styles.min.css">
+    <EmbeddedResource Include="HTTPRoot\styles.min.css">
       <DependentUpon>styles.css</DependentUpon>
-    </Content>
+    </EmbeddedResource>
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
