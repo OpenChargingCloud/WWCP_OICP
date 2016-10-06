@@ -580,15 +580,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                 #endregion
 
+                #region Check Query String parameters
+
                 var skip    = Request.QueryString.GetUInt32OrDefault("skip");
                 var take    = Request.QueryString.GetUInt32("take");
-                var status  = Request.QueryString.Map("status", value => (EVSEStatusType) Enum.Parse(typeof(EVSEStatusType), value), EVSEStatusType.Unspecified);
+
+                var status  = Request.QueryString.ParseEnum("status", EVSEStatusTypes.Unknown);
+
+                Func<EVSE, Boolean> statusFilter = evse => status != EVSEStatusTypes.Unknown
+                    ? evse.Status == status.AsWWCPEVSEStatus()
+                    : true;
+
                 var match   = Request.QueryString.GetString("match");
                 var since   = Request.QueryString.GetString("since");
 
-                Func<EVSE, Boolean> statusFilter = evse => status != EVSEStatusType.Unspecified
-                    ? evse.Status == status
-                    : true;
+                #endregion
 
                 //ToDo: Getting the expected total is very expensive!
                 var _ExpectedCount = _RoamingNetwork.EVSEStatus(1).ULongCount();
@@ -635,7 +641,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                                                                                                        @"        <div class=""statuslist"">", Environment.NewLine,
                                                                                                        @"          <div class=""timestampedstatus"">", Environment.NewLine,
                                                                                                        @"            <div class=""timestamp"">", evse.Status.Timestamp.ToString("dd.MM.yyyy HH:mm:ss"), @"</div>", Environment.NewLine,
-                                                                                                       @"            <div class=""status"">",    evse.Status.Value.    ToString(),                      @"</div>", Environment.NewLine,
+                                                                                                       @"            <div class=""status"">",    evse.Status.Value.AsOICPEVSEStatus().ToString(),       @"</div>", Environment.NewLine,
                                                                                                        @"          </div>", Environment.NewLine,
                                                                                                        @"        </div>", Environment.NewLine,
                                                                                                        @"      </div>", Environment.NewLine
