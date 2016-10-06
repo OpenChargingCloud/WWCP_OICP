@@ -9,8 +9,10 @@ this protocol please visit http://www.intercharge.eu.
 
 The OICP WebAPI helps clients of Hubject to share OICP data sets also
 via plain HTTP, instead of HTTP/SOAP. In contrast to the Hubject APIs
-the WebAPI allows to extend the XML with additional data sets which are
-currently not available in the Open InterCharge Protocol.
+the WebAPI allows you to extend the XML with additional data sets
+which are currently not available in the Open InterCharge Protocol
+and can not be shared via Hubject because of their inbound (X)ML
+schema validation.
 
 ### Usage
 
