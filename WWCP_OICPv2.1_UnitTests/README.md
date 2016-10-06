@@ -1,5 +1,5 @@
-WWCP OICP v2.1
-==============
+WWCP OICP UnitTest v2.1
+=======================
 
 This software will allow the communication between WWCP entities and
 entities implementing the _Open InterCharge Protocol (OICP)_, which is

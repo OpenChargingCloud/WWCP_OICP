@@ -99,6 +99,8 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <None Include="HTTPRoot\styles.scss" />
+    <None Include="LICENSE" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
