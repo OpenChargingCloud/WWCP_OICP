@@ -54,7 +54,7 @@
     <Compile Include="Version.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HTTPServer\HTTPRoot\Logos\REWAG_Logo.png" />
+    <EmbeddedResource Include="HTTPRoot\Logos\REWAG_Logo.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Aegir\Aegir\Aegir.csproj">
@@ -85,6 +85,20 @@
       <Project>{a01e9361-39c7-4705-9173-7cea79364dd0}</Project>
       <Name>WWCP_OICPv2.1</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HTTPRoot\index.html" />
+    <EmbeddedResource Include="HTTPRoot\styles.css">
+      <DependentUpon>styles.scss</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="HTTPRoot\styles.min.css">
+      <DependentUpon>styles.css</DependentUpon>
+    </Content>
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <None Include="HTTPRoot\styles.scss" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
