@@ -17,9 +17,7 @@
 
 #region Usings
 
-using System;
 using System.Xml.Linq;
-using System.Threading.Tasks;
 
 #endregion
 
@@ -27,36 +25,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// A delegate which allows you to modify EVSE data records
-    /// before sending them upstream.
+    /// A delegate which allows you to modify EVSE data records before sending them upstream.
     /// </summary>
     /// <param name="EVSE">A WWCP EVSE.</param>
-    /// <param name="EVSEDataRecord">An OICPv2.1 EVSE data record.</param>
-    public delegate EVSEDataRecord EVSE2EVSEDataRecordDelegate     (EVSE                      EVSE,
-                                                                    EVSEDataRecord            EVSEDataRecord);
+    /// <param name="EVSEDataRecord">An EVSE data record.</param>
+    public delegate EVSEDataRecord EVSE2EVSEDataRecordDelegate (EVSE               EVSE,
+                                                                EVSEDataRecord     EVSEDataRecord);
 
     /// <summary>
-    /// A delegate which allows you to modify the XML representation
-    /// of EVSE data records before sending them upstream.
+    /// A delegate which allows you to modify the XML representation of EVSE data records before sending them upstream.
     /// </summary>
-    /// <param name="RoamingNetwork">An EVSE roaming network.</param>
+    /// <param name="RoamingNetwork">A roaming network.</param>
     /// <param name="EVSEDataRecord">An EVSE data record.</param>
     /// <param name="XML">The XML representation of an EVSE data record.</param>
-    public delegate XElement       EVSEDataRecord2XMLDelegate      (RoamingNetwork            RoamingNetwork,
-                                                                    EVSEDataRecord            EVSEDataRecord,
-                                                                    XElement                  XML);
+    public delegate XElement       EVSEDataRecord2XMLDelegate  (RoamingNetwork     RoamingNetwork,
+                                                                EVSEDataRecord     EVSEDataRecord,
+                                                                XElement           XML);
 
     /// <summary>
-    /// A delegate which allows you to modify the XML representation
-    /// of EVSE status records before sending them upstream.
+    /// A delegate which allows you to modify the XML representation of EVSE status records before sending them upstream.
     /// </summary>
     /// <param name="RoamingNetwork">An EVSE roaming network.</param>
     /// <param name="EVSEStatusRecord">An EVSE status record.</param>
     /// <param name="XML">The XML representation of an EVSE status record.</param>
-    public delegate XElement       EVSEStatusRecord2XMLDelegate    (RoamingNetwork            RoamingNetwork,
-                                                                    EVSEStatusRecord          EVSEStatusRecord,
-                                                                    XElement                  XML);
+    public delegate XElement       EVSEStatusRecord2XMLDelegate(RoamingNetwork     RoamingNetwork,
+                                                                EVSEStatusRecord   EVSEStatusRecord,
+                                                                XElement           XML);
 
-    public delegate XElement       XMLPostProcessingDelegate       (XElement                  XML);
+    public delegate XElement       XMLPostProcessingDelegate   (XElement           XML);
 
 }

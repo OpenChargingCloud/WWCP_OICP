@@ -28,7 +28,18 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    /// <summary>
+    /// A delegate for filtering EVSE data records.
+    /// </summary>
+    /// <param name="EVSEDataRecord">An EVSE data record.</param>
+    public delegate Boolean IncludeEVSEDataRecordsDelegate  (EVSEDataRecord    EVSEDataRecord);
+
+    /// <summary>
+    /// A delegate for filtering EVSE status records.
+    /// </summary>
+    /// <param name="EVSEStatusRecord">An EVSE status record.</param>
     public delegate Boolean IncludeEVSEStatusRecordsDelegate(EVSEStatusRecord  EVSEStatusRecord);
+
 
     #region OnPushEVSEData/-Status
 

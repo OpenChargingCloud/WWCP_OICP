@@ -25,7 +25,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 {
 
     /// <summary>
-    /// OICP+ XML namspaces
+    /// OICP+ XML namspaces.
     /// </summary>
     public static class OICPPlusNS
     {

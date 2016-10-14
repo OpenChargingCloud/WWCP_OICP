@@ -34,12 +34,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 {
 
     /// <summary>
-    /// OICP HTTP API extention methods.
+    /// OICP+ HTTP API extention methods.
     /// </summary>
     public static class ExtentionMethods
     {
 
-        #region ParseRoamingNetwork(this HTTPRequest, WWCPAPI, out RoamingNetwork, out HTTPResponse)
+        #region ParseRoamingNetwork(this HTTPRequest, HTTPServer, out RoamingNetwork, out HTTPResponse)
 
         /// <summary>
         /// Parse the given HTTP request and return the roaming network
@@ -51,10 +51,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         /// <param name="RoamingNetwork">The roaming network.</param>
         /// <param name="HTTPResponse">A HTTP error response.</param>
         /// <returns>True, when roaming network was found; false else.</returns>
-        public static Boolean ParseRoamingNetwork(this HTTPRequest    HTTPRequest,
-                                                  HTTPServer<RoamingNetworks, RoamingNetwork> HTTPServer,
-                                                  out RoamingNetwork  RoamingNetwork,
-                                                  out HTTPResponse    HTTPResponse)
+        public static Boolean ParseRoamingNetwork(this HTTPRequest                             HTTPRequest,
+                                                  HTTPServer<RoamingNetworks, RoamingNetwork>  HTTPServer,
+                                                  out RoamingNetwork                           RoamingNetwork,
+                                                  out HTTPResponse                             HTTPResponse)
         {
 
             if (HTTPServer == null)

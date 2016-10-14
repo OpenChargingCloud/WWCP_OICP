@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WWCP OICPv2_1 WebAPI")]
-[assembly: AssemblyDescription("WWCP OICPv2_1 WebAPI")]
+[assembly: AssemblyTitle("WWCP OICP v2.1 WebAPI")]
+[assembly: AssemblyDescription("WWCP OICP v2.1 WebAPI")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GraphDefined GmbH")]
-[assembly: AssemblyProduct("WWCP OICPv2_1 WebAPI")]
+[assembly: AssemblyProduct("WWCP OICP v2.1 WebAPI")]
 [assembly: AssemblyCopyright("Copyright © 2014-2016 GraphDefined GmbH")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

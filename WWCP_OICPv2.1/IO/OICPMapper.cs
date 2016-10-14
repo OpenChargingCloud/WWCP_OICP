@@ -84,17 +84,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region AsWWCPEVSEStatus(this EVSEStatus)
+        #region AsWWCPEVSEStatus(this EVSEStatusTypes)
 
         /// <summary>
-        /// Convert an OICP v2.0 EVSE status into a corresponding WWCP EVSE status.
+        /// Convert an OICP EVSE status into a corresponding WWCP EVSE status.
         /// </summary>
-        /// <param name="EVSEStatus">An OICP v2.0 EVSE status.</param>
+        /// <param name="EVSEStatusTypes">An OICP EVSE status.</param>
         /// <returns>The corresponding WWCP EVSE status.</returns>
-        public static WWCP.EVSEStatusType AsWWCPEVSEStatus(this EVSEStatusTypes EVSEStatus)
+        public static WWCP.EVSEStatusType AsWWCPEVSEStatus(this EVSEStatusTypes EVSEStatusTypes)
         {
 
-            switch (EVSEStatus)
+            switch (EVSEStatusTypes)
             {
 
                 case EVSEStatusTypes.Available:
@@ -121,17 +121,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region AsOICPEVSEStatus(this EVSEStatus)
+        #region AsOICPEVSEStatus(this EVSEStatusType)
 
         /// <summary>
-        /// Convert a WWCP EVSE status into a corresponding OICP v2.0 EVSE status.
+        /// Convert a WWCP EVSE status into a corresponding OICP EVSE status.
         /// </summary>
-        /// <param name="EVSEStatus">An WWCP EVSE status.</param>
+        /// <param name="EVSEStatusType">An WWCP EVSE status.</param>
         /// <returns>The corresponding OICP EVSE status.</returns>
-        public static EVSEStatusTypes AsOICPEVSEStatus(this WWCP.EVSEStatusType EVSEStatus)
+        public static EVSEStatusTypes AsOICPEVSEStatus(this WWCP.EVSEStatusType EVSEStatusType)
         {
 
-            switch (EVSEStatus)
+            switch (EVSEStatusType)
             {
 
                 case WWCP.EVSEStatusType.Available:

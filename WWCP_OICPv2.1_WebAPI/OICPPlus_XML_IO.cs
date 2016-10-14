@@ -31,9 +31,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 {
 
     /// <summary>
-    /// OICP XML I/O.
+    /// OICP+ XML I/O.
     /// </summary>
-    public static class OICP_XML_IO
+    public static class OICPPlus_XML_IO
     {
 
         #region ToXML(this EVSEDataRecords, RoamingNetwork, XMLNamespaces = null, EVSEDataRecord2XML = null, XMLPostProcessing = null)
