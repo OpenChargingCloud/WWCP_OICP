@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.gnu.org/licenses/agpl.html
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -249,12 +249,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 throw new Exception("Invalid eRoamingMobileAuthorizationStart XML!");
 
             var ChargingStationName = new I18NString();
-            MobileAuthorizationStartXML.UseValue(OICPNS.MobileAuthorization + "ChargingStationName",   v => ChargingStationName.Add(Languages.de, v));
-            MobileAuthorizationStartXML.UseValue(OICPNS.MobileAuthorization + "EnChargingStationName", v => ChargingStationName.Add(Languages.en, v));
+            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "ChargingStationName",   v => ChargingStationName.Add(Languages.de, v));
+            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "EnChargingStationName", v => ChargingStationName.Add(Languages.en, v));
 
             var AdditionalInfo = new I18NString();
-            MobileAuthorizationStartXML.UseValue(OICPNS.MobileAuthorization + "AdditionalInfo",        v => AdditionalInfo.Add(Languages.de, v));
-            MobileAuthorizationStartXML.UseValue(OICPNS.MobileAuthorization + "EnAdditionalInfo",      v => AdditionalInfo.Add(Languages.en, v));
+            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "AdditionalInfo",        v => AdditionalInfo.Add(Languages.de, v));
+            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "EnAdditionalInfo",      v => AdditionalInfo.Add(Languages.en, v));
 
             return new MobileAuthorizationStart((AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), MobileAuthorizationStartXML.ElementValueOrFail(OICPNS.MobileAuthorization + "AuthorizationStatus")),
                                                 GeoCoordinates:       XMLMethods.ParseGeoCoordinatesXML(MobileAuthorizationStartXML.ElementOrFail(OICPNS.MobileAuthorization + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),

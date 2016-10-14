@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.gnu.org/licenses/agpl.html
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -308,27 +308,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 throw new Exception("Invalid eRoamingChargeDetailRecord XML!");
 
             var Identification = ChargeDetailRecordXML.MapElementOrFail(OICPNS.Authorization + "Identification",
-                                                                                "The Identification is invalid!",
-                                                                                AuthorizationIdentification.Parse,
-                                                                                OnException);
+                                                                        AuthorizationIdentification.Parse,
+                                                                        OnException);
 
             return new ChargeDetailRecord(
 
                 ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "EvseID",
-                                                            EVSE_Id.Parse,
-                                                            "The EvseID is invalid!"),
+                                                            EVSE_Id.Parse),
 
                 ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionID",
-                                                            ChargingSession_Id.Parse,
-                                                            "The SessionID is invalid!"),
+                                                            ChargingSession_Id.Parse),
 
                 ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionStart",
-                                                            DateTime.Parse,
-                                                            "The SessionStart is invalid!"),
+                                                            DateTime.Parse),
 
                 ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionEnd",
-                                                            DateTime.Parse,
-                                                            "The SessionStart is invalid!"),
+                                                            DateTime.Parse),
 
                 Identification,
 

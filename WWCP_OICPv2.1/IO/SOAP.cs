@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.gnu.org/licenses/agpl.html
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -54,14 +54,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return XMLNamespaces(
                 new XElement(SOAPNS.NS.SOAPEnvelope_v1_1 + "Envelope",
-                    new XAttribute(XNamespace.Xmlns + "SOAP",                SOAPNS.NS.SOAPEnvelope_v1_1.    NamespaceName),
-                    new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.        NamespaceName),
-                    new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.           NamespaceName),
-                    new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.         NamespaceName),
-                    new XAttribute(XNamespace.Xmlns + "MobileAuthorization", OICPNS.MobileAuthorization.NamespaceName),
-                    new XAttribute(XNamespace.Xmlns + "Authorization",       OICPNS.Authorization.      NamespaceName),
-                    new XAttribute(XNamespace.Xmlns + "AuthenticationData",  OICPNS.AuthenticationData. NamespaceName),
-                    new XAttribute(XNamespace.Xmlns + "EVSESearch",          OICPNS.EVSESearch.         NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "SOAP",                SOAPNS.NS.SOAPEnvelope_v1_1.NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.         NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.            NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.          NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "MobileAuthorization", OICPNS.MobileAuthorization. NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "Authorization",       OICPNS.Authorization.       NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "AuthenticationData",  OICPNS.AuthenticationData.  NamespaceName),
+                    new XAttribute(XNamespace.Xmlns + "EVSESearch",          OICPNS.EVSESearch.          NamespaceName),
 
                     new XElement(SOAPNS.NS.SOAPEnvelope_v1_1 + "Header"),
                     new XElement(SOAPNS.NS.SOAPEnvelope_v1_1 + "Body",  SOAPBody)

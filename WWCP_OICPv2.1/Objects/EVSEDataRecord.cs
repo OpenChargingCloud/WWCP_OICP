@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.gnu.org/licenses/agpl.html
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -569,11 +569,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             var _ChargingStationName = new I18NString();
 
-            EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "ChargingStationName",
-                                                 v => _ChargingStationName.Add(Languages.de, v));
+            EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "ChargingStationName",
+                                                      v => _ChargingStationName.Add(Languages.de, v));
 
-            EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "EnChargingStationName",
-                                                 v => _ChargingStationName.Add(Languages.en, v));
+            EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnChargingStationName",
+                                                      v => _ChargingStationName.Add(Languages.en, v));
 
             #endregion
 
@@ -617,45 +617,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             var _AdditionalInfo = new I18NString();
 
-            EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "AdditionalInfo",
-                                                 v => _AdditionalInfo.Add(Languages.de, v));
+            EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "AdditionalInfo",
+                                                      v => _AdditionalInfo.Add(Languages.de, v));
 
             // EnAdditionalInfo not parsed as OICP v2.0 multi-language string!
-            EVSEDataRecordXML.IfElementIsDefined(OICPNS.EVSEData + "EnAdditionalInfo",
-                                                 EnAdditionalInfo => {
+            EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnAdditionalInfo",
+                                                      EnAdditionalInfo => {
 
-                                                     // The section must end with the separator string "|||"
-                                                     // Example: "DEU:Inhalt|||GBR:Content|||FRA:Objet|||"
-                                                     if (EnAdditionalInfo.Contains("|||"))
-                                                     {
+                                                          // The section must end with the separator string "|||"
+                                                          // Example: "DEU:Inhalt|||GBR:Content|||FRA:Objet|||"
+                                                          if (EnAdditionalInfo.Contains("|||"))
+                                                          {
 
-                                                         foreach (var Token1 in EnAdditionalInfo.Split(new String[] { "|||" }, StringSplitOptions.RemoveEmptyEntries))
-                                                         {
+                                                              foreach (var Token1 in EnAdditionalInfo.Split(new String[] { "|||" }, StringSplitOptions.RemoveEmptyEntries))
+                                                              {
 
-                                                             var I18NTokens = Token1.Split(':');
+                                                                  var I18NTokens = Token1.Split(':');
 
-                                                             try
-                                                             {
-                                                                 if (I18NTokens.Length == 2)
-                                                                 {
-                                                                     _AdditionalInfo.Add((Languages)Enum.Parse(typeof(Languages),
-                                                                                                               Country.ParseAlpha3Code(I18NTokens[0]).Alpha2Code.ToLower()),
-                                                                                        I18NTokens[1]);
-                                                                 }
-                                                             }
-                                                             catch (Exception e)
-                                                             {
-                                                                 DebugX.Log("Could not parse 'EnAdditionalInfo': " + I18NTokens + Environment.NewLine + e.Message);
-                                                             }
+                                                                  try
+                                                                  {
+                                                                      if (I18NTokens.Length == 2)
+                                                                      {
+                                                                          _AdditionalInfo.Add((Languages)Enum.Parse(typeof(Languages),
+                                                                                                                    Country.ParseAlpha3Code(I18NTokens[0]).Alpha2Code.ToLower()),
+                                                                                             I18NTokens[1]);
+                                                                      }
+                                                                  }
+                                                                  catch (Exception e)
+                                                                  {
+                                                                      DebugX.Log("Could not parse 'EnAdditionalInfo': " + I18NTokens + Environment.NewLine + e.Message);
+                                                                  }
 
-                                                         }
+                                                              }
 
-                                                     }
+                                                          }
 
-                                                     else
-                                                         _AdditionalInfo.Add(Languages.en, EnAdditionalInfo);
+                                                          else
+                                                              _AdditionalInfo.Add(Languages.en, EnAdditionalInfo);
 
-                                                 });
+                                                      });
 
             #endregion
 
@@ -703,10 +703,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 XMLMethods.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
 
-                EVSEDataRecordXML.MapValuesOrFail(OICPNS.EVSEData + "Plugs", "Missing 'Plugs'-XML tag!",
+                EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "Plugs",
                                                      OICPNS.EVSEData + "Plug",
-                                                     OICPMapper.AsPlugType,
-                                                     PlugTypes.Unspecified).
+                                                     OICPMapper.AsPlugType).
                                                      Reduce(),
 
                 EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ChargingFacilities",
@@ -721,7 +720,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      ChargingModes.Unspecified).
                                                      Reduce(),
 
-                EVSEDataRecordXML.MapValuesOrFail(OICPNS.EVSEData + "AuthenticationModes", "Missing 'AuthenticationModes'-XML tag!",
+                EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "AuthenticationModes",
                                                      OICPNS.EVSEData + "AuthenticationMode",
                                                      OICPMapper.AsAuthenticationMode).
                                                      Reduce(),
@@ -741,10 +740,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      Reduce(),
 
                 OICPMapper.AsAccessibilityType(EVSEDataRecordXML.
-                                               ElementValueOrFail(OICPNS.EVSEData + "Accessibility", "Missing 'Accessibility'-XML tag!").
+                                               ElementValueOrFail(OICPNS.EVSEData + "Accessibility").
                                                Trim()),
 
-                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "HotlinePhoneNum", "Missing 'HotlinePhoneNum '-XML tag!").
+                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "HotlinePhoneNum").
                                   Trim(),
 
                 _AdditionalInfo,
@@ -761,10 +760,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 EVSEDataRecordXML.MapValueOrNull(OICPNS.EVSEData + "ClearinghouseID",
                                                  RoamingProvider_Id.Parse),
 
-                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible", "Missing 'IsHubjectCompatible '-XML tag!").
+                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible").
                                   Trim() == "true",
 
-                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable", "Missing 'DynamicInfoAvailable '-XML tag!").
+                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable").
                                   Trim() != "false"
 
             );
