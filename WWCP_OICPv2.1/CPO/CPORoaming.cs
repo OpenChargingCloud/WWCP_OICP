@@ -845,7 +845,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          ActionTypes                                  OICPAction              = ActionTypes.insert,
                          ChargingStationOperator                      Operator                = null,
                          ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector    = null,
-                         Func<EVSEDataRecord, Boolean>                IncludeEVSEDataRecords  = null,
+                         IncludeEVSEDataRecordsDelegate               IncludeEVSEDataRecords  = null,
 
                          DateTime?                                    Timestamp               = null,
                          CancellationToken?                           CancellationToken       = null,
@@ -887,7 +887,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          ActionTypes                                  OICPAction              = ActionTypes.fullLoad,
                          ChargingStationOperator                      Operator                = null,
                          ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector    = null,
-                         Func<EVSEDataRecord, Boolean>                IncludeEVSEDataRecords  = null,
+                         IncludeEVSEDataRecordsDelegate               IncludeEVSEDataRecords  = null,
 
                          DateTime?                                    Timestamp               = null,
                          CancellationToken?                           CancellationToken       = null,
