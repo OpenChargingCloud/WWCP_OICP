@@ -54,6 +54,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public new static readonly IPPort  DefaultRemotePort     = IPPort.Parse(443);
 
+        /// <summary>
+        /// The default URI prefix.
+        /// </summary>
+        public const               String  DefaultURIPrefix      = "/ibis/ws";
+
         #endregion
 
         #region Properties
@@ -230,6 +235,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
+        /// <param name="URIPrefix">An default URI prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
@@ -241,6 +247,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                          X509Certificate                      ClientCert                  = null,
                          String                               HTTPVirtualHost             = null,
+                         String                               URIPrefix                   = DefaultURIPrefix,
                          String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                          TimeSpan?                            QueryTimeout                = null,
                          DNSClient                            DNSClient                   = null,
@@ -253,6 +260,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    RemoteCertificateValidator,
                    ClientCert,
                    HTTPVirtualHost,
+                   URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    HTTPUserAgent,
                    QueryTimeout,
                    DNSClient)
@@ -290,6 +298,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
+        /// <param name="URIPrefix">An default URI prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
@@ -300,6 +309,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                          X509Certificate                      ClientCert                  = null,
                          String                               HTTPVirtualHost             = null,
+                         String                               URIPrefix                   = DefaultURIPrefix,
                          String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                          TimeSpan?                            QueryTimeout                = null,
                          DNSClient                            DNSClient                   = null)
@@ -310,6 +320,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    RemoteCertificateValidator,
                    ClientCert,
                    HTTPVirtualHost,
+                   URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    HTTPUserAgent,
                    QueryTimeout,
                    DNSClient)
@@ -427,7 +438,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         RemotePort,
                                                         HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingEvseData_V2.1",
+                                                        URIPrefix + "/eRoamingEvseData_V2.1",
                                                         RemoteCertificateValidator,
                                                         ClientCert,
                                                         UserAgent,
@@ -750,7 +761,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         RemotePort,
                                                         HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                        URIPrefix + "/eRoamingEvseStatus_V2.0",
                                                         RemoteCertificateValidator,
                                                         ClientCert,
                                                         UserAgent,
@@ -1086,7 +1097,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         RemotePort,
                                                         HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                        URIPrefix + "/eRoamingAuthorization_V2.0",
                                                         RemoteCertificateValidator,
                                                         ClientCert,
                                                         UserAgent,
@@ -1303,7 +1314,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         RemotePort,
                                                         HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                        URIPrefix + "/eRoamingAuthorization_V2.0",
                                                         RemoteCertificateValidator,
                                                         ClientCert,
                                                         UserAgent,
@@ -1518,7 +1529,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 using (var _OICPClient = new SOAPClient(Hostname,
                                                         RemotePort,
                                                         HTTPVirtualHost,
-                                                        "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                        URIPrefix + "/eRoamingAuthorization_V2.0",
                                                         RemoteCertificateValidator,
                                                         ClientCert,
                                                         UserAgent,
@@ -1692,7 +1703,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingAuthenticationData_V2.0",
+                                                    URIPrefix + "/eRoamingAuthenticationData_V2.0",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,

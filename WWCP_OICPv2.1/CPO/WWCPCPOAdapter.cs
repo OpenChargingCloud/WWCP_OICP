@@ -142,7 +142,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// An event fired whenever an authentication token will be verified for charging.
         /// </summary>
-        public override event WWCP.OnAuthorizeStartDelegate              OnAuthorizeStart;
+        public override event WWCP.OnAuthorizeDelegate              OnAuthorizeStart;
 
         /// <summary>
         /// An event fired whenever an authentication token had been verified for charging.
@@ -747,6 +747,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               RemoteCertificateValidationCallback          RemoteCertificateValidator  = null,
                               X509Certificate                              ClientCert                  = null,
                               String                                       RemoteHTTPVirtualHost       = null,
+                              String                                       URIPrefix                   = CPOClient.DefaultURIPrefix,
                               String                                       HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
                               TimeSpan?                                    RequestTimeout              = null,
 
@@ -781,6 +782,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                   RemoteCertificateValidator,
                                   ClientCert,
                                   RemoteHTTPVirtualHost,
+                                  URIPrefix,
                                   HTTPUserAgent,
                                   RequestTimeout,
 

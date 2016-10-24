@@ -54,6 +54,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public new static readonly IPPort  DefaultRemotePort     = IPPort.Parse(443);
 
+        /// <summary>
+        /// The default URI prefix.
+        /// </summary>
+        public const               String  DefaultURIPrefix      = "/ibis/ws";
+
         #endregion
 
         #region Properties
@@ -322,6 +327,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
+        /// <param name="URIPrefix">An default URI prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
@@ -333,6 +339,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                          X509Certificate                      ClientCert                  = null,
                          String                               HTTPVirtualHost             = null,
+                         String                               URIPrefix                   = DefaultURIPrefix,
                          String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout              = null,
                          DNSClient                            DNSClient                   = null,
@@ -345,6 +352,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    RemoteCertificateValidator,
                    ClientCert,
                    HTTPVirtualHost,
+                   URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    HTTPUserAgent,
                    RequestTimeout,
                    DNSClient)
@@ -380,6 +388,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
+        /// <param name="URIPrefix">An default URI prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
@@ -390,6 +399,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                          X509Certificate                      ClientCert                  = null,
                          String                               HTTPVirtualHost             = null,
+                         String                               URIPrefix                   = DefaultURIPrefix,
                          String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout              = null,
                          DNSClient                            DNSClient                   = null)
@@ -400,6 +410,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    RemoteCertificateValidator,
                    ClientCert,
                    HTTPVirtualHost,
+                   URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    HTTPUserAgent,
                    RequestTimeout,
                    DNSClient)
@@ -446,15 +457,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSEData>>
 
-            PullEVSEData(eMobilityProvider_Id             ProviderId,
-                         GeoCoordinate       SearchCenter       = null,
-                         Double              DistanceKM         = 0.0,
-                         DateTime?           LastCall           = null,
+            PullEVSEData(eMobilityProvider_Id  ProviderId,
+                         GeoCoordinate         SearchCenter       = null,
+                         Double                DistanceKM         = 0.0,
+                         DateTime?             LastCall           = null,
 
-                         DateTime?           Timestamp          = null,
-                         CancellationToken?  CancellationToken  = null,
-                         EventTracking_Id    EventTrackingId    = null,
-                         TimeSpan?           RequestTimeout     = null)
+                         DateTime?             Timestamp          = null,
+                         CancellationToken?    CancellationToken  = null,
+                         EventTracking_Id      EventTrackingId    = null,
+                         TimeSpan?             RequestTimeout     = null)
 
         {
 
@@ -503,7 +514,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingEvseData_V2.1",
+                                                    URIPrefix + "/eRoamingEvseData_V2.1",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -624,17 +635,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSESearchResult>>
 
-            SearchEVSE(eMobilityProvider_Id              ProviderId,
-                       GeoCoordinate        SearchCenter       = null,
-                       Double               DistanceKM         = 0.0,
-                       Address              Address            = null,
-                       PlugTypes?           Plug               = null,
-                       ChargingFacilities?  ChargingFacility   = null,
+            SearchEVSE(eMobilityProvider_Id  ProviderId,
+                       GeoCoordinate         SearchCenter       = null,
+                       Double                DistanceKM         = 0.0,
+                       Address               Address            = null,
+                       PlugTypes?            Plug               = null,
+                       ChargingFacilities?   ChargingFacility   = null,
 
-                       DateTime?            Timestamp          = null,
-                       CancellationToken?   CancellationToken  = null,
-                       EventTracking_Id     EventTrackingId    = null,
-                       TimeSpan?            RequestTimeout     = null)
+                       DateTime?             Timestamp          = null,
+                       CancellationToken?    CancellationToken  = null,
+                       EventTracking_Id      EventTrackingId    = null,
+                       TimeSpan?             RequestTimeout     = null)
 
         {
 
@@ -685,7 +696,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingEvseSearch_V2.0",
+                                                    URIPrefix + "/eRoamingEvseSearch_V2.0",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -812,15 +823,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSEStatus>>
 
-            PullEVSEStatus(eMobilityProvider_Id             ProviderId,
-                           GeoCoordinate       SearchCenter       = null,
-                           Double              DistanceKM         = 0.0,
-                           EVSEStatusTypes?     EVSEStatusFilter   = null,
+            PullEVSEStatus(eMobilityProvider_Id  ProviderId,
+                           GeoCoordinate         SearchCenter       = null,
+                           Double                DistanceKM         = 0.0,
+                           EVSEStatusTypes?      EVSEStatusFilter   = null,
 
-                           DateTime?           Timestamp          = null,
-                           CancellationToken?  CancellationToken  = null,
-                           EventTracking_Id    EventTrackingId    = null,
-                           TimeSpan?           RequestTimeout     = null)
+                           DateTime?             Timestamp          = null,
+                           CancellationToken?    CancellationToken  = null,
+                           EventTracking_Id      EventTrackingId    = null,
+                           TimeSpan?             RequestTimeout     = null)
 
         {
 
@@ -869,7 +880,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                    URIPrefix + "/eRoamingEvseStatus_V2.0",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -986,7 +997,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSEStatusById>>
 
-            PullEVSEStatusById(eMobilityProvider_Id               ProviderId,
+            PullEVSEStatusById(eMobilityProvider_Id  ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
 
                                DateTime?             Timestamp          = null,
@@ -1042,7 +1053,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingEvseStatus_V2.0",
+                                                    URIPrefix + "/eRoamingEvseStatus_V2.0",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1157,7 +1168,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
-                                   ActionTypes                               OICPAction         = ActionTypes.fullLoad,
+                                   ActionTypes                              OICPAction         = ActionTypes.fullLoad,
 
                                    DateTime?                                Timestamp          = null,
                                    CancellationToken?                       CancellationToken  = null,
@@ -1209,7 +1220,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingAuthenticationData_V2.0",
+                                                    URIPrefix + "/eRoamingAuthenticationData_V2.0",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1326,8 +1337,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
-                                   eMobilityProvider_Id                                   ProviderId,
-                                   ActionTypes                                OICPAction         = ActionTypes.fullLoad,
+                                   eMobilityProvider_Id                      ProviderId,
+                                   ActionTypes                               OICPAction         = ActionTypes.fullLoad,
 
                                    DateTime?                                 Timestamp          = null,
                                    CancellationToken?                        CancellationToken  = null,
@@ -1432,7 +1443,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingReservation_V1.0",
+                                                    URIPrefix + "/eRoamingReservation_V1.0",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1620,7 +1631,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingReservation_V1.0",
+                                                    URIPrefix + "/eRoamingReservation_V1.0",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1812,7 +1823,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    URIPrefix + "/eRoamingAuthorization_V2.0",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -2001,7 +2012,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    URIPrefix + "/eRoamingAuthorization_V2.0",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -2181,7 +2192,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    "/ibis/ws/eRoamingAuthorization_V2.0",
+                                                    URIPrefix + "/eRoamingAuthorization_V2.0",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,

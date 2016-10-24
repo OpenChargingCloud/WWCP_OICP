@@ -642,6 +642,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                               RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                               X509Certificate                      ClientCert                  = null,
                               String                               RemoteHTTPVirtualHost       = null,
+                              String                               URIPrefix                   = EMPClient.DefaultURIPrefix,
                               String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
                               TimeSpan?                            RequestTimeout                = null,
 
@@ -668,6 +669,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                   RemoteCertificateValidator,
                                   ClientCert,
                                   RemoteHTTPVirtualHost,
+                                  URIPrefix,
                                   HTTPUserAgent,
                                   RequestTimeout,
 

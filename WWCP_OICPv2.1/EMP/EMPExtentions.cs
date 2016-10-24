@@ -83,6 +83,7 @@ namespace org.GraphDefined.WWCP
                                               RemoteCertificateValidationCallback   RemoteCertificateValidator  = null,
                                               X509Certificate                       ClientCert                  = null,
                                               String                                RemoteHTTPVirtualHost       = null,
+                                              String                                URIPrefix                   = OICPv2_1.EMPClient.DefaultURIPrefix,
                                               String                                HTTPUserAgent               = OICPv2_1.EMPClient.DefaultHTTPUserAgent,
                                               TimeSpan?                             QueryTimeout                = null,
 
@@ -99,7 +100,7 @@ namespace org.GraphDefined.WWCP
 
                                               DNSClient                             DNSClient                   = null,
 
-                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>      OICPConfigurator            = null,
+                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator            = null,
                                               Action<AEMPRoamingProvider>           Configurator                = null)
 
         {
@@ -121,29 +122,30 @@ namespace org.GraphDefined.WWCP
             #endregion
 
             var NewRoamingProvider = new OICPv2_1.EMP.WWCPEMPAdapter(Id,
-                                                                  Name,
-                                                                  RoamingNetwork,
+                                                                     Name,
+                                                                     RoamingNetwork,
 
-                                                                  RemoteHostname,
-                                                                  RemoteTCPPort,
-                                                                  RemoteCertificateValidator,
-                                                                  ClientCert,
-                                                                  RemoteHTTPVirtualHost,
-                                                                  HTTPUserAgent,
-                                                                  QueryTimeout,
+                                                                     RemoteHostname,
+                                                                     RemoteTCPPort,
+                                                                     RemoteCertificateValidator,
+                                                                     ClientCert,
+                                                                     RemoteHTTPVirtualHost,
+                                                                     URIPrefix,
+                                                                     HTTPUserAgent,
+                                                                     QueryTimeout,
 
-                                                                  ServerName,
-                                                                  ServerTCPPort,
-                                                                  ServerURIPrefix,
-                                                                  ServerAutoStart,
+                                                                     ServerName,
+                                                                     ServerTCPPort,
+                                                                     ServerURIPrefix,
+                                                                     ServerAutoStart,
 
-                                                                  ClientLoggingContext,
-                                                                  ServerLoggingContext,
-                                                                  LogFileCreator,
+                                                                     ClientLoggingContext,
+                                                                     ServerLoggingContext,
+                                                                     LogFileCreator,
 
-                                                                  EVSEDataRecord2EVSE,
+                                                                     EVSEDataRecord2EVSE,
 
-                                                                  DNSClient);
+                                                                     DNSClient);
 
 
             OICPConfigurator?.Invoke(NewRoamingProvider);
@@ -199,6 +201,7 @@ namespace org.GraphDefined.WWCP
                                               RemoteCertificateValidationCallback   RemoteCertificateValidator  = null,
                                               X509Certificate                       ClientCert                  = null,
                                               String                                RemoteHTTPVirtualHost       = null,
+                                              String                                URIPrefix                   = OICPv2_1.EMPClient.DefaultURIPrefix,
                                               String                                HTTPUserAgent               = OICPv2_1.EMPClient.DefaultHTTPUserAgent,
                                               TimeSpan?                             QueryTimeout                = null,
 
@@ -247,6 +250,7 @@ namespace org.GraphDefined.WWCP
                                                                                          RemoteCertificateValidator,
                                                                                          ClientCert,
                                                                                          RemoteHTTPVirtualHost,
+                                                                                         URIPrefix,
                                                                                          HTTPUserAgent,
                                                                                          QueryTimeout,
                                                                                          DNSClient,

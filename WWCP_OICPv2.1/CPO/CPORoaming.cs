@@ -738,6 +738,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
                           X509Certificate                      ClientCert                  = null,
                           String                               RemoteHTTPVirtualHost       = null,
+                          String                               URIPrefix                   = CPOClient.DefaultURIPrefix,
                           String                               HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
                           TimeSpan?                            QueryTimeout                = null,
 
@@ -758,6 +759,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                  RemoteCertificateValidator,
                                  ClientCert,
                                  RemoteHTTPVirtualHost,
+                                 URIPrefix,
                                  HTTPUserAgent,
                                  QueryTimeout,
                                  DNSClient,
