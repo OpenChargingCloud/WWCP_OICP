@@ -2333,9 +2333,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Initial checks
 
-            if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId),  "The given Charging Station Operator identification must not be null!");
-
             if (AuthToken == null)
                 throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
 
@@ -2837,7 +2834,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 result = AuthStopResult.Authorized(AuthorizatorId,
-                                                   response.Content?.ProviderId,
+                                                   response.Content.ProviderId,
                                                    response.Content?.StatusCode?.Description,
                                                    response.Content?.StatusCode?.AdditionalInfo);
 

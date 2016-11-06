@@ -327,14 +327,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    ChargingSession_Id      SessionId           = null;
-                    ChargingSession_Id      PartnerSessionId    = null;
-                    eMobilityProvider_Id                 ProviderId          = null;
-                    EVSE_Id                 EVSEId              = null;
-                    eMobilityAccount_Id                  eMAId               = null;
-                    ChargingProduct_Id      ChargingProductId   = null;
+                    ChargingSession_Id    SessionId           = null;
+                    ChargingSession_Id    PartnerSessionId    = null;
+                    eMobilityProvider_Id  ProviderId          = default(eMobilityProvider_Id);
+                    EVSE_Id               EVSEId              = null;
+                    eMobilityAccount_Id   eMAId               = null;
+                    ChargingProduct_Id    ChargingProductId   = null;
 
-                    Acknowledgement response            = null;
+                    Acknowledgement       response            = null;
 
                     try
                     {
@@ -459,10 +459,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                         if (results.Length == 0 || response == null)
                             response = new Acknowledgement(StatusCodes.SystemError,
-                                                                   "Could not process the incoming AuthorizeRemoteReservationStart request!",
-                                                                   null,
-                                                                   SessionId,
-                                                                   PartnerSessionId);
+                                                           "Could not process the incoming AuthorizeRemoteReservationStart request!",
+                                                           null,
+                                                           SessionId,
+                                                           PartnerSessionId);
 
                     }
 
@@ -558,12 +558,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    ChargingSession_Id      SessionId         = null;
-                    ChargingSession_Id      PartnerSessionId  = null;
-                    eMobilityProvider_Id                 ProviderId        = null;
-                    EVSE_Id                 EVSEId            = null;
+                    ChargingSession_Id    SessionId         = null;
+                    ChargingSession_Id    PartnerSessionId  = null;
+                    eMobilityProvider_Id  ProviderId        = default(eMobilityProvider_Id);
+                    EVSE_Id               EVSEId            = null;
 
-                    Acknowledgement response          = null;
+                    Acknowledgement       response          = null;
 
                     try
                     {
@@ -794,14 +794,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    ChargingSession_Id      SessionId           = null;
-                    ChargingSession_Id      PartnerSessionId    = null;
-                    eMobilityProvider_Id                 ProviderId          = null;
-                    EVSE_Id                 EVSEId              = null;
-                    eMobilityAccount_Id                  eMAId               = null;
-                    ChargingProduct_Id      ChargingProductId   = null;
+                    ChargingSession_Id    SessionId           = null;
+                    ChargingSession_Id    PartnerSessionId    = null;
+                    eMobilityProvider_Id  ProviderId          = default(eMobilityProvider_Id);
+                    EVSE_Id               EVSEId              = null;
+                    eMobilityAccount_Id   eMAId               = null;
+                    ChargingProduct_Id    ChargingProductId   = null;
 
-                    Acknowledgement response            = null;
+                    Acknowledgement       response            = null;
 
                     try
                     {
@@ -1026,12 +1026,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    ChargingSession_Id      SessionId         = null;
-                    ChargingSession_Id      PartnerSessionId  = null;
-                    eMobilityProvider_Id                 ProviderId        = null;
-                    EVSE_Id                 EVSEId            = null;
+                    ChargingSession_Id    SessionId          = null;
+                    ChargingSession_Id    PartnerSessionId   = null;
+                    eMobilityProvider_Id  ProviderId         = default(eMobilityProvider_Id);
+                    EVSE_Id               EVSEId             = null;
 
-                    Acknowledgement response          = null;
+                    Acknowledgement       response           = null;
 
                     try
                     {

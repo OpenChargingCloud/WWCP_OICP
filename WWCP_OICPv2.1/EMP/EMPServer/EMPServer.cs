@@ -366,14 +366,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Parse request parameters
 
-                ChargingSession_Id         SessionId           = null;
-                ChargingSession_Id         PartnerSessionId    = null;
-                ChargingStationOperator_Id            OperatorId          = null;
-                EVSE_Id                    EVSEId              = null;
-                ChargingProduct_Id         ChargingProductId   = null;
-                Auth_Token                 AuthToken           = null;
+                ChargingSession_Id          SessionId           = null;
+                ChargingSession_Id          PartnerSessionId    = null;
+                ChargingStationOperator_Id  OperatorId          = default(ChargingStationOperator_Id);
+                EVSE_Id                     EVSEId              = null;
+                ChargingProduct_Id          ChargingProductId   = null;
+                Auth_Token                  AuthToken           = null;
 
-                AuthorizationStart response            = null;
+                AuthorizationStart          response            = null;
 
                 try
                 {
@@ -567,13 +567,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Parse request parameters
 
-                ChargingSession_Id        SessionId          = null;
-                ChargingSession_Id        PartnerSessionId   = null;
-                ChargingStationOperator_Id           OperatorId         = null;
-                EVSE_Id                   EVSEId             = null;
-                Auth_Token                AuthToken          = null;
+                ChargingSession_Id          SessionId          = null;
+                ChargingSession_Id          PartnerSessionId   = null;
+                ChargingStationOperator_Id  OperatorId         = default(ChargingStationOperator_Id);
+                EVSE_Id                     EVSEId             = null;
+                Auth_Token                  AuthToken          = null;
 
-                AuthorizationStop response           = null;
+                AuthorizationStop           response           = null;
 
                 try
                 {

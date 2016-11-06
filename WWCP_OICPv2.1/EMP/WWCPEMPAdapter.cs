@@ -376,12 +376,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                         case AuthStartEVSEResultType.Authorized:
                             return new AuthorizationStart(response.SessionId,
-                                                                  null,
-                                                                  response.ProviderId,
-                                                                  "Ready to charge!",
-                                                                  null,
-                                                                  response.ListOfAuthStopTokens.
-                                                                      SafeSelect(token => new AuthorizationIdentification(AuthInfo.FromAuthToken(token))));
+                                                          null,
+                                                          response.ProviderId,
+                                                          "Ready to charge!",
+                                                          null,
+                                                          response.ListOfAuthStopTokens.
+                                                              SafeSelect(token => new AuthorizationIdentification(AuthInfo.FromAuthToken(token))));
 
                         case AuthStartEVSEResultType.NotAuthorized:
                             return new AuthorizationStart(StatusCodes.RFIDAuthenticationfailed_InvalidUID,
@@ -415,9 +415,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 }
 
                 return new AuthorizationStart(StatusCodes.ServiceNotAvailable,
-                                                      "Service not available!",
-                                                      SessionId:  response?.SessionId ?? SessionId,
-                                                      ProviderId: response?.ProviderId);
+                                              "Service not available!",
+                                              SessionId:  response?.SessionId ?? SessionId,
+                                              ProviderId: response?.ProviderId);
 
             };
 
@@ -454,29 +454,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                         case AuthStopEVSEResultType.Authorized:
                             return new AuthorizationStop(response.SessionId,
-                                                                 response.ProviderId,
-                                                                 null,
-                                                                 "Ready to stop charging!");
+                                                         response.ProviderId,
+                                                         null,
+                                                         "Ready to stop charging!");
 
                         case AuthStopEVSEResultType.InvalidSessionId:
                             return new AuthorizationStop(StatusCodes.SessionIsInvalid,
-                                                                 "Session is invalid");
+                                                         "Session is invalid");
 
                         case AuthStopEVSEResultType.EVSECommunicationTimeout:
                             return new AuthorizationStop(StatusCodes.CommunicationToEVSEFailed,
-                                                                 "Communication to EVSE failed!");
+                                                         "Communication to EVSE failed!");
 
                         case AuthStopEVSEResultType.StopChargingTimeout:
                             return new AuthorizationStop(StatusCodes.NoEVConnectedToEVSE,
-                                                                 "No EV connected to EVSE!");
+                                                         "No EV connected to EVSE!");
 
                         case AuthStopEVSEResultType.UnknownEVSE:
                             return new AuthorizationStop(StatusCodes.UnknownEVSEID,
-                                                                 "Unknown EVSE ID!");
+                                                         "Unknown EVSE ID!");
 
                         case AuthStopEVSEResultType.OutOfService:
                             return new AuthorizationStop(StatusCodes.EVSEOutOfService,
-                                                                 "EVSE out of service!");
+                                                         "EVSE out of service!");
 
                     }
                 }
@@ -714,20 +714,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task
 
-            PullEVSEData(RoamingNetwork        RoamingNetwork,
-                         GeoCoordinate         SearchCenter       = null,
-                         Double                DistanceKM         = 0.0,
-                         DateTime?             LastCall           = null,
-                         eMobilityProvider_Id  ProviderId         = null,
+            PullEVSEData(RoamingNetwork         RoamingNetwork,
+                         GeoCoordinate          SearchCenter       = null,
+                         Double                 DistanceKM         = 0.0,
+                         DateTime?              LastCall           = null,
+                         eMobilityProvider_Id?  ProviderId         = null,
 
-                         DateTime?             Timestamp          = null,
-                         CancellationToken?    CancellationToken  = null,
-                         EventTracking_Id      EventTrackingId    = null,
-                         TimeSpan?             RequestTimeout     = null)
+                         DateTime?              Timestamp          = null,
+                         CancellationToken?     CancellationToken  = null,
+                         EventTracking_Id       EventTrackingId    = null,
+                         TimeSpan?              RequestTimeout     = null)
 
         {
 
-            var result = await EMPRoaming.PullEVSEData(ProviderId,
+            #region Initial checks
+
+            if (ProviderId == null || !ProviderId.HasValue)
+                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+
+            #endregion
+
+            var result = await EMPRoaming.PullEVSEData(ProviderId.Value,
                                                        SearchCenter,
                                                        DistanceKM,
                                                        LastCall,
@@ -1080,19 +1087,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<IEnumerable<WWCP.EVSEStatus>>
 
-            PullEVSEStatus(GeoCoordinate         SearchCenter       = null,
-                           Double                DistanceKM         = 0.0,
-                           EVSEStatusTypes?      EVSEStatusFilter   = null,
-                           eMobilityProvider_Id  ProviderId         = null,
+            PullEVSEStatus(GeoCoordinate          SearchCenter        = null,
+                           Double                 DistanceKM          = 0.0,
+                           EVSEStatusTypes?       EVSEStatusFilter    = null,
+                           eMobilityProvider_Id?  ProviderId          = null,
 
-                           DateTime?             Timestamp          = null,
-                           CancellationToken?    CancellationToken  = null,
-                           EventTracking_Id      EventTrackingId    = null,
-                           TimeSpan?             RequestTimeout     = null)
+                           DateTime?              Timestamp           = null,
+                           CancellationToken?     CancellationToken   = null,
+                           EventTracking_Id       EventTrackingId     = null,
+                           TimeSpan?              RequestTimeout      = null)
 
         {
 
-            var result = await EMPRoaming.PullEVSEStatus(ProviderId,
+            #region Initial checks
+
+            if (ProviderId == null || !ProviderId.HasValue)
+                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+
+            #endregion
+
+            var result = await EMPRoaming.PullEVSEStatus(ProviderId.Value,
                                                          SearchCenter,
                                                          DistanceKM,
                                                          EVSEStatusFilter,
@@ -1134,15 +1148,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<IEnumerable<WWCP.EVSEStatus>>
 
-            PullEVSEStatusById(IEnumerable<EVSE_Id>  EVSEIds,
-                               eMobilityProvider_Id  ProviderId         = null,
+            PullEVSEStatusById(IEnumerable<EVSE_Id>   EVSEIds,
+                               eMobilityProvider_Id?  ProviderId          = null,
 
-                               DateTime?             Timestamp          = null,
-                               CancellationToken?    CancellationToken  = null,
-                               EventTracking_Id      EventTrackingId    = null,
-                               TimeSpan?             RequestTimeout     = null)
+                               DateTime?              Timestamp           = null,
+                               CancellationToken?     CancellationToken   = null,
+                               EventTracking_Id       EventTrackingId     = null,
+                               TimeSpan?              RequestTimeout      = null)
 
         {
+
+            #region Initial checks
+
+            if (ProviderId == null || !ProviderId.HasValue)
+                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+
+            #endregion
 
             var _EVSEStatus = new List<WWCP.EVSEStatus>();
 
@@ -1151,7 +1172,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             foreach (var evsepart in EVSEIds.ToPartitions(100))
             {
 
-                var result = await EMPRoaming.PullEVSEStatusById(ProviderId,
+                var result = await EMPRoaming.PullEVSEStatusById(ProviderId.Value,
                                                                  evsepart,
 
                                                                  Timestamp,
@@ -1242,7 +1263,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
                                    ActionTypes                               OICPAction         = ActionTypes.fullLoad,
-                                   eMobilityProvider_Id                      ProviderId         = null,
+                                   eMobilityProvider_Id?                     ProviderId         = null,
 
                                    DateTime?                                 Timestamp          = null,
                                    CancellationToken?                        CancellationToken  = null,
@@ -1251,8 +1272,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
+            #region Initial checks
+
+            if (ProviderId == null || !ProviderId.HasValue)
+                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+
+            #endregion
+
             var result = await EMPRoaming.PushAuthenticationData(AuthorizationIdentifications,
-                                                                 ProviderId,
+                                                                 ProviderId.Value,
                                                                  OICPAction,
 
                                                                  Timestamp,
@@ -1298,27 +1326,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public override async Task<ReservationResult>
 
             Reserve(EVSE_Id                           EVSEId,
-                    DateTime?                         ReservationStartTime  = null,
-                    TimeSpan?                         Duration              = null,
-                    ChargingReservation_Id            ReservationId         = null,
-                    eMobilityProvider_Id              ProviderId            = null,
-                    eMobilityAccount_Id               eMAId                 = null,
-                    ChargingProduct_Id                ChargingProductId     = null,
-                    IEnumerable<Auth_Token>           AuthTokens            = null,
-                    IEnumerable<eMobilityAccount_Id>  eMAIds                = null,
-                    IEnumerable<UInt32>               PINs                  = null,
+                    DateTime?                         ReservationStartTime   = null,
+                    TimeSpan?                         Duration               = null,
+                    ChargingReservation_Id            ReservationId          = null,
+                    eMobilityProvider_Id?             ProviderId             = null,
+                    eMobilityAccount_Id               eMAId                  = null,
+                    ChargingProduct_Id                ChargingProductId      = null,
+                    IEnumerable<Auth_Token>           AuthTokens             = null,
+                    IEnumerable<eMobilityAccount_Id>  eMAIds                 = null,
+                    IEnumerable<UInt32>               PINs                   = null,
 
-                    DateTime?                         Timestamp             = null,
-                    CancellationToken?                CancellationToken     = null,
-                    EventTracking_Id                  EventTrackingId       = null,
-                    TimeSpan?                         RequestTimeout        = null)
+                    DateTime?                         Timestamp              = null,
+                    CancellationToken?                CancellationToken      = null,
+                    EventTracking_Id                  EventTrackingId        = null,
+                    TimeSpan?                         RequestTimeout         = null)
 
         {
 
             #region Initial checks
 
             if (EVSEId == null)
-                throw new ArgumentNullException(nameof(EVSEId),  "The given EVSE identification must not be null!");
+                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
+
+            if (ProviderId == null || !ProviderId.HasValue)
+                throw new ArgumentNullException(nameof(ProviderId),  "The provider identification is mandatory in OICP!");
 
 
             if (!Timestamp.HasValue)
@@ -1440,7 +1471,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
             var result = await EMPRoaming.ReservationStart(EVSEId:             EVSEId,
-                                                           ProviderId:         ProviderId,
+                                                           ProviderId:         ProviderId.Value,
                                                            eMAId:              eMAId,
                                                            SessionId:          ReservationId != null ? ChargingSession_Id.Parse(ReservationId.ToString()) : null,
                                                            PartnerSessionId:   null,
@@ -1506,13 +1537,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             CancelReservation(ChargingReservation_Id                 ReservationId,
                               ChargingReservationCancellationReason  Reason,
-                              eMobilityProvider_Id                   ProviderId         = null,
-                              EVSE_Id                                EVSEId             = null,
+                              eMobilityProvider_Id?                  ProviderId          = null,
+                              EVSE_Id                                EVSEId              = null,
 
-                              DateTime?                              Timestamp          = null,
-                              CancellationToken?                     CancellationToken  = null,
-                              EventTracking_Id                       EventTrackingId    = null,
-                              TimeSpan?                              RequestTimeout     = null)
+                              DateTime?                              Timestamp           = null,
+                              CancellationToken?                     CancellationToken   = null,
+                              EventTracking_Id                       EventTrackingId     = null,
+                              TimeSpan?                              RequestTimeout      = null)
 
         {
 
@@ -1520,6 +1551,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             if (ReservationId == null)
                 throw new ArgumentNullException(nameof(ReservationId),  "The given reservation identification must not be null!");
+
+            if (ProviderId == null || !ProviderId.HasValue)
+                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
 
 
             if (!Timestamp.HasValue)
@@ -1549,7 +1583,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                    this,
                                                    EventTrackingId,
                                                    RoamingNetwork.Id,
-                                                   ProviderId,
+                                                   ProviderId.Value,
                                                    ReservationId,
                                                    Reason,
                                                    RequestTimeout);
@@ -1564,7 +1598,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
             var result = await EMPRoaming.ReservationStop(SessionId:          ChargingSession_Id.Parse(ReservationId.ToString()),
-                                                          ProviderId:         ProviderId,
+                                                          ProviderId:         ProviderId.Value,
                                                           EVSEId:             EVSEId,
                                                           PartnerSessionId:   null,
 
@@ -1610,19 +1644,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<RemoteStartEVSEResult>
 
-            RemoteStart(EVSE_Id                 EVSEId,
-                        ChargingProduct_Id      ChargingProductId  = null,
-//                      TimeSpan?               Duration           = null,
-//                      Double?                 MaxEnergy          = null,
-                        ChargingReservation_Id  ReservationId      = null,
-                        ChargingSession_Id      SessionId          = null,
-                        eMobilityProvider_Id    ProviderId         = null,
-                        eMobilityAccount_Id     eMAId              = null,
+            RemoteStart(EVSE_Id                  EVSEId,
+                        ChargingProduct_Id       ChargingProductId   = null,
+//                      TimeSpan?                Duration            = null,
+//                      Double?                  MaxEnergy           = null,
+                        ChargingReservation_Id   ReservationId       = null,
+                        ChargingSession_Id       SessionId           = null,
+                        eMobilityProvider_Id?    ProviderId          = null,
+                        eMobilityAccount_Id      eMAId               = null,
 
-                        DateTime?               Timestamp          = null,
-                        CancellationToken?      CancellationToken  = null,
-                        EventTracking_Id        EventTrackingId    = null,
-                        TimeSpan?               RequestTimeout     = null)
+                        DateTime?                Timestamp           = null,
+                        CancellationToken?       CancellationToken   = null,
+                        EventTracking_Id         EventTrackingId     = null,
+                        TimeSpan?                RequestTimeout      = null)
 
         {
 
@@ -1630,6 +1664,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             if (EVSEId == null)
                 throw new ArgumentNullException(nameof(EVSEId),  "The given EVSE identification must not be null!");
+
+            if (ProviderId == null || !ProviderId.HasValue)
+                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
 
 
             if (!Timestamp.HasValue)
@@ -1758,7 +1795,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
             var result = await EMPRoaming.RemoteStart(EVSEId:             EVSEId,
-                                                      ProviderId:         ProviderId,
+                                                      ProviderId:         ProviderId.Value,
                                                       eMAId:              eMAId,
                                                       SessionId:          SessionId,
                                                       PartnerSessionId:   null,
@@ -1810,16 +1847,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<RemoteStopEVSEResult>
 
-            RemoteStop(EVSE_Id               EVSEId,
-                       ChargingSession_Id    SessionId,
-                       ReservationHandling   ReservationHandling  = null,
-                       eMobilityProvider_Id  ProviderId           = null,
-                       eMobilityAccount_Id   eMAId                = null,
+            RemoteStop(EVSE_Id                EVSEId,
+                       ChargingSession_Id     SessionId,
+                       ReservationHandling    ReservationHandling   = null,
+                       eMobilityProvider_Id?  ProviderId            = null,
+                       eMobilityAccount_Id    eMAId                 = null,
 
-                       DateTime?             Timestamp            = null,
-                       CancellationToken?    CancellationToken    = null,
-                       EventTracking_Id      EventTrackingId      = null,
-                       TimeSpan?             RequestTimeout       = null)
+                       DateTime?              Timestamp             = null,
+                       CancellationToken?     CancellationToken     = null,
+                       EventTracking_Id       EventTrackingId       = null,
+                       TimeSpan?              RequestTimeout        = null)
 
         {
 
@@ -1830,6 +1867,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             if (SessionId == null)
                 throw new ArgumentNullException(nameof(SessionId),  "The given charging session identification must not be null!");
+
+            if (ProviderId == null || !ProviderId.HasValue)
+                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
 
 
             if (!Timestamp.HasValue)
@@ -1877,7 +1917,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
             var result = await EMPRoaming.RemoteStop(SessionId:          SessionId,
-                                                     ProviderId:         ProviderId,
+                                                     ProviderId:         ProviderId.Value,
                                                      EVSEId:             EVSEId,
                                                      PartnerSessionId:   null,
 
@@ -1919,18 +1959,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<IEnumerable<WWCP.ChargeDetailRecord>>
 
-            GetChargeDetailRecords(DateTime              From,
-                                   DateTime?             To                 = null,
-                                   eMobilityProvider_Id  ProviderId         = null,
+            GetChargeDetailRecords(DateTime               From,
+                                   DateTime?              To                 = null,
+                                   eMobilityProvider_Id?  ProviderId         = null,
 
-                                   DateTime?             Timestamp          = null,
-                                   CancellationToken?    CancellationToken  = null,
-                                   EventTracking_Id      EventTrackingId    = null,
-                                   TimeSpan?             RequestTimeout     = null)
+                                   DateTime?              Timestamp          = null,
+                                   CancellationToken?     CancellationToken  = null,
+                                   EventTracking_Id       EventTrackingId    = null,
+                                   TimeSpan?              RequestTimeout     = null)
 
         {
 
-            var result = await EMPRoaming.GetChargeDetailRecords(ProviderId,
+            #region Initial checks
+
+            if (ProviderId == null || !ProviderId.HasValue)
+                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+
+            #endregion
+
+            var result = await EMPRoaming.GetChargeDetailRecords(ProviderId.Value,
                                                                  From,
                                                                  To,
 

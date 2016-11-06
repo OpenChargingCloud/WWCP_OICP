@@ -144,8 +144,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             _StationId = null;
 
             // 1st: Try to use the given ChargingStationId from the XML...
-            if (StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(IdFormatType.OLD)) ||
-                StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(IdFormatType.NEW)))
+            if (StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(OperatorIdFormats.OLD)) ||
+                StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(OperatorIdFormats.NEW)))
                 ChargingStation_Id.TryParse(StationXMLId, out _StationId);
 
             // 2nd: Try to use the given EVSE Ids to find a common prefix...

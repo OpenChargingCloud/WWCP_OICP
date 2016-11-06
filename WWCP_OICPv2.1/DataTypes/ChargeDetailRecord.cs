@@ -133,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// An optional identification of the hub provider.
         /// </summary>
         [Optional]
-        public eMobilityProvider_Id         HubProviderId           { get; }
+        public HubProvider_Id               HubProviderId           { get; }
 
         #endregion
 
@@ -173,7 +173,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                   Double?                      ConsumedEnergy        = null,
                                   String                       MeteringSignature     = null,
                                   HubOperator_Id               HubOperatorId         = null,
-                                  eMobilityProvider_Id         HubProviderId         = null)
+                                  HubProvider_Id               HubProviderId         = null)
 
         {
 
@@ -364,8 +364,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             null),
 
                 ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubProviderID",
-                                                            eMobilityProvider_Id.Parse,
-                                                            null));
+                                                            HubProvider_Id.Parse));
 
         }
 
