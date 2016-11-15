@@ -341,7 +341,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                           new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
 
-                                          EVSEIds.Select(EVSEId => new XElement(OICPNS.EVSEStatus + "EvseId", EVSEId.OriginId))
+                                          EVSEIds.Select(EVSEId => new XElement(OICPNS.EVSEStatus + "EvseId", EVSEId.ToString()))
 
                                      ));
 

@@ -35,73 +35,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region CPInfoList
+        public CPInfoList       CPInfoList    { get; }
 
-        private readonly CPInfoList _CPInfoList;
+        public ChargingPool_Id  PoolId        { get; }
 
-        public CPInfoList CPInfoList
-        {
-            get
-            {
-                return _CPInfoList;
-            }
-        }
+        public Address          Address       { get; }
 
-        #endregion
-
-        #region PoolId
-
-        private readonly ChargingPool_Id _PoolId;
-
-        public ChargingPool_Id PoolId
-        {
-            get
-            {
-                return _PoolId;
-            }
-        }
-
-        #endregion
-
-        #region Address
-
-        private readonly Address _Address;
-
-        public Address Address
-        {
-            get
-            {
-                return _Address;
-            }
-        }
-
-        #endregion
-
-        #region GeoLocation
-
-        private readonly GeoCoordinate _GeoLocation;
-
-        public GeoCoordinate GeoLocation
-        {
-            get
-            {
-                return _GeoLocation;
-            }
-        }
-
-        #endregion
+        public GeoCoordinate    GeoLocation   { get; }
 
         #region ChargingStations
 
         private readonly List<ChargeStationInfo> _ChargingStations;
 
         public IEnumerable<ChargeStationInfo> ChargingStations
-        {
-            get
-            {
-                return _ChargingStations;
-            }
-        }
+            => _ChargingStations;
 
         #endregion
 
@@ -118,23 +65,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (CPInfoList  == null)
-                throw new ArgumentNullException("CPInfoList",  "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(CPInfoList),   "The given CPInfoList must not be null!");
 
             if (PoolId      == null)
-                throw new ArgumentNullException("PoolId",      "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(PoolId),       "The given charging pool identification must not be null!");
 
             if (Address     == null)
-                throw new ArgumentNullException("Address",     "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(Address),      "The given address must not be null!");
 
             if (GeoLocation == null)
-                throw new ArgumentNullException("GeoLocation", "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(GeoLocation),  "The given geo location must not be null!");
 
             #endregion
 
-            this._CPInfoList        = CPInfoList;
-            this._PoolId            = PoolId;
-            this._Address           = Address;
-            this._GeoLocation       = GeoLocation;
+            this.CPInfoList         = CPInfoList;
+            this.PoolId             = PoolId;
+            this.Address            = Address;
+            this.GeoLocation        = GeoLocation;
             this._ChargingStations  = new List<ChargeStationInfo>();
 
         }
@@ -166,12 +113,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             var ExCSInfos = ChargingStationXMLId.IsNotNullOrEmpty()
                                 ? _ChargingStations.
-                                      Where(CSInfo => CSInfo.StationXMLId == ChargingStationXMLId).
-                                      //Where(CSInfo => CSInfo.StationId    == ChargingStation_Id.Create(EVSEId)).
-                                      FirstOrDefault()
+                                      FirstOrDefault(CSInfo => CSInfo.StationXMLId == ChargingStationXMLId)
                                 : _ChargingStations.
-                                      Where(CSInfo => CSInfo.StationId    == ChargingStation_Id.Create(EVSEId)).
-                                      FirstOrDefault();
+                                      FirstOrDefault(CSInfo => CSInfo.StationId    == ChargingStation_Id.Create(EVSEId.ToWWCP_EVSEId()));
 
             if (ExCSInfos == null)
                 AddCSInfo(ChargingStationXMLId, EVSEId);
@@ -199,14 +143,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region IEnumerable<ChargeStationInfo> Members
 
         public IEnumerator<ChargeStationInfo> GetEnumerator()
-        {
-            return _ChargingStations.GetEnumerator();
-        }
+            => _ChargingStations.GetEnumerator();
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return _ChargingStations.GetEnumerator();
-        }
+            => _ChargingStations.GetEnumerator();
 
         #endregion
 
@@ -249,7 +189,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if ((Object) ChargePoolInfo == null)
                 return false;
 
-            return ChargePoolInfo._PoolId.Equals(_PoolId);
+            return ChargePoolInfo.PoolId.Equals(PoolId);
 
         }
 
@@ -263,9 +203,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Return a string representation of this object.
         /// </summary>
         public override String ToString()
-        {
-            return "'" + PoolId + "' => " + _ChargingStations.Count + " charging stations, " + _ChargingStations.SelectMany(v => v.EVSEIds).Count() + " EVSEs";
-        }
+
+            => String.Concat("'", PoolId, "' => ",
+                             _ChargingStations.Count,
+                             " charging stations, ",
+                             _ChargingStations.SelectMany(v => v.EVSEIds).Count(),
+                             " EVSEs");
 
         #endregion
 

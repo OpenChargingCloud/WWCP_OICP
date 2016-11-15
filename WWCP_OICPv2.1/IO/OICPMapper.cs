@@ -173,12 +173,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EVSEStatus == null)
                 throw new ArgumentNullException(nameof(EVSEStatus), "The given EVSE status must not be null!");
 
-            if (!Definitions.EVSEIdRegExpr.IsMatch(EVSEStatus.Id.ToString()))
-                throw new ArgumentException("The given EVSE identification '" + EVSEStatus.Id + "' does not match the OICP definition!", nameof(EVSEStatus));
-
             #endregion
 
-            return new EVSEStatusRecord(EVSEStatus.Id,
+            return new EVSEStatusRecord(EVSEStatus.Id.ToOICP_EVSEId(),
                                         AsOICPEVSEStatus(EVSEStatus.Status));
 
         }
@@ -1603,39 +1600,50 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         public static IEnumerable<ValueAddedServices> ToEnumeration(this ValueAddedServices e)
-        {
 
-            return Enum.GetValues(typeof(ValueAddedServices)).
-                        Cast<ValueAddedServices>().
-                        Where(flag => e.HasFlag(flag) && flag != ValueAddedServices.None);
-
-        }
+            => Enum.GetValues(typeof(ValueAddedServices)).
+                    Cast<ValueAddedServices>().
+                    Where(flag => e.HasFlag(flag) && flag != ValueAddedServices.None);
 
         #endregion
 
+
+        public static EVSE_Id ToOICP_EVSEId(this WWCP.EVSE_Id EVSEId)
+            => EVSE_Id.Parse(EVSEId.ToString());
+
+        public static WWCP.EVSE_Id ToWWCP_EVSEId(this EVSE_Id EVSEId)
+            => WWCP.EVSE_Id.Parse(EVSEId.ToString());
 
 
         #region AsWWCPChargeDetailRecord(this ChargeDetailRecord)
 
         /// <summary>
-        /// Convert an OICP v2.0 EVSE charge detail record into a corresponding WWCP charge detail record.
+        /// Convert an OICP EVSE charge detail record into a corresponding WWCP charge detail record.
         /// </summary>
-        /// <param name="ChargeDetailRecord">An OICP v2.0 charge detail record.</param>
+        /// <param name="ChargeDetailRecord">An OICP charge detail record.</param>
         /// <returns>The corresponding WWCP EVSE status.</returns>
         public static WWCP.ChargeDetailRecord AsWWCPChargeDetailRecord(this ChargeDetailRecord ChargeDetailRecord)
-        {
 
-            return new WWCP.ChargeDetailRecord(ChargeDetailRecord.SessionId,
-                                               EVSEId:             ChargeDetailRecord.EVSEId,
-                                               ChargingProductId:  ChargeDetailRecord.PartnerProductId,
-                                               SessionTime:        new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
-                                               EnergyMeteringValues:  new List<Timestamped<double>>() { new Timestamped<double>(ChargeDetailRecord.ChargingStart.Value, ChargeDetailRecord.MeterValueStart.Value),
-                                                                                                     new Timestamped<double>(ChargeDetailRecord.ChargingEnd.Value,   ChargeDetailRecord.MeterValueEnd.Value) },
-                                               //MeterValuesInBetween
-                                               //ConsumedEnergy
-                                               MeteringSignature:  ChargeDetailRecord.MeteringSignature);
+            => new WWCP.ChargeDetailRecord(ChargeDetailRecord.SessionId,
+                                           EVSEId:                ChargeDetailRecord.EVSEId.ToWWCP_EVSEId(),
+                                           ChargingProductId:     ChargeDetailRecord.PartnerProductId,
+                                           SessionTime:           new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
+                                           EnergyMeteringValues:  new List<Timestamped<Double>> {
 
-        }
+                                                                      new Timestamped<Double>(
+                                                                          ChargeDetailRecord.ChargingStart.Value,
+                                                                          ChargeDetailRecord.MeterValueStart.Value
+                                                                      ),
+
+                                                                      new Timestamped<Double>(
+                                                                          ChargeDetailRecord.ChargingEnd.Value,
+                                                                          ChargeDetailRecord.MeterValueEnd.Value
+                                                                      )
+
+                                                                  },
+                                           //MeterValuesInBetween
+                                           //ConsumedEnergy
+                                           MeteringSignature:  ChargeDetailRecord.MeteringSignature);
 
         #endregion
 

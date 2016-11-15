@@ -1091,15 +1091,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             AuthorizeStart(ChargingStationOperator_Id  OperatorId,
                            Auth_Token                  AuthToken,
-                           EVSE_Id                     EVSEId             = null,
-                           ChargingSession_Id          SessionId          = null,
-                           ChargingProduct_Id          PartnerProductId   = null,
-                           ChargingSession_Id          PartnerSessionId   = null,
+                           EVSE_Id?                    EVSEId              = null,
+                           ChargingSession_Id          SessionId           = null,
+                           ChargingProduct_Id          PartnerProductId    = null,
+                           ChargingSession_Id          PartnerSessionId    = null,
 
-                           DateTime?                   Timestamp          = null,
-                           CancellationToken?          CancellationToken  = null,
-                           EventTracking_Id            EventTrackingId    = null,
-                           TimeSpan?                   RequestTimeout     = null)
+                           DateTime?                   Timestamp           = null,
+                           CancellationToken?          CancellationToken   = null,
+                           EventTracking_Id            EventTrackingId     = null,
+                           TimeSpan?                   RequestTimeout      = null)
 
 
             => await CPOClient.AuthorizeStart(OperatorId,
@@ -1140,13 +1140,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             AuthorizeStop(ChargingStationOperator_Id  OperatorId,
                           ChargingSession_Id          SessionId,
                           Auth_Token                  AuthToken,
-                          EVSE_Id                     EVSEId             = null,
-                          ChargingSession_Id          PartnerSessionId   = null,
+                          EVSE_Id?                    EVSEId              = null,
+                          ChargingSession_Id          PartnerSessionId    = null,
 
-                          DateTime?                   Timestamp          = null,
-                          CancellationToken?          CancellationToken  = null,
-                          EventTracking_Id            EventTrackingId    = null,
-                          TimeSpan?                   RequestTimeout     = null)
+                          DateTime?                   Timestamp           = null,
+                          CancellationToken?          CancellationToken   = null,
+                          EventTracking_Id            EventTrackingId     = null,
+                          TimeSpan?                   RequestTimeout      = null)
 
 
             => await CPOClient.AuthorizeStop(OperatorId,

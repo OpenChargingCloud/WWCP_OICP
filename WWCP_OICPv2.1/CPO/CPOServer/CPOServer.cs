@@ -330,7 +330,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     ChargingSession_Id    SessionId           = null;
                     ChargingSession_Id    PartnerSessionId    = null;
                     eMobilityProvider_Id  ProviderId          = default(eMobilityProvider_Id);
-                    EVSE_Id               EVSEId              = null;
+                    EVSE_Id               EVSEId              = default(EVSE_Id);
                     eMobilityAccount_Id   eMAId               = null;
                     ChargingProduct_Id    ChargingProductId   = null;
 
@@ -561,7 +561,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     ChargingSession_Id    SessionId         = null;
                     ChargingSession_Id    PartnerSessionId  = null;
                     eMobilityProvider_Id  ProviderId        = default(eMobilityProvider_Id);
-                    EVSE_Id               EVSEId            = null;
+                    EVSE_Id               EVSEId            = default(EVSE_Id);
 
                     Acknowledgement       response          = null;
 
@@ -797,7 +797,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     ChargingSession_Id    SessionId           = null;
                     ChargingSession_Id    PartnerSessionId    = null;
                     eMobilityProvider_Id  ProviderId          = default(eMobilityProvider_Id);
-                    EVSE_Id               EVSEId              = null;
+                    EVSE_Id               EVSEId              = default(EVSE_Id);
                     eMobilityAccount_Id   eMAId               = null;
                     ChargingProduct_Id    ChargingProductId   = null;
 
@@ -1029,7 +1029,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     ChargingSession_Id    SessionId          = null;
                     ChargingSession_Id    PartnerSessionId   = null;
                     eMobilityProvider_Id  ProviderId         = default(eMobilityProvider_Id);
-                    EVSE_Id               EVSEId             = null;
+                    EVSE_Id               EVSEId             = default(EVSE_Id);
 
                     Acknowledgement       response           = null;
 

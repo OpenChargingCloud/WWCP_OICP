@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Operator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
         /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         public static XElement PushEVSEDataXML(ILookup<ChargingStationOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
-                                               ActionTypes                             OICPAction            = ActionTypes.fullLoad,
+                                               ActionTypes                                       OICPAction            = ActionTypes.fullLoad,
                                                ChargingStationOperator                           Operator              = null,
                                                ChargingStationOperatorNameSelectorDelegate       OperatorNameSelector  = null)
 
@@ -133,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Operator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
         /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
         public static XElement PushEVSEStatusXML(ILookup<ChargingStationOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
-                                                 ActionTypes                               OICPAction            = ActionTypes.update,
+                                                 ActionTypes                                         OICPAction            = ActionTypes.update,
                                                  ChargingStationOperator                             Operator              = null,
                                                  ChargingStationOperatorNameSelectorDelegate         OperatorNameSelector  = null)
         {
@@ -220,12 +220,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        public static XElement AuthorizeStartXML(ChargingStationOperator_Id     OperatorId,
-                                                 Auth_Token          AuthToken,
-                                                 EVSE_Id             EVSEId            = null,   // OICP v2.0: Optional
-                                                 ChargingProduct_Id  PartnerProductId  = null,   // OICP v2.0: Optional [100]
-                                                 ChargingSession_Id  SessionId         = null,   // OICP v2.0: Optional
-                                                 ChargingSession_Id  PartnerSessionId  = null)   // OICP v2.0: Optional [50]
+        public static XElement AuthorizeStartXML(ChargingStationOperator_Id  OperatorId,
+                                                 Auth_Token                  AuthToken,
+                                                 EVSE_Id?                    EVSEId             = null,   // OICP v2.1: Optional
+                                                 ChargingProduct_Id          PartnerProductId   = null,   // OICP v2.1: Optional [100]
+                                                 ChargingSession_Id          SessionId          = null,   // OICP v2.1: Optional
+                                                 ChargingSession_Id          PartnerSessionId   = null)   // OICP v2.1: Optional [50]
         {
 
             #region Documentation
@@ -306,10 +306,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                           SessionId        != null ? new XElement(OICPNS.Authorization + "SessionID",        SessionId.       ToString()) : null,
                                           PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
 
-                                          new XElement(OICPNS.Authorization + "OperatorID", OperatorId.OriginId),
+                                          new XElement(OICPNS.Authorization + "OperatorID",    OperatorId.OriginId),
 
-                                          EVSEId != null
-                                              ? new XElement(OICPNS.Authorization + "EVSEID", EVSEId.OriginId)
+                                          EVSEId.HasValue
+                                              ? new XElement(OICPNS.Authorization + "EVSEID",  EVSEId.ToString())
                                               : null,
 
                                           new XElement(OICPNS.Authorization + "Identification",
@@ -338,11 +338,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="AuthToken">The (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        public static XElement AuthorizeStopXML(ChargingStationOperator_Id     OperatorId,
-                                                ChargingSession_Id  SessionId,
-                                                Auth_Token          AuthToken,
-                                                EVSE_Id             EVSEId            = null,
-                                                ChargingSession_Id  PartnerSessionId  = null)
+        public static XElement AuthorizeStopXML(ChargingStationOperator_Id  OperatorId,
+                                                ChargingSession_Id          SessionId,
+                                                Auth_Token                  AuthToken,
+                                                EVSE_Id?                    EVSEId             = null,
+                                                ChargingSession_Id          PartnerSessionId   = null)
         {
 
             #region Documentation
@@ -424,10 +424,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                           PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
 
-                                          new XElement(OICPNS.Authorization + "OperatorID", OperatorId.OriginId),
+                                          new XElement(OICPNS.Authorization + "OperatorID",    OperatorId.OriginId),
 
-                                          EVSEId != null
-                                              ? new XElement(OICPNS.Authorization + "EVSEID", EVSEId.OriginId)
+                                          EVSEId.HasValue
+                                              ? new XElement(OICPNS.Authorization + "EVSEID",  EVSEId.ToString())
                                               : null,
 
                                           new XElement(OICPNS.Authorization + "Identification",

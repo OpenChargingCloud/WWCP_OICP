@@ -111,9 +111,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                  DateTime                       RequestTimestamp,
                                                  CPOClient                      Sender,
                                                  String                         SenderId,
-                                                 ChargingStationOperator_Id                OperatorId,
+                                                 ChargingStationOperator_Id     OperatorId,
                                                  Auth_Token                     AuthToken,
-                                                 EVSE_Id                        EVSEId,
+                                                 EVSE_Id?                       EVSEId,
                                                  ChargingSession_Id             SessionId,
                                                  ChargingProduct_Id             PartnerProductId,
                                                  ChargingSession_Id             PartnerSessionId,
@@ -125,14 +125,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public delegate Task OnAuthorizeStartedHandler(DateTime                     Timestamp,
                                                    CPOClient                    Sender,
                                                    String                       SenderId,
-                                                   ChargingStationOperator_Id              OperatorId,
+                                                   ChargingStationOperator_Id   OperatorId,
                                                    Auth_Token                   AuthToken,
-                                                   EVSE_Id                      EVSEId,
+                                                   EVSE_Id?                     EVSEId,
                                                    ChargingSession_Id           SessionId,
                                                    ChargingProduct_Id           PartnerProductId,
                                                    ChargingSession_Id           PartnerSessionId,
                                                    TimeSpan?                    RequestTimeout,
-                                                   AuthorizationStart   Result,
+                                                   AuthorizationStart           Result,
                                                    TimeSpan                     Duration);
 
 
@@ -143,10 +143,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        DateTime                     RequestTimestamp,
                                                        CPOClient                    Sender,
                                                        String                       SenderId,
-                                                       ChargingStationOperator_Id              OperatorId,
+                                                       ChargingStationOperator_Id   OperatorId,
                                                        ChargingSession_Id           SessionId,
                                                        Auth_Token                   AuthToken,
-                                                       EVSE_Id                      EVSEId,
+                                                       EVSE_Id?                     EVSEId,
                                                        ChargingSession_Id           PartnerSessionId,
                                                        TimeSpan?                    RequestTimeout);
 
@@ -156,13 +156,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public delegate Task OnAuthorizeStopResponseHandler(DateTime                    Timestamp,
                                                         CPOClient                   Sender,
                                                         String                      SenderId,
-                                                        ChargingStationOperator_Id             OperatorId,
+                                                        ChargingStationOperator_Id  OperatorId,
                                                         ChargingSession_Id          SessionId,
                                                         Auth_Token                  AuthToken,
-                                                        EVSE_Id                     EVSEId,
+                                                        EVSE_Id?                    EVSEId,
                                                         ChargingSession_Id          PartnerSessionId,
                                                         TimeSpan?                   RequestTimeout,
-                                                        AuthorizationStop   Result,
+                                                        AuthorizationStop           Result,
                                                         TimeSpan                    Duration);
 
     #endregion

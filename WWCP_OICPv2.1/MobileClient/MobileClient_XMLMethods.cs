@@ -99,7 +99,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileAuthorizeStart",
 
-                                          new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.OriginId.ToString()),
+                                          new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.ToString()),
 
                                           eMAIdWithPIN.ToXML(OICPNS.MobileAuthorization),
 
@@ -146,7 +146,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId), "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(SessionId),  "The given session identification must not be null!");
 
             #endregion
 
@@ -187,7 +187,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId), "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(SessionId), "The given session identification must not be null!");
 
             #endregion
 

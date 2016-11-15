@@ -41,20 +41,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="SessionId">An optional session identification.</param>
     /// <param name="PartnerProductId">An optional partner product identification.</param>
     /// <param name="PartnerSessionId">An optional partner session identification.</param>
-    /// <param name="QueryTimeout">An optional timeout for this request.</param>
+    /// <param name="RequestTimeout">An optional timeout for this request.</param>
     public delegate Task<AuthorizationStart>
 
-        OnAuthorizeStartDelegate(DateTime            Timestamp,
-                                 EMPServer           Sender,
-                                 CancellationToken   CancellationToken,
-                                 EventTracking_Id    EventTrackingId,
-                                 ChargingStationOperator_Id     OperatorId,
-                                 Auth_Token          AuthToken,
-                                 EVSE_Id             EVSEId            = null,
-                                 ChargingSession_Id  SessionId         = null,
-                                 ChargingProduct_Id  PartnerProductId  = null,
-                                 ChargingSession_Id  PartnerSessionId  = null,
-                                 TimeSpan?           QueryTimeout      = null);
+        OnAuthorizeStartDelegate(DateTime                    Timestamp,
+                                 EMPServer                   Sender,
+                                 CancellationToken           CancellationToken,
+                                 EventTracking_Id            EventTrackingId,
+                                 ChargingStationOperator_Id  OperatorId,
+                                 Auth_Token                  AuthToken,
+                                 EVSE_Id?                    EVSEId             = null,
+                                 ChargingSession_Id          SessionId          = null,
+                                 ChargingProduct_Id          PartnerProductId   = null,
+                                 ChargingSession_Id          PartnerSessionId   = null,
+                                 TimeSpan?                   RequestTimeout     = null);
 
 
     /// <summary>
@@ -69,19 +69,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="OperatorId">The unique identification of the Charging Station Operator.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="AuthToken">A (RFID) user identification.</param>
-    /// <param name="QueryTimeout">An optional timeout for this request.</param>
+    /// <param name="RequestTimeout">An optional timeout for this request.</param>
     public delegate Task<AuthorizationStop>
 
-        OnAuthorizeStopDelegate(DateTime            Timestamp,
-                                EMPServer           Sender,
-                                CancellationToken   CancellationToken,
-                                EventTracking_Id    EventTrackingId,
-                                ChargingSession_Id  SessionId,
-                                ChargingSession_Id  PartnerSessionId,
-                                ChargingStationOperator_Id     OperatorId,
-                                EVSE_Id             EVSEId,
-                                Auth_Token          AuthToken,
-                                TimeSpan?           QueryTimeout  = null);
+        OnAuthorizeStopDelegate(DateTime                    Timestamp,
+                                EMPServer                   Sender,
+                                CancellationToken           CancellationToken,
+                                EventTracking_Id            EventTrackingId,
+                                ChargingSession_Id          SessionId,
+                                ChargingSession_Id          PartnerSessionId,
+                                ChargingStationOperator_Id  OperatorId,
+                                EVSE_Id                     EVSEId,
+                                Auth_Token                  AuthToken,
+                                TimeSpan?                   RequestTimeout  = null);
 
 
     /// <summary>
@@ -92,7 +92,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <param name="CancellationToken">A token to cancel this task.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="ChargeDetailRecord">A charge detail record.</param>
-    /// <param name="QueryTimeout">An optional timeout for this request.</param>
+    /// <param name="RequestTimeout">An optional timeout for this request.</param>
     public delegate Task<Acknowledgement>
 
         OnChargeDetailRecordDelegate(DateTime            Timestamp,
@@ -100,6 +100,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                      CancellationToken   CancellationToken,
                                      EventTracking_Id    EventTrackingId,
                                      ChargeDetailRecord  ChargeDetailRecord,
-                                     TimeSpan?           QueryTimeout  = null);
+                                     TimeSpan?           RequestTimeout  = null);
 
 }

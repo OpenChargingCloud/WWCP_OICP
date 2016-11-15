@@ -245,7 +245,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                 Boolean                           IsHubjectCompatible         = true,
                                 Boolean                           DynamicInfoAvailable        = true)
 
-            : this(EVSE.Id,
+            : this(EVSE.Id.ToOICP_EVSEId(),
                    DeltaType,
                    LastUpdate,
                    ChargingStationId,
@@ -286,16 +286,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Id">The unique identification of an EVSE.</param>
         public EVSEDataRecord(EVSE_Id  Id)
         {
-
-            #region Initial checks
-
-            if (Id == null)
-                throw new ArgumentNullException(nameof(Id),  "The given unique EVSE identification must not be null!");
-
-            if (!Definitions.EVSEIdRegExpr.IsMatch(Id.ToString()))
-                throw new ArgumentException("The given EVSE identification '" + Id + "' does not match the OICP definition!", nameof(Id));
-
-            #endregion
 
             this.Id                   = Id;
             this.ChargingStationName  = new I18NString();
@@ -782,7 +772,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new XElement(OICPNS.EVSEData + "EvseDataRecord",
 
-                   new XElement(OICPNS.EVSEData + "EvseId",                Id.OriginId),
+                   new XElement(OICPNS.EVSEData + "EvseId",                Id.ToString()),
                    new XElement(OICPNS.EVSEData + "ChargingStationId",     ChargingStationId),
                    new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.de].SubstringMax(50)),
                    new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.en].SubstringMax(50)),
@@ -790,7 +780,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    new XElement(OICPNS.EVSEData + "Address",
                        new XElement(OICPNS.CommonTypes + "Country",        Address.Country.Alpha3Code),
                        new XElement(OICPNS.CommonTypes + "City",           Address.City.FirstText),
-                       new XElement(OICPNS.CommonTypes + "Street",         Address.Street), // OICPEVSEData.0 requires at least 5 characters!
+                       new XElement(OICPNS.CommonTypes + "Street",         Address.Street), // OICP v2.1 requires at least 5 characters!
 
                        Address.PostalCode. IsNotNullOrEmpty()
                            ? new XElement(OICPNS.CommonTypes + "PostalCode", Address.PostalCode)
@@ -904,9 +894,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Return a builder for this EVSE data record.
         /// </summary>
         /// <param name="NewEVSEId">An optional new EVSE identification.</param>
-        public Builder ToBuilder(EVSE_Id NewEVSEId = null)
+        public Builder ToBuilder(EVSE_Id? NewEVSEId = null)
 
-            => new Builder(NewEVSEId ?? this.Id) {
+            => new Builder(NewEVSEId ?? Id) {
 
                    EVSE                      = EVSE,
 
@@ -1065,7 +1055,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                              Boolean              IsHubjectCompatible        = true,
                              Boolean              DynamicInfoAvailable       = true)
 
-                : this(EVSE?.Id,
+                : this(EVSE.Id.ToOICP_EVSEId(),
                        "",
                        DateTime.Now,
                        EVSE.Operator,
@@ -1108,13 +1098,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             public Builder(EVSE_Id  Id)
             {
 
-                #region Initial checks
-
-                if (Id == null)
-                    throw new ArgumentNullException(nameof(Id),  "The given unique EVSE identification must not be null!");
-
-                #endregion
-
                 this.Id                   = Id;
                 this.ChargingStationName  = new I18NString();
                 this.AdditionalInfo       = new I18NString();
@@ -1152,31 +1135,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
             /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
             /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
-            public Builder(EVSE_Id              Id,
-                           String               DeltaType,
-                           DateTime?            LastUpdate,
-                           ChargingStationOperator         EVSEOperator,
-                           String               ChargingStationId          = null,
-                           I18NString           ChargingStationName        = null,
-                           Address              Address                    = null,
-                           GeoCoordinate        GeoCoordinate              = null,
-                           PlugTypes            Plugs                      = PlugTypes.Unspecified,
-                           ChargingFacilities   ChargingFacilities         = ChargingFacilities.Unspecified,
-                           ChargingModes        ChargingModes              = ChargingModes.Unspecified,
-                           AuthenticationModes  AuthenticationModes        = AuthenticationModes.Unkown,
-                           Double?              MaxCapacity                = null,
-                           PaymentOptions       PaymentOptions             = PaymentOptions.Unspecified,
-                           ValueAddedServices   ValueAddedServices         = ValueAddedServices.None,
-                           AccessibilityTypes   Accessibility              = AccessibilityTypes.Free_publicly_accessible,
-                           String               HotlinePhoneNumber         = null,
-                           I18NString           AdditionalInfo             = null,
-                           GeoCoordinate        GeoChargingPointEntrance   = null,
-                           Boolean?             IsOpen24Hours              = null,
-                           OpeningTimes         OpeningTime                = null,
-                           HubOperator_Id       HubOperatorId              = null,
-                           RoamingProvider_Id   ClearingHouseId            = null,
-                           Boolean              IsHubjectCompatible        = true,
-                           Boolean              DynamicInfoAvailable       = true)
+            public Builder(EVSE_Id                  Id,
+                           String                   DeltaType,
+                           DateTime?                LastUpdate,
+                           ChargingStationOperator  EVSEOperator,
+                           String                   ChargingStationId          = null,
+                           I18NString               ChargingStationName        = null,
+                           Address                  Address                    = null,
+                           GeoCoordinate            GeoCoordinate              = null,
+                           PlugTypes                Plugs                      = PlugTypes.Unspecified,
+                           ChargingFacilities       ChargingFacilities         = ChargingFacilities.Unspecified,
+                           ChargingModes            ChargingModes              = ChargingModes.Unspecified,
+                           AuthenticationModes      AuthenticationModes        = AuthenticationModes.Unkown,
+                           Double?                  MaxCapacity                = null,
+                           PaymentOptions           PaymentOptions             = PaymentOptions.Unspecified,
+                           ValueAddedServices       ValueAddedServices         = ValueAddedServices.None,
+                           AccessibilityTypes       Accessibility              = AccessibilityTypes.Free_publicly_accessible,
+                           String                   HotlinePhoneNumber         = null,
+                           I18NString               AdditionalInfo             = null,
+                           GeoCoordinate            GeoChargingPointEntrance   = null,
+                           Boolean?                 IsOpen24Hours              = null,
+                           OpeningTimes             OpeningTime                = null,
+                           HubOperator_Id           HubOperatorId              = null,
+                           RoamingProvider_Id       ClearingHouseId            = null,
+                           Boolean                  IsHubjectCompatible        = true,
+                           Boolean                  DynamicInfoAvailable       = true)
 
                 : this(Id)
 

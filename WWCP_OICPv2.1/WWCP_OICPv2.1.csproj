@@ -57,12 +57,12 @@
     <Compile Include="CPO\CPOServer\CPOServer.cs" />
     <Compile Include="CPO\CPOServer\CPOServerDelegates.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
+    <Compile Include="DataTypes\EVSE_Id.cs" />
     <Compile Include="DataTypes\HubOperator_Id.cs" />
     <Compile Include="DataTypes\HubProvider_Id.cs" />
     <Compile Include="MobileClient\MobileClientDelegates.cs" />
     <Compile Include="MobileClient\MobileClientLogger.cs" />
     <Compile Include="DataTypes\Data\StatusCodes.cs" />
-    <Compile Include="Definitions.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="EMP\EMPClient\EMPClient.cs" />
     <Compile Include="EMP\EMPClient\EMPClientDelegates.cs" />

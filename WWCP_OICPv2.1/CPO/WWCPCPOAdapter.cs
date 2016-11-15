@@ -247,15 +247,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               RoamingNetwork                               RoamingNetwork,
 
                               CPORoaming                                   CPORoaming,
-                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
-                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML    = null,
+                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord    = null,
+                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML     = null,
 
-                              ChargingStationOperator                      DefaultOperator       = null,
-                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector  = null,
-                              IncludeEVSEDelegate                          IncludeEVSEs          = null,
-                              TimeSpan?                                    ServiceCheckEvery     = null,
-                              TimeSpan?                                    StatusCheckEvery      = null,
-                              Boolean                                      DisableAutoUploads    = false)
+                              ChargingStationOperator                      DefaultOperator        = null,
+                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector   = null,
+                              IncludeEVSEDelegate                          IncludeEVSEs           = null,
+                              TimeSpan?                                    ServiceCheckEvery      = null,
+                              TimeSpan?                                    StatusCheckEvery       = null,
+                              Boolean                                      DisableAutoUploads     = false)
 
             : base(Id,
                    Name,
@@ -339,7 +339,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                var response = await RoamingNetwork.Reserve(EVSEId,
+                var response = await RoamingNetwork.Reserve(EVSEId.ToWWCP_EVSEId(),
                                                             Duration:           Duration,
                                                             ReservationId:      SessionId != null ? ChargingReservation_Id.Parse(SessionId.ToString()) : null,
                                                             ProviderId:         ProviderId,
@@ -416,7 +416,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 var response = await _RoamingNetwork.CancelReservation(ChargingReservation_Id.Parse(SessionId.ToString()),
                                                                        ChargingReservationCancellationReason.Deleted,
                                                                        ProviderId,
-                                                                       EVSEId,
+                                                                       EVSEId.ToWWCP_EVSEId(),
 
                                                                        Timestamp,
                                                                        CancellationToken,
@@ -500,7 +500,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                var response = await _RoamingNetwork.RemoteStart(EVSEId,
+                var response = await _RoamingNetwork.RemoteStart(EVSEId.ToWWCP_EVSEId(),
                                                                  ChargingProductId,
                                                                  ReservationId,
                                                                  SessionId,
@@ -582,7 +582,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                    ProviderId,
                                                    RequestTimeout) => {
 
-                var response = await _RoamingNetwork.RemoteStop(EVSEId,
+                var response = await _RoamingNetwork.RemoteStop(EVSEId.ToWWCP_EVSEId(),
                                                                 SessionId,
                                                                 ReservationHandling.Close,
                                                                 ProviderId,
@@ -667,18 +667,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                               CPOClient                                    CPOClient,
                               CPOServer                                    CPOServer,
-                              String                                       ServerLoggingContext  = CPOServerLogger.DefaultContext,
-                              Func<String, String, String>                 LogFileCreator        = null,
+                              String                                       ServerLoggingContext   = CPOServerLogger.DefaultContext,
+                              Func<String, String, String>                 LogFileCreator         = null,
 
-                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
-                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML    = null,
+                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord    = null,
+                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML     = null,
 
-                              ChargingStationOperator                      DefaultOperator       = null,
-                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector  = null,
-                              IncludeEVSEDelegate                          IncludeEVSEs          = null,
-                              TimeSpan?                                    ServiceCheckEvery     = null,
-                              TimeSpan?                                    StatusCheckEvery      = null,
-                              Boolean                                      DisableAutoUploads    = false)
+                              ChargingStationOperator                      DefaultOperator        = null,
+                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector   = null,
+                              IncludeEVSEDelegate                          IncludeEVSEs           = null,
+                              TimeSpan?                                    ServiceCheckEvery      = null,
+                              TimeSpan?                                    StatusCheckEvery       = null,
+                              Boolean                                      DisableAutoUploads     = false)
 
             : this(Id,
                    Name,
@@ -743,34 +743,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               RoamingNetwork                               RoamingNetwork,
 
                               String                                       RemoteHostname,
-                              IPPort                                       RemoteTCPPort               = null,
-                              RemoteCertificateValidationCallback          RemoteCertificateValidator  = null,
-                              X509Certificate                              ClientCert                  = null,
-                              String                                       RemoteHTTPVirtualHost       = null,
-                              String                                       URIPrefix                   = CPOClient.DefaultURIPrefix,
-                              String                                       HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
-                              TimeSpan?                                    RequestTimeout              = null,
+                              IPPort                                       RemoteTCPPort                = null,
+                              RemoteCertificateValidationCallback          RemoteCertificateValidator   = null,
+                              X509Certificate                              ClientCert                   = null,
+                              String                                       RemoteHTTPVirtualHost        = null,
+                              String                                       URIPrefix                    = CPOClient.DefaultURIPrefix,
+                              String                                       HTTPUserAgent                = CPOClient.DefaultHTTPUserAgent,
+                              TimeSpan?                                    RequestTimeout               = null,
 
-                              String                                       ServerName                  = CPOServer.DefaultHTTPServerName,
-                              IPPort                                       ServerTCPPort               = null,
-                              String                                       ServerURIPrefix             = "",
-                              Boolean                                      ServerAutoStart             = false,
+                              String                                       ServerName                   = CPOServer.DefaultHTTPServerName,
+                              IPPort                                       ServerTCPPort                = null,
+                              String                                       ServerURIPrefix              = "",
+                              Boolean                                      ServerAutoStart              = false,
 
-                              String                                       ClientLoggingContext        = CPOClient.CPOClientLogger.DefaultContext,
-                              String                                       ServerLoggingContext        = CPOServerLogger.DefaultContext,
-                              Func<String, String, String>                 LogFileCreator              = null,
+                              String                                       ClientLoggingContext         = CPOClient.CPOClientLogger.DefaultContext,
+                              String                                       ServerLoggingContext         = CPOServerLogger.DefaultContext,
+                              Func<String, String, String>                 LogFileCreator               = null,
 
-                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord         = null,
-                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML          = null,
+                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord          = null,
+                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML           = null,
 
-                              ChargingStationOperator                      DefaultOperator             = null,
-                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector        = null,
-                              IncludeEVSEDelegate                          IncludeEVSEs                = null,
-                              TimeSpan?                                    ServiceCheckEvery           = null,
-                              TimeSpan?                                    StatusCheckEvery            = null,
-                              Boolean                                      DisableAutoUploads          = false,
+                              ChargingStationOperator                      DefaultOperator              = null,
+                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector         = null,
+                              IncludeEVSEDelegate                          IncludeEVSEs                 = null,
+                              TimeSpan?                                    ServiceCheckEvery            = null,
+                              TimeSpan?                                    StatusCheckEvery             = null,
+                              Boolean                                      DisableAutoUploads           = false,
 
-                              DNSClient                                    DNSClient                   = null)
+                              DNSClient                                    DNSClient                    = null)
 
             : this(Id,
                    Name,
@@ -1461,12 +1461,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(ILookup<ChargingStationOperator, WWCP.EVSEStatus>  GroupedEVSEStatus,
-                           WWCP.ActionType                               ActionType         = WWCP.ActionType.update,
+                           WWCP.ActionType                                    ActionType         = WWCP.ActionType.update,
 
-                           DateTime?                                     Timestamp          = null,
-                           CancellationToken?                            CancellationToken  = null,
-                           EventTracking_Id                              EventTrackingId    = null,
-                           TimeSpan?                                     RequestTimeout     = null)
+                           DateTime?                                          Timestamp          = null,
+                           CancellationToken?                                 CancellationToken  = null,
+                           EventTracking_Id                                   EventTrackingId    = null,
+                           TimeSpan?                                          RequestTimeout     = null)
 
         {
 
@@ -1497,12 +1497,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Get effective number of EVSE status to upload
 
+            var Warnings = new List<String>();
             WWCP.Acknowledgement result = null;
 
-            var _NumberOfEVSEStatus  = GroupedEVSEStatus.
-                                          Where     (group => group.Key != null).
-                                          SelectMany(group => group.Where(evsestatus => evsestatus != null)).
-                                          Count();
+            var EVSEStatusToPush = GroupedEVSEStatus.
+                                       Where       (group => group.Key != null).
+                                       ToDictionary(group => group.Key,
+                                                    group => group.AsEnumerable(). // Only send the latest EVSE status!
+                                                                   GroupBy(evsestatus      => evsestatus.Id).
+                                                                   Select (sameevseidgroup => sameevseidgroup.OrderByDescending(status => status.Timestamp).First())).
+                                       SelectMany(kvp => kvp.Value.Select(evsestatus => {
+
+                                           try
+                                           {
+                                               return evsestatus.AsOICPEVSEStatus();
+                                           }
+                                           catch (Exception e)
+                                           {
+                                               DebugX.Log(e.Message);
+                                               Warnings.Add(e.Message);
+                                           }
+
+                                           return null;
+
+                                       }), Tuple.Create).
+                                       Where(xx => xx != null).
+                                       ToLookup(kvp => kvp.Item1.Key,
+                                                kvp => kvp.Item2);
+
+            var _NumberOfEVSEStatus  = EVSEStatusToPush.
+                                           SelectMany(group => group.Where(evsestatus => evsestatus != null)).
+                                           Count();
 
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
@@ -1537,31 +1562,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (_NumberOfEVSEStatus > 0)
             {
 
-                var Warnings = new List<String>();
-
-                var response = await CPORoaming.PushEVSEStatus(GroupedEVSEStatus.
-                                                                   Where       (group => group.Key != null).
-                                                                   ToDictionary(group => group.Key,
-                                                                                group => group.AsEnumerable(). // Only send the latest EVSE status!
-                                                                                               GroupBy(evsestatus      => evsestatus.Id).
-                                                                                               Select (sameevseidgroup => sameevseidgroup.OrderByDescending(status => status.Timestamp).First())).
-                                                                   SelectMany(kvp => kvp.Value.Select(evsestatus => {
-
-                                                                       try
-                                                                       {
-                                                                           return evsestatus.AsOICPEVSEStatus();
-                                                                       }
-                                                                       catch (Exception e)
-                                                                       {
-                                                                           DebugX.Log(e.Message);
-                                                                           Warnings.Add(e.Message);
-                                                                       }
-
-                                                                       return null;
-
-                                                                   }), Tuple.Create).
-                                                                   ToLookup(kvp => kvp.Item1.Key,
-                                                                            kvp => kvp.Item2), 
+                var response = await CPORoaming.PushEVSEStatus(EVSEStatusToPush,
                                                                ActionType.AsOICPActionType(),
                                                                DefaultOperator,
                                                                _OperatorNameSelector ?? DefaultOperatorNameSelector,
@@ -2469,7 +2470,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             AuthorizeStart(ChargingStationOperator_Id  OperatorId,
                            Auth_Token                  AuthToken,
-                           EVSE_Id                     EVSEId,
+                           WWCP.EVSE_Id                EVSEId,
                            ChargingProduct_Id          ChargingProductId  = null,   // [maxlength: 100]
                            ChargingSession_Id          SessionId          = null,
 
@@ -2537,7 +2538,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             var response  = await CPORoaming.AuthorizeStart(OperatorId,
                                                             AuthToken,
-                                                            EVSEId,
+                                                            EVSEId.ToOICP_EVSEId(),
                                                             SessionId,
                                                             ChargingProductId,
                                                             null,
@@ -2897,7 +2898,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public override async Task<AuthStopEVSEResult>
 
             AuthorizeStop(ChargingStationOperator_Id  OperatorId,
-                          EVSE_Id                     EVSEId,
+                          WWCP.EVSE_Id                EVSEId,
                           ChargingSession_Id          SessionId,
                           Auth_Token                  AuthToken,
 
@@ -2967,7 +2968,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             var response  = await CPORoaming.AuthorizeStop(OperatorId,
                                                            SessionId,
                                                            AuthToken,
-                                                           EVSEId,
+                                                           EVSEId.ToOICP_EVSEId(),
                                                            null,
 
                                                            Timestamp,
@@ -3219,7 +3220,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
             var response = await CPORoaming.SendChargeDetailRecord(new ChargeDetailRecord(
-                                                                       ChargeDetailRecord.EVSEId,
+                                                                       ChargeDetailRecord.EVSEId.Value.ToOICP_EVSEId(),
                                                                        ChargeDetailRecord.SessionId,
                                                                        ChargeDetailRecord.SessionTime.Value.StartTime,
                                                                        ChargeDetailRecord.SessionTime.Value.EndTime.Value,

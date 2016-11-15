@@ -55,7 +55,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             String                                                    Hostname,
                             IPPort                                                    TCPPort,
                             String                                                    HTTPVirtualHost,
-                            eMobilityProvider_Id                                                   ProviderId,
+                            eMobilityProvider_Id                                      ProviderId,
                             DNSClient                                                 DNSClient                      = null,
 
                             TimeSpan?                                                 UpdateEVSEDataEvery            = null,
@@ -71,7 +71,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                             Func  <String, DateTime, IEnumerable<EVSE_Id>>            GetEVSEIdsForStatusUpdate      = null,
                             Action<String, DateTime, XElement>                        EVSEStatusXMLHandler           = null,
-                            Action<String, DateTime, EVSE_Id, EVSEStatusTypes>     EVSEStatusHandler              = null,
+                            Action<String, DateTime, EVSE_Id, EVSEStatusTypes>        EVSEStatusHandler              = null,
 
                             Func<EVSEStatusReport, ChargingStationStatusType>         EVSEStatusAggregationDelegate  = null
 
@@ -318,7 +318,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                               #region Update matching EVSE... or create a new one!
 
-                                                              if (_ChargingStation.TryGetEVSEbyId(EvseDataRecord.Id, out _EVSE))
+                                                              if (_ChargingStation.TryGetEVSEbyId(EvseDataRecord.Id.ToWWCP_EVSEId(), out _EVSE))
                                                               {
 
                                                                   // Update via events!
@@ -331,7 +331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                               }
 
                                                               else
-                                                                  _ChargingStation.CreateNewEVSE(EvseDataRecord.Id,
+                                                                  _ChargingStation.CreateNewEVSE(EvseDataRecord.Id.ToWWCP_EVSEId(),
 
                                                                                                  Configurator: evse => {
 
@@ -442,29 +442,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region Identification
+        public String Identification { get; }
 
-        private readonly String _Identification;
+        private readonly String                _Hostname;
+        private readonly IPPort                _TCPPort;
+        private readonly String                _HTTPVirtualHost;
+        private readonly eMobilityProvider_Id  _ProviderId;
 
-        public String Identification
-        {
-            get
-            {
-                return _Identification;
-            }
-        }
-
-        #endregion
-
-        private readonly String         _Hostname;
-        private readonly IPPort         _TCPPort;
-        private readonly String         _HTTPVirtualHost;
-        private readonly eMobilityProvider_Id        _ProviderId;
-
-        private readonly TimeSpan       _UpdateEVSEDataEvery;
-        private readonly TimeSpan       _UpdateEVSEDataTimeout;
-        private readonly TimeSpan       _UpdateEVSEStatusEvery;
-        private readonly TimeSpan       _UpdateEVSEStatusTimeout;
+        private readonly TimeSpan              _UpdateEVSEDataEvery;
+        private readonly TimeSpan              _UpdateEVSEDataTimeout;
+        private readonly TimeSpan              _UpdateEVSEStatusEvery;
+        private readonly TimeSpan              _UpdateEVSEStatusTimeout;
 
         #region LoadStaticDataCounter
 
@@ -494,34 +482,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region DNSClient
-
-        private readonly DNSClient _DNSClient;
-
-        public DNSClient DNSClient
-        {
-            get
-            {
-                return _DNSClient;
-            }
-        }
-
-        #endregion
-
-        #region QueryTimeout
+        public DNSClient DNSClient { get; }
 
         /// <summary>
         /// The timeout for upstream queries.
         /// </summary>
         public TimeSpan QueryTimeout
-        {
-            get
-            {
-                return _EMPClient.RequestTimeout;
-            }
-        }
-
-        #endregion
+            => _EMPClient.RequestTimeout;
 
         #endregion
 
@@ -617,7 +584,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Init parameters
 
-            this._Identification               = Identification;
+            this.Identification               = Identification;
             this._Hostname                     = Hostname;
             this._TCPPort                      = TCPPort;
             this._HTTPVirtualHost              = HTTPVirtualHost;
@@ -635,7 +602,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (!UpdateEVSEStatusTimeout.HasValue)
                 this._UpdateEVSEStatusTimeout  = DefaultUpdateEVSEStatusTimeout;
 
-            this._DNSClient                    = DNSClient != null
+            this.DNSClient                    = DNSClient != null
                                                      ? DNSClient
                                                      : new DNSClient();
 
@@ -661,7 +628,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         RemotePort:          _TCPPort,
                                         HTTPVirtualHost:  _HTTPVirtualHost,
                                         RequestTimeout:     QueryTimeout,
-                                        DNSClient:        _DNSClient);
+                                        DNSClient:        DNSClient);
 
             _EMPClient.OnException += SendException;
             _EMPClient.OnHTTPError += SendHTTPError;
@@ -726,7 +693,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Init parameters
 
-            this._Identification               = Identification;
+            this.Identification               = Identification;
             this._Hostname                     = Hostname;
             this._TCPPort                      = TCPPort;
             this._HTTPVirtualHost              = HTTPVirtualHost;
@@ -744,7 +711,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (!UpdateEVSEStatusTimeout.HasValue)
                 this._UpdateEVSEStatusTimeout  = DefaultUpdateEVSEStatusTimeout;
 
-            this._DNSClient                    = DNSClient != null
+            this.DNSClient                    = DNSClient != null
                                                      ? DNSClient
                                                      : new DNSClient();
 
@@ -770,7 +737,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         RemotePort:          _TCPPort,
                                         HTTPVirtualHost:  _HTTPVirtualHost,
                                         RequestTimeout:     QueryTimeout,
-                                        DNSClient:        _DNSClient);
+                                        DNSClient:        DNSClient);
 
             _EMPClient.OnException += SendException;
             _EMPClient.OnHTTPError += SendHTTPError;

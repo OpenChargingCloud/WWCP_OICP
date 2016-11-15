@@ -369,7 +369,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 ChargingSession_Id          SessionId           = null;
                 ChargingSession_Id          PartnerSessionId    = null;
                 ChargingStationOperator_Id  OperatorId          = default(ChargingStationOperator_Id);
-                EVSE_Id                     EVSEId              = null;
+                EVSE_Id                     EVSEId              = default(EVSE_Id);
                 ChargingProduct_Id          ChargingProductId   = null;
                 Auth_Token                  AuthToken           = null;
 
@@ -570,7 +570,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 ChargingSession_Id          SessionId          = null;
                 ChargingSession_Id          PartnerSessionId   = null;
                 ChargingStationOperator_Id  OperatorId         = default(ChargingStationOperator_Id);
-                EVSE_Id                     EVSEId             = null;
+                EVSE_Id                     EVSEId             = default(EVSE_Id);
                 Auth_Token                  AuthToken          = null;
 
                 AuthorizationStop           response           = null;
@@ -727,8 +727,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    ChargeDetailRecord      CDR       = null;
-                    Acknowledgement response  = null;
+                    ChargeDetailRecord CDR       = null;
+                    Acknowledgement    response  = null;
 
                     try
                     {

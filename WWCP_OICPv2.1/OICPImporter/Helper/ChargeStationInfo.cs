@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -32,33 +33,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region ChargePoolInfo
+        public ChargingPoolInfo  ChargePoolInfo   { get; }
 
-        private readonly ChargingPoolInfo _ChargePoolInfo;
-
-        public ChargingPoolInfo ChargePoolInfo
-        {
-            get
-            {
-                return _ChargePoolInfo;
-            }
-        }
-
-        #endregion
-
-        #region StationXMLId
-
-        private readonly String _StationXMLId;
-
-        public String StationXMLId
-        {
-            get
-            {
-                return _StationXMLId;
-            }
-        }
-
-        #endregion
+        public String            StationXMLId     { get; }
 
         #region StationId
 
@@ -87,12 +64,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         private readonly List<EVSE_Id> _EVSEIds;
 
         public IEnumerable<EVSE_Id> EVSEIds
-        {
-            get
-            {
-                return _EVSEIds;
-            }
-        }
+            => _EVSEIds;
 
         #endregion
 
@@ -108,16 +80,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (ChargePoolInfo == null)
-                throw new ArgumentNullException("ChargePoolInfo", "The given parameter must not be null!");
-
-            if (EVSEId         == null)
-                throw new ArgumentNullException(nameof(EVSEId),         "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(ChargePoolInfo),  "The given charging pool information must not be null!");
 
             #endregion
 
-            this._ChargePoolInfo  = ChargePoolInfo;
-            this._StationXMLId    = StationXMLId != null ? StationXMLId : "";
-            this._EVSEIds         = new List<EVSE_Id>() { EVSEId };
+            this.ChargePoolInfo  = ChargePoolInfo;
+            this.StationXMLId    = StationXMLId != null ? StationXMLId : "";
+            this._EVSEIds        = new List<EVSE_Id> { EVSEId };
 
             Check();
 
@@ -144,19 +113,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             _StationId = null;
 
             // 1st: Try to use the given ChargingStationId from the XML...
-            if (StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(OperatorIdFormats.OLD)) ||
-                StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(OperatorIdFormats.NEW)))
+            if (StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(OperatorIdFormats.DIN)) ||
+                StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(OperatorIdFormats.ISO)))
                 ChargingStation_Id.TryParse(StationXMLId, out _StationId);
 
             // 2nd: Try to use the given EVSE Ids to find a common prefix...
             if (_StationId == null)
-                _StationId = ChargingStation_Id.Create(this._EVSEIds);
+                _StationId = ChargingStation_Id.Create(_EVSEIds.Select(evse => evse.ToWWCP_EVSEId()));
 
             // Alternative: Try to use a modified StationXML Id...
             if (_StationId == null)
             {
                 var rgx = new Regex("[^A-Z0-9]");
-                ChargingStation_Id.TryParse(ChargePoolInfo.PoolId.OperatorId, rgx.Replace(_StationXMLId.ToUpper(), ""), out _StationId);
+                ChargingStation_Id.TryParse(ChargePoolInfo.PoolId.OperatorId, rgx.Replace(StationXMLId.ToUpper(), ""), out _StationId);
             }
 
         }
@@ -217,7 +186,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if ((Object) ChargeStationInfo == null)
                 return false;
 
-            return ChargeStationInfo._StationXMLId.Equals(_StationXMLId);
+            return ChargeStationInfo.StationXMLId.Equals(StationXMLId);
 
         }
 

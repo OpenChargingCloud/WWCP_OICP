@@ -65,12 +65,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EVSE == null)
                 throw new ArgumentNullException(nameof(EVSE),  "The given EVSE must not be null!");
 
-            if (!Definitions.EVSEIdRegExpr.IsMatch(EVSE.Id.ToString()))
+            if (!EVSE_Id.EVSEId_RegEx.IsMatch(EVSE.Id.ToString()))
                 throw new ArgumentException("The given EVSE identification '" + EVSE.Id + "' does not match the OICP definition!", nameof(EVSE));
 
             #endregion
 
-            this.Id      = EVSE.Id;
+            this.Id      = EVSE.Id.ToOICP_EVSEId();
             this.Status  = OICPMapper.AsOICPEVSEStatus(EVSE.Status.Value);
 
         }
@@ -84,20 +84,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="Id">The unique identification of an EVSE.</param>
         /// <param name="Status">The current status of an EVSE.</param>
-        public EVSEStatusRecord(EVSE_Id         Id,
+        public EVSEStatusRecord(EVSE_Id          Id,
                                 EVSEStatusTypes  Status)
 
         {
-
-            #region Initial checks
-
-            if (Id == null)
-                throw new ArgumentNullException(nameof(Id),  "The given unique identification of an EVSE must not be null!");
-
-            if (!Definitions.EVSEIdRegExpr.IsMatch(Id.ToString()))
-                throw new ArgumentException("The given EVSE identification '" + Id + "' does not match the OICP definition!", nameof(Id));
-
-            #endregion
 
             this.Id      = Id;
             this.Status  = Status;
@@ -187,7 +177,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public XElement ToXML()
 
             => new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
-                   new XElement(OICPNS.EVSEStatus + "EvseId",     Id.    OriginId),
+                   new XElement(OICPNS.EVSEStatus + "EvseId",     Id.    ToString()),
                    new XElement(OICPNS.EVSEStatus + "EvseStatus", Status.ToString())
                );
 

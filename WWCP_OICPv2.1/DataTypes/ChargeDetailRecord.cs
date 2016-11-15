@@ -382,7 +382,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
                    PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
                    PartnerProductId != null ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString()) : null,
-                   new XElement(OICPNS.Authorization + "EvseID",           EVSEId.OriginId),
+                   new XElement(OICPNS.Authorization + "EvseID",           EVSEId.ToString()),
 
                    Identification.ToXML(OICPNS.Authorization),
 
