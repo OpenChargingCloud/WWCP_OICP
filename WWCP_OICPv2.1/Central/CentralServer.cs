@@ -48,40 +48,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #region Properties
 
-        #region RoamingNetwork
+        public RoamingNetwork RoamingNetwork { get; }
 
-        private readonly RoamingNetwork _RoamingNetwork;
-
-        public RoamingNetwork RoamingNetwork
-        {
-            get
-            {
-                return _RoamingNetwork;
-            }
-        }
-
-        #endregion
-
-        #region URIPrefix
-
-        protected readonly String _URIPrefix;
-
-        public String URIPrefix
-        {
-            get
-            {
-                return _URIPrefix;
-            }
-        }
-
-        #endregion
+        public String         URIPrefix { get; }
 
         #endregion
 
         #region Constructor(s)
 
         /// <summary>
-        /// Initialize the OICP v2.0 HTTP/SOAP central server using IPAddress.Any.
+        /// Initialize the OICP HTTP/SOAP central server using IPAddress.Any.
         /// </summary>
         /// <param name="RoamingNetwork">The roaming network to use.</param>
         /// <param name="IPPort">The TCP listing port of the HTTP/SOAP server.</param>
@@ -99,8 +75,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         {
 
-            this._RoamingNetwork   = RoamingNetwork;
-            this._URIPrefix        = URIPrefix;
+            this.RoamingNetwork    = RoamingNetwork;
+            this.URIPrefix         = URIPrefix;
             this._EVSEDataRecords  = new Dictionary<EVSE_Id, EVSEDataRecord>();
 
             this.Start();
@@ -459,13 +435,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
             this.AddMethodCallback(HTTPHostname.Any,
                                    HTTPMethod.GET,
-                                   _URIPrefix + "/RNs/{RoamingNetworkId}",
+                                   URIPrefix + "/RNs/{RoamingNetworkId}",
                                    HTTPContentType.XMLTEXT_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 
             this.AddMethodCallback(HTTPHostname.Any,
                                    HTTPMethod.GET,
-                                   _URIPrefix + "/RNs/{RoamingNetworkId}",
+                                   URIPrefix + "/RNs/{RoamingNetworkId}",
                                    HTTPContentType.XML_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 
@@ -475,13 +451,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
             this.AddMethodCallback(HTTPHostname.Any,
                                    HTTPMethod.POST,
-                                   _URIPrefix + "/RNs/{RoamingNetwork}",
+                                   URIPrefix + "/RNs/{RoamingNetwork}",
                                    HTTPContentType.XMLTEXT_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 
             this.AddMethodCallback(HTTPHostname.Any,
                                    HTTPMethod.POST,
-                                   _URIPrefix + "/RNs/{RoamingNetwork}",
+                                   URIPrefix + "/RNs/{RoamingNetwork}",
                                    HTTPContentType.XML_UTF8,
                                    HTTPDelegate: OICPServerDelegate);
 

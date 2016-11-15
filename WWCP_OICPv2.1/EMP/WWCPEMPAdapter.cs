@@ -1330,7 +1330,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     TimeSpan?                         Duration               = null,
                     ChargingReservation_Id            ReservationId          = null,
                     eMobilityProvider_Id?             ProviderId             = null,
-                    eMobilityAccount_Id               eMAId                  = null,
+                    eMobilityAccount_Id?              eMAId                  = null,
                     ChargingProduct_Id                ChargingProductId      = null,
                     IEnumerable<Auth_Token>           AuthTokens             = null,
                     IEnumerable<eMobilityAccount_Id>  eMAIds                 = null,
@@ -1413,7 +1413,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            #region Copy the 'ReservationStartTime' value into the PartnerProductId
+            #region Copy the 'ReservationStartTime' value into the PartnerProductId "S=..."
 
             if (ReservationStartTime.HasValue)
             {
@@ -1427,7 +1427,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            #region Copy the 'Duration' value into the PartnerProductId
+            #region Copy the 'Duration' value into the PartnerProductId "D=...min"
 
             if (Duration.HasValue && Duration.Value >= TimeSpan.FromSeconds(1))
             {
@@ -1454,13 +1454,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Add the eMAId to the list of valid eMAIds
 
-            if (eMAIds == null && eMAId != null)
-                eMAIds = new List<eMobilityAccount_Id> { eMAId };
+            if (eMAIds == null && eMAId.HasValue)
+                eMAIds = new List<eMobilityAccount_Id> { eMAId.Value };
 
-            if (eMAIds != null && !eMAIds.Contains(eMAId))
+            if (eMAIds != null && eMAId.HasValue && !eMAIds.Contains(eMAId.Value))
             {
                 var _eMAIds = new List<eMobilityAccount_Id>(eMAIds);
-                _eMAIds.Add(eMAId);
+                _eMAIds.Add(eMAId.Value);
                 eMAIds = _eMAIds;
             }
 
@@ -1469,7 +1469,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             var result = await EMPRoaming.ReservationStart(EVSEId:             EVSEId.ToOICP_EVSEId(),
                                                            ProviderId:         ProviderId.Value,
-                                                           eMAId:              eMAId,
+                                                           eMAId:              eMAId.Value,
                                                            SessionId:          ReservationId != null ? ChargingSession_Id.Parse(ReservationId.ToString()) : null,
                                                            PartnerSessionId:   null,
                                                            PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.
@@ -1648,7 +1648,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         ChargingReservation_Id   ReservationId       = null,
                         ChargingSession_Id       SessionId           = null,
                         eMobilityProvider_Id?    ProviderId          = null,
-                        eMobilityAccount_Id      eMAId               = null,
+                        eMobilityAccount_Id?     eMAId               = null,
 
                         DateTime?                Timestamp           = null,
                         CancellationToken?       CancellationToken   = null,
@@ -1723,7 +1723,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            #region Copy the 'Duration' value into the PartnerProductId
+            #region Copy the 'Duration' value into the PartnerProductId "D=...min"
 
             //if (Duration.HasValue && Duration.Value >= TimeSpan.FromSeconds(1))
             //{
@@ -1790,7 +1790,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             var result = await EMPRoaming.RemoteStart(EVSEId:             EVSEId.ToOICP_EVSEId(),
                                                       ProviderId:         ProviderId.Value,
-                                                      eMAId:              eMAId,
+                                                      eMAId:              eMAId.Value,
                                                       SessionId:          SessionId,
                                                       PartnerSessionId:   null,
                                                       PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.
@@ -1845,7 +1845,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                        ChargingSession_Id     SessionId,
                        ReservationHandling    ReservationHandling   = null,
                        eMobilityProvider_Id?  ProviderId            = null,
-                       eMobilityAccount_Id    eMAId                 = null,
+                       eMobilityAccount_Id?   eMAId                 = null,
 
                        DateTime?              Timestamp             = null,
                        CancellationToken?     CancellationToken     = null,

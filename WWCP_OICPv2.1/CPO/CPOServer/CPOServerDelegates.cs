@@ -54,7 +54,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                          ChargingSession_Id     SessionId,
                                          ChargingSession_Id     PartnerSessionId,
                                          eMobilityProvider_Id?  ProviderId,
-                                         eMobilityAccount_Id    eMAId,
+                                         eMobilityAccount_Id?   eMAId,
                                          TimeSpan?              RequestTimeout  = null);
 
 
@@ -108,7 +108,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               ChargingSession_Id     SessionId,
                               ChargingSession_Id     PartnerSessionId,
                               eMobilityProvider_Id?  ProviderId,
-                              eMobilityAccount_Id    eMAId,
+                              eMobilityAccount_Id?   eMAId,
                               TimeSpan?              RequestTimeout  = null);
 
 
