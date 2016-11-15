@@ -259,7 +259,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                         return new HTTPResponseBuilder(Request) {
                             HTTPStatusCode  = HTTPStatusCode.OK,
                             ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                            Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                            Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "Acknowledgement",
 
                                                                      new XElement(OICPNS.CommonTypes + "Result", "true"),
 
@@ -346,7 +346,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                         return new HTTPResponseBuilder(Request) {
                             HTTPStatusCode  = HTTPStatusCode.OK,
                             ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                            Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                            Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "Acknowledgement",
 
                                                                      new XElement(OICPNS.CommonTypes + "Result", "true"),
 
@@ -391,7 +391,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                     return new HTTPResponseBuilder(Request) {
                         HTTPStatusCode  = HTTPStatusCode.OK,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                        Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "Acknowledgement",
 
                                                                  new XElement(OICPNS.CommonTypes + "Result", "false"),
 
@@ -433,7 +433,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                         HTTPStatusCode = HTTPStatusCode.OK,
                         ContentType    = HTTPContentType.XMLTEXT_UTF8,
-                        Content        = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                        Content        = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "Acknowledgement",
 
                                                                 new XElement(OICPNS.CommonTypes + "Result", "false"),
 

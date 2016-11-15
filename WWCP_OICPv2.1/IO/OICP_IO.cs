@@ -177,7 +177,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                                         out HTTPResponse  HTTPResponse)
         {
 
-            EVSE_Id EVSEId        = null;
+            EVSE_Id EVSEId        = default(EVSE_Id);
                     EVSE          = null;
                     HTTPResponse  = null;
 
@@ -210,7 +210,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             }
 
             //ToDo: May fail for empty sequences!
-            if (!RoamingNetwork.TryGetEVSEbyId(EVSEId, out EVSE))
+            if (!RoamingNetwork.TryGetEVSEbyId(EVSEId.ToWWCP_EVSEId(), out EVSE))
             {
 
                 HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
@@ -333,11 +333,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                 return null;
 
             return new JProperty(JPropertyKey,
-                                 org.GraphDefined.Vanaheimr.Hermod.JSONObject.Create(
+                                 JSONObject.Create(
                                      Location.Projection != GravitationalModel.WGS84 ? new JProperty("projection", Location.Projection.ToString()) : null,
                                      new JProperty("lat", Location.Latitude. Value),
                                      new JProperty("lng", Location.Longitude.Value),
-                                     Location.Altitude.Value != 0.0                  ? new JProperty("altitude",   Location.Altitude.Value)        : null)
+                                     Location.Altitude.HasValue                      ? new JProperty("altitude",   Location.Altitude.Value)        : null)
                                 );
 
         }

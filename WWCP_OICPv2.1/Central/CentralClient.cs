@@ -18,12 +18,9 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Xml.Linq;
-using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -74,24 +71,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         public event OnPushEVSEDataResponseDelegate OnEVSEDataPushed;
 
         #endregion
-
         #endregion
 
         #region Properties
 
-        #region URIPrefix
-
-        private readonly String _URIPrefix;
-
-        public String URIPrefix
-        {
-            get
-            {
-                return _URIPrefix;
-            }
-        }
-
-        #endregion
+        public String URIPrefix { get; }
 
         #endregion
 
@@ -125,6 +109,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                    RemoteCertificateValidator,
                    ClientCert,
                    HTTPVirtualHost,
+                   "",
                    HTTPUserAgent,
                    QueryTimeout,
                    DNSClient)
@@ -133,7 +118,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
             this._Random     = new Random(DateTime.Now.Millisecond);
 
-            this._URIPrefix  = URIPrefix.IsNotNullOrEmpty() ? URIPrefix : "/ibis/ws/eRoamingAuthorization_V2.0";
+            this.URIPrefix  = URIPrefix.IsNotNullOrEmpty() ? URIPrefix : "/ibis/ws/eRoamingAuthorization_V2.0";
 
         }
 
@@ -156,7 +141,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
             AuthorizeRemoteReservationStart(ChargingSession_Id    SessionId,
                                             eMobilityProvider_Id  ProviderId,
@@ -171,7 +156,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    _URIPrefix + "/Reservation",
+                                                    URIPrefix + "/Reservation",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -241,15 +226,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                 var XML = SOAP.Encapsulation(new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart",
 
-                                                 new XElement(OICPNS.Reservation + "SessionID", SessionId.ToString()),
+                                                 new XElement(OICPNS.Reservation + "SessionID",   SessionId. ToString()),
 
-                                                 PartnerSessionId != null ? new XElement(OICPNS.Reservation + "PartnerSessionID", PartnerSessionId.ToString()) : null,
-
-                                                 new XElement(OICPNS.Reservation + "ProviderID", ProviderId.ToString()),
-
-                                                 EVSEId != null
-                                                     ? new XElement(OICPNS.Reservation + "EVSEID", EVSEId.OriginId)
+                                                 PartnerSessionId != null
+                                                     ? new XElement(OICPNS.Reservation + "PartnerSessionID", PartnerSessionId.ToString())
                                                      : null,
+
+                                                 new XElement(OICPNS.Reservation + "ProviderID",  ProviderId.ToString()),
+                                                 new XElement(OICPNS.Reservation + "EVSEID",      EVSEId.    ToString()),
 
                                                  new XElement(OICPNS.Reservation + "Identification",
                                                      new XElement(OICPNS.CommonTypes + "RemoteIdentification",
@@ -272,7 +256,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                #region OnSuccess
 
                                                OnSuccess: XMLResponse => {
-                                                   return XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse);
+                                                   return XMLResponse.ConvertContent(Acknowledgement.Parse);
                                                },
 
                                                #endregion
@@ -283,8 +267,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                                                    SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                   return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                    new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                 httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                 httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                     IsFault: true);
@@ -299,8 +283,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                                                    SendHTTPError(timestamp, this, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                   return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                    new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                 httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                 httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                     IsFault: true);
@@ -339,20 +323,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
-            AuthorizeRemoteReservationStop(ChargingSession_Id  SessionId,
-                                           eMobilityProvider_Id             ProviderId,
-                                           EVSE_Id             EVSEId,
-                                           ChargingSession_Id  PartnerSessionId   = null,
-                                           TimeSpan?           QueryTimeout       = null)
+            AuthorizeRemoteReservationStop(ChargingSession_Id    SessionId,
+                                           eMobilityProvider_Id  ProviderId,
+                                           EVSE_Id               EVSEId,
+                                           ChargingSession_Id    PartnerSessionId   = null,
+                                           TimeSpan?             QueryTimeout       = null)
 
         {
 
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    _URIPrefix + "/Reservation",
+                                                    URIPrefix + "/Reservation",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -386,15 +370,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                 var XML = SOAP.Encapsulation(new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStop",
 
-                                                 new XElement(OICPNS.Reservation + "SessionID", SessionId.ToString()),
+                                                 new XElement(OICPNS.Reservation + "SessionID",   SessionId. ToString()),
 
-                                                 PartnerSessionId != null ? new XElement(OICPNS.Reservation + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+                                                 PartnerSessionId != null
+                                                     ? new XElement(OICPNS.Reservation + "PartnerSessionID", PartnerSessionId.ToString())
+                                                     : null,
 
-                                                 new XElement(OICPNS.Reservation + "ProviderID", ProviderId.ToString()),
-
-                                                 EVSEId != null
-                                                     ? new XElement(OICPNS.Reservation + "EVSEID", EVSEId.OriginId)
-                                                     : null
+                                                 new XElement(OICPNS.Reservation + "ProviderID",  ProviderId.ToString()),
+                                                 new XElement(OICPNS.Reservation + "EVSEID",      EVSEId.    ToString())
 
                                              ));
 
@@ -407,7 +390,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                #region OnSuccess
 
                                                OnSuccess: XMLResponse => {
-                                                   return XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse);
+                                                   return XMLResponse.ConvertContent(Acknowledgement.Parse);
                                                },
 
                                                #endregion
@@ -418,8 +401,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                                                    SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                   return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                    new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                 httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                 httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                     IsFault: true);
@@ -434,8 +417,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                                                    SendHTTPError(timestamp, this, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                   return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                    new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                 httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                 httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                     IsFault: true);
@@ -477,22 +460,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
-            AuthorizeRemoteStart(ChargingSession_Id  SessionId,
-                                 eMobilityProvider_Id             ProviderId,
-                                 EVSE_Id             EVSEId,
-                                 eMobilityAccount_Id              eMAId,
-                                 ChargingProduct_Id  ChargingProductId  = null,
-                                 ChargingSession_Id  PartnerSessionId   = null,
-                                 TimeSpan?           QueryTimeout       = null)
+            AuthorizeRemoteStart(ChargingSession_Id    SessionId,
+                                 eMobilityProvider_Id  ProviderId,
+                                 EVSE_Id               EVSEId,
+                                 eMobilityAccount_Id   eMAId,
+                                 ChargingProduct_Id    ChargingProductId   = null,
+                                 ChargingSession_Id    PartnerSessionId    = null,
+                                 TimeSpan?             QueryTimeout        = null)
 
         {
 
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    _URIPrefix + "/Authorization",
+                                                    URIPrefix + "/Authorization",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -563,15 +546,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                 var XML = SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart",
 
-                                                 new XElement(OICPNS.Authorization + "SessionID", SessionId.ToString()),
+                                                 new XElement(OICPNS.Authorization + "SessionID",  SessionId. ToString()),
 
-                                                 PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+                                                 PartnerSessionId != null
+                                                     ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())
+                                                     : null,
 
                                                  new XElement(OICPNS.Authorization + "ProviderID", ProviderId.ToString()),
-
-                                                 EVSEId != null
-                                                     ? new XElement(OICPNS.Authorization + "EVSEID", EVSEId.OriginId)
-                                                     : null,
+                                                 new XElement(OICPNS.Authorization + "EVSEID",     EVSEId.    ToString()),
 
                                                  new XElement(OICPNS.Authorization + "Identification",
                                                      new XElement(OICPNS.CommonTypes + "QRCodeIdentification",
@@ -594,7 +576,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                #region OnSuccess
 
                                                OnSuccess: XMLResponse => {
-                                                   return XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse);
+                                                   return XMLResponse.ConvertContent(Acknowledgement.Parse);
                                                },
 
                                                #endregion
@@ -605,8 +587,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                                                    SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                   return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                    new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                 httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                 httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                     IsFault: true);
@@ -621,8 +603,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                                                    SendHTTPError(timestamp, this, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                   return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                    new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                 httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                 httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                     IsFault: true);
@@ -661,20 +643,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="QueryTimeout">An optional timeout for this query.</param>
-        public async Task<HTTPResponse<eRoamingAcknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement>>
 
-            AuthorizeRemoteStop(ChargingSession_Id  SessionId,
-                                eMobilityProvider_Id             ProviderId,
-                                EVSE_Id             EVSEId,
-                                ChargingSession_Id  PartnerSessionId   = null,
-                                TimeSpan?           QueryTimeout       = null)
+            AuthorizeRemoteStop(ChargingSession_Id    SessionId,
+                                eMobilityProvider_Id  ProviderId,
+                                EVSE_Id               EVSEId,
+                                ChargingSession_Id    PartnerSessionId   = null,
+                                TimeSpan?             QueryTimeout       = null)
 
         {
 
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    _URIPrefix + "/Authorization",
+                                                    URIPrefix + "/Authorization",
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -709,15 +691,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                 var XML = SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop",
 
-                                                 new XElement(OICPNS.Authorization + "SessionID", SessionId.ToString()),
+                                                 new XElement(OICPNS.Authorization + "SessionID",   SessionId. ToString()),
 
-                                                 PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+                                                 PartnerSessionId != null
+                                                     ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())
+                                                     : null,
 
-                                                 new XElement(OICPNS.Authorization + "ProviderID", ProviderId.ToString()),
-
-                                                 EVSEId != null
-                                                     ? new XElement(OICPNS.Authorization + "EVSEID", EVSEId.OriginId)
-                                                     : null
+                                                 new XElement(OICPNS.Authorization + "ProviderID",  ProviderId.ToString()),
+                                                 new XElement(OICPNS.Authorization + "EVSEID",      EVSEId.    ToString())
 
                                              ));
 
@@ -730,7 +711,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
                                                #region OnSuccess
 
                                                OnSuccess: XMLResponse => {
-                                                   return XMLResponse.ConvertContent(eRoamingAcknowledgement.Parse);
+                                                   return XMLResponse.ConvertContent(Acknowledgement.Parse);
                                                },
 
                                                #endregion
@@ -741,8 +722,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                                                    SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                   return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                    new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                 httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                 httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                     IsFault: true);
@@ -757,8 +738,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Server
 
                                                    SendHTTPError(timestamp, this, httpresponse);
 
-                                                   return new HTTPResponse<eRoamingAcknowledgement>(httpresponse,
-                                                                                                    new eRoamingAcknowledgement(StatusCodes.SystemError,
+                                                   return new HTTPResponse<Acknowledgement>(httpresponse,
+                                                                                                    new Acknowledgement(StatusCodes.SystemError,
                                                                                                                                 httpresponse.HTTPStatusCode.ToString(),
                                                                                                                                 httpresponse.HTTPBody.      ToUTF8String()),
                                                                                                     IsFault: true);
