@@ -38,22 +38,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// An authentication token.
         /// </summary>
-        public Auth_Token           AuthToken                    { get; }
+        public Auth_Token            AuthToken                    { get; }
 
         /// <summary>
         /// An e-mobility account identification and its PIN.
         /// </summary>
-        public eMAIdWithPIN         QRCodeIdentification         { get; }
+        public eMAIdWithPIN          QRCodeIdentification         { get; }
 
         /// <summary>
         /// An e-mobility account identification (PnC).
         /// </summary>
-        public eMobilityAccount_Id  PlugAndChargeIdentification  { get; }
+        public eMobilityAccount_Id?  PlugAndChargeIdentification  { get; }
 
         /// <summary>
         /// An e-mobility account identification.
         /// </summary>
-        public eMobilityAccount_Id  RemoteIdentification         { get; }
+        public eMobilityAccount_Id?  RemoteIdentification         { get; }
 
         #endregion
 
