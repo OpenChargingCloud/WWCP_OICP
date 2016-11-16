@@ -1461,12 +1461,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(ILookup<ChargingStationOperator, WWCP.EVSEStatus>  GroupedEVSEStatus,
-                           WWCP.ActionType                                    ActionType         = WWCP.ActionType.update,
+                           WWCP.ActionType                                    ActionType          = WWCP.ActionType.update,
 
-                           DateTime?                                          Timestamp          = null,
-                           CancellationToken?                                 CancellationToken  = null,
-                           EventTracking_Id                                   EventTrackingId    = null,
-                           TimeSpan?                                          RequestTimeout     = null)
+                           DateTime?                                          Timestamp           = null,
+                           CancellationToken?                                 CancellationToken   = null,
+                           EventTracking_Id                                   EventTrackingId     = null,
+                           TimeSpan?                                          RequestTimeout      = null)
 
         {
 
@@ -1656,13 +1656,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public override async Task<WWCP.Acknowledgement>
 
-            PushEVSEStatus(WWCP.EVSEStatus          EVSEStatus,
-                           WWCP.ActionType     ActionType         = WWCP.ActionType.update,
+            PushEVSEStatus(WWCP.EVSEStatus     EVSEStatus,
+                           WWCP.ActionType     ActionType          = WWCP.ActionType.update,
 
-                           DateTime?           Timestamp          = null,
-                           CancellationToken?  CancellationToken  = null,
-                           EventTracking_Id    EventTrackingId    = null,
-                           TimeSpan?           RequestTimeout     = null)
+                           DateTime?           Timestamp           = null,
+                           CancellationToken?  CancellationToken   = null,
+                           EventTracking_Id    EventTrackingId     = null,
+                           TimeSpan?           RequestTimeout      = null)
 
         {
 
@@ -1700,12 +1700,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public override async Task<WWCP.Acknowledgement>
 
             PushEVSEStatus(IEnumerable<WWCP.EVSEStatus>  EVSEStatus,
-                           WWCP.ActionType          ActionType         = WWCP.ActionType.update,
+                           WWCP.ActionType               ActionType          = WWCP.ActionType.update,
 
-                           DateTime?                Timestamp          = null,
-                           CancellationToken?       CancellationToken  = null,
-                           EventTracking_Id         EventTrackingId    = null,
-                           TimeSpan?                RequestTimeout     = null)
+                           DateTime?                     Timestamp           = null,
+                           CancellationToken?            CancellationToken   = null,
+                           EventTracking_Id              EventTrackingId     = null,
+                           TimeSpan?                     RequestTimeout      = null)
 
         {
 
@@ -2483,14 +2483,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Initial checks
 
-            if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId), "The given Charging Station Operator identification must not be null!");
-
             if (AuthToken == null)
                 throw new ArgumentNullException(nameof(AuthToken),  "The given authentication token must not be null!");
-
-            if (EVSEId    == null)
-                throw new ArgumentNullException(nameof(EVSEId),     "The given EVSE identification must not be null!");
 
 
             if (!Timestamp.HasValue)
@@ -2640,9 +2634,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Initial checks
 
-            if (OperatorId        == null)
-                throw new ArgumentNullException(nameof(OperatorId),         "The given Charging Station Operator identification must not be null!");
-
             if (AuthToken         == null)
                 throw new ArgumentNullException(nameof(AuthToken),          "The given authentication token must not be null!");
 
@@ -2760,9 +2751,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         {
 
             #region Initial checks
-
-            if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId),  "The given Charging Station Operator identification must not be null!");
 
             if (SessionId == null)
                 throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
@@ -2910,12 +2898,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Initial checks
 
-            if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId),  "The given Charging Station Operator identification must not be null!");
-
-            if (EVSEId     == null)
-                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
-
             if (SessionId  == null)
                 throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
 
@@ -3060,9 +3042,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         {
 
             #region Initial checks
-
-            if (OperatorId         == null)
-                throw new ArgumentNullException(nameof(OperatorId),         "The given Charging Station Operator identification must not be null!");
 
             if (ChargingStationId  == null)
                 throw new ArgumentNullException(nameof(ChargingStationId),  "The given EVSE identification must not be null!");
