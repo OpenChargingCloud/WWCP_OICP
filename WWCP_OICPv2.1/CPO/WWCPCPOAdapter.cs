@@ -723,6 +723,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="ServerContentType">An optional HTTP content type to use.</param>
+        /// <param name="ServerRegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
@@ -743,34 +745,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               RoamingNetwork                               RoamingNetwork,
 
                               String                                       RemoteHostname,
-                              IPPort                                       RemoteTCPPort                = null,
-                              RemoteCertificateValidationCallback          RemoteCertificateValidator   = null,
-                              X509Certificate                              ClientCert                   = null,
-                              String                                       RemoteHTTPVirtualHost        = null,
-                              String                                       URIPrefix                    = CPOClient.DefaultURIPrefix,
-                              String                                       HTTPUserAgent                = CPOClient.DefaultHTTPUserAgent,
-                              TimeSpan?                                    RequestTimeout               = null,
+                              IPPort                                       RemoteTCPPort                   = null,
+                              RemoteCertificateValidationCallback          RemoteCertificateValidator      = null,
+                              X509Certificate                              ClientCert                      = null,
+                              String                                       RemoteHTTPVirtualHost           = null,
+                              String                                       URIPrefix                       = CPOClient.DefaultURIPrefix,
+                              String                                       HTTPUserAgent                   = CPOClient.DefaultHTTPUserAgent,
+                              TimeSpan?                                    RequestTimeout                  = null,
 
-                              String                                       ServerName                   = CPOServer.DefaultHTTPServerName,
-                              IPPort                                       ServerTCPPort                = null,
-                              String                                       ServerURIPrefix              = "",
-                              Boolean                                      ServerAutoStart              = false,
+                              String                                       ServerName                      = CPOServer.DefaultHTTPServerName,
+                              IPPort                                       ServerTCPPort                   = null,
+                              String                                       ServerURIPrefix                 = CPOServer.DefaultURIPrefix,
+                              HTTPContentType                              ServerContentType               = null,
+                              Boolean                                      ServerRegisterHTTPRootService   = true,
+                              Boolean                                      ServerAutoStart                 = false,
 
-                              String                                       ClientLoggingContext         = CPOClient.CPOClientLogger.DefaultContext,
-                              String                                       ServerLoggingContext         = CPOServerLogger.DefaultContext,
-                              Func<String, String, String>                 LogFileCreator               = null,
+                              String                                       ClientLoggingContext            = CPOClient.CPOClientLogger.DefaultContext,
+                              String                                       ServerLoggingContext            = CPOServerLogger.DefaultContext,
+                              Func<String, String, String>                 LogFileCreator                  = null,
 
-                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord          = null,
-                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML           = null,
+                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord             = null,
+                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML              = null,
 
-                              ChargingStationOperator                      DefaultOperator              = null,
-                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector         = null,
-                              IncludeEVSEDelegate                          IncludeEVSEs                 = null,
-                              TimeSpan?                                    ServiceCheckEvery            = null,
-                              TimeSpan?                                    StatusCheckEvery             = null,
-                              Boolean                                      DisableAutoUploads           = false,
+                              ChargingStationOperator                      DefaultOperator                 = null,
+                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector            = null,
+                              IncludeEVSEDelegate                          IncludeEVSEs                    = null,
+                              TimeSpan?                                    ServiceCheckEvery               = null,
+                              TimeSpan?                                    StatusCheckEvery                = null,
+                              Boolean                                      DisableAutoUploads              = false,
 
-                              DNSClient                                    DNSClient                    = null)
+                              DNSClient                                    DNSClient                       = null)
 
             : this(Id,
                    Name,
@@ -789,7 +793,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                   ServerName,
                                   ServerTCPPort,
                                   ServerURIPrefix,
-                                  ServerAutoStart,
+                                  ServerContentType,
+                                  ServerRegisterHTTPRootService,
+                                  false,
 
                                   ClientLoggingContext,
                                   ServerLoggingContext,
@@ -807,7 +813,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    StatusCheckEvery,
                    DisableAutoUploads)
 
-        { }
+        {
+
+            if (ServerAutoStart)
+                CPOServer.Start();
+
+        }
 
         #endregion
 

@@ -20,14 +20,16 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -35,12 +37,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 {
 
     /// <summary>
-    /// OICP v2.0 HTTP/SOAP central server.
+    /// An OICP Central HTTP/SOAP/XML server.
     /// </summary>
-    public class CentralServer : HTTPServer
+    public class CentralServer : ASOAPServer
     {
 
         #region Data
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML server name.
+        /// </summary>
+        public new const           String           DefaultHTTPServerName  = "GraphDefined OICP " + Version.Number + " HTTP/SOAP/XML Central Server API";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML server TCP port.
+        /// </summary>
+        public new static readonly IPPort           DefaultHTTPServerPort  = new IPPort(2003);
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML server URI prefix.
+        /// </summary>
+        public new const           String           DefaultURIPrefix       = "";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML content type.
+        /// </summary>
+        public new static readonly HTTPContentType  DefaultContentType     = HTTPContentType.XMLTEXT_UTF8;
+
+        /// <summary>
+        /// The default query timeout.
+        /// </summary>
+        public new static readonly TimeSpan         DefaultQueryTimeout    = TimeSpan.FromMinutes(1);
+
 
         private readonly Dictionary<EVSE_Id, EVSEDataRecord> _EVSEDataRecords;
 
@@ -48,83 +76,79 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #region Properties
 
-        public RoamingNetwork RoamingNetwork { get; }
-
-        public String         URIPrefix { get; }
+        /// <summary>
+        /// The attached e-mobility roaming network.
+        /// </summary>
+        public RoamingNetwork  RoamingNetwork           { get; }
 
         #endregion
 
         #region Constructor(s)
 
-        /// <summary>
-        /// Initialize the OICP HTTP/SOAP central server using IPAddress.Any.
-        /// </summary>
-        /// <param name="RoamingNetwork">The roaming network to use.</param>
-        /// <param name="IPPort">The TCP listing port of the HTTP/SOAP server.</param>
-        /// <param name="URIPrefix">The URI prefix for the  HTTP/SOAP server.</param>
-        /// <param name="RegisterHTTPRootService">Whether to register a simple webpage for '/', or not.</param>
-        /// <param name="DNSClient">An optional DNS client to use.</param>
-        public CentralServer(RoamingNetwork  RoamingNetwork,
-                             IPPort          IPPort,
-                             String          URIPrefix                = "",
-                             Boolean         RegisterHTTPRootService  = true,
-                             DNSClient       DNSClient                = null)
+        #region CentralServer(HTTPServerName, TCPPort = Default, URIPrefix = Default, ContentType = Default, DNSClient = null, AutoStart = false)
 
-            : base(IPPort,
-                   DNSClient: DNSClient)
+        /// <summary>
+        /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML Central API.
+        /// </summary>
+        /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
+        /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
+        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="ContentType">An optional HTTP content type to use.</param>
+        /// <param name="RegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
+        /// <param name="DNSClient">An optional DNS client to use.</param>
+        /// <param name="AutoStart">Start the server immediately.</param>
+        public CentralServer(String          HTTPServerName           = DefaultHTTPServerName,
+                             IPPort          TCPPort                  = null,
+                             String          URIPrefix                = DefaultURIPrefix,
+                             HTTPContentType ContentType              = null,
+                             Boolean         RegisterHTTPRootService  = true,
+                             DNSClient       DNSClient                = null,
+                             Boolean         AutoStart                = false)
+
+            : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
+                   TCPPort     ?? DefaultHTTPServerPort,
+                   URIPrefix   ?? DefaultURIPrefix,
+                   ContentType ?? DefaultContentType,
+                   RegisterHTTPRootService,
+                   DNSClient,
+                   AutoStart: false)
 
         {
 
-            this.RoamingNetwork    = RoamingNetwork;
-            this.URIPrefix         = URIPrefix;
-            this._EVSEDataRecords  = new Dictionary<EVSE_Id, EVSEDataRecord>();
+            this.RoamingNetwork           = RoamingNetwork;
+            this._EVSEDataRecords         = new Dictionary<EVSE_Id, EVSEDataRecord>();
 
-            this.Start();
+            if (AutoStart)
+                Start();
 
-            #region / (HTTPRoot), if RegisterHTTPRootService == true
+        }
 
-            if (RegisterHTTPRootService)
-            {
+        #endregion
 
-                // HTML
-                this.AddMethodCallback(HTTPHostname.Any,
-                                       HTTPMethod.GET,
-                                       "/",
-                                       HTTPContentType.HTML_UTF8,
-                                       HTTPDelegate: async Request => {
+        #region CentralServer(SOAPServer, URIPrefix = DefaultURIPrefix)
 
-                                           var RoamingNetworkId = Request.ParsedURIParameters[0];
+        /// <summary>
+        /// Use the given SOAP server for the OICP HTTP/SOAP/XML Central API.
+        /// </summary>
+        /// <param name="SOAPServer">A SOAP server.</param>
+        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        public CentralServer(SOAPServer  SOAPServer,
+                             String      URIPrefix  = DefaultURIPrefix)
 
-                                           return new HTTPResponseBuilder(Request) {
-                                               HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                               ContentType     = HTTPContentType.HTML_UTF8,
-                                               Content         = ("/RNs/{RoamingNetworkId} is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                               Connection      = "close"
-                                           };
+            : base(SOAPServer,
+                   URIPrefix)
 
-                                       });
+        { }
 
-                // Text
-                this.AddMethodCallback(HTTPHostname.Any,
-                                       HTTPMethod.GET,
-                                       "/",
-                                       HTTPContentType.TEXT_UTF8,
-                                       HTTPDelegate: async Request => {
+        #endregion
 
-                                           var RoamingNetworkId = Request.ParsedURIParameters[0];
+        #endregion
 
-                                           return new HTTPResponseBuilder(Request) {
-                                               HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                               ContentType     = HTTPContentType.HTML_UTF8,
-                                               Content         = ("/RNs/{RoamingNetworkId} is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                               Connection      = "close"
-                                           };
 
-                                       });
+        #region (override) RegisterURITemplates()
 
-            }
-
-            #endregion
+        protected override void RegisterURITemplates()
+        {
 
             #region /RNs/{RoamingNetworkId}
 
@@ -144,7 +168,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                     //Log.WriteLine("Invalid XML request!");
                     //Log.WriteLine(HTTPRequest.Content.ToUTF8String());
 
-                    GetEventSource(Semantics.DebugLog).
+                    SOAPServer.GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
@@ -394,7 +418,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                     //Log.WriteLine("Invalid XML request!");
 
-                    GetEventSource(Semantics.DebugLog).
+                    SOAPServer.GetEventSource(Semantics.DebugLog).
                         SubmitSubEvent("InvalidXMLRequest",
                                        new JObject(
                                            new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
@@ -433,73 +457,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
             #region Register SOAP-XML Request via GET
 
-            this.AddMethodCallback(HTTPHostname.Any,
-                                   HTTPMethod.GET,
-                                   URIPrefix + "/RNs/{RoamingNetworkId}",
-                                   HTTPContentType.XMLTEXT_UTF8,
-                                   HTTPDelegate: OICPServerDelegate);
+            SOAPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.GET,
+                                         URIPrefix + "/RNs/{RoamingNetworkId}",
+                                         HTTPContentType.XMLTEXT_UTF8,
+                                         HTTPDelegate: OICPServerDelegate);
 
-            this.AddMethodCallback(HTTPHostname.Any,
-                                   HTTPMethod.GET,
-                                   URIPrefix + "/RNs/{RoamingNetworkId}",
-                                   HTTPContentType.XML_UTF8,
-                                   HTTPDelegate: OICPServerDelegate);
+            SOAPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.GET,
+                                         URIPrefix + "/RNs/{RoamingNetworkId}",
+                                         HTTPContentType.XML_UTF8,
+                                         HTTPDelegate: OICPServerDelegate);
 
             #endregion
 
             #region Register SOAP-XML Request via POST
 
-            this.AddMethodCallback(HTTPHostname.Any,
-                                   HTTPMethod.POST,
-                                   URIPrefix + "/RNs/{RoamingNetwork}",
-                                   HTTPContentType.XMLTEXT_UTF8,
-                                   HTTPDelegate: OICPServerDelegate);
+            SOAPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URIPrefix + "/RNs/{RoamingNetwork}",
+                                         HTTPContentType.XMLTEXT_UTF8,
+                                         HTTPDelegate: OICPServerDelegate);
 
-            this.AddMethodCallback(HTTPHostname.Any,
-                                   HTTPMethod.POST,
-                                   URIPrefix + "/RNs/{RoamingNetwork}",
-                                   HTTPContentType.XML_UTF8,
-                                   HTTPDelegate: OICPServerDelegate);
-
-            #endregion
-
-            #region Register HTML+Plaintext ErrorResponse
-
-            // HTML
-            this.AddMethodCallback(HTTPHostname.Any,
-                                   HTTPMethod.GET,
-                                   "/RNs/{RoamingNetwork}",
-                                   HTTPContentType.HTML_UTF8,
-                                   HTTPDelegate: async Request => {
-
-                                       var RoamingNetworkId = Request.ParsedURIParameters[0];
-
-                                       return new HTTPResponseBuilder(Request) {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/" + RoamingNetworkId + " is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
-
-                                   });
-
-            // Text
-            this.AddMethodCallback(HTTPHostname.Any,
-                                   HTTPMethod.GET,
-                                   "/RNs/{RoamingNetwork}",
-                                   HTTPContentType.TEXT_UTF8,
-                                   HTTPDelegate: async Request => {
-
-                                       var RoamingNetworkId = Request.ParsedURIParameters[0];
-
-                                       return new HTTPResponseBuilder(Request) {
-                                           HTTPStatusCode  = HTTPStatusCode.BadGateway,
-                                           ContentType     = HTTPContentType.HTML_UTF8,
-                                           Content         = ("/RNs/" + RoamingNetworkId + " is a HTTP/SOAP/XML endpoint!").ToUTF8Bytes(),
-                                           Connection      = "close"
-                                       };
-
-                                   });
+            SOAPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URIPrefix + "/RNs/{RoamingNetwork}",
+                                         HTTPContentType.XML_UTF8,
+                                         HTTPDelegate: OICPServerDelegate);
 
             #endregion
 
@@ -508,6 +492,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         }
 
         #endregion
+
 
     }
 

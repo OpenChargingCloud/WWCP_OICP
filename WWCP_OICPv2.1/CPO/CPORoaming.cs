@@ -720,11 +720,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="ServerContentType">An optional HTTP content type to use.</param>
+        /// <param name="ServerRegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
@@ -734,24 +736,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CPORoaming(String                               ClientId,
                           String                               RemoteHostname,
-                          IPPort                               RemoteTCPPort               = null,
-                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                          X509Certificate                      ClientCert                  = null,
-                          String                               RemoteHTTPVirtualHost       = null,
-                          String                               URIPrefix                   = CPOClient.DefaultURIPrefix,
-                          String                               HTTPUserAgent               = CPOClient.DefaultHTTPUserAgent,
-                          TimeSpan?                            QueryTimeout                = null,
+                          IPPort                               RemoteTCPPort                   = null,
+                          RemoteCertificateValidationCallback  RemoteCertificateValidator      = null,
+                          X509Certificate                      ClientCert                      = null,
+                          String                               RemoteHTTPVirtualHost           = null,
+                          String                               URIPrefix                       = CPOClient.DefaultURIPrefix,
+                          String                               HTTPUserAgent                   = CPOClient.DefaultHTTPUserAgent,
+                          TimeSpan?                            RequestTimeout                  = null,
 
-                          String                               ServerName                  = CPOServer.DefaultHTTPServerName,
-                          IPPort                               ServerTCPPort               = null,
-                          String                               ServerURIPrefix             = "",
-                          Boolean                              ServerAutoStart             = false,
+                          String                               ServerName                      = CPOServer.DefaultHTTPServerName,
+                          IPPort                               ServerTCPPort                   = null,
+                          String                               ServerURIPrefix                 = CPOServer.DefaultURIPrefix,
+                          HTTPContentType                      ServerContentType               = null,
+                          Boolean                              ServerRegisterHTTPRootService   = true,
+                          Boolean                              ServerAutoStart                 = false,
 
-                          String                               ClientLoggingContext        = CPOClient.CPOClientLogger.DefaultContext,
-                          String                               ServerLoggingContext        = CPOServerLogger.DefaultContext,
-                          Func<String, String, String>         LogFileCreator              = null,
+                          String                               ClientLoggingContext            = CPOClient.CPOClientLogger.DefaultContext,
+                          String                               ServerLoggingContext            = CPOServerLogger.DefaultContext,
+                          Func<String, String, String>         LogFileCreator                  = null,
 
-                          DNSClient                            DNSClient                   = null)
+                          DNSClient                            DNSClient                       = null)
 
             : this(new CPOClient(ClientId,
                                  RemoteHostname,
@@ -761,7 +765,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                  RemoteHTTPVirtualHost,
                                  URIPrefix,
                                  HTTPUserAgent,
-                                 QueryTimeout,
+                                 RequestTimeout,
                                  DNSClient,
                                  ClientLoggingContext,
                                  LogFileCreator),
@@ -769,6 +773,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    new CPOServer(ServerName,
                                  ServerTCPPort,
                                  ServerURIPrefix,
+                                 ServerContentType,
+                                 ServerRegisterHTTPRootService,
                                  DNSClient,
                                  false),
 

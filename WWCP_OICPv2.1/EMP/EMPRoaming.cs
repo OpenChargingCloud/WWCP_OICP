@@ -1122,6 +1122,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="ServerContentType">An optional HTTP content type to use.</param>
+        /// <param name="ServerRegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
@@ -1131,24 +1133,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public EMPRoaming(String                               ClientId,
                           String                               RemoteHostname,
-                          IPPort                               RemoteTCPPort               = null,
-                          RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                          X509Certificate                      ClientCert                  = null,
-                          String                               RemoteHTTPVirtualHost       = null,
-                          String                               URIPrefix                   = EMPClient.DefaultURIPrefix,
-                          String                               HTTPUserAgent               = EMPClient.DefaultHTTPUserAgent,
-                          TimeSpan?                            RequestTimeout              = null,
+                          IPPort                               RemoteTCPPort                   = null,
+                          RemoteCertificateValidationCallback  RemoteCertificateValidator      = null,
+                          X509Certificate                      ClientCert                      = null,
+                          String                               RemoteHTTPVirtualHost           = null,
+                          String                               URIPrefix                       = EMPClient.DefaultURIPrefix,
+                          String                               HTTPUserAgent                   = EMPClient.DefaultHTTPUserAgent,
+                          TimeSpan?                            RequestTimeout                  = null,
 
-                          String                               ServerName                  = EMPServer.DefaultHTTPServerName,
-                          IPPort                               ServerTCPPort               = null,
-                          String                               ServerURIPrefix             = "",
-                          Boolean                              ServerAutoStart             = false,
+                          String                               ServerName                      = EMPServer.DefaultHTTPServerName,
+                          IPPort                               ServerTCPPort                   = null,
+                          String                               ServerURIPrefix                 = EMPServer.DefaultURIPrefix,
+                          HTTPContentType                      ServerContentType               = null,
+                          Boolean                              ServerRegisterHTTPRootService   = true,
+                          Boolean                              ServerAutoStart                 = false,
 
-                          String                               ClientLoggingContext        = EMPClient.EMPClientLogger.DefaultContext,
-                          String                               ServerLoggingContext        = EMPServerLogger.DefaultContext,
-                          Func<String, String, String>         LogFileCreator              = null,
+                          String                               ClientLoggingContext            = EMPClient.EMPClientLogger.DefaultContext,
+                          String                               ServerLoggingContext            = EMPServerLogger.DefaultContext,
+                          Func<String, String, String>         LogFileCreator                  = null,
 
-                          DNSClient                            DNSClient                   = null)
+                          DNSClient                            DNSClient                       = null)
 
             : this(new EMPClient(ClientId,
                                  RemoteHostname,
@@ -1166,6 +1170,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                    new EMPServer(ServerName,
                                  ServerTCPPort,
                                  ServerURIPrefix,
+                                 ServerContentType,
+                                 ServerRegisterHTTPRootService,
                                  DNSClient,
                                  false),
 
