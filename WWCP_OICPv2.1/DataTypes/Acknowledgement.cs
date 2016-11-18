@@ -50,13 +50,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// An optional charging session identification for
         /// RemoteReservationStart and RemoteStart requests.
         /// </summary>
-        public ChargingSession_Id  SessionId           { get; }
+        public Session_Id?         SessionId           { get; }
 
         /// <summary>
         /// An optional partner charging session identification for
         /// RemoteReservationStart and RemoteStart requests.
         /// </summary>
-        public ChargingSession_Id  PartnerSessionId    { get; }
+        public PartnerSession_Id?  PartnerSessionId    { get; }
 
         #endregion
 
@@ -73,8 +73,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         private Acknowledgement(Boolean             Result,
                                 StatusCode          StatusCode,
-                                ChargingSession_Id  SessionId         = null,
-                                ChargingSession_Id  PartnerSessionId  = null)
+                                Session_Id?         SessionId         = null,
+                                PartnerSession_Id?  PartnerSessionId  = null)
         {
 
             this.Result            = Result;
@@ -95,8 +95,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        public Acknowledgement(ChargingSession_Id  SessionId,
-                               ChargingSession_Id  PartnerSessionId          = null,
+        public Acknowledgement(Session_Id          SessionId,
+                               PartnerSession_Id?  PartnerSessionId          = null,
                                String              StatusCodeDescription     = null,
                                String              StatusCodeAdditionalInfo  = null)
 
@@ -124,8 +124,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public Acknowledgement(StatusCodes         StatusCode,
                                String              StatusCodeDescription     = null,
                                String              StatusCodeAdditionalInfo  = null,
-                               ChargingSession_Id  SessionId                 = null,
-                               ChargingSession_Id  PartnerSessionId          = null)
+                               Session_Id?         SessionId                 = null,
+                               PartnerSession_Id?  PartnerSessionId          = null)
 
             : this(false,
                    new StatusCode(StatusCode,
@@ -260,8 +260,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           : false,
                                                       StatusCode.Parse(AcknowledgementXML.ElementOrFail(OICPNS.CommonTypes + "StatusCode",
                                                                                                         "Missing 'StatusCode'-XML-tag!")),
-                                                      AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "SessionID", ChargingSession_Id.Parse),
-                                                      AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "PartnerSessionID", ChargingSession_Id.Parse));
+                                                      AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "SessionID",        Session_Id.Parse),
+                                                      AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "PartnerSessionID", PartnerSession_Id.Parse));
 
                 return true;
 

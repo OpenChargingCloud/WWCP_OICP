@@ -23,6 +23,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using org.GraphDefined.WWCP.OICPv2_1.EMP;
+
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -58,7 +60,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
         #region TestAuthStop(HubjectCPO, SessionId, AuthToken)
 
         public async Task TestAuthStop(CPOClient           HubjectCPO,
-                                       ChargingSession_Id  SessionId,
+                                       Session_Id  SessionId,
                                        Auth_Token          AuthToken)
         {
 
@@ -103,7 +105,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
             var AuthStopResult = await HubjectCPO.
                                            AuthorizeStop(EVSEOperatorId,
-                                                         AuthStartResult.Content.SessionId,
+                                                         AuthStartResult.Content.SessionId.Value,
                                                          AuthToken,
                                                          EVSEId);
 
@@ -119,12 +121,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
             var SendCDRResult = await HubjectCPO.
                                           SendChargeDetailRecord(new ChargeDetailRecord(
                                                                      EVSEId:                EVSEId,
-                                                                     SessionId:             AuthStartResult.Content.SessionId,
-                                                                     PartnerProductId:      ChargingProduct_Id.Parse("AC1"),
+                                                                     SessionId:             AuthStartResult.Content.SessionId.Value,
+                                                                     PartnerProductId:      PartnerProduct_Id.Parse("AC1"),
                                                                      SessionStart:          DateTime.Now,
                                                                      SessionEnd:            DateTime.Now - TimeSpan.FromHours(3),
                                                                      Identification:        AuthorizationIdentification.FromAuthToken(AuthToken),
-                                                                     PartnerSessionId:      ChargingSession_Id.Parse("0815"),
+                                                                     PartnerSessionId:      PartnerSession_Id.Parse("081508150815-0815-0815-0815-0815081508150815"),
                                                                      ChargingStart:         DateTime.Now,
                                                                      ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),
                                                                      MeterValueStart:       123.456,

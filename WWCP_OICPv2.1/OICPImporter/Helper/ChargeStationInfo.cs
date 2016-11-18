@@ -119,7 +119,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             // 2nd: Try to use the given EVSE Ids to find a common prefix...
             if (_StationId == null)
-                _StationId = ChargingStation_Id.Create(_EVSEIds.Select(evse => evse.ToWWCP_EVSEId()));
+                _StationId = ChargingStation_Id.Create(_EVSEIds.Select(evse => evse.ToWWCP()));
 
             // Alternative: Try to use a modified StationXML Id...
             if (_StationId == null)

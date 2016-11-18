@@ -71,7 +71,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                              MobileClient         Sender,
                                                              String               SenderId,
                                                              EventTracking_Id     EventTrackingId,
-                                                             ChargingSession_Id   SessionId,
+                                                             Session_Id   SessionId,
                                                              TimeSpan?            RequestTimeout);
 
     /// <summary>
@@ -82,7 +82,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                              MobileClient         Sender,
                                                              String               SenderId,
                                                              EventTracking_Id     EventTrackingId,
-                                                             ChargingSession_Id   SessionId,
+                                                             Session_Id   SessionId,
                                                              TimeSpan?            RequestTimeout,
                                                              Acknowledgement      Result,
                                                              TimeSpan             Duration);
@@ -99,7 +99,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             MobileClient          Sender,
                                                             String                SenderId,
                                                             EventTracking_Id      EventTrackingId,
-                                                            ChargingSession_Id    SessionId,
+                                                            Session_Id    SessionId,
                                                             TimeSpan?             RequestTimeout);
 
     /// <summary>
@@ -110,7 +110,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             MobileClient          Sender,
                                                             String                SenderId,
                                                             EventTracking_Id      EventTrackingId,
-                                                            ChargingSession_Id    SessionId,
+                                                            Session_Id    SessionId,
                                                             TimeSpan?             RequestTimeout,
                                                             Acknowledgement       Result,
                                                             TimeSpan              Duration);

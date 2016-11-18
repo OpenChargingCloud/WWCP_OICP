@@ -68,7 +68,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
 
                 var RemoteStart = await HubjectMobile.
-                                            MobileRemoteStart(SessionId,
+                                            MobileRemoteStart(SessionId.Value,
                                                               RequestTimeout: TimeSpan.FromSeconds(240));
 
                 if (!RemoteStart.Content.Result)
@@ -86,7 +86,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                     Thread.Sleep(2000);
 
                     var RemoteStop = await HubjectMobile.
-                                               MobileRemoteStop(SessionId,
+                                               MobileRemoteStop(SessionId.Value,
                                                                 RequestTimeout: TimeSpan.FromSeconds(120));
 
 

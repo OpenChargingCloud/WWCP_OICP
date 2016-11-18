@@ -553,7 +553,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            MobileRemoteStart(ChargingSession_Id  SessionId,
+            MobileRemoteStart(Session_Id  SessionId,
 
                               DateTime?           Timestamp          = null,
                               CancellationToken?  CancellationToken  = null,
@@ -721,7 +721,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            MobileRemoteStop(ChargingSession_Id  SessionId,
+            MobileRemoteStop(Session_Id  SessionId,
 
                              DateTime?           Timestamp          = null,
                              CancellationToken?  CancellationToken  = null,

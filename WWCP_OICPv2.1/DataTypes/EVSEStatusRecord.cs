@@ -70,7 +70,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            this.Id      = EVSE.Id.ToOICP_EVSEId();
+            this.Id      = EVSE.Id.ToOICP();
             this.Status  = OICPMapper.AsOICPEVSEStatus(EVSE.Status.Value);
 
         }

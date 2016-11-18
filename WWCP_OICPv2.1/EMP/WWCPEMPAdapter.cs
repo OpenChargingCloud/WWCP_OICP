@@ -314,7 +314,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                               RoamingNetwork               RoamingNetwork,
 
                               EMPRoaming                   EMPRoaming,
-                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE = null)
+                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE  = null)
 
             : base(Id,
                    Name,
@@ -360,9 +360,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 var response = await RoamingNetwork.AuthorizeStart(OperatorId,
                                                                    AuthToken,
-                                                                   EVSEId.Value.ToWWCP_EVSEId(),
-                                                                   PartnerProductId,
-                                                                   SessionId,
+                                                                   EVSEId.Value.ToWWCP(),
+                                                                   PartnerProductId.ToWWCP(),
+                                                                   SessionId.ToWWCP(),
 
                                                                    Timestamp,
                                                                    CancellationToken,
@@ -375,9 +375,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     {
 
                         case AuthStartEVSEResultType.Authorized:
-                            return new AuthorizationStart(response.SessionId,
+                            return new AuthorizationStart(response.SessionId.ToOICP(),
                                                           null,
-                                                          response.ProviderId,
+                                                          response.ProviderId.ToOICP(),
                                                           "Ready to charge!",
                                                           null,
                                                           response.ListOfAuthStopTokens.
@@ -385,39 +385,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                         case AuthStartEVSEResultType.NotAuthorized:
                             return new AuthorizationStart(StatusCodes.RFIDAuthenticationfailed_InvalidUID,
-                                                                  "RFID Authentication failed - invalid UID");
+                                                          "RFID Authentication failed - invalid UID");
 
                         case AuthStartEVSEResultType.InvalidSessionId:
                             return new AuthorizationStart(StatusCodes.SessionIsInvalid,
-                                                                  "Session is invalid");
+                                                          "Session is invalid");
 
                         case AuthStartEVSEResultType.CommunicationTimeout:
                             return new AuthorizationStart(StatusCodes.CommunicationToEVSEFailed,
-                                                                  "Communication to EVSE failed!");
+                                                          "Communication to EVSE failed!");
 
                         case AuthStartEVSEResultType.StartChargingTimeout:
                             return new AuthorizationStart(StatusCodes.NoEVConnectedToEVSE,
-                                                                  "No EV connected to EVSE!");
+                                                          "No EV connected to EVSE!");
 
                         case AuthStartEVSEResultType.Reserved:
                             return new AuthorizationStart(StatusCodes.EVSEAlreadyReserved,
-                                                                  "EVSE already reserved!");
+                                                          "EVSE already reserved!");
 
                         case AuthStartEVSEResultType.UnknownEVSE:
                             return new AuthorizationStart(StatusCodes.UnknownEVSEID,
-                                                                  "Unknown EVSE ID!");
+                                                          "Unknown EVSE ID!");
 
                         case AuthStartEVSEResultType.OutOfService:
                             return new AuthorizationStart(StatusCodes.EVSEOutOfService,
-                                                                  "EVSE out of service!");
+                                                          "EVSE out of service!");
 
                     }
                 }
 
                 return new AuthorizationStart(StatusCodes.ServiceNotAvailable,
                                               "Service not available!",
-                                              SessionId:  response?.SessionId ?? SessionId,
-                                              ProviderId: response?.ProviderId);
+                                              SessionId:  response?.SessionId. ToOICP() ?? SessionId,
+                                              ProviderId: response?.ProviderId.ToOICP());
 
             };
 
@@ -438,9 +438,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
                 var response = await RoamingNetwork.AuthorizeStop(OperatorId,
-                                                                  SessionId,
+                                                                  SessionId.ToWWCP().Value,
                                                                   AuthToken,
-                                                                  EVSEId.ToWWCP_EVSEId(),
+                                                                  EVSEId.ToWWCP(),
 
                                                                   Timestamp,
                                                                   CancellationToken,
@@ -453,8 +453,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     {
 
                         case AuthStopEVSEResultType.Authorized:
-                            return new AuthorizationStop(response.SessionId,
-                                                         response.ProviderId,
+                            return new AuthorizationStop(response.SessionId. ToOICP(),
+                                                         response.ProviderId.ToOICP(),
                                                          null,
                                                          "Ready to stop charging!");
 
@@ -482,9 +482,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 }
 
                 return new AuthorizationStop(StatusCodes.ServiceNotAvailable,
-                                                     "Service not available!",
-                                                     SessionId:  response?.SessionId ?? SessionId,
-                                                     ProviderId: response?.ProviderId);
+                                             "Service not available!",
+                                             SessionId:  response?.SessionId. ToOICP() ?? SessionId,
+                                             ProviderId: response?.ProviderId.ToOICP());
 
             };
 
@@ -504,7 +504,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                            Timestamp,
                                                                            CancellationToken,
                                                                            EventTrackingId,
-                                                                           OICPMapper.AsWWCPChargeDetailRecord(ChargeDetailRecord),
+                                                                           OICPMapper.ToWWCP(ChargeDetailRecord),
                                                                            RequestTimeout);
 
                 if (response != null)
@@ -514,38 +514,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                         case SendCDRResultType.Forwarded:
                             return new Acknowledgement(StatusCodes.Success,
-                                                               "Charge detail record forwarded!",
-                                                               null,
-                                                               ChargeDetailRecord?.SessionId,
-                                                               ChargeDetailRecord?.PartnerSessionId);
+                                                       "Charge detail record forwarded!",
+                                                       null,
+                                                       ChargeDetailRecord?.SessionId,
+                                                       ChargeDetailRecord?.PartnerSessionId);
 
                         case SendCDRResultType.NotForwared:
                             return new Acknowledgement(StatusCodes.SystemError,
-                                                               "Communication to EVSE failed!",
-                                                               null,
-                                                               ChargeDetailRecord?.SessionId,
-                                                               ChargeDetailRecord?.PartnerSessionId);
+                                                       "Communication to EVSE failed!",
+                                                       null,
+                                                       ChargeDetailRecord?.SessionId,
+                                                       ChargeDetailRecord?.PartnerSessionId);
 
                         case SendCDRResultType.InvalidSessionId:
                             return new Acknowledgement(StatusCodes.SessionIsInvalid,
-                                                               "Session is invalid",
-                                                               null,
-                                                               ChargeDetailRecord?.SessionId,
-                                                               ChargeDetailRecord?.PartnerSessionId);
+                                                       "Session is invalid",
+                                                       null,
+                                                       ChargeDetailRecord?.SessionId,
+                                                       ChargeDetailRecord?.PartnerSessionId);
 
                         case SendCDRResultType.UnknownEVSE:
                             return new Acknowledgement(StatusCodes.UnknownEVSEID,
-                                                               "Unknown EVSE ID!",
-                                                               null,
-                                                               ChargeDetailRecord?.SessionId,
-                                                               ChargeDetailRecord?.PartnerSessionId);
+                                                       "Unknown EVSE ID!",
+                                                       null,
+                                                       ChargeDetailRecord?.SessionId,
+                                                       ChargeDetailRecord?.PartnerSessionId);
 
                         case SendCDRResultType.Error:
                             return new Acknowledgement(StatusCodes.DataError,
-                                                               "Data Error!",
-                                                               null,
-                                                               ChargeDetailRecord?.SessionId,
-                                                               ChargeDetailRecord?.PartnerSessionId);
+                                                       "Data Error!",
+                                                       null,
+                                                       ChargeDetailRecord?.SessionId,
+                                                       ChargeDetailRecord?.PartnerSessionId);
 
                     }
                 }
@@ -950,7 +950,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                 #region Update matching EVSE... or create a new one!
 
-                                if (_ChargingStation.TryGetEVSEbyId(evsedatarecord.Id.ToWWCP_EVSEId(), out _EVSE))
+                                if (_ChargingStation.TryGetEVSEbyId(evsedatarecord.Id.ToWWCP(), out _EVSE))
                                 {
 
                                     // Update via events!
@@ -965,7 +965,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                 }
 
                                 else
-                                    _ChargingStation.CreateNewEVSE(evsedatarecord.Id.ToWWCP_EVSEId(),
+                                    _ChargingStation.CreateNewEVSE(evsedatarecord.Id.ToWWCP(),
 
                                                                    Configurator: evse => {
                                                                        evse.Description         = evsedatarecord.AdditionalInfo;
@@ -1122,7 +1122,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 return result.Content.OperatorEVSEStatus.
                            SelectMany(operatorevsestatus => operatorevsestatus.EVSEStatusRecords).
-                           SafeSelect(evsestatusrecord   => new WWCP.EVSEStatus(evsestatusrecord.Id.ToWWCP_EVSEId(),
+                           SafeSelect(evsestatusrecord   => new WWCP.EVSEStatus(evsestatusrecord.Id.ToWWCP(),
                                                                                 OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
                                                                                 result.Timestamp));
 
@@ -1185,7 +1185,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 {
 
                     _EVSEStatus.AddRange(result.Content.EVSEStatusRecords.
-                                                SafeSelect(evsestatusrecord => new WWCP.EVSEStatus(evsestatusrecord.Id.ToWWCP_EVSEId(),
+                                                SafeSelect(evsestatusrecord => new WWCP.EVSEStatus(evsestatusrecord.Id.ToWWCP(),
                                                                                                    OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
                                                                                                    result.Timestamp)));
 
@@ -1331,7 +1331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     ChargingReservation_Id            ReservationId          = null,
                     eMobilityProvider_Id?             ProviderId             = null,
                     eMobilityAccount_Id?              eMAId                  = null,
-                    ChargingProduct_Id                ChargingProductId      = null,
+                    ChargingProduct_Id?               ChargingProductId      = null,
                     IEnumerable<Auth_Token>           AuthTokens             = null,
                     IEnumerable<eMobilityAccount_Id>  eMAIds                 = null,
                     IEnumerable<UInt32>               PINs                   = null,
@@ -1467,12 +1467,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #endregion
 
 
-            var result = await EMPRoaming.ReservationStart(EVSEId:             EVSEId.ToOICP_EVSEId(),
-                                                           ProviderId:         ProviderId.Value,
-                                                           eMAId:              eMAId.Value,
-                                                           SessionId:          ReservationId != null ? ChargingSession_Id.Parse(ReservationId.ToString()) : null,
+            var result = await EMPRoaming.ReservationStart(EVSEId:             EVSEId.ToOICP(),
+                                                           ProviderId:         ProviderId.Value.ToOICP(),
+                                                           EVCOId:             eMAId.     Value.ToOICP(),
+                                                           SessionId:          ReservationId != null ? Session_Id.Parse(ReservationId.ToString()) : new Session_Id?(),
                                                            PartnerSessionId:   null,
-                                                           PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.
+                                                           PartnerProductId:   PartnerProduct_Id.Parse(PartnerProductIdElements.
                                                                                                             Select(kvp => kvp.Key + "=" + kvp.Value).
                                                                                                             AggregateWith("|")),
 
@@ -1594,9 +1594,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #endregion
 
 
-            var result = await EMPRoaming.ReservationStop(SessionId:          ChargingSession_Id.Parse(ReservationId.ToString()),
-                                                          ProviderId:         ProviderId.Value,
-                                                          EVSEId:             EVSEId.Value.ToOICP_EVSEId(),
+            var result = await EMPRoaming.ReservationStop(SessionId:          Session_Id.Parse(ReservationId.ToString()),
+                                                          ProviderId:         ProviderId.Value.ToOICP(),
+                                                          EVSEId:             EVSEId.    Value.ToOICP(),
                                                           PartnerSessionId:   null,
 
                                                           Timestamp:          Timestamp,
@@ -1642,11 +1642,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public override async Task<RemoteStartEVSEResult>
 
             RemoteStart(WWCP.EVSE_Id             EVSEId,
-                        ChargingProduct_Id       ChargingProductId   = null,
+                        ChargingProduct_Id?      ChargingProductId   = null,
 //                      TimeSpan?                Duration            = null,
 //                      Double?                  MaxEnergy           = null,
                         ChargingReservation_Id   ReservationId       = null,
-                        ChargingSession_Id       SessionId           = null,
+                        ChargingSession_Id?      SessionId           = null,
                         eMobilityProvider_Id?    ProviderId          = null,
                         eMobilityAccount_Id?     eMAId               = null,
 
@@ -1659,8 +1659,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Initial checks
 
-            if (ProviderId == null || !ProviderId.HasValue)
-                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+            if (!ProviderId.HasValue)
+                throw new ArgumentNullException(nameof(ProviderId),  "The e-mobility provider identification is mandatory in OICP!");
+
+            if (!eMAId.HasValue)
+                throw new ArgumentNullException(nameof(eMAId),       "The e-mobility account identification is mandatory in OICP!");
 
 
             if (!Timestamp.HasValue)
@@ -1788,14 +1791,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #endregion
 
 
-            var result = await EMPRoaming.RemoteStart(EVSEId:             EVSEId.ToOICP_EVSEId(),
-                                                      ProviderId:         ProviderId.Value,
-                                                      eMAId:              eMAId.Value,
-                                                      SessionId:          SessionId,
+            var result = await EMPRoaming.RemoteStart(EVSEId:             EVSEId.ToOICP(),
+                                                      ProviderId:         ProviderId.Value.ToOICP(),
+                                                      EVCOId:             eMAId.     Value.ToOICP(),
+                                                      SessionId:          SessionId.       ToOICP(),
                                                       PartnerSessionId:   null,
-                                                      PartnerProductId:   ChargingProduct_Id.Parse(PartnerProductIdElements.
-                                                                                                       Select(kvp => kvp.Key + "=" + kvp.Value).
-                                                                                                       AggregateWith("|")),
+                                                      PartnerProductId:   PartnerProduct_Id.Parse(PartnerProductIdElements.
+                                                                                                      Select(kvp => kvp.Key + "=" + kvp.Value).
+                                                                                                      AggregateWith("|")),
 
                                                       Timestamp:          Timestamp,
                                                       CancellationToken:  CancellationToken,
@@ -1811,8 +1814,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 result.Content.Result)
             {
 
-                return RemoteStartEVSEResult.Success(result.Content.SessionId != null
-                                                         ? new ChargingSession(result.Content.SessionId)
+                return RemoteStartEVSEResult.Success(result.Content.SessionId.HasValue
+                                                         ? new ChargingSession(result.Content.SessionId.ToWWCP().Value)
                                                          : null);
 
             }
@@ -1856,11 +1859,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Initial checks
 
-            if (SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId),  "The given charging session identification must not be null!");
-
-            if (ProviderId == null || !ProviderId.HasValue)
-                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+            if (!ProviderId.HasValue)
+                throw new ArgumentNullException(nameof(ProviderId),  "The e-mobility provider identification is mandatory in OICP!");
 
 
             if (!Timestamp.HasValue)
@@ -1907,9 +1907,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
 
-            var result = await EMPRoaming.RemoteStop(SessionId:          SessionId,
-                                                     ProviderId:         ProviderId.Value,
-                                                     EVSEId:             EVSEId.ToOICP_EVSEId(),
+            var result = await EMPRoaming.RemoteStop(SessionId:          SessionId.       ToOICP(),
+                                                     ProviderId:         ProviderId.Value.ToOICP(),
+                                                     EVSEId:             EVSEId.          ToOICP(),
                                                      PartnerSessionId:   null,
 
                                                      Timestamp:          Timestamp,
@@ -1981,7 +1981,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 result.Content        != null)
             {
 
-                return result.Content.SafeSelect(cdr => OICPMapper.AsWWCPChargeDetailRecord(cdr));
+                return result.Content.SafeSelect(cdr => OICPMapper.ToWWCP(cdr));
 
             }
 

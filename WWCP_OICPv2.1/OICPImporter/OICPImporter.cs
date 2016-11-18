@@ -318,7 +318,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                               #region Update matching EVSE... or create a new one!
 
-                                                              if (_ChargingStation.TryGetEVSEbyId(EvseDataRecord.Id.ToWWCP_EVSEId(), out _EVSE))
+                                                              if (_ChargingStation.TryGetEVSEbyId(EvseDataRecord.Id.ToWWCP(), out _EVSE))
                                                               {
 
                                                                   // Update via events!
@@ -331,7 +331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                               }
 
                                                               else
-                                                                  _ChargingStation.CreateNewEVSE(EvseDataRecord.Id.ToWWCP_EVSEId(),
+                                                                  _ChargingStation.CreateNewEVSE(EvseDataRecord.Id.ToWWCP(),
 
                                                                                                  Configurator: evse => {
 
@@ -416,7 +416,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static readonly TimeSpan      DefaultUpdateEVSEStatusEvery    = TimeSpan.FromSeconds( 20);
         public static readonly TimeSpan      DefaultUpdateEVSEStatusTimeout  = TimeSpan.FromMinutes( 30);   // First import might be big and slow!
 
-        private readonly EMPClient                                                  _EMPClient;
+        private readonly EMP.EMPClient                                              _EMPClient;
         private readonly Object                                                     UpdateEVSEsLock  = new Object();
         private readonly Timer                                                      UpdateEVSEDataTimer;
         private readonly Timer                                                      UpdateEVSEStatusTimer;
@@ -430,7 +430,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         private readonly Func  <TContext, DateTime, IEnumerable<EVSE_Id>>           _GetEVSEIdsForStatusUpdate;
         private readonly Action<TContext, DateTime, XElement>                       _EVSEStatusXMLHandler;
-        private readonly Action<TContext, DateTime, EVSE_Id, EVSEStatusTypes>    _EVSEStatusHandler;
+        private readonly Action<TContext, DateTime, EVSE_Id, EVSEStatusTypes>       _EVSEStatusHandler;
 
         private readonly Action<TContext>                                           _StopBulkUpdate;
 
@@ -623,12 +623,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Init OICP EMP UpstreamService
 
-            _EMPClient  = new EMPClient(ClientId:         Identification,
-                                        Hostname:         _Hostname,
-                                        RemotePort:          _TCPPort,
-                                        HTTPVirtualHost:  _HTTPVirtualHost,
-                                        RequestTimeout:     QueryTimeout,
-                                        DNSClient:        DNSClient);
+            _EMPClient  = new EMP.EMPClient(ClientId:         Identification,
+                                            Hostname:         _Hostname,
+                                            RemotePort:       _TCPPort,
+                                            HTTPVirtualHost:  _HTTPVirtualHost,
+                                            RequestTimeout:   QueryTimeout,
+                                            DNSClient:        DNSClient);
 
             _EMPClient.OnException += SendException;
             _EMPClient.OnHTTPError += SendHTTPError;
@@ -732,12 +732,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Init OICP EMP UpstreamService
 
-            _EMPClient  = new EMPClient(ClientId:         Identification,
-                                        Hostname:         _Hostname,
-                                        RemotePort:          _TCPPort,
-                                        HTTPVirtualHost:  _HTTPVirtualHost,
-                                        RequestTimeout:     QueryTimeout,
-                                        DNSClient:        DNSClient);
+            _EMPClient  = new EMP.EMPClient(ClientId:         Identification,
+                                            Hostname:         _Hostname,
+                                            RemotePort:       _TCPPort,
+                                            HTTPVirtualHost:  _HTTPVirtualHost,
+                                            RequestTimeout:   QueryTimeout,
+                                            DNSClient:        DNSClient);
 
             _EMPClient.OnException += SendException;
             _EMPClient.OnHTTPError += SendHTTPError;

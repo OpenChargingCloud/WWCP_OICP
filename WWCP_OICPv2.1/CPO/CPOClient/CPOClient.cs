@@ -1014,9 +1014,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             AuthorizeStart(ChargingStationOperator_Id  OperatorId,
                            Auth_Token                  AuthToken,
                            EVSE_Id?                    EVSEId              = null,
-                           ChargingSession_Id          SessionId           = null,
-                           ChargingProduct_Id          PartnerProductId    = null,
-                           ChargingSession_Id          PartnerSessionId    = null,
+                           Session_Id?                 SessionId           = null,
+                           PartnerProduct_Id?          PartnerProductId    = null,
+                           PartnerSession_Id?          PartnerSessionId    = null,
 
                            DateTime?                   Timestamp           = null,
                            CancellationToken?          CancellationToken   = null,
@@ -1227,10 +1227,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<AuthorizationStop>>
 
             AuthorizeStop(ChargingStationOperator_Id  OperatorId,
-                          ChargingSession_Id          SessionId,
+                          Session_Id                  SessionId,
                           Auth_Token                  AuthToken,
                           EVSE_Id?                    EVSEId              = null,
-                          ChargingSession_Id          PartnerSessionId    = null,
+                          PartnerSession_Id?          PartnerSessionId    = null,
 
                           DateTime?                   Timestamp           = null,
                           CancellationToken?          CancellationToken   = null,

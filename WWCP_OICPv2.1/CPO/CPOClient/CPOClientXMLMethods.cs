@@ -223,9 +223,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static XElement AuthorizeStartXML(ChargingStationOperator_Id  OperatorId,
                                                  Auth_Token                  AuthToken,
                                                  EVSE_Id?                    EVSEId             = null,   // OICP v2.1: Optional
-                                                 ChargingProduct_Id          PartnerProductId   = null,   // OICP v2.1: Optional [100]
-                                                 ChargingSession_Id          SessionId          = null,   // OICP v2.1: Optional
-                                                 ChargingSession_Id          PartnerSessionId   = null)   // OICP v2.1: Optional [50]
+                                                 PartnerProduct_Id?          PartnerProductId   = null,   // OICP v2.1: Optional [100]
+                                                 Session_Id?                 SessionId          = null,   // OICP v2.1: Optional
+                                                 PartnerSession_Id?          PartnerSessionId   = null)   // OICP v2.1: Optional [50]
         {
 
             #region Documentation
@@ -336,10 +336,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         public static XElement AuthorizeStopXML(ChargingStationOperator_Id  OperatorId,
-                                                ChargingSession_Id          SessionId,
+                                                Session_Id                  SessionId,
                                                 Auth_Token                  AuthToken,
                                                 EVSE_Id?                    EVSEId             = null,
-                                                ChargingSession_Id          PartnerSessionId   = null)
+                                                PartnerSession_Id?          PartnerSessionId   = null)
         {
 
             #region Documentation

@@ -26,7 +26,7 @@ using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 {
 
     #region OnPullEVSEData
@@ -200,12 +200,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            EMPClient                 Sender,
                                                            String                    SenderId,
                                                            EventTracking_Id          EventTrackingId,
-                                                           eMobilityProvider_Id                   ProviderId,
+                                                           Provider_Id               ProviderId,
                                                            EVSE_Id                   EVSEId,
-                                                           eMobilityAccount_Id                    eMAId,
-                                                           ChargingSession_Id        SessionId,
-                                                           ChargingSession_Id        PartnerSessionId,
-                                                           ChargingProduct_Id        PartnerProductId,
+                                                           EVCO_Id                   EVCOId,
+                                                           Session_Id?               SessionId,
+                                                           PartnerSession_Id?        PartnerSessionId,
+                                                           PartnerProduct_Id?        PartnerProductId,
                                                            TimeSpan?                 RequestTimeout);
 
     /// <summary>
@@ -215,14 +215,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            EMPClient                 Sender,
                                                            String                    SenderId,
                                                            EventTracking_Id          EventTrackingId,
-                                                           eMobilityProvider_Id                   ProviderId,
+                                                           Provider_Id               ProviderId,
                                                            EVSE_Id                   EVSEId,
-                                                           eMobilityAccount_Id                    eMAId,
-                                                           ChargingSession_Id        SessionId,
-                                                           ChargingSession_Id        PartnerSessionId,
-                                                           ChargingProduct_Id        PartnerProductId,
+                                                           EVCO_Id                   EVCOId,
+                                                           Session_Id?               SessionId,
+                                                           PartnerSession_Id?        PartnerSessionId,
+                                                           PartnerProduct_Id?        PartnerProductId,
                                                            TimeSpan?                 RequestTimeout,
-                                                           Acknowledgement   Result,
+                                                           Acknowledgement           Result,
                                                            TimeSpan                  Duration);
 
 
@@ -234,10 +234,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            EMPClient                 Sender,
                                                            String                    SenderId,
                                                            EventTracking_Id          EventTrackingId,
-                                                           ChargingSession_Id        SessionId,
-                                                           eMobilityProvider_Id                   ProviderId,
+                                                           Session_Id                SessionId,
+                                                           Provider_Id               ProviderId,
                                                            EVSE_Id                   EVSEId,
-                                                           ChargingSession_Id        PartnerSessionId,
+                                                           PartnerSession_Id?        PartnerSessionId,
                                                            TimeSpan?                 RequestTimeout);
 
     /// <summary>
@@ -247,12 +247,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            EMPClient                 Sender,
                                                            String                    SenderId,
                                                            EventTracking_Id          EventTrackingId,
-                                                           ChargingSession_Id        SessionId,
-                                                           eMobilityProvider_Id                   ProviderId,
+                                                           Session_Id                SessionId,
+                                                           Provider_Id               ProviderId,
                                                            EVSE_Id                   EVSEId,
-                                                           ChargingSession_Id        PartnerSessionId,
+                                                           PartnerSession_Id?        PartnerSessionId,
                                                            TimeSpan?                 RequestTimeout,
-                                                           Acknowledgement   Result,
+                                                           Acknowledgement           Result,
                                                            TimeSpan                  Duration);
 
     #endregion
@@ -267,12 +267,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                EMPClient                 Sender,
                                                                String                    SenderId,
                                                                EventTracking_Id          EventTrackingId,
-                                                               eMobilityProvider_Id                   ProviderId,
+                                                               Provider_Id               ProviderId,
                                                                EVSE_Id                   EVSEId,
-                                                               eMobilityAccount_Id                    eMAId,
-                                                               ChargingSession_Id        SessionId,
-                                                               ChargingSession_Id        PartnerSessionId,
-                                                               ChargingProduct_Id        PartnerProductId,
+                                                               EVCO_Id                   EVCOId,
+                                                               Session_Id?               SessionId,
+                                                               PartnerSession_Id?        PartnerSessionId,
+                                                               PartnerProduct_Id?        PartnerProductId,
                                                                TimeSpan?                 RequestTimeout);
 
     /// <summary>
@@ -282,14 +282,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                EMPClient                 Sender,
                                                                String                    SenderId,
                                                                EventTracking_Id          EventTrackingId,
-                                                               eMobilityProvider_Id                   ProviderId,
+                                                               Provider_Id               ProviderId,
                                                                EVSE_Id                   EVSEId,
-                                                               eMobilityAccount_Id                    eMAId,
-                                                               ChargingSession_Id        SessionId,
-                                                               ChargingSession_Id        PartnerSessionId,
-                                                               ChargingProduct_Id        PartnerProductId,
+                                                               EVCO_Id                   EVCOId,
+                                                               Session_Id?               SessionId,
+                                                               PartnerSession_Id?        PartnerSessionId,
+                                                               PartnerProduct_Id?        PartnerProductId,
                                                                TimeSpan?                 RequestTimeout,
-                                                               Acknowledgement   Result,
+                                                               Acknowledgement           Result,
                                                                TimeSpan                  Duration);
 
 
@@ -301,10 +301,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                EMPClient                 Sender,
                                                                String                    SenderId,
                                                                EventTracking_Id          EventTrackingId,
-                                                               ChargingSession_Id        SessionId,
-                                                               eMobilityProvider_Id                   ProviderId,
+                                                               Session_Id                SessionId,
+                                                               Provider_Id               ProviderId,
                                                                EVSE_Id                   EVSEId,
-                                                               ChargingSession_Id        PartnerSessionId,
+                                                               PartnerSession_Id?        PartnerSessionId,
                                                                TimeSpan?                 RequestTimeout);
 
     /// <summary>
@@ -314,12 +314,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                EMPClient                 Sender,
                                                                String                    SenderId,
                                                                EventTracking_Id          EventTrackingId,
-                                                               ChargingSession_Id        SessionId,
-                                                               eMobilityProvider_Id                   ProviderId,
+                                                               Session_Id                SessionId,
+                                                               Provider_Id               ProviderId,
                                                                EVSE_Id                   EVSEId,
-                                                               ChargingSession_Id        PartnerSessionId,
+                                                               PartnerSession_Id?        PartnerSessionId,
                                                                TimeSpan?                 RequestTimeout,
-                                                               Acknowledgement   Result,
+                                                               Acknowledgement           Result,
                                                                TimeSpan                  Duration);
 
     #endregion

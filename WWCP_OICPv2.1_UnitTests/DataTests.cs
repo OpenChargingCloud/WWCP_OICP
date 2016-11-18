@@ -108,7 +108,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         }
 
-        public async Task TestPullEVSEData(EMPClient HubjectEMP)
+        public async Task TestPullEVSEData(EMP.EMPClient HubjectEMP)
         {
 
             var req2 = HubjectEMP.
@@ -180,7 +180,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         }
 
-        public async Task TestPullEVSEStatus(EMPClient HubjectEMP)
+        public async Task TestPullEVSEStatus(EMP.EMPClient HubjectEMP)
         {
 
             var req4 = HubjectEMP.
@@ -221,7 +221,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         }
 
-        public async Task TestPullEVSEStatusById(EMPClient HubjectEMP)
+        public async Task TestPullEVSEStatusById(EMP.EMPClient HubjectEMP)
         {
 
             var req5 = HubjectEMP.
@@ -259,7 +259,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         }
 
-        public async Task TestSearchEVSE(EMPClient HubjectEMP)
+        public async Task TestSearchEVSE(EMP.EMPClient HubjectEMP)
         {
 
             Task.Factory.StartNew(async () => {
@@ -289,7 +289,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
         }
 
 
-        public void TestPushAuthenticationData(EMPClient HubjectEMP)
+        public void TestPushAuthenticationData(EMP.EMPClient HubjectEMP)
         {
 
             Task.Factory.StartNew(async () => {

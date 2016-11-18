@@ -59,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The Hubject session identification.
         /// </summary>
-        public ChargingSession_Id       SessionId               { get; }
+        public Session_Id?              SessionId               { get; }
 
         /// <summary>
         /// The status code of the request.
@@ -94,13 +94,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="TermsOfUse">An optional multilingual term-of-use text.</param>
         /// <param name="AdditionalInfo">Optional additional information.</param>
         public MobileAuthorizationStart(AuthorizationStatusTypes  AuthorizationStatus,
-                                        GeoCoordinate            GeoCoordinates,
-                                        I18NString               ChargingStationName  = null,
-                                        Address                  Address              = null,
-                                        ChargingSession_Id       SessionId            = null,
-                                        StatusCode               StatusCode           = null,
-                                        I18NString               TermsOfUse           = null,
-                                        I18NString               AdditionalInfo       = null)
+                                        GeoCoordinate             GeoCoordinates,
+                                        I18NString                ChargingStationName  = null,
+                                        Address                   Address              = null,
+                                        Session_Id?               SessionId            = null,
+                                        StatusCode                StatusCode           = null,
+                                        I18NString                TermsOfUse           = null,
+                                        I18NString                AdditionalInfo       = null)
         {
 
             #region Initial checks
@@ -259,10 +259,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             return new MobileAuthorizationStart((AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), MobileAuthorizationStartXML.ElementValueOrFail(OICPNS.MobileAuthorization + "AuthorizationStatus")),
                                                 GeoCoordinates:       XMLMethods.ParseGeoCoordinatesXML(MobileAuthorizationStartXML.ElementOrFail(OICPNS.MobileAuthorization + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
                                                 ChargingStationName:  ChargingStationName,
-                                                Address:              MobileAuthorizationStartXML.MapElement       (OICPNS.MobileAuthorization + "Address",    XMLMethods.ParseAddressXML, null),
-                                                SessionId:            MobileAuthorizationStartXML.MapValueOrDefault(OICPNS.MobileAuthorization + "SessionID",  ChargingSession_Id.Parse,   null),
-                                                StatusCode:           MobileAuthorizationStartXML.MapElement       (OICPNS.MobileAuthorization + "StatusCode", StatusCode.Parse,           null),
-                                                TermsOfUse:           MobileAuthorizationStartXML.MapValueOrDefault(OICPNS.MobileAuthorization + "TermsOfUse", s => new I18NString(Languages.de, s), null),
+                                                Address:              MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "Address",    XMLMethods.ParseAddressXML, null),
+                                                SessionId:            MobileAuthorizationStartXML.MapValueOrNullable(OICPNS.MobileAuthorization + "SessionID",  Session_Id.Parse),
+                                                StatusCode:           MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "StatusCode", StatusCode.Parse,           null),
+                                                TermsOfUse:           MobileAuthorizationStartXML.MapValueOrDefault (OICPNS.MobileAuthorization + "TermsOfUse", s => new I18NString(Languages.de, s), null),
                                                 AdditionalInfo:       AdditionalInfo);
 
         }

@@ -25,7 +25,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 {
 
     /// <summary>
@@ -51,9 +51,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                  ChargingStationOperator_Id  OperatorId,
                                  Auth_Token                  AuthToken,
                                  EVSE_Id?                    EVSEId             = null,
-                                 ChargingSession_Id          SessionId          = null,
-                                 ChargingProduct_Id          PartnerProductId   = null,
-                                 ChargingSession_Id          PartnerSessionId   = null,
+                                 Session_Id?                 SessionId          = null,
+                                 PartnerProduct_Id?          PartnerProductId   = null,
+                                 PartnerSession_Id?          PartnerSessionId   = null,
                                  TimeSpan?                   RequestTimeout     = null);
 
 
@@ -76,8 +76,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                 EMPServer                   Sender,
                                 CancellationToken           CancellationToken,
                                 EventTracking_Id            EventTrackingId,
-                                ChargingSession_Id          SessionId,
-                                ChargingSession_Id          PartnerSessionId,
+                                Session_Id?                 SessionId,
+                                PartnerSession_Id?          PartnerSessionId,
                                 ChargingStationOperator_Id  OperatorId,
                                 EVSE_Id                     EVSEId,
                                 Auth_Token                  AuthToken,

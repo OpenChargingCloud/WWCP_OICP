@@ -290,11 +290,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                CancellationToken,
                                                                EventTrackingId,
                                                                EVSEId,
-                                                               ChargingProductId,
+                                                               PartnerProductId,
                                                                SessionId,
                                                                PartnerSessionId,
                                                                ProviderId,
-                                                               eMAId,
+                                                               EVCOId,
                                                                RequestTimeout) => {
 
 
@@ -303,10 +303,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 TimeSpan? Duration = null;
 
                 // Analyse the ChargingProductId field and apply the found key/value-pairs
-                if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
+                if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
                 {
 
-                    var Elements = pattern.Replace(ChargingProductId.ToString(), "=").Split('|').ToArray();
+                    var Elements = pattern.Replace(PartnerProductId.ToString(), "=").Split('|').ToArray();
 
                     if (Elements.Length > 0)
                     {
@@ -325,11 +325,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         }
 
-                        var ChargingProductText = Elements.FirstOrDefault(element => element.StartsWith("P=", StringComparison.InvariantCulture));
-                        if (ChargingProductText != null)
+                        var PartnerProductText = Elements.FirstOrDefault(element => element.StartsWith("P=", StringComparison.InvariantCulture));
+                        if (PartnerProductText != null)
                         {
 
-                            ChargingProductId = ChargingProduct_Id.Parse(DurationText.Substring(2));
+                            PartnerProductId = PartnerProduct_Id.Parse(DurationText.Substring(2));
 
                         }
 
@@ -339,13 +339,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                var response = await RoamingNetwork.Reserve(EVSEId.ToWWCP_EVSEId(),
+                var response = await RoamingNetwork.Reserve(EVSEId.ToWWCP(),
                                                             Duration:           Duration,
                                                             ReservationId:      SessionId != null ? ChargingReservation_Id.Parse(SessionId.ToString()) : null,
-                                                            ProviderId:         ProviderId,
-                                                            eMAId:              eMAId,
-                                                            ChargingProductId:  ChargingProductId,
-                                                            eMAIds:             new eMobilityAccount_Id[] { eMAId.Value },
+                                                            ProviderId:         ProviderId.      ToWWCP(),
+                                                            eMAId:              EVCOId.          ToWWCP(),
+                                                            ChargingProductId:  PartnerProductId.ToWWCP(),
+                                                            eMAIds:             new eMobilityAccount_Id[] { EVCOId.Value.ToWWCP() },
                                                             Timestamp:          Timestamp,
                                                             CancellationToken:  CancellationToken,
                                                             EventTrackingId:    EventTrackingId,
@@ -359,13 +359,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case ReservationResultType.Success:
-                            return new Acknowledgement(ChargingSession_Id.Parse(response.Reservation.Id.ToString()),
+                            return new Acknowledgement(Session_Id.Parse(response.Reservation.Id.ToString()),
                                                        StatusCodeDescription: "Ready to charge!");
 
                         case ReservationResultType.InvalidCredentials:
                             return new Acknowledgement(StatusCodes.SessionIsInvalid,
                                                        "Session is invalid",
-                                                       SessionId: ChargingSession_Id.Parse(response.Reservation.Id.ToString()));
+                                                       SessionId: Session_Id.Parse(response.Reservation.Id.ToString()));
 
                         case ReservationResultType.Timeout:
                         case ReservationResultType.CommunicationError:
@@ -393,7 +393,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 return new Acknowledgement(StatusCodes.ServiceNotAvailable,
                                            "Service not available!",
-                                           SessionId: ChargingSession_Id.Parse(response.Reservation.Id.ToString()));
+                                           SessionId: Session_Id.Parse(response.Reservation.Id.ToString()));
 
                 #endregion
 
@@ -415,8 +415,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 var response = await _RoamingNetwork.CancelReservation(ChargingReservation_Id.Parse(SessionId.ToString()),
                                                                        ChargingReservationCancellationReason.Deleted,
-                                                                       ProviderId,
-                                                                       EVSEId.ToWWCP_EVSEId(),
+                                                                       ProviderId.ToWWCP(),
+                                                                       EVSEId.    ToWWCP(),
 
                                                                        Timestamp,
                                                                        CancellationToken,
@@ -431,7 +431,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case CancelReservationResultType.Success:
-                            return new Acknowledgement(ChargingSession_Id.Parse(response.ReservationId.ToString()),
+                            return new Acknowledgement(Session_Id.Parse(response.ReservationId.ToString()),
                                                        StatusCodeDescription: "Reservation deleted!");
 
                         case CancelReservationResultType.UnknownReservationId:
@@ -477,7 +477,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     SessionId,
                                                     PartnerSessionId,
                                                     ProviderId,
-                                                    eMAId,
+                                                    EVCOId,
                                                     RequestTimeout) => {
 
                 #region Request mapping
@@ -500,12 +500,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                var response = await _RoamingNetwork.RemoteStart(EVSEId.ToWWCP_EVSEId(),
-                                                                 ChargingProductId,
+                var response = await _RoamingNetwork.RemoteStart(EVSEId.ToWWCP(),
+                                                                 ChargingProductId.ToWWCP(),
                                                                  ReservationId,
-                                                                 SessionId,
-                                                                 ProviderId,
-                                                                 eMAId,
+                                                                 SessionId. ToWWCP().Value,
+                                                                 ProviderId.ToWWCP(),
+                                                                 EVCOId.    ToWWCP(),
 
                                                                  Timestamp,
                                                                  CancellationToken,
@@ -520,7 +520,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case RemoteStartEVSEResultType.Success:
-                            return new Acknowledgement(response.Session.Id,
+                            return new Acknowledgement(response.Session.Id.ToOICP(),
                                                        StatusCodeDescription: "Ready to charge!");
 
                         case RemoteStartEVSEResultType.InvalidSessionId:
@@ -582,10 +582,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                    ProviderId,
                                                    RequestTimeout) => {
 
-                var response = await _RoamingNetwork.RemoteStop(EVSEId.ToWWCP_EVSEId(),
-                                                                SessionId,
+                var response = await _RoamingNetwork.RemoteStop(EVSEId.ToWWCP(),
+                                                                SessionId. ToWWCP(),
                                                                 ReservationHandling.Close,
-                                                                ProviderId,
+                                                                ProviderId.ToWWCP(),
                                                                 null,
 
                                                                 Timestamp,
@@ -601,7 +601,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case RemoteStopEVSEResultType.Success:
-                            return new Acknowledgement(response.SessionId,
+                            return new Acknowledgement(response.SessionId.ToOICP(),
                                                        StatusCodeDescription: "Ready to stop charging!");
 
                         case RemoteStopEVSEResultType.InvalidSessionId:
@@ -2323,8 +2323,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             AuthorizeStart(ChargingStationOperator_Id  OperatorId,
                            Auth_Token                  AuthToken,
-                           ChargingProduct_Id          ChargingProductId  = null,
-                           ChargingSession_Id          SessionId          = null,
+                           ChargingProduct_Id?         ChargingProductId  = null,
+                           ChargingSession_Id?         SessionId          = null,
 
                            DateTime?                   Timestamp          = null,
                            CancellationToken?          CancellationToken  = null,
@@ -2383,8 +2383,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             var response = await CPORoaming.AuthorizeStart(OperatorId,
                                                            AuthToken,
                                                            null,
-                                                           SessionId,
-                                                           ChargingProductId,
+                                                           SessionId.        ToOICP(),
+                                                           ChargingProductId.ToOICP(),
                                                            null,
 
                                                            Timestamp,
@@ -2404,8 +2404,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 result = AuthStartResult.Authorized(AuthorizatorId,
-                                                    response.Content.SessionId,
-                                                    response.Content.ProviderId,
+                                                    response.Content.SessionId. ToWWCP().Value,
+                                                    response.Content.ProviderId.ToWWCP(),
                                                     response.Content.StatusCode.Description,
                                                     response.Content.StatusCode.AdditionalInfo,
                                                     Runtime);
@@ -2414,7 +2414,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             else
                 result = AuthStartResult.NotAuthorized(AuthorizatorId,
-                                                       response.Content.ProviderId,
+                                                       response.Content.ProviderId.ToWWCP(),
                                                        response.Content.StatusCode.Description,
                                                        response.Content.StatusCode.AdditionalInfo,
                                                        Runtime);
@@ -2471,8 +2471,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             AuthorizeStart(ChargingStationOperator_Id  OperatorId,
                            Auth_Token                  AuthToken,
                            WWCP.EVSE_Id                EVSEId,
-                           ChargingProduct_Id          ChargingProductId  = null,   // [maxlength: 100]
-                           ChargingSession_Id          SessionId          = null,
+                           ChargingProduct_Id?         ChargingProductId  = null,   // [maxlength: 100]
+                           ChargingSession_Id?         SessionId          = null,
 
                            DateTime?                   Timestamp          = null,
                            CancellationToken?          CancellationToken  = null,
@@ -2532,9 +2532,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             var response  = await CPORoaming.AuthorizeStart(OperatorId,
                                                             AuthToken,
-                                                            EVSEId.ToOICP_EVSEId(),
-                                                            SessionId,
-                                                            ChargingProductId,
+                                                            EVSEId.ToOICP(),
+                                                            SessionId.        ToOICP(),
+                                                            ChargingProductId.ToOICP(),
                                                             null,
 
                                                             Timestamp,
@@ -2554,8 +2554,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 result = AuthStartEVSEResult.Authorized(AuthorizatorId,
-                                                        response.Content.SessionId,
-                                                        response.Content.ProviderId,
+                                                        response.Content.SessionId. ToWWCP().Value,
+                                                        response.Content.ProviderId.ToWWCP(),
                                                         response.Content.StatusCode.Description,
                                                         response.Content.StatusCode.AdditionalInfo,
                                                         Runtime);
@@ -2564,7 +2564,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             else
                 result = AuthStartEVSEResult.NotAuthorized(AuthorizatorId,
-                                                           response.Content.ProviderId,
+                                                           response.Content.ProviderId.ToWWCP(),
                                                            response.Content.StatusCode.Description,
                                                            response.Content.StatusCode.AdditionalInfo,
                                                            Runtime);
@@ -2622,8 +2622,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             AuthorizeStart(ChargingStationOperator_Id  OperatorId,
                            Auth_Token                  AuthToken,
                            ChargingStation_Id          ChargingStationId,
-                           ChargingProduct_Id          ChargingProductId  = null,   // [maxlength: 100]
-                           ChargingSession_Id          SessionId          = null,
+                           ChargingProduct_Id?         ChargingProductId  = null,   // [maxlength: 100]
+                           ChargingSession_Id?         SessionId          = null,
 
                            DateTime?                   Timestamp          = null,
                            CancellationToken?          CancellationToken  = null,
@@ -2744,19 +2744,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                           ChargingSession_Id          SessionId,
                           Auth_Token                  AuthToken,
 
-                          DateTime?                   Timestamp          = null,
-                          CancellationToken?          CancellationToken  = null,
-                          EventTracking_Id            EventTrackingId    = null,
-                          TimeSpan?                   RequestTimeout     = null)
+                          DateTime?                   Timestamp           = null,
+                          CancellationToken?          CancellationToken   = null,
+                          EventTracking_Id            EventTrackingId     = null,
+                          TimeSpan?                   RequestTimeout      = null)
         {
 
             #region Initial checks
 
-            if (SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
-
             if (AuthToken == null)
-                throw new ArgumentNullException(nameof(AuthToken),   "The given auth token must not be null!");
+                throw new ArgumentNullException(nameof(AuthToken),  "The given authentication token must not be null!");
 
 
             if (!Timestamp.HasValue)
@@ -2801,7 +2798,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
             var response = await CPORoaming.AuthorizeStop(OperatorId,
-                                                          SessionId,
+                                                          SessionId.ToOICP(),
                                                           AuthToken,
                                                           null,
                                                           null,
@@ -2823,14 +2820,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 result = AuthStopResult.Authorized(AuthorizatorId,
-                                                   response.Content.ProviderId,
+                                                   response.Content.ProviderId.ToWWCP(),
                                                    response.Content?.StatusCode?.Description,
                                                    response.Content?.StatusCode?.AdditionalInfo);
 
             }
             else
                 result = AuthStopResult.NotAuthorized(AuthorizatorId,
-                                                      response.Content?.ProviderId,
+                                                      response.Content?.ProviderId.ToWWCP(),
                                                       response.Content?.StatusCode?.Description,
                                                       response.Content?.StatusCode?.AdditionalInfo);
 
@@ -2898,9 +2895,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Initial checks
 
-            if (SessionId  == null)
-                throw new ArgumentNullException(nameof(SessionId),   "The given charging session identification must not be null!");
-
             if (AuthToken  == null)
                 throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
 
@@ -2948,9 +2942,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
             var response  = await CPORoaming.AuthorizeStop(OperatorId,
-                                                           SessionId,
+                                                           SessionId.ToOICP(),
                                                            AuthToken,
-                                                           EVSEId.ToOICP_EVSEId(),
+                                                           EVSEId.ToOICP(),
                                                            null,
 
                                                            Timestamp,
@@ -2970,14 +2964,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 result = AuthStopEVSEResult.Authorized(AuthorizatorId,
-                                                       response.Content?.ProviderId,
+                                                       response.Content?.ProviderId.ToWWCP(),
                                                        response.Content?.StatusCode?.Description,
                                                        response.Content?.StatusCode?.AdditionalInfo);
 
             }
             else
                 result = AuthStopEVSEResult.NotAuthorized(AuthorizatorId,
-                                                          response.Content?.ProviderId,
+                                                          response.Content?.ProviderId.ToWWCP(),
                                                           response.Content?.StatusCode?.Description,
                                                           response.Content?.StatusCode?.AdditionalInfo);
 
@@ -3045,9 +3039,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             if (ChargingStationId  == null)
                 throw new ArgumentNullException(nameof(ChargingStationId),  "The given EVSE identification must not be null!");
-
-            if (SessionId          == null)
-                throw new ArgumentNullException(nameof(SessionId),          "The given charging session identification must not be null!");
 
             if (AuthToken          == null)
                 throw new ArgumentNullException(nameof(AuthToken),          "The given authentication token must not be null!");
@@ -3199,12 +3190,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
             var response = await CPORoaming.SendChargeDetailRecord(new ChargeDetailRecord(
-                                                                       ChargeDetailRecord.EVSEId.Value.ToOICP_EVSEId(),
-                                                                       ChargeDetailRecord.SessionId,
+                                                                       ChargeDetailRecord.EVSEId.Value.ToOICP(),
+                                                                       ChargeDetailRecord.SessionId.ToOICP(),
                                                                        ChargeDetailRecord.SessionTime.Value.StartTime,
                                                                        ChargeDetailRecord.SessionTime.Value.EndTime.Value,
                                                                        new AuthorizationIdentification(ChargeDetailRecord.IdentificationStart),
-                                                                       ChargeDetailRecord.ChargingProductId,
+                                                                       ChargeDetailRecord.ChargingProductId.ToOICP(),
                                                                        null, // PartnerSessionId
                                                                        ChargeDetailRecord.SessionTime.HasValue ? new DateTime?(ChargeDetailRecord.SessionTime.Value.StartTime) : null,
                                                                        ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.EndTime : null,

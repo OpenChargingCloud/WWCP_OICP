@@ -327,14 +327,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    ChargingSession_Id    SessionId           = null;
-                    ChargingSession_Id    PartnerSessionId    = null;
-                    eMobilityProvider_Id  ProviderId          = default(eMobilityProvider_Id);
-                    EVSE_Id               EVSEId              = default(EVSE_Id);
-                    eMobilityAccount_Id?  eMAId               = null;
-                    ChargingProduct_Id    ChargingProductId   = null;
+                    Session_Id?         SessionId          = null;
+                    PartnerSession_Id?  PartnerSessionId   = null;
+                    Provider_Id?        ProviderId         = null;
+                    EVSE_Id?            EVSEId             = null;
+                    EVCO_Id?            EVCOId             = null;
+                    PartnerProduct_Id?  PartnerProductId   = null;
 
-                    Acknowledgement       response            = null;
+                    Acknowledgement     response           = null;
 
                     try
                     {
@@ -346,18 +346,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         XElement            PartnerSessionIdXML;
                         XElement            ChargingProductIdXML;
 
-                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Reservation + "SessionID",        null));
+                        SessionId                = Session_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Reservation + "SessionID",        null));
 
                         PartnerSessionIdXML      = RemoteStartXML.Element(OICPNS.Reservation + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
-                            PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
+                            PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId               = eMobilityProvider_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Reservation + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Reservation + "EVSEID",     "No EVSEID XML tag provided!"));
+                        ProviderId               = Provider_Id.Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Reservation + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId                   = EVSE_Id.    Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Reservation + "EVSEID",     "No EVSEID XML tag provided!"));
 
                         ChargingProductIdXML = RemoteStartXML.Element(OICPNS.Reservation + "PartnerProductID");
                         if (ChargingProductIdXML != null)
-                            ChargingProductId = ChargingProduct_Id.Parse(ChargingProductIdXML.Value);
+                            PartnerProductId = PartnerProduct_Id.Parse(ChargingProductIdXML.Value);
 
                         IdentificationXML        = RemoteStartXML.   ElementOrFail(OICPNS.Reservation   + "Identification",       "No EVSEID XML tag provided!");
                         QRCodeIdentificationXML  = IdentificationXML.Element      (OICPNS.CommonTypes   + "QRCodeIdentification");
@@ -370,13 +370,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             throw new Exception("Neither a QRCodeIdentification, PlugAndChargeIdentification, nor a RemoteIdentification was provided!");
 
                         if      (QRCodeIdentificationXML != null)
-                            eMAId = eMobilityAccount_Id.Parse(QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            EVCOId = EVCO_Id.Parse(QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                         else if (PnCIdentificationXML != null)
-                            eMAId = eMobilityAccount_Id.Parse(PnCIdentificationXML.   ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            EVCOId = EVCO_Id.Parse(PnCIdentificationXML.   ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                         else if (RemoteIdentificationXML != null)
-                            eMAId = eMobilityAccount_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            EVCOId = EVCO_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                     }
                     catch (Exception e)
@@ -439,12 +439,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                this,
                                                Request.CancellationToken,
                                                Request.EventTrackingId,
-                                               EVSEId,
-                                               ChargingProductId,
+                                               EVSEId.Value,
+                                               PartnerProductId,
                                                SessionId,
                                                PartnerSessionId,
                                                ProviderId,
-                                               eMAId,
+                                               EVCOId,
                                                DefaultQueryTimeout)).
                                           ToArray();
 
@@ -558,26 +558,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    ChargingSession_Id    SessionId         = null;
-                    ChargingSession_Id    PartnerSessionId  = null;
-                    eMobilityProvider_Id  ProviderId        = default(eMobilityProvider_Id);
-                    EVSE_Id               EVSEId            = default(EVSE_Id);
+                    Session_Id?         SessionId          = null;
+                    PartnerSession_Id?  PartnerSessionId   = null;
+                    Provider_Id?        ProviderId         = null;
+                    EVSE_Id?            EVSEId             = null;
 
-                    Acknowledgement       response          = null;
+                    Acknowledgement     response           = null;
 
                     try
                     {
 
                         XElement PartnerSessionIdXML;
 
-                        SessionId         = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Reservation + "SessionID",  "No SessionID XML tag provided!"));
+                        SessionId         = Session_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Reservation + "SessionID",  "No SessionID XML tag provided!"));
 
                         PartnerSessionIdXML = RemoteStopXML.Element(OICPNS.Reservation + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
-                            PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
+                            PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId        = eMobilityProvider_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Reservation + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId            = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Reservation + "EVSEID",     "No EVSEID XML tag provided!"));
+                        ProviderId        = Provider_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Reservation + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId            = EVSE_Id.    Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Reservation + "EVSEID",     "No EVSEID XML tag provided!"));
 
                     }
                     catch (Exception e)
@@ -640,7 +640,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                this,
                                                Request.CancellationToken,
                                                Request.EventTrackingId,
-                                               EVSEId,
+                                               EVSEId.Value,
                                                SessionId,
                                                PartnerSessionId,
                                                ProviderId,
@@ -794,14 +794,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    ChargingSession_Id    SessionId           = null;
-                    ChargingSession_Id    PartnerSessionId    = null;
-                    eMobilityProvider_Id  ProviderId          = default(eMobilityProvider_Id);
-                    EVSE_Id               EVSEId              = default(EVSE_Id);
-                    eMobilityAccount_Id?  eMAId               = null;
-                    ChargingProduct_Id    ChargingProductId   = null;
+                    Session_Id?         SessionId          = null;
+                    PartnerSession_Id?  PartnerSessionId   = null;
+                    Provider_Id?        ProviderId         = null;
+                    EVSE_Id?            EVSEId             = null;
+                    EVCO_Id?            EVCOId             = null;
+                    PartnerProduct_Id?  PartnerProductId   = null;
 
-                    Acknowledgement       response            = null;
+                    Acknowledgement     response           = null;
 
                     try
                     {
@@ -813,18 +813,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         XElement  PartnerSessionIdXML;
                         XElement  ChargingProductIdXML;
 
-                        SessionId                = ChargingSession_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",        null));
+                        SessionId                = Session_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",        null));
 
                         PartnerSessionIdXML      = RemoteStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
-                            PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
+                            PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId               = eMobilityProvider_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId                   = EVSE_Id.           Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        ProviderId               = Provider_Id.Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId                   = EVSE_Id.    Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                         ChargingProductIdXML = RemoteStartXML.Element(OICPNS.Authorization + "PartnerProductID");
                         if (ChargingProductIdXML != null)
-                            ChargingProductId = ChargingProduct_Id.Parse(ChargingProductIdXML.Value);
+                            PartnerProductId = PartnerProduct_Id.Parse(ChargingProductIdXML.Value);
 
                         IdentificationXML        = RemoteStartXML.   ElementOrFail(OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");
                         QRCodeIdentificationXML  = IdentificationXML.Element      (OICPNS.CommonTypes   + "QRCodeIdentification");
@@ -837,13 +837,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             throw new Exception("Neither a QRCodeIdentification, PlugAndChargeIdentification, nor a RemoteIdentification was provided!");
 
                         if      (QRCodeIdentificationXML != null)
-                            eMAId = eMobilityAccount_Id.Parse(QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            EVCOId = EVCO_Id.Parse(QRCodeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                         else if (PnCIdentificationXML != null)
-                            eMAId = eMobilityAccount_Id.Parse(PnCIdentificationXML.   ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            EVCOId = EVCO_Id.Parse(PnCIdentificationXML.   ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                         else if (RemoteIdentificationXML != null)
-                            eMAId = eMobilityAccount_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
+                            EVCOId = EVCO_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes   + "EVCOID",    "No EVCOID XML tag provided!"));
 
                     }
                     catch (Exception e)
@@ -906,12 +906,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                this,
                                                Request.CancellationToken,
                                                Request.EventTrackingId,
-                                               EVSEId,
-                                               ChargingProductId,
+                                               EVSEId.Value,
+                                               PartnerProductId,
                                                SessionId,
                                                PartnerSessionId,
                                                ProviderId,
-                                               eMAId,
+                                               EVCOId,
                                                DefaultQueryTimeout)).
                                           ToArray();
 
@@ -1026,26 +1026,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     #region Parse request parameters
 
-                    ChargingSession_Id    SessionId          = null;
-                    ChargingSession_Id    PartnerSessionId   = null;
-                    eMobilityProvider_Id  ProviderId         = default(eMobilityProvider_Id);
-                    EVSE_Id               EVSEId             = default(EVSE_Id);
+                    Session_Id?         SessionId          = null;
+                    PartnerSession_Id?  PartnerSessionId   = null;
+                    Provider_Id?        ProviderId         = null;
+                    EVSE_Id?            EVSEId             = null;
 
-                    Acknowledgement       response           = null;
+                    Acknowledgement     response           = null;
 
                     try
                     {
 
                         XElement  PartnerSessionIdXML;
 
-                        SessionId         = ChargingSession_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
+                        SessionId         = Session_Id.          Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
 
                         PartnerSessionIdXML = RemoteStopXML.Element(OICPNS.Authorization + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
-                            PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
+                            PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                        ProviderId        = eMobilityProvider_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
-                        EVSEId            = EVSE_Id.           Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
+                        ProviderId        = Provider_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
+                        EVSEId            = EVSE_Id.    Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                     }
                     catch (Exception e)
@@ -1108,8 +1108,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                this,
                                                Request.CancellationToken,
                                                Request.EventTrackingId,
-                                               EVSEId,
-                                               SessionId,
+                                               EVSEId.Value,
+                                               SessionId.Value,
                                                PartnerSessionId,
                                                ProviderId,
                                                DefaultQueryTimeout)).

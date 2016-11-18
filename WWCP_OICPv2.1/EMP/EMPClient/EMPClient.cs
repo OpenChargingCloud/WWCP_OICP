@@ -33,7 +33,7 @@ using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 {
 
     /// <summary>
@@ -1365,7 +1365,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
-        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
@@ -1376,31 +1376,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            ReservationStart(eMobilityProvider_Id  ProviderId,
+            ReservationStart(Provider_Id           ProviderId,
                              EVSE_Id               EVSEId,
-                             eMobilityAccount_Id   eMAId,
-                             ChargingSession_Id    SessionId          = null,
-                             ChargingSession_Id    PartnerSessionId   = null,
-                             ChargingProduct_Id    PartnerProductId   = null,
+                             EVCO_Id               EVCOId,
+                             Session_Id?           SessionId           = null,
+                             PartnerSession_Id?    PartnerSessionId    = null,
+                             PartnerProduct_Id?    PartnerProductId    = null,
 
-                             DateTime?             Timestamp          = null,
-                             CancellationToken?    CancellationToken  = null,
-                             EventTracking_Id      EventTrackingId    = null,
-                             TimeSpan?             RequestTimeout     = null)
+                             DateTime?             Timestamp           = null,
+                             CancellationToken?    CancellationToken   = null,
+                             EventTracking_Id      EventTrackingId     = null,
+                             TimeSpan?             RequestTimeout      = null)
 
         {
 
             #region Initial checks
-
-            if (ProviderId == null)
-                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
-
-            if (EVSEId == null)
-                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
-
-            if (eMAId == null)
-                throw new ArgumentNullException(nameof(eMAId),       "The given e-mobility account identification must not be null!");
-
 
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
@@ -1425,7 +1415,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                   EventTrackingId,
                                                   ProviderId,
                                                   EVSEId,
-                                                  eMAId,
+                                                  EVCOId,
                                                   SessionId,
                                                   PartnerSessionId,
                                                   PartnerProductId,
@@ -1439,6 +1429,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
+            var Request = new AuthorizeRemoteReservationStartRequest(ProviderId,
+                                                                     EVSEId,
+                                                                     EVCOId,
+                                                                     SessionId,
+                                                                     PartnerSessionId,
+                                                                     PartnerProductId);
+
 
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
@@ -1450,12 +1447,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteReservationStartXML(ProviderId,
-                                                                                                            EVSEId,
-                                                                                                            eMAId,
-                                                                                                            SessionId,
-                                                                                                            PartnerSessionId,
-                                                                                                            PartnerProductId),
+                var result = await _OICPClient.Query(Request.ToXML(),
                                                      "eRoamingAuthorizeRemoteReservationStart",
                                                      RequestLogDelegate:   OnReservationStartSOAPRequest,
                                                      ResponseLogDelegate:  OnReservationStartSOAPResponse,
@@ -1529,7 +1521,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        EventTrackingId,
                                                        ProviderId,
                                                        EVSEId,
-                                                       eMAId,
+                                                       EVCOId,
                                                        SessionId,
                                                        PartnerSessionId,
                                                        PartnerProductId,
@@ -1568,15 +1560,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            ReservationStop(ChargingSession_Id    SessionId,
-                            eMobilityProvider_Id  ProviderId,
+            ReservationStop(Session_Id            SessionId,
+                            Provider_Id           ProviderId,
                             EVSE_Id               EVSEId,
-                            ChargingSession_Id    PartnerSessionId   = null,
+                            PartnerSession_Id?    PartnerSessionId    = null,
 
-                            DateTime?             Timestamp          = null,
-                            CancellationToken?    CancellationToken  = null,
-                            EventTracking_Id      EventTrackingId    = null,
-                            TimeSpan?             RequestTimeout     = null)
+                            DateTime?             Timestamp           = null,
+                            CancellationToken?    CancellationToken   = null,
+                            EventTracking_Id      EventTrackingId     = null,
+                            TimeSpan?             RequestTimeout      = null)
 
         {
 
@@ -1628,6 +1620,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
 
+            var Request = new AuthorizeRemoteReservationStopRequest(SessionId,
+                                                                    ProviderId,
+                                                                    EVSEId,
+                                                                    PartnerSessionId);
+
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
@@ -1638,10 +1636,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteReservationStopXML(SessionId,
-                                                                                                           ProviderId,
-                                                                                                           EVSEId,
-                                                                                                           PartnerSessionId),
+                var result = await _OICPClient.Query(Request.ToXML(),
                                                      "eRoamingAuthorizeRemoteReservationStop",
                                                      RequestLogDelegate:   OnReservationStartSOAPRequest,
                                                      ResponseLogDelegate:  OnReservationStopSOAPResponse,
@@ -1745,7 +1740,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
-        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
@@ -1756,17 +1751,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            RemoteStart(eMobilityProvider_Id  ProviderId,
+            RemoteStart(Provider_Id           ProviderId,
                         EVSE_Id               EVSEId,
-                        eMobilityAccount_Id   eMAId,
-                        ChargingSession_Id    SessionId          = null,
-                        ChargingSession_Id    PartnerSessionId   = null,
-                        ChargingProduct_Id    PartnerProductId   = null,
+                        EVCO_Id               EVCOId,
+                        Session_Id?           SessionId           = null,
+                        PartnerSession_Id?    PartnerSessionId    = null,
+                        PartnerProduct_Id?    PartnerProductId    = null,
 
-                        DateTime?             Timestamp          = null,
-                        CancellationToken?    CancellationToken  = null,
-                        EventTracking_Id      EventTrackingId    = null,
-                        TimeSpan?             RequestTimeout     = null)
+                        DateTime?             Timestamp           = null,
+                        CancellationToken?    CancellationToken   = null,
+                        EventTracking_Id      EventTrackingId     = null,
+                        TimeSpan?             RequestTimeout      = null)
 
         {
 
@@ -1778,8 +1773,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EVSEId == null)
                 throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
 
-            if (eMAId == null)
-                throw new ArgumentNullException(nameof(eMAId),       "The given e-mobility account identification must not be null!");
+            if (EVCOId == null)
+                throw new ArgumentNullException(nameof(EVCOId),       "The given e-mobility account identification must not be null!");
 
 
             if (!Timestamp.HasValue)
@@ -1805,7 +1800,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                       EventTrackingId,
                                                       ProviderId,
                                                       EVSEId,
-                                                      eMAId,
+                                                      EVCOId,
                                                       SessionId,
                                                       PartnerSessionId,
                                                       PartnerProductId,
@@ -1832,7 +1827,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 var result = await _OICPClient.Query(EMPClientXMLMethods.AuthorizeRemoteStartXML(ProviderId,
                                                                                                  EVSEId,
-                                                                                                 eMAId,
+                                                                                                 EVCOId,
                                                                                                  SessionId,
                                                                                                  PartnerSessionId,
                                                                                                  PartnerProductId),
@@ -1909,7 +1904,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            EventTrackingId,
                                                            ProviderId,
                                                            EVSEId,
-                                                           eMAId,
+                                                           EVCOId,
                                                            SessionId,
                                                            PartnerSessionId,
                                                            PartnerProductId,
@@ -1949,15 +1944,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            RemoteStop(ChargingSession_Id    SessionId,
-                       eMobilityProvider_Id  ProviderId,
+            RemoteStop(Session_Id            SessionId,
+                       Provider_Id           ProviderId,
                        EVSE_Id               EVSEId,
-                       ChargingSession_Id    PartnerSessionId   = null,
+                       PartnerSession_Id?    PartnerSessionId    = null,
 
-                       DateTime?             Timestamp          = null,
-                       CancellationToken?    CancellationToken  = null,
-                       EventTracking_Id      EventTrackingId    = null,
-                       TimeSpan?             RequestTimeout     = null)
+                       DateTime?             Timestamp           = null,
+                       CancellationToken?    CancellationToken   = null,
+                       EventTracking_Id      EventTrackingId     = null,
+                       TimeSpan?             RequestTimeout      = null)
 
         {
 

@@ -175,7 +175,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            return new EVSEStatusRecord(EVSEStatus.Id.ToOICP_EVSEId(),
+            return new EVSEStatusRecord(EVSEStatus.Id.ToOICP(),
                                         AsOICPEVSEStatus(EVSEStatus.Status));
 
         }
@@ -1608,25 +1608,90 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        public static EVSE_Id ToOICP_EVSEId(this WWCP.EVSE_Id EVSEId)
+        public static EVSE_Id ToOICP(this WWCP.EVSE_Id EVSEId)
             => EVSE_Id.Parse(EVSEId.ToString());
 
-        public static WWCP.EVSE_Id ToWWCP_EVSEId(this EVSE_Id EVSEId)
+        public static WWCP.EVSE_Id ToWWCP(this EVSE_Id EVSEId)
             => WWCP.EVSE_Id.Parse(EVSEId.ToString());
 
 
-        #region AsWWCPChargeDetailRecord(this ChargeDetailRecord)
+        public static Session_Id ToOICP(this WWCP.ChargingSession_Id SessionId)
+            => Session_Id.Parse(SessionId.ToString());
+
+        public static WWCP.ChargingSession_Id ToWWCP(this Session_Id SessionId)
+            => WWCP.ChargingSession_Id.Parse(SessionId.ToString());
+
+
+        public static Session_Id? ToOICP(this WWCP.ChargingSession_Id? SessionId)
+            => SessionId.HasValue
+                   ? Session_Id.Parse(SessionId.ToString())
+                   : new Session_Id?();
+
+        public static WWCP.ChargingSession_Id? ToWWCP(this Session_Id? SessionId)
+            => SessionId.HasValue
+                   ? WWCP.ChargingSession_Id.Parse(SessionId.ToString())
+                   : new ChargingSession_Id?();
+
+
+        public static PartnerProduct_Id? ToOICP(this WWCP.ChargingProduct_Id? ProductId)
+            => ProductId.HasValue
+                   ? PartnerProduct_Id.Parse(ProductId.ToString())
+                   : new PartnerProduct_Id?();
+
+        public static WWCP.ChargingProduct_Id? ToWWCP(this PartnerProduct_Id? ProductId)
+            => ProductId.HasValue
+                   ? WWCP.ChargingProduct_Id.Parse(ProductId.ToString())
+                   : new ChargingProduct_Id?();
+
+
+        public static Provider_Id ToOICP(this WWCP.eMobilityProvider_Id ProviderId)
+            => Provider_Id.Parse(ProviderId.ToString());
+
+        public static WWCP.eMobilityProvider_Id ToWWCP(this Provider_Id ProviderId)
+            => WWCP.eMobilityProvider_Id.Parse(ProviderId.ToString());
+
+
+        public static Provider_Id? ToOICP(this WWCP.eMobilityProvider_Id? ProviderId)
+            => ProviderId.HasValue
+                   ? Provider_Id.Parse(ProviderId.ToString())
+                   : new Provider_Id?();
+
+        public static WWCP.eMobilityProvider_Id? ToWWCP(this Provider_Id? ProviderId)
+            => ProviderId.HasValue
+                   ? WWCP.eMobilityProvider_Id.Parse(ProviderId.ToString())
+                   : new eMobilityProvider_Id?();
+
+
+        public static EVCO_Id ToOICP(this WWCP.eMobilityAccount_Id eMAId)
+            => EVCO_Id.Parse(eMAId.ToString());
+
+        public static WWCP.eMobilityAccount_Id ToWWCP(this EVCO_Id EVCOId)
+            => WWCP.eMobilityAccount_Id.Parse(EVCOId.ToString());
+
+
+        public static EVCO_Id? ToOICP(this WWCP.eMobilityAccount_Id? eMAId)
+            => eMAId.HasValue
+                   ? EVCO_Id.Parse(eMAId.ToString())
+                   : new EVCO_Id?();
+
+        public static WWCP.eMobilityAccount_Id? ToWWCP(this EVCO_Id? EVCOId)
+            => EVCOId.HasValue
+                   ? WWCP.eMobilityAccount_Id.Parse(EVCOId.ToString())
+                   : new eMobilityAccount_Id?();
+
+
+        #region ToWWCP(this ChargeDetailRecord)
 
         /// <summary>
         /// Convert an OICP EVSE charge detail record into a corresponding WWCP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecord">An OICP charge detail record.</param>
         /// <returns>The corresponding WWCP EVSE status.</returns>
-        public static WWCP.ChargeDetailRecord AsWWCPChargeDetailRecord(this ChargeDetailRecord ChargeDetailRecord)
+        public static WWCP.ChargeDetailRecord ToWWCP(this ChargeDetailRecord ChargeDetailRecord)
 
-            => new WWCP.ChargeDetailRecord(ChargeDetailRecord.SessionId,
-                                           EVSEId:                ChargeDetailRecord.EVSEId.ToWWCP_EVSEId(),
-                                           ChargingProductId:     ChargeDetailRecord.PartnerProductId,
+            => new WWCP.ChargeDetailRecord(ChargeDetailRecord.SessionId.ToWWCP(),
+                                           EVSEId:                ChargeDetailRecord.EVSEId.ToWWCP(),
+                                           ChargingProductId:     ChargeDetailRecord.PartnerProductId.ToWWCP(),
                                            SessionTime:           new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
                                            EnergyMeteringValues:  new List<Timestamped<Double>> {
 

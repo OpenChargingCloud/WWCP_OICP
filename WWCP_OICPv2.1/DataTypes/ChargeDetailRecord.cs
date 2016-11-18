@@ -49,7 +49,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// A charging session identification.
         /// </summary>
         [Mandatory]
-        public ChargingSession_Id           SessionId               { get; }
+        public Session_Id                   SessionId               { get; }
 
         /// <summary>
         /// The timestamp of the session start.
@@ -73,13 +73,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// An unqiue identification for the consumed charging product.
         /// </summary>
         [Mandatory]
-        public ChargingProduct_Id           PartnerProductId        { get; }
+        public PartnerProduct_Id?           PartnerProductId        { get; }
 
         /// <summary>
         /// An optional partner session identification.
         /// </summary>
         [Optional]
-        public ChargingSession_Id           PartnerSessionId        { get; }
+        public PartnerSession_Id?           PartnerSessionId        { get; }
 
         /// <summary>
         /// An optional charging start timestamp.
@@ -159,33 +159,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
         public ChargeDetailRecord(EVSE_Id                      EVSEId,
-                                  ChargingSession_Id           SessionId,
+                                  Session_Id                   SessionId,
                                   DateTime                     SessionStart,
                                   DateTime                     SessionEnd,
                                   AuthorizationIdentification  Identification,
-                                  ChargingProduct_Id           PartnerProductId      = null,
-                                  ChargingSession_Id           PartnerSessionId      = null,
-                                  DateTime?                    ChargingStart         = null,
-                                  DateTime?                    ChargingEnd           = null,
-                                  Double?                      MeterValueStart       = null,
-                                  Double?                      MeterValueEnd         = null,
-                                  IEnumerable<Double>          MeterValuesInBetween  = null,
-                                  Double?                      ConsumedEnergy        = null,
-                                  String                       MeteringSignature     = null,
-                                  HubOperator_Id               HubOperatorId         = null,
-                                  HubProvider_Id               HubProviderId         = null)
+                                  PartnerProduct_Id?           PartnerProductId       = null,
+                                  PartnerSession_Id?           PartnerSessionId       = null,
+                                  DateTime?                    ChargingStart          = null,
+                                  DateTime?                    ChargingEnd            = null,
+                                  Double?                      MeterValueStart        = null,
+                                  Double?                      MeterValueEnd          = null,
+                                  IEnumerable<Double>          MeterValuesInBetween   = null,
+                                  Double?                      ConsumedEnergy         = null,
+                                  String                       MeteringSignature      = null,
+                                  HubOperator_Id               HubOperatorId          = null,
+                                  HubProvider_Id               HubProviderId          = null)
 
         {
-
-            #region Initial checks
-
-            if (EVSEId    == null)
-                throw new ArgumentNullException(nameof(EVSEId),     "The given EVSE identification must not be null!");
-
-            if (SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId),  "The given session identification must not be null!");
-
-            #endregion
 
             this.EVSEId                = EVSEId;
             this.SessionId             = SessionId;
@@ -317,7 +307,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             EVSE_Id.Parse),
 
                 ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionID",
-                                                            ChargingSession_Id.Parse),
+                                                            Session_Id.Parse),
 
                 ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionStart",
                                                             DateTime.Parse),
@@ -328,10 +318,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 Identification,
 
                 ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerProductID",
-                                                            ChargingProduct_Id.Parse),
+                                                            PartnerProduct_Id.Parse),
 
                 ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerSessionID",
-                                                            ChargingSession_Id.Parse),
+                                                            PartnerSession_Id.Parse),
 
                 ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "ChargingStart",
                                                             v => new DateTime?(DateTime.Parse(v)),

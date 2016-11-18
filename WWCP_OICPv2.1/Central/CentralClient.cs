@@ -90,7 +90,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CentralClient(String                               ClientId,
                              String                               Hostname,
@@ -100,7 +100,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                              X509Certificate                      ClientCert                  = null,
                              String                               URIPrefix                   = "/ibis/ws/eRoamingAuthorization_V2.0",
                              String                               HTTPUserAgent               = DefaultHTTPUserAgent,
-                             TimeSpan?                            QueryTimeout                = null,
+                             TimeSpan?                            RequestTimeout                = null,
                              DNSClient                            DNSClient                   = null)
 
             : base(ClientId,
@@ -111,7 +111,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                    HTTPVirtualHost,
                    "",
                    HTTPUserAgent,
-                   QueryTimeout,
+                   RequestTimeout,
                    DNSClient)
 
         {
@@ -129,7 +129,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         // Towards CPOs
 
-        #region AuthorizeRemoteReservationStart(SessionId, ProviderId, EVSEId, eMAId, ChargingProductId = null, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeRemoteReservationStart(SessionId, ProviderId, EVSEId, eMAId, ChargingProductId = null, PartnerSessionId = null, RequestTimeout = null)
 
         /// <summary>
         /// Create an OICP authorize remote start request.
@@ -137,19 +137,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
-        /// <param name="eMAId">An e-mobility account indentification.</param>
+        /// <param name="EVCOId">An e-mobility account indentification.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// <param name="RequestTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            AuthorizeRemoteReservationStart(ChargingSession_Id    SessionId,
-                                            eMobilityProvider_Id  ProviderId,
-                                            EVSE_Id               EVSEId,
-                                            eMobilityAccount_Id                eMAId,
-                                            ChargingProduct_Id    ChargingProductId  = null,
-                                            ChargingSession_Id    PartnerSessionId   = null,
-                                            TimeSpan?             QueryTimeout       = null)
+            AuthorizeRemoteReservationStart(Session_Id          SessionId,
+                                            Provider_Id         ProviderId,
+                                            EVSE_Id             EVSEId,
+                                            EVCO_Id             EVCOId,
+                                            PartnerProduct_Id?  ChargingProductId   = null,
+                                            PartnerSession_Id?  PartnerSessionId    = null,
+                                            TimeSpan?           RequestTimeout      = null)
 
         {
 
@@ -237,7 +237,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                                  new XElement(OICPNS.Reservation + "Identification",
                                                      new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                                                         new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
+                                                         new XElement(OICPNS.CommonTypes + "EVCOID", EVCOId.ToString())
                                                      )
                                                  ),
 
@@ -250,7 +250,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 return await _OICPClient.Query(XML,
                                                "AuthorizeRemoteReservationStart",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                                               QueryTimeout: RequestTimeout.HasValue ? RequestTimeout.Value : this.RequestTimeout,
                                                HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
 
                                                #region OnSuccess
@@ -313,7 +313,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-        #region AuthorizeRemoteReservationStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeRemoteReservationStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, RequestTimeout = null)
 
         /// <summary>
         /// Create an OICP remote authorize stop request.
@@ -322,14 +322,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// <param name="RequestTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            AuthorizeRemoteReservationStop(ChargingSession_Id    SessionId,
-                                           eMobilityProvider_Id  ProviderId,
-                                           EVSE_Id               EVSEId,
-                                           ChargingSession_Id    PartnerSessionId   = null,
-                                           TimeSpan?             QueryTimeout       = null)
+            AuthorizeRemoteReservationStop(Session_Id          SessionId,
+                                           Provider_Id         ProviderId,
+                                           EVSE_Id             EVSEId,
+                                           PartnerSession_Id?  PartnerSessionId   = null,
+                                           TimeSpan?           RequestTimeout     = null)
 
         {
 
@@ -384,7 +384,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 return await _OICPClient.Query(XML,
                                                "AuthorizeRemoteReservationStop",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                                               QueryTimeout: RequestTimeout.HasValue ? RequestTimeout.Value : this.RequestTimeout,
                                                HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
 
                                                #region OnSuccess
@@ -448,7 +448,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         #endregion
 
 
-        #region AuthorizeRemoteStart(SessionId, ProviderId, EVSEId, eMAId, ChargingProductId = null, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeRemoteStart(SessionId, ProviderId, EVSEId, eMAId, ChargingProductId = null, PartnerSessionId = null, RequestTimeout = null)
 
         /// <summary>
         /// Create an OICP authorize remote start request.
@@ -459,16 +459,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <param name="eMAId">An e-mobility account indentification.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// <param name="RequestTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            AuthorizeRemoteStart(ChargingSession_Id    SessionId,
-                                 eMobilityProvider_Id  ProviderId,
-                                 EVSE_Id               EVSEId,
-                                 eMobilityAccount_Id   eMAId,
-                                 ChargingProduct_Id    ChargingProductId   = null,
-                                 ChargingSession_Id    PartnerSessionId    = null,
-                                 TimeSpan?             QueryTimeout        = null)
+            AuthorizeRemoteStart(Session_Id          SessionId,
+                                 Provider_Id         ProviderId,
+                                 EVSE_Id             EVSEId,
+                                 EVCO_Id             EVCOId,
+                                 PartnerProduct_Id?  ChargingProductId   = null,
+                                 PartnerSession_Id?  PartnerSessionId    = null,
+                                 TimeSpan?           RequestTimeout      = null)
 
         {
 
@@ -557,7 +557,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                                  new XElement(OICPNS.Authorization + "Identification",
                                                      new XElement(OICPNS.CommonTypes + "QRCodeIdentification",
-                                                         new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString())
+                                                         new XElement(OICPNS.CommonTypes + "EVCOID", EVCOId.ToString())
                                                      )
                                                  ),
 
@@ -570,7 +570,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 return await _OICPClient.Query(XML,
                                                "AuthorizeRemoteStart",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                                               QueryTimeout: RequestTimeout.HasValue ? RequestTimeout.Value : this.RequestTimeout,
                                                HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
 
                                                #region OnSuccess
@@ -633,7 +633,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-        #region AuthorizeRemoteStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, QueryTimeout = null)
+        #region AuthorizeRemoteStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, RequestTimeout = null)
 
         /// <summary>
         /// Create an OICP remote authorize stop request.
@@ -642,14 +642,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="QueryTimeout">An optional timeout for this query.</param>
+        /// <param name="RequestTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            AuthorizeRemoteStop(ChargingSession_Id    SessionId,
-                                eMobilityProvider_Id  ProviderId,
-                                EVSE_Id               EVSEId,
-                                ChargingSession_Id    PartnerSessionId   = null,
-                                TimeSpan?             QueryTimeout       = null)
+            AuthorizeRemoteStop(Session_Id          SessionId,
+                                Provider_Id         ProviderId,
+                                EVSE_Id             EVSEId,
+                                PartnerSession_Id?  PartnerSessionId   = null,
+                                TimeSpan?           RequestTimeout     = null)
 
         {
 
@@ -693,7 +693,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                                  new XElement(OICPNS.Authorization + "SessionID",   SessionId. ToString()),
 
-                                                 PartnerSessionId != null
+                                                 PartnerSessionId.HasValue
                                                      ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())
                                                      : null,
 
@@ -705,7 +705,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 return await _OICPClient.Query(XML,
                                                "AuthorizeRemoteStop",
-                                               QueryTimeout: QueryTimeout != null ? QueryTimeout.Value : this.RequestTimeout,
+                                               QueryTimeout: RequestTimeout.HasValue ? RequestTimeout.Value : this.RequestTimeout,
                                                HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
 
                                                #region OnSuccess

@@ -28,7 +28,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 {
 
     /// <summary>
@@ -633,203 +633,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         //#endregion
 
 
-        #region AuthorizeRemoteReservationStartXML(...)
-
-        /// <summary>
-        /// Create a new AuthorizeRemoteReservationStart request.
-        /// </summary>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="eMAId">An eMobility account identification.</param>
-        /// <param name="SessionId">A charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="PartnerProductId">The ev charging product identification.</param>
-        public static XElement AuthorizeRemoteReservationStartXML(eMobilityProvider_Id             ProviderId,
-                                                                  EVSE_Id             EVSEId,
-                                                                  eMobilityAccount_Id              eMAId,
-                                                                  ChargingSession_Id  SessionId         = null,
-                                                                  ChargingSession_Id  PartnerSessionId  = null,
-                                                                  ChargingProduct_Id  PartnerProductId  = null)
-        {
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Reservation  = "http://www.hubject.com/b2b/services/reservation/v1.0"
-            //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            //
-            //    <soapenv:Header/>
-            //
-            //    <soapenv:Body>
-            //       <Reservation:eRoamingAuthorizeRemoteReservationStart>
-            //
-            //          <!--Optional:-->
-            //          <Reservation:SessionID>?</Reservation:SessionID>
-            //
-            //          <!--Optional:-->
-            //          <Reservation:PartnerSessionID>?</Reservation:PartnerSessionID>
-            //
-            //          <Reservation:ProviderID>?</Reservation:ProviderID>
-            //          <Reservation:EVSEID>?</Reservation:EVSEID>
-            //
-            //          <Reservation:Identification>
-            //
-            //             <!--You have a CHOICE of the next 4 items at this level-->
-            //             <CommonTypes:RFIDmifarefamilyIdentification>
-            //                <CommonTypes:UID>?</CommonTypes:UID>
-            //             </CommonTypes:RFIDmifarefamilyIdentification>
-            //
-            //             <CommonTypes:QRCodeIdentification>
-            //
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            //
-            //                <!--You have a CHOICE of the next 2 items at this level-->
-            //                <CommonTypes:PIN>?</CommonTypes:PIN>
-            //
-            //                <CommonTypes:HashedPIN>
-            //                   <CommonTypes:Value>?</CommonTypes:Value>
-            //                   <CommonTypes:Function>?</CommonTypes:Function>
-            //                   <CommonTypes:Salt>?</CommonTypes:Salt>
-            //                </CommonTypes:HashedPIN>
-            //
-            //             </CommonTypes:QRCodeIdentification>
-            //
-            //             <CommonTypes:PlugAndChargeIdentification>
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            //             </CommonTypes:PlugAndChargeIdentification>
-            //
-            //             <CommonTypes:RemoteIdentification>
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            //             </CommonTypes:RemoteIdentification>
-            //
-            //          </Reservation:Identification>
-            //
-            //          <!--Optional:-->
-            //          <Reservation:PartnerProductID>?</Reservation:PartnerProductID>
-            //
-            //       </Reservation:eRoamingAuthorizeRemoteReservationStart>
-            //    </soapenv:Body>
-            // </soapenv:Envelope>
-
-            #endregion
-
-            #region Initial checks
-
-            if (ProviderId == null)
-                throw new ArgumentNullException(nameof(ProviderId),  "The given eMobility provider identification must not be null!");
-
-            if (eMAId      == null)
-                throw new ArgumentNullException(nameof(eMAId),       "The given eMobility account identification must not be null!");
-
-            if (EVSEId     == null)
-                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
-
-            #endregion
-
-
-            return SOAP.Encapsulation(new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart",
-
-                                          SessionId != null
-                                              ? new XElement(OICPNS.Reservation + "SessionID",         SessionId.         ToString())
-                                              : null,
-
-                                          PartnerSessionId != null
-                                              ? new XElement(OICPNS.Reservation + "PartnerSessionID",  PartnerSessionId.  ToString())
-                                              : null,
-
-                                          new XElement(OICPNS.Reservation + "ProviderID",              ProviderId.        ToString()),
-                                          new XElement(OICPNS.Reservation + "EVSEID",                  EVSEId.            ToString()),
-
-                                          new XElement(OICPNS.Reservation + "Identification",
-                                              new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                                                  new XElement(OICPNS.CommonTypes + "EVCOID",
-                                                      eMAId.ToString()
-                                                  )
-                                              )
-                                          ),
-
-                                          PartnerProductId != null
-                                              ? new XElement(OICPNS.Reservation + "PartnerProductID",  PartnerProductId.  ToString())
-                                              : null
-
-                                     ));
-
-        }
-
-        #endregion
-
-        #region AuthorizeRemoteReservationStopXML(...)
-
-        /// <summary>
-        /// Create a new AuthorizeRemoteReservationStop request.
-        /// </summary>
-        /// <param name="SessionId">A charging session identification.</param>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        public static XElement AuthorizeRemoteReservationStopXML(ChargingSession_Id  SessionId,
-                                                                 eMobilityProvider_Id             ProviderId,
-                                                                 EVSE_Id             EVSEId,
-                                                                 ChargingSession_Id  PartnerSessionId  = null)
-        {
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Reservation  = "http://www.hubject.com/b2b/services/reservation/v1.0">
-            //
-            //    <soapenv:Header/>
-            //
-            //    <soapenv:Body>
-            //       <Reservation:eRoamingAuthorizeRemoteReservationStop>
-            //
-            //          <Reservation:SessionID>?</Authorization:SessionID>
-            //
-            //          <!--Optional:-->
-            //          <Reservation:PartnerSessionID>?</Authorization:PartnerSessionID>
-            //
-            //          <Reservation:ProviderID>?</Authorization:ProviderID>
-            //          <Reservation:EVSEID>?</Authorization:EVSEID>
-            //
-            //       </Reservation:eRoamingAuthorizeRemoteReservationStop>
-            //    </soapenv:Body>
-            //
-            // </soapenv:Envelope>
-
-            #endregion
-
-            #region Initial checks
-
-            if (SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId),   "The given session identification must not be null!");
-
-            if (ProviderId == null)
-                throw new ArgumentNullException(nameof(ProviderId),  "The given provider identification must not be null!");
-
-            if (EVSEId == null)
-                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
-
-            #endregion
-
-
-            return SOAP.Encapsulation(new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStop",
-
-                                          new XElement(OICPNS.Reservation + "SessionID",               SessionId.        ToString()),
-
-                                          PartnerSessionId != null
-                                              ? new XElement(OICPNS.Reservation + "PartnerSessionID",  PartnerSessionId. ToString())
-                                              : null,
-
-                                          new XElement(OICPNS.Reservation + "ProviderID",              ProviderId.       ToString()),
-                                          new XElement(OICPNS.Reservation + "EVSEID",                  EVSEId.           ToString())
-
-                                     ));
-
-        }
-
-        #endregion
-
-
         #region AuthorizeRemoteStartXML(...)
 
         /// <summary>
@@ -837,16 +640,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="eMAId">An eMobility account identification.</param>
+        /// <param name="EVCOId">An eMobility account identification.</param>
         /// <param name="SessionId">A charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">The ev charging product identification.</param>
-        public static XElement AuthorizeRemoteStartXML(eMobilityProvider_Id             ProviderId,
+        public static XElement AuthorizeRemoteStartXML(Provider_Id         ProviderId,
                                                        EVSE_Id             EVSEId,
-                                                       eMobilityAccount_Id              eMAId,
-                                                       ChargingSession_Id  SessionId         = null,
-                                                       ChargingSession_Id  PartnerSessionId  = null,
-                                                       ChargingProduct_Id  PartnerProductId  = null)
+                                                       EVCO_Id             EVCOId,
+                                                       Session_Id?         SessionId          = null,
+                                                       PartnerSession_Id?  PartnerSessionId   = null,
+                                                       PartnerProduct_Id?  PartnerProductId   = null)
         {
 
             #region Documentation
@@ -910,27 +713,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            #region Initial checks
-
-            if (ProviderId == null)
-                throw new ArgumentNullException(nameof(ProviderId),  "The given eMobility provider identification must not be null!");
-
-            if (eMAId      == null)
-                throw new ArgumentNullException(nameof(eMAId),       "The given eMobility account identification must not be null!");
-
-            if (EVSEId     == null)
-                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
-
-            #endregion
-
 
             return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart",
 
-                                          SessionId != null
+                                          SessionId.HasValue
                                               ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.         ToString())
                                               : null,
 
-                                          PartnerSessionId != null
+                                          PartnerSessionId.HasValue
                                               ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.  ToString())
                                               : null,
 
@@ -940,12 +730,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                           new XElement(OICPNS.Authorization + "Identification",
                                               new XElement(OICPNS.CommonTypes + "RemoteIdentification",
                                                   new XElement(OICPNS.CommonTypes + "EVCOID",
-                                                      eMAId.ToString()
+                                                      EVCOId.ToString()
                                                   )
                                               )
                                           ),
 
-                                          PartnerProductId != null
+                                          PartnerProductId.HasValue
                                               ? new XElement(OICPNS.Authorization + "PartnerProductID",  PartnerProductId.  ToString())
                                               : null
 
@@ -964,10 +754,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEId">The EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        public static XElement AuthorizeRemoteStopXML(ChargingSession_Id  SessionId,
-                                                      eMobilityProvider_Id             ProviderId,
+        public static XElement AuthorizeRemoteStopXML(Session_Id          SessionId,
+                                                      Provider_Id         ProviderId,
                                                       EVSE_Id             EVSEId,
-                                                      ChargingSession_Id  PartnerSessionId  = null)
+                                                      PartnerSession_Id?  PartnerSessionId  = null)
         {
 
             #region Documentation
@@ -995,25 +785,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            #region Initial checks
-
-            if (SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId),   "The given session identification must not be null!");
-
-            if (ProviderId == null)
-                throw new ArgumentNullException(nameof(ProviderId),  "The given provider identification must not be null!");
-
-            if (EVSEId == null)
-                throw new ArgumentNullException(nameof(EVSEId),      "The given EVSE identification must not be null!");
-
-            #endregion
-
 
             return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop",
 
                                           new XElement(OICPNS.Authorization + "SessionID",               SessionId.        ToString()),
 
-                                          PartnerSessionId != null
+                                          PartnerSessionId.HasValue
                                               ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId. ToString())
                                               : null,
 

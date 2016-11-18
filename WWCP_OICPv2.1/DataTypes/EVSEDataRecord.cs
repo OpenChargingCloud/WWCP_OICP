@@ -245,7 +245,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                 Boolean                           IsHubjectCompatible         = true,
                                 Boolean                           DynamicInfoAvailable        = true)
 
-            : this(EVSE.Id.ToOICP_EVSEId(),
+            : this(EVSE.Id.ToOICP(),
                    DeltaType,
                    LastUpdate,
                    ChargingStationId,
@@ -1055,7 +1055,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                              Boolean              IsHubjectCompatible        = true,
                              Boolean              DynamicInfoAvailable       = true)
 
-                : this(EVSE.Id.ToOICP_EVSEId(),
+                : this(EVSE.Id.ToOICP(),
                        "",
                        DateTime.Now,
                        EVSE.Operator,

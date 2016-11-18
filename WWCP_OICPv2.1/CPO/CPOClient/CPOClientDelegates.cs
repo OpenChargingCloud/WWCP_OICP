@@ -114,9 +114,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                  ChargingStationOperator_Id     OperatorId,
                                                  Auth_Token                     AuthToken,
                                                  EVSE_Id?                       EVSEId,
-                                                 ChargingSession_Id             SessionId,
-                                                 ChargingProduct_Id             PartnerProductId,
-                                                 ChargingSession_Id             PartnerSessionId,
+                                                 Session_Id?                    SessionId,
+                                                 PartnerProduct_Id?             PartnerProductId,
+                                                 PartnerSession_Id?             PartnerSessionId,
                                                  TimeSpan?                      RequestTimeout);
 
     /// <summary>
@@ -128,9 +128,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                    ChargingStationOperator_Id   OperatorId,
                                                    Auth_Token                   AuthToken,
                                                    EVSE_Id?                     EVSEId,
-                                                   ChargingSession_Id           SessionId,
-                                                   ChargingProduct_Id           PartnerProductId,
-                                                   ChargingSession_Id           PartnerSessionId,
+                                                   Session_Id?                  SessionId,
+                                                   PartnerProduct_Id?           PartnerProductId,
+                                                   PartnerSession_Id?           PartnerSessionId,
                                                    TimeSpan?                    RequestTimeout,
                                                    AuthorizationStart           Result,
                                                    TimeSpan                     Duration);
@@ -144,10 +144,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        CPOClient                    Sender,
                                                        String                       SenderId,
                                                        ChargingStationOperator_Id   OperatorId,
-                                                       ChargingSession_Id           SessionId,
+                                                       Session_Id                   SessionId,
                                                        Auth_Token                   AuthToken,
                                                        EVSE_Id?                     EVSEId,
-                                                       ChargingSession_Id           PartnerSessionId,
+                                                       PartnerSession_Id?           PartnerSessionId,
                                                        TimeSpan?                    RequestTimeout);
 
     /// <summary>
@@ -157,10 +157,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         CPOClient                   Sender,
                                                         String                      SenderId,
                                                         ChargingStationOperator_Id  OperatorId,
-                                                        ChargingSession_Id          SessionId,
+                                                        Session_Id                  SessionId,
                                                         Auth_Token                  AuthToken,
                                                         EVSE_Id?                    EVSEId,
-                                                        ChargingSession_Id          PartnerSessionId,
+                                                        PartnerSession_Id?          PartnerSessionId,
                                                         TimeSpan?                   RequestTimeout,
                                                         AuthorizationStop           Result,
                                                         TimeSpan                    Duration);

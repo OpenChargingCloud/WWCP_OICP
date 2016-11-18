@@ -123,7 +123,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new MobileRemoteStart request.
         /// </summary>
         /// <param name="SessionId">A charging session identification.</param>
-        public static XElement MobileRemoteStartXML(ChargingSession_Id  SessionId)
+        public static XElement MobileRemoteStartXML(Session_Id  SessionId)
         {
 
             #region Documentation
@@ -164,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new MobileRemoteStop request.
         /// </summary>
         /// <param name="SessionId">A charging session identification.</param>
-        public static XElement MobileRemoteStopXML(ChargingSession_Id  SessionId)
+        public static XElement MobileRemoteStopXML(Session_Id  SessionId)
         {
 
             #region Documentation

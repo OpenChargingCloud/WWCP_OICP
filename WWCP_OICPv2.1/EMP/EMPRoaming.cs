@@ -32,7 +32,7 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 {
 
     /// <summary>
@@ -1421,7 +1421,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
         /// <param name="SessionId">An optional unique identification of the charging session.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
@@ -1433,11 +1433,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             ReservationStart(EVSE_Id               EVSEId,
-                             eMobilityProvider_Id  ProviderId,
-                             eMobilityAccount_Id   eMAId,
-                             ChargingSession_Id    SessionId           = null,
-                             ChargingSession_Id    PartnerSessionId    = null,
-                             ChargingProduct_Id    PartnerProductId    = null,
+                             Provider_Id           ProviderId,
+                             EVCO_Id               EVCOId,
+                             Session_Id?           SessionId           = null,
+                             PartnerSession_Id?    PartnerSessionId    = null,
+                             PartnerProduct_Id?    PartnerProductId    = null,
 
                              DateTime?             Timestamp           = null,
                              CancellationToken?    CancellationToken   = null,
@@ -1447,7 +1447,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => await EMPClient.ReservationStart(ProviderId,
                                                 EVSEId,
-                                                eMAId,
+                                                EVCOId,
                                                 SessionId,
                                                 PartnerSessionId,
                                                 PartnerProductId,
@@ -1475,10 +1475,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            ReservationStop(ChargingSession_Id    SessionId,
-                            eMobilityProvider_Id  ProviderId,
+            ReservationStop(Session_Id            SessionId,
+                            Provider_Id           ProviderId,
                             EVSE_Id               EVSEId,
-                            ChargingSession_Id    PartnerSessionId    = null,
+                            PartnerSession_Id?    PartnerSessionId    = null,
 
                             DateTime?             Timestamp           = null,
                             CancellationToken?    CancellationToken   = null,
@@ -1506,7 +1506,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
         /// <param name="SessionId">An optional unique identification of the charging session.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
@@ -1518,11 +1518,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<Acknowledgement>>
 
             RemoteStart(EVSE_Id               EVSEId,
-                        eMobilityProvider_Id  ProviderId,
-                        eMobilityAccount_Id   eMAId,
-                        ChargingSession_Id    SessionId           = null,
-                        ChargingSession_Id    PartnerSessionId    = null,
-                        ChargingProduct_Id    PartnerProductId    = null,
+                        Provider_Id           ProviderId,
+                        EVCO_Id               EVCOId,
+                        Session_Id?           SessionId           = null,
+                        PartnerSession_Id?    PartnerSessionId    = null,
+                        PartnerProduct_Id?    PartnerProductId    = null,
 
                         DateTime?             Timestamp           = null,
                         CancellationToken?    CancellationToken   = null,
@@ -1532,7 +1532,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => await EMPClient.RemoteStart(ProviderId,
                                            EVSEId,
-                                           eMAId,
+                                           EVCOId,
                                            SessionId,
                                            PartnerSessionId,
                                            PartnerProductId,
@@ -1560,10 +1560,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            RemoteStop(ChargingSession_Id    SessionId,
-                       eMobilityProvider_Id  ProviderId,
+            RemoteStop(Session_Id            SessionId,
+                       Provider_Id           ProviderId,
                        EVSE_Id               EVSEId,
-                       ChargingSession_Id    PartnerSessionId    = null,
+                       PartnerSession_Id?    PartnerSessionId    = null,
 
                        DateTime?             Timestamp           = null,
                        CancellationToken?    CancellationToken   = null,

@@ -31,7 +31,7 @@ using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 {
 
     /// <summary>
@@ -366,14 +366,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Parse request parameters
 
-                ChargingSession_Id          SessionId           = null;
-                ChargingSession_Id          PartnerSessionId    = null;
-                ChargingStationOperator_Id  OperatorId          = default(ChargingStationOperator_Id);
-                EVSE_Id                     EVSEId              = default(EVSE_Id);
-                ChargingProduct_Id          ChargingProductId   = null;
-                Auth_Token                  AuthToken           = null;
+                Session_Id?                 SessionId          = null;
+                PartnerSession_Id?          PartnerSessionId   = null;
+                ChargingStationOperator_Id  OperatorId         = default(ChargingStationOperator_Id);
+                EVSE_Id                     EVSEId             = default(EVSE_Id);
+                PartnerProduct_Id?          PartnerProductId   = null;
+                Auth_Token                  AuthToken          = null;
 
-                AuthorizationStart          response            = null;
+                AuthorizationStart          response           = null;
 
                 try
                 {
@@ -382,15 +382,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     XElement            PartnerSessionIdXML;
                     XElement            EVSEIdXML;
                     XElement            IdentificationXML;
-                    XElement            ChargingProductIdXML;
+                    XElement            PartnerProductIdXML;
 
                     SessionIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "SessionID");
                     if (SessionIdXML != null)
-                        SessionId            = ChargingSession_Id.Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",   null));
+                        SessionId            = Session_Id.Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",   null));
 
                     PartnerSessionIdXML      = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
                     if (PartnerSessionIdXML != null)
-                        PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
+                        PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
 
                     OperatorId               = ChargingStationOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
 
@@ -417,19 +417,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     else
                         throw new Exception("Missing 'Identification'-XML tag!");
 
-                    ChargingProductIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerProductID");
-                    if (ChargingProductIdXML != null)
-                        ChargingProductId = ChargingProduct_Id.Parse(ChargingProductIdXML.Value);
+                    PartnerProductIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerProductID");
+                    if (PartnerProductIdXML != null)
+                        PartnerProductId = PartnerProduct_Id.Parse(PartnerProductIdXML.Value);
 
                 }
                 catch (Exception e)
                 {
 
                     response = new AuthorizationStart(StatusCodes.DataError,
-                                                              "The AuthorizeStart request led to an exception!",
-                                                              e.Message,
-                                                              SessionId,
-                                                              PartnerSessionId);
+                                                      "The AuthorizeStart request led to an exception!",
+                                                      e.Message,
+                                                      SessionId,
+                                                      PartnerSessionId);
 
                 }
 
@@ -451,7 +451,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        AuthToken,
                                        EVSEId,
                                        SessionId,
-                                       ChargingProductId,
+                                       PartnerProductId,
                                        PartnerSessionId,
                                        DefaultQueryTimeout)).
                                   ToArray();
@@ -567,8 +567,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Parse request parameters
 
-                ChargingSession_Id          SessionId          = null;
-                ChargingSession_Id          PartnerSessionId   = null;
+                Session_Id?                 SessionId          = null;
+                PartnerSession_Id?          PartnerSessionId   = null;
                 ChargingStationOperator_Id  OperatorId         = default(ChargingStationOperator_Id);
                 EVSE_Id                     EVSEId             = default(EVSE_Id);
                 Auth_Token                  AuthToken          = null;
@@ -581,11 +581,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     XElement  PartnerSessionIdXML;
                     XElement  IdentificationXML;
 
-                    SessionId         = ChargingSession_Id.Parse(AuthorizeStopXML.ElementValueOrFail    (OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
+                    SessionId         = Session_Id.Parse(AuthorizeStopXML.ElementValueOrFail    (OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
 
                     PartnerSessionIdXML = AuthorizeStopXML.Element(OICPNS.Authorization + "PartnerSessionID");
                     if (PartnerSessionIdXML != null)
-                        PartnerSessionId = ChargingSession_Id.Parse(PartnerSessionIdXML.Value);
+                        PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
 
                     OperatorId        = ChargingStationOperator_Id.   Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
                     EVSEId            = EVSE_Id.           Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",      "No EVSEID XML tag provided!"));
