@@ -341,7 +341,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 var response = await RoamingNetwork.Reserve(EVSEId.ToWWCP(),
                                                             Duration:           Duration,
-                                                            ReservationId:      SessionId != null ? ChargingReservation_Id.Parse(SessionId.ToString()) : null,
+                                                            ReservationId:      SessionId.HasValue ? ChargingReservation_Id.Parse(SessionId.ToString()) : new ChargingReservation_Id?(),
                                                             ProviderId:         ProviderId.      ToWWCP(),
                                                             eMAId:              EVCOId.          ToWWCP(),
                                                             ChargingProductId:  PartnerProductId.ToWWCP(),
@@ -482,7 +482,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #region Request mapping
 
-                ChargingReservation_Id ReservationId = null;
+                ChargingReservation_Id ReservationId = default(ChargingReservation_Id);
 
                 if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
                 {
