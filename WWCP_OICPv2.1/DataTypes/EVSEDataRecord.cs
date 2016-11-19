@@ -59,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The delta type when this EVSE data record was just downloaded.
         /// </summary>
-        public String               DeltaType                   { get; }
+        public DeltaTypes?          DeltaType                   { get; }
 
         /// <summary>
         /// The last update timestamp of this EVSE data record.
@@ -221,7 +221,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
         /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
         internal EVSEDataRecord(EVSE                              EVSE,
-                                String                            DeltaType,
+                                DeltaTypes?                       DeltaType,
                                 DateTime?                         LastUpdate,
                                 String                            ChargingStationId           = null,
                                 I18NString                        ChargingStationName         = null,
@@ -325,7 +325,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
         /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
         public EVSEDataRecord(EVSE_Id                           Id,
-                              String                            DeltaType,
+                              DeltaTypes?                       DeltaType,
                               DateTime?                         LastUpdate,
                               String                            ChargingStationId           = null,
                               I18NString                        ChargingStationName         = null,
@@ -676,7 +676,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!")),
 
-                EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"), ""),
+                XML_IO.AsDeltaType(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"), "")),
 
                 _LastUpdate,
 
@@ -691,7 +691,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                  I18NString.Create(Languages.unknown, AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City", "Missing 'City'-XML tag!").Trim()),
                                                  _Country),
 
-                XMLMethods.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
+                XML_IO.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
 
                 EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "Plugs",
                                                      OICPNS.EVSEData + "Plug",
@@ -739,7 +739,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 _AdditionalInfo,
 
                 EVSEDataRecordXML.MapElement(OICPNS.CommonTypes + "GeoChargingPointEntrance",
-                                             XMLMethods.ParseGeoCoordinatesXML),
+                                             XML_IO.ParseGeoCoordinatesXML),
 
                 _OpeningTime.IsOpen24Hours,
                 _OpeningTime,
@@ -763,14 +763,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(IncludeMetadata = false)
 
         /// <summary>
         /// Return an XML representation of this EVSE data record.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="IncludeMetadata">Include deltaType and lastUpdate meta data.</param>
+        public XElement ToXML(Boolean IncludeMetadata = false)
 
             => new XElement(OICPNS.EVSEData + "EvseDataRecord",
+
+                   IncludeMetadata && DeltaType.HasValue
+                       ? new XAttribute(OICPNS.EVSEData + "deltaType",  DeltaType.ToString())
+                       : null,
+
+                   IncludeMetadata && LastUpdate.HasValue
+                       ? new XAttribute(OICPNS.EVSEData + "lastUpdate", LastUpdate.ToString())
+                       : null,
 
                    new XElement(OICPNS.EVSEData + "EvseId",                Id.ToString()),
                    new XElement(OICPNS.EVSEData + "ChargingStationId",     ChargingStationId),
@@ -951,7 +960,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             public EVSE_Id Id { get; }
 
 
-            public String DeltaType { get; set; }
+            public DeltaTypes? DeltaType { get; set; }
             public DateTime? LastUpdate { get; set; }
 
             public String ChargingStationId { get; set; }
@@ -1056,7 +1065,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                              Boolean              DynamicInfoAvailable       = true)
 
                 : this(EVSE.Id.ToOICP(),
-                       "",
+                       DeltaTypes.insert,
                        DateTime.Now,
                        EVSE.Operator,
                        ChargingStationId,
@@ -1136,7 +1145,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
             /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
             public Builder(EVSE_Id                  Id,
-                           String                   DeltaType,
+                           DeltaTypes?              DeltaType,
                            DateTime?                LastUpdate,
                            ChargingStationOperator  EVSEOperator,
                            String                   ChargingStationId          = null,

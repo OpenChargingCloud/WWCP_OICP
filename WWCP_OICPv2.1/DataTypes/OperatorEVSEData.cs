@@ -38,19 +38,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Properties
 
         /// <summary>
-        /// The unique identification of an Charging Station Operator.
+        /// An enumeration of EVSE data records.
+        /// </summary>
+        public IEnumerable<EVSEDataRecord>  EVSEDataRecords   { get; }
+
+        /// <summary>
+        /// The unqiue identification of the charging station operator maintaining the given EVSE data records.
         /// </summary>
         public ChargingStationOperator_Id   OperatorId        { get; }
 
         /// <summary>
-        /// The name of an Charging Station Operator.
+        /// An optional name of the charging station operator maintaining the given EVSE data records.
         /// </summary>
-        public I18NString                   OperatorName      { get; }
-
-        /// <summary>
-        /// An enumeration of EVSE data records.
-        /// </summary>
-        public IEnumerable<EVSEDataRecord>  EVSEDataRecords   { get; }
+        public String                       OperatorName      { get; }
 
         #endregion
 
@@ -59,24 +59,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Create a new group of OICP EVSE data records.
         /// </summary>
-        /// <param name="OperatorId">The unique identification of an Charging Station Operator.</param>
-        /// <param name="OperatorName">The name of an Charging Station Operator.</param>
         /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
-        public OperatorEVSEData(ChargingStationOperator_Id   OperatorId,
-                                I18NString                   OperatorName,
-                                IEnumerable<EVSEDataRecord>  EVSEDataRecords)
+        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
+        /// <param name="OperatorName">An optional name of the charging station operator maintaining the given EVSE data records.</param>
+        public OperatorEVSEData(IEnumerable<EVSEDataRecord>  EVSEDataRecords,
+                                ChargingStationOperator_Id   OperatorId,
+                                String                       OperatorName)
         {
 
             #region Initial checks
 
-            if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId),  "The given operator identification must not be null!");
+            if (EVSEDataRecords == null)
+                throw new ArgumentNullException(nameof(EVSEDataRecords), "The given enumeration of EVSE data records must not be null!");
 
             #endregion
 
+            this.EVSEDataRecords  = EVSEDataRecords;
             this.OperatorId       = OperatorId;
-            this.OperatorName     = OperatorName    ?? new I18NString();
-            this.EVSEDataRecords  = EVSEDataRecords ?? new EVSEDataRecord[0];
+            this.OperatorName     = OperatorName;
 
         }
 
@@ -89,9 +89,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
         //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
         // 
-        //    <soapenv:Header/>
-        // 
-        //    <soapenv:Body>
+        // [...]
         // 
         //      <!--Zero or more repetitions:-->
         //      <EVSEData:OperatorEvseData>
@@ -116,7 +114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse(OperatorEVSEDataXML, OnException = null)
+        #region (static) Parse(OperatorEVSEDataXML,  OnException = null)
 
         /// <summary>
         /// Parse the givem XML as an eumeration of OICP EVSE Data Records.
@@ -137,66 +135,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
-                return new OperatorEVSEData(OperatorEVSEDataXML.MapValueOrFail(OICPNS.EVSEData + "OperatorID",
-                                                                               ChargingStationOperator_Id.Parse,
-                                                                               "Missing OperatorID!"),
+                return new OperatorEVSEData(
 
-                                            OperatorEVSEDataXML.MapValueOrNull(OICPNS.EVSEData + "OperatorName",
-                                                                               v => new I18NString(Languages.unknown, v)),
+                           OperatorEVSEDataXML.MapElements          (OICPNS.EVSEData + "EvseDataRecord",
+                                                                     (EvseDataRecordXML, e) => EVSEDataRecord.Parse(EvseDataRecordXML, e),
+                                                                     OnException),
 
-                                            OperatorEVSEDataXML.MapElements(OICPNS.EVSEData + "EvseDataRecord",
-                                                                            (EvseDataRecordXML, e) => EVSEDataRecord.Parse(EvseDataRecordXML, e),
-                                                                            OnException)
-                                           );
+                           OperatorEVSEDataXML.MapValueOrFail       (OICPNS.EVSEData + "OperatorID",
+                                                                     ChargingStationOperator_Id.Parse,
+                                                                     "Missing OperatorID!"),
+
+                           OperatorEVSEDataXML.ElementValueOrDefault(OICPNS.EVSEData + "OperatorName")
+
+                       );
 
             }
             catch (Exception e)
             {
 
-                if (OnException != null)
-                    OnException(DateTime.Now, OperatorEVSEDataXML, e);
+                OnException?.Invoke(DateTime.Now, OperatorEVSEDataXML, e);
 
                 return null;
 
             }
 
         }
-
-        #endregion
-
-
-        #region Documentation
-
-        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        // 
-        //    <soapenv:Header/>
-        // 
-        //    <soapenv:Body>
-        // 
-        //      <EVSEData:EvseData>
-        //         <!--Zero or more repetitions:-->
-        //         <EVSEData:OperatorEvseData>
-        // 
-        //            <EVSEData:OperatorID>?</EVSEData:OperatorID>
-        // 
-        //            <!--Optional:-->
-        //            <EVSEData:OperatorName>?</EVSEData:OperatorName>
-        // 
-        //            <!--Zero or more repetitions:-->
-        //            <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
-        //               [...]
-        //            </EVSEData:EvseDataRecord>
-        // 
-        //         </EVSEData:OperatorEvseData>
-        //      </EVSEData:EvseData>
-        //
-        // [...]
-        //
-        //    </soapenv:Body>
-        // 
-        // </soapenv:Envelope>
 
         #endregion
 
@@ -216,16 +179,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (OperatorEVSEDataXMLs == null)
                 return new OperatorEVSEData[0];
 
-            var _OperatorEVSEDataXMLs = OperatorEVSEDataXMLs.ToArray();
-
-            if (_OperatorEVSEDataXMLs.Length == 0)
-                return new OperatorEVSEData[0];
-
             #endregion
 
             return OperatorEVSEDataXMLs.
-                       Select(OperatorEVSEDataXML => OperatorEVSEData.Parse(OperatorEVSEDataXML, OnException)).
-                       Where (OperatorEvseData    => OperatorEvseData != null);
+                       SafeSelect(OperatorEVSEDataXML => Parse(OperatorEVSEDataXML, OnException)).
+                       Where     (OperatorEvseData    => OperatorEvseData != null);
 
         }
 

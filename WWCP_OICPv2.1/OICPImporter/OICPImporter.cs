@@ -122,13 +122,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                       #region Find a matching EVSE Operator and maybe update its properties... or create a new one!
 
                                                       if (!RoamingNetwork.TryGetChargingStationOperatorById(_OperatorEvseData.OperatorId, out _EVSEOperator))
-                                                          _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(_OperatorEvseData.OperatorId, _OperatorEvseData.OperatorName);
+                                                          _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(_OperatorEvseData.OperatorId, I18NString.Create(Languages.unknown, _OperatorEvseData.OperatorName));
 
                                                       else
                                                       {
 
                                                           // Update via events!
-                                                          _EVSEOperator.Name = _OperatorEvseData.OperatorName;
+                                                          _EVSEOperator.Name = I18NString.Create(Languages.unknown, _OperatorEvseData.OperatorName);
 
                                                       }
 

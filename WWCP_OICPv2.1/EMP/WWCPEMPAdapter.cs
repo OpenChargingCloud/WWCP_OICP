@@ -783,13 +783,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         #region Find Charging Station Operator, or create a new one...
 
                         if (!RoamingNetwork.TryGetChargingStationOperatorById(operatorevsedata.OperatorId, out _EVSEOperator))
-                            _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(operatorevsedata.OperatorId, operatorevsedata.OperatorName);
+                            _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(operatorevsedata.OperatorId, I18NString.Create(Languages.unknown, operatorevsedata.OperatorName));
 
                         else
                         {
 
                             // Update via events!
-                            _EVSEOperator.Name = operatorevsedata.OperatorName;
+                            _EVSEOperator.Name = I18NString.Create(Languages.unknown, operatorevsedata.OperatorName);
 
                         }
 

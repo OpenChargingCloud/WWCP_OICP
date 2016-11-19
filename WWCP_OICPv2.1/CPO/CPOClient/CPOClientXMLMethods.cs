@@ -26,7 +26,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
     /// <summary>
@@ -34,94 +34,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// </summary>
     public static class CPOClientXMLMethods
     {
-
-        #region PushEVSEDataXML  (GroupedEVSEDataRecords,   OICPAction = fullLoad, Operator = null, OperatorNameSelector = null)
-
-        /// <summary>
-        /// Create an OICP PushEVSEData XML/SOAP request.
-        /// </summary>
-        /// <param name="GroupedEVSEDataRecords">EVSE data records grouped by their Charging Station Operator.</param>
-        /// <param name="OICPAction">The server-side data management operation.</param>
-        /// <param name="Operator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
-        /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
-        public static XElement PushEVSEDataXML(ILookup<ChargingStationOperator, EVSEDataRecord>  GroupedEVSEDataRecords,
-                                               ActionTypes                                       OICPAction            = ActionTypes.fullLoad,
-                                               ChargingStationOperator                           Operator              = null,
-                                               ChargingStationOperatorNameSelectorDelegate       OperatorNameSelector  = null)
-
-        {
-
-            #region Documentation
-
-            // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:EVSEData     = "http://www.hubject.com/b2b/services/evsedata/EVSEData.0"
-            //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
-            //
-            //    <soapenv:Header/>
-            //    <soapenv:Body>
-            //       <EVSEData:eRoamingPushEvseData>
-            //
-            //          <EVSEData:ActionType>?</EVSEData:ActionType>
-            //
-            //          <EVSEData:OperatorEvseData>
-            //
-            //             <EVSEData:OperatorID>?</EVSEData:OperatorID>
-            //
-            //             <!--Optional:-->
-            //             <EVSEData:OperatorName>?</EVSEData:OperatorName>
-            //
-            //             <!--Zero or more repetitions:-->
-            //             <EVSEData:EvseDataRecord deltaType="?" lastUpdate="?">
-            //                [...]
-            //             </EVSEData:EvseDataRecord>
-            //
-            //          </EVSEData:OperatorEvseData>
-            //       </EVSEData:eRoamingPushEvseData>
-            //    </soapenv:Body>
-            // </soapenv:Envelope>
-
-            #endregion
-
-            #region Initial checks
-
-            if (GroupedEVSEDataRecords == null || !GroupedEVSEDataRecords.Any())
-                throw new ArgumentNullException(nameof(GroupedEVSEDataRecords),  "The given EVSE data lookup must not be null or empty!");
-
-            if (Operator == null && GroupedEVSEDataRecords.Any())
-                Operator = GroupedEVSEDataRecords.FirstOrDefault()?.Key;
-
-            var OperatorName = OperatorNameSelector != null
-                                   ? OperatorNameSelector(Operator?.Name ?? GroupedEVSEDataRecords.FirstOrDefault()?.Key?.Name)
-                                   : (Operator ?? GroupedEVSEDataRecords.FirstOrDefault()?.Key).Name.FirstText;
-
-            #endregion
-
-
-            return SOAP.Encapsulation(new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
-                                          new XElement(OICPNS.EVSEData + "ActionType", OICPAction.ToString()),
-
-                                              new XElement(OICPNS.EVSEData + "OperatorEvseData",
-
-                                                  new XElement(OICPNS.EVSEData + "OperatorID", Operator.Id.OriginId),
-
-                                                  OperatorName.IsNotNullOrEmpty()
-                                                          ? new XElement(OICPNS.EVSEData + "OperatorName", OperatorName)
-                                                          : null,
-
-                                                  // <EvseDataRecord> ... </EvseDataRecord>
-                                                  GroupedEVSEDataRecords.
-                                                      Where     (group => group.Key != null).
-                                                      SelectMany(group => group.Where (evsedatarecord => evsedatarecord != null).
-                                                                                Select(evsedatarecord => evsedatarecord.ToXML())).
-                                                      ToArray()
-
-                                              )
-
-                                          ));
-
-        }
-
-        #endregion
 
         #region PushEVSEStatusXML(GroupedEVSEStatusRecords, OICPAction = update,   Operator = null, OperatorNameSelector = null)
 

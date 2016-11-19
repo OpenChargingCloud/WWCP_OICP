@@ -829,13 +829,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region PushEVSEData...
 
-        #region PushEVSEData(GroupedEVSEs,     ActionType = fullLoad, ...)
+        #region PushEVSEData(GroupedEVSEs,     ActionType = fullLoad, IncludeEVSEs = null, ...)
 
         /// <summary>
         /// Upload the EVSE data of the given lookup of EVSEs grouped by their Charging Station Operator.
         /// </summary>
         /// <param name="GroupedEVSEs">A lookup of EVSEs grouped by their Charging Station Operator.</param>
         /// <param name="ActionType">The server-side data management operation.</param>
+        /// <param name="IncludeEVSEs">Only upload the EVSEs returned by the given filter delegate.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -845,6 +846,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             PushEVSEData(ILookup<ChargingStationOperator, EVSE>  GroupedEVSEs,
                          WWCP.ActionType                         ActionType         = WWCP.ActionType.fullLoad,
+                         IncludeEVSEDelegate                     IncludeEVSEs       = null,
 
                          DateTime?                               Timestamp          = null,
                          CancellationToken?                      CancellationToken  = null,
@@ -857,6 +859,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             if (GroupedEVSEs == null)
                 throw new ArgumentNullException(nameof(GroupedEVSEs), "The given lookup of EVSEs must not be null!");
+
+            if (IncludeEVSEs == null)
+                IncludeEVSEs = EVSE => true;
 
 
             if (!Timestamp.HasValue)
@@ -923,10 +928,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 var Warnings = new List<String>();
 
                 var response = await CPORoaming.PushEVSEData(GroupedEVSEs.
-                                                                 Where       (group => group.Key != null).
-                                                                 ToDictionary(group => group.Key,
-                                                                              group => group.AsEnumerable()).
-                                                                 SelectMany(kvp => kvp.Value.Select(evse => {
+                                                                 //Where       (group => group.Key != null).
+                                                                 //ToDictionary(group => group.Key,
+                                                                 //             group => group.AsEnumerable()).
+                                                                 SelectMany(group => group.Where (evse => IncludeEVSEs(evse)).
+                                                                                           Select(evse => {
 
                                                                      try
                                                                      {
@@ -940,12 +946,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                                      return null;
 
-                                                                 }), Tuple.Create).
-                                                                 ToLookup(kvp => kvp.Item1.Key,
-                                                                          kvp => kvp.Item2),
+                                                                 })),
+                                                             DefaultOperator.Id,
+                                                             (_OperatorNameSelector ?? DefaultOperatorNameSelector)(DefaultOperator.Name),
                                                              ActionType.AsOICPActionType(),
-                                                             DefaultOperator,
-                                                             _OperatorNameSelector ?? DefaultOperatorNameSelector,
+                                                             null,
 
                                                              Timestamp,
                                                              CancellationToken,
@@ -1116,6 +1121,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 return await PushEVSEData(_EVSEs.ToLookup(evse => evse.Operator,
                                                           evse => evse),
                                           ActionType,
+                                          null,
 
                                           Timestamp,
                                           CancellationToken,

@@ -22,6 +22,9 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
+using org.GraphDefined.WWCP.OICPv2_1.EMP;
+using org.GraphDefined.WWCP.OICPv2_1.CPO;
+
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 

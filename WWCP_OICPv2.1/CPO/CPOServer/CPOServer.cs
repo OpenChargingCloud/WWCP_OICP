@@ -31,7 +31,7 @@ using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
     /// <summary>
@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public new const           String           DefaultHTTPServerName  = "GraphDefined OICP " + Version.Number + " HTTP/SOAP/XML CPO Server API";
+        public new const           String           DefaultHTTPServerName  = "GraphDefined OICP " + Version.Number + " HTTP/SOAP/XML CPO API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
@@ -55,7 +55,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The default HTTP/SOAP/XML server URI prefix.
         /// </summary>
-        public new const           String            DefaultURIPrefix       = "";
+        public new const           String           DefaultURIPrefix       = "";
 
         /// <summary>
         /// The default HTTP/SOAP/XML content type.
@@ -63,9 +63,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public new static readonly HTTPContentType  DefaultContentType     = HTTPContentType.XMLTEXT_UTF8;
 
         /// <summary>
-        /// The default query timeout.
+        /// The default request timeout.
         /// </summary>
-        public new static readonly TimeSpan         DefaultQueryTimeout    = TimeSpan.FromMinutes(1);
+        public new static readonly TimeSpan         DefaultRequestTimeout  = TimeSpan.FromMinutes(1);
 
         #endregion
 
@@ -151,7 +151,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
-        #region CPOServer(HTTPServerName, TCPPort = Default, URIPrefix = Default, ContentType = Default, DNSClient = null, AutoStart = false)
+        #region CPOServer(HTTPServerName, TCPPort = default, URIPrefix = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML CPO API.
@@ -188,7 +188,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region CPOServer(SOAPServer, URIPrefix = DefaultURIPrefix)
+        #region CPOServer(SOAPServer, URIPrefix = default)
 
         /// <summary>
         /// Use the given SOAP server for the OICP HTTP/SOAP/XML CPO API.
@@ -199,7 +199,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          String      URIPrefix  = DefaultURIPrefix)
 
             : base(SOAPServer,
-                   URIPrefix)
+                   URIPrefix ?? DefaultURIPrefix)
 
         { }
 
@@ -210,6 +210,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region (override) RegisterURITemplates()
 
+        /// <summary>
+        /// Register all URI templates for this SOAP API.
+        /// </summary>
         protected override void RegisterURITemplates()
         {
 
@@ -421,7 +424,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                PartnerSessionId,
                                                ProviderId,
                                                EVCOId,
-                                               DefaultQueryTimeout)).
+                                               DefaultRequestTimeout)).
                                           ToArray();
 
                         if (results.Length > 0)
@@ -620,7 +623,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                SessionId,
                                                PartnerSessionId,
                                                ProviderId,
-                                               DefaultQueryTimeout)).
+                                               DefaultRequestTimeout)).
                                           ToArray();
 
                         if (results.Length > 0)
@@ -888,7 +891,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                PartnerSessionId,
                                                ProviderId,
                                                EVCOId,
-                                               DefaultQueryTimeout)).
+                                               DefaultRequestTimeout)).
                                           ToArray();
 
                         if (results.Length > 0)
@@ -1088,7 +1091,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                SessionId.Value,
                                                PartnerSessionId,
                                                ProviderId,
-                                               DefaultQueryTimeout)).
+                                               DefaultRequestTimeout)).
                                           ToArray();
 
                         if (results.Length > 0)

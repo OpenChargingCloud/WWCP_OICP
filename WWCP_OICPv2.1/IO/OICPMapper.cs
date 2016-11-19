@@ -43,12 +43,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSE">A WWCP EVSE.</param>
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to a roaming provider.</param>
         /// <returns>The corresponding OICP EVSE data record.</returns>
-        public static EVSEDataRecord AsOICPEVSEDataRecord(this WWCP.EVSE               EVSE,
-                                                          EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord = null)
+        public static EVSEDataRecord AsOICPEVSEDataRecord(this WWCP.EVSE                   EVSE,
+                                                          CPO.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord = null)
         {
 
             var _EVSEDataRecord = new EVSEDataRecord(EVSE,
-                                                     "",
+                                                     DeltaTypes.insert,
                                                      DateTime.Now,
                                                      EVSE.ChargingStation.Id.ToString(),
                                                      EVSE.ChargingStation.Name,
@@ -181,77 +181,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
-
-
-
-        #region AsWWCPActionType(this Action)
-
-        /// <summary>
-        /// Convert an OICP v2.0 action type into a corresponding WWCP EVSE action type.
-        /// </summary>
-        /// <param name="ActionType">An OICP v2.0 action type.</param>
-        /// <returns>The corresponding WWCP action type.</returns>
-        public static WWCP.ActionType AsWWCPActionType(this ActionTypes ActionType)
-        {
-
-            switch (ActionType)
-            {
-
-                case ActionTypes.fullLoad:
-                    return WWCP.ActionType.fullLoad;
-
-                case ActionTypes.update:
-                    return WWCP.ActionType.update;
-
-                case ActionTypes.insert:
-                    return WWCP.ActionType.insert;
-
-                case ActionTypes.delete:
-                    return WWCP.ActionType.delete;
-
-                default:
-                    return WWCP.ActionType.fullLoad;
-
-            }
-
-        }
-
-        #endregion
-
-        #region AsOICPActionType(this ActionType)
-
-        /// <summary>
-        /// Convert a WWCP action type into a corresponding OICP v2.0 action type.
-        /// </summary>
-        /// <param name="ActionType">An WWCP action type.</param>
-        /// <returns>The corresponding OICP v2.0 action type.</returns>
-        public static ActionTypes AsOICPActionType(this WWCP.ActionType ActionType)
-        {
-
-            switch (ActionType)
-            {
-
-                case WWCP.ActionType.fullLoad:
-                    return OICPv2_1.ActionTypes.fullLoad;
-
-                case WWCP.ActionType.update:
-                    return OICPv2_1.ActionTypes.update;
-
-                case WWCP.ActionType.insert:
-                    return OICPv2_1.ActionTypes.insert;
-
-                case WWCP.ActionType.delete:
-                    return OICPv2_1.ActionTypes.delete;
-
-                default:
-                    return OICPv2_1.ActionTypes.fullLoad;
-
-            }
-
-        }
-
-        #endregion
-
 
 
         #region ChargingFacilities

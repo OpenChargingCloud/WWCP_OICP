@@ -257,9 +257,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "EnAdditionalInfo",      v => AdditionalInfo.Add(Languages.en, v));
 
             return new MobileAuthorizationStart((AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), MobileAuthorizationStartXML.ElementValueOrFail(OICPNS.MobileAuthorization + "AuthorizationStatus")),
-                                                GeoCoordinates:       XMLMethods.ParseGeoCoordinatesXML(MobileAuthorizationStartXML.ElementOrFail(OICPNS.MobileAuthorization + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
+                                                GeoCoordinates:       XML_IO.ParseGeoCoordinatesXML(MobileAuthorizationStartXML.ElementOrFail(OICPNS.MobileAuthorization + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
                                                 ChargingStationName:  ChargingStationName,
-                                                Address:              MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "Address",    XMLMethods.ParseAddressXML, null),
+                                                Address:              MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "Address",    XML_IO.ParseAddressXML, null),
                                                 SessionId:            MobileAuthorizationStartXML.MapValueOrNullable(OICPNS.MobileAuthorization + "SessionID",  Session_Id.Parse),
                                                 StatusCode:           MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "StatusCode", StatusCode.Parse,           null),
                                                 TermsOfUse:           MobileAuthorizationStartXML.MapValueOrDefault (OICPNS.MobileAuthorization + "TermsOfUse", s => new I18NString(Languages.de, s), null),

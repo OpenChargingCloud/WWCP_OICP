@@ -55,12 +55,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new generic OICP response.
         /// </summary>
         /// <param name="Request">The OICP request leading to this result.</param>
-        /// <param name="Result">A generic OICP result.</param>
-        public AResponse(TRequest  Request,
-                         Result    Result)
-
-            : base(Result)
-
+        public AResponse(TRequest  Request)
         {
 
             this.Request            = Request;
@@ -104,10 +99,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new generic OICP response.
         /// </summary>
         /// <param name="Result">A generic OICP result.</param>
-        public AResponse(Result Result)
+        public AResponse()
         {
 
-            this.Result             = Result;
             this.ResponseTimestamp  = DateTime.Now;
 
         }

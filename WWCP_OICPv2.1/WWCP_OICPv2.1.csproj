@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Central\CentralServer\CentralServerDelegates.cs" />
     <Compile Include="CPO\CPOClient\CPOClient.cs" />
     <Compile Include="CPO\CPOClient\CPOClientDelegates.cs" />
     <Compile Include="CPO\CPOClient\CPOClientLogger.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="CPO\CPOServer\CPOServer.cs" />
     <Compile Include="CPO\CPOServer\CPOServerDelegates.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
+    <Compile Include="DataTypes\Enums\DeltaTypes.cs" />
     <Compile Include="DataTypes\Enums\ResultCodes.cs" />
     <Compile Include="DataTypes\EVSE_Id.cs" />
     <Compile Include="DataTypes\HubOperator_Id.cs" />
@@ -67,8 +69,11 @@
     <Compile Include="DataTypes\Simple\PartnerSession_Id.cs" />
     <Compile Include="DataTypes\Simple\Session_Id.cs" />
     <Compile Include="DataTypes\Simple\Provider_Id.cs" />
+    <Compile Include="IO\XML_IO.cs" />
     <Compile Include="Messages\ARequest.cs" />
     <Compile Include="Messages\AResponse.cs" />
+    <Compile Include="Messages\CPO\PushEVSEDataResponse.cs" />
+    <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStopRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartResponse.cs" />
@@ -76,9 +81,9 @@
     <Compile Include="Messages\IResponse.cs" />
     <Compile Include="MobileClient\MobileClientDelegates.cs" />
     <Compile Include="MobileClient\MobileClientLogger.cs" />
-    <Compile Include="DataTypes\Data\StatusCodes.cs" />
+    <Compile Include="DataTypes\Enums\StatusCodes.cs" />
     <Compile Include="Central\CentralClient.cs" />
-    <Compile Include="Central\CentralServer.cs" />
+    <Compile Include="Central\CentralServer\CentralServer.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="EMP\EMPClient\EMPClient.cs" />
     <Compile Include="EMP\EMPClient\EMPClientDelegates.cs" />
@@ -97,20 +102,19 @@
     <Compile Include="IO\SOAP.cs" />
     <Compile Include="MobileClient\MobileClient.cs" />
     <Compile Include="MobileClient\MobileClient_XMLMethods.cs" />
-    <Compile Include="DataTypes\Data\ActionTypes.cs" />
-    <Compile Include="DataTypes\Data\ChargingFacilities.cs" />
-    <Compile Include="DataTypes\Data\PlugTypes.cs" />
-    <Compile Include="DataTypes\Data\ChargingModes.cs" />
+    <Compile Include="DataTypes\Enums\ActionTypes.cs" />
+    <Compile Include="DataTypes\Enums\ChargingFacilities.cs" />
+    <Compile Include="DataTypes\Enums\PlugTypes.cs" />
+    <Compile Include="DataTypes\Enums\ChargingModes.cs" />
     <Compile Include="DataTypes\Data\PaymentOptions.cs" />
-    <Compile Include="DataTypes\Data\ValueAddedServices.cs" />
-    <Compile Include="DataTypes\Data\AuthenticationModes.cs" />
+    <Compile Include="DataTypes\Enums\ValueAddedServices.cs" />
+    <Compile Include="DataTypes\Enums\AuthenticationModes.cs" />
     <Compile Include="DataTypes\Data\AuthorizationIdentification.cs" />
-    <Compile Include="DataTypes\Data\AuthorizationStatusTypes.cs" />
+    <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
     <Compile Include="DataTypes\Data\eMAIdWithPIN.cs" />
-    <Compile Include="DataTypes\Data\EVSEStatusTypes.cs" />
-    <Compile Include="DataTypes\Data\GeoCoordinatesResponseFormatTypes.cs" />
+    <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />
+    <Compile Include="DataTypes\Enums\GeoCoordinatesResponseFormatTypes.cs" />
     <Compile Include="IO\OICPMapper.cs" />
-    <Compile Include="IO\XMLMethods.cs" />
     <Compile Include="DataTypes\EVSEDataRecord.cs" />
     <Compile Include="DataTypes\EVSEMatch.cs" />
     <Compile Include="DataTypes\EVSEStatusRecord.cs" />
@@ -167,9 +171,7 @@
       <Name>WWCP_Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Messages\CPO\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

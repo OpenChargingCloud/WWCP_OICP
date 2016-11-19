@@ -23,6 +23,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using org.GraphDefined.WWCP.OICPv2_1.EMP;
+using org.GraphDefined.WWCP.OICPv2_1.CPO;
+
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -43,7 +46,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
                 new EVSEDataRecord(
                     EVSE_Id.Parse("DE*GEF*E123456789*2"),
-                    "",
+                    DeltaTypes.insert,
                     DateTime.Now,
                     //EVSEOperator:         RN.CreateNewEVSEOperator(EVSEOperator_Id.Parse("TEST"), I18NString.Create(Languages.de, "TEST")),
                     ChargingStationId:    ChargingStation_Id.Parse("DE*GEF*S123456789").ToString(),
@@ -86,6 +89,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
             var req1 = HubjectCPO.
 
                           PushEVSEData(EVSEDataRecords,
+                                       ChargingStationOperator_Id.Parse("DE*GEF"),
+                                       null,
                                        ActionTypes.insert,
                                        IncludeEVSEDataRecords: evse => evse.Id.ToString().StartsWith("DE")).
 

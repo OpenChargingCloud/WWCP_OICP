@@ -47,7 +47,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public new const           String           DefaultHTTPServerName  = "GraphDefined OICP " + Version.Number + " HTTP/SOAP/XML Central Server API";
+        public new const           String           DefaultHTTPServerName  = "GraphDefined OICP " + Version.Number + " HTTP/SOAP/XML Central API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
@@ -65,9 +65,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         public new static readonly HTTPContentType  DefaultContentType     = HTTPContentType.XMLTEXT_UTF8;
 
         /// <summary>
-        /// The default query timeout.
+        /// The default request timeout.
         /// </summary>
-        public new static readonly TimeSpan         DefaultQueryTimeout    = TimeSpan.FromMinutes(1);
+        public new static readonly TimeSpan         DefaultRequestTimeout  = TimeSpan.FromMinutes(1);
 
 
         private readonly Dictionary<EVSE_Id, EVSEDataRecord> _EVSEDataRecords;
@@ -83,9 +83,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
+        #region Events
+
+        #region OnPushEvseData
+
+        /// <summary>
+        /// An event sent whenever a remote reservation start command was received.
+        /// </summary>
+        public event RequestLogHandler       OnPushEvseDataSOAPRequest;
+
+        /// <summary>
+        /// An event sent whenever a remote reservation start response was sent.
+        /// </summary>
+        public event AccessLogHandler        OnPushEvseDataSOAPResponse;
+
+        /// <summary>
+        /// An event sent whenever a remote reservation start command was received.
+        /// </summary>
+        public event OnPushEvseDataDelegate  OnPushEvseDataRequest;
+
+        #endregion
+
+        #endregion
+
         #region Constructor(s)
 
-        #region CentralServer(HTTPServerName, TCPPort = Default, URIPrefix = Default, ContentType = Default, DNSClient = null, AutoStart = false)
+        #region CentralServer(HTTPServerName, TCPPort = default, URIPrefix = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML Central API.
@@ -125,7 +148,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-        #region CentralServer(SOAPServer, URIPrefix = DefaultURIPrefix)
+        #region CentralServer(SOAPServer, URIPrefix = default)
 
         /// <summary>
         /// Use the given SOAP server for the OICP HTTP/SOAP/XML Central API.
@@ -136,7 +159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                              String      URIPrefix  = DefaultURIPrefix)
 
             : base(SOAPServer,
-                   URIPrefix)
+                   URIPrefix ?? DefaultURIPrefix)
 
         { }
 
@@ -147,8 +170,116 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #region (override) RegisterURITemplates()
 
+        /// <summary>
+        /// Register all URI templates for this SOAP API.
+        /// </summary>
         protected override void RegisterURITemplates()
         {
+
+            #region / - AddCDRsRequest
+
+            //SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
+            //                                URIPrefix + "/",
+            //                                "PushEvseData",
+            //                                XML => XML.Descendants(OICPNS.EVSEData + "eRoamingPushEvseData").FirstOrDefault(),
+            //                                async (Request, PushEVSEDataXML) => {
+
+            //    #region Send OnPushEvseDataSOAPRequest event
+
+            //    try
+            //    {
+
+            //        OnPushEvseDataSOAPRequest?.Invoke(DateTime.Now,
+            //                                          this.SOAPServer,
+            //                                          Request);
+
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        e.Log(nameof(CentralServer) + "." + nameof(OnPushEvseDataSOAPRequest));
+            //    }
+
+            //    #endregion
+
+
+            //    var ActionType        = PushEVSEDataXML.ElementValueOrFail(OICPNS.EVSEData + "ActionType", "No ActionType XML tag provided!");
+            //    var OperatorEvseData  = OperatorEVSEData.Parse(PushEVSEDataXML.ElementsOrFail(OICPNS.EVSEData + "OperatorEvseData", "No OperatorEvseData XML tags provided!"));
+
+
+            //    var _AddCDRsRequest = AddCDRsRequest.Parse(AddCDRsXML);
+
+            //    AddCDRsResponse response = null;
+
+
+            //    #region Call async subscribers
+
+            //    if (response == null)
+            //    {
+
+            //        var results = OnPushEvseDataRequest?.
+            //                          GetInvocationList()?.
+            //                          SafeSelect(subscriber => (subscriber as OnPushEVSEDataRequestDelegate)
+            //                              (DateTime.Now,
+            //                               this,
+            //                               Request.CancellationToken,
+            //                               Request.EventTrackingId,
+            //                               _AddCDRsRequest.CDRInfos,
+            //                               DefaultRequestTimeout)).
+            //                          ToArray();
+
+            //        if (results.Length > 0)
+            //        {
+
+            //            await Task.WhenAll(results);
+
+            //            response = results.FirstOrDefault()?.Result;
+
+            //        }
+
+            //        if (results.Length == 0 || response == null)
+            //            response = AddCDRsResponse.Server(_AddCDRsRequest, "Could not process the incoming AddCDRs request!");
+
+            //    }
+
+            //    #endregion
+
+            //    #region Create SOAPResponse
+
+            //    var HTTPResponse = new HTTPResponseBuilder(Request) {
+            //        HTTPStatusCode  = HTTPStatusCode.OK,
+            //        Server          = SOAPServer.DefaultServerName,
+            //        Date            = DateTime.Now,
+            //        ContentType     = SOAPServer.SOAPContentType,
+            //        Content         = SOAP.Encapsulation(response.ToXML()).ToUTF8Bytes()
+            //    };
+
+            //    #endregion
+
+
+            //    #region Send OnPushEvseDataSOAPResponse event
+
+            //    try
+            //    {
+
+            //        OnPushEvseDataSOAPResponse?.Invoke(HTTPResponse.Timestamp,
+            //                                           this.SOAPServer,
+            //                                           Request,
+            //                                           HTTPResponse);
+
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        e.Log(nameof(CentralServer) + "." + nameof(OnPushEvseDataSOAPResponse));
+            //    }
+
+            //    #endregion
+
+            //    return HTTPResponse;
+
+            //});
+
+            #endregion
+
 
             #region /RNs/{RoamingNetworkId}
 

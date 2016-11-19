@@ -43,7 +43,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Whether the operation was successful and returned a valid result.
         /// </summary>
-        public Boolean     HasResult => Code == 0;
+        public Boolean     HasResult
+            => Code == 0;
 
         /// <summary>
         /// The description of the result code.
@@ -71,8 +72,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             this.Code            = Code;
-            this.Description     = Description.   IsNotNullOrEmpty() ? Description    : String.Empty;
-            this.AdditionalInfo  = AdditionalInfo.IsNotNullOrEmpty() ? AdditionalInfo : String.Empty;
+            this.Description     = Description;
+            this.AdditionalInfo  = AdditionalInfo;
 
         }
 
@@ -97,18 +98,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse(StatusCodeXML)
+        #region (static) Parse(StatusCodeXML,  OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeXML">The XML to parse.</param>
-        public static StatusCode Parse(XElement  StatusCodeXML)
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static StatusCode Parse(XElement             StatusCodeXML,
+                                       OnExceptionDelegate  OnException = null)
         {
 
             StatusCode _StatusCode;
 
-            if (TryParse(StatusCodeXML, out _StatusCode))
+            if (TryParse(StatusCodeXML, out _StatusCode, OnException))
                 return _StatusCode;
 
             return null;
@@ -117,7 +120,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(StatusCodeXML, out StatusCode, OnException = null)
+        #region (static) Parse(StatusCodeText, OnException = null)
+
+        /// <summary>
+        /// Parse the given text representation of an OICP status code.
+        /// </summary>
+        /// <param name="StatusCodeText">The text to parse.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static StatusCode Parse(String               StatusCodeText,
+                                       OnExceptionDelegate  OnException = null)
+        {
+
+            StatusCode _StatusCode;
+
+            if (TryParse(StatusCodeText, out _StatusCode, OnException))
+                return _StatusCode;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(StatusCodeXML,  out StatusCode, OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP status code.
@@ -167,6 +192,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+        #region (static) TryParse(StatusCodeText, out StatusCode, OnException = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of an OICP status code.
+        /// </summary>
+        /// <param name="StatusCodeText">The text to parse.</param>
+        /// <param name="StatusCode">The parsed status code.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(String               StatusCodeText,
+                                       out StatusCode       StatusCode,
+                                       OnExceptionDelegate  OnException  = null)
+        {
+
+            try
+            {
+
+                if (TryParse(XDocument.Parse(StatusCodeText).Root,
+                             out StatusCode,
+                             OnException))
+
+                    return true;
+
+            }
+            catch (Exception e)
+            {
+                OnException?.Invoke(DateTime.Now, StatusCodeText, e);
+            }
+
+            StatusCode = null;
+            return false;
+
+        }
+
+        #endregion
+
         #region ToXML()
 
         /// <summary>
@@ -191,6 +251,128 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
+        #region Operator overloading
+
+        #region Operator == (StatusCode1, StatusCode2)
+
+        /// <summary>
+        /// Compares two results for equality.
+        /// </summary>
+        /// <param name="StatusCode1">A status code.</param>
+        /// <param name="StatusCode2">Another status code.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public static Boolean operator == (StatusCode StatusCode1, StatusCode StatusCode2)
+        {
+
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(StatusCode1, StatusCode2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (((Object) StatusCode1 == null) || ((Object) StatusCode2 == null))
+                return false;
+
+            return StatusCode1.Equals(StatusCode2);
+
+        }
+
+        #endregion
+
+        #region Operator != (StatusCode1, StatusCode2)
+
+        /// <summary>
+        /// Compares two results for inequality.
+        /// </summary>
+        /// <param name="StatusCode1">A status code.</param>
+        /// <param name="StatusCode2">Another status code.</param>
+        /// <returns>False if both match; True otherwise.</returns>
+        public static Boolean operator != (StatusCode StatusCode1, StatusCode StatusCode2)
+
+            => !(StatusCode1 == StatusCode2);
+
+        #endregion
+
+        #endregion
+
+        #region IEquatable<StatusCode> Members
+
+        #region Equals(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        /// <returns>true|false</returns>
+        public override Boolean Equals(Object Object)
+        {
+
+            if (Object == null)
+                return false;
+
+            // Check if the given object is a result.
+            var StatusCode = Object as StatusCode;
+            if ((Object) StatusCode == null)
+                return false;
+
+            return this.Equals(StatusCode);
+
+        }
+
+        #endregion
+
+        #region Equals(StatusCode)
+
+        /// <summary>
+        /// Compares two status codes for equality.
+        /// </summary>
+        /// <param name="StatusCode">A status code to compare with.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public Boolean Equals(StatusCode StatusCode)
+        {
+
+            if ((Object) StatusCode == null)
+                return false;
+
+            return Code.Equals(StatusCode.Code) &&
+
+                   ((Description    == null && StatusCode.Description    == null) ||
+                    (Description    != null && StatusCode.Description    != null && Description.   Equals(StatusCode.Description))) &&
+
+                   ((AdditionalInfo == null && StatusCode.AdditionalInfo == null) ||
+                    (AdditionalInfo != null && StatusCode.AdditionalInfo != null && AdditionalInfo.Equals(StatusCode.AdditionalInfo)));
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Return the HashCode of this object.
+        /// </summary>
+        /// <returns>The HashCode of this object.</returns>
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+
+                return Code.GetHashCode() * 5 ^
+
+                       (Description != null
+                            ? Description.   GetHashCode()
+                            : 0) * 3 ^
+
+                       (AdditionalInfo != null
+                            ? AdditionalInfo.GetHashCode()
+                            : 0);
+
+            }
+        }
+
+        #endregion
+
         #region (override) ToString()
 
         /// <summary>
@@ -198,9 +380,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public override String ToString()
 
-            => String.Concat("StatusCode: ", ((Int32) Code), ", Description: ", Description, ", Additional Info: ", AdditionalInfo);
+            => String.Concat("StatusCode: ",         (Int32) Code,
+                             ", Description: ",      Description,
+                             ", Additional Info: ",  AdditionalInfo);
 
         #endregion
+
 
     }
 

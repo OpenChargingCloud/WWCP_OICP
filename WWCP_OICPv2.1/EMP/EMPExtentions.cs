@@ -25,6 +25,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -79,29 +80,31 @@ namespace org.GraphDefined.WWCP
                                               I18NString                            Name,
 
                                               String                                RemoteHostname,
-                                              IPPort                                RemoteTCPPort               = null,
-                                              RemoteCertificateValidationCallback   RemoteCertificateValidator  = null,
-                                              X509Certificate                       ClientCert                  = null,
-                                              String                                RemoteHTTPVirtualHost       = null,
-                                              String                                URIPrefix                   = OICPv2_1.EMP.EMPClient.DefaultURIPrefix,
-                                              String                                HTTPUserAgent               = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                             QueryTimeout                = null,
+                                              IPPort                                RemoteTCPPort                   = null,
+                                              RemoteCertificateValidationCallback   RemoteCertificateValidator      = null,
+                                              X509Certificate                       ClientCert                      = null,
+                                              String                                RemoteHTTPVirtualHost           = null,
+                                              String                                URIPrefix                       = OICPv2_1.EMP.EMPClient.DefaultURIPrefix,
+                                              String                                HTTPUserAgent                   = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
+                                              TimeSpan?                             QueryTimeout                    = null,
 
-                                              String                                ServerName                  = OICPv2_1.EMP.EMPServer.DefaultHTTPServerName,
-                                              IPPort                                ServerTCPPort               = null,
-                                              String                                ServerURIPrefix             = "",
-                                              Boolean                               ServerAutoStart             = true,
+                                              String                                ServerName                      = OICPv2_1.EMP.EMPServer.DefaultHTTPServerName,
+                                              IPPort                                ServerTCPPort                   = null,
+                                              String                                ServerURIPrefix                 = OICPv2_1.EMP.EMPServer.DefaultURIPrefix,
+                                              HTTPContentType                       ServerContentType               = null,
+                                              Boolean                               ServerRegisterHTTPRootService   = true,
+                                              Boolean                               ServerAutoStart                 = false,
 
-                                              String                                ClientLoggingContext        = OICPv2_1.EMP.EMPClient.EMPClientLogger.DefaultContext,
-                                              String                                ServerLoggingContext        = OICPv2_1.EMP.EMPServerLogger.DefaultContext,
-                                              Func<String, String, String>          LogFileCreator              = null,
+                                              String                                ClientLoggingContext            = OICPv2_1.EMP.EMPClient.EMPClientLogger.DefaultContext,
+                                              String                                ServerLoggingContext            = OICPv2_1.EMP.EMPServerLogger.DefaultContext,
+                                              Func<String, String, String>          LogFileCreator                  = null,
 
-                                              OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE         = null,
+                                              OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE             = null,
 
-                                              DNSClient                             DNSClient                   = null,
+                                              DNSClient                             DNSClient                       = null,
 
-                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator            = null,
-                                              Action<AEMPRoamingProvider>           Configurator                = null)
+                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator                = null,
+                                              Action<AEMPRoamingProvider>           Configurator                    = null)
 
         {
 
@@ -137,6 +140,8 @@ namespace org.GraphDefined.WWCP
                                                                      ServerName,
                                                                      ServerTCPPort,
                                                                      ServerURIPrefix,
+                                                                     ServerContentType,
+                                                                     ServerRegisterHTTPRootService,
                                                                      ServerAutoStart,
 
                                                                      ClientLoggingContext,
@@ -197,26 +202,26 @@ namespace org.GraphDefined.WWCP
                                               SOAPServer                            SOAPServer,
 
                                               String                                RemoteHostname,
-                                              IPPort                                RemoteTCPPort               = null,
-                                              RemoteCertificateValidationCallback   RemoteCertificateValidator  = null,
-                                              X509Certificate                       ClientCert                  = null,
-                                              String                                RemoteHTTPVirtualHost       = null,
-                                              String                                URIPrefix                   = OICPv2_1.EMP.EMPClient.DefaultURIPrefix,
-                                              String                                HTTPUserAgent               = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                             QueryTimeout                = null,
+                                              IPPort                                RemoteTCPPort                = null,
+                                              RemoteCertificateValidationCallback   RemoteCertificateValidator   = null,
+                                              X509Certificate                       ClientCert                   = null,
+                                              String                                RemoteHTTPVirtualHost        = null,
+                                              String                                URIPrefix                    = OICPv2_1.EMP.EMPClient.DefaultURIPrefix,
+                                              String                                HTTPUserAgent                = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
+                                              TimeSpan?                             QueryTimeout                 = null,
 
-                                              String                                ServerURIPrefix             = null,
+                                              String                                ServerURIPrefix              = null,
 
-                                              String                                ClientLoggingContext        = OICPv2_1.EMP.EMPClient.EMPClientLogger.DefaultContext,
-                                              String                                ServerLoggingContext        = OICPv2_1.EMP.EMPServerLogger.DefaultContext,
-                                              Func<String, String, String>          LogFileCreator              = null,
+                                              String                                ClientLoggingContext         = OICPv2_1.EMP.EMPClient.EMPClientLogger.DefaultContext,
+                                              String                                ServerLoggingContext         = OICPv2_1.EMP.EMPServerLogger.DefaultContext,
+                                              Func<String, String, String>          LogFileCreator               = null,
 
-                                              OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE         = null,
+                                              OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE          = null,
 
-                                              DNSClient                             DNSClient                   = null,
+                                              DNSClient                             DNSClient                    = null,
 
-                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>      OICPConfigurator            = null,
-                                              Action<AEMPRoamingProvider>           Configurator                = null)
+                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator             = null,
+                                              Action<AEMPRoamingProvider>           Configurator                 = null)
 
         {
 
@@ -241,29 +246,29 @@ namespace org.GraphDefined.WWCP
             #endregion
 
             var NewRoamingProvider = new OICPv2_1.EMP.WWCPEMPAdapter(Id,
-                                                                  Name,
-                                                                  RoamingNetwork,
+                                                                     Name,
+                                                                     RoamingNetwork,
 
-                                                                  new OICPv2_1.EMP.EMPClient(Id.ToString(),
-                                                                                             RemoteHostname,
-                                                                                             RemoteTCPPort,
-                                                                                             RemoteCertificateValidator,
-                                                                                             ClientCert,
-                                                                                             RemoteHTTPVirtualHost,
-                                                                                             URIPrefix,
-                                                                                             HTTPUserAgent,
-                                                                                             QueryTimeout,
-                                                                                             DNSClient,
-                                                                                             ClientLoggingContext,
-                                                                                             LogFileCreator),
+                                                                     new OICPv2_1.EMP.EMPClient(Id.ToString(),
+                                                                                                RemoteHostname,
+                                                                                                RemoteTCPPort,
+                                                                                                RemoteCertificateValidator,
+                                                                                                ClientCert,
+                                                                                                RemoteHTTPVirtualHost,
+                                                                                                URIPrefix,
+                                                                                                HTTPUserAgent,
+                                                                                                QueryTimeout,
+                                                                                                DNSClient,
+                                                                                                ClientLoggingContext,
+                                                                                                LogFileCreator),
 
-                                                                  new OICPv2_1.EMP.EMPServer(SOAPServer,
-                                                                                             ServerURIPrefix),
+                                                                     new OICPv2_1.EMP.EMPServer(SOAPServer,
+                                                                                                ServerURIPrefix),
 
-                                                                  ServerLoggingContext,
-                                                                  LogFileCreator,
+                                                                     ServerLoggingContext,
+                                                                     LogFileCreator,
 
-                                                                  EVSEDataRecord2EVSE);
+                                                                     EVSEDataRecord2EVSE);
 
 
             OICPConfigurator?.Invoke(NewRoamingProvider);

@@ -24,6 +24,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using org.GraphDefined.WWCP.OICPv2_1.EMP;
+using org.GraphDefined.WWCP.OICPv2_1.CPO;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;

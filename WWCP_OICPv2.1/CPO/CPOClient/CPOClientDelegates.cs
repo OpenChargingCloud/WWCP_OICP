@@ -20,12 +20,13 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
     /// <summary>
@@ -51,9 +52,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         CPOClient                               Sender,
                                                         String                                  SenderId,
                                                         EventTracking_Id                        EventTrackingId,
-                                                        ActionTypes                              ActionType,
-                                                        ILookup<ChargingStationOperator, EVSEDataRecord>   EVSEDataRecords,
-                                                        UInt32                                  NumberOfEVSEs,
+                                                        ActionTypes                             ActionType,
+                                                        UInt64                                  NumberOfEVSEDataRecords,
+                                                        IEnumerable<EVSEDataRecord>             EVSEDataRecords,
                                                         TimeSpan?                               RequestTimeout);
 
     /// <summary>
@@ -64,11 +65,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                         CPOClient                               Sender,
                                                         String                                  SenderId,
                                                         EventTracking_Id                        EventTrackingId,
-                                                        ActionTypes                              ActionType,
-                                                        ILookup<ChargingStationOperator, EVSEDataRecord>   EVSEDataRecords,
-                                                        UInt32                                  NumberOfEVSEs,
+                                                        ActionTypes                             ActionType,
+                                                        UInt64                                  NumberOfEVSEDataRecords,
+                                                        IEnumerable<EVSEDataRecord>             EVSEDataRecords,
                                                         TimeSpan?                               RequestTimeout,
-                                                        Acknowledgement                 Result,
+                                                        Acknowledgement                         Result,
                                                         TimeSpan                                Duration);
 
 

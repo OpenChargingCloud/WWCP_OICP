@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public new const           String           DefaultHTTPServerName  = "GraphDefined OICP " + Version.Number + " HTTP/SOAP/XML EMP Server API";
+        public new const           String           DefaultHTTPServerName  = "GraphDefined OICP " + Version.Number + " HTTP/SOAP/XML EMP API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
@@ -63,9 +63,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public new static readonly HTTPContentType  DefaultContentType     = HTTPContentType.XMLTEXT_UTF8;
 
         /// <summary>
-        /// The default query timeout.
+        /// The default request timeout.
         /// </summary>
-        public new static readonly TimeSpan         DefaultQueryTimeout    = TimeSpan.FromMinutes(1);
+        public new static readonly TimeSpan         DefaultRequestTimeout  = TimeSpan.FromMinutes(1);
 
         #endregion
 
@@ -150,7 +150,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Constructor(s)
 
-        #region EMPServer(HTTPServerName, TCPPort = Default, URIPrefix = Default, ContentType = Default, DNSClient = null, AutoStart = false)
+        #region EMPServer(HTTPServerName, TCPPort = default, URIPrefix = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML EMP API.
@@ -187,7 +187,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region EMPServer(SOAPServer, URIPrefix = DefaultURIPrefix)
+        #region EMPServer(SOAPServer, URIPrefix = default)
 
         /// <summary>
         /// Use the given SOAP server for the OICP HTTP/SOAP/XML EMP API.
@@ -209,6 +209,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region (override) RegisterURITemplates()
 
+        /// <summary>
+        /// Register all URI templates for this SOAP API.
+        /// </summary>
         protected override void RegisterURITemplates()
         {
 
@@ -431,7 +434,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                        SessionId,
                                        PartnerProductId,
                                        PartnerSessionId,
-                                       DefaultQueryTimeout)).
+                                       DefaultRequestTimeout)).
                                   ToArray();
 
                     if (results.Length > 0)
@@ -617,7 +620,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                            OperatorId,
                                            EVSEId,
                                            AuthToken,
-                                           DefaultQueryTimeout)).
+                                           DefaultRequestTimeout)).
                                       ToArray();
 
                     if (results.Length > 0)
@@ -736,7 +739,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                Request.CancellationToken,
                                                Request.EventTrackingId,
                                                CDR,
-                                               DefaultQueryTimeout)).
+                                               DefaultRequestTimeout)).
                                           ToArray();
 
                         if (results.Length > 0)
