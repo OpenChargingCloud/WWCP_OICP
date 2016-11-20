@@ -184,7 +184,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (UIDXML == null)
                     throw new Exception("Missing 'UIDXML' XML tag!");
 
-                return new AuthorizationIdentification(Auth_Token.Parse(RFIDmifarefamilyIdentificationXML.Value));
+                return new AuthorizationIdentification(Auth_Token.Parse(UIDXML.Value));
 
             }
 

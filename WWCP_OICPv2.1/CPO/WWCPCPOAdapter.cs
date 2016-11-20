@@ -949,7 +949,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                  })),
                                                              DefaultOperator.Id,
                                                              (_OperatorNameSelector ?? DefaultOperatorNameSelector)(DefaultOperator.Name),
-                                                             ActionType.AsOICPActionType(),
+                                                             ActionType.ToOICP(),
                                                              null,
 
                                                              Timestamp,
@@ -1580,7 +1580,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 var response = await CPORoaming.PushEVSEStatus(EVSEStatusToPush,
-                                                               ActionType.AsOICPActionType(),
+                                                               ActionType.ToOICP(),
                                                                DefaultOperator,
                                                                _OperatorNameSelector ?? DefaultOperatorNameSelector,
 

@@ -21,6 +21,7 @@ using System;
 using System.Xml.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Threading;
 
 #endregion
 
@@ -35,13 +36,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Properties
 
-
+        /// <summary>
+        /// A charging session identification.
+        /// </summary>
         public Session_Id          SessionId          { get; }
 
+        /// <summary>
+        /// An e-mobility provider identification.
+        /// </summary>
         public Provider_Id         ProviderId         { get; }
 
+        /// <summary>
+        /// An EVSE identification.
+        /// </summary>
         public EVSE_Id             EVSEId             { get; }
 
+        /// <summary>
+        /// An optional partner session identification.
+        /// </summary>
         public PartnerSession_Id?  PartnerSessionId   { get; }
 
         #endregion
@@ -58,7 +70,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public AuthorizeRemoteReservationStopRequest(Session_Id          SessionId,
                                                      Provider_Id         ProviderId,
                                                      EVSE_Id             EVSEId,
-                                                     PartnerSession_Id?  PartnerSessionId  = null)
+                                                     PartnerSession_Id?  PartnerSessionId    = null,
+
+                                                     DateTime?           Timestamp           = null,
+                                                     CancellationToken?  CancellationToken   = null,
+                                                     EventTracking_Id    EventTrackingId     = null,
+                                                     TimeSpan?           RequestTimeout      = null)
+
+            : base(Timestamp,
+                   CancellationToken,
+                   EventTrackingId,
+                   RequestTimeout)
+
         {
 
             this.SessionId         = SessionId;
@@ -309,7 +332,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if ((Object) AuthorizeRemoteReservationStop == null)
                 return false;
 
-            return this.Equals(AuthorizeRemoteReservationStop);
+            return Equals(AuthorizeRemoteReservationStop);
 
         }
 

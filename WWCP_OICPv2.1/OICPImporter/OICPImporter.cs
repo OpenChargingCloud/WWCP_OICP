@@ -487,7 +487,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The timeout for upstream queries.
         /// </summary>
-        public TimeSpan QueryTimeout
+        public TimeSpan? RequestTimeout
             => _EMPClient.RequestTimeout;
 
         #endregion

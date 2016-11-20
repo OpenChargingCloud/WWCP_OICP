@@ -72,11 +72,14 @@
     <Compile Include="IO\XML_IO.cs" />
     <Compile Include="Messages\ARequest.cs" />
     <Compile Include="Messages\AResponse.cs" />
-    <Compile Include="Messages\CPO\PushEVSEDataResponse.cs" />
+    <Compile Include="Messages\Common\PushEVSEDataResponse.cs" />
     <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
+    <Compile Include="Messages\EMP\GetChargeDetailRecordsRequest.cs" />
+    <Compile Include="Messages\EMP\PushAuthenticationDataRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteStopRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteStartRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStopRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartRequest.cs" />
-    <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartResponse.cs" />
     <Compile Include="Messages\IRequest.cs" />
     <Compile Include="Messages\IResponse.cs" />
     <Compile Include="MobileClient\MobileClientDelegates.cs" />
@@ -126,7 +129,7 @@
     <Compile Include="DataTypes\AuthorizationStart.cs" />
     <Compile Include="DataTypes\AuthorizationStop.cs" />
     <Compile Include="DataTypes\ChargeDetailRecord.cs" />
-    <Compile Include="DataTypes\ChargeDetailRecords.cs" />
+    <Compile Include="Messages\EMP\GetChargeDetailRecordsResponse.cs" />
     <Compile Include="DataTypes\EVSEData.cs" />
     <Compile Include="DataTypes\EVSESearchResult.cs" />
     <Compile Include="DataTypes\EVSEStatus.cs" />

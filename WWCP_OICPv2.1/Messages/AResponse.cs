@@ -55,10 +55,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new generic OICP response.
         /// </summary>
         /// <param name="Request">The OICP request leading to this result.</param>
-        public AResponse(TRequest  Request)
+        /// <param name="CustomData">Optional customer-specific semi-structured data.</param>
+        public AResponse(TRequest                             Request,
+                         IReadOnlyDictionary<String, Object>  CustomData = null)
+
+            : base(CustomData)
+
         {
 
-            this.Request            = Request;
+            this.Request = Request;
 
         }
 
@@ -84,12 +89,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The machine-readable result code.
         /// </summary>
-        public Result    Result              { get; }
+        public Result                               Result              { get; }
 
         /// <summary>
         /// The timestamp of the response message creation.
         /// </summary>
-        public DateTime  ResponseTimestamp   { get; }
+        public DateTime                             ResponseTimestamp   { get; }
+
+        /// <summary>
+        /// Customer-specific semi-structured data.
+        /// </summary>
+        public IReadOnlyDictionary<String, Object>  CustomData          { get; }
+
+        /// <summary>
+        /// Whether the response has customer-specific data defined.
+        /// </summary>
+        public Boolean HasCustomData
+            => CustomData != null;
 
         #endregion
 
@@ -98,10 +114,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Create a new generic OICP response.
         /// </summary>
-        /// <param name="Result">A generic OICP result.</param>
-        public AResponse()
+        /// <param name="CustomData">Customer-specific semi-structured data.</param>
+        public AResponse(IReadOnlyDictionary<String, Object> CustomData = null)
         {
 
+            this.CustomData         = CustomData;
             this.ResponseTimestamp  = DateTime.Now;
 
         }

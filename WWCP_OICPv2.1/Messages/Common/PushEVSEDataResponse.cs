@@ -39,7 +39,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #region Properties
 
         /// <summary>
-        /// Wether the response has a result.
+        /// Whether the response has a result.
         /// </summary>
         public Boolean             HasResult          { get; }
 
@@ -66,7 +66,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Create a new OICP push EVSE data response.
         /// </summary>
         /// <param name="Request">The push EVSE data request leading to this response.</param>
-        /// <param name="HasResult">Wether the response has a result.</param>
+        /// <param name="HasResult">Whether the response has a result.</param>
         /// <param name="StatusCode">The status code of the response.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>

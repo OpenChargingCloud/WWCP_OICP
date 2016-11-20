@@ -354,7 +354,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             null),
 
                 ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubProviderID",
-                                                            HubProvider_Id.Parse));
+                                                            HubProvider_Id.Parse)
+
+            );
 
         }
 

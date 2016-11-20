@@ -38,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// <summary>
     /// An OICP roaming client for EMPs.
     /// </summary>
-    public class EMPRoaming
+    public class EMPRoaming : IEMPClient
     {
 
         #region Properties
@@ -59,6 +59,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// The EMP server logger.
         /// </summary>
         public EMPServerLogger  EMPServerLogger     { get; }
+
+
+        public TimeSpan? RequestTimeout { get; }
+
 
         /// <summary>
         /// The DNS client defines which DNS servers to use.
@@ -1080,6 +1084,107 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        #region RequestMappers
+
+        #region PushAuthenticationDataRequestMapper
+
+        public Func<PushAuthenticationDataRequest, PushAuthenticationDataRequest> PushAuthenticationDataRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.PushAuthenticationDataRequestMapper;
+            }
+
+            set
+            {
+                EMPClient.PushAuthenticationDataRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region AuthorizeRemoteReservationStartRequestMapper
+
+        public Func<AuthorizeRemoteReservationStartRequest, AuthorizeRemoteReservationStartRequest> AuthorizeRemoteReservationStartRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.AuthorizeRemoteReservationStartRequestMapper;
+            }
+
+            set
+            {
+                EMPClient.AuthorizeRemoteReservationStartRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region AuthorizeRemoteReservationStopRequestMapper
+
+        public Func<AuthorizeRemoteReservationStopRequest, AuthorizeRemoteReservationStopRequest> AuthorizeRemoteReservationStopRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.AuthorizeRemoteReservationStopRequestMapper;
+            }
+
+            set
+            {
+                EMPClient.AuthorizeRemoteReservationStopRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region AuthorizeRemoteStartRequestMapper
+
+        public Func<AuthorizeRemoteStartRequest, AuthorizeRemoteStartRequest> AuthorizeRemoteStartRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.AuthorizeRemoteStartRequestMapper;
+            }
+
+            set
+            {
+                EMPClient.AuthorizeRemoteStartRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region AuthorizeRemoteStopRequestMapper
+
+        public Func<AuthorizeRemoteStopRequest, AuthorizeRemoteStopRequest> AuthorizeRemoteStopRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.AuthorizeRemoteStopRequestMapper;
+            }
+
+            set
+            {
+                EMPClient.AuthorizeRemoteStopRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #endregion
+
         #region Constructor(s)
 
         #region EMPRoaming(EMPClient, EMPServer, ServerLoggingContext = EMPServerLogger.DefaultContext, LogFileCreator = null)
@@ -1350,279 +1455,90 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region PushAuthenticationData(ProviderAuthenticationDataRecords, OICPAction = fullLoad, ...)
+        #region PushAuthenticationData(Request)
 
         /// <summary>
         /// Create a new task pushing provider authentication data records onto the OICP server.
         /// </summary>
-        /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
+        /// <param name="Request">An PushAuthenticationData request.</param>
+        public async Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
 
-            PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
-                                   ActionTypes                              OICPAction         = ActionTypes.fullLoad,
+            PushAuthenticationData(PushAuthenticationDataRequest Request)
 
-                                   DateTime?                                Timestamp          = null,
-                                   CancellationToken?                       CancellationToken  = null,
-                                   EventTracking_Id                         EventTrackingId    = null,
-                                   TimeSpan?                                RequestTimeout     = null)
-
-
-            => await EMPClient.PushAuthenticationData(ProviderAuthenticationDataRecords,
-                                                      OICPAction,
-
-                                                      Timestamp,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      RequestTimeout);
-
-        #endregion
-
-        #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, OICPAction = fullLoad, ...)
-
-        /// <summary>
-        /// Create a new task pushing authorization identifications onto the OICP server.
-        /// </summary>
-        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
-
-            PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
-                                   eMobilityProvider_Id                      ProviderId,
-                                   ActionTypes                               OICPAction         = ActionTypes.fullLoad,
-
-                                   DateTime?                                 Timestamp          = null,
-                                   CancellationToken?                        CancellationToken  = null,
-                                   EventTracking_Id                          EventTrackingId    = null,
-                                   TimeSpan?                                 RequestTimeout     = null)
-
-
-            => await EMPClient.PushAuthenticationData(AuthorizationIdentifications,
-                                                      ProviderId,
-                                                      OICPAction,
-
-                                                      Timestamp,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      RequestTimeout);
+                => await EMPClient.PushAuthenticationData(Request);
 
         #endregion
 
 
-        #region ReservationStart(EVSEId, ProviderId, eMAId, SessionId = null, PartnerSessionId = null, ChargingProductId = null, ...)
+        #region ReservationStart(Request)
 
         /// <summary>
         /// Create a reservation at the given EVSE.
         /// </summary>
-        /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
-        /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-        /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
-        /// <param name="SessionId">An optional unique identification of the charging session.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
+        /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
+        public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
 
-            ReservationStart(EVSE_Id               EVSEId,
-                             Provider_Id           ProviderId,
-                             EVCO_Id               EVCOId,
-                             Session_Id?           SessionId           = null,
-                             PartnerSession_Id?    PartnerSessionId    = null,
-                             PartnerProduct_Id?    PartnerProductId    = null,
+            ReservationStart(AuthorizeRemoteReservationStartRequest  Request)
 
-                             DateTime?             Timestamp           = null,
-                             CancellationToken?    CancellationToken   = null,
-                             EventTracking_Id      EventTrackingId     = null,
-                             TimeSpan?             RequestTimeout      = null)
-
-
-            => await EMPClient.ReservationStart(ProviderId,
-                                                EVSEId,
-                                                EVCOId,
-                                                SessionId,
-                                                PartnerSessionId,
-                                                PartnerProductId,
-
-                                                Timestamp,
-                                                CancellationToken,
-                                                EventTrackingId,
-                                                RequestTimeout);
+                => await EMPClient.ReservationStart(Request);
 
         #endregion
 
-        #region ReservationStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, ...)
+        #region ReservationStop (Request)
 
         /// <summary>
         /// Delete a reservation at the given EVSE.
         /// </summary>
-        /// <param name="SessionId">The unique identification for this charging session.</param>
-        /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
-        /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
+        /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
+        public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
 
-            ReservationStop(Session_Id            SessionId,
-                            Provider_Id           ProviderId,
-                            EVSE_Id               EVSEId,
-                            PartnerSession_Id?    PartnerSessionId    = null,
+            ReservationStop(AuthorizeRemoteReservationStopRequest Request)
 
-                            DateTime?             Timestamp           = null,
-                            CancellationToken?    CancellationToken   = null,
-                            EventTracking_Id      EventTrackingId     = null,
-                            TimeSpan?             RequestTimeout      = null)
-
-
-            => await EMPClient.ReservationStop(SessionId,
-                                               ProviderId,
-                                               EVSEId,
-                                               PartnerSessionId,
-
-                                               Timestamp,
-                                               CancellationToken,
-                                               EventTrackingId,
-                                               RequestTimeout);
+                => await EMPClient.ReservationStop(Request);
 
         #endregion
 
 
-        #region RemoteStart(EVSEId, ProviderId, eMAId, SessionId = null, PartnerSessionId = null, ChargingProductId = null, ...)
+        #region RemoteStart(Request)
 
         /// <summary>
         /// Start a charging session at the given EVSE.
         /// </summary>
-        /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
-        /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-        /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
-        /// <param name="SessionId">An optional unique identification of the charging session.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
+        /// <param name="Request">An AuthorizeRemoteStart request.</param>
+        public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
 
-            RemoteStart(EVSE_Id               EVSEId,
-                        Provider_Id           ProviderId,
-                        EVCO_Id               EVCOId,
-                        Session_Id?           SessionId           = null,
-                        PartnerSession_Id?    PartnerSessionId    = null,
-                        PartnerProduct_Id?    PartnerProductId    = null,
+            RemoteStart(AuthorizeRemoteStartRequest Request)
 
-                        DateTime?             Timestamp           = null,
-                        CancellationToken?    CancellationToken   = null,
-                        EventTracking_Id      EventTrackingId     = null,
-                        TimeSpan?             RequestTimeout      = null)
-
-
-            => await EMPClient.RemoteStart(ProviderId,
-                                           EVSEId,
-                                           EVCOId,
-                                           SessionId,
-                                           PartnerSessionId,
-                                           PartnerProductId,
-
-                                           Timestamp,
-                                           CancellationToken,
-                                           EventTrackingId,
-                                           RequestTimeout);
+                => await EMPClient.RemoteStart(Request);
 
         #endregion
 
-        #region RemoteStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, ...)
+        #region RemoteStop (Request)
 
         /// <summary>
         /// Stop the given charging session at the given EVSE.
         /// </summary>
-        /// <param name="SessionId">The unique identification for this charging session.</param>
-        /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
-        /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
+        /// <param name="Request">An AuthorizeRemoteStop request.</param>
+        public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
 
-            RemoteStop(Session_Id            SessionId,
-                       Provider_Id           ProviderId,
-                       EVSE_Id               EVSEId,
-                       PartnerSession_Id?    PartnerSessionId    = null,
+            RemoteStop(AuthorizeRemoteStopRequest Request)
 
-                       DateTime?             Timestamp           = null,
-                       CancellationToken?    CancellationToken   = null,
-                       EventTracking_Id      EventTrackingId     = null,
-                       TimeSpan?             RequestTimeout      = null)
-
-
-            => await EMPClient.RemoteStop(SessionId,
-                                          ProviderId,
-                                          EVSEId,
-                                          PartnerSessionId,
-
-                                          Timestamp,
-                                          CancellationToken,
-                                          EventTrackingId,
-                                          RequestTimeout);
+                => await EMPClient.RemoteStop(Request);
 
         #endregion
 
 
-        #region GetChargeDetailRecords(ProviderId, From, To = null, ...)
+        #region GetChargeDetailRecords(Request)
 
         /// <summary>
         /// Create a new task querying charge detail records from the OICP server.
         /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="From">The starting time.</param>
-        /// <param name="To">An optional end time. [default: current time].</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<IEnumerable<ChargeDetailRecord>>>
+        /// <param name="Request">An GetChargeDetailRecords request.</param>
+        public async Task<HTTPResponse<GetChargeDetailRecordsResponse>>
 
-            GetChargeDetailRecords(eMobilityProvider_Id  ProviderId,
-                                   DateTime              From,
-                                   DateTime?             To                  = null,
+            GetChargeDetailRecords(GetChargeDetailRecordsRequest Request)
 
-                                   DateTime?             Timestamp           = null,
-                                   CancellationToken?    CancellationToken   = null,
-                                   EventTracking_Id      EventTrackingId     = null,
-                                   TimeSpan?             RequestTimeout      = null)
-
-
-            => await EMPClient.GetChargeDetailRecords(ProviderId,
-                                                      From,
-                                                      To,
-
-                                                      Timestamp,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      RequestTimeout);
+                => await EMPClient.GetChargeDetailRecords(Request);
 
         #endregion
 

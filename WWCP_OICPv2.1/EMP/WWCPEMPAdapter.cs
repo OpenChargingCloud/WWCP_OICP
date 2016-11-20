@@ -1211,69 +1211,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region PushAuthenticationData(...ProviderAuthenticationDataRecords, OICPAction = fullLoad, ...)
-
-        /// <summary>
-        /// Create a new task pushing provider authentication data records onto the OICP server.
-        /// </summary>
-        /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<Acknowledgement>
-
-            PushAuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
-                                   ActionTypes                              OICPAction         = ActionTypes.fullLoad,
-
-                                   DateTime?                                Timestamp          = null,
-                                   CancellationToken?                       CancellationToken  = null,
-                                   EventTracking_Id                         EventTrackingId    = null,
-                                   TimeSpan?                                RequestTimeout     = null)
-
-        {
-
-            var result = await EMPRoaming.PushAuthenticationData(ProviderAuthenticationDataRecords,
-                                                                 OICPAction,
-
-                                                                 Timestamp,
-                                                                 CancellationToken,
-                                                                 EventTrackingId,
-                                                                 RequestTimeout);
-
-            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
-                result.Content        != null)
-            {
-
-                return result.Content;
-
-            }
-
-            return result.Content;
-
-        }
-
-        #endregion
-
-        #region PushAuthenticationData(...AuthorizationIdentifications, OICPAction = fullLoad, ProviderId = null, ...)
+        #region PushAuthenticationData(...AuthorizationIdentifications, Action = fullLoad, ProviderId = null, ...)
 
         /// <summary>
         /// Create a new task pushing authorization identifications onto the OICP server.
         /// </summary>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="Action">An optional OICP action.</param>
         /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<Acknowledgement>
+        public async Task<WWCP.Acknowledgement>
 
             PushAuthenticationData(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
-                                   ActionTypes                               OICPAction         = ActionTypes.fullLoad,
+                                   ActionType                                Action             = ActionType.fullLoad,
                                    eMobilityProvider_Id?                     ProviderId         = null,
 
                                    DateTime?                                 Timestamp          = null,
@@ -1285,29 +1239,101 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Initial checks
 
-            if (ProviderId == null || !ProviderId.HasValue)
+            if (!ProviderId.HasValue)
                 throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+
+
+            WWCP.Acknowledgement result = null;
 
             #endregion
 
-            var result = await EMPRoaming.PushAuthenticationData(AuthorizationIdentifications,
-                                                                 ProviderId.Value,
-                                                                 OICPAction,
+            #region Send OnPushAuthenticationDataRequest event
 
-                                                                 Timestamp,
-                                                                 CancellationToken,
-                                                                 EventTrackingId,
-                                                                 RequestTimeout);
+            //var StartTime = DateTime.Now;
 
-            if (result.HTTPStatusCode == HTTPStatusCode.OK &&
-                result.Content        != null)
+            //try
+            //{
+
+            //    OnPushAuthenticationDataRequest?.Invoke(StartTime,
+            //                                            Request.Timestamp.Value,
+            //                                            this,
+            //                                            ClientId,
+            //                                            Request.EventTrackingId,
+            //                                            Request.AuthorizationIdentifications,
+            //                                            Request.ProviderId,
+            //                                            Request.OICPAction,
+            //                                            RequestTimeout);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnPushAuthenticationDataRequest));
+            //}
+
+            #endregion
+
+
+            var response = await EMPRoaming.PushAuthenticationData(AuthorizationIdentifications,
+                                                                   ProviderId.ToOICP().Value,
+                                                                   Action.    ToOICP(),
+
+                                                                   Timestamp,
+                                                                   CancellationToken,
+                                                                   EventTrackingId,
+                                                                   RequestTimeout);
+
+            if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                response.Content        != null)
             {
 
-                return result.Content;
+                result = new WWCP.Acknowledgement(response.Content.Result
+                                                      ? ResultType.True
+                                                      : ResultType.False,
+                                                  response.Content.StatusCode.Description,
+                                                  response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                      ? new String[] { response.Content.StatusCode.AdditionalInfo }
+                                                      : null);
 
             }
 
-            return result.Content;
+            result = new WWCP.Acknowledgement(ResultType.False,
+                                              response.Content != null
+                                                  ? response.Content.StatusCode.Description
+                                                  : null,
+                                              response.Content != null
+                                                  ? response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                        ? new String[] { response.Content.StatusCode.AdditionalInfo }
+                                                        : null
+                                                  : null);
+
+
+            #region Send OnPushAuthenticationDataResponse event
+
+            //var Endtime = DateTime.Now;
+            //
+            //try
+            //{
+            //
+            //    OnPushAuthenticationDataResponse?.Invoke(Endtime,
+            //                                             this,
+            //                                             ClientId,
+            //                                             Request.EventTrackingId,
+            //                                             Request.AuthorizationIdentifications,
+            //                                             Request.ProviderId,
+            //                                             Request.OICPAction,
+            //                                             RequestTimeout,
+            //                                             response.Content,
+            //                                             Endtime - StartTime);
+            //
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(EMPClient) + "." + nameof(OnPushAuthenticationDataResponse));
+            //}
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1845,7 +1871,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="EVSEId">The unique identification of the EVSE to be stopped remotely.</param>
         /// <param name="SessionId">An optional identification of this charging session.</param>
-        /// <param name="ReservationHandling">Wether to remove the reservation after session end, or to keep it open for some more time.</param>
+        /// <param name="ReservationHandling">Whether to remove the reservation after session end, or to keep it open for some more time.</param>
         /// <param name="ProviderId">An optional identification of the e-mobility service provider, whenever this identification is different from the current message sender.</param>
         /// <param name="eMAId">An optional identification of the e-mobility account who wants to stop charging.</param>
         /// 
@@ -1974,14 +2000,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Initial checks
 
-            if (ProviderId == null || !ProviderId.HasValue)
+            if (!ProviderId.HasValue)
                 throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+
+            if (!To.HasValue)
+                To = DateTime.Now;
 
             #endregion
 
-            var result = await EMPRoaming.GetChargeDetailRecords(ProviderId.Value,
+            var result = await EMPRoaming.GetChargeDetailRecords(ProviderId.Value.ToOICP(),
                                                                  From,
-                                                                 To,
+                                                                 To.Value,
 
                                                                  Timestamp,
                                                                  CancellationToken,
@@ -1992,7 +2021,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 result.Content        != null)
             {
 
-                return result.Content.SafeSelect(cdr => OICPMapper.ToWWCP(cdr));
+                return result.Content.ChargeDetailRecords.SafeSelect(cdr => OICPMapper.ToWWCP(cdr));
 
             }
 

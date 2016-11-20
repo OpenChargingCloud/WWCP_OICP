@@ -18,8 +18,8 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Xml.Linq;
+using System.Threading;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -36,17 +36,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Properties
 
-
+        /// <summary>
+        /// An e-mobility provider identification.
+        /// </summary>
         public Provider_Id         ProviderId         { get; }
 
+        /// <summary>
+        /// An EVSE identification.
+        /// </summary>
         public EVSE_Id             EVSEId             { get; }
 
+        /// <summary>
+        /// An electric vehicle contract identification.
+        /// </summary>
         public EVCO_Id             EVCOId             { get; }
 
+        /// <summary>
+        /// An optional charging session identification.
+        /// </summary>
         public Session_Id?         SessionId          { get; }
 
+        /// <summary>
+        /// An optional partner session identification.
+        /// </summary>
         public PartnerSession_Id?  PartnerSessionId   { get; }
 
+        /// <summary>
+        /// An optional partner product identification.
+        /// </summary>
         public PartnerProduct_Id?  PartnerProductId   { get; }
 
         #endregion
@@ -56,18 +73,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// Create an OICP AuthorizeRemoteReservationStart XML/SOAP request.
         /// </summary>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="EVCOId">An eMobility account identification.</param>
+        /// <param name="ProviderId">An e-mobility provider identification.</param>
+        /// <param name="EVSEId">An EVSE identification.</param>
+        /// <param name="EVCOId">An electric vehicle contract identification.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         public AuthorizeRemoteReservationStartRequest(Provider_Id         ProviderId,
                                                       EVSE_Id             EVSEId,
                                                       EVCO_Id             EVCOId,
-                                                      Session_Id?         SessionId          = null,
-                                                      PartnerSession_Id?  PartnerSessionId   = null,
-                                                      PartnerProduct_Id?  PartnerProductId   = null)
+                                                      Session_Id?         SessionId           = null,
+                                                      PartnerSession_Id?  PartnerSessionId    = null,
+                                                      PartnerProduct_Id?  PartnerProductId    = null,
+
+                                                      DateTime?           Timestamp           = null,
+                                                      CancellationToken?  CancellationToken   = null,
+                                                      EventTracking_Id    EventTrackingId     = null,
+                                                      TimeSpan?           RequestTimeout      = null)
+
+            : base(Timestamp,
+                   CancellationToken,
+                   EventTrackingId,
+                   RequestTimeout)
+
         {
 
             this.ProviderId        = ProviderId;
@@ -195,9 +223,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="AuthorizeRemoteReservationStartXML">The XML to parse.</param>
         /// <param name="AuthorizeRemoteReservationStart">The parsed authorize remote reservation start request.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                             AuthorizeRemoteReservationStartXML,
+        public static Boolean TryParse(XElement                                    AuthorizeRemoteReservationStartXML,
                                        out AuthorizeRemoteReservationStartRequest  AuthorizeRemoteReservationStart,
-                                       OnExceptionDelegate                  OnException  = null)
+                                       OnExceptionDelegate                         OnException  = null)
         {
 
             try
@@ -409,7 +437,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if ((Object) AuthorizeRemoteReservationStart == null)
                 return false;
 
-            return this.Equals(AuthorizeRemoteReservationStart);
+            return Equals(AuthorizeRemoteReservationStart);
 
         }
 

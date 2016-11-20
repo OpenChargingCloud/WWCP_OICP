@@ -18,6 +18,9 @@
 #region Usings
 
 using System;
+using System.Threading;
+
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -34,12 +37,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
     {
 
+        #region Data
+
+        /// <summary>
+        /// The default request timeout.
+        /// </summary>
+        public static readonly TimeSpan DefaultRequestTimeout = TimeSpan.FromSeconds(60);
+
+        #endregion
+
         #region Properties
 
         /// <summary>
-        /// The timestamp of the request message creation.
+        /// The optional timestamp of the request.
         /// </summary>
-        public DateTime  RequestTimestamp   { get; }
+        public DateTime?           Timestamp           { get; }
+
+        /// <summary>
+        /// An optional token to cancel this request.
+        /// </summary>
+        public CancellationToken?  CancellationToken   { get; }
+
+        /// <summary>
+        /// An optional event tracking identification for correlating this request with other events.
+        /// </summary>
+        public EventTracking_Id    EventTrackingId     { get; }
+
+        /// <summary>
+        /// An optional timeout for this request.
+        /// </summary>
+        public TimeSpan?           RequestTimeout      { get; }
 
         #endregion
 
@@ -48,10 +75,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Create a new generic OICP request message.
         /// </summary>
-        public ARequest()
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public ARequest(DateTime?           Timestamp           = null,
+                        CancellationToken?  CancellationToken   = null,
+                        EventTracking_Id    EventTrackingId     = null,
+                        TimeSpan?           RequestTimeout      = null)
         {
 
-            this.RequestTimestamp  = DateTime.Now;
+            this.Timestamp          = Timestamp.        HasValue ? Timestamp            : DateTime.Now;
+            this.CancellationToken  = CancellationToken.HasValue ? CancellationToken    : new CancellationTokenSource().Token;
+            this.EventTrackingId    = EventTrackingId != null    ? EventTrackingId      : EventTracking_Id.New;
+            this.RequestTimeout     = RequestTimeout.   HasValue ? RequestTimeout.Value : DefaultRequestTimeout;
 
         }
 

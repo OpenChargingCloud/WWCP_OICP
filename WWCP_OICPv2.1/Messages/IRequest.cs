@@ -18,6 +18,9 @@
 #region Usings
 
 using System;
+using System.Threading;
+
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -31,9 +34,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     {
 
         /// <summary>
-        /// The timestamp of the request message creation.
+        /// The optional timestamp of the request.
         /// </summary>
-        DateTime  RequestTimestamp   { get; }
+        DateTime?           Timestamp           { get; }
+
+        /// <summary>
+        /// An optional token to cancel this request.
+        /// </summary>
+        CancellationToken?  CancellationToken   { get; }
+
+        /// <summary>
+        /// An optional event tracking identification for correlating this request with other events.
+        /// </summary>
+        EventTracking_Id    EventTrackingId     { get; }
+
+        /// <summary>
+        /// An optional timeout for this request.
+        /// </summary>
+        TimeSpan?           RequestTimeout      { get; }
 
     }
 

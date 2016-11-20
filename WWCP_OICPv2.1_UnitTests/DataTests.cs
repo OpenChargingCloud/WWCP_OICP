@@ -294,7 +294,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
         }
 
 
-        public void TestPushAuthenticationData(EMP.EMPClient HubjectEMP)
+        public void TestPushAuthenticationData(EMPClient HubjectEMP)
         {
 
             Task.Factory.StartNew(async () => {
@@ -310,7 +310,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                                                     "1234") //DE**GDF*CAETE4*3"), "1234") //
 
                                            ),
-                                           ProviderId:     eMobilityProvider_Id.   Parse("DE*GDF"),
+                                           ProviderId:     Provider_Id.Parse("DE*GDF"),
                                            OICPAction:     ActionTypes.fullLoad,
                                            RequestTimeout: TimeSpan.  FromSeconds(120));
 

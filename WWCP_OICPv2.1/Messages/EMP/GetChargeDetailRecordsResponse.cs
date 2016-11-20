@@ -25,13 +25,14 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 {
 
     /// <summary>
-    /// A group of OICP Charge Detail Records.
+    /// An OICP get charge detail records response.
     /// </summary>
-    public class ChargeDetailRecords
+    public class GetChargeDetailRecordsResponse : AResponse<GetChargeDetailRecordsRequest,
+                                                            GetChargeDetailRecordsResponse>
     {
 
         #region Properties
@@ -39,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// An enumeration of charge detail records.
         /// </summary>
-        public IEnumerable<ChargeDetailRecord> Records { get; }
+        public IEnumerable<ChargeDetailRecord>  ChargeDetailRecords   { get; }
 
         #endregion
 
@@ -49,17 +50,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new group of OICP Charge Detail Records.
         /// </summary>
         /// <param name="ChargeDetailRecords">An enumeration of charge detail records.</param>
-        public ChargeDetailRecords(IEnumerable<ChargeDetailRecord>  ChargeDetailRecords)
+        public GetChargeDetailRecordsResponse(GetChargeDetailRecordsRequest        Request,
+                                              IEnumerable<ChargeDetailRecord>      ChargeDetailRecords,
+                                              IReadOnlyDictionary<String, Object>  CustomData = null)
+
+            : base(Request,
+                   CustomData)
+
         {
 
             #region Initial checks
 
             if (ChargeDetailRecords == null)
-                throw new ArgumentNullException(nameof(ChargeDetailRecords),  "The given parameter must not be null!");
+                throw new ArgumentNullException(nameof(ChargeDetailRecords), "The given enumeration of charge detail records must not be null!");
 
             #endregion
 
-            this.Records  = ChargeDetailRecords;
+            this.ChargeDetailRecords  = ChargeDetailRecords;
 
         }
 
@@ -96,20 +103,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ChargeDetailRecordsXML">A XML representation of an enumeration of OICP charge detail records.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static IEnumerable<ChargeDetailRecord> ParseXML(XElement             ChargeDetailRecordsXML,
-                                                               OnExceptionDelegate  OnException  = null)
+        public static GetChargeDetailRecordsResponse ParseXML(GetChargeDetailRecordsRequest  Request,
+                                                              XElement                       ChargeDetailRecordsXML,
+                                                              Func<XElement, Dictionary<String, Object>> CustomerMapper1,
+                                                              Func<XElement, Dictionary<String, Object>> CustomerMapper2,
+                                                              OnExceptionDelegate            OnException  = null)
         {
 
             if (ChargeDetailRecordsXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecords")
                 throw new Exception("Invalid eRoamingChargeDetailRecords XML!");
 
-            return ChargeDetailRecordsXML.MapElements(OICPNS.Authorization + "eRoamingChargeDetailRecord",
-                                                      (XML, e) => ChargeDetailRecord.Parse(XML, e),
-                                                      OnException);
+            return new GetChargeDetailRecordsResponse(
+
+                       Request,
+
+                       ChargeDetailRecordsXML.MapElements(OICPNS.Authorization + "eRoamingChargeDetailRecord",
+                                                             //(XML, e) => CustomerMapper(XML, ChargeDetailRecord.Parse(XML, e)),
+                                                             (XML, e) => ChargeDetailRecord.Parse(XML, e),
+                                                             OnException),
+
+                       CustomerMapper1 != null
+                           ? CustomerMapper1(ChargeDetailRecordsXML)
+                           : null
+
+                   );
 
         }
 
         #endregion
+
+
+        public override bool Equals(GetChargeDetailRecordsResponse AResponse)
+        {
+            throw new NotImplementedException();
+        }
 
 
     }
