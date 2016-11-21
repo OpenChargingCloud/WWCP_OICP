@@ -55,11 +55,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new generic OICP response.
         /// </summary>
         /// <param name="Request">The OICP request leading to this result.</param>
-        /// <param name="CustomData">Optional customer-specific semi-structured data.</param>
-        public AResponse(TRequest                             Request,
-                         IReadOnlyDictionary<String, Object>  CustomData = null)
+        /// <param name="CustomMapper">An optional mapper for customer-specific semi-structured data.</param>
+        public AResponse(TRequest           Request,
+                         Action<TResponse>  CustomMapper = null)
 
-            : base(CustomData)
+            : base(CustomMapper)
 
         {
 
@@ -84,6 +84,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
     {
 
+        #region Data
+
+        private Action<TResponse> CustomMapper;
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -99,7 +105,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Customer-specific semi-structured data.
         /// </summary>
-        public IReadOnlyDictionary<String, Object>  CustomData          { get; }
+        public IReadOnlyDictionary<String, Object>  CustomData          { get; protected set; }
 
         /// <summary>
         /// Whether the response has customer-specific data defined.
@@ -114,11 +120,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Create a new generic OICP response.
         /// </summary>
-        /// <param name="CustomData">Customer-specific semi-structured data.</param>
-        public AResponse(IReadOnlyDictionary<String, Object> CustomData = null)
+        /// <param name="CustomMapper">An optional mapper for customer-specific semi-structured data.</param>
+        public AResponse(Action<TResponse>  CustomMapper = null)
         {
 
-            this.CustomData         = CustomData;
+            this.CustomMapper       = CustomMapper;
             this.ResponseTimestamp  = DateTime.Now;
 
         }

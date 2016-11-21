@@ -18,11 +18,9 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -30,6 +28,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using System.Xml.Linq;
 
 #endregion
 
@@ -37,9 +36,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
     /// <summary>
-    /// An OICP CPO Client.
+    /// An OICP CPO client.
     /// </summary>
-    public partial class CPOClient : ASOAPClient
+    public partial class CPOClient : ASOAPClient,
+                                     ICPOClient
     {
 
         #region Data
@@ -66,11 +66,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The attached OICP CPO client (HTTP/SOAP client) logger.
         /// </summary>
-        public CPOClientLogger                              Logger                       { get; }
-
-        public RoamingNetwork                               RoamingNetwork               { get; }
-
-        public ChargingStationOperatorNameSelectorDelegate  DefaultOperatorNameSelector  { get; }
+        public CPOClientLogger  Logger   { get; }
 
         #endregion
 
@@ -222,6 +218,110 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
+        #region Custom request mappers
+
+        #region CustomPushEVSEDataRequestMapper
+
+        #region CustomPushEVSEDataRequestMapper
+
+        private Func<PushEVSEDataRequest, PushEVSEDataRequest> _CustomPushEVSEDataRequestMapper = _ => _;
+
+        public Func<PushEVSEDataRequest, PushEVSEDataRequest> CustomPushEVSEDataRequestMapper
+        {
+
+            get
+            {
+                return _CustomPushEVSEDataRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPushEVSEDataRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPushEVSEDataSOAPRequestMapper
+
+        private Func<PushEVSEDataRequest, XElement, XElement> _CustomPushEVSEDataSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<PushEVSEDataRequest, XElement, XElement> CustomPushEVSEDataSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomPushEVSEDataSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPushEVSEDataSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PushEVSEDataRequest>, Acknowledgement<PushEVSEDataRequest>.Builder> CustomPushEVSEDataResponseMapper { get; set; }
+
+        #endregion
+
+        #region CustomPushEVSEStatusRequestMapper
+
+        #region CustomPushEVSEStatusRequestMapper
+
+        private Func<PushEVSEStatusRequest, PushEVSEStatusRequest> _CustomPushEVSEStatusRequestMapper = _ => _;
+
+        public Func<PushEVSEStatusRequest, PushEVSEStatusRequest> CustomPushEVSEStatusRequestMapper
+        {
+
+            get
+            {
+                return _CustomPushEVSEStatusRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPushEVSEStatusRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPushEVSEStatusSOAPRequestMapper
+
+        private Func<PushEVSEStatusRequest, XElement, XElement> _CustomPushEVSEStatusSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<PushEVSEStatusRequest, XElement, XElement> CustomPushEVSEStatusSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomPushEVSEStatusSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPushEVSEStatusSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PushEVSEStatusRequest>, Acknowledgement<PushEVSEStatusRequest>.Builder> CustomPushEVSEStatusResponseMapper { get; set; }
+
+        #endregion
+
+        #endregion
+
         #region Constructor(s)
 
         #region CPOClient(ClientId, Hostname, ..., LoggingContext = CPOClientLogger.DefaultContext, ...)
@@ -277,11 +377,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            this.Logger                       = new CPOClientLogger(this,
-                                                                    LoggingContext,
-                                                                    LogFileCreator);
-
-            this.DefaultOperatorNameSelector  = I18N => I18N.FirstText;
+            this.Logger = new CPOClientLogger(this,
+                                              LoggingContext,
+                                              LogFileCreator);
 
         }
 
@@ -305,14 +403,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public CPOClient(String                               ClientId,
                          CPOClientLogger                      Logger,
                          String                               Hostname,
-                         IPPort                               RemotePort                  = null,
-                         RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                         X509Certificate                      ClientCert                  = null,
-                         String                               HTTPVirtualHost             = null,
-                         String                               URIPrefix                   = DefaultURIPrefix,
-                         String                               HTTPUserAgent               = DefaultHTTPUserAgent,
-                         TimeSpan?                            QueryTimeout                = null,
-                         DNSClient                            DNSClient                   = null)
+                         IPPort                               RemotePort                   = null,
+                         RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
+                         X509Certificate                      ClientCert                   = null,
+                         String                               HTTPVirtualHost              = null,
+                         String                               URIPrefix                    = DefaultURIPrefix,
+                         String                               HTTPUserAgent                = DefaultHTTPUserAgent,
+                         TimeSpan?                            QueryTimeout                 = null,
+                         DNSClient                            DNSClient                    = null)
 
             : base(ClientId,
                    Hostname,
@@ -340,8 +438,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            this.Logger                       = Logger;
-            this.DefaultOperatorNameSelector  = I18N => I18N.FirstText;
+            this.Logger = Logger;
 
         }
 
@@ -350,79 +447,48 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region PushEVSEData(EVSEDataRecords, OperatorId, OperatorName = null, OICPAction = fullLoad, ...)
+        #region PushEVSEData  (Request)
 
         /// <summary>
-        /// Upload the given EVSE data records grouped by their Charging Station Operator.
+        /// Upload the given EVSE data records.
         /// </summary>
-        /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
-        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
-        /// <param name="OperatorName">An optional name of the charging station operator maintaining the given EVSE data records.</param>
-        /// <param name="OICPAction">The server-side data management operation.</param>
-        /// <param name="IncludeEVSEDataRecords">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
+        /// <param name="Request">A PushEVSEData request.</param>
+        public async Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
 
-            PushEVSEData(IEnumerable<EVSEDataRecord>     EVSEDataRecords,
-                         ChargingStationOperator_Id      OperatorId,
-                         String                          OperatorName             = null,
-                         ActionTypes                     OICPAction               = ActionTypes.fullLoad,
-                         IncludeEVSEDataRecordsDelegate  IncludeEVSEDataRecords   = null,
-
-                         DateTime?                       Timestamp                = null,
-                         CancellationToken?              CancellationToken        = null,
-                         EventTracking_Id                EventTrackingId          = null,
-                         TimeSpan?                       RequestTimeout           = null)
+            PushEVSEData(PushEVSEDataRequest Request)
 
         {
 
             #region Initial checks
 
-            if (EVSEDataRecords == null)
-                throw new ArgumentNullException(nameof(EVSEDataRecords),  "The given enumeration of EVSE data records must not be null!");
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The given PushEVSEData request must not be null!");
 
-            if (IncludeEVSEDataRecords == null)
-                IncludeEVSEDataRecords = EVSEDataRecord => true;
+            Request = _CustomPushEVSEDataRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The mapped PushEVSEData request must not be null!");
 
 
-            if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
-
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = this.RequestTimeout;
-
-            #endregion
-
-            #region Get effective number of EVSE data records to upload
-
-            var _EVSEDataRecords = EVSEDataRecords.
-                                       Where(evsedatarecord => evsedatarecord != null && IncludeEVSEDataRecords(evsedatarecord)).
-                                       ToArray();
-
-            HTTPResponse<Acknowledgement> result = null;
+            HTTPResponse<Acknowledgement<PushEVSEDataRequest>> result = null;
 
             #endregion
 
             #region Send OnPushEVSEDataRequest event
 
+            var StartTime = DateTime.Now;
+
             try
             {
 
-                OnPushEVSEDataRequest?.Invoke(DateTime.Now,
-                                              Timestamp.Value,
+                OnPushEVSEDataRequest?.Invoke(StartTime,
+                                              Request.Timestamp.Value,
                                               this,
                                               ClientId,
-                                              EventTrackingId,
-                                              OICPAction,
-                                              _EVSEDataRecords.ULongCount(),
-                                              EVSEDataRecords,
+                                              Request.EventTrackingId,
+                                              Request.Action,
+                                              Request.EVSEDataRecords.ULongCount(),
+                                              Request.EVSEDataRecords,
                                               RequestTimeout);
 
             }
@@ -432,12 +498,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
 
             #endregion
-
-
-            var request = new PushEVSEDataRequest(EVSEDataRecords,
-                                                  OperatorId,
-                                                  OperatorName,
-                                                  OICPAction);
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
@@ -450,17 +510,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(SOAP.Encapsulation(request.ToXML(false)),
+                result = await _OICPClient.Query(_CustomPushEVSEDataSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML(false))),
                                                  "eRoamingPushEvseData",
                                                  RequestLogDelegate:   OnPushEVSEDataSOAPRequest,
                                                  ResponseLogDelegate:  OnPushEVSEDataSOAPResponse,
-                                                 CancellationToken:    CancellationToken,
-                                                 EventTrackingId:      EventTrackingId,
-                                                 QueryTimeout:         RequestTimeout,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout,
 
                                                  #region OnSuccess
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) =>
+                                                                                                      Acknowledgement<PushEVSEDataRequest>.Parse(request,
+                                                                                                                                                 xml,
+                                                                                                                                                 CustomPushEVSEDataResponseMapper,
+                                                                                                                                                 onexception)),
 
                                                  #endregion
 
@@ -470,9 +535,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                     return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                              new Acknowledgement(StatusCodes.SystemError),
-                                                                                              IsFault: true);
+                                                     return new HTTPResponse<Acknowledgement<PushEVSEDataRequest>>(
+
+                                                                httpresponse,
+
+                                                                new Acknowledgement<PushEVSEDataRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.Content.ToString()
+                                                                ),
+
+                                                                IsFault: true
+
+                                                            );
 
                                                  },
 
@@ -484,11 +559,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      SendHTTPError(timestamp, this, httpresponse);
 
-                                                     return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                              new Acknowledgement(StatusCodes.SystemError,
-                                                                                                                  httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                  httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                              IsFault: true);
+                                                     return new HTTPResponse<Acknowledgement<PushEVSEDataRequest>>(
+
+                                                                httpresponse,
+
+                                                                new Acknowledgement<PushEVSEDataRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                ),
+
+                                                                IsFault: true
+
+                                                            );
 
                                                  },
 
@@ -500,10 +584,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      SendException(timestamp, sender, exception);
 
-                                                     return HTTPResponse<Acknowledgement>.ExceptionThrown(new Acknowledgement(StatusCodes.SystemError,
-                                                                                                                              exception.Message,
-                                                                                                                              exception.StackTrace),
-                                                                                                          Exception:  exception);
+                                                     return HTTPResponse<Acknowledgement<PushEVSEDataRequest>>.ExceptionThrown(
+
+                                                            new Acknowledgement<PushEVSEDataRequest>(
+                                                                Request,
+                                                                StatusCodes.ServiceNotAvailable,
+                                                                exception.Message,
+                                                                exception.StackTrace
+                                                            ),
+
+                                                            Exception: exception
+
+                                                        );
 
                                                  }
 
@@ -514,25 +606,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
 
             if (result == null)
-                result = HTTPResponse<Acknowledgement>.OK(new Acknowledgement(StatusCodes.Success, "Nothing to upload!"));
+                result = HTTPResponse<Acknowledgement<PushEVSEDataRequest>>.OK(
+                             new Acknowledgement<PushEVSEDataRequest>(
+                                 Request,
+                                 StatusCodes.SystemError,
+                                 "HTTP request failed!"
+                             )
+                         );
 
 
             #region Send OnPushEVSEDataResponse event
 
+            var Endtime = DateTime.Now;
+
             try
             {
 
-                OnPushEVSEDataResponse?.Invoke(DateTime.Now,
-                                               Timestamp.Value,
+                OnPushEVSEDataResponse?.Invoke(Endtime,
+                                               Request.Timestamp.Value,
                                                this,
                                                ClientId,
-                                               EventTrackingId,
-                                               OICPAction,
-                                               _EVSEDataRecords.ULongCount(),
-                                               EVSEDataRecords,
-                                               RequestTimeout,
+                                               Request.EventTrackingId,
+                                               Request.Action,
+                                               Request.EVSEDataRecords.ULongCount(),
+                                               Request.EVSEDataRecords,
+                                               Request.RequestTimeout,
                                                result.Content,
-                                               DateTime.Now - Timestamp.Value);
+                                               Endtime - StartTime);
 
             }
             catch (Exception e)
@@ -549,143 +649,49 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region PushEVSEData(EVSEDataRecord,  OICPAction = insert, OperatorId = null, OperatorName = null, IncludeEVSEDataRecords = null, ...)
+        #region PushEVSEStatus(Request)
 
         /// <summary>
-        /// Create a new task pushing a single EVSE data record onto the OICP server.
+        /// Upload the given EVSE status records.
         /// </summary>
-        /// <param name="EVSEDataRecord">An EVSE data record.</param>
-        /// <param name="OICPAction">The server-side data management operation.</param>
-        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
-        /// <param name="OperatorName">An optional name of the charging station operator maintaining the given EVSE data records.</param>
-        /// <param name="IncludeEVSEDataRecords">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
+        /// <param name="Request">A PushEVSEStatus request.</param>
+        public async Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
 
-            PushEVSEData(EVSEDataRecord                  EVSEDataRecord,
-                         ActionTypes                     OICPAction               = ActionTypes.insert,
-                         ChargingStationOperator_Id?     OperatorId               = null,
-                         String                          OperatorName             = null,
-                         IncludeEVSEDataRecordsDelegate  IncludeEVSEDataRecords   = null,
-
-                         DateTime?                       Timestamp                = null,
-                         CancellationToken?              CancellationToken        = null,
-                         EventTracking_Id                EventTrackingId          = null,
-                         TimeSpan?                       RequestTimeout           = null)
-
-
-            => await PushEVSEData(new EVSEDataRecord[] { EVSEDataRecord },
-                                  OperatorId.  HasValue           ? OperatorId.Value : (EVSEDataRecord?.EVSE?.Operator.Id). Value,
-                                  OperatorName.IsNotNullOrEmpty() ? OperatorName     :  EVSEDataRecord?.EVSE?.Operator.Name.FirstText,
-                                  OICPAction,
-                                  IncludeEVSEDataRecords,
-
-                                  Timestamp,
-                                  CancellationToken,
-                                  EventTrackingId,
-                                  RequestTimeout);
-
-        #endregion
-
-        #region PushEVSEData(OperatorId, OICPAction, params EVSEDataRecords)
-
-        /// <summary>
-        /// Create a new task pushing EVSE data records onto the OICP server.
-        /// </summary>
-        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
-        /// <param name="OICPAction">The server-side data management operation.</param>
-        /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
-
-            PushEVSEData(ChargingStationOperator_Id  OperatorId,
-                         ActionTypes                 OICPAction,
-                         params EVSEDataRecord[]     EVSEDataRecords)
-
-
-            => await PushEVSEData(EVSEDataRecords,
-                                  OperatorId,
-                                  null,
-                                  OICPAction);
-
-        #endregion
-
-
-        #region PushEVSEStatus(GroupedEVSEStatusRecords, OICPAction = update, Operator = null, OperatorNameSelector = null, ...)
-
-        /// <summary>
-        /// Upload the given EVSE status records grouped by their Charging Station Operator.
-        /// </summary>
-        /// <param name="GroupedEVSEStatusRecords">EVSE status records grouped by their Charging Station Operator.</param>
-        /// <param name="OICPAction">The server-side data management operation.</param>
-        /// <param name="Operator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
-        /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
-
-            PushEVSEStatus(ILookup<ChargingStationOperator, EVSEStatusRecord>  GroupedEVSEStatusRecords,
-                           ActionTypes                                         OICPAction            = ActionTypes.update,
-                           ChargingStationOperator                             Operator              = null,
-                           ChargingStationOperatorNameSelectorDelegate         OperatorNameSelector  = null,
-
-                           DateTime?                                           Timestamp             = null,
-                           CancellationToken?                                  CancellationToken     = null,
-                           EventTracking_Id                                    EventTrackingId       = null,
-                           TimeSpan?                                           RequestTimeout        = null)
+            PushEVSEStatus(PushEVSEStatusRequest Request)
 
         {
 
             #region Initial checks
 
-            if (GroupedEVSEStatusRecords == null)
-                throw new ArgumentNullException(nameof(GroupedEVSEStatusRecords),  "The given lookup of EVSE status records must not be null!");
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The given PushEVSEStatus request must not be null!");
+
+            Request = _CustomPushEVSEStatusRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The mapped PushEVSEStatus request must not be null!");
 
 
-            if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
-
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = this.RequestTimeout;
-
-            #endregion
-
-            #region Get effective number of EVSE data records to upload
-
-            var NumberOfEVSEStatusRecords = GroupedEVSEStatusRecords.
-                                                Where     (group => group.Key != null).
-                                                SelectMany(group => group.Where(evsestatusrecord => evsestatusrecord != null)).
-                                                Count();
-
-            HTTPResponse<Acknowledgement> result = null;
-
-            var _OICPAction = OICPAction;
+            HTTPResponse<Acknowledgement<PushEVSEStatusRequest>> result = null;
 
             #endregion
 
             #region Send OnPushEVSEStatusRequest event
 
+            var StartTime = DateTime.Now;
+
             try
             {
 
-                OnPushEVSEStatusRequest?.Invoke(DateTime.Now,
-                                                Timestamp.Value,
-                                                this,
-                                                ClientId,
-                                                EventTrackingId,
-                                                OICPAction,
-                                                GroupedEVSEStatusRecords,
-                                                (UInt32) NumberOfEVSEStatusRecords,
-                                                RequestTimeout);
+                OnPushEVSEStatusRequest?.Invoke(StartTime,
+                                              Request.Timestamp.Value,
+                                              this,
+                                              ClientId,
+                                              Request.EventTrackingId,
+                                              Request.Action,
+                                              Request.EVSEStatusRecords.ULongCount(),
+                                              Request.EVSEStatusRecords,
+                                              RequestTimeout);
 
             }
             catch (Exception e)
@@ -696,240 +702,152 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            if (NumberOfEVSEStatusRecords > 0)
+            using (var _OICPClient = new SOAPClient(Hostname,
+                                                    RemotePort,
+                                                    HTTPVirtualHost,
+                                                    URIPrefix + "/eRoamingEvseStatus_V2.0",
+                                                    RemoteCertificateValidator,
+                                                    ClientCert,
+                                                    UserAgent,
+                                                    DNSClient))
             {
 
-                using (var _OICPClient = new SOAPClient(Hostname,
-                                                        RemotePort,
-                                                        HTTPVirtualHost,
-                                                        URIPrefix + "/eRoamingEvseStatus_V2.0",
-                                                        RemoteCertificateValidator,
-                                                        ClientCert,
-                                                        UserAgent,
-                                                        DNSClient))
-                {
+                result = await _OICPClient.Query(_CustomPushEVSEStatusSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                                                 "eRoamingPushEvseStatus",
+                                                 RequestLogDelegate:   OnPushEVSEStatusSOAPRequest,
+                                                 ResponseLogDelegate:  OnPushEVSEStatusSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout,
 
-                     result = await _OICPClient.Query(CPOClientXMLMethods.PushEVSEStatusXML(GroupedEVSEStatusRecords,
-                                                                                            _OICPAction,
-                                                                                            Operator,
-                                                                                            OperatorNameSelector ?? DefaultOperatorNameSelector),
-                                                      "eRoamingPushEvseStatus",
-                                                      RequestLogDelegate:   OnPushEVSEStatusSOAPRequest,
-                                                      ResponseLogDelegate:  OnPushEVSEStatusSOAPResponse,
-                                                      CancellationToken:    CancellationToken,
-                                                      EventTrackingId:      EventTrackingId,
-                                                      QueryTimeout:         RequestTimeout,
+                                                 #region OnSuccess
 
-                                                      #region OnSuccess
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) =>
+                                                                                                      Acknowledgement<PushEVSEStatusRequest>.Parse(request,
+                                                                                                                                                   xml,
+                                                                                                                                                   CustomPushEVSEStatusResponseMapper,
+                                                                                                                                                   onexception)),
 
-                                                      OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
+                                                 #endregion
 
-                                                      #endregion
+                                                 #region OnSOAPFault
 
-                                                      #region OnSOAPFault
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                      OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                          SendSOAPError(timestamp, this, httpresponse.Content);
+                                                     return new HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>(
 
-                                                          return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                                   new Acknowledgement(StatusCodes.SystemError),
-                                                                                                   IsFault: true);
+                                                                httpresponse,
 
-                                                      },
+                                                                new Acknowledgement<PushEVSEStatusRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.Content.ToString()
+                                                                ),
 
-                                                      #endregion
+                                                                IsFault: true
 
-                                                      #region OnHTTPError
+                                                            );
 
-                                                      OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                 },
 
-                                                          SendHTTPError(timestamp, this, httpresponse);
+                                                 #endregion
 
-                                                          return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                                   new Acknowledgement(StatusCodes.SystemError,
-                                                                                                                       httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                       httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                   IsFault: true);
+                                                 #region OnHTTPError
 
-                                                      },
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                      #endregion
+                                                     SendHTTPError(timestamp, this, httpresponse);
 
-                                                      #region OnException
+                                                     return new HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>(
 
-                                                      OnException: (timestamp, sender, exception) => {
+                                                                httpresponse,
 
-                                                          SendException(timestamp, sender, exception);
+                                                                new Acknowledgement<PushEVSEStatusRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                ),
 
-                                                          return HTTPResponse<Acknowledgement>.ExceptionThrown(new Acknowledgement(StatusCodes.SystemError,
-                                                                                                                                   exception.Message,
-                                                                                                                                   exception.StackTrace),
-                                                                                                               Exception: exception);
+                                                                IsFault: true
 
-                                                      }
+                                                            );
 
-                                                      #endregion
+                                                 },
 
-                                                     );
+                                                 #endregion
 
-                }
+                                                 #region OnException
+
+                                                 OnException: (timestamp, sender, exception) => {
+
+                                                     SendException(timestamp, sender, exception);
+
+                                                     return HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>.ExceptionThrown(
+
+                                                            new Acknowledgement<PushEVSEStatusRequest>(
+                                                                Request,
+                                                                StatusCodes.ServiceNotAvailable,
+                                                                exception.Message,
+                                                                exception.StackTrace
+                                                            ),
+
+                                                            Exception: exception
+
+                                                        );
+
+                                                 }
+
+                                                 #endregion
+
+                                                );
 
             }
 
             if (result == null)
-                result = HTTPResponse<Acknowledgement>.OK(new Acknowledgement(StatusCodes.Success, "Nothing to upload!"));
+                result = HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>.OK(
+                             new Acknowledgement<PushEVSEStatusRequest>(
+                                 Request,
+                                 StatusCodes.SystemError,
+                                 "HTTP request failed!"
+                             )
+                         );
 
 
-            #region Send OnPushEVSEDataResponse event
+            #region Send OnPushEVSEStatusResponse event
+
+            var Endtime = DateTime.Now;
 
             try
             {
 
-                OnPushEVSEStatusResponse?.Invoke(DateTime.Now,
-                                                 Timestamp.Value,
+                OnPushEVSEStatusResponse?.Invoke(Endtime,
+                                                 Request.Timestamp.Value,
                                                  this,
                                                  ClientId,
-                                                 EventTrackingId,
-                                                 OICPAction,
-                                                 GroupedEVSEStatusRecords,
-                                                 (UInt32) NumberOfEVSEStatusRecords,
-                                                 RequestTimeout,
+                                                 Request.EventTrackingId,
+                                                 Request.Action,
+                                                 Request.EVSEStatusRecords.ULongCount(),
+                                                 Request.EVSEStatusRecords,
+                                                 Request.RequestTimeout,
                                                  result.Content,
-                                                 DateTime.Now - Timestamp.Value);
+                                                 Endtime - StartTime);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEDataResponse));
+                e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEStatusResponse));
             }
 
             #endregion
 
+
             return result;
 
         }
-
-        #endregion
-
-        #region PushEVSEStatus(EVSEStatusRecord,         OICPAction = insert, Operator = null, OperatorNameSelector = null, IncludeEVSEStatusRecords = null, ...)
-
-        /// <summary>
-        /// Create a new task pushing a single EVSE status record onto the OICP server.
-        /// </summary>
-        /// <param name="EVSEStatusRecord">An EVSE status record.</param>
-        /// <param name="OICPAction">The server-side data management operation.</param>
-        /// <param name="Operator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
-        /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
-        /// <param name="IncludeEVSEStatusRecords">An optional delegate for filtering EVSE status records before pushing them to the server.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
-
-            PushEVSEStatus(EVSEStatusRecord                             EVSEStatusRecord,
-                           ActionTypes                                  OICPAction                = ActionTypes.insert,
-                           ChargingStationOperator                      Operator                  = null,
-                           ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector      = null,
-                           IncludeEVSEStatusRecordsDelegate             IncludeEVSEStatusRecords  = null,
-
-                           DateTime?                                    Timestamp                 = null,
-                           CancellationToken?                           CancellationToken         = null,
-                           EventTracking_Id                             EventTrackingId           = null,
-                           TimeSpan?                                    RequestTimeout            = null)
-
-
-            => await PushEVSEStatus(new EVSEStatusRecord[] { EVSEStatusRecord },
-                                    OICPAction,
-                                    Operator,
-                                    OperatorNameSelector,
-                                    IncludeEVSEStatusRecords,
-
-                                    Timestamp,
-                                    CancellationToken,
-                                    EventTrackingId,
-                                    RequestTimeout);
-
-        #endregion
-
-        #region PushEVSEStatus(EVSEStatusRecords,        OICPAction = update, Operator = null, OperatorNameSelector = null, IncludeEVSEStatusRecords = null, ...)
-
-        /// <summary>
-        /// Create a new task pushing EVSE status key-value-pairs onto the OICP server.
-        /// </summary>
-        /// <param name="EVSEStatusRecords">An enumeration of EVSE identification and status key-value-pairs.</param>
-        /// <param name="OICPAction">The server-side data management operation.</param>
-        /// <param name="Operator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
-        /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
-        /// <param name="IncludeEVSEStatusRecords">An optional delegate for filtering EVSE status records before pushing them to the server.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
-
-            PushEVSEStatus(IEnumerable<EVSEStatusRecord>                EVSEStatusRecords,
-                           ActionTypes                                  OICPAction                = ActionTypes.update,
-                           ChargingStationOperator                      Operator                  = null,
-                           ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector      = null,
-                           IncludeEVSEStatusRecordsDelegate             IncludeEVSEStatusRecords  = null,
-
-                           DateTime?                                    Timestamp                 = null,
-                           CancellationToken?                           CancellationToken         = null,
-                           EventTracking_Id                             EventTrackingId           = null,
-                           TimeSpan?                                    RequestTimeout            = null)
-
-        {
-
-            #region Initial checks
-
-            if (EVSEStatusRecords == null)
-                throw new ArgumentNullException(nameof(EVSEStatusRecords), "The given enumeration of EVSE status records must not be null!");
-
-            var _EVSEStatusRecords = IncludeEVSEStatusRecords != null
-                                         ? EVSEStatusRecords.
-                                               Where(evsestatus => IncludeEVSEStatusRecords(evsestatus)).
-                                               ToArray()
-                                         : EVSEStatusRecords.
-                                               ToArray();
-
-            #endregion
-
-            if (_EVSEStatusRecords.Length > 0)
-                return await PushEVSEStatus(_EVSEStatusRecords.ToLookup(evsestatusrecord => RoamingNetwork.GetChargingStationOperatorById(evsestatusrecord.Id.OperatorId)),
-                                            OICPAction,
-                                            Operator,
-                                            OperatorNameSelector,
-
-                                            Timestamp,
-                                            CancellationToken,
-                                            EventTrackingId,
-                                            RequestTimeout);
-
-            return HTTPResponse<Acknowledgement>.OK(new Acknowledgement(StatusCodes.Success, "Nothing to upload!"));
-
-        }
-
-        #endregion
-
-        #region PushEVSEStatus(OICPAction, params EVSEStatusRecords)
-
-        /// <summary>
-        /// Create a new task pushing EVSE status records onto the OICP server.
-        /// </summary>
-        /// <param name="OICPAction">The server-side data management operation.</param>
-        /// <param name="EVSEStatusRecords">An array of EVSE status records.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
-
-            PushEVSEStatus(ActionTypes                OICPAction,
-                           params EVSEStatusRecord[]  EVSEStatusRecords)
-
-
-            => await PushEVSEStatus(EVSEStatusRecords,
-                                    OICPAction);
 
         #endregion
 

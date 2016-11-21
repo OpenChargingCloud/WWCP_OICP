@@ -52,7 +52,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                         CPOClient                               Sender,
                                                         String                                  SenderId,
                                                         EventTracking_Id                        EventTrackingId,
-                                                        ActionTypes                             ActionType,
+                                                        ActionTypes                             Action,
                                                         UInt64                                  NumberOfEVSEDataRecords,
                                                         IEnumerable<EVSEDataRecord>             EVSEDataRecords,
                                                         TimeSpan?                               RequestTimeout);
@@ -65,11 +65,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                         CPOClient                               Sender,
                                                         String                                  SenderId,
                                                         EventTracking_Id                        EventTrackingId,
-                                                        ActionTypes                             ActionType,
+                                                        ActionTypes                             Action,
                                                         UInt64                                  NumberOfEVSEDataRecords,
                                                         IEnumerable<EVSEDataRecord>             EVSEDataRecords,
                                                         TimeSpan?                               RequestTimeout,
-                                                        Acknowledgement                         Result,
+                                                        Acknowledgement<PushEVSEDataRequest>    Result,
                                                         TimeSpan                                Duration);
 
 
@@ -81,9 +81,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                           CPOClient                                Sender,
                                                           String                                   SenderId,
                                                           EventTracking_Id                         EventTrackingId,
-                                                          ActionTypes                               ActionType,
-                                                          ILookup<ChargingStationOperator, EVSEStatusRecord>  EVSEStatusRecords,
-                                                          UInt32                                   NumberOfEVSEs,
+                                                          ActionTypes                              Action,
+                                                          UInt64                                   NumberOfEVSEStatus,
+                                                          IEnumerable<EVSEStatusRecord>            EVSEStatusRecords,
                                                           TimeSpan?                                RequestTimeout);
 
     /// <summary>
@@ -94,11 +94,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                           CPOClient                                Sender,
                                                           String                                   SenderId,
                                                           EventTracking_Id                         EventTrackingId,
-                                                          ActionTypes                               ActionType,
-                                                          ILookup<ChargingStationOperator, EVSEStatusRecord>  EVSEStatusRecords,
-                                                          UInt32                                   NumberOfEVSEs,
+                                                          ActionTypes                              Action,
+                                                          UInt64                                   NumberOfEVSEStatus,
+                                                          IEnumerable<EVSEStatusRecord>            EVSEStatusRecords,
                                                           TimeSpan?                                RequestTimeout,
-                                                          Acknowledgement                  Result,
+                                                          Acknowledgement<PushEVSEStatusRequest>   Result,
                                                           TimeSpan                                 Duration);
 
     #endregion

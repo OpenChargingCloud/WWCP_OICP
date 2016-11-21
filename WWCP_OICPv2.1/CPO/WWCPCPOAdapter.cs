@@ -1518,32 +1518,52 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             WWCP.Acknowledgement result = null;
 
             var EVSEStatusToPush = GroupedEVSEStatus.
-                                       Where       (group => group.Key != null).
-                                       ToDictionary(group => group.Key,
-                                                    group => group.AsEnumerable(). // Only send the latest EVSE status!
-                                                                   GroupBy(evsestatus      => evsestatus.Id).
-                                                                   Select (sameevseidgroup => sameevseidgroup.OrderByDescending(status => status.Timestamp).First())).
-                                       SelectMany(kvp => kvp.Value.Select(evsestatus => {
+                                     Where     (group           => group.Key != null).
+                                     SelectMany(group           => group.Where(evse => evse != null)).
+                                     GroupBy   (evsestatus      => evsestatus.Id).
+                                     Select    (sameevseidgroup => sameevseidgroup.OrderByDescending(status => status.Timestamp).First()).
+                                     Select    (evsestatus      => {
 
-                                           try
-                                           {
-                                               return evsestatus.AsOICPEVSEStatus();
-                                           }
-                                           catch (Exception e)
-                                           {
-                                               DebugX.Log(e.Message);
-                                               Warnings.Add(e.Message);
-                                           }
+                                         try
+                                         {
+                                             return evsestatus.AsOICPEVSEStatus();
+                                         }
+                                         catch (Exception e)
+                                         {
+                                             DebugX.Log(e.Message);
+                                             Warnings.Add(e.Message);
+                                         }
 
-                                           return null;
+                                         return null;
 
-                                       }), Tuple.Create).
-                                       Where(xx => xx != null).
-                                       ToLookup(kvp => kvp.Item1.Key,
-                                                kvp => kvp.Item2);
+                                     });
+
+
+           // var EVSEStatusToPush = GroupedEVSEStatus.
+           //                            Where       (group => group.Key != null).
+           //                            ToDictionary(group => group.Key,
+           //                                         group => group.AsEnumerable(). // Only send the latest EVSE status!
+           //                                                        GroupBy(evsestatus      => evsestatus.Id).
+           //                                                        Select (sameevseidgroup => sameevseidgroup.OrderByDescending(status => status.Timestamp).First())
+           //                                        ).
+           //                            SelectMany(group => group.Select(evsestatus => {
+           //
+           //                                try
+           //                                {
+           //                                    return evsestatus.AsOICPEVSEStatus();
+           //                                }
+           //                                catch (Exception e)
+           //                                {
+           //                                    DebugX.Log(e.Message);
+           //                                    Warnings.Add(e.Message);
+           //                                }
+           //
+           //                                return null;
+           //
+           //                            }));
 
             var _NumberOfEVSEStatus  = EVSEStatusToPush.
-                                           SelectMany(group => group.Where(evsestatus => evsestatus != null)).
+                                     //      SelectMany(group => group.Where(evsestatus => evsestatus != null)).
                                            Count();
 
             if (!Timestamp.HasValue)
@@ -1576,53 +1596,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            if (_NumberOfEVSEStatus > 0)
+            var response = await CPORoaming.PushEVSEStatus(EVSEStatusToPush,
+                                                           DefaultOperator.Id,
+                                                           (_OperatorNameSelector ?? DefaultOperatorNameSelector)(DefaultOperator.Name),
+                                                           ActionType.ToOICP(),
+                                                           null,
+
+                                                           Timestamp,
+                                                           CancellationToken,
+                                                           EventTrackingId,
+                                                           RequestTimeout);
+
+
+            Now     = DateTime.Now;
+            Runtime = Now - Timestamp.Value;
+
+            if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                response.Content        != null)
             {
 
-                var response = await CPORoaming.PushEVSEStatus(EVSEStatusToPush,
-                                                               ActionType.ToOICP(),
-                                                               DefaultOperator,
-                                                               _OperatorNameSelector ?? DefaultOperatorNameSelector,
+                if (response.Content.Result == true)
+                    result = new WWCP.Acknowledgement(ResultType.True,
+                                                      response.Content.StatusCode.Description,
+                                                      Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
+                                                      Runtime);
 
-                                                               Timestamp,
-                                                               CancellationToken,
-                                                               EventTrackingId,
-                                                               RequestTimeout);
-
-
-                Now     = DateTime.Now;
-                Runtime = Now - Timestamp.Value;
-
-                if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                    response.Content        != null)
-                {
-
-                    if (response.Content.Result == true)
-                        result = new WWCP.Acknowledgement(ResultType.True,
-                                                          response.Content.StatusCode.Description,
-                                                          Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
-                                                          Runtime);
-
-                    else
-                        result = new WWCP.Acknowledgement(ResultType.False,
-                                                          response.Content.StatusCode.Description,
-                                                          Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
-                                                          Runtime);
-
-                }
                 else
                     result = new WWCP.Acknowledgement(ResultType.False,
-                                                      response.HTTPStatusCode.ToString(),
-                                                      response.HTTPBody != null
-                                                          ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
-                                                          : Warnings.AddAndReturnList("No HTTP body received!"),
+                                                      response.Content.StatusCode.Description,
+                                                      Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
                                                       Runtime);
 
             }
-
             else
-                result = new WWCP.Acknowledgement(ResultType.NoOperation,
-                                                  Runtime:  Runtime);
+                result = new WWCP.Acknowledgement(ResultType.False,
+                                                  response.HTTPStatusCode.ToString(),
+                                                  response.HTTPBody != null
+                                                      ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
+                                                      : Warnings.AddAndReturnList("No HTTP body received!"),
+                                                  Runtime);
 
 
             #region Send OnEVSEStatusPushed event

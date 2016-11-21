@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Central\CentralServer\CentralServerDelegates.cs" />
+    <Compile Include="CPO\CPOClient\ICPOClient.cs" />
+    <Compile Include="CPO\CPOClient\ICPOClientExtentions.cs" />
     <Compile Include="CPO\CPOClient\CPOClient.cs" />
     <Compile Include="CPO\CPOClient\CPOClientDelegates.cs" />
     <Compile Include="CPO\CPOClient\CPOClientLogger.cs" />
@@ -69,10 +71,13 @@
     <Compile Include="DataTypes\Simple\PartnerSession_Id.cs" />
     <Compile Include="DataTypes\Simple\Session_Id.cs" />
     <Compile Include="DataTypes\Simple\Provider_Id.cs" />
+    <Compile Include="EMP\EMPClient\IEMPClientExtentions.cs" />
+    <Compile Include="EMP\EMPClient\IEMPClient.cs" />
     <Compile Include="IO\XML_IO.cs" />
     <Compile Include="Messages\ARequest.cs" />
     <Compile Include="Messages\AResponse.cs" />
     <Compile Include="Messages\Common\PushEVSEDataResponse.cs" />
+    <Compile Include="Messages\CPO\PushEVSEStatusRequest.cs" />
     <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
     <Compile Include="Messages\EMP\GetChargeDetailRecordsRequest.cs" />
     <Compile Include="Messages\EMP\PushAuthenticationDataRequest.cs" />
@@ -124,7 +129,7 @@
     <Compile Include="DataTypes\OperatorEVSEData.cs" />
     <Compile Include="DataTypes\OperatorEVSEStatus.cs" />
     <Compile Include="DataTypes\ProviderAuthenticationData.cs" />
-    <Compile Include="DataTypes\Acknowledgement.cs" />
+    <Compile Include="Messages\Common\Acknowledgement.cs" />
     <Compile Include="DataTypes\AuthenticationData.cs" />
     <Compile Include="DataTypes\AuthorizationStart.cs" />
     <Compile Include="DataTypes\AuthorizationStop.cs" />

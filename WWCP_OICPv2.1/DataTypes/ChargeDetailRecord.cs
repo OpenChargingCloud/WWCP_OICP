@@ -173,7 +173,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                   Double?                      ConsumedEnergy         = null,
                                   String                       MeteringSignature      = null,
                                   HubOperator_Id               HubOperatorId          = null,
-                                  HubProvider_Id               HubProviderId          = null)
+                                  HubProvider_Id               HubProviderId          = null,
+                                  Action<ChargeDetailRecord>   CustomMapper           = null)
 
         {
 
@@ -290,8 +291,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ChargeDetailRecordXML">A XML representation of an OICP charge detail record.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static ChargeDetailRecord Parse(XElement             ChargeDetailRecordXML,
-                                               OnExceptionDelegate  OnException  = null)
+        public static ChargeDetailRecord Parse(XElement                                  ChargeDetailRecordXML,
+                                               OnExceptionDelegate                       OnException           = null,
+                                               CustomMapperDelegate<ChargeDetailRecord>  CustomElementsMapper  = null)
         {
 
             if (ChargeDetailRecordXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecord")
@@ -354,7 +356,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             null),
 
                 ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubProviderID",
-                                                            HubProvider_Id.Parse)
+                                                            HubProvider_Id.Parse),
+
+                response => CustomElementsMapper(ChargeDetailRecordXML, response)
 
             );
 

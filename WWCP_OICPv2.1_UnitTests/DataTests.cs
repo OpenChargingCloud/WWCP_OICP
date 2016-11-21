@@ -163,6 +163,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
             var req3 = HubjectCPO.
 
                           PushEVSEStatus(EVSEStatus,
+                                         ChargingStationOperator_Id.Parse("DE*GEF"),
+                                         "GraphDefined",
                                          ActionTypes.insert,
                                          RequestTimeout:  TimeSpan.FromSeconds(120)).
 

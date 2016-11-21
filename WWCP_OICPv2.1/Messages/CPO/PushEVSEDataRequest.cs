@@ -20,6 +20,7 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using System.Threading;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -55,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The server-side data management operation.
         /// </summary>
-        public ActionTypes                  OICPAction        { get; }
+        public ActionTypes                  Action            { get; }
 
         #endregion
 
@@ -67,24 +68,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
         /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
         /// <param name="OperatorName">An optional name of the charging station operator maintaining the given EVSE data records.</param>
-        /// <param name="OICPAction">The server-side data management operation.</param>
+        /// <param name="Action">The server-side data management operation.</param>
         public PushEVSEDataRequest(IEnumerable<EVSEDataRecord>  EVSEDataRecords,
                                    ChargingStationOperator_Id   OperatorId,
-                                   String                       OperatorName  = null,
-                                   ActionTypes                  OICPAction    = ActionTypes.fullLoad)
+                                   String                       OperatorName        = null,
+                                   ActionTypes                  Action              = ActionTypes.fullLoad,
+
+                                   DateTime?                    Timestamp           = null,
+                                   CancellationToken?           CancellationToken   = null,
+                                   EventTracking_Id             EventTrackingId     = null,
+                                   TimeSpan?                    RequestTimeout      = null)
+
+            : base(Timestamp,
+                   CancellationToken,
+                   EventTrackingId,
+                   RequestTimeout)
+
         {
 
             #region Initial checks
 
             if (EVSEDataRecords == null)
-                throw new ArgumentNullException(nameof(EVSEDataRecords),  "The given enumeration of EVSE data records must not be null!");
+                throw new ArgumentNullException(nameof(EVSEDataRecords), "The given enumeration of EVSE data records must not be null!");
 
             #endregion
 
-            this.EVSEDataRecords  = EVSEDataRecords;
+            this.EVSEDataRecords  = EVSEDataRecords.Where(evsedatarecord => evsedatarecord != null);
             this.OperatorId       = OperatorId;
             this.OperatorName     = OperatorName;
-            this.OICPAction       = OICPAction;
+            this.Action           = Action;
 
         }
 
@@ -96,25 +108,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
         //                   xmlns:EVSEData     = "http://www.hubject.com/b2b/services/evsedata/EVSEData.0"
         //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
-        //
+        // 
         //    <soapenv:Header/>
+        // 
         //    <soapenv:Body>
         //       <EVSEData:eRoamingPushEvseData>
-        //
-        //          <EVSEData:ActionType>?</EVSEData:ActionType>
-        //
+        // 
+        //          <EVSEData:ActionType>fullLoad|update|insert|delete</EVSEStatus:ActionType>
+        // 
         //          <EVSEData:OperatorEvseData>
-        //
-        //             <EVSEData:OperatorID>?</EVSEData:OperatorID>
-        //
+        // 
+        //             <EVSEData:OperatorID>DE*GEF</EVSEStatus:OperatorID>
+        // 
         //             <!--Optional:-->
-        //             <EVSEData:OperatorName>?</EVSEData:OperatorName>
-        //
+        //             <EVSEData:OperatorName>GraphDefined e-Mobility Operator</EVSEStatus:OperatorName>
+        // 
         //             <!--Zero or more repetitions:-->
         //             <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
         //                [...]
         //             </EVSEData:EvseDataRecord>
-        //
+        // 
         //          </EVSEData:OperatorEvseData>
         //       </EVSEData:eRoamingPushEvseData>
         //    </soapenv:Body>
@@ -257,7 +270,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
 
-                                new XElement(OICPNS.EVSEData + "ActionType",              XML_IO.AsText(OICPAction)),
+                                new XElement(OICPNS.EVSEData + "ActionType",              XML_IO.AsText(Action)),
 
                                 new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
@@ -364,7 +377,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    ((OperatorName == null && PushEVSEData.OperatorName == null) ||
                     (OperatorName != null && PushEVSEData.OperatorName != null && OperatorName.Equals(PushEVSEData.OperatorName))) &&
 
-                   OICPAction.             Equals(PushEVSEData.OICPAction);
+                   Action.                 Equals(PushEVSEData.Action);
 
         }
 
@@ -390,7 +403,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                             ? OperatorName.GetHashCode() * 5
                             : 0) ^
 
-                       OICPAction.GetHashCode();
+                       Action.GetHashCode();
 
             }
         }
@@ -404,7 +417,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OICPAction, " of ",
+            => String.Concat(Action, " of ",
                              EVSEDataRecords.Count(), " EVSE data record(s)",
                              " (", OperatorName != null ? OperatorName : "", " / ", OperatorName, ")");
 

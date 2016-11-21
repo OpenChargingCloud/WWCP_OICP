@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Xml.Linq;
 using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
@@ -30,314 +31,11 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using System.Xml.Linq;
 
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 {
-
-    public interface IEMPClient
-    {
-
-        #region Properties
-
-        /// <summary>
-        /// The default request timeout for this client.
-        /// </summary>
-        TimeSpan?  RequestTimeout   { get; }
-
-        #endregion
-
-
-
-        Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
-
-            PushAuthenticationData(PushAuthenticationDataRequest Request);
-
-
-
-        Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
-
-            ReservationStart(AuthorizeRemoteReservationStartRequest  Request);
-
-
-        Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
-
-            ReservationStop (AuthorizeRemoteReservationStopRequest   Request);
-
-
-
-        Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
-
-            RemoteStart(AuthorizeRemoteStartRequest Request);
-
-
-        Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
-
-            RemoteStop(AuthorizeRemoteStopRequest Request);
-
-
-
-        Task<HTTPResponse<GetChargeDetailRecordsResponse>>
-
-            GetChargeDetailRecords(GetChargeDetailRecordsRequest Request);
-
-    }
-
-    public static class IEMPClientExtentions
-    {
-
-        #region PushAuthenticationData(ProviderAuthenticationDataRecords, ProviderId, OICPAction = fullLoad, ...)
-
-        /// <summary>
-        /// Create a new task pushing provider authentication data records onto the OICP server.
-        /// </summary>
-        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
-        /// <param name="ProviderId">An e-mobility provider identification.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
-
-            PushAuthenticationData(this IEMPClient                           IEMPClient,
-                                   IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
-                                   Provider_Id                               ProviderId,
-                                   ActionTypes                               OICPAction          = ActionTypes.fullLoad,
-
-                                   DateTime?                                 Timestamp           = null,
-                                   CancellationToken?                        CancellationToken   = null,
-                                   EventTracking_Id                          EventTrackingId     = null,
-                                   TimeSpan?                                 RequestTimeout      = null)
-
-
-            => await IEMPClient.PushAuthenticationData(new PushAuthenticationDataRequest(AuthorizationIdentifications,
-                                                                                         ProviderId,
-                                                                                         OICPAction,
-
-                                                                                         Timestamp,
-                                                                                         CancellationToken,
-                                                                                         EventTrackingId,
-                                                                                         RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
-
-        #endregion
-
-
-        #region ReservationStart(ProviderId, EVSEId, eMAId, SessionId = null, PartnerSessionId = null, PartnerProductId = null, ...)
-
-        /// <summary>
-        /// Create a reservation at the given EVSE.
-        /// </summary>
-        /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-        /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
-        /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
-        /// <param name="SessionId">The unique identification for this charging session.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
-
-            ReservationStart(this IEMPClient       IEMPClient,
-                             Provider_Id           ProviderId,
-                             EVSE_Id               EVSEId,
-                             EVCO_Id               EVCOId,
-                             Session_Id?           SessionId           = null,
-                             PartnerSession_Id?    PartnerSessionId    = null,
-                             PartnerProduct_Id?    PartnerProductId    = null,
-
-                             DateTime?             Timestamp           = null,
-                             CancellationToken?    CancellationToken   = null,
-                             EventTracking_Id      EventTrackingId     = null,
-                             TimeSpan?             RequestTimeout      = null)
-
-
-            => await IEMPClient.ReservationStart(new AuthorizeRemoteReservationStartRequest(ProviderId,
-                                                                                            EVSEId,
-                                                                                            EVCOId,
-                                                                                            SessionId,
-                                                                                            PartnerSessionId,
-                                                                                            PartnerProductId,
-
-                                                                                            Timestamp,
-                                                                                            CancellationToken,
-                                                                                            EventTrackingId,
-                                                                                            RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
-
-        #endregion
-
-        #region ReservationStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, ...)
-
-        /// <summary>
-        /// Delete a reservation at the given EVSE.
-        /// </summary>
-        /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
-        /// <param name="SessionId">The unique identification for this charging session.</param>
-        /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
-
-            ReservationStop(this IEMPClient       IEMPClient,
-                            Session_Id            SessionId,
-                            Provider_Id           ProviderId,
-                            EVSE_Id               EVSEId,
-                            PartnerSession_Id?    PartnerSessionId    = null,
-
-                            DateTime?             Timestamp           = null,
-                            CancellationToken?    CancellationToken   = null,
-                            EventTracking_Id      EventTrackingId     = null,
-                            TimeSpan?             RequestTimeout      = null)
-
-
-            => await IEMPClient.ReservationStop(new AuthorizeRemoteReservationStopRequest(SessionId,
-                                                                                          ProviderId,
-                                                                                          EVSEId,
-                                                                                          PartnerSessionId,
-
-                                                                                          Timestamp,
-                                                                                          CancellationToken,
-                                                                                          EventTrackingId,
-                                                                                          RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
-
-        #endregion
-
-
-        #region RemoteStart(ProviderId, EVSEId, eMAId, SessionId = null, PartnerSessionId = null, PartnerProductId = null, ...)
-
-        /// <summary>
-        /// Start a charging session at the given EVSE.
-        /// </summary>
-        /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-        /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
-        /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
-        /// <param name="SessionId">The unique identification for this charging session.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
-
-            RemoteStart(this IEMPClient       IEMPClient,
-                        Provider_Id           ProviderId,
-                        EVSE_Id               EVSEId,
-                        EVCO_Id               EVCOId,
-                        Session_Id?           SessionId           = null,
-                        PartnerSession_Id?    PartnerSessionId    = null,
-                        PartnerProduct_Id?    PartnerProductId    = null,
-
-                        DateTime?             Timestamp           = null,
-                        CancellationToken?    CancellationToken   = null,
-                        EventTracking_Id      EventTrackingId     = null,
-                        TimeSpan?             RequestTimeout      = null)
-
-            => await IEMPClient.RemoteStart(new AuthorizeRemoteStartRequest(ProviderId,
-                                                                            EVSEId,
-                                                                            EVCOId,
-                                                                            SessionId,
-                                                                            PartnerSessionId,
-                                                                            PartnerProductId,
-
-                                                                            Timestamp,
-                                                                            CancellationToken,
-                                                                            EventTrackingId,
-                                                                            RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
-
-        #endregion
-
-        #region RemoteStop(EVSEId, SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
-
-        /// <summary>
-        /// Stop the given charging session at the given EVSE.
-        /// </summary>
-        /// <param name="SessionId">The unique identification for this charging session.</param>
-        /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
-        /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
-        /// <param name="PartnerSessionId">The unique identification for the partner charging session.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
-
-            RemoteStop(this IEMPClient       IEMPClient,
-                       Session_Id            SessionId,
-                       Provider_Id           ProviderId,
-                       EVSE_Id               EVSEId,
-                       PartnerSession_Id?    PartnerSessionId    = null,
-
-                       DateTime?             Timestamp           = null,
-                       CancellationToken?    CancellationToken   = null,
-                       EventTracking_Id      EventTrackingId     = null,
-                       TimeSpan?             RequestTimeout      = null)
-
-
-            => await IEMPClient.RemoteStop(new AuthorizeRemoteStopRequest(SessionId,
-                                                                          ProviderId,
-                                                                          EVSEId,
-                                                                          PartnerSessionId,
-
-                                                                          Timestamp,
-                                                                          CancellationToken,
-                                                                          EventTrackingId,
-                                                                          RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
-
-        #endregion
-
-
-        #region GetChargeDetailRecords(ProviderId, From, To, ...)
-
-        /// <summary>
-        /// Create a new task querying charge detail records from the OICP server.
-        /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="From">The starting time.</param>
-        /// <param name="To">An optional end time. [default: current time].</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<GetChargeDetailRecordsResponse>>
-
-            GetChargeDetailRecords(this IEMPClient     IEMPClient,
-                                   Provider_Id         ProviderId,
-                                   DateTime            From,
-                                   DateTime            To,
-
-                                   DateTime?           Timestamp           = null,
-                                   CancellationToken?  CancellationToken   = null,
-                                   EventTracking_Id    EventTrackingId     = null,
-                                   TimeSpan?           RequestTimeout      = null)
-
-
-            => await IEMPClient.GetChargeDetailRecords(new GetChargeDetailRecordsRequest(ProviderId,
-                                                                                         From,
-                                                                                         To,
-
-                                                                                         Timestamp,
-                                                                                         CancellationToken,
-                                                                                         EventTrackingId,
-                                                                                         RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
-
-        #endregion
-
-
-    }
-
 
     /// <summary>
     /// An OICP EMP client.
@@ -374,179 +72,310 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region RequestMappers
+        #region Custom request mappers
 
-        #region PushAuthenticationDataRequestMapper
+        #region CustomPushAuthenticationData(SOAP)RequestMapper
 
-        private Func<PushAuthenticationDataRequest, PushAuthenticationDataRequest> _PushAuthenticationDataRequestMapper = _ => _;
+        #region CustomPushAuthenticationDataRequestMapper
 
-        public Func<PushAuthenticationDataRequest, PushAuthenticationDataRequest> PushAuthenticationDataRequestMapper
+        private Func<PushAuthenticationDataRequest, PushAuthenticationDataRequest> _CustomPushAuthenticationDataRequestMapper = _ => _;
+
+        public Func<PushAuthenticationDataRequest, PushAuthenticationDataRequest> CustomPushAuthenticationDataRequestMapper
         {
 
             get
             {
-                return _PushAuthenticationDataRequestMapper;
+                return _CustomPushAuthenticationDataRequestMapper;
             }
 
             set
             {
                 if (value != null)
-                    _PushAuthenticationDataRequestMapper = value;
+                    _CustomPushAuthenticationDataRequestMapper = value;
             }
 
         }
 
         #endregion
 
+        #region CustomPushAuthenticationDataSOAPRequestMapper
 
-        #region AuthorizeRemoteReservationStartRequestMapper
+        private Func<PushAuthenticationDataRequest, XElement, XElement> _CustomPushAuthenticationDataSOAPRequestMapper = (request, xml) => xml;
 
-        private Func<AuthorizeRemoteReservationStartRequest, AuthorizeRemoteReservationStartRequest> _AuthorizeRemoteReservationStartRequestMapper = _ => _;
-
-        public Func<AuthorizeRemoteReservationStartRequest, AuthorizeRemoteReservationStartRequest> AuthorizeRemoteReservationStartRequestMapper
+        public Func<PushAuthenticationDataRequest, XElement, XElement> CustomPushAuthenticationDataSOAPRequestMapper
         {
 
             get
             {
-                return _AuthorizeRemoteReservationStartRequestMapper;
+                return _CustomPushAuthenticationDataSOAPRequestMapper;
             }
 
             set
             {
                 if (value != null)
-                    _AuthorizeRemoteReservationStartRequestMapper = value;
+                    _CustomPushAuthenticationDataSOAPRequestMapper = value;
             }
 
         }
 
         #endregion
 
-        #region AuthorizeRemoteReservationStopRequestMapper
+        public CustomMapperDelegate<Acknowledgement<PushAuthenticationDataRequest>, Acknowledgement<PushAuthenticationDataRequest>.Builder> CustomPushAuthenticationDataResponseMapper  { get; set; }
 
-        private Func<AuthorizeRemoteReservationStopRequest, AuthorizeRemoteReservationStopRequest> _AuthorizeRemoteReservationStopRequestMapper = _ => _;
+        #endregion
 
-        public Func<AuthorizeRemoteReservationStopRequest, AuthorizeRemoteReservationStopRequest> AuthorizeRemoteReservationStopRequestMapper
+
+        #region CustomAuthorizeRemoteReservationStart(SOAP)RequestMapper
+
+        #region CustomAuthorizeRemoteReservationStartRequestMapper
+
+        private Func<AuthorizeRemoteReservationStartRequest, AuthorizeRemoteReservationStartRequest> _CustomAuthorizeRemoteReservationStartRequestMapper = _ => _;
+
+        public Func<AuthorizeRemoteReservationStartRequest, AuthorizeRemoteReservationStartRequest> CustomAuthorizeRemoteReservationStartRequestMapper
         {
 
             get
             {
-                return _AuthorizeRemoteReservationStopRequestMapper;
+                return _CustomAuthorizeRemoteReservationStartRequestMapper;
             }
 
             set
             {
                 if (value != null)
-                    _AuthorizeRemoteReservationStopRequestMapper = value;
+                    _CustomAuthorizeRemoteReservationStartRequestMapper = value;
             }
 
         }
 
         #endregion
 
+        #region CustomAuthorizeRemoteReservationStartSOAPRequestMapper
 
-        #region AuthorizeRemoteStart(SOAP)RequestMapper
+        private Func<AuthorizeRemoteReservationStartRequest, XElement, XElement> _CustomAuthorizeRemoteReservationStartSOAPRequestMapper = (request, xml) => xml;
 
-        private Func<AuthorizeRemoteStartRequest, AuthorizeRemoteStartRequest> _AuthorizeRemoteStartRequestMapper = _ => _;
-
-        public Func<AuthorizeRemoteStartRequest, AuthorizeRemoteStartRequest> AuthorizeRemoteStartRequestMapper
+        public Func<AuthorizeRemoteReservationStartRequest, XElement, XElement> CustomAuthorizeRemoteReservationStartSOAPRequestMapper
         {
 
             get
             {
-                return _AuthorizeRemoteStartRequestMapper;
+                return _CustomAuthorizeRemoteReservationStartSOAPRequestMapper;
             }
 
             set
             {
                 if (value != null)
-                    _AuthorizeRemoteStartRequestMapper = value;
-            }
-
-        }
-
-        private Func<XElement, XElement> _AuthorizeRemoteStartSOAPRequestMapper = _ => _;
-
-        public Func<XElement, XElement> AuthorizeRemoteStartSOAPRequestMapper
-        {
-
-            get
-            {
-                return _AuthorizeRemoteStartSOAPRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _AuthorizeRemoteStartSOAPRequestMapper = value;
+                    _CustomAuthorizeRemoteReservationStartSOAPRequestMapper = value;
             }
 
         }
 
         #endregion
 
-        #region AuthorizeRemoteStopRequestMapper
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>, Acknowledgement<AuthorizeRemoteReservationStartRequest>.Builder> CustomAuthorizeRemoteReservationStartResponseMapper  { get; set; }
 
-        private Func<AuthorizeRemoteStopRequest, AuthorizeRemoteStopRequest> _AuthorizeRemoteStopRequestMapper = _ => _;
+        #endregion
 
-        public Func<AuthorizeRemoteStopRequest, AuthorizeRemoteStopRequest> AuthorizeRemoteStopRequestMapper
+        #region CustomAuthorizeRemoteReservationStop(SOAP)RequestMapper
+
+        #region CustomAuthorizeRemoteReservationStopRequestMapper
+
+        private Func<AuthorizeRemoteReservationStopRequest, AuthorizeRemoteReservationStopRequest> _CustomAuthorizeRemoteReservationStopRequestMapper = _ => _;
+
+        public Func<AuthorizeRemoteReservationStopRequest, AuthorizeRemoteReservationStopRequest> CustomAuthorizeRemoteReservationStopRequestMapper
         {
 
             get
             {
-                return _AuthorizeRemoteStopRequestMapper;
+                return _CustomAuthorizeRemoteReservationStopRequestMapper;
             }
 
             set
             {
                 if (value != null)
-                    _AuthorizeRemoteStopRequestMapper = value;
+                    _CustomAuthorizeRemoteReservationStopRequestMapper = value;
             }
 
         }
 
         #endregion
 
+        #region CustomAuthorizeRemoteReservationStopSOAPRequestMapper
 
-        #region GetChargeDetailRecordsRequestMapper
+        private Func<AuthorizeRemoteReservationStopRequest, XElement, XElement> _CustomAuthorizeRemoteReservationStopSOAPRequestMapper = (request, xml) => xml;
 
-        private Func<GetChargeDetailRecordsRequest, GetChargeDetailRecordsRequest> _GetChargeDetailRecordsRequestMapper = _ => _;
-
-        public Func<GetChargeDetailRecordsRequest, GetChargeDetailRecordsRequest> GetChargeDetailRecordsRequestMapper
+        public Func<AuthorizeRemoteReservationStopRequest, XElement, XElement> CustomAuthorizeRemoteReservationStopSOAPRequestMapper
         {
 
             get
             {
-                return _GetChargeDetailRecordsRequestMapper;
+                return _CustomAuthorizeRemoteReservationStopSOAPRequestMapper;
             }
 
             set
             {
                 if (value != null)
-                    _GetChargeDetailRecordsRequestMapper = value;
+                    _CustomAuthorizeRemoteReservationStopSOAPRequestMapper = value;
             }
 
         }
 
-        private Func<XElement, XElement> _GetChargeDetailRecordsSOAPRequestMapper = _ => _;
+        #endregion
 
-        public Func<XElement, XElement> GetChargeDetailRecordsSOAPRequestMapper
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>, Acknowledgement<AuthorizeRemoteReservationStopRequest>.Builder> CustomAuthorizeRemoteReservationStopResponseMapper  { get; set; }
+
+        #endregion
+
+
+        #region CustomAuthorizeRemoteStart(SOAP)RequestMapper
+
+        #region CustomAuthorizeRemoteStartRequestMapper
+
+        private Func<AuthorizeRemoteStartRequest, AuthorizeRemoteStartRequest> _CustomAuthorizeRemoteStartRequestMapper = request => request;
+
+        public Func<AuthorizeRemoteStartRequest, AuthorizeRemoteStartRequest> CustomAuthorizeRemoteStartRequestMapper
         {
 
             get
             {
-                return _GetChargeDetailRecordsSOAPRequestMapper;
+                return _CustomAuthorizeRemoteStartRequestMapper;
             }
 
             set
             {
                 if (value != null)
-                    _GetChargeDetailRecordsSOAPRequestMapper = value;
+                    _CustomAuthorizeRemoteStartRequestMapper = value;
             }
 
         }
 
-        public Func<XElement, Dictionary<String, Object>> GetChargeDetailRecordsSOAPResponseMapper          { get; set; }
-        public Func<XElement, Dictionary<String, Object>> GetChargeDetailRecordsSOAPResponseElementsMapper  { get; set; }
+        #endregion
+
+        #region CustomAuthorizeRemoteStartSOAPRequestMapper
+
+        private Func<AuthorizeRemoteStartRequest, XElement, XElement> _CustomAuthorizeRemoteStartSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<AuthorizeRemoteStartRequest, XElement, XElement> CustomAuthorizeRemoteStartSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomAuthorizeRemoteStartSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomAuthorizeRemoteStartSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteStartRequest>, Acknowledgement<AuthorizeRemoteStartRequest>.Builder> CustomAuthorizeRemoteStartResponseMapper  { get; set; }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteStop(SOAP)Mappers
+
+        #region CustomAuthorizeRemoteStopRequestMapper
+
+        private Func<AuthorizeRemoteStopRequest, AuthorizeRemoteStopRequest> _CustomAuthorizeRemoteStopRequestMapper = request => request;
+
+        public Func<AuthorizeRemoteStopRequest, AuthorizeRemoteStopRequest> CustomAuthorizeRemoteStopRequestMapper
+        {
+
+            get
+            {
+                return _CustomAuthorizeRemoteStopRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomAuthorizeRemoteStopRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteStopSOAPRequestMapper
+
+        private Func<AuthorizeRemoteStopRequest, XElement, XElement> _CustomAuthorizeRemoteStopSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<AuthorizeRemoteStopRequest, XElement, XElement> CustomAuthorizeRemoteStopSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomAuthorizeRemoteStopSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomAuthorizeRemoteStopSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteStopRequest>, Acknowledgement<AuthorizeRemoteStopRequest>.Builder> CustomAuthorizeRemoteStopResponseMapper  { get; set; }
+
+        #endregion
+
+
+        #region CustomGetChargeDetailRecords(SOAP)RequestMapper
+
+        #region CustomGetChargeDetailRecordsRequestMapper
+
+        private Func<GetChargeDetailRecordsRequest, GetChargeDetailRecordsRequest> _CustomGetChargeDetailRecordsRequestMapper = _ => _;
+
+        public Func<GetChargeDetailRecordsRequest, GetChargeDetailRecordsRequest> CustomGetChargeDetailRecordsRequestMapper
+        {
+
+            get
+            {
+                return _CustomGetChargeDetailRecordsRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomGetChargeDetailRecordsRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomGetChargeDetailRecordsSOAPRequestMapper
+
+        private Func<XElement, XElement> _CustomGetChargeDetailRecordsSOAPRequestMapper = _ => _;
+
+        public Func<XElement, XElement> CustomGetChargeDetailRecordsSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomGetChargeDetailRecordsSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomGetChargeDetailRecordsSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<GetChargeDetailRecordsResponse> CustomGetChargeDetailRecordsResponseMapper  { get; set; }
+
+        public CustomMapperDelegate<ChargeDetailRecord>             CustomChargeDetailRecordXMLMapper           { get; set; }
 
         #endregion
 
@@ -1640,7 +1469,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// Create a new task pushing provider authentication data records onto the OICP server.
         /// </summary>
-        /// <param name="Request">An PushAuthenticationData request.</param>
+        /// <param name="Request">A PushAuthenticationData request.</param>
         public async Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
 
             PushAuthenticationData(PushAuthenticationDataRequest Request)
@@ -1652,10 +1481,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The given PushAuthenticationData request must not be null!");
 
-            Request = _PushAuthenticationDataRequestMapper(Request);
+            Request = _CustomPushAuthenticationDataRequestMapper(Request);
 
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The mapped PushAuthenticationData request must not be null!");
+
+
+            HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>> result = null;
 
             #endregion
 
@@ -1695,124 +1527,138 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(SOAP.Encapsulation(Request.ToXML()),
-                                                     "eRoamingPushAuthenticationData",
-                                                     RequestLogDelegate:   OnPushAuthenticationDataSOAPRequest,
-                                                     ResponseLogDelegate:  OnPushAuthenticationDataSOAPResponse,
-                                                     CancellationToken:    Request.CancellationToken,
-                                                     EventTrackingId:      Request.EventTrackingId,
-                                                     QueryTimeout:         Request.RequestTimeout,
+                result = await _OICPClient.Query(_CustomPushAuthenticationDataSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                                                 "eRoamingPushAuthenticationData",
+                                                 RequestLogDelegate:   OnPushAuthenticationDataSOAPRequest,
+                                                 ResponseLogDelegate:  OnPushAuthenticationDataSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout,
 
-                                                     #region OnSuccess
+                                                 #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                          Acknowledgement<PushAuthenticationDataRequest>.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) =>
+                                                                                                          Acknowledgement<PushAuthenticationDataRequest>.Parse(request,
+                                                                                                                                                               xml,
+                                                                                                                                                               CustomPushAuthenticationDataResponseMapper,
+                                                                                                                                                               onexception)),
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnSOAPFault
+                                                 #region OnSOAPFault
 
-                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                     SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                         return new HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>(
+                                                     return new HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>(
 
-                                                                    httpresponse,
-
-                                                                    new Acknowledgement<PushAuthenticationDataRequest>(
-                                                                        Request,
-                                                                        StatusCodes.DataError,
-                                                                        httpresponse.Content.ToString()
-                                                                    ),
-
-                                                                    IsFault: true
-
-                                                                );
-
-                                                     },
-
-                                                     #endregion
-
-                                                     #region OnHTTPError
-
-                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
-
-                                                         SendHTTPError(timestamp, soapclient, httpresponse);
-
-                                                         return new HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>(
-
-                                                                    httpresponse,
-
-                                                                    new Acknowledgement<PushAuthenticationDataRequest>(
-                                                                        Request,
-                                                                        StatusCodes.DataError,
-                                                                        httpresponse.HTTPStatusCode.ToString(),
-                                                                        httpresponse.HTTPBody.      ToUTF8String()
-                                                                    ),
-
-                                                                    IsFault: true
-
-                                                                );
-
-                                                     },
-
-                                                     #endregion
-
-                                                     #region OnHTTPError
-
-                                                     OnException: (timestamp, sender, exception) => {
-
-                                                         SendException(timestamp, sender, exception);
-
-                                                         return HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>.ExceptionThrown(
+                                                                httpresponse,
 
                                                                 new Acknowledgement<PushAuthenticationDataRequest>(
                                                                     Request,
-                                                                    StatusCodes.ServiceNotAvailable,
-                                                                    exception.Message,
-                                                                    exception.StackTrace
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.Content.ToString()
                                                                 ),
 
-                                                                Exception: exception
+                                                                IsFault: true
 
                                                             );
 
-                                                     }
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                    );
+                                                 #region OnHTTPError
 
-                #region Send OnPushAuthenticationDataResponse event
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                var Endtime = DateTime.Now;
+                                                     SendHTTPError(timestamp, soapclient, httpresponse);
 
-                try
-                {
+                                                     return new HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>(
 
-                    OnPushAuthenticationDataResponse?.Invoke(Endtime,
-                                                             this,
-                                                             ClientId,
-                                                             Request.EventTrackingId,
-                                                             Request.AuthorizationIdentifications,
-                                                             Request.ProviderId,
-                                                             Request.OICPAction,
-                                                             RequestTimeout,
-                                                             result.Content,
-                                                             Endtime - StartTime);
+                                                                httpresponse,
 
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(EMPClient) + "." + nameof(OnPushAuthenticationDataResponse));
-                }
+                                                                new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                ),
 
-                #endregion
+                                                                IsFault: true
 
-                return result;
+                                                            );
+
+                                                 },
+
+                                                 #endregion
+
+                                                 #region OnHTTPError
+
+                                                 OnException: (timestamp, sender, exception) => {
+
+                                                     SendException(timestamp, sender, exception);
+
+                                                     return HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>.ExceptionThrown(
+
+                                                            new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                Request,
+                                                                StatusCodes.ServiceNotAvailable,
+                                                                exception.Message,
+                                                                exception.StackTrace
+                                                            ),
+
+                                                            Exception: exception
+
+                                                        );
+
+                                                 }
+
+                                                 #endregion
+
+                                                );
 
             }
+
+            if (result == null)
+                result = HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>.OK(
+                             new Acknowledgement<PushAuthenticationDataRequest>(
+                                 Request,
+                                 StatusCodes.SystemError,
+                                 "HTTP request failed!"
+                             )
+                         );
+
+
+            #region Send OnPushAuthenticationDataResponse event
+
+            var Endtime = DateTime.Now;
+
+            try
+            {
+
+                OnPushAuthenticationDataResponse?.Invoke(Endtime,
+                                                         this,
+                                                         ClientId,
+                                                         Request.EventTrackingId,
+                                                         Request.AuthorizationIdentifications,
+                                                         Request.ProviderId,
+                                                         Request.OICPAction,
+                                                         RequestTimeout,
+                                                         result.Content,
+                                                         Endtime - StartTime);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnPushAuthenticationDataResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1836,7 +1682,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The given AuthorizeRemoteReservationStart request must not be null!");
 
-            Request = _AuthorizeRemoteReservationStartRequestMapper(Request);
+            Request = _CustomAuthorizeRemoteReservationStartRequestMapper(Request);
 
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteReservationStart request must not be null!");
@@ -1882,7 +1728,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(SOAP.Encapsulation(Request.ToXML()),
+                var result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStartSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
                                                      "eRoamingAuthorizeRemoteReservationStart",
                                                      RequestLogDelegate:   OnReservationStartSOAPRequest,
                                                      ResponseLogDelegate:  OnReservationStartSOAPResponse,
@@ -1893,7 +1739,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      #region OnSuccess
 
                                                      OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                          Acknowledgement<AuthorizeRemoteReservationStartRequest>.Parse),
+                                                                                                          (request, xml, onexception) =>
+                                                                                                              Acknowledgement<AuthorizeRemoteReservationStartRequest>.Parse(request,
+                                                                                                                                                                            xml,
+                                                                                                                                                                            CustomAuthorizeRemoteReservationStartResponseMapper,
+                                                                                                                                                                            onexception)),
 
                                                      #endregion
 
@@ -2026,7 +1876,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The given AuthorizeRemoteReservationStop request must not be null!");
 
-            Request = _AuthorizeRemoteReservationStopRequestMapper(Request);
+            Request = _CustomAuthorizeRemoteReservationStopRequestMapper(Request);
 
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteReservationStop request must not be null!");
@@ -2070,7 +1920,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(SOAP.Encapsulation(Request.ToXML()),
+                var result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStopSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
                                                      "eRoamingAuthorizeRemoteReservationStop",
                                                      RequestLogDelegate:   OnReservationStartSOAPRequest,
                                                      ResponseLogDelegate:  OnReservationStopSOAPResponse,
@@ -2081,7 +1931,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      #region OnSuccess
 
                                                      OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                          Acknowledgement<AuthorizeRemoteReservationStopRequest>.Parse),
+                                                                                                          (request, xml, onexception) =>
+                                                                                                              Acknowledgement<AuthorizeRemoteReservationStopRequest>.Parse(request,
+                                                                                                                                                                           xml,
+                                                                                                                                                                           CustomAuthorizeRemoteReservationStopResponseMapper,
+                                                                                                                                                                           onexception)),
 
                                                      #endregion
 
@@ -2213,7 +2067,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The given AuthorizeRemoteStart request must not be null!");
 
-            Request = _AuthorizeRemoteStartRequestMapper(Request);
+            Request = _CustomAuthorizeRemoteStartRequestMapper(Request);
 
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteStart request must not be null!");
@@ -2259,7 +2113,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(AuthorizeRemoteStartSOAPRequestMapper(SOAP.Encapsulation(Request.ToXML())),
+                var result = await _OICPClient.Query(_CustomAuthorizeRemoteStartSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
                                                      "eRoamingAuthorizeRemoteStart",
                                                      RequestLogDelegate:   OnAuthorizeRemoteStartSOAPRequest,
                                                      ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
@@ -2270,7 +2124,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      #region OnSuccess
 
                                                      OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                          Acknowledgement<AuthorizeRemoteStartRequest>.Parse),
+                                                                                                          (request, xml, onexception) =>
+                                                                                                              Acknowledgement<AuthorizeRemoteStartRequest>.Parse(request,
+                                                                                                                                                                 xml,
+                                                                                                                                                                 CustomAuthorizeRemoteStartResponseMapper,
+                                                                                                                                                                 onexception)),
 
                                                      #endregion
 
@@ -2400,10 +2258,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The given AuthorizeRemoteStop request must not be null!");
 
-            Request = _AuthorizeRemoteStopRequestMapper(Request);
+            Request = _CustomAuthorizeRemoteStopRequestMapper(Request);
 
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteStop request must not be null!");
+
+            HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>> result = null;
 
             #endregion
 
@@ -2444,95 +2304,99 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(SOAP.Encapsulation(Request.ToXML()),
-                                                     "eRoamingAuthorizeRemoteStop",
-                                                     RequestLogDelegate:   OnAuthorizeRemoteStopSOAPRequest,
-                                                     ResponseLogDelegate:  OnAuthorizeRemoteStopSOAPResponse,
-                                                     CancellationToken:    Request.CancellationToken,
-                                                     EventTrackingId:      Request.EventTrackingId,
-                                                     QueryTimeout:         Request.RequestTimeout,
+                result = await _OICPClient.Query(_CustomAuthorizeRemoteStopSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                                                 "eRoamingAuthorizeRemoteStop",
+                                                 RequestLogDelegate:   OnAuthorizeRemoteStopSOAPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeRemoteStopSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout,
 
-                                                     #region OnSuccess
+                                                 #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                          Acknowledgement<AuthorizeRemoteStopRequest>.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) =>
+                                                                                                      Acknowledgement<AuthorizeRemoteStopRequest>.Parse(request,
+                                                                                                                                                        xml,
+                                                                                                                                                        CustomAuthorizeRemoteStopResponseMapper,
+                                                                                                                                                        onexception)),
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnSOAPFault
+                                                 #region OnSOAPFault
 
-                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                     SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                         return new HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>(
+                                                     return new HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>(
 
-                                                                    httpresponse,
-
-                                                                    new Acknowledgement<AuthorizeRemoteStopRequest>(
-                                                                        Request,
-                                                                        StatusCodes.DataError,
-                                                                        httpresponse.Content.ToString()
-                                                                    ),
-
-                                                                    IsFault: true
-
-                                                                );
-
-                                                     },
-
-                                                     #endregion
-
-                                                     #region OnHTTPError
-
-                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
-
-                                                         SendHTTPError(timestamp, soapclient, httpresponse);
-
-                                                         return new HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>(
-
-                                                                    httpresponse,
-
-                                                                    new Acknowledgement<AuthorizeRemoteStopRequest>(
-                                                                        Request,
-                                                                        StatusCodes.DataError,
-                                                                        httpresponse.HTTPStatusCode.ToString(),
-                                                                        httpresponse.HTTPBody.      ToUTF8String()
-                                                                    ),
-
-                                                                    IsFault: true
-
-                                                                );
-
-                                                     },
-
-                                                     #endregion
-
-                                                     #region OnException
-
-                                                     OnException: (timestamp, sender, exception) => {
-
-                                                         SendException(timestamp, sender, exception);
-
-                                                         return HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>.ExceptionThrown(
+                                                                httpresponse,
 
                                                                 new Acknowledgement<AuthorizeRemoteStopRequest>(
                                                                     Request,
-                                                                    StatusCodes.ServiceNotAvailable,
-                                                                    exception.Message,
-                                                                    exception.StackTrace,
-                                                                    Request.SessionId
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.Content.ToString()
                                                                 ),
 
-                                                                Exception: exception
+                                                                IsFault: true
 
                                                             );
 
-                                                     }
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                    );
+                                                 #region OnHTTPError
+
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                     SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                     return new HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>(
+
+                                                                httpresponse,
+
+                                                                new Acknowledgement<AuthorizeRemoteStopRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                ),
+
+                                                                IsFault: true
+
+                                                            );
+
+                                                 },
+
+                                                 #endregion
+
+                                                 #region OnException
+
+                                                 OnException: (timestamp, sender, exception) => {
+
+                                                     SendException(timestamp, sender, exception);
+
+                                                     return HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>.ExceptionThrown(
+
+                                                            new Acknowledgement<AuthorizeRemoteStopRequest>(
+                                                                Request,
+                                                                StatusCodes.ServiceNotAvailable,
+                                                                exception.Message,
+                                                                exception.StackTrace,
+                                                                Request.SessionId
+                                                            ),
+
+                                                            Exception: exception
+
+                                                        );
+
+                                                 }
+
+                                                 #endregion
+
+                                                );
 
                 #region Send OnAuthorizeRemoteStopResponse event
 
@@ -2587,7 +2451,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The given GetChargeDetailRecords request must not be null!");
 
-            Request = _GetChargeDetailRecordsRequestMapper(Request);
+            Request = _CustomGetChargeDetailRecordsRequestMapper(Request);
 
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The mapped GetChargeDetailRecords request must not be null!");
@@ -2630,7 +2494,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(_GetChargeDetailRecordsSOAPRequestMapper(SOAP.Encapsulation(Request.ToXML())),
+                var result = await _OICPClient.Query(_CustomGetChargeDetailRecordsSOAPRequestMapper(SOAP.Encapsulation(Request.ToXML())),
                                                      "eRoamingGetChargeDetailRecords",
                                                      RequestLogDelegate:   OnGetChargeDetailRecordsSOAPRequest,
                                                      ResponseLogDelegate:  OnGetChargeDetailRecordsSOAPResponse,
@@ -2641,13 +2505,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      #region OnSuccess
 
                                                      OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                          (request,
-                                                                                                           xml,
-                                                                                                           onexception) => GetChargeDetailRecordsResponse.ParseXML(request,
-                                                                                                                                                                   xml,
-                                                                                                                                                                   GetChargeDetailRecordsSOAPResponseMapper,
-                                                                                                                                                                   GetChargeDetailRecordsSOAPResponseElementsMapper,
-                                                                                                                                                                   onexception)),
+                                                                                                          (request, xml, onexception)
+                                                                                                              => GetChargeDetailRecordsResponse.ParseXML(request,
+                                                                                                                                                         xml,
+                                                                                                                                                         CustomGetChargeDetailRecordsResponseMapper,
+                                                                                                                                                         CustomChargeDetailRecordXMLMapper,
+                                                                                                                                                         onexception)),
 
                                                      #endregion
 

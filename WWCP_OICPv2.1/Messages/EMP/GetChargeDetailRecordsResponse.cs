@@ -50,12 +50,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Create a new group of OICP Charge Detail Records.
         /// </summary>
         /// <param name="ChargeDetailRecords">An enumeration of charge detail records.</param>
-        public GetChargeDetailRecordsResponse(GetChargeDetailRecordsRequest        Request,
-                                              IEnumerable<ChargeDetailRecord>      ChargeDetailRecords,
-                                              IReadOnlyDictionary<String, Object>  CustomData = null)
+        public GetChargeDetailRecordsResponse(GetChargeDetailRecordsRequest           Request,
+                                              IEnumerable<ChargeDetailRecord>         ChargeDetailRecords,
+                                              Action<GetChargeDetailRecordsResponse>  CustomMapper = null)
 
             : base(Request,
-                   CustomData)
+                   CustomMapper)
 
         {
 
@@ -67,6 +67,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #endregion
 
             this.ChargeDetailRecords  = ChargeDetailRecords;
+
+            CustomMapper?.Invoke(this);
 
         }
 
@@ -103,11 +105,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="ChargeDetailRecordsXML">A XML representation of an enumeration of OICP charge detail records.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static GetChargeDetailRecordsResponse ParseXML(GetChargeDetailRecordsRequest  Request,
-                                                              XElement                       ChargeDetailRecordsXML,
-                                                              Func<XElement, Dictionary<String, Object>> CustomerMapper1,
-                                                              Func<XElement, Dictionary<String, Object>> CustomerMapper2,
-                                                              OnExceptionDelegate            OnException  = null)
+        public static GetChargeDetailRecordsResponse ParseXML(GetChargeDetailRecordsRequest                         Request,
+                                                              XElement                                              ChargeDetailRecordsXML,
+                                                              CustomMapperDelegate<GetChargeDetailRecordsResponse>  CustomObjectMapper,
+                                                              CustomMapperDelegate<ChargeDetailRecord>              CustomChargeDetailRecordMapper,
+                                                              OnExceptionDelegate                                   OnException  = null)
         {
 
             if (ChargeDetailRecordsXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecords")
@@ -118,13 +120,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                        Request,
 
                        ChargeDetailRecordsXML.MapElements(OICPNS.Authorization + "eRoamingChargeDetailRecord",
-                                                             //(XML, e) => CustomerMapper(XML, ChargeDetailRecord.Parse(XML, e)),
-                                                             (XML, e) => ChargeDetailRecord.Parse(XML, e),
-                                                             OnException),
+                                                          (XML, e) => ChargeDetailRecord.Parse(XML, e, CustomChargeDetailRecordMapper),
+                                                          OnException),
 
-                       CustomerMapper1 != null
-                           ? CustomerMapper1(ChargeDetailRecordsXML)
-                           : null
+                       response => CustomObjectMapper(ChargeDetailRecordsXML, response)
 
                    );
 

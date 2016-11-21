@@ -29,6 +29,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using System.Xml.Linq;
 
 #endregion
 
@@ -60,8 +61,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         public EMPServerLogger  EMPServerLogger     { get; }
 
-
-        public TimeSpan? RequestTimeout { get; }
+        /// <summary>
+        /// The default request timeout for this client.
+        /// </summary>
+        public TimeSpan?        RequestTimeout      { get; }
 
 
         /// <summary>
@@ -1084,21 +1087,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region RequestMappers
+        #region Custom request mappers
 
-        #region PushAuthenticationDataRequestMapper
+        #region CustomPushAuthenticationDataRequestMapper
 
-        public Func<PushAuthenticationDataRequest, PushAuthenticationDataRequest> PushAuthenticationDataRequestMapper
+        #region CustomPushAuthenticationDataRequestMapper
+
+        public Func<PushAuthenticationDataRequest, PushAuthenticationDataRequest> CustomPushAuthenticationDataRequestMapper
         {
 
             get
             {
-                return EMPClient.PushAuthenticationDataRequestMapper;
+                return EMPClient.CustomPushAuthenticationDataRequestMapper;
             }
 
             set
             {
-                EMPClient.PushAuthenticationDataRequestMapper = value;
+                if (value != null)
+                    EMPClient.CustomPushAuthenticationDataRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PushAuthenticationDataRequest>, Acknowledgement<PushAuthenticationDataRequest>.Builder> CustomPushAuthenticationDataResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPushAuthenticationDataResponseMapper;
+            }
+
+            set
+            {
+                EMPClient.CustomPushAuthenticationDataResponseMapper = value;
             }
 
         }
@@ -1106,38 +1129,76 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region AuthorizeRemoteReservationStartRequestMapper
+        #region CustomAuthorizeRemoteReservationStartRequestMapper
 
-        public Func<AuthorizeRemoteReservationStartRequest, AuthorizeRemoteReservationStartRequest> AuthorizeRemoteReservationStartRequestMapper
+        #region CustomAuthorizeRemoteReservationStartRequestMapper
+
+        public Func<AuthorizeRemoteReservationStartRequest, AuthorizeRemoteReservationStartRequest> CustomAuthorizeRemoteReservationStartRequestMapper
         {
 
             get
             {
-                return EMPClient.AuthorizeRemoteReservationStartRequestMapper;
+                return EMPClient.CustomAuthorizeRemoteReservationStartRequestMapper;
             }
 
             set
             {
-                EMPClient.AuthorizeRemoteReservationStartRequestMapper = value;
+                EMPClient.CustomAuthorizeRemoteReservationStartRequestMapper = value;
             }
 
         }
 
         #endregion
 
-        #region AuthorizeRemoteReservationStopRequestMapper
-
-        public Func<AuthorizeRemoteReservationStopRequest, AuthorizeRemoteReservationStopRequest> AuthorizeRemoteReservationStopRequestMapper
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>, Acknowledgement<AuthorizeRemoteReservationStartRequest>.Builder> CustomAuthorizeRemoteReservationStartResponseMapper
         {
 
             get
             {
-                return EMPClient.AuthorizeRemoteReservationStopRequestMapper;
+                return EMPClient.CustomAuthorizeRemoteReservationStartResponseMapper;
             }
 
             set
             {
-                EMPClient.AuthorizeRemoteReservationStopRequestMapper = value;
+                EMPClient.CustomAuthorizeRemoteReservationStartResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteReservationStopRequestMapper
+
+        #region CustomAuthorizeRemoteReservationStopRequestMapper
+
+        public Func<AuthorizeRemoteReservationStopRequest, AuthorizeRemoteReservationStopRequest> CustomAuthorizeRemoteReservationStopRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteReservationStopRequestMapper;
+            }
+
+            set
+            {
+                EMPClient.CustomAuthorizeRemoteReservationStopRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>, Acknowledgement<AuthorizeRemoteReservationStopRequest>.Builder> CustomAuthorizeRemoteReservationStopResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteReservationStopResponseMapper;
+            }
+
+            set
+            {
+                EMPClient.CustomAuthorizeRemoteReservationStopResponseMapper = value;
             }
 
         }
@@ -1145,38 +1206,187 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region AuthorizeRemoteStartRequestMapper
+        #region CustomAuthorizeRemoteStart(SOAP)RequestMapper
 
-        public Func<AuthorizeRemoteStartRequest, AuthorizeRemoteStartRequest> AuthorizeRemoteStartRequestMapper
+        #region CustomAuthorizeRemoteStartRequestMapper
+
+        public Func<AuthorizeRemoteStartRequest, AuthorizeRemoteStartRequest> CustomAuthorizeRemoteStartRequestMapper
         {
 
             get
             {
-                return EMPClient.AuthorizeRemoteStartRequestMapper;
+                return EMPClient.CustomAuthorizeRemoteStartRequestMapper;
             }
 
             set
             {
-                EMPClient.AuthorizeRemoteStartRequestMapper = value;
+                EMPClient.CustomAuthorizeRemoteStartRequestMapper = value;
             }
 
         }
 
         #endregion
 
-        #region AuthorizeRemoteStopRequestMapper
+        #region CustomAuthorizeRemoteStartSOAPRequestMapper
 
-        public Func<AuthorizeRemoteStopRequest, AuthorizeRemoteStopRequest> AuthorizeRemoteStopRequestMapper
+        public Func<AuthorizeRemoteStartRequest, XElement, XElement> CustomAuthorizeRemoteStartSOAPRequestMapper
         {
 
             get
             {
-                return EMPClient.AuthorizeRemoteStopRequestMapper;
+                return EMPClient.CustomAuthorizeRemoteStartSOAPRequestMapper;
             }
 
             set
             {
-                EMPClient.AuthorizeRemoteStopRequestMapper = value;
+                EMPClient.CustomAuthorizeRemoteStartSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteStartRequest>, Acknowledgement<AuthorizeRemoteStartRequest>.Builder> CustomAuthorizeRemoteStartResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteStartResponseMapper;
+            }
+
+            set
+            {
+                EMPClient.CustomAuthorizeRemoteStartResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteStop(SOAP)Mappers
+
+        #region CustomAuthorizeRemoteStopRequestMapper
+
+        public Func<AuthorizeRemoteStopRequest, AuthorizeRemoteStopRequest> CustomAuthorizeRemoteStopRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteStopRequestMapper;
+            }
+
+            set
+            {
+                EMPClient.CustomAuthorizeRemoteStopRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteStopSOAPRequestMapper
+
+        public Func<AuthorizeRemoteStopRequest, XElement, XElement> CustomAuthorizeRemoteStopSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteStopSOAPRequestMapper;
+            }
+
+            set
+            {
+                EMPClient.CustomAuthorizeRemoteStopSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteStopRequest>, Acknowledgement<AuthorizeRemoteStopRequest>.Builder> CustomAuthorizeRemoteStopResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteStopResponseMapper;
+            }
+
+            set
+            {
+                EMPClient.CustomAuthorizeRemoteStopResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region CustomGetChargeDetailRecordsRequestMapper
+
+        #region CustomGetChargeDetailRecordsRequestMapper
+
+        public Func<GetChargeDetailRecordsRequest, GetChargeDetailRecordsRequest> CustomGetChargeDetailRecordsRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomGetChargeDetailRecordsRequestMapper;
+            }
+
+            set
+            {
+                EMPClient.CustomGetChargeDetailRecordsRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomGetChargeDetailRecordsSOAPRequestMapper
+
+        public Func<XElement, XElement> CustomGetChargeDetailRecordsSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomGetChargeDetailRecordsSOAPRequestMapper;
+            }
+
+            set
+            {
+                EMPClient.CustomGetChargeDetailRecordsSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<GetChargeDetailRecordsResponse> CustomGetChargeDetailRecordsResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomGetChargeDetailRecordsResponseMapper;
+            }
+
+            set
+            {
+                EMPClient.CustomGetChargeDetailRecordsResponseMapper = value;
+            }
+
+        }
+
+        public CustomMapperDelegate<ChargeDetailRecord> CustomChargeDetailRecordXMLMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomChargeDetailRecordXMLMapper;
+            }
+
+            set
+            {
+                EMPClient.CustomChargeDetailRecordXMLMapper = value;
             }
 
         }

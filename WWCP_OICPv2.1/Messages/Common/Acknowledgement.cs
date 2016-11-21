@@ -20,6 +20,7 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -28,7 +29,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public class Acknowledgement<T>
+    public class Acknowledgement<T> : AResponse<Acknowledgement<T>>
         where T : class
     {
 
@@ -72,11 +73,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="StatusCode">The status code of the operation.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
-        private Acknowledgement(T                   Request,
-                                Boolean             Result,
-                                StatusCode          StatusCode,
-                                Session_Id?         SessionId         = null,
-                                PartnerSession_Id?  PartnerSessionId  = null)
+        private Acknowledgement(T                               Request,
+                                Boolean                         Result,
+                                StatusCode                      StatusCode,
+                                Session_Id?                     SessionId         = null,
+                                PartnerSession_Id?              PartnerSessionId  = null,
+                                //IReadOnlyDictionary<String, Object> CustomData = null,
+                                CustomMapper2Delegate<Builder>  CustomMapper      = null)
         {
 
             #region Initial checks
@@ -92,6 +95,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this.SessionId         = SessionId;
             this.PartnerSessionId  = PartnerSessionId;
 
+            if (CustomMapper != null)
+            {
+
+                var Builder = CustomMapper.Invoke(new Builder(this));
+
+                this.Request           = Builder.Request;
+                this.Result            = Builder.Result;
+                this.StatusCode        = Builder.StatusCode;
+                this.SessionId         = Builder.SessionId;
+                this.PartnerSessionId  = Builder.PartnerSessionId;
+                this.CustomData        = Builder.CustomData;
+
+            }
+
         }
 
         #endregion
@@ -106,11 +123,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        public Acknowledgement(T                   Request,
-                               Session_Id          SessionId,
-                               PartnerSession_Id?  PartnerSessionId          = null,
-                               String              StatusCodeDescription     = null,
-                               String              StatusCodeAdditionalInfo  = null)
+        public Acknowledgement(T                               Request,
+                               Session_Id                      SessionId,
+                               PartnerSession_Id?              PartnerSessionId          = null,
+                               String                          StatusCodeDescription     = null,
+                               String                          StatusCodeAdditionalInfo  = null,
+                               CustomMapper2Delegate<Builder>  CustomMapper              = null)
 
             : this(Request,
                    true,
@@ -118,7 +136,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                   StatusCodeDescription,
                                   StatusCodeAdditionalInfo),
                    SessionId,
-                   PartnerSessionId)
+                   PartnerSessionId,
+                   CustomMapper)
 
         { }
 
@@ -135,12 +154,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
-        public Acknowledgement(T                   Request,
-                               StatusCodes         StatusCode,
-                               String              StatusCodeDescription     = null,
-                               String              StatusCodeAdditionalInfo  = null,
-                               Session_Id?         SessionId                 = null,
-                               PartnerSession_Id?  PartnerSessionId          = null)
+        public Acknowledgement(T                               Request,
+                               StatusCodes                     StatusCode,
+                               String                          StatusCodeDescription     = null,
+                               String                          StatusCodeAdditionalInfo  = null,
+                               Session_Id?                     SessionId                 = null,
+                               PartnerSession_Id?              PartnerSessionId          = null,
+                               CustomMapper2Delegate<Builder>  CustomMapper              = null)
 
             : this(Request,
                    false,
@@ -148,7 +168,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                   StatusCodeDescription,
                                   StatusCodeAdditionalInfo),
                    SessionId,
-                   PartnerSessionId)
+                   PartnerSessionId,
+                   CustomMapper)
 
         { }
 
@@ -233,14 +254,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Try to parse the given XML representation of an OICP acknowledgement.
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
-        public static Acknowledgement<T> Parse(T                    Request,
-                                               XElement             XML,
-                                               OnExceptionDelegate  OnException = null)
+        public static Acknowledgement<T> Parse(T                                                  Request,
+                                               XElement                                           XML,
+                                               CustomMapperDelegate<Acknowledgement<T>, Builder>  CustomMapper,
+                                               OnExceptionDelegate                                OnException = null)
         {
 
             Acknowledgement<T> _Acknowledgement;
 
-            if (TryParse(Request, XML, out _Acknowledgement, OnException))
+            if (TryParse(Request, XML, CustomMapper, out _Acknowledgement, OnException))
                 return _Acknowledgement;
 
             return null;
@@ -256,10 +278,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement</param>
-        public static Boolean TryParse(T                       Request,
-                                       XElement                XML,
-                                       out Acknowledgement<T>  Acknowledgement,
-                                       OnExceptionDelegate     OnException  = null)
+        public static Boolean TryParse(T                                                  Request,
+                                       XElement                                           XML,
+                                       CustomMapperDelegate<Acknowledgement<T>, Builder>  CustomMapper,
+                                       out Acknowledgement<T>                             Acknowledgement,
+                                       OnExceptionDelegate                                OnException  = null)
         {
 
             try
@@ -291,7 +314,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                             Session_Id.Parse),
 
                                       AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "PartnerSessionID",
-                                                                            PartnerSession_Id.Parse)
+                                                                            PartnerSession_Id.Parse),
+
+                                      responsebuilder => CustomMapper(AcknowledgementXML, responsebuilder)
 
                                   );
 
@@ -349,6 +374,73 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+
+        public override bool Equals(Acknowledgement<T> ARequest)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public class Builder
+        {
+
+            #region Properties
+
+            public T                   Request             { get; set; }
+
+            /// <summary>
+            /// The result of the operation.
+            /// </summary>
+            public Boolean             Result              { get; set; }
+
+            /// <summary>
+            /// The status code of the operation.
+            /// </summary>
+            public StatusCode          StatusCode          { get; set; }
+
+            /// <summary>
+            /// An optional charging session identification for
+            /// RemoteReservationStart and RemoteStart requests.
+            /// </summary>
+            public Session_Id?         SessionId           { get; set; }
+
+            /// <summary>
+            /// An optional partner charging session identification for
+            /// RemoteReservationStart and RemoteStart requests.
+            /// </summary>
+            public PartnerSession_Id?  PartnerSessionId    { get; set; }
+
+            public Dictionary<String, Object> CustomData { get; set; }
+
+            #endregion
+
+            public Builder(Acknowledgement<T> Acknowledgement = null)
+            {
+
+                this.Request            = Acknowledgement.Request;
+                this.Result             = Acknowledgement.Result;
+                this.StatusCode         = Acknowledgement.StatusCode;
+                this.SessionId          = Acknowledgement.SessionId;
+                this.PartnerSessionId   = Acknowledgement.PartnerSessionId;
+                this.CustomData         = new Dictionary<String, Object>();
+
+                if (Acknowledgement.CustomData != null)
+                    foreach (var item in Acknowledgement.CustomData)
+                        CustomData.Add(item.Key, item.Value);
+
+            }
+
+
+            //public Acknowledgement<T> ToImmutable()
+
+            //    => new Acknowledgement<T>(Request,
+            //                              Result,
+            //                              StatusCode,
+            //                              SessionId,
+            //                              PartnerSessionId,
+            //                              CustomData);
+
+        }
 
     }
 

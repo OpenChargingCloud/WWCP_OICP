@@ -18,36 +18,41 @@
 #region Usings
 
 using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+using System.Threading.Tasks;
+
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
-    public delegate T CustomMapperDelegate<T>(XElement XML, T ResponseBuilder);
-
-    public delegate TB CustomMapper2Delegate<TB>(TB ResponseBuilder);
-
-    public delegate TB CustomMapperDelegate<T, TB>(XElement XML, TB ResponseBuilder);
-
-
     /// <summary>
-    /// The common interface of an OICP response message.
+    /// The common interface of all OICP CPO clients.
     /// </summary>
-    public interface IResponse
+    public interface ICPOClient
     {
 
-        /// <summary>
-        /// The machine-readable result code.
-        /// </summary>
-   //     Result    Result              { get; }
+        #region Properties
 
         /// <summary>
-        /// The timestamp of the response message creation.
+        /// The default request timeout for this client.
         /// </summary>
-        DateTime  ResponseTimestamp   { get; }
+        TimeSpan? RequestTimeout { get; }
+
+        #endregion
+
+
+
+        Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
+
+            PushEVSEData(PushEVSEDataRequest Request);
+
+
+        Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
+
+            PushEVSEStatus(PushEVSEStatusRequest Request);
+
 
     }
 
