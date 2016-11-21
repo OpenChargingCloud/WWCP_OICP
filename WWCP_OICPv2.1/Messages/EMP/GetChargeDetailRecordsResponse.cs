@@ -50,12 +50,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Create a new group of OICP Charge Detail Records.
         /// </summary>
         /// <param name="ChargeDetailRecords">An enumeration of charge detail records.</param>
-        public GetChargeDetailRecordsResponse(GetChargeDetailRecordsRequest           Request,
-                                              IEnumerable<ChargeDetailRecord>         ChargeDetailRecords,
-                                              Action<GetChargeDetailRecordsResponse>  CustomMapper = null)
+        public GetChargeDetailRecordsResponse(GetChargeDetailRecordsRequest    Request,
+                                              IEnumerable<ChargeDetailRecord>  ChargeDetailRecords,
+                                              CustomMapper2Delegate<Builder>   CustomMapper  = null)
 
-            : base(Request,
-                   CustomMapper)
+            : base(Request)
 
         {
 
@@ -68,7 +67,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             this.ChargeDetailRecords  = ChargeDetailRecords;
 
-            CustomMapper?.Invoke(this);
+            if (CustomMapper != null)
+            {
+
+                var Builder = CustomMapper.Invoke(new Builder(this));
+
+                this.ChargeDetailRecords  = Builder.ChargeDetailRecords;
+                this.CustomData           = Builder.CustomData;
+
+            }
 
         }
 
@@ -105,11 +112,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="ChargeDetailRecordsXML">A XML representation of an enumeration of OICP charge detail records.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static GetChargeDetailRecordsResponse ParseXML(GetChargeDetailRecordsRequest                         Request,
-                                                              XElement                                              ChargeDetailRecordsXML,
-                                                              CustomMapperDelegate<GetChargeDetailRecordsResponse>  CustomObjectMapper,
-                                                              CustomMapperDelegate<ChargeDetailRecord>              CustomChargeDetailRecordMapper,
-                                                              OnExceptionDelegate                                   OnException  = null)
+        public static GetChargeDetailRecordsResponse ParseXML(GetChargeDetailRecordsRequest                                  Request,
+                                                              XElement                                                       ChargeDetailRecordsXML,
+                                                              CustomMapperDelegate<GetChargeDetailRecordsResponse, Builder>  CustomObjectMapper              = null,
+                                                              CustomMapperDelegate<ChargeDetailRecord>                       CustomChargeDetailRecordMapper  = null,
+                                                              OnExceptionDelegate                                            OnException                     = null)
         {
 
             if (ChargeDetailRecordsXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecords")
@@ -123,7 +130,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                           (XML, e) => ChargeDetailRecord.Parse(XML, e, CustomChargeDetailRecordMapper),
                                                           OnException),
 
-                       response => CustomObjectMapper(ChargeDetailRecordsXML, response)
+                       responsebuilder => CustomObjectMapper != null
+                                              ? CustomObjectMapper(ChargeDetailRecordsXML, responsebuilder)
+                                              : responsebuilder
 
                    );
 
@@ -135,6 +144,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public override bool Equals(GetChargeDetailRecordsResponse AResponse)
         {
             throw new NotImplementedException();
+        }
+
+
+        public class Builder
+        {
+
+            #region Properties
+
+            /// <summary>
+            /// An enumeration of charge detail records.
+            /// </summary>
+            public IEnumerable<ChargeDetailRecord> ChargeDetailRecords { get; set; }
+
+            public Dictionary<String, Object> CustomData { get; set; }
+
+            #endregion
+
+            public Builder(GetChargeDetailRecordsResponse GetChargeDetailRecordsResponse = null)
+            {
+
+                this.ChargeDetailRecords  = GetChargeDetailRecordsResponse.ChargeDetailRecords;
+                this.CustomData           = new Dictionary<String, Object>();
+
+                if (GetChargeDetailRecordsResponse.CustomData != null)
+                    foreach (var item in GetChargeDetailRecordsResponse.CustomData)
+                        CustomData.Add(item.Key, item.Value);
+
+            }
+
+
+            //public GetChargeDetailRecordsResponse ToImmutable()
+
+            //    => new GetChargeDetailRecordsResponse(Request,
+            //                                          Result,
+            //                                          StatusCode,
+            //                                          SessionId,
+            //                                          PartnerSessionId,
+            //                                          CustomData);
+
         }
 
 

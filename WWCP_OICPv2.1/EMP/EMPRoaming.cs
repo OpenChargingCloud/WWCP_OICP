@@ -1361,7 +1361,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<GetChargeDetailRecordsResponse> CustomGetChargeDetailRecordsResponseMapper
+        public CustomMapperDelegate<GetChargeDetailRecordsResponse, GetChargeDetailRecordsResponse.Builder> CustomGetChargeDetailRecordsResponseMapper
         {
 
             get

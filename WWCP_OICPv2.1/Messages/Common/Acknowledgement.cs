@@ -29,13 +29,14 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public class Acknowledgement<T> : AResponse<Acknowledgement<T>>
-        where T : class
+    public class Acknowledgement<T> : AResponse<T,
+                                                Acknowledgement<T>>
+
+        where T : class, IRequest
+
     {
 
         #region Properties
-
-        public T                   Request             { get; }
 
         /// <summary>
         /// The result of the operation.
@@ -80,6 +81,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                 PartnerSession_Id?              PartnerSessionId  = null,
                                 //IReadOnlyDictionary<String, Object> CustomData = null,
                                 CustomMapper2Delegate<Builder>  CustomMapper      = null)
+
+            : base(Request)
+
         {
 
             #region Initial checks
@@ -89,7 +93,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            this.Request           = Request;
             this.Result            = Result;
             this.StatusCode        = StatusCode;
             this.SessionId         = SessionId;
@@ -100,7 +103,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 var Builder = CustomMapper.Invoke(new Builder(this));
 
-                this.Request           = Builder.Request;
                 this.Result            = Builder.Result;
                 this.StatusCode        = Builder.StatusCode;
                 this.SessionId         = Builder.SessionId;
@@ -256,13 +258,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="XML">The XML to parse.</param>
         public static Acknowledgement<T> Parse(T                                                  Request,
                                                XElement                                           XML,
-                                               CustomMapperDelegate<Acknowledgement<T>, Builder>  CustomMapper,
-                                               OnExceptionDelegate                                OnException = null)
+                                               CustomMapperDelegate<Acknowledgement<T>, Builder>  CustomMapper  = null,
+                                               OnExceptionDelegate                                OnException   = null)
         {
 
             Acknowledgement<T> _Acknowledgement;
 
-            if (TryParse(Request, XML, CustomMapper, out _Acknowledgement, OnException))
+            if (TryParse(Request, XML, out _Acknowledgement, CustomMapper, OnException))
                 return _Acknowledgement;
 
             return null;
@@ -271,7 +273,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(Request, XML, out Acknowledgement, OnException = null)
+        #region (static) TryParse(Request, XML, out Acknowledgement, CustomMapper = null, OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP acknowledgement.
@@ -280,9 +282,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Acknowledgement">The parsed acknowledgement</param>
         public static Boolean TryParse(T                                                  Request,
                                        XElement                                           XML,
-                                       CustomMapperDelegate<Acknowledgement<T>, Builder>  CustomMapper,
                                        out Acknowledgement<T>                             Acknowledgement,
-                                       OnExceptionDelegate                                OnException  = null)
+                                       CustomMapperDelegate<Acknowledgement<T>, Builder>  CustomMapper  = null,
+                                       OnExceptionDelegate                                OnException   = null)
         {
 
             try
@@ -316,7 +318,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "PartnerSessionID",
                                                                             PartnerSession_Id.Parse),
 
-                                      responsebuilder => CustomMapper(AcknowledgementXML, responsebuilder)
+                                      responsebuilder => CustomMapper != null
+                                                             ? CustomMapper(AcknowledgementXML, responsebuilder)
+                                                             : responsebuilder
 
                                   );
 
