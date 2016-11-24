@@ -54,98 +54,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  PartnerSession_Id?          PartnerSessionId   = null)   // OICP v2.1: Optional [50]
         {
 
-            #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/EVSEData.0"
-            //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
-            //
-            //    <soapenv:Header/>
-            //
-            //    <soapenv:Body>
-            //       <Authorization:eRoamingAuthorizeStart>
-            //
-            //          <!--Optional:-->
-            //          <Authorization:SessionID>?</Authorization:SessionID>
-            //          <!--Optional:-->
-            //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
-            //
-            //          <Authorization:OperatorID>?</Authorization:OperatorID>
-            //
-            //          <!--Optional:-->
-            //          <Authorization:EVSEID>?</Authorization:EVSEID>
-            //
-            //          <Authorization:Identification>
-            //
-            //             <!--You have a CHOICE of the next 4 items at this level-->
-            //             <CommonTypes:RFIDmifarefamilyIdentification>
-            //                <CommonTypes:UID>?</CommonTypes:UID>
-            //             </CommonTypes:RFIDmifarefamilyIdentification>
-            //
-            //             <CommonTypes:QRCodeIdentification>
-            //
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            //
-            //                <!--You have a CHOICE of the next 2 items at this level-->
-            //                <CommonTypes:PIN>?</CommonTypes:PIN>
-            //
-            //                <CommonTypes:HashedPIN>
-            //                   <CommonTypes:Value>?</CommonTypes:Value>
-            //                   <CommonTypes:Function>?</CommonTypes:Function>
-            //                   <CommonTypes:Salt>?</CommonTypes:Salt>
-            //                </CommonTypes:HashedPIN>
-            //
-            //             </CommonTypes:QRCodeIdentification>
-            //
-            //             <CommonTypes:PlugAndChargeIdentification>
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            //             </CommonTypes:PlugAndChargeIdentification>
-            //
-            //             <CommonTypes:RemoteIdentification>
-            //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-            //             </CommonTypes:RemoteIdentification>
-            //
-            //          </Authorization:Identification>
-            //
-            //          <!--Optional:-->
-            //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
-            //
-            //       </Authorization:eRoamingAuthorizeStart>
-            //    </soapenv:Body>
-            //
-            // </soapenv:Envelope>
 
-            #endregion
-
-            #region Initial checks
-
-            if (AuthToken  == null)
-                throw new ArgumentNullException(nameof(AuthToken),  "The given authentication token must not be null!");
-
-            #endregion
-
-            return SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeStart",
-
-                                          SessionId        != null ? new XElement(OICPNS.Authorization + "SessionID",        SessionId.       ToString()) : null,
-                                          PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
-
-                                          new XElement(OICPNS.Authorization + "OperatorID",    OperatorId.OriginId),
-
-                                          EVSEId.HasValue
-                                              ? new XElement(OICPNS.Authorization + "EVSEID",  EVSEId.ToString())
-                                              : null,
-
-                                          new XElement(OICPNS.Authorization + "Identification",
-                                              new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                                 new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString())
-                                              )
-                                          ),
-
-                                          PartnerProductId != null
-                                              ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString())
-                                              : null
-
-                                     ));
+            return SOAP.Encapsulation();
 
         }
 

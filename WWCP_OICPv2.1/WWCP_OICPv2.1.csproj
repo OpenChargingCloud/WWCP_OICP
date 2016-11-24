@@ -77,6 +77,7 @@
     <Compile Include="Messages\ARequest.cs" />
     <Compile Include="Messages\AResponse.cs" />
     <Compile Include="Messages\Common\PushEVSEDataResponse.cs" />
+    <Compile Include="Messages\CPO\AuthorizeStartRequest.cs" />
     <Compile Include="Messages\CPO\PushEVSEStatusRequest.cs" />
     <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
     <Compile Include="Messages\EMP\GetChargeDetailRecordsRequest.cs" />
