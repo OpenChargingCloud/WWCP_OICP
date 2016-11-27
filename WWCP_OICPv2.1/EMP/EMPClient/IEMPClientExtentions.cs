@@ -30,6 +30,9 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 {
 
+    /// <summary>
+    /// Extention methods for the EMP client interface.
+    /// </summary>
     public static class IEMPClientExtentions
     {
 

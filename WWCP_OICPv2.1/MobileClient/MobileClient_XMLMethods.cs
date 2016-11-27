@@ -31,17 +31,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public static class MobileClient_XMLMethods
     {
 
-        #region MobileAuthorizeStartXML(EVSEId, eMAIdWithPIN, PartnerProductId = null, GetNewSession = null)
+        #region MobileAuthorizeStartXML(EVSEId, EVCOIdWithPIN, PartnerProductId = null, GetNewSession = null)
 
         /// <summary>
         /// Create a new MobileAuthorizeStart request.
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="eMAIdWithPIN">The eMA identification with its PIN.</param>
+        /// <param name="EVCOIdWithPIN">The eMA identification with its PIN.</param>
         /// <param name="PartnerProductId">The optional charging product identification.</param>
         /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
         public static XElement MobileAuthorizeStartXML(EVSE_Id       EVSEId,
-                                                       eMAIdWithPIN  eMAIdWithPIN,
+                                                       EVCOIdWithPIN  EVCOIdWithPIN,
                                                        String        PartnerProductId  = null,
                                                        Boolean?      GetNewSession     = null)
         {
@@ -92,8 +92,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EVSEId == null)
                 throw new ArgumentNullException(nameof(EVSEId),        "The given EVSE identification must not be null!");
 
-            if (eMAIdWithPIN == null)
-                throw new ArgumentNullException(nameof(eMAIdWithPIN),  "The given e-mobility account identification with PIN must not be null!");
+            if (EVCOIdWithPIN == null)
+                throw new ArgumentNullException(nameof(EVCOIdWithPIN),  "The given e-mobility account identification with PIN must not be null!");
 
             #endregion
 
@@ -101,7 +101,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                           new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.ToString()),
 
-                                          eMAIdWithPIN.ToXML(OICPNS.MobileAuthorization),
+                                          EVCOIdWithPIN.ToXML(OICPNS.MobileAuthorization),
 
                                           (PartnerProductId != null)
                                               ? new XElement(OICPNS.MobileAuthorization + "PartnerProductID", PartnerProductId.ToString())

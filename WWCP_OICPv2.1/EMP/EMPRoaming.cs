@@ -44,7 +44,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Properties
 
-        public Authorizator_Id  AuthorizatorId      { get; }
+        //public Authorizator_Id  AuthorizatorId      { get; }
 
         /// <summary>
         /// The EMP client part.
@@ -1523,15 +1523,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSEData>>
 
-            PullEVSEData(eMobilityProvider_Id  ProviderId,
-                         GeoCoordinate         SearchCenter        = null,
-                         Double                DistanceKM          = 0.0,
-                         DateTime?             LastCall            = null,
+            PullEVSEData(Provider_Id         ProviderId,
+                         GeoCoordinate       SearchCenter        = null,
+                         Double              DistanceKM          = 0.0,
+                         DateTime?           LastCall            = null,
 
-                         DateTime?             Timestamp           = null,
-                         CancellationToken?    CancellationToken   = null,
-                         EventTracking_Id      EventTrackingId     = null,
-                         TimeSpan?             RequestTimeout      = null)
+                         DateTime?           Timestamp           = null,
+                         CancellationToken?  CancellationToken   = null,
+                         EventTracking_Id    EventTrackingId     = null,
+                         TimeSpan?           RequestTimeout      = null)
 
 
             => await EMPClient.PullEVSEData(ProviderId,
@@ -1564,17 +1564,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSESearchResult>>
 
-            SearchEVSE(eMobilityProvider_Id  ProviderId,
-                       GeoCoordinate         SearchCenter        = null,
-                       Double                DistanceKM          = 0.0,
-                       Address               Address             = null,
-                       PlugTypes?            Plug                = null,
-                       ChargingFacilities?   ChargingFacility    = null,
+            SearchEVSE(Provider_Id          ProviderId,
+                       GeoCoordinate        SearchCenter        = null,
+                       Double               DistanceKM          = 0.0,
+                       Address              Address             = null,
+                       PlugTypes?           Plug                = null,
+                       ChargingFacilities?  ChargingFacility    = null,
 
-                       DateTime?             Timestamp           = null,
-                       CancellationToken?    CancellationToken   = null,
-                       EventTracking_Id      EventTrackingId     = null,
-                       TimeSpan?             RequestTimeout      = null)
+                       DateTime?            Timestamp           = null,
+                       CancellationToken?   CancellationToken   = null,
+                       EventTracking_Id     EventTrackingId     = null,
+                       TimeSpan?            RequestTimeout      = null)
 
 
             => await EMPClient.SearchEVSE(ProviderId,
@@ -1608,15 +1608,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSEStatus>>
 
-            PullEVSEStatus(eMobilityProvider_Id  ProviderId,
-                           GeoCoordinate         SearchCenter        = null,
-                           Double                DistanceKM          = 0.0,
-                           EVSEStatusTypes?      EVSEStatusFilter    = null,
+            PullEVSEStatus(Provider_Id         ProviderId,
+                           GeoCoordinate       SearchCenter        = null,
+                           Double              DistanceKM          = 0.0,
+                           EVSEStatusTypes?    EVSEStatusFilter    = null,
 
-                           DateTime?             Timestamp           = null,
-                           CancellationToken?    CancellationToken   = null,
-                           EventTracking_Id      EventTrackingId     = null,
-                           TimeSpan?             RequestTimeout      = null)
+                           DateTime?           Timestamp           = null,
+                           CancellationToken?  CancellationToken   = null,
+                           EventTracking_Id    EventTrackingId     = null,
+                           TimeSpan?           RequestTimeout      = null)
 
 
             => await EMPClient.PullEVSEStatus(ProviderId,
@@ -1645,7 +1645,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSEStatusById>>
 
-            PullEVSEStatusById(eMobilityProvider_Id  ProviderId,
+            PullEVSEStatusById(Provider_Id           ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
 
                                DateTime?             Timestamp          = null,

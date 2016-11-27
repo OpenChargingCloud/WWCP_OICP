@@ -43,7 +43,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-
         Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
 
             PushEVSEData(PushEVSEDataRequest Request);
@@ -52,6 +51,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
 
             PushEVSEStatus(PushEVSEStatusRequest Request);
+
+
+        Task<HTTPResponse<AuthorizationStart>>
+
+            AuthorizeStart(AuthorizeStartRequest Request);
+
+        Task<HTTPResponse<AuthorizationStop>>
+
+            AuthorizeStop(AuthorizeStopRequest Request);
+
+        Task<HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>>
+
+            SendChargeDetailRecord(SendChargeDetailRecordRequest Request);
+
+
+        Task<HTTPResponse<AuthenticationData>>
+
+            PullAuthenticationData(PullAuthenticationDataRequest Request);
 
 
     }

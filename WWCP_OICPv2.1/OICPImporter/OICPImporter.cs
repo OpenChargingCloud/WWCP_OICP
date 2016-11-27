@@ -55,7 +55,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             String                                                    Hostname,
                             IPPort                                                    TCPPort,
                             String                                                    HTTPVirtualHost,
-                            eMobilityProvider_Id                                      ProviderId,
+                            Provider_Id                                               ProviderId,
                             DNSClient                                                 DNSClient                      = null,
 
                             TimeSpan?                                                 UpdateEVSEDataEvery            = null,
@@ -121,8 +121,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                       #region Find a matching EVSE Operator and maybe update its properties... or create a new one!
 
-                                                      if (!RoamingNetwork.TryGetChargingStationOperatorById(_OperatorEvseData.OperatorId, out _EVSEOperator))
-                                                          _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(_OperatorEvseData.OperatorId, I18NString.Create(Languages.unknown, _OperatorEvseData.OperatorName));
+                                                      if (!RoamingNetwork.TryGetChargingStationOperatorById(_OperatorEvseData.OperatorId.ToWWCP(), out _EVSEOperator))
+                                                          _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(_OperatorEvseData.OperatorId.ToWWCP(), I18NString.Create(Languages.unknown, _OperatorEvseData.OperatorName));
 
                                                       else
                                                       {
@@ -136,12 +136,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                       #region Generate a list of all charging pools/stations/EVSEs
 
-                                                      _CPInfoList = new CPInfoList(_OperatorEvseData.OperatorId);
+                                                      _CPInfoList = new CPInfoList(_OperatorEvseData.OperatorId.ToWWCP());
 
                                                       foreach (var EvseDataRecord in _OperatorEvseData.EVSEDataRecords)
                                                       {
 
-                                                          PoolId  = ChargingPool_Id.Generate(EvseDataRecord.Id.OperatorId,
+                                                          PoolId  = ChargingPool_Id.Generate(EvseDataRecord.Id.OperatorId.ToWWCP(),
                                                                                              EvseDataRecord.Address,
                                                                                              EvseDataRecord.GeoCoordinate);
 
@@ -444,15 +444,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         public String Identification { get; }
 
-        private readonly String                _Hostname;
-        private readonly IPPort                _TCPPort;
-        private readonly String                _HTTPVirtualHost;
-        private readonly eMobilityProvider_Id  _ProviderId;
+        private readonly String       _Hostname;
+        private readonly IPPort       _TCPPort;
+        private readonly String       _HTTPVirtualHost;
+        private readonly Provider_Id  _ProviderId;
 
-        private readonly TimeSpan              _UpdateEVSEDataEvery;
-        private readonly TimeSpan              _UpdateEVSEDataTimeout;
-        private readonly TimeSpan              _UpdateEVSEStatusEvery;
-        private readonly TimeSpan              _UpdateEVSEStatusTimeout;
+        private readonly TimeSpan     _UpdateEVSEDataEvery;
+        private readonly TimeSpan     _UpdateEVSEDataTimeout;
+        private readonly TimeSpan     _UpdateEVSEStatusEvery;
+        private readonly TimeSpan     _UpdateEVSEStatusTimeout;
 
         #region LoadStaticDataCounter
 
@@ -540,51 +540,48 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Create a new service for importing EVSE data via OICP/Hubject.
         /// </summary>
-        public OICPImporter(String                                                      Identification,
-                            String                                                      Hostname,
-                            IPPort                                                      TCPPort,
-                            String                                                      HTTPVirtualHost,
-                            eMobilityProvider_Id                                                     ProviderId,
-                            DNSClient                                                   DNSClient                   = null,
-                            TimeSpan?                                                   QueryTimeout                = null,
+        public OICPImporter(String                                             Identification,
+                            String                                             Hostname,
+                            IPPort                                             TCPPort,
+                            String                                             HTTPVirtualHost,
+                            Provider_Id                                        ProviderId,
+                            DNSClient                                          DNSClient                   = null,
+                            TimeSpan?                                          QueryTimeout                = null,
 
-                            TimeSpan?                                                   UpdateEVSEDataEvery         = null,
-                            TimeSpan?                                                   UpdateEVSEDataTimeout       = null,
-                            TimeSpan?                                                   UpdateEVSEStatusEvery       = null,
-                            TimeSpan?                                                   UpdateEVSEStatusTimeout     = null,
-                            Func<TContext>                                              UpdateContextCreator        = null,
-                            Action<TContext>                                            UpdateContextDisposer       = null,
-                            Action<TContext>                                            StartBulkUpdate             = null,
-                            Action<TContext>                                            StopBulkUpdate              = null,
+                            TimeSpan?                                          UpdateEVSEDataEvery         = null,
+                            TimeSpan?                                          UpdateEVSEDataTimeout       = null,
+                            TimeSpan?                                          UpdateEVSEStatusEvery       = null,
+                            TimeSpan?                                          UpdateEVSEStatusTimeout     = null,
+                            Func<TContext>                                     UpdateContextCreator        = null,
+                            Action<TContext>                                   UpdateContextDisposer       = null,
+                            Action<TContext>                                   StartBulkUpdate             = null,
+                            Action<TContext>                                   StopBulkUpdate              = null,
 
-                            Func<UInt64, StreamReader>                                  LoadStaticDataFromStream    = null,
-                            Func<UInt64, StreamReader>                                  LoadDynamicDataFromStream   = null,
+                            Func<UInt64, StreamReader>                         LoadStaticDataFromStream    = null,
+                            Func<UInt64, StreamReader>                         LoadDynamicDataFromStream   = null,
 
-                            Action<TContext, DateTime, IEnumerable<XElement>>           EVSEDataXMLHandler          = null,
-                            Func  <TContext, DateTime, IEnumerable<EVSE_Id>>            GetEVSEIdsForStatusUpdate   = null,
-                            Action<TContext, DateTime, XElement>                        EVSEStatusXMLHandler        = null)
+                            Action<TContext, DateTime, IEnumerable<XElement>>  EVSEDataXMLHandler          = null,
+                            Func  <TContext, DateTime, IEnumerable<EVSE_Id>>   GetEVSEIdsForStatusUpdate   = null,
+                            Action<TContext, DateTime, XElement>               EVSEStatusXMLHandler        = null)
 
         {
 
             #region Initial checks
 
             if (Identification.IsNullOrEmpty())
-                throw new ArgumentNullException("The given service identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Identification),  "The given service identification must not be null or empty!");
 
             if (Hostname.IsNullOrEmpty())
-                throw new ArgumentNullException("The given upstream service hostname must not be null or empty!");
+                throw new ArgumentNullException(nameof(Hostname),        "The given upstream service hostname must not be null or empty!");
 
             if (TCPPort == null)
-                throw new ArgumentNullException("The given upstream service TCP port must not be null!");
-
-            if (ProviderId == null)
-                throw new ArgumentNullException("The given EV Service Provider identification (EVSP Id) must not be null!");
+                throw new ArgumentNullException(nameof(TCPPort),         "The given upstream service TCP port must not be null!");
 
             #endregion
 
             #region Init parameters
 
-            this.Identification               = Identification;
+            this.Identification                = Identification;
             this._Hostname                     = Hostname;
             this._TCPPort                      = TCPPort;
             this._HTTPVirtualHost              = HTTPVirtualHost;
@@ -656,7 +653,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             String                                                      Hostname,
                             IPPort                                                      TCPPort,
                             String                                                      HTTPVirtualHost,
-                            eMobilityProvider_Id                                                     ProviderId,
+                            Provider_Id                                                 ProviderId,
                             DNSClient                                                   DNSClient                   = null,
                             TimeSpan?                                                   QueryTimeout                = null,
 
@@ -671,7 +668,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                             Action<TContext, DateTime, IEnumerable<OperatorEVSEData>>   EVSEDataHandler             = null,
                             Func  <TContext, DateTime, IEnumerable<EVSE_Id>>            GetEVSEIdsForStatusUpdate   = null,
-                            Action<TContext, DateTime, EVSE_Id, EVSEStatusTypes>     EVSEStatusHandler           = null)
+                            Action<TContext, DateTime, EVSE_Id, EVSEStatusTypes>        EVSEStatusHandler           = null)
 
         {
 

@@ -29,10 +29,10 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public class Acknowledgement<T> : AResponse<T,
-                                                Acknowledgement<T>>
+    public class Acknowledgement<TRequest> : AResponse<TRequest,
+                                                       Acknowledgement<TRequest>>
 
-        where T : class, IRequest
+        where TRequest : class, IRequest
 
     {
 
@@ -74,7 +74,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="StatusCode">The status code of the operation.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
-        private Acknowledgement(T                               Request,
+        private Acknowledgement(TRequest                               Request,
                                 Boolean                         Result,
                                 StatusCode                      StatusCode,
                                 Session_Id?                     SessionId         = null,
@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        public Acknowledgement(T                               Request,
+        public Acknowledgement(TRequest                               Request,
                                Session_Id                      SessionId,
                                PartnerSession_Id?              PartnerSessionId          = null,
                                String                          StatusCodeDescription     = null,
@@ -156,7 +156,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
-        public Acknowledgement(T                               Request,
+        public Acknowledgement(TRequest                               Request,
                                StatusCodes                     StatusCode,
                                String                          StatusCodeDescription     = null,
                                String                          StatusCodeAdditionalInfo  = null,
@@ -256,13 +256,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Try to parse the given XML representation of an OICP acknowledgement.
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
-        public static Acknowledgement<T> Parse(T                                                  Request,
+        public static Acknowledgement<TRequest> Parse(TRequest                                                  Request,
                                                XElement                                           XML,
-                                               CustomMapperDelegate<Acknowledgement<T>, Builder>  CustomMapper  = null,
+                                               CustomMapperDelegate<Acknowledgement<TRequest>, Builder>  CustomMapper  = null,
                                                OnExceptionDelegate                                OnException   = null)
         {
 
-            Acknowledgement<T> _Acknowledgement;
+            Acknowledgement<TRequest> _Acknowledgement;
 
             if (TryParse(Request, XML, out _Acknowledgement, CustomMapper, OnException))
                 return _Acknowledgement;
@@ -280,10 +280,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement</param>
-        public static Boolean TryParse(T                                                  Request,
+        public static Boolean TryParse(TRequest                                                  Request,
                                        XElement                                           XML,
-                                       out Acknowledgement<T>                             Acknowledgement,
-                                       CustomMapperDelegate<Acknowledgement<T>, Builder>  CustomMapper  = null,
+                                       out Acknowledgement<TRequest>                             Acknowledgement,
+                                       CustomMapperDelegate<Acknowledgement<TRequest>, Builder>  CustomMapper  = null,
                                        OnExceptionDelegate                                OnException   = null)
         {
 
@@ -302,7 +302,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     return false;
                 }
 
-                Acknowledgement = new Acknowledgement<T>(
+                Acknowledgement = new Acknowledgement<TRequest>(
 
                                       Request,
 
@@ -379,7 +379,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        public override bool Equals(Acknowledgement<T> ARequest)
+        public override bool Equals(Acknowledgement<TRequest> ARequest)
         {
             throw new NotImplementedException();
         }
@@ -390,7 +390,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Properties
 
-            public T                   Request             { get; set; }
+            public TRequest                   Request             { get; set; }
 
             /// <summary>
             /// The result of the operation.
@@ -418,7 +418,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            public Builder(Acknowledgement<T> Acknowledgement = null)
+            public Builder(Acknowledgement<TRequest> Acknowledgement = null)
             {
 
                 this.Request            = Acknowledgement.Request;

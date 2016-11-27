@@ -68,14 +68,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <summary>
         /// An event fired whenever new EVSE data record had been sent upstream.
         /// </summary>
-        public event OnPushEVSEDataResponseDelegate OnEVSEDataPushed;
+        public event OnPushEVSEDataResponseDelegate  OnEVSEDataPushed;
 
         #endregion
-        #endregion
-
-        #region Properties
-
-        public String URIPrefix { get; }
 
         #endregion
 
@@ -109,7 +104,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                    RemoteCertificateValidator,
                    ClientCert,
                    HTTPVirtualHost,
-                   "",
+                   URIPrefix.IsNotNullOrEmpty() ? URIPrefix : "/ibis/ws/eRoamingAuthorization_V2.0",
                    HTTPUserAgent,
                    RequestTimeout,
                    DNSClient)
@@ -117,8 +112,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         {
 
             this._Random     = new Random(DateTime.Now.Millisecond);
-
-            this.URIPrefix  = URIPrefix.IsNotNullOrEmpty() ? URIPrefix : "/ibis/ws/eRoamingAuthorization_V2.0";
 
         }
 
@@ -305,7 +298,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                                #endregion
 
-                                              );
+                                              ).ConfigureAwait(false);
 
             }
 
@@ -439,7 +432,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                                #endregion
 
-                                              );
+                                              ).ConfigureAwait(false);
 
             }
 
@@ -625,7 +618,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                                #endregion
 
-                                              );
+                                              ).ConfigureAwait(false);
 
             }
 
@@ -760,7 +753,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                                #endregion
 
-                                              );
+                                              ).ConfigureAwait(false);
 
             }
 

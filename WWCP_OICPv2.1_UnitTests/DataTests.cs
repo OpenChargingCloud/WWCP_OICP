@@ -89,7 +89,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
             var req1 = HubjectCPO.
 
                           PushEVSEData(EVSEDataRecords,
-                                       ChargingStationOperator_Id.Parse("DE*GEF"),
+                                       Operator_Id.Parse("DE*GEF"),
                                        null,
                                        ActionTypes.insert,
                                        IncludeEVSEDataRecords: evse => evse.Id.ToString().StartsWith("DE")).
@@ -118,7 +118,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
             var req2 = HubjectEMP.
 
-                          PullEVSEData(ProviderId:      eMobilityProvider_Id.Parse("DE*GDF"),
+                          PullEVSEData(ProviderId:      Provider_Id.Parse("DE*GDF"),
                                        SearchCenter:    new GeoCoordinate(Latitude. Parse(49.731102),
                                                                           Longitude.Parse(10.142533)),
                                        DistanceKM:      100,
@@ -163,7 +163,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
             var req3 = HubjectCPO.
 
                           PushEVSEStatus(EVSEStatus,
-                                         ChargingStationOperator_Id.Parse("DE*GEF"),
+                                         Operator_Id.Parse("DE*GEF"),
                                          "GraphDefined",
                                          ActionTypes.insert,
                                          RequestTimeout:  TimeSpan.FromSeconds(120)).
@@ -192,7 +192,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
             var req4 = HubjectEMP.
 
-                          PullEVSEStatus(ProviderId:        eMobilityProvider_Id.Parse("DE*GDF"),
+                          PullEVSEStatus(ProviderId:        Provider_Id.Parse("DE*GDF"),
                                          SearchCenter:      new GeoCoordinate(Latitude. Parse(49.731102),
                                                                               Longitude.Parse(10.142533)),
                                          DistanceKM:        100,
@@ -232,7 +232,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
         {
 
             var req5 = HubjectEMP.
-                PullEVSEStatusById(ProviderId:      eMobilityProvider_Id.Parse("DE*GDF"),
+                PullEVSEStatusById(ProviderId:      Provider_Id.Parse("DE*GDF"),
                                    EVSEIds:         Enumeration.Create(EVSE_Id.Parse("DE*GEF*E123456789*1"),
                                                                        EVSE_Id.Parse("+49*822*083431571*1")),
                                    RequestTimeout:  TimeSpan.FromSeconds(120)).
@@ -272,7 +272,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
             Task.Factory.StartNew(async () => {
 
                 var result = await HubjectEMP.
-                    SearchEVSE(eMobilityProvider_Id.Parse("DE*GDF"),
+                    SearchEVSE(Provider_Id.Parse("DE*GDF"),
                                SearchCenter:    new GeoCoordinate(Latitude. Parse(49.731102),
                                                                   Longitude.Parse(10.142533)),
                                DistanceKM:      100,
@@ -304,11 +304,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                 var result = await HubjectEMP.
                     PushAuthenticationData(Enumeration.Create(  // ([A-Za-z]{2} \-? [A-Za-z0-9]{3} \-? C[A-Za-z0-9]{8}[\*|\-]?[\d|X])
 
-                                               AuthorizationIdentification.FromAuthToken
-                                                   (Auth_Token.Parse("08152305")),
+                                               AuthorizationIdentification.FromRFIDId(UID.Parse("08152305")),
 
                                                AuthorizationIdentification.FromQRCodeIdentification
-                                                   (eMobilityAccount_Id.Parse("DE-GDF-C123ABC56-X"),
+                                                   (EVCO_Id.Parse("DE-GDF-C123ABC56-X"),
                                                     "1234") //DE**GDF*CAETE4*3"), "1234") //
 
                                            ),
@@ -340,7 +339,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
             Task.Factory.StartNew(async () => {
 
                 var result = await HubjectCPO.
-                    PullAuthenticationData(ChargingStationOperator_Id.Parse("DE*GEF"),
+                    PullAuthenticationData(Operator_Id.Parse("DE*GEF"),
                                            RequestTimeout: TimeSpan.FromSeconds(120));
 
 

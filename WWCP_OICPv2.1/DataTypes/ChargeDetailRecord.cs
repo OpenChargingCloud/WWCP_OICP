@@ -127,13 +127,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// An optional identification of the hub operator.
         /// </summary>
         [Optional]
-        public HubOperator_Id               HubOperatorId           { get; }
+        public HubOperator_Id?              HubOperatorId           { get; }
 
         /// <summary>
         /// An optional identification of the hub provider.
         /// </summary>
         [Optional]
-        public HubProvider_Id               HubProviderId           { get; }
+        public HubProvider_Id?              HubProviderId           { get; }
 
         #endregion
 
@@ -172,8 +172,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                   IEnumerable<Double>          MeterValuesInBetween   = null,
                                   Double?                      ConsumedEnergy         = null,
                                   String                       MeteringSignature      = null,
-                                  HubOperator_Id               HubOperatorId          = null,
-                                  HubProvider_Id               HubProviderId          = null,
+                                  HubOperator_Id?              HubOperatorId          = null,
+                                  HubProvider_Id?              HubProviderId          = null,
                                   Action<ChargeDetailRecord>   CustomMapper           = null)
 
         {
@@ -351,11 +351,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 ChargeDetailRecordXML.ElementValueOrDefault(OICPNS.Authorization + "MeteringSignature"),
 
-                ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubOperatorID",
-                                                            HubOperator_Id.Parse,
-                                                            null),
+                ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "HubOperatorID",
+                                                            HubOperator_Id.Parse),
 
-                ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "HubProviderID",
+                ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "HubProviderID",
                                                             HubProvider_Id.Parse),
 
                 response => CustomElementsMapper(ChargeDetailRecordXML, response)
@@ -371,9 +370,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        public XElement ToXML(XName XName = null)
 
-            => new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecord",
+            => new XElement(XName != null ? XName : OICPNS.Authorization + "eRoamingChargeDetailRecord",
 
                    new XElement(OICPNS.Authorization + "SessionID",        SessionId.ToString()),
                    PartnerSessionId != null ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,

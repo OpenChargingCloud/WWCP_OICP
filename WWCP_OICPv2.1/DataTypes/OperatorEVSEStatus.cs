@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The unique identification of an Charging Station Operator.
         /// </summary>
-        public ChargingStationOperator_Id     OperatorId          { get; }
+        public Operator_Id                    OperatorId          { get; }
 
         /// <summary>
         /// The name of an Charging Station Operator.
@@ -62,7 +62,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">The unique identification of an Charging Station Operator.</param>
         /// <param name="OperatorName">The name of an Charging Station Operator.</param>
         /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
-        public OperatorEVSEStatus(ChargingStationOperator_Id     OperatorId,
+        public OperatorEVSEStatus(Operator_Id                    OperatorId,
                                   String                         OperatorName,
                                   IEnumerable<EVSEStatusRecord>  EVSEStatusRecords)
         {
@@ -98,7 +98,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
-                return new OperatorEVSEStatus(ChargingStationOperator_Id.Parse(OperatorEVSEStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "OperatorID", "Missing OperatorID!")),
+                return new OperatorEVSEStatus(Operator_Id.Parse(OperatorEVSEStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "OperatorID", "Missing OperatorID!")),
                                               OperatorEVSEStatusXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName", ""),
                                               OperatorEVSEStatusXML.Elements             (OICPNS.EVSEStatus + "EvseStatusRecord").
                                                                     SafeSelect(EvseStatusRecordXML => EVSEStatusRecord.Parse(EvseStatusRecordXML)).

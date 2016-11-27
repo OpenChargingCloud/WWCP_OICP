@@ -197,6 +197,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+        #region GetHashCode()
+
+        /// <summary>
+        /// Return the HashCode of this object.
+        /// </summary>
+        /// <returns>The HashCode of this object.</returns>
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+
+                return PoolId.GetHashCode();
+
+            }
+        }
+
+        #endregion
+
         #region (override) ToString()
 
         /// <summary>

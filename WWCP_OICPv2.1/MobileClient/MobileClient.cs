@@ -266,13 +266,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region MobileAuthorizeStart(EVSEId, eMAId, PIN, PartnerProductId = null, GetNewSession = null, ...)
+        #region MobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductId = null, GetNewSession = null, ...)
 
         /// <summary>
         /// Create a new task sending a MobileAuthorizeStart request.
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="eMAId">The eMA identification.</param>
+        /// <param name="EVCOId">The eMA identification.</param>
         /// <param name="PIN">The PIN of the eMA identification.</param>
         /// <param name="PartnerProductId">The optional charging product identification.</param>
         /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
@@ -284,7 +284,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<MobileAuthorizationStart>>
 
             MobileAuthorizeStart(EVSE_Id              EVSEId,
-                                 eMobilityAccount_Id  eMAId,
+                                 EVCO_Id              EVCOId,
                                  String               PIN,
                                  String               PartnerProductId   = null,
                                  Boolean?             GetNewSession      = null,
@@ -296,7 +296,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
             => await MobileAuthorizeStart(EVSEId,
-                                          new eMAIdWithPIN(eMAId, PIN),
+                                          new EVCOIdWithPIN(EVCOId, PIN),
                                           PartnerProductId,
                                           GetNewSession,
 
@@ -308,13 +308,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region MobileAuthorizeStart(EVSEId, eMAId, HashedPIN, Function, Salt, PartnerProductId = null, GetNewSession = null, ...)
+        #region MobileAuthorizeStart(EVSEId, EVCOId, HashedPIN, Function, Salt, PartnerProductId = null, GetNewSession = null, ...)
 
         /// <summary>
         /// Create a new task sending a MobileAuthorizeStart request.
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="eMAId">The eMA identification.</param>
+        /// <param name="EVCOId">The eMA identification.</param>
         /// <param name="HashedPIN">The PIN of the eMA identification.</param>
         /// <param name="Function">The crypto hash function of the eMA identification.</param>
         /// <param name="Salt">The Salt of the eMA identification.</param>
@@ -327,22 +327,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<MobileAuthorizationStart>>
 
-            MobileAuthorizeStart(EVSE_Id              EVSEId,
-                                 eMobilityAccount_Id  eMAId,
-                                 String               HashedPIN,
-                                 PINCrypto            Function,
-                                 String               Salt,
-                                 String               PartnerProductId   = null,
-                                 Boolean?             GetNewSession      = null,
+            MobileAuthorizeStart(EVSE_Id             EVSEId,
+                                 EVCO_Id             EVCOId,
+                                 String              HashedPIN,
+                                 PINCrypto           Function,
+                                 String              Salt,
+                                 String              PartnerProductId   = null,
+                                 Boolean?            GetNewSession      = null,
 
-                                 DateTime?            Timestamp          = null,
-                                 CancellationToken?   CancellationToken  = null,
-                                 EventTracking_Id     EventTrackingId    = null,
-                                 TimeSpan?            RequestTimeout     = null)
+                                 DateTime?           Timestamp          = null,
+                                 CancellationToken?  CancellationToken  = null,
+                                 EventTracking_Id    EventTrackingId    = null,
+                                 TimeSpan?           RequestTimeout     = null)
 
 
             => await MobileAuthorizeStart(EVSEId,
-                                          new eMAIdWithPIN(eMAId, HashedPIN, Function, Salt),
+                                          new EVCOIdWithPIN(EVCOId, HashedPIN, Function, Salt),
                                           PartnerProductId,
                                           GetNewSession,
 
@@ -354,13 +354,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region MobileAuthorizeStart(EVSEId, eMAIdWithPIN, PartnerProductId = null, GetNewSession = null, ...)
+        #region MobileAuthorizeStart(EVSEId, EVCOIdWithPIN, PartnerProductId = null, GetNewSession = null, ...)
 
         /// <summary>
         /// Create a new task sending a MobileAuthorizeStart request.
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="eMAIdWithPIN">The eMA identification with its PIN.</param>
+        /// <param name="EVCOIdWithPIN">The eMA identification with its PIN.</param>
         /// <param name="ProductId">The optional charging product identification.</param>
         /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
         /// 
@@ -371,7 +371,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<MobileAuthorizationStart>>
 
             MobileAuthorizeStart(EVSE_Id             EVSEId,
-                                 eMAIdWithPIN        eMAIdWithPIN,
+                                 EVCOIdWithPIN       EVCOIdWithPIN,
                                  String              ProductId          = null,
                                  Boolean?            GetNewSession      = null,
 
@@ -387,8 +387,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (EVSEId == null)
                 throw new ArgumentNullException(nameof(EVSEId),        "The given EVSE identification must not be null!");
 
-            if (eMAIdWithPIN == null)
-                throw new ArgumentNullException(nameof(eMAIdWithPIN),  "The given e-mobility account identification with PIN must not be null!");
+            if (EVCOIdWithPIN == null)
+                throw new ArgumentNullException(nameof(EVCOIdWithPIN),  "The given e-mobility account identification with PIN must not be null!");
 
 
             if (!Timestamp.HasValue)
@@ -413,7 +413,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                       ClientId,
                                                       EventTrackingId,
                                                       EVSEId,
-                                                      eMAIdWithPIN,
+                                                      EVCOIdWithPIN,
                                                       ProductId,
                                                       GetNewSession,
                                                       RequestTimeout);
@@ -439,7 +439,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             {
 
                 var result = await _OICPClient.Query(MobileClient_XMLMethods.MobileAuthorizeStartXML(EVSEId,
-                                                                                                     eMAIdWithPIN,
+                                                                                                     EVCOIdWithPIN,
                                                                                                      ProductId,
                                                                                                      GetNewSession),
                                                      "eRoamingMobileAuthorizeStart",
@@ -515,7 +515,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                            ClientId,
                                                            EventTrackingId,
                                                            EVSEId,
-                                                           eMAIdWithPIN,
+                                                           EVCOIdWithPIN,
                                                            ProductId,
                                                            GetNewSession,
                                                            RequestTimeout,
@@ -553,7 +553,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            MobileRemoteStart(Session_Id  SessionId,
+            MobileRemoteStart(Session_Id          SessionId,
 
                               DateTime?           Timestamp          = null,
                               CancellationToken?  CancellationToken  = null,
@@ -721,7 +721,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            MobileRemoteStop(Session_Id  SessionId,
+            MobileRemoteStop(Session_Id          SessionId,
 
                              DateTime?           Timestamp          = null,
                              CancellationToken?  CancellationToken  = null,

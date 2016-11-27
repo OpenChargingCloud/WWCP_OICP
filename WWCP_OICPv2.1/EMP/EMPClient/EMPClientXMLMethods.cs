@@ -92,7 +92,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="GeoCoordinatesResponseFormat">An optional response format for the geo coordinates [default: DecimalDegree]</param>
-        public static XElement PullEVSEDataRequestXML(eMobilityProvider_Id                            ProviderId,
+        public static XElement PullEVSEDataRequestXML(Provider_Id                        ProviderId,
                                                       GeoCoordinate                      SearchCenter                  = null,
                                                       Double                             DistanceKM                    = 0.0,
                                                       DateTime?                          LastCall                      = null,
@@ -198,9 +198,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatus">An optional EVSE status as filter criteria.</param>
-        public static XElement PullEVSEStatusRequestXML(eMobilityProvider_Id          ProviderId,
-                                                        GeoCoordinate    SearchCenter  = null,
-                                                        Double           DistanceKM    = 0.0,
+        public static XElement PullEVSEStatusRequestXML(Provider_Id       ProviderId,
+                                                        GeoCoordinate     SearchCenter  = null,
+                                                        Double            DistanceKM    = 0.0,
                                                         EVSEStatusTypes?  EVSEStatus    = null)
         {
 
@@ -298,7 +298,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
-        public static XElement PullEVSEStatusByIdRequestXML(eMobilityProvider_Id               ProviderId,
+        public static XElement PullEVSEStatusByIdRequestXML(Provider_Id           ProviderId,
                                                             IEnumerable<EVSE_Id>  EVSEIds)
         {
 
@@ -361,7 +361,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="Address">An optional address of the charging stations.</param>
         /// <param name="Plug">Optional plugs of the charging station.</param>
         /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
-        public static XElement SearchEvseRequestXML(eMobilityProvider_Id              ProviderId,
+        public static XElement SearchEvseRequestXML(Provider_Id          ProviderId,
                                                     GeoCoordinate        SearchCenter      = null,
                                                     Double               DistanceKM        = 0.0,
                                                     Address              Address           = null,

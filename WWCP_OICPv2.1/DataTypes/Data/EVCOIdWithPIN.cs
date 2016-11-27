@@ -28,51 +28,51 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An e-mobility account identification with (hashed) pin.
+    /// An electric vehicle contract identification with (hashed) pin.
     /// </summary>
-    public class eMAIdWithPIN : IEquatable <eMAIdWithPIN>,
-                                IComparable<eMAIdWithPIN>,
-                                IComparable
+    public class EVCOIdWithPIN : IEquatable <EVCOIdWithPIN>,
+                                 IComparable<EVCOIdWithPIN>,
+                                 IComparable
     {
 
         #region Properties
 
         /// <summary>
-        /// An e-mobility account identification.
+        /// The electric vehicle contract identification.
         /// </summary>
-        public eMobilityAccount_Id  eMAId       { get; }
+        public EVCO_Id    EVCOId     { get; }
 
         /// <summary>
         /// A pin.
         /// </summary>
-        public String               PIN         { get; }
+        public String     PIN        { get; }
 
         /// <summary>
         /// A crypto function.
         /// </summary>
-        public PINCrypto            Function    { get; }
+        public PINCrypto  Function   { get; }
 
         /// <summary>
         /// The salt for the crypto function.
         /// </summary>
-        public String               Salt        { get; }
+        public String     Salt       { get; }
 
         #endregion
 
         #region Constructor(s)
 
-        #region eMAIdWithPIN(eMAId, PIN)
+        #region EVCOIdWithPIN(EVCOId, PIN)
 
         /// <summary>
-        /// Create a new e-mobility account identification with pin.
+        /// Create a new electric vehicle contract identification with pin.
         /// </summary>
-        /// <param name="eMAId">The e-mobility account identification.</param>
-        /// <param name="PIN">The pin.</param>
-        public eMAIdWithPIN(eMobilityAccount_Id  eMAId,
-                            String               PIN)
+        /// <param name="EVCOId">An electric vehicle contract identification.</param>
+        /// <param name="PIN">A pin.</param>
+        public EVCOIdWithPIN(EVCO_Id  EVCOId,
+                             String   PIN)
         {
 
-            this.eMAId     = eMAId;
+            this.EVCOId    = EVCOId;
             this.PIN       = PIN;
             this.Function  = PINCrypto.none;
 
@@ -80,25 +80,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region eMAIdWithPIN(eMAId, HashedPIN, Function, Salt = "")
+        #region EVCOIdWithPIN(EVCOId, HashedPIN, Function, Salt = "")
 
         /// <summary>
-        /// Create a new e-mobility account identification with a hashed pin.
+        /// Create a new electric vehicle contract identification with a hashed pin.
         /// </summary>
-        /// <param name="eMAId">The e-mobility account identification.</param>
-        /// <param name="HashedPIN">The hashed pin.</param>
-        /// <param name="Function">The crypto function.</param>
-        /// <param name="Salt">The salt of the crypto function.</param>
-        public eMAIdWithPIN(eMobilityAccount_Id  eMAId,
-                            String               HashedPIN,
-                            PINCrypto            Function,
-                            String               Salt = "")
+        /// <param name="EVCOId">An electric vehicle contract identification.</param>
+        /// <param name="HashedPIN">A hashed pin.</param>
+        /// <param name="Function">A crypto function.</param>
+        /// <param name="Salt">A salt of the crypto function.</param>
+        public EVCOIdWithPIN(EVCO_Id    EVCOId,
+                             String     HashedPIN,
+                             PINCrypto  Function,
+                             String     Salt = "")
         {
 
-            this.eMAId     = eMAId;
+            this.EVCOId    = EVCOId;
             this.PIN       = HashedPIN;
             this.Function  = Function;
-            this.Salt      = Salt;
+            this.Salt      = Salt ?? "";
 
         }
 
@@ -139,23 +139,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region (static) Parse(QRCodeIdentificationXML, OnException = null)
 
         /// <summary>
-        /// Parse the givem XML as an e-mobility account identification with (hashed) pin.
+        /// Parse the givem XML as an electric vehicle contract identification with (hashed) pin.
         /// </summary>
-        /// <param name="eMAIdWithPinXML">A XML representation of an e-mobility account identification with (hashed) pin.</param>
+        /// <param name="EVCOIdWithPinXML">A XML representation of an electric vehicle contract identification with (hashed) pin.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static eMAIdWithPIN Parse(XElement             eMAIdWithPinXML,
+        public static EVCOIdWithPIN Parse(XElement             EVCOIdWithPinXML,
                                          OnExceptionDelegate  OnException  = null)
         {
 
-            var _eMobilityAccount_Id       = eMAIdWithPinXML.MapValueOrFail(OICPNS.CommonTypes + "EVCOID",
-                                                                            eMobilityAccount_Id.Parse,
+            var _EVCO_Id       = EVCOIdWithPinXML.MapValueOrFail(OICPNS.CommonTypes + "EVCOID",
+                                                                            EVCO_Id.Parse,
                                                                             "The 'EVCOID' XML tag could not be found!");
 
-            var PINXML        = eMAIdWithPinXML.Element(OICPNS.CommonTypes + "PIN");
-            var HashedPINXML  = eMAIdWithPinXML.Element(OICPNS.CommonTypes + "HashedPIN");
+            var PINXML        = EVCOIdWithPinXML.Element(OICPNS.CommonTypes + "PIN");
+            var HashedPINXML  = EVCOIdWithPinXML.Element(OICPNS.CommonTypes + "HashedPIN");
 
             if (PINXML != null)
-                return new eMAIdWithPIN(_eMobilityAccount_Id,
+                return new EVCOIdWithPIN(_EVCO_Id,
                                         PINXML.Value.IsNotNullOrEmpty() ? PINXML.Value : String.Empty);
 
 
@@ -169,7 +169,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (FunctionXML == null || (FunctionXML.Value != "MD5" && FunctionXML.Value != "SHA-1"))
                 throw new Exception("Invalid 'HashedPIN Function'!");
 
-            return new eMAIdWithPIN(_eMobilityAccount_Id,
+            return new EVCOIdWithPIN(_EVCO_Id,
                                     ValueXML.Value.IsNotNullOrEmpty() ? ValueXML.Value : String.Empty,
                                     FunctionXML.Value == "MD5" ? PINCrypto.MD5 : PINCrypto.SHA1,
                                     SaltXML != null ? SaltXML.Value : String.Empty);
@@ -188,7 +188,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new XElement((Namespace ?? OICPNS.CommonTypes) + "QRCodeIdentification",
 
-                   new XElement(OICPNS.CommonTypes + "EVCOID", eMAId.ToString()),
+                   new XElement(OICPNS.CommonTypes + "EVCOID", EVCOId.ToString()),
 
                    Function == PINCrypto.none
 
@@ -205,7 +205,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
 
-        #region IComparable<eMAIdWithPIN> Members
+        #region IComparable<EVCOIdWithPIN> Members
 
         #region CompareTo(Object)
 
@@ -219,42 +219,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object),  "The given object must not be null!");
 
-            // Check if the given object is an e-mobility account identification with (hashed) pin.
-            var eMAIdWithPIN = Object as eMAIdWithPIN;
-            if ((Object) eMAIdWithPIN == null)
-                throw new ArgumentException("The given object is not an e-mobility account identification with (hashed) pin!");
+            // Check if the given object is an electric vehicle contract identification with (hashed) pin.
+            var EVCOIdWithPIN = Object as EVCOIdWithPIN;
+            if ((Object) EVCOIdWithPIN == null)
+                throw new ArgumentException("The given object is not an electric vehicle contract identification with (hashed) pin!");
 
-            return CompareTo(eMAIdWithPIN);
+            return CompareTo(EVCOIdWithPIN);
 
         }
 
         #endregion
 
-        #region CompareTo(eMAIdWithPIN)
+        #region CompareTo(EVCOIdWithPIN)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="eMAIdWithPIN">An e-mobility account identification with (hashed) pin object to compare with.</param>
-        public Int32 CompareTo(eMAIdWithPIN eMAIdWithPIN)
+        /// <param name="EVCOIdWithPIN">An electric vehicle contract identification with (hashed) pin object to compare with.</param>
+        public Int32 CompareTo(EVCOIdWithPIN EVCOIdWithPIN)
         {
 
-            if ((Object) eMAIdWithPIN == null)
-                throw new ArgumentNullException(nameof(eMAIdWithPIN),  "The given e-mobility account identification with (hashed) pin must not be null!");
+            if ((Object) EVCOIdWithPIN == null)
+                throw new ArgumentNullException(nameof(EVCOIdWithPIN),  "The given electric vehicle contract identification with (hashed) pin must not be null!");
 
-            var result = eMAId.CompareTo(eMAIdWithPIN.eMAId);
+            var result = EVCOId.CompareTo(EVCOIdWithPIN.EVCOId);
             if (result != 0)
                 return result;
 
-            result = String.Compare(PIN, eMAIdWithPIN.PIN, StringComparison.Ordinal);
+            result = String.Compare(PIN, EVCOIdWithPIN.PIN, StringComparison.Ordinal);
             if (result != 0)
                 return result;
 
-            result = Function.CompareTo(eMAIdWithPIN.Function);
+            result = Function.CompareTo(EVCOIdWithPIN.Function);
             if (result != 0)
                 return result;
 
-            return String.Compare(Salt, eMAIdWithPIN.Salt, StringComparison.Ordinal);
+            return String.Compare(Salt, EVCOIdWithPIN.Salt, StringComparison.Ordinal);
 
         }
 
@@ -277,40 +277,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 return false;
 
-            // Check if the given object is an e-mobility account identification with (hashed) pin.
-            var eMAIdWithPIN = Object as eMAIdWithPIN;
-            if ((Object) eMAIdWithPIN == null)
+            // Check if the given object is an electric vehicle contract identification with (hashed) pin.
+            var EVCOIdWithPIN = Object as EVCOIdWithPIN;
+            if ((Object) EVCOIdWithPIN == null)
                 return false;
 
-            return this.Equals(eMAIdWithPIN);
+            return this.Equals(EVCOIdWithPIN);
 
         }
 
         #endregion
 
-        #region Equals(eMAIdWithPIN)
+        #region Equals(EVCOIdWithPIN)
 
         /// <summary>
-        /// Compares two e-mobility account identifications with (hashed) pins for equality.
+        /// Compares two electric vehicle contract identifications with (hashed) pins for equality.
         /// </summary>
-        /// <param name="eMAIdWithPIN">An e-mobility account identification with (hashed) pin to compare with.</param>
+        /// <param name="EVCOIdWithPIN">An electric vehicle contract identification with (hashed) pin to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(eMAIdWithPIN eMAIdWithPIN)
+        public Boolean Equals(EVCOIdWithPIN EVCOIdWithPIN)
         {
 
-            if ((Object) eMAIdWithPIN == null)
+            if ((Object) EVCOIdWithPIN == null)
                 return false;
 
-            if (!eMAId.Equals(eMAIdWithPIN.eMAId))
+            if (!EVCOId.Equals(EVCOIdWithPIN.EVCOId))
                 return false;
 
-            if (!PIN.Equals(eMAIdWithPIN.PIN))
+            if (!PIN.Equals(EVCOIdWithPIN.PIN))
                 return false;
 
-            if (!Function.Equals(eMAIdWithPIN.Function))
+            if (!Function.Equals(EVCOIdWithPIN.Function))
                 return false;
 
-            return Salt.Equals(eMAIdWithPIN.Salt);
+            return Salt.Equals(EVCOIdWithPIN.Salt);
 
         }
 
@@ -327,7 +327,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
             unchecked
             {
-                return eMAId.GetHashCode() * 23 ^ PIN.GetHashCode() * 17 ^ Function.GetHashCode() * 7 ^ Salt.GetHashCode();
+                return EVCOId.GetHashCode() * 23 ^ PIN.GetHashCode() * 17 ^ Function.GetHashCode() * 7 ^ Salt.GetHashCode();
             }
         }
 
@@ -340,7 +340,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public override String ToString()
 
-            => String.Concat(eMAId.ToString(), " -", Function != PINCrypto.none ? Function.ToString(): "", "-> ", PIN );
+            => String.Concat(EVCOId.ToString(), " -", Function != PINCrypto.none ? Function.ToString(): "", "-> ", PIN );
 
         #endregion
 

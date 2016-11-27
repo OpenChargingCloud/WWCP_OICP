@@ -64,17 +64,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The charging station operator identification.
         /// </summary>
-        public ChargingStationOperator_Id  OperatorId   { get; }
+        public Operator_Id             OperatorId   { get; }
 
         /// <summary>
         /// The suffix of the EVSE identification.
         /// </summary>
-        public String                      Suffix       { get; }
+        public String                  Suffix       { get; }
 
         /// <summary>
         /// The detected format of the EVSE identification.
         /// </summary>
-        public OperatorIdFormats           Format
+        public OperatorIdFormats  Format
             => OperatorId.Format;
 
         /// <summary>
@@ -94,8 +94,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="OperatorId">The unique identification of a charging station operator.</param>
         /// <param name="Suffix">The suffix of the EVSE identification.</param>
-        private EVSE_Id(ChargingStationOperator_Id  OperatorId,
-                        String                      Suffix)
+        private EVSE_Id(Operator_Id  OperatorId,
+                        String       Suffix)
         {
 
             #region Initial checks
@@ -135,13 +135,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 throw new ArgumentException("Illegal EVSE identification '" + Text + "'!",
                                             nameof(Text));
 
-            ChargingStationOperator_Id _OperatorId;
+            Operator_Id _OperatorId;
 
-            if (ChargingStationOperator_Id.TryParse(MatchCollection[0].Groups[1].Value, out _OperatorId))
+            if (Operator_Id.TryParse(MatchCollection[0].Groups[1].Value, out _OperatorId))
                 return new EVSE_Id(_OperatorId,
                                    MatchCollection[0].Groups[2].Value);
 
-            if (ChargingStationOperator_Id.TryParse(MatchCollection[0].Groups[3].Value, out _OperatorId))
+            if (Operator_Id.TryParse(MatchCollection[0].Groups[3].Value, out _OperatorId))
                 return new EVSE_Id(_OperatorId,
                                    MatchCollection[0].Groups[4].Value);
 
@@ -160,8 +160,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="OperatorId">The unique identification of a charging station operator.</param>
         /// <param name="Suffix">The suffix of the EVSE identification.</param>
-        public static EVSE_Id Parse(ChargingStationOperator_Id  OperatorId,
-                                    String                      Suffix)
+        public static EVSE_Id Parse(Operator_Id  OperatorId,
+                                    String       Suffix)
         {
 
             switch (OperatorId.Format)
@@ -220,10 +220,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (_MatchCollection.Count != 1)
                     return false;
 
-                ChargingStationOperator_Id __EVSEOperatorId;
+                Operator_Id __EVSEOperatorId;
 
                 // New format...
-                if (ChargingStationOperator_Id.TryParse(_MatchCollection[0].Groups[1].Value, out __EVSEOperatorId))
+                if (Operator_Id.TryParse(_MatchCollection[0].Groups[1].Value, out __EVSEOperatorId))
                 {
 
                     EVSEId = new EVSE_Id(__EVSEOperatorId,
@@ -234,7 +234,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 }
 
                 // Old format...
-                if (ChargingStationOperator_Id.TryParse(_MatchCollection[0].Groups[3].Value, out __EVSEOperatorId))
+                if (Operator_Id.TryParse(_MatchCollection[0].Groups[3].Value, out __EVSEOperatorId))
                 {
 
                     EVSEId = new EVSE_Id(__EVSEOperatorId,

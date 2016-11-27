@@ -34,14 +34,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         #region TestMobileAuth(HubjectMobile, EVSEId, eMAIdWithPin)
 
-        public async Task TestMobileAuth(MobileClient  HubjectMobile,
-                                         EVSE_Id       EVSEId,
-                                         eMAIdWithPIN  eMAIdWithPin)
+        public async Task TestMobileAuth(MobileClient   HubjectMobile,
+                                         EVSE_Id        EVSEId,
+                                         EVCOIdWithPIN  EVCOIdWithPIN)
         {
 
             var MobileAuthorizationStart = await HubjectMobile.
                                    MobileAuthorizeStart(EVSEId,
-                                                        eMAIdWithPin,
+                                                        EVCOIdWithPIN,
                                                         RequestTimeout: TimeSpan.FromSeconds(120));
 
 

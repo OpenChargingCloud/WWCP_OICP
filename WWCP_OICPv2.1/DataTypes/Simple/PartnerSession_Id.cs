@@ -18,6 +18,9 @@
 #region Usings
 
 using System;
+using System.Text.RegularExpressions;
+
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -25,10 +28,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The unique identification of an OICP partner session.
+    /// The unique identification of an OICP partner charging session.
     /// </summary>
     public struct PartnerSession_Id : IId,
-                                      IEquatable<PartnerSession_Id>,
+                                      IEquatable <PartnerSession_Id>,
                                       IComparable<PartnerSession_Id>
 
     {
@@ -40,38 +43,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         private readonly String InternalId;
 
+
+        /// <summary>
+        /// The regular expression for parsing a partner charging session identification.
+        /// </summary>
+        public static readonly Regex PartnerSessionId_RegEx  = new Regex(@"^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$",
+                                                                  RegexOptions.IgnorePatternWhitespace);
+
         #endregion
 
         #region Properties
 
-        #region New
-
         /// <summary>
-        /// Returns a new partner session identification.
-        /// </summary>
-        public static PartnerSession_Id New
-
-            => PartnerSession_Id.Parse(Guid.NewGuid().ToString());
-
-        #endregion
-
-        #region Length
-
-        /// <summary>
-        /// Returns the length of the identificator.
+        /// The length of the partner charging session identificator.
         /// </summary>
         public UInt64 Length
-
             => (UInt64) InternalId.Length;
-
-        #endregion
 
         #endregion
 
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new partner session identification.
+        /// Create a new partner charging session identification.
         /// based on the given string.
         /// </summary>
         private PartnerSession_Id(String Text)
@@ -85,37 +79,77 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Parse(Text)
 
         /// <summary>
-        /// Parse the given string as a partner session identification.
+        /// Parse the given string as a partner charging session identification.
         /// </summary>
-        /// <param name="Text">A text representation of a partner session identification.</param>
+        /// <param name="Text">A text representation of a partner charging session identification.</param>
         public static PartnerSession_Id Parse(String Text)
+{
 
-            => new PartnerSession_Id(Text);
+            #region Initial checks
+
+            if (Text.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Text), "The given text representation of a partner charging session identification must not be null or empty!");
+
+            #endregion
+
+            var MatchCollection = PartnerSessionId_RegEx.Matches(Text);
+
+            if (MatchCollection.Count != 1)
+                throw new ArgumentException("Illegal text representation of a partner charging session identification: '" + Text + "'!", nameof(Text));
+
+            return new PartnerSession_Id(Text);
+
+        }
 
         #endregion
 
-        #region TryParse(Text, out ChargingSessionId)
+        #region TryParse(Text, out PartnerSessionId)
 
         /// <summary>
-        /// Parse the given string as a partner session identification.
+        /// Parse the given string as a partner charging session identification.
         /// </summary>
-        /// <param name="Text">A text representation of a partner session identification.</param>
-        /// <param name="ChargingSessionId">The parsed partner session identification.</param>
-        public static Boolean TryParse(String Text, out PartnerSession_Id ChargingSessionId)
+        /// <param name="Text">A text representation of a partner charging session identification.</param>
+        /// <param name="PartnerSessionId">The parsed partner charging session identification.</param>
+        public static Boolean TryParse(String Text, out PartnerSession_Id PartnerSessionId)
         {
+
+            #region Initial checks
+
+            if (Text.IsNullOrEmpty())
+            {
+                PartnerSessionId = default(PartnerSession_Id);
+                return false;
+            }
+
+            #endregion
+
             try
             {
 
-                ChargingSessionId = new PartnerSession_Id(Text);
+                var MatchCollection = PartnerSessionId_RegEx.Matches(Text);
+
+                if (MatchCollection.Count != 1)
+                {
+                    PartnerSessionId = default(PartnerSession_Id);
+                    return false;
+                }
+
+                PartnerSessionId = new PartnerSession_Id(Text);
 
                 return true;
 
             }
+
+#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
+#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch (Exception)
-            {
-                ChargingSessionId = default(PartnerSession_Id);
-                return false;
-            }
+#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
+#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
+            { }
+
+            PartnerSessionId = default(PartnerSession_Id);
+            return false;
+
         }
 
         #endregion
@@ -123,7 +157,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Clone
 
         /// <summary>
-        /// Clone this partner session identification.
+        /// Clone this partner charging session identification.
         /// </summary>
         public PartnerSession_Id Clone
 
@@ -136,113 +170,113 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Operator overloading
 
-        #region Operator == (ChargingSessionId1, ChargingSessionId2)
+        #region Operator == (PartnerPartnerSessionId1, PartnerPartnerSessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingSessionId1">A ChargingSessionId.</param>
-        /// <param name="ChargingSessionId2">Another ChargingSessionId.</param>
+        /// <param name="PartnerPartnerSessionId1">A partner charging session identification.</param>
+        /// <param name="PartnerPartnerSessionId2">Another partner charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (PartnerSession_Id ChargingSessionId1, PartnerSession_Id ChargingSessionId2)
+        public static Boolean operator == (PartnerSession_Id PartnerPartnerSessionId1, PartnerSession_Id PartnerPartnerSessionId2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(ChargingSessionId1, ChargingSessionId2))
+            if (Object.ReferenceEquals(PartnerPartnerSessionId1, PartnerPartnerSessionId2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) ChargingSessionId1 == null) || ((Object) ChargingSessionId2 == null))
+            if (((Object) PartnerPartnerSessionId1 == null) || ((Object) PartnerPartnerSessionId2 == null))
                 return false;
 
-            return ChargingSessionId1.Equals(ChargingSessionId2);
+            return PartnerPartnerSessionId1.Equals(PartnerPartnerSessionId2);
 
         }
 
         #endregion
 
-        #region Operator != (ChargingSessionId1, ChargingSessionId2)
+        #region Operator != (PartnerPartnerSessionId1, PartnerPartnerSessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingSessionId1">A ChargingSessionId.</param>
-        /// <param name="ChargingSessionId2">Another ChargingSessionId.</param>
+        /// <param name="PartnerPartnerSessionId1">A partner charging session identification.</param>
+        /// <param name="PartnerPartnerSessionId2">Another partner charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (PartnerSession_Id ChargingSessionId1, PartnerSession_Id ChargingSessionId2)
-            => !(ChargingSessionId1 == ChargingSessionId2);
+        public static Boolean operator != (PartnerSession_Id PartnerPartnerSessionId1, PartnerSession_Id PartnerPartnerSessionId2)
+            => !(PartnerPartnerSessionId1 == PartnerPartnerSessionId2);
 
         #endregion
 
-        #region Operator <  (ChargingSessionId1, ChargingSessionId2)
+        #region Operator <  (PartnerPartnerSessionId1, PartnerPartnerSessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingSessionId1">A ChargingSessionId.</param>
-        /// <param name="ChargingSessionId2">Another ChargingSessionId.</param>
+        /// <param name="PartnerPartnerSessionId1">A partner charging session identification.</param>
+        /// <param name="PartnerPartnerSessionId2">Another partner charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (PartnerSession_Id ChargingSessionId1, PartnerSession_Id ChargingSessionId2)
+        public static Boolean operator < (PartnerSession_Id PartnerPartnerSessionId1, PartnerSession_Id PartnerPartnerSessionId2)
         {
 
-            if ((Object) ChargingSessionId1 == null)
-                throw new ArgumentNullException(nameof(ChargingSessionId1), "The given ChargingSessionId1 must not be null!");
+            if ((Object) PartnerPartnerSessionId1 == null)
+                throw new ArgumentNullException(nameof(PartnerPartnerSessionId1), "The given PartnerPartnerSessionId1 must not be null!");
 
-            return ChargingSessionId1.CompareTo(ChargingSessionId2) < 0;
+            return PartnerPartnerSessionId1.CompareTo(PartnerPartnerSessionId2) < 0;
 
         }
 
         #endregion
 
-        #region Operator <= (ChargingSessionId1, ChargingSessionId2)
+        #region Operator <= (PartnerPartnerSessionId1, PartnerPartnerSessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingSessionId1">A ChargingSessionId.</param>
-        /// <param name="ChargingSessionId2">Another ChargingSessionId.</param>
+        /// <param name="PartnerPartnerSessionId1">A partner charging session identification.</param>
+        /// <param name="PartnerPartnerSessionId2">Another partner charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (PartnerSession_Id ChargingSessionId1, PartnerSession_Id ChargingSessionId2)
-            => !(ChargingSessionId1 > ChargingSessionId2);
+        public static Boolean operator <= (PartnerSession_Id PartnerPartnerSessionId1, PartnerSession_Id PartnerPartnerSessionId2)
+            => !(PartnerPartnerSessionId1 > PartnerPartnerSessionId2);
 
         #endregion
 
-        #region Operator >  (ChargingSessionId1, ChargingSessionId2)
+        #region Operator >  (PartnerPartnerSessionId1, PartnerPartnerSessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingSessionId1">A ChargingSessionId.</param>
-        /// <param name="ChargingSessionId2">Another ChargingSessionId.</param>
+        /// <param name="PartnerPartnerSessionId1">A partner charging session identification.</param>
+        /// <param name="PartnerPartnerSessionId2">Another partner charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (PartnerSession_Id ChargingSessionId1, PartnerSession_Id ChargingSessionId2)
+        public static Boolean operator > (PartnerSession_Id PartnerPartnerSessionId1, PartnerSession_Id PartnerPartnerSessionId2)
         {
 
-            if ((Object) ChargingSessionId1 == null)
-                throw new ArgumentNullException(nameof(ChargingSessionId1), "The given ChargingSessionId1 must not be null!");
+            if ((Object) PartnerPartnerSessionId1 == null)
+                throw new ArgumentNullException(nameof(PartnerPartnerSessionId1), "The given PartnerPartnerSessionId1 must not be null!");
 
-            return ChargingSessionId1.CompareTo(ChargingSessionId2) > 0;
+            return PartnerPartnerSessionId1.CompareTo(PartnerPartnerSessionId2) > 0;
 
         }
 
         #endregion
 
-        #region Operator >= (ChargingSessionId1, ChargingSessionId2)
+        #region Operator >= (PartnerPartnerSessionId1, PartnerPartnerSessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingSessionId1">A ChargingSessionId.</param>
-        /// <param name="ChargingSessionId2">Another ChargingSessionId.</param>
+        /// <param name="PartnerPartnerSessionId1">A partner charging session identification.</param>
+        /// <param name="PartnerPartnerSessionId2">Another partner charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (PartnerSession_Id ChargingSessionId1, PartnerSession_Id ChargingSessionId2)
-            => !(ChargingSessionId1 < ChargingSessionId2);
+        public static Boolean operator >= (PartnerSession_Id PartnerPartnerSessionId1, PartnerSession_Id PartnerPartnerSessionId2)
+            => !(PartnerPartnerSessionId1 < PartnerPartnerSessionId2);
 
         #endregion
 
         #endregion
 
-        #region IComparable<ChargingSessionId> Members
+        #region IComparable<PartnerSessionId> Members
 
         #region CompareTo(Object)
 
@@ -257,7 +291,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
             if (!(Object is PartnerSession_Id))
-                throw new ArgumentException("The given object is not a partner session identification!",
+                throw new ArgumentException("The given object is not a partner charging session identification!",
                                             nameof(Object));
 
             return CompareTo((PartnerSession_Id) Object);
@@ -266,23 +300,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region CompareTo(ChargingSessionId)
+        #region CompareTo(PartnerSessionId)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingSessionId">An object to compare with.</param>
-        public Int32 CompareTo(PartnerSession_Id ChargingSessionId)
+        /// <param name="PartnerSessionId">An object to compare with.</param>
+        public Int32 CompareTo(PartnerSession_Id PartnerSessionId)
         {
 
-            if ((Object) ChargingSessionId == null)
-                throw new ArgumentNullException(nameof(ChargingSessionId),  "The given partner session identification must not be null!");
+            if ((Object) PartnerSessionId == null)
+                throw new ArgumentNullException(nameof(PartnerSessionId),  "The given partner charging session identification must not be null!");
 
-            // Compare the length of the ChargingSessionIds
-            var _Result = this.Length.CompareTo(ChargingSessionId.Length);
+            // Compare the length of the PartnerSessionIds
+            var _Result = this.Length.CompareTo(PartnerSessionId.Length);
 
             if (_Result == 0)
-                _Result = String.Compare(InternalId, ChargingSessionId.InternalId, StringComparison.Ordinal);
+                _Result = String.Compare(InternalId, PartnerSessionId.InternalId, StringComparison.Ordinal);
 
             return _Result;
 
@@ -292,7 +326,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region IEquatable<ChargingSessionId> Members
+        #region IEquatable<PartnerSessionId> Members
 
         #region Equals(Object)
 
@@ -316,20 +350,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region Equals(ChargingSessionId)
+        #region Equals(PartnerSessionId)
 
         /// <summary>
-        /// Compares two ChargingSessionIds for equality.
+        /// Compares two PartnerSessionIds for equality.
         /// </summary>
-        /// <param name="ChargingSessionId">A ChargingSessionId to compare with.</param>
+        /// <param name="PartnerSessionId">A partner charging session identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(PartnerSession_Id ChargingSessionId)
+        public Boolean Equals(PartnerSession_Id PartnerSessionId)
         {
 
-            if ((Object) ChargingSessionId == null)
+            if ((Object) PartnerSessionId == null)
                 return false;
 
-            return InternalId.Equals(ChargingSessionId.InternalId);
+            return InternalId.Equals(PartnerSessionId.InternalId);
 
         }
 
@@ -357,7 +391,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             => InternalId;
 
         #endregion
-
 
     }
 

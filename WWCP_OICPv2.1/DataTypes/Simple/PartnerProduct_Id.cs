@@ -18,6 +18,9 @@
 #region Usings
 
 using System;
+using System.Text.RegularExpressions;
+
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -28,7 +31,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// The unique identification of an OICP partner product.
     /// </summary>
     public struct PartnerProduct_Id : IId,
-                                      IEquatable<PartnerProduct_Id>,
+                                      IEquatable <PartnerProduct_Id>,
                                       IComparable<PartnerProduct_Id>
 
     {
@@ -44,27 +47,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region New
-
         /// <summary>
-        /// Returns a new partner product identification.
-        /// </summary>
-        public static PartnerProduct_Id New
-
-            => PartnerProduct_Id.Parse(Guid.NewGuid().ToString());
-
-        #endregion
-
-        #region Length
-
-        /// <summary>
-        /// Returns the length of the identificator.
+        /// The length of the partner product identificator.
         /// </summary>
         public UInt64 Length
-
             => (UInt64) InternalId.Length;
-
-        #endregion
 
         #endregion
 
@@ -89,8 +76,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="Text">A text representation of a partner product identification.</param>
         public static PartnerProduct_Id Parse(String Text)
+        {
 
-            => new PartnerProduct_Id(Text);
+            #region Initial checks
+
+            if (Text != null)
+                Text = Text.Trim();
+
+            if (Text.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Text), "The given text representation of a partner product identification must not be null or empty!");
+
+            #endregion
+
+            return new PartnerProduct_Id(Text);
+
+        }
 
         #endregion
 
@@ -103,6 +103,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerProductId">The parsed partner product identification.</param>
         public static Boolean TryParse(String Text, out PartnerProduct_Id PartnerProductId)
         {
+
+            #region Initial checks
+
+            if (Text != null)
+                Text = Text.Trim();
+
+            if (Text.IsNullOrEmpty())
+            {
+                PartnerProductId = default(PartnerProduct_Id);
+                return false;
+            }
+
+            #endregion
+
             try
             {
 
@@ -111,11 +125,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 return true;
 
             }
+
+#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
+#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch (Exception)
-            {
-                PartnerProductId = default(PartnerProduct_Id);
-                return false;
-            }
+#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
+#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
+            { }
+
+            PartnerProductId = default(PartnerProduct_Id);
+            return false;
+
         }
 
         #endregion
@@ -141,8 +161,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerProductId1">A partner product identification</param>
-        /// <param name="PartnerProductId2">Another partner product identification</param>
+        /// <param name="PartnerProductId1">A partner product identification.</param>
+        /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
         {
@@ -166,8 +186,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerProductId1">A partner product identification</param>
-        /// <param name="PartnerProductId2">Another partner product identification</param>
+        /// <param name="PartnerProductId1">A partner product identification.</param>
+        /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
             => !(PartnerProductId1 == PartnerProductId2);
@@ -179,8 +199,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerProductId1">A partner product identification</param>
-        /// <param name="PartnerProductId2">Another partner product identification</param>
+        /// <param name="PartnerProductId1">A partner product identification.</param>
+        /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
         {
@@ -199,8 +219,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerProductId1">A partner product identification</param>
-        /// <param name="PartnerProductId2">Another partner product identification</param>
+        /// <param name="PartnerProductId1">A partner product identification.</param>
+        /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
             => !(PartnerProductId1 > PartnerProductId2);
@@ -212,8 +232,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerProductId1">A partner product identification</param>
-        /// <param name="PartnerProductId2">Another partner product identification</param>
+        /// <param name="PartnerProductId1">A partner product identification.</param>
+        /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
         {
@@ -232,8 +252,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerProductId1">A partner product identification</param>
-        /// <param name="PartnerProductId2">Another partner product identification</param>
+        /// <param name="PartnerProductId1">A partner product identification.</param>
+        /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
             => !(PartnerProductId1 < PartnerProductId2);
@@ -321,7 +341,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two PartnerProductIds for equality.
         /// </summary>
-        /// <param name="PartnerProductId">A PartnerProductId to compare with.</param>
+        /// <param name="PartnerProductId">A partner product identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(PartnerProduct_Id PartnerProductId)
         {
@@ -357,7 +377,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             => InternalId;
 
         #endregion
-
 
     }
 

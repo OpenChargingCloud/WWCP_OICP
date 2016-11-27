@@ -37,16 +37,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
     public class OICPTests
     {
 
-        #region TestAuthStart(HubjectCPO, AuthToken)
+        #region TestAuthStart(HubjectCPO, UID)
 
         public async Task TestAuthStart(CPOClient   HubjectCPO,
-                                        Auth_Token  AuthToken)
+                                        UID         UID)
         {
 
             var result = await HubjectCPO.
-                                   AuthorizeStart(ChargingStationOperator_Id.Parse("DE*GEF"),
-                                                  AuthToken,
-                                                  EVSE_Id.        Parse("DE*GEF*E123456789*1"));
+                                   AuthorizeStart(Operator_Id.Parse("DE*GEF"),
+                                                  UID,
+                                                  EVSE_Id.    Parse("DE*GEF*E123456789*1"));
 
             ConsoleX.WriteLines("AuthStart result:",
                                 result.Content.AuthorizationStatus,
@@ -58,18 +58,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         #endregion
 
-        #region TestAuthStop(HubjectCPO, SessionId, AuthToken)
+        #region TestAuthStop(HubjectCPO, SessionId, UserId)
 
-        public async Task TestAuthStop(CPOClient           HubjectCPO,
+        public async Task TestAuthStop(CPOClient   HubjectCPO,
                                        Session_Id  SessionId,
-                                       Auth_Token          AuthToken)
+                                       UID         UserId)
         {
 
             var result = await HubjectCPO.
-                                   AuthorizeStop(ChargingStationOperator_Id.Parse("DE*GEF"),
+                                   AuthorizeStop(Operator_Id.Parse("DE*GEF"),
                                                  SessionId,
-                                                 AuthToken,
-                                                 EVSE_Id.        Parse("DE*GEF*E123456789*1"));
+                                                 UserId,
+                                                 EVSE_Id.    Parse("DE*GEF*E123456789*1"));
 
             ConsoleX.WriteLines("AuthStop result:",
                                 result.Content.AuthorizationStatus,
@@ -86,14 +86,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
         public async Task TestChargeDetailRecord(CPOClient HubjectCPO)
         {
 
-            var EVSEOperatorId  = ChargingStationOperator_Id.Parse("DE*GEF");
-            var EVSEId          = EVSE_Id.        Parse("DE*GEF*E123456789*1");
-            var AuthToken       = Auth_Token.     Parse("08152305");
+            var OperatorId  = Operator_Id.Parse("DE*GEF");
+            var EVSEId      = EVSE_Id.    Parse("DE*GEF*E123456789*1");
+            var UserId      = UID.        Parse("08152305");
 
 
             var AuthStartResult = await HubjectCPO.
-                                            AuthorizeStart(EVSEOperatorId,
-                                                           AuthToken,
+                                            AuthorizeStart(OperatorId,
+                                                           UserId,
                                                            EVSEId);
 
             ConsoleX.WriteLines("AuthStart result:",
@@ -105,9 +105,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
 
             var AuthStopResult = await HubjectCPO.
-                                           AuthorizeStop(EVSEOperatorId,
+                                           AuthorizeStop(OperatorId,
                                                          AuthStartResult.Content.SessionId.Value,
-                                                         AuthToken,
+                                                         UserId,
                                                          EVSEId);
 
             ConsoleX.WriteLines("AuthStop result:",
@@ -126,7 +126,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                                                                      PartnerProductId:      PartnerProduct_Id.Parse("AC1"),
                                                                      SessionStart:          DateTime.Now,
                                                                      SessionEnd:            DateTime.Now - TimeSpan.FromHours(3),
-                                                                     Identification:        AuthorizationIdentification.FromAuthToken(AuthToken),
+                                                                     Identification:        AuthorizationIdentification.FromRFIDId(UserId),
                                                                      PartnerSessionId:      PartnerSession_Id.Parse("081508150815-0815-0815-0815-0815081508150815"),
                                                                      ChargingStart:         DateTime.Now,
                                                                      ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),

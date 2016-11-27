@@ -71,19 +71,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Properties
 
-        #region AuthorizatorId
+        //#region AuthorizatorId
 
-        private readonly Authorizator_Id _AuthorizatorId;
+        //private readonly Authorizator_Id _AuthorizatorId;
 
-        public Authorizator_Id AuthorizatorId
-        {
-            get
-            {
-                return _AuthorizatorId;
-            }
-        }
+        //public Authorizator_Id AuthorizatorId
+        //{
+        //    get
+        //    {
+        //        return _AuthorizatorId;
+        //    }
+        //}
 
-        #endregion
+        //#endregion
 
         #endregion
 
@@ -767,7 +767,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         Date            = DateTime.Now,
                         ContentType     = HTTPContentType.XMLTEXT_UTF8,
                         Content         = SOAP.Encapsulation(response.ToXML()).ToUTF8Bytes()
-                                              
+
                     };
 
                     #endregion

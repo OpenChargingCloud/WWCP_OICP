@@ -82,10 +82,10 @@ namespace org.GraphDefined.WWCP
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public static AChargingStationOperatorRoamingProvider
+        public static ICSORoamingProvider
 
             CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork                              RoamingNetwork,
-                                              RoamingProvider_Id                               Id,
+                                              CSORoamingProvider_Id                            Id,
                                               I18NString                                       Name,
 
                                               String                                           RemoteHostname,
@@ -119,7 +119,7 @@ namespace org.GraphDefined.WWCP
                                               Boolean                                          DisableAutoUploads              = false,
 
                                               Action<OICPv2_1.CPO.WWCPCPOAdapter>              OICPConfigurator                = null,
-                                              Action<AChargingStationOperatorRoamingProvider>  Configurator                    = null,
+                                              Action<ICSORoamingProvider>  Configurator                    = null,
                                               DNSClient                                        DNSClient                       = null)
 
         {
@@ -226,10 +226,10 @@ namespace org.GraphDefined.WWCP
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public static AChargingStationOperatorRoamingProvider
+        public static ICSORoamingProvider
 
             CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork                              RoamingNetwork,
-                                              RoamingProvider_Id                               Id,
+                                              CSORoamingProvider_Id                            Id,
                                               I18NString                                       Name,
                                               SOAPServer                                       SOAPServer,
 
@@ -259,7 +259,7 @@ namespace org.GraphDefined.WWCP
                                               Boolean                                          DisableAutoUploads          = false,
 
                                               Action<OICPv2_1.CPO.WWCPCPOAdapter>              OICPConfigurator            = null,
-                                              Action<AChargingStationOperatorRoamingProvider>  Configurator                = null,
+                                              Action<ICSORoamingProvider>  Configurator                = null,
                                               DNSClient                                        DNSClient                   = null)
 
         {

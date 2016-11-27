@@ -85,7 +85,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             this.ChargePoolInfo  = ChargePoolInfo;
-            this.StationXMLId    = StationXMLId != null ? StationXMLId : "";
+            this.StationXMLId    = StationXMLId ?? "";
             this._EVSEIds        = new List<EVSE_Id> { EVSEId };
 
             Check();
@@ -113,8 +113,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             _StationId = null;
 
             // 1st: Try to use the given ChargingStationId from the XML...
-            if (StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(OperatorIdFormats.DIN)) ||
-                StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(OperatorIdFormats.ISO)))
+            if (StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(WWCP.OperatorIdFormats.DIN), StringComparison.Ordinal) ||
+                StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(WWCP.OperatorIdFormats.ISO), StringComparison.Ordinal))
                 ChargingStation_Id.TryParse(StationXMLId, out _StationId);
 
             // 2nd: Try to use the given EVSE Ids to find a common prefix...
@@ -191,6 +191,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Return the HashCode of this object.
+        /// </summary>
+        /// <returns>The HashCode of this object.</returns>
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+
+                return StationXMLId.GetHashCode();
+
+            }
+        }
 
         #endregion
 

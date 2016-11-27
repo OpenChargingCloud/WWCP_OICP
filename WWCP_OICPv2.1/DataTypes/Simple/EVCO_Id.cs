@@ -560,16 +560,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             {
 
                 case ProviderIdFormats.DIN_STAR:
-                    return String.Concat(ProviderId.CountryCode.Alpha2Code, "*",
-                                         ProviderId.ProviderId, "*",
+                    return String.Concat(ProviderId, "*",
                                          Suffix,
                                          CheckDigit.HasValue
                                              ? "*" + CheckDigit
                                              : "");
 
                 default: // ISO_HYPHEN
-                    return String.Concat(ProviderId.CountryCode.Alpha2Code, "-",
-                                         ProviderId.ProviderId, "-",
+                    return String.Concat(ProviderId, "-",
                                          "C", Suffix,
                                          CheckDigit.HasValue
                                              ? "-" + CheckDigit

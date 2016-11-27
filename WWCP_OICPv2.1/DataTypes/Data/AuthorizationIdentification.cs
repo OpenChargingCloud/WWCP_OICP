@@ -36,41 +36,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Properties
 
         /// <summary>
-        /// An authentication token.
+        /// An RFID Id.
         /// </summary>
-        public Auth_Token            AuthToken                    { get; }
+        public UID            RFIDId                       { get; }
 
         /// <summary>
         /// An e-mobility account identification and its PIN.
         /// </summary>
-        public eMAIdWithPIN          QRCodeIdentification         { get; }
+        public EVCOIdWithPIN  QRCodeIdentification         { get; }
 
         /// <summary>
         /// An e-mobility account identification (PnC).
         /// </summary>
-        public eMobilityAccount_Id?  PlugAndChargeIdentification  { get; }
+        public EVCO_Id?       PlugAndChargeIdentification  { get; }
 
         /// <summary>
         /// An e-mobility account identification.
         /// </summary>
-        public eMobilityAccount_Id?  RemoteIdentification         { get; }
+        public EVCO_Id?       RemoteIdentification         { get; }
 
         #endregion
 
         #region Constructor(s)
 
-        #region (private) AuthorizationIdentification(AuthToken)
+        #region (private) AuthorizationIdentification(RFIDId)
 
-        private AuthorizationIdentification(Auth_Token  AuthToken)
+        private AuthorizationIdentification(UID RFIDId)
         {
-            this.AuthToken  = AuthToken;
+            this.RFIDId  = RFIDId;
         }
 
         #endregion
 
         #region (private) AuthorizationIdentification(QRCodeIdentification)
 
-        private AuthorizationIdentification(eMAIdWithPIN QRCodeIdentification)
+        private AuthorizationIdentification(EVCOIdWithPIN QRCodeIdentification)
         {
             this.QRCodeIdentification  = QRCodeIdentification;
         }
@@ -79,7 +79,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region (private) AuthorizationIdentification(PlugAndChargeIdentification, IsPnC)
 
-        private AuthorizationIdentification(eMobilityAccount_Id  PlugAndChargeIdentification,
+        private AuthorizationIdentification(EVCO_Id  PlugAndChargeIdentification,
                                             Boolean              IsPnC)
         {
             this.PlugAndChargeIdentification  = PlugAndChargeIdentification;
@@ -89,60 +89,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region (private) AuthorizationIdentification(RemoteIdentification)
 
-        private AuthorizationIdentification(eMobilityAccount_Id  RemoteIdentification)
+        private AuthorizationIdentification(EVCO_Id  RemoteIdentification)
         {
             this.RemoteIdentification  = RemoteIdentification;
         }
 
         #endregion
 
-
-        #region AuthorizationIdentification(AuthInfo)
-
-        /// <summary>
-        /// Create a new identification for authorization based on the given WWCP AuthInfo.
-        /// </summary>
-        /// <param name="AuthInfo">A WWCP auth info.</param>
-        public AuthorizationIdentification(AuthInfo AuthInfo)
-        {
-
-            this.AuthToken                    = AuthInfo.AuthToken;
-            this.QRCodeIdentification         = AuthInfo.QRCodeIdentification != null
-                                                    ? new eMAIdWithPIN(AuthInfo.QRCodeIdentification.eMAId,
-                                                                       AuthInfo.QRCodeIdentification.PIN,
-                                                                       AuthInfo.QRCodeIdentification.Function,
-                                                                       AuthInfo.QRCodeIdentification.Salt)
-                                                    : null;
-            this.PlugAndChargeIdentification  = AuthInfo.PlugAndChargeIdentification;
-            this.RemoteIdentification         = AuthInfo.RemoteIdentification;
-
-        }
-
-        #endregion
-
         #endregion
 
 
-        #region (static) FromAuthToken(AuthToken)
+        #region (static) FromRFIDId(RFIDId)
 
-        public static AuthorizationIdentification FromAuthToken(Auth_Token  AuthToken)
+        public static AuthorizationIdentification FromRFIDId(UID RFIDId)
 
-            => new AuthorizationIdentification(AuthToken);
+            => new AuthorizationIdentification(RFIDId);
 
         #endregion
 
-        #region (static) FromQRCodeIdentification(eMAId, PIN)
+        #region (static) FromQRCodeIdentification(EVCOId, PIN)
 
-        public static AuthorizationIdentification FromQRCodeIdentification(eMobilityAccount_Id  eMAId,
-                                                                           String               PIN)
+        public static AuthorizationIdentification FromQRCodeIdentification(EVCO_Id  EVCOId,
+                                                                           String   PIN)
 
-            => new AuthorizationIdentification(new eMAIdWithPIN(eMAId, PIN));
+            => new AuthorizationIdentification(new EVCOIdWithPIN(EVCOId, PIN));
 
         #endregion
 
         #region (static) FromQRCodeIdentification(QRCodeIdentification)
 
-        public static AuthorizationIdentification FromQRCodeIdentification(eMAIdWithPIN  QRCodeIdentification)
+        public static AuthorizationIdentification FromQRCodeIdentification(EVCOIdWithPIN  QRCodeIdentification)
 
             => new AuthorizationIdentification(QRCodeIdentification);
 
@@ -150,7 +126,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region (static) FromPlugAndChargeIdentification(PlugAndChargeIdentification)
 
-        public static AuthorizationIdentification FromPlugAndChargeIdentification(eMobilityAccount_Id  PlugAndChargeIdentification)
+        public static AuthorizationIdentification FromPlugAndChargeIdentification(EVCO_Id  PlugAndChargeIdentification)
 
             => new AuthorizationIdentification(PlugAndChargeIdentification);
 
@@ -158,7 +134,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region (static) FromRemoteIdentification(RemoteIdentification)
 
-        public static AuthorizationIdentification FromRemoteIdentification(eMobilityAccount_Id  RemoteIdentification)
+        public static AuthorizationIdentification FromRemoteIdentification(EVCO_Id  RemoteIdentification)
 
             => new AuthorizationIdentification(RemoteIdentification);
 
@@ -184,7 +160,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (UIDXML == null)
                     throw new Exception("Missing 'UIDXML' XML tag!");
 
-                return new AuthorizationIdentification(Auth_Token.Parse(UIDXML.Value));
+                return new AuthorizationIdentification(UID.Parse(UIDXML.Value));
 
             }
 
@@ -192,7 +168,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (QRCodeIdentificationXML != null)
             {
 
-                return new AuthorizationIdentification(eMAIdWithPIN.Parse(QRCodeIdentificationXML));
+                return new AuthorizationIdentification(EVCOIdWithPIN.Parse(QRCodeIdentificationXML));
 
             }
 
@@ -200,7 +176,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (PlugAndChargeIdentificationXML != null)
             {
 
-                return new AuthorizationIdentification(eMobilityAccount_Id.Parse(PlugAndChargeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes + "EVCOID")), true);
+                return new AuthorizationIdentification(EVCO_Id.Parse(PlugAndChargeIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes + "EVCOID")), true);
 
             }
 
@@ -208,7 +184,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (RemoteIdentificationXML != null)
             {
 
-                return new AuthorizationIdentification(eMobilityAccount_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes + "EVCOID")));
+                return new AuthorizationIdentification(EVCO_Id.Parse(RemoteIdentificationXML.ElementValueOrFail(OICPNS.CommonTypes + "EVCOID")));
 
             }
 
@@ -228,9 +204,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new XElement(XMLNamespace + "Identification",
 
-                   AuthToken != null
+                   RFIDId != null
                        ? new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                             new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString()))
+                             new XElement(OICPNS.CommonTypes + "UID", RFIDId.ToString()))
                        : null,
 
                    QRCodeIdentification != null
@@ -258,8 +234,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public override String ToString()
         {
 
-            if (AuthToken                   != null)
-                return AuthToken.ToString();
+            if (RFIDId                   != null)
+                return RFIDId.ToString();
 
             if (QRCodeIdentification        != null)
                 return QRCodeIdentification.ToString();

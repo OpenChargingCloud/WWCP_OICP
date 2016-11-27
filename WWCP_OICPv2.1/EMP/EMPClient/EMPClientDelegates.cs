@@ -39,7 +39,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        EMPClient          Sender,
                                                        String             SenderId,
                                                        EventTracking_Id   EventTrackingId,
-                                                       eMobilityProvider_Id            ProviderId,
+                                                       Provider_Id        ProviderId,
                                                        GeoCoordinate      SearchCenter,
                                                        Double             DistanceKM,
                                                        DateTime?          LastCall,
@@ -52,12 +52,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        EMPClient          Sender,
                                                        String             SenderId,
                                                        EventTracking_Id   EventTrackingId,
-                                                       eMobilityProvider_Id            ProviderId,
+                                                       Provider_Id        ProviderId,
                                                        GeoCoordinate      SearchCenter,
                                                        Double             DistanceKM,
                                                        DateTime?          LastCall,
                                                        TimeSpan?          RequestTimeout,
-                                                       EVSEData   Result,
+                                                       EVSEData           Result,
                                                        TimeSpan           Duration);
 
     #endregion
@@ -72,7 +72,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      EMPClient                  Sender,
                                                      String                     SenderId,
                                                      EventTracking_Id           EventTrackingId,
-                                                     eMobilityProvider_Id                    ProviderId,
+                                                     Provider_Id                ProviderId,
                                                      GeoCoordinate              SearchCenter,
                                                      Double                     DistanceKM,
                                                      Address                    Address,
@@ -87,14 +87,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      EMPClient                  Sender,
                                                      String                     SenderId,
                                                      EventTracking_Id           EventTrackingId,
-                                                     eMobilityProvider_Id                    ProviderId,
+                                                     Provider_Id                ProviderId,
                                                      GeoCoordinate              SearchCenter,
                                                      Double                     DistanceKM,
                                                      Address                    Address,
                                                      PlugTypes?                 Plug,
                                                      ChargingFacilities?        ChargingFacility,
                                                      TimeSpan?                  RequestTimeout,
-                                                     EVSESearchResult   Result,
+                                                     EVSESearchResult           Result,
                                                      TimeSpan                   Duration);
 
     #endregion
@@ -109,10 +109,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                          EMPClient            Sender,
                                                          String               SenderId,
                                                          EventTracking_Id     EventTrackingId,
-                                                         eMobilityProvider_Id              ProviderId,
+                                                         Provider_Id          ProviderId,
                                                          GeoCoordinate        SearchCenter,
                                                          Double               DistanceKM,
-                                                         EVSEStatusTypes?      EVSEStatusFilter,
+                                                         EVSEStatusTypes?     EVSEStatusFilter,
                                                          TimeSpan?            RequestTimeout);
 
     /// <summary>
@@ -122,12 +122,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                          EMPClient            Sender,
                                                          String               SenderId,
                                                          EventTracking_Id     EventTrackingId,
-                                                         eMobilityProvider_Id              ProviderId,
+                                                         Provider_Id          ProviderId,
                                                          GeoCoordinate        SearchCenter,
                                                          Double               DistanceKM,
-                                                         EVSEStatusTypes?      EVSEStatusFilter,
+                                                         EVSEStatusTypes?     EVSEStatusFilter,
                                                          TimeSpan?            RequestTimeout,
-                                                         EVSEStatus   Result,
+                                                         EVSEStatus           Result,
                                                          TimeSpan             Duration);
 
     #endregion
@@ -142,7 +142,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                              EMPClient                Sender,
                                                              String                   SenderId,
                                                              EventTracking_Id         EventTrackingId,
-                                                             eMobilityProvider_Id                  ProviderId,
+                                                             Provider_Id              ProviderId,
                                                              IEnumerable<EVSE_Id>     EVSEIds,
                                                              TimeSpan?                RequestTimeout);
 
@@ -153,10 +153,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                              EMPClient                Sender,
                                                              String                   SenderId,
                                                              EventTracking_Id         EventTrackingId,
-                                                             eMobilityProvider_Id                  ProviderId,
+                                                             Provider_Id              ProviderId,
                                                              IEnumerable<EVSE_Id>     EVSEIds,
                                                              TimeSpan?                RequestTimeout,
-                                                             EVSEStatusById   Result,
+                                                             EVSEStatusById           Result,
                                                              TimeSpan                 Duration);
 
     #endregion

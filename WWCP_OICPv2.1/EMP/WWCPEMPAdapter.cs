@@ -40,7 +40,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// A WWCP wrapper for the OICP EMP Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class WWCPEMPAdapter : AEMPRoamingProvider
+    public class WWCPEMPAdapter : ABaseEMobilityEntity<EMPRoamingProvider_Id>,
+                                  IEMPRoamingProvider
     {
 
         #region Data
@@ -94,6 +95,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public DNSClient DNSClient
             => EMPRoaming?.DNSClient;
 
+        EMPRoamingProvider_Id IEMPRoamingProvider.Id
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        I18NString IEMPRoamingProvider.Name
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        RoamingNetwork IEMPRoamingProvider.RoamingNetwork
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         #endregion
 
         #region Events
@@ -105,12 +130,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event sent whenever a reserve EVSE command will be send.
         /// </summary>
-        public override event OnReserveEVSERequestDelegate         OnReserveEVSERequest;
+        public event OnReserveEVSERequestDelegate         OnReserveEVSERequest;
 
         /// <summary>
         /// An event sent whenever a reserve EVSE command was sent.
         /// </summary>
-        public override event OnReserveEVSEResponseDelegate        OnReserveEVSEResponse;
+        public event OnReserveEVSEResponseDelegate        OnReserveEVSEResponse;
 
         #endregion
 
@@ -119,12 +144,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event sent whenever a cancel reservation command will be send.
         /// </summary>
-        public override event OnCancelReservationRequestDelegate   OnCancelReservationRequest;
+        public event OnCancelReservationRequestDelegate   OnCancelReservationRequest;
 
         /// <summary>
         /// An event sent whenever a cancel reservation command was sent.
         /// </summary>
-        public override event OnCancelReservationResponseDelegate  OnCancelReservationResponse;
+        public event OnCancelReservationResponseDelegate  OnCancelReservationResponse;
 
         #endregion
 
@@ -133,12 +158,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event sent whenever a remote start EVSE command will be send.
         /// </summary>
-        public override event OnRemoteStartEVSERequestDelegate     OnRemoteStartEVSERequest;
+        public event OnRemoteStartEVSERequestDelegate     OnRemoteStartEVSERequest;
 
         /// <summary>
         /// An event sent whenever a remote start EVSE command was sent.
         /// </summary>
-        public override event OnRemoteStartEVSEResponseDelegate    OnRemoteStartEVSEResponse;
+        public event OnRemoteStartEVSEResponseDelegate    OnRemoteStartEVSEResponse;
 
         #endregion
 
@@ -147,12 +172,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event sent whenever a remote stop EVSE command will be send.
         /// </summary>
-        public override event OnRemoteStopEVSERequestDelegate      OnRemoteStopEVSERequest;
+        public event OnRemoteStopEVSERequestDelegate      OnRemoteStopEVSERequest;
 
         /// <summary>
         /// An event sent whenever a remote stop EVSE command was sent.
         /// </summary>
-        public override event OnRemoteStopEVSEResponseDelegate     OnRemoteStopEVSEResponse;
+        public event OnRemoteStopEVSEResponseDelegate     OnRemoteStopEVSEResponse;
 
         #endregion
 
@@ -200,7 +225,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event sent whenever a authorize start command was received.
         /// </summary>
-        public override event OnAuthorizeStartEVSEDelegate OnAuthorizeStartEVSE;
+        public event OnAuthorizeStartEVSEDelegate OnAuthorizeStartEVSE;
 
         #endregion
 
@@ -245,7 +270,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event sent whenever a authorize stop command was received.
         /// </summary>
-        public override event OnAuthorizeStopEVSEDelegate OnAuthorizeStopEVSE;
+        public event OnAuthorizeStopEVSEDelegate OnAuthorizeStopEVSE;
 
         #endregion
 
@@ -287,10 +312,153 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         }
 
+        event OnReserveEVSERequestDelegate IEMPRoamingProvider.OnReserveEVSERequest
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnReserveEVSEResponseDelegate IEMPRoamingProvider.OnReserveEVSEResponse
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnCancelReservationRequestDelegate IEMPRoamingProvider.OnCancelReservationRequest
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnCancelReservationResponseDelegate IEMPRoamingProvider.OnCancelReservationResponse
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnRemoteStartEVSERequestDelegate IEMPRoamingProvider.OnRemoteStartEVSERequest
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnRemoteStartEVSEResponseDelegate IEMPRoamingProvider.OnRemoteStartEVSEResponse
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnRemoteStopEVSERequestDelegate IEMPRoamingProvider.OnRemoteStopEVSERequest
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnRemoteStopEVSEResponseDelegate IEMPRoamingProvider.OnRemoteStopEVSEResponse
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeStartEVSEDelegate IEMPRoamingProvider.OnAuthorizeStartEVSE
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeStopEVSEDelegate IEMPRoamingProvider.OnAuthorizeStopEVSE
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event WWCP.OnChargeDetailRecordDelegate IEMPRoamingProvider.OnChargeDetailRecord
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         /// <summary>
         /// An event sent whenever a charge detail record was received.
         /// </summary>
-        public override event WWCP.OnChargeDetailRecordDelegate OnChargeDetailRecord;
+        public event WWCP.OnChargeDetailRecordDelegate OnChargeDetailRecord;
 
         #endregion
 
@@ -309,32 +477,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// 
         /// <param name="EMPRoaming">A OICP EMP roaming object to be mapped to WWCP.</param>
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
-        public WWCPEMPAdapter(RoamingProvider_Id           Id,
+        public WWCPEMPAdapter(EMPRoamingProvider_Id        Id,
                               I18NString                   Name,
                               RoamingNetwork               RoamingNetwork,
 
                               EMPRoaming                   EMPRoaming,
-                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE  = null)
+                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE   = null)
 
             : base(Id,
-                   Name,
                    RoamingNetwork)
 
         {
 
             #region Initial checks
 
-            if (Id             == null)
-                throw new ArgumentNullException(nameof(Id),              "The given unique roaming provider identification must not be null or empty!");
-
             if (Name.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Name),            "The given roaming provider name must not be null or empty!");
-
-            if (RoamingNetwork == null)
-                throw new ArgumentNullException(nameof(RoamingNetwork),  "The given roaming network must not be null!");
+                throw new ArgumentNullException(nameof(Name),        "The given roaming provider name must not be null or empty!");
 
             if (EMPRoaming     == null)
-                throw new ArgumentNullException(nameof(EMPRoaming),      "The given OICP EMP Roaming object must not be null!");
+                throw new ArgumentNullException(nameof(EMPRoaming),  "The given OICP EMP Roaming object must not be null!");
 
             #endregion
 
@@ -358,16 +519,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        RequestTimeout) => {
 
 
-                var response = await RoamingNetwork.AuthorizeStart(OperatorId,
-                                                                   AuthToken,
+                var response = await RoamingNetwork.AuthorizeStart(AuthToken,
                                                                    EVSEId.Value.ToWWCP(),
                                                                    PartnerProductId.ToWWCP(),
                                                                    SessionId.ToWWCP(),
+                                                                   OperatorId,
 
                                                                    Timestamp,
                                                                    CancellationToken,
                                                                    EventTrackingId,
-                                                                   RequestTimeout);
+                                                                   RequestTimeout).
+                                                    ConfigureAwait(false);
 
                 if (response != null)
                 {
@@ -381,7 +543,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                           "Ready to charge!",
                                                           null,
                                                           response.ListOfAuthStopTokens.
-                                                              SafeSelect(token => new AuthorizationIdentification(AuthInfo.FromAuthToken(token))));
+                                                              SafeSelect(token => AuthorizationIdentification.FromRFIDId(token.ToOICP())));
 
                         case AuthStartEVSEResultType.NotAuthorized:
                             return new AuthorizationStart(StatusCodes.RFIDAuthenticationfailed_InvalidUID,
@@ -437,15 +599,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                       RequestTimeout) => {
 
 
-                var response = await RoamingNetwork.AuthorizeStop(OperatorId,
-                                                                  SessionId.ToWWCP().Value,
+                var response = await RoamingNetwork.AuthorizeStop(SessionId.ToWWCP().Value,
                                                                   AuthToken,
                                                                   EVSEId.ToWWCP(),
+                                                                  OperatorId,
 
                                                                   Timestamp,
                                                                   CancellationToken,
                                                                   EventTrackingId,
-                                                                  RequestTimeout);
+                                                                  RequestTimeout).
+                                                    ConfigureAwait(false);
 
                                                           if (response != null)
                 {
@@ -500,12 +663,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                            RequestTimeout) => {
 
 
-                var response = await RoamingNetwork.SendChargeDetailRecord(DateTime.Now,
+                var response = await RoamingNetwork.SendChargeDetailRecord(ChargeDetailRecord.ToWWCP(),
+                                                                           DateTime.Now,
                                                                            Timestamp,
                                                                            CancellationToken,
                                                                            EventTrackingId,
-                                                                           OICPMapper.ToWWCP(ChargeDetailRecord),
-                                                                           RequestTimeout);
+                                                                           RequestTimeout).
+                                                    ConfigureAwait(false);
 
                 if (response != null)
                 {
@@ -578,7 +742,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
-        public WWCPEMPAdapter(RoamingProvider_Id            Id,
+        public WWCPEMPAdapter(EMPRoamingProvider_Id         Id,
                               I18NString                    Name,
                               RoamingNetwork                RoamingNetwork,
 
@@ -635,7 +799,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public WWCPEMPAdapter(RoamingProvider_Id                   Id,
+        public WWCPEMPAdapter(EMPRoamingProvider_Id                Id,
                               I18NString                           Name,
                               RoamingNetwork                       RoamingNetwork,
 
@@ -704,7 +868,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        // EMPClient methods
+        // Outgoing EMPClient requests...
+
+        #region PushEVSEData/-Status directly...
 
         #region PullEVSEData(RoamingNetwork, SearchCenter = null, DistanceKM = 0.0, LastCall = null, ProviderId = null, ...)
 
@@ -745,7 +911,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            var result = await EMPRoaming.PullEVSEData(ProviderId.Value,
+            var result = await EMPRoaming.PullEVSEData(ProviderId.Value.ToOICP(),
                                                        SearchCenter,
                                                        DistanceKM,
                                                        LastCall,
@@ -753,7 +919,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        Timestamp,
                                                        CancellationToken,
                                                        EventTrackingId,
-                                                       RequestTimeout);
+                                                       RequestTimeout).
+                                          ConfigureAwait(false);
 
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK &&
@@ -782,8 +949,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                         #region Find Charging Station Operator, or create a new one...
 
-                        if (!RoamingNetwork.TryGetChargingStationOperatorById(operatorevsedata.OperatorId, out _EVSEOperator))
-                            _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(operatorevsedata.OperatorId, I18NString.Create(Languages.unknown, operatorevsedata.OperatorName));
+                        if (!RoamingNetwork.TryGetChargingStationOperatorById(operatorevsedata.OperatorId.ToWWCP(), out _EVSEOperator))
+                            _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(operatorevsedata.OperatorId.ToWWCP(), I18NString.Create(Languages.unknown, operatorevsedata.OperatorName));
 
                         else
                         {
@@ -807,7 +974,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             try
                             {
 
-                                _CPInfoList.AddOrUpdateCPInfo(ChargingPool_Id.Generate(operatorevsedata.OperatorId,
+                                _CPInfoList.AddOrUpdateCPInfo(ChargingPool_Id.Generate(operatorevsedata.OperatorId.ToWWCP(),
                                                                                        evsedatarecord.  Address,
                                                                                        evsedatarecord.  GeoCoordinate),
                                                               evsedatarecord.Address,
@@ -890,8 +1057,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                     _ChargingPool.LocationLanguage     = LocationLanguage;
                                     _ChargingPool.EntranceLocation     = evsedatarecord.GeoChargingPointEntrance;
                                     _ChargingPool.OpeningTimes         = evsedatarecord.OpeningTime;
-                                    _ChargingPool.AuthenticationModes  = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
-                                    _ChargingPool.PaymentOptions       = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
+                                    _ChargingPool.AuthenticationModes  = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => mode.  AsWWCPAuthenticationMode()));
+                                    _ChargingPool.PaymentOptions       = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => option.AsWWCPPaymentOption()));
                                     _ChargingPool.Accessibility        = evsedatarecord.Accessibility;
                                     _ChargingPool.HotlinePhoneNumber   = evsedatarecord.HotlinePhoneNumber;
 
@@ -966,7 +1133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                     // Update via events!
                                     _EVSE.Description         = evsedatarecord.AdditionalInfo;
-                                    _EVSE.ChargingModes       = new ReactiveSet<WWCP.ChargingModes>(evsedatarecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode))); 
+                                    _EVSE.ChargingModes       = new ReactiveSet<WWCP.ChargingModes>(evsedatarecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
                                     //_EVSE.ChargingFacilities  = evsedatarecord.ChargingFacilities;
                                     //_EVSE.MaxPower            = 
                                     //_EVSE.AverageVoltage      = 
@@ -1055,7 +1222,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            var result = await EMPRoaming.SearchEVSE(ProviderId,
+            var result = await EMPRoaming.SearchEVSE(ProviderId.ToOICP(),
                                                      SearchCenter,
                                                      DistanceKM,
                                                      Address,
@@ -1065,7 +1232,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      Timestamp,
                                                      CancellationToken,
                                                      EventTrackingId,
-                                                     RequestTimeout);
+                                                     RequestTimeout).
+                                          ConfigureAwait(false);
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK &&
                 result.Content        != null)
@@ -1117,7 +1285,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            var result = await EMPRoaming.PullEVSEStatus(ProviderId.Value,
+            var result = await EMPRoaming.PullEVSEStatus(ProviderId.Value.ToOICP(),
                                                          SearchCenter,
                                                          DistanceKM,
                                                          EVSEStatusFilter,
@@ -1125,7 +1293,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                          Timestamp,
                                                          CancellationToken,
                                                          EventTrackingId,
-                                                         RequestTimeout);
+                                                         RequestTimeout).
+                                          ConfigureAwait(false);
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK &&
                 result.Content        != null)
@@ -1183,13 +1352,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             foreach (var evsepart in EVSEIds.ToPartitions(100))
             {
 
-                var result = await EMPRoaming.PullEVSEStatusById(ProviderId.Value,
+                var result = await EMPRoaming.PullEVSEStatusById(ProviderId.Value.ToOICP(),
                                                                  evsepart,
 
                                                                  Timestamp,
                                                                  CancellationToken,
                                                                  EventTrackingId,
-                                                                 RequestTimeout);
+                                                                 RequestTimeout).
+                                              ConfigureAwait(false);
 
                 if (result.HTTPStatusCode == HTTPStatusCode.OK &&
                     result.Content != null)
@@ -1280,7 +1450,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                    Timestamp,
                                                                    CancellationToken,
                                                                    EventTrackingId,
-                                                                   RequestTimeout);
+                                                                   RequestTimeout).
+                                            ConfigureAwait(false);
 
             if (response.HTTPStatusCode == HTTPStatusCode.OK &&
                 response.Content        != null)
@@ -1340,7 +1511,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region Reserve(...EVSEId, ChargingProductId = null, ReservationId = null, SessionId = null, ProviderId = null, eMAId = null, ...)
+        #region Reserve(EVSEId, ChargingProductId = null, ReservationId = null, SessionId = null, ProviderId = null, eMAId = null, ...)
 
         /// <summary>
         /// Reserve the possibility to charge at the given EVSE.
@@ -1360,23 +1531,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<ReservationResult>
+        async Task<ReservationResult>
 
-            Reserve(WWCP.EVSE_Id                      EVSEId,
-                    DateTime?                         ReservationStartTime   = null,
-                    TimeSpan?                         Duration               = null,
-                    ChargingReservation_Id?           ReservationId          = null,
-                    eMobilityProvider_Id?             ProviderId             = null,
-                    eMobilityAccount_Id?              eMAId                  = null,
-                    ChargingProduct_Id?               ChargingProductId      = null,
-                    IEnumerable<Auth_Token>           AuthTokens             = null,
-                    IEnumerable<eMobilityAccount_Id>  eMAIds                 = null,
-                    IEnumerable<UInt32>               PINs                   = null,
+            IReserveRemoteStartStop.Reserve(WWCP.EVSE_Id                      EVSEId,
+                                            DateTime?                         ReservationStartTime,  // = null,
+                                            TimeSpan?                         Duration,              // = null,
+                                            ChargingReservation_Id?           ReservationId,         // = null,
+                                            eMobilityProvider_Id?             ProviderId,            // = null,
+                                            eMobilityAccount_Id?              eMAId,                 // = null,
+                                            ChargingProduct_Id?               ChargingProductId,     // = null,
+                                            IEnumerable<Auth_Token>           AuthTokens,            // = null,
+                                            IEnumerable<eMobilityAccount_Id>  eMAIds,                // = null,
+                                            IEnumerable<UInt32>               PINs,                  // = null,
 
-                    DateTime?                         Timestamp              = null,
-                    CancellationToken?                CancellationToken      = null,
-                    EventTracking_Id                  EventTrackingId        = null,
-                    TimeSpan?                         RequestTimeout         = null)
+                                            DateTime?                         Timestamp,
+                                            CancellationToken?                CancellationToken,
+                                            EventTracking_Id                  EventTrackingId,
+                                            TimeSpan?                         RequestTimeout)
 
         {
 
@@ -1516,7 +1687,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                            Timestamp:          Timestamp,
                                                            CancellationToken:  CancellationToken,
                                                            EventTrackingId:    EventTrackingId,
-                                                           RequestTimeout:     RequestTimeout);
+                                                           RequestTimeout:     RequestTimeout).
+                                          ConfigureAwait(false);
 
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK &&
@@ -1553,7 +1725,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region CancelReservation(...ReservationId, Reason, ProviderId = null, EVSEId = null, ...)
+        #region CancelReservation(ReservationId, Reason, ProviderId = null, EVSEId = null, ...)
 
         /// <summary>
         /// Try to remove the given charging reservation.
@@ -1567,26 +1739,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<CancelReservationResult>
+        async Task<CancelReservationResult>
 
-            CancelReservation(ChargingReservation_Id                 ReservationId,
-                              ChargingReservationCancellationReason  Reason,
-                              eMobilityProvider_Id?                  ProviderId          = null,
-                              WWCP.EVSE_Id?                          EVSEId              = null,
+            IReserveRemoteStartStop.CancelReservation(ChargingReservation_Id                 ReservationId,
+                                                      ChargingReservationCancellationReason  Reason,
+                                                      eMobilityProvider_Id?                  ProviderId,  // = null,
+                                                      WWCP.EVSE_Id?                          EVSEId,      // = null,
 
-                              DateTime?                              Timestamp           = null,
-                              CancellationToken?                     CancellationToken   = null,
-                              EventTracking_Id                       EventTrackingId     = null,
-                              TimeSpan?                              RequestTimeout      = null)
+                                                      DateTime?                              Timestamp,
+                                                      CancellationToken?                     CancellationToken,
+                                                      EventTracking_Id                       EventTrackingId,
+                                                      TimeSpan?                              RequestTimeout)
 
         {
 
             #region Initial checks
 
-            if (ReservationId == null)
-                throw new ArgumentNullException(nameof(ReservationId),  "The given reservation identification must not be null!");
-
-            if (ProviderId == null || !ProviderId.HasValue)
+            if (!ProviderId.HasValue)
                 throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
 
 
@@ -1639,7 +1808,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                           Timestamp:          Timestamp,
                                                           CancellationToken:  CancellationToken,
                                                           EventTrackingId:    EventTrackingId,
-                                                          RequestTimeout:     RequestTimeout);
+                                                          RequestTimeout:     RequestTimeout).
+                                          ConfigureAwait(false);
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK &&
                 result.Content        != null              &&
@@ -1658,7 +1828,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region RemoteStart(...EVSEId, ChargingProductId = null, ReservationId = null, SessionId = null, ProviderId = null, eMAId = null, ...)
+        #region RemoteStart(EVSEId,            ChargingProductId = null, ReservationId = null, SessionId = null, ProviderId = null, eMAId = null, ...)
 
         /// <summary>
         /// Start a charging session at the given EVSE.
@@ -1676,21 +1846,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<RemoteStartEVSEResult>
+        async Task<RemoteStartEVSEResult>
 
-            RemoteStart(WWCP.EVSE_Id             EVSEId,
-                        ChargingProduct_Id?      ChargingProductId   = null,
-//                      TimeSpan?                Duration            = null,
-//                      Double?                  MaxEnergy           = null,
-                        ChargingReservation_Id?  ReservationId       = null,
-                        ChargingSession_Id?      SessionId           = null,
-                        eMobilityProvider_Id?    ProviderId          = null,
-                        eMobilityAccount_Id?     eMAId               = null,
+            IReserveRemoteStartStop.RemoteStart(WWCP.EVSE_Id             EVSEId,
+                                                ChargingProduct_Id?      ChargingProductId,  // = null,
+//                                              TimeSpan?                Duration            // = null,
+//                                              Double?                  MaxEnergy           // = null,
+                                                ChargingReservation_Id?  ReservationId,      // = null,
+                                                ChargingSession_Id?      SessionId,          // = null,
+                                                eMobilityProvider_Id?    ProviderId,         // = null,
+                                                eMobilityAccount_Id?     eMAId,              // = null,
 
-                        DateTime?                Timestamp           = null,
-                        CancellationToken?       CancellationToken   = null,
-                        EventTracking_Id         EventTrackingId     = null,
-                        TimeSpan?                RequestTimeout      = null)
+                                                DateTime?                Timestamp,
+                                                CancellationToken?       CancellationToken,
+                                                EventTracking_Id         EventTrackingId,
+                                                TimeSpan?                RequestTimeout)
 
         {
 
@@ -1840,7 +2010,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                       Timestamp:          Timestamp,
                                                       CancellationToken:  CancellationToken,
                                                       EventTrackingId:    EventTrackingId,
-                                                      RequestTimeout:     RequestTimeout);
+                                                      RequestTimeout:     RequestTimeout).
+                                          ConfigureAwait(false);
 
 
             var Now     = DateTime.Now;
@@ -1864,7 +2035,74 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region RemoteStop(...EVSEId, SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
+        #region RemoteStart(ChargingStationId, ChargingProductId = null, ReservationId = null, SessionId = null, ProviderId = null, eMAId = null, ...)
+
+        /// <summary>
+        /// Start a charging session at the given charging station.
+        /// </summary>
+        /// <param name="ChargingStationId">The unique identification of the charging station to be started.</param>
+        /// <param name="ChargingProductId">The unique identification of the choosen charging product.</param>
+        /// <param name="ReservationId">The unique identification for a charging reservation.</param>
+        /// <param name="SessionId">The unique identification for this charging session.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
+        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        Task<RemoteStartChargingStationResult>
+
+            IReserveRemoteStartStop.RemoteStart(ChargingStation_Id       ChargingStationId,
+                                                ChargingProduct_Id?      ChargingProductId,  // = null,
+                                                ChargingReservation_Id?  ReservationId,      // = null,
+                                                ChargingSession_Id?      SessionId,          // = null,
+                                                eMobilityProvider_Id?    ProviderId,         // = null,
+                                                eMobilityAccount_Id?     eMAId,              // = null,
+
+                                                DateTime?                Timestamp,
+                                                CancellationToken?       CancellationToken,
+                                                EventTracking_Id         EventTrackingId,
+                                                TimeSpan?                RequestTimeout)
+
+
+                => Task.FromResult(RemoteStartChargingStationResult.OutOfService);
+
+        #endregion
+
+
+        #region RemoteStop(                   SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
+
+        /// <summary>
+        /// Stop the given charging session.
+        /// </summary>
+        /// <param name="SessionId">The unique identification for this charging session.</param>
+        /// <param name="ReservationHandling">Whether to remove the reservation after session end, or to keep it open for some more time.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
+        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        Task<RemoteStopResult>
+
+            IReserveRemoteStartStop.RemoteStop(ChargingSession_Id     SessionId,
+                                               ReservationHandling    ReservationHandling,
+                                               eMobilityProvider_Id?  ProviderId,         // = null,
+                                               eMobilityAccount_Id?   eMAId,              // = null,
+
+                                               DateTime?              Timestamp,
+                                               CancellationToken?     CancellationToken,
+                                               EventTracking_Id       EventTrackingId,
+                                               TimeSpan?              RequestTimeout)
+
+
+                => Task.FromResult(RemoteStopResult.OutOfService(SessionId));
+
+        #endregion
+
+        #region RemoteStop(EVSEId,            SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
 
         /// <summary>
         /// Stop the given charging session at the given EVSE.
@@ -1879,7 +2117,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<RemoteStopEVSEResult>
+        public async Task<RemoteStopEVSEResult>
 
             RemoteStop(WWCP.EVSE_Id           EVSEId,
                        ChargingSession_Id     SessionId,
@@ -1952,7 +2190,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      Timestamp:          Timestamp,
                                                      CancellationToken:  CancellationToken,
                                                      EventTrackingId:    EventTrackingId,
-                                                     RequestTimeout:     RequestTimeout);
+                                                     RequestTimeout:     RequestTimeout).
+                                          ConfigureAwait(false);
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK &&
                 result.Content        != null              &&
@@ -1971,6 +2210,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        #region RemoteStop(ChargingStationId, SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
+
+        /// <summary>
+        /// Stop the given charging session at the given charging station.
+        /// </summary>
+        /// <param name="ChargingStationId">The unique identification of the charging station to be stopped.</param>
+        /// <param name="SessionId">The unique identification for this charging session.</param>
+        /// <param name="ReservationHandling">Whether to remove the reservation after session end, or to keep it open for some more time.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
+        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        Task<RemoteStopChargingStationResult>
+
+            IReserveRemoteStartStop.RemoteStop(ChargingStation_Id     ChargingStationId,
+                                               ChargingSession_Id     SessionId,
+                                               ReservationHandling    ReservationHandling,
+                                               eMobilityProvider_Id?  ProviderId,         // = null,
+                                               eMobilityAccount_Id?   eMAId,              // = null,
+
+                                               DateTime?              Timestamp,
+                                               CancellationToken?     CancellationToken,
+                                               EventTracking_Id       EventTrackingId,
+                                               TimeSpan?              RequestTimeout)
+
+
+                => Task.FromResult(RemoteStopChargingStationResult.OutOfService(SessionId));
+
+        #endregion
+
 
         #region GetChargeDetailRecords(From, To = null, ProviderId = null, ...)
 
@@ -1985,16 +2257,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public override async Task<IEnumerable<WWCP.ChargeDetailRecord>>
+        async Task<IEnumerable<WWCP.ChargeDetailRecord>>
 
-            GetChargeDetailRecords(DateTime               From,
-                                   DateTime?              To                 = null,
-                                   eMobilityProvider_Id?  ProviderId         = null,
+            IEMPRoamingProvider.GetChargeDetailRecords(DateTime               From,
+                                                       DateTime?              To,          // = null,
+                                                       eMobilityProvider_Id?  ProviderId,  // = null,
 
-                                   DateTime?              Timestamp          = null,
-                                   CancellationToken?     CancellationToken  = null,
-                                   EventTracking_Id       EventTrackingId    = null,
-                                   TimeSpan?              RequestTimeout     = null)
+                                                       DateTime?              Timestamp,
+                                                       CancellationToken?     CancellationToken,
+                                                       EventTracking_Id       EventTrackingId,
+                                                       TimeSpan?              RequestTimeout)
 
         {
 
@@ -2015,7 +2287,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                  Timestamp,
                                                                  CancellationToken,
                                                                  EventTrackingId,
-                                                                 RequestTimeout);
+                                                                 RequestTimeout).
+                                          ConfigureAwait(false);
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK &&
                 result.Content        != null)
@@ -2028,6 +2301,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             return new WWCP.ChargeDetailRecord[0];
 
         }
+
+        #endregion
 
         #endregion
 

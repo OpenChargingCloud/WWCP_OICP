@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The unqiue identification of the charging station operator maintaining the given EVSE data records.
         /// </summary>
-        public ChargingStationOperator_Id   OperatorId        { get; }
+        public Operator_Id                  OperatorId        { get; }
 
         /// <summary>
         /// An optional name of the charging station operator maintaining the given EVSE data records.
@@ -63,7 +63,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
         /// <param name="OperatorName">An optional name of the charging station operator maintaining the given EVSE data records.</param>
         public OperatorEVSEData(IEnumerable<EVSEDataRecord>  EVSEDataRecords,
-                                ChargingStationOperator_Id   OperatorId,
+                                Operator_Id                  OperatorId,
                                 String                       OperatorName)
         {
 
@@ -142,7 +142,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                      OnException),
 
                            OperatorEVSEDataXML.MapValueOrFail       (OICPNS.EVSEData + "OperatorID",
-                                                                     ChargingStationOperator_Id.Parse,
+                                                                     Operator_Id.Parse,
                                                                      "Missing OperatorID!"),
 
                            OperatorEVSEDataXML.ElementValueOrDefault(OICPNS.EVSEData + "OperatorName")

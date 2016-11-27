@@ -73,10 +73,10 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static AEMPRoamingProvider
+        public static IEMPRoamingProvider
 
             CreateOICPv2_1_EMPRoamingProvider(this RoamingNetwork                   RoamingNetwork,
-                                              RoamingProvider_Id                    Id,
+                                              EMPRoamingProvider_Id                 Id,
                                               I18NString                            Name,
 
                                               String                                RemoteHostname,
@@ -104,7 +104,7 @@ namespace org.GraphDefined.WWCP
                                               DNSClient                             DNSClient                       = null,
 
                                               Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator                = null,
-                                              Action<AEMPRoamingProvider>           Configurator                    = null)
+                                              Action<IEMPRoamingProvider>           Configurator                    = null)
 
         {
 
@@ -194,10 +194,10 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static AEMPRoamingProvider
+        public static IEMPRoamingProvider
 
             CreateOICPv2_1_EMPRoamingProvider(this RoamingNetwork                   RoamingNetwork,
-                                              RoamingProvider_Id                    Id,
+                                              EMPRoamingProvider_Id                 Id,
                                               I18NString                            Name,
                                               SOAPServer                            SOAPServer,
 
@@ -221,7 +221,7 @@ namespace org.GraphDefined.WWCP
                                               DNSClient                             DNSClient                    = null,
 
                                               Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator             = null,
-                                              Action<AEMPRoamingProvider>           Configurator                 = null)
+                                              Action<IEMPRoamingProvider>           Configurator                 = null)
 
         {
 

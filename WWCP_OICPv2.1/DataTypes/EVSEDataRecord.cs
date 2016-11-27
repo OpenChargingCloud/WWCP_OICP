@@ -170,12 +170,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// An optional hub operator of this EVSE.
         /// </summary>
-        public HubOperator_Id       HubOperatorId               { get; }
+        public HubOperator_Id?      HubOperatorId               { get; }
 
         /// <summary>
         /// An optional clearing house of this EVSE.
         /// </summary>
-        public RoamingProvider_Id   ClearingHouseId             { get; }
+        public ClearingHouse_Id?    ClearingHouseId             { get; }
 
         /// <summary>
         /// Whether this EVSE is Hubject compatible.
@@ -240,8 +240,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                 GeoCoordinate                     GeoChargingPointEntrance    = null,
                                 Boolean?                          IsOpen24Hours               = null,
                                 OpeningTimes                      OpeningTime                 = null,
-                                HubOperator_Id                    HubOperatorId               = null,
-                                RoamingProvider_Id                ClearingHouseId             = null,
+                                HubOperator_Id?                   HubOperatorId               = null,
+                                ClearingHouse_Id?                 ClearingHouseId             = null,
                                 Boolean                           IsHubjectCompatible         = true,
                                 Boolean                           DynamicInfoAvailable        = true)
 
@@ -344,8 +344,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               GeoCoordinate                     GeoChargingPointEntrance    = null,
                               Boolean?                          IsOpen24Hours               = null,
                               OpeningTimes                      OpeningTime                 = null,
-                              HubOperator_Id                    HubOperatorId               = null,
-                              RoamingProvider_Id                ClearingHouseId             = null,
+                              HubOperator_Id?                   HubOperatorId               = null,
+                              ClearingHouse_Id?                 ClearingHouseId             = null,
                               Boolean                           IsHubjectCompatible         = true,
                               Boolean                           DynamicInfoAvailable        = true)
 
@@ -744,11 +744,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 _OpeningTime.IsOpen24Hours,
                 _OpeningTime,
 
-                EVSEDataRecordXML.MapValueOrNull(OICPNS.EVSEData + "HubOperatorID",
-                                                 HubOperator_Id.Parse),
+                EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "HubOperatorID",
+                                                     HubOperator_Id.Parse),
 
-                EVSEDataRecordXML.MapValueOrNull(OICPNS.EVSEData + "ClearinghouseID",
-                                                 RoamingProvider_Id.Parse),
+                EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ClearinghouseID",
+                                                     ClearingHouse_Id.Parse),
 
                 EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible").
                                   Trim() == "true",
@@ -1004,9 +1004,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             public OpeningTimes OpeningTime { get; set; }
 
-            public HubOperator_Id HubOperatorId { get; set; }
+            public HubOperator_Id? HubOperatorId { get; set; }
 
-            public RoamingProvider_Id ClearingHouseId { get; set; }
+            public ClearingHouse_Id? ClearingHouseId { get; set; }
             public Boolean IsHubjectCompatible { get; set; }
             public Boolean DynamicInfoAvailable { get; set; }
 
@@ -1059,8 +1059,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                              GeoCoordinate        GeoChargingPointEntrance   = null,
                              Boolean?             IsOpen24Hours              = null,
                              OpeningTimes         OpeningTime                = null,
-                             HubOperator_Id       HubOperatorId              = null,
-                             RoamingProvider_Id   ClearingHouseId            = null,
+                             HubOperator_Id?      HubOperatorId              = null,
+                             ClearingHouse_Id?    ClearingHouseId            = null,
                              Boolean              IsHubjectCompatible        = true,
                              Boolean              DynamicInfoAvailable       = true)
 
@@ -1165,8 +1165,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            GeoCoordinate            GeoChargingPointEntrance   = null,
                            Boolean?                 IsOpen24Hours              = null,
                            OpeningTimes             OpeningTime                = null,
-                           HubOperator_Id           HubOperatorId              = null,
-                           RoamingProvider_Id       ClearingHouseId            = null,
+                           HubOperator_Id?          HubOperatorId              = null,
+                           ClearingHouse_Id?        ClearingHouseId            = null,
                            Boolean                  IsHubjectCompatible        = true,
                            Boolean                  DynamicInfoAvailable       = true)
 

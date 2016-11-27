@@ -18,17 +18,16 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using System.Xml.Linq;
 
 #endregion
 
@@ -694,6 +693,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region CustomPushEVSEDataRequestMapper
 
+        #region CustomPushEVSEDataRequestMapper
+
         public Func<PushEVSEDataRequest, PushEVSEDataRequest> CustomPushEVSEDataRequestMapper
         {
 
@@ -711,7 +712,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region CustomPushEVSEDataResponseMapper
+        #region CustomPushEVSEDataSOAPRequestMapper
+
+        public Func<PushEVSEDataRequest, XElement, XElement> CustomPushEVSEDataSOAPRequestMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomPushEVSEDataSOAPRequestMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomPushEVSEDataSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
 
         public CustomMapperDelegate<Acknowledgement<PushEVSEDataRequest>, Acknowledgement<PushEVSEDataRequest>.Builder> CustomPushEVSEDataResponseMapper
         {
@@ -724,6 +742,293 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             set
             {
                 CPOClient.CustomPushEVSEDataResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPushEVSEStatusRequestMapper
+
+        #region CustomPushEVSEStatusRequestMapper
+
+        public Func<PushEVSEStatusRequest, PushEVSEStatusRequest> CustomPushEVSEStatusRequestMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomPushEVSEStatusRequestMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomPushEVSEStatusRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPushEVSEStatusSOAPRequestMapper
+
+        public Func<PushEVSEStatusRequest, XElement, XElement> CustomPushEVSEStatusSOAPRequestMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomPushEVSEStatusSOAPRequestMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomPushEVSEStatusSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PushEVSEStatusRequest>, Acknowledgement<PushEVSEStatusRequest>.Builder> CustomPushEVSEStatusResponseMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomPushEVSEStatusResponseMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomPushEVSEStatusResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region CustomAuthorizeStartRequestMapper
+
+        #region CustomAuthorizeStartRequestMapper
+
+        public Func<AuthorizeStartRequest, AuthorizeStartRequest> CustomAuthorizeStartRequestMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomAuthorizeStartRequestMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomAuthorizeStartRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeStartSOAPRequestMapper
+
+        public Func<AuthorizeStartRequest, XElement, XElement> CustomAuthorizeStartSOAPRequestMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomAuthorizeStartSOAPRequestMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomAuthorizeStartSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<AuthorizeStartRequest>, Acknowledgement<AuthorizeStartRequest>.Builder> CustomAuthorizeStartResponseMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomAuthorizeStartResponseMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomAuthorizeStartResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeStopRequestMapper
+
+        #region CustomAuthorizeStopRequestMapper
+
+        public Func<AuthorizeStopRequest, AuthorizeStopRequest> CustomAuthorizeStopRequestMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomAuthorizeStopRequestMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomAuthorizeStopRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeStopSOAPRequestMapper
+
+        public Func<AuthorizeStopRequest, XElement, XElement> CustomAuthorizeStopSOAPRequestMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomAuthorizeStopSOAPRequestMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomAuthorizeStopSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<AuthorizeStopRequest>, Acknowledgement<AuthorizeStopRequest>.Builder> CustomAuthorizeStopResponseMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomAuthorizeStopResponseMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomAuthorizeStopResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomSendChargeDetailRecordRequestMapper
+
+        #region CustomSendChargeDetailRecordRequestMapper
+
+        public Func<SendChargeDetailRecordRequest, SendChargeDetailRecordRequest> CustomSendChargeDetailRecordRequestMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomSendChargeDetailRecordRequestMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomSendChargeDetailRecordRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomSendChargeDetailRecordSOAPRequestMapper
+
+        public Func<SendChargeDetailRecordRequest, XElement, XElement> CustomSendChargeDetailRecordSOAPRequestMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomSendChargeDetailRecordSOAPRequestMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomSendChargeDetailRecordSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<SendChargeDetailRecordRequest>, Acknowledgement<SendChargeDetailRecordRequest>.Builder> CustomSendChargeDetailRecordResponseMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomSendChargeDetailRecordResponseMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomSendChargeDetailRecordResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region CustomPullAuthenticationDataRequestMapper
+
+        #region CustomPullAuthenticationDataRequestMapper
+
+        public Func<PullAuthenticationDataRequest, PullAuthenticationDataRequest> CustomPullAuthenticationDataRequestMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomPullAuthenticationDataRequestMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomPullAuthenticationDataRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullAuthenticationDataSOAPRequestMapper
+
+        public Func<PullAuthenticationDataRequest, XElement, XElement> CustomPullAuthenticationDataSOAPRequestMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomPullAuthenticationDataSOAPRequestMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomPullAuthenticationDataSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PullAuthenticationDataRequest>, Acknowledgement<PullAuthenticationDataRequest>.Builder> CustomPullAuthenticationDataResponseMapper
+        {
+
+            get
+            {
+                return CPOClient.CustomPullAuthenticationDataResponseMapper;
+            }
+
+            set
+            {
+                CPOClient.CustomPullAuthenticationDataResponseMapper = value;
             }
 
         }
@@ -868,160 +1173,65 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             PushEVSEStatus(PushEVSEStatusRequest Request)
 
-            => await CPOClient.PushEVSEStatus(Request);
+                => await CPOClient.PushEVSEStatus(Request);
 
         #endregion
 
 
-        #region AuthorizeStart(OperatorId, AuthToken, EVSEId = null, SessionId = null, PartnerProductId = null, PartnerSessionId = null, ...)
+        #region AuthorizeStart        (Request)
 
         /// <summary>
         /// Create an OICP authorize start request.
         /// </summary>
-        /// <param name="OperatorId">An Charging Station Operator identification.</param>
-        /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="EVSEId">An optional EVSE identification.</param>
-        /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="PartnerProductId">An optional partner product identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="Request">An AuthorizeStart request.</param>
         public async Task<HTTPResponse<AuthorizationStart>>
 
-            AuthorizeStart(ChargingStationOperator_Id  OperatorId,
-                           Auth_Token                  AuthToken,
-                           EVSE_Id?                    EVSEId              = null,
-                           Session_Id?                 SessionId           = null,
-                           PartnerProduct_Id?          PartnerProductId    = null,
-                           PartnerSession_Id?          PartnerSessionId    = null,
+            AuthorizeStart(AuthorizeStartRequest  Request)
 
-                           DateTime?                   Timestamp           = null,
-                           CancellationToken?          CancellationToken   = null,
-                           EventTracking_Id            EventTrackingId     = null,
-                           TimeSpan?                   RequestTimeout      = null)
-
-
-            => await CPOClient.AuthorizeStart(OperatorId,
-                                              AuthToken,
-                                              EVSEId,
-                                              SessionId,
-                                              PartnerProductId,
-                                              PartnerSessionId,
-
-                                              Timestamp,
-                                              CancellationToken,
-                                              EventTrackingId,
-                                              RequestTimeout);
+                => await CPOClient.AuthorizeStart(Request);
 
         #endregion
 
-        #region AuthorizeStop (OperatorId, SessionId, AuthToken, EVSEId = null, PartnerSessionId = null, ...)
-
-        // UID => Not everybody can stop any session, but maybe another
-        //        UID than the UID which started the session!
-        //        (e.g. car sharing)
+        #region AuthorizeStop         (Request)
 
         /// <summary>
         /// Create an OICP authorize stop request.
         /// </summary>
-        /// <param name="OperatorId">An EVSE Operator identification.</param>
-        /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
-        /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="EVSEId">An optional EVSE identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="Request">An AuthorizeStop request.</param>
         public async Task<HTTPResponse<AuthorizationStop>>
 
-            AuthorizeStop(ChargingStationOperator_Id  OperatorId,
-                          Session_Id                  SessionId,
-                          Auth_Token                  AuthToken,
-                          EVSE_Id?                    EVSEId              = null,
-                          PartnerSession_Id?          PartnerSessionId    = null,
+            AuthorizeStop(AuthorizeStopRequest Request)
 
-                          DateTime?                   Timestamp           = null,
-                          CancellationToken?          CancellationToken   = null,
-                          EventTracking_Id            EventTrackingId     = null,
-                          TimeSpan?                   RequestTimeout      = null)
-
-
-            => await CPOClient.AuthorizeStop(OperatorId,
-                                             SessionId,
-                                             AuthToken,
-                                             EVSEId,
-                                             PartnerSessionId,
-
-                                             Timestamp,
-                                             CancellationToken,
-                                             EventTrackingId,
-                                             RequestTimeout);
+                => await CPOClient.AuthorizeStop(Request);
 
         #endregion
 
-        #region SendChargeDetailRecord(ChargeDetailRecord, ...)
+        #region SendChargeDetailRecord(Request)
 
         /// <summary>
         /// Send a charge detail record to an OICP server.
         /// </summary>
-        /// <param name="ChargeDetailRecord">A charge detail record.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
+        /// <param name="Request">A SendChargeDetailRecord request.</param>
+        public async Task<HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>>
 
-            SendChargeDetailRecord(ChargeDetailRecord  ChargeDetailRecord,
+            SendChargeDetailRecord(SendChargeDetailRecordRequest Request)
 
-                                   DateTime?           Timestamp           = null,
-                                   CancellationToken?  CancellationToken   = null,
-                                   EventTracking_Id    EventTrackingId     = null,
-                                   TimeSpan?           RequestTimeout      = null)
-
-
-            => await CPOClient.SendChargeDetailRecord(ChargeDetailRecord,
-
-                                                      Timestamp,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      RequestTimeout);
+                => await CPOClient.SendChargeDetailRecord(Request);
 
         #endregion
 
 
-        #region PullAuthenticationData(OperatorId, ...)
+        #region PullAuthenticationData(Request)
 
         /// <summary>
         /// Pull authentication data from the OICP server.
         /// </summary>
-        /// <param name="OperatorId">An Charging Station Operator identification.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="Request">A PullAuthenticationData request.</param>
         public async Task<HTTPResponse<AuthenticationData>>
 
-            PullAuthenticationData(ChargingStationOperator_Id  OperatorId,
+            PullAuthenticationData(PullAuthenticationDataRequest Request)
 
-                                   DateTime?                   Timestamp           = null,
-                                   CancellationToken?          CancellationToken   = null,
-                                   EventTracking_Id            EventTrackingId     = null,
-                                   TimeSpan?                   RequestTimeout      = null)
-
-
-            => await CPOClient.PullAuthenticationData(OperatorId,
-
-                                                      Timestamp,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      RequestTimeout);
+                => await CPOClient.PullAuthenticationData(Request);
 
         #endregion
 

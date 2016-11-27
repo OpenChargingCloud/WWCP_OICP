@@ -348,8 +348,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                         !PushEVSEStatusXMLs.    Any() &&
                         !PullEVSEStatusXMLs.    Any() &&
                         !PullEVSEStatusByIdXMLs.Any())
-
+                    {
                         throw new Exception("Unkown XML/SOAP request!");
+                    }
 
                     if (PushEVSEDataXMLs.       Count() > 1)
                         throw new Exception("Multiple PushEvseData XML tags within a single request are not supported!");

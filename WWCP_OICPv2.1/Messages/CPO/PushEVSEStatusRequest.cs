@@ -46,7 +46,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The unqiue identification of the charging station operator maintaining the given EVSE status records.
         /// </summary>
-        public ChargingStationOperator_Id     OperatorId          { get; }
+        public Operator_Id     OperatorId          { get; }
 
         /// <summary>
         /// An optional name of the charging station operator maintaining the given EVSE status records.
@@ -70,7 +70,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="OperatorName">An optional name of the charging station operator maintaining the given EVSE status records.</param>
         /// <param name="Action">The server-side data management operation.</param>
         public PushEVSEStatusRequest(IEnumerable<EVSEStatusRecord>  EVSEStatusRecords,
-                                     ChargingStationOperator_Id     OperatorId,
+                                     Operator_Id                    OperatorId,
                                      String                         OperatorName        = null,
                                      ActionTypes                    Action              = ActionTypes.update,
 

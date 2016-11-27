@@ -768,7 +768,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSEData>>
 
-            PullEVSEData(eMobilityProvider_Id  ProviderId,
+            PullEVSEData(Provider_Id           ProviderId,
                          GeoCoordinate         SearchCenter       = null,
                          Double                DistanceKM         = 0.0,
                          DateTime?             LastCall           = null,
@@ -781,10 +781,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         {
 
             #region Initial checks
-
-            if (ProviderId == null)
-                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
-
 
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
@@ -845,7 +841,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(EVSEData.Parse, base.SendException),
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(EVSEData.Parse, SendException),
 
                                                      #endregion
 
@@ -893,7 +889,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      #endregion
 
-                                                    );
+                                                    ).ConfigureAwait(false);
 
                 #region Send OnPullEVSEDataResponse event
 
@@ -946,7 +942,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSESearchResult>>
 
-            SearchEVSE(eMobilityProvider_Id  ProviderId,
+            SearchEVSE(Provider_Id           ProviderId,
                        GeoCoordinate         SearchCenter       = null,
                        Double                DistanceKM         = 0.0,
                        Address               Address            = null,
@@ -961,10 +957,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         {
 
             #region Initial checks
-
-            if (ProviderId == null)
-                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
-
 
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
@@ -1080,7 +1072,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      #endregion
 
-                                                    );
+                                                    ).ConfigureAwait(false);
 
                 #region Send OnSearchEVSEResponse event
 
@@ -1134,7 +1126,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSEStatus>>
 
-            PullEVSEStatus(eMobilityProvider_Id  ProviderId,
+            PullEVSEStatus(Provider_Id           ProviderId,
                            GeoCoordinate         SearchCenter       = null,
                            Double                DistanceKM         = 0.0,
                            EVSEStatusTypes?      EVSEStatusFilter   = null,
@@ -1147,10 +1139,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         {
 
             #region Initial checks
-
-            if (ProviderId == null)
-                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
-
 
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
@@ -1259,7 +1247,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      #endregion
 
-                                                    );
+                                                    ).ConfigureAwait(false);
 
                 #region Send OnPullEVSEStatusResponse event
 
@@ -1308,7 +1296,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSEStatusById>>
 
-            PullEVSEStatusById(eMobilityProvider_Id  ProviderId,
+            PullEVSEStatusById(Provider_Id           ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
 
                                DateTime?             Timestamp          = null,
@@ -1319,9 +1307,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         {
 
             #region Initial checks
-
-            if (ProviderId == null)
-                throw new ArgumentNullException(nameof(ProviderId),  "The given e-mobility provider identification must not be null!");
 
             if (EVSEIds == null)
                 throw new ArgumentNullException(nameof(EVSEIds),     "The given enumeration of EVSE identifications must not be null!");
@@ -1430,7 +1415,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      #endregion
 
-                                                    );
+                                                    ).ConfigureAwait(false);
 
                 #region Send OnPullEVSEStatusByIdResponse event
 
@@ -1618,7 +1603,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                  #endregion
 
-                                                );
+                                                ).ConfigureAwait(false);
 
             }
 
@@ -1820,7 +1805,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      #endregion
 
-                                                    );
+                                                    ).ConfigureAwait(false);
 
                 #region Send OnReservationStartResponse event
 
@@ -2012,7 +1997,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      #endregion
 
-                                                    );
+                                                    ).ConfigureAwait(false);
 
                 #region Send OnReservationStopResponse event
 
@@ -2202,7 +2187,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      #endregion
 
-                                                    );
+                                                    ).ConfigureAwait(false);
 
                 #region Send OnAuthorizeRemoteStartResponse event
 
@@ -2396,7 +2381,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                  #endregion
 
-                                                );
+                                                ).ConfigureAwait(false);
 
                 #region Send OnAuthorizeRemoteStopResponse event
 
@@ -2568,7 +2553,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      #endregion
 
-                                                    );
+                                                    ).ConfigureAwait(false);
 
                 #region Send OnGetChargeDetailRecordsResponse event
 

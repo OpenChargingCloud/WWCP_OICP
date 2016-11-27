@@ -112,8 +112,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  DateTime                       RequestTimestamp,
                                                  CPOClient                      Sender,
                                                  String                         SenderId,
-                                                 ChargingStationOperator_Id     OperatorId,
-                                                 Auth_Token                     AuthToken,
+                                                 Operator_Id                    OperatorId,
+                                                 UID                            UID,
                                                  EVSE_Id?                       EVSEId,
                                                  Session_Id?                    SessionId,
                                                  PartnerProduct_Id?             PartnerProductId,
@@ -126,8 +126,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     public delegate Task OnAuthorizeStartedHandler(DateTime                     Timestamp,
                                                    CPOClient                    Sender,
                                                    String                       SenderId,
-                                                   ChargingStationOperator_Id   OperatorId,
-                                                   Auth_Token                   AuthToken,
+                                                   Operator_Id                  OperatorId,
+                                                   UID                          UID,
                                                    EVSE_Id?                     EVSEId,
                                                    Session_Id?                  SessionId,
                                                    PartnerProduct_Id?           PartnerProductId,
@@ -144,9 +144,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                        DateTime                     RequestTimestamp,
                                                        CPOClient                    Sender,
                                                        String                       SenderId,
-                                                       ChargingStationOperator_Id   OperatorId,
+                                                       Operator_Id                  OperatorId,
                                                        Session_Id                   SessionId,
-                                                       Auth_Token                   AuthToken,
+                                                       UID                          UID,
                                                        EVSE_Id?                     EVSEId,
                                                        PartnerSession_Id?           PartnerSessionId,
                                                        TimeSpan?                    RequestTimeout);
@@ -157,9 +157,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     public delegate Task OnAuthorizeStopResponseHandler(DateTime                    Timestamp,
                                                         CPOClient                   Sender,
                                                         String                      SenderId,
-                                                        ChargingStationOperator_Id  OperatorId,
+                                                        Operator_Id                 OperatorId,
                                                         Session_Id                  SessionId,
-                                                        Auth_Token                  AuthToken,
+                                                        UID                         UID,
                                                         EVSE_Id?                    EVSEId,
                                                         PartnerSession_Id?          PartnerSessionId,
                                                         TimeSpan?                   RequestTimeout,
@@ -173,26 +173,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// <summary>
     /// A delegate called whenever a 'charge detail record' will be send.
     /// </summary>
-    public delegate Task OnSendChargeDetailRecordRequestHandler (DateTime                  LogTimestamp,
-                                                                 DateTime                  RequestTimestamp,
-                                                                 CPOClient                 Sender,
-                                                                 String                    SenderId,
-                                                                 EventTracking_Id          EventTrackingId,
-                                                                 ChargeDetailRecord        ChargeDetailRecord,
-                                                                 TimeSpan?                 RequestTimeout);
+    public delegate Task OnSendChargeDetailRecordRequestHandler (DateTime                                         LogTimestamp,
+                                                                 DateTime                                         RequestTimestamp,
+                                                                 CPOClient                                        Sender,
+                                                                 String                                           SenderId,
+                                                                 EventTracking_Id                                 EventTrackingId,
+                                                                 ChargeDetailRecord                               ChargeDetailRecord,
+                                                                 TimeSpan?                                        RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a sent 'charge detail record' had been received.
     /// </summary>
-    public delegate Task OnSendChargeDetailRecordResponseHandler(DateTime                  Timestamp,
-                                                                 DateTime                  RequestTimestamp,
-                                                                 CPOClient                 Sender,
-                                                                 String                    SenderId,
-                                                                 EventTracking_Id          EventTrackingId,
-                                                                 ChargeDetailRecord        ChargeDetailRecord,
-                                                                 TimeSpan?                 RequestTimeout,
-                                                                 Acknowledgement   Result,
-                                                                 TimeSpan                  Duration);
+    public delegate Task OnSendChargeDetailRecordResponseHandler(DateTime                                         Timestamp,
+                                                                 DateTime                                         RequestTimestamp,
+                                                                 CPOClient                                        Sender,
+                                                                 String                                           SenderId,
+                                                                 EventTracking_Id                                 EventTrackingId,
+                                                                 ChargeDetailRecord                               ChargeDetailRecord,
+                                                                 TimeSpan?                                        RequestTimeout,
+                                                                 Acknowledgement<SendChargeDetailRecordRequest>   Result,
+                                                                 TimeSpan                                         Duration);
 
     #endregion
 
@@ -206,7 +206,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                  CPOClient                    Sender,
                                                                  String                       SenderId,
                                                                  EventTracking_Id             EventTrackingId,
-                                                                 ChargingStationOperator_Id              OperatorId,
+                                                                 Operator_Id                  OperatorId,
                                                                  TimeSpan?                    RequestTimeout);
 
     /// <summary>
@@ -216,9 +216,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                  CPOClient                    Sender,
                                                                  String                       SenderId,
                                                                  EventTracking_Id             EventTrackingId,
-                                                                 ChargingStationOperator_Id              OperatorId,
+                                                                 Operator_Id                  OperatorId,
                                                                  TimeSpan?                    RequestTimeout,
-                                                                 AuthenticationData   Result,
+                                                                 AuthenticationData           Result,
                                                                  TimeSpan                     Duration);
 
     #endregion

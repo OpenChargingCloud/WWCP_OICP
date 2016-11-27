@@ -1642,6 +1642,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    : new ChargingProduct_Id?();
 
 
+        public static Operator_Id ToOICP(this WWCP.ChargingStationOperator_Id OperatorId)
+            => Operator_Id.Parse(OperatorId.ToString());
+
+        public static WWCP.ChargingStationOperator_Id ToWWCP(this Operator_Id OperatorId)
+            => WWCP.ChargingStationOperator_Id.Parse(OperatorId.ToString());
+
+
         public static Provider_Id ToOICP(this WWCP.eMobilityProvider_Id ProviderId)
             => Provider_Id.Parse(ProviderId.ToString());
 
@@ -1676,6 +1683,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             => EVCOId.HasValue
                    ? WWCP.eMobilityAccount_Id.Parse(EVCOId.ToString())
                    : new eMobilityAccount_Id?();
+
+
+
+        public static UID ToOICP(this WWCP.Auth_Token AuthToken)
+            => UID.Parse(AuthToken.ToString());
+
+        public static WWCP.Auth_Token ToWWCP(this UID UID)
+            => WWCP.Auth_Token.Parse(UID.ToString());
+
+
+        #region ToOICP(AuthInfo)
+
+        /// <summary>
+        /// Create a new identification for authorization based on the given WWCP AuthInfo.
+        /// </summary>
+        /// <param name="AuthInfo">A WWCP auth info.</param>
+        public static AuthorizationIdentification ToOICP(this AuthInfo AuthInfo)
+        {
+
+            if (AuthInfo.AuthToken                   != null)
+                return AuthorizationIdentification.FromRFIDId                     (AuthInfo.AuthToken.ToOICP());
+
+            if (AuthInfo.QRCodeIdentification        != null)
+                return AuthorizationIdentification.FromQRCodeIdentification       (new EVCOIdWithPIN(AuthInfo.QRCodeIdentification.eMAId.ToOICP(),
+                                                                                                     AuthInfo.QRCodeIdentification.PIN,
+                                                                                                     AuthInfo.QRCodeIdentification.Function,
+                                                                                                     AuthInfo.QRCodeIdentification.Salt));
+
+            if (AuthInfo.PlugAndChargeIdentification.HasValue)
+                return AuthorizationIdentification.FromPlugAndChargeIdentification(AuthInfo.PlugAndChargeIdentification.Value.ToOICP());
+
+            if (AuthInfo.RemoteIdentification.       HasValue)
+                return AuthorizationIdentification.FromRemoteIdentification       (AuthInfo.RemoteIdentification.       Value.ToOICP());
+
+            throw new ArgumentException("Invalid AuthInfo!", nameof(AuthInfo));
+
+        }
+
+        #endregion
 
 
         #region ToWWCP(this ChargeDetailRecord)

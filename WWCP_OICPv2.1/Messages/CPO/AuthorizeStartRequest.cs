@@ -18,10 +18,8 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Xml.Linq;
 using System.Threading;
-using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -41,32 +39,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The unqiue identification of the charging station operator.
         /// </summary>
-        public ChargingStationOperator_Id  OperatorId         { get; }
+        public Operator_Id         OperatorId         { get; }
 
         /// <summary>
         /// A (RFID) user identification.
         /// </summary>
-        public Auth_Token                  AuthToken          { get; }
+        public UID                 UID                { get; }
 
         /// <summary>
         /// An optional EVSE identification.
         /// </summary>
-        public EVSE_Id?                    EVSEId             { get; }
+        public EVSE_Id?            EVSEId             { get; }
 
         /// <summary>
         /// An optional partner product identification.
         /// </summary>
-        public PartnerProduct_Id?          PartnerProductId   { get; }
+        public PartnerProduct_Id?  PartnerProductId   { get; }
 
         /// <summary>
-        /// An optional session identification.
+        /// An optional charging session identification.
         /// </summary>
-        public Session_Id?                 SessionId          { get; }
+        public Session_Id?         SessionId          { get; }
 
         /// <summary>
         /// An optional partner session identification.
         /// </summary>
-        public PartnerSession_Id?          PartnerSessionId   { get; }
+        public PartnerSession_Id?  PartnerSessionId   { get; }
 
         #endregion
 
@@ -76,22 +74,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Create an OICP AuthorizeStart XML/SOAP request.
         /// </summary>
         /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
-        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="UID">A (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
-        /// <param name="SessionId">An optional session identification.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        public AuthorizeStartRequest(ChargingStationOperator_Id  OperatorId,
-                                     Auth_Token                  AuthToken,
-                                     EVSE_Id?                    EVSEId              = null,   // OICP v2.1: Optional
-                                     PartnerProduct_Id?          PartnerProductId    = null,   // OICP v2.1: Optional [100]
-                                     Session_Id?                 SessionId           = null,   // OICP v2.1: Optional
-                                     PartnerSession_Id?          PartnerSessionId    = null,   // OICP v2.1: Optional [50]
+        public AuthorizeStartRequest(Operator_Id         OperatorId,
+                                     UID                 UID,
+                                     EVSE_Id?            EVSEId              = null,   // OICP v2.1: Optional
+                                     PartnerProduct_Id?  PartnerProductId    = null,   // OICP v2.1: Optional [100]
+                                     Session_Id?         SessionId           = null,   // OICP v2.1: Optional
+                                     PartnerSession_Id?  PartnerSessionId    = null,   // OICP v2.1: Optional [50]
 
-                                     DateTime?                   Timestamp           = null,
-                                     CancellationToken?          CancellationToken   = null,
-                                     EventTracking_Id            EventTrackingId     = null,
-                                     TimeSpan?                   RequestTimeout      = null)
+                                     DateTime?           Timestamp           = null,
+                                     CancellationToken?  CancellationToken   = null,
+                                     EventTracking_Id    EventTrackingId     = null,
+                                     TimeSpan?           RequestTimeout      = null)
 
             : base(Timestamp,
                    CancellationToken,
@@ -102,13 +100,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Initial checks
 
-            if (AuthToken == null)
-                throw new ArgumentNullException(nameof(AuthToken), "The given authentication token must not be null!");
+            if (UID == null)
+                throw new ArgumentNullException(nameof(UID), "The given authentication token must not be null!");
 
             #endregion
 
             this.OperatorId        = OperatorId;
-            this.AuthToken         = AuthToken;
+            this.UID         = UID;
             this.EVSEId            = EVSEId;
             this.PartnerProductId  = PartnerProductId;
             this.SessionId         = SessionId;
@@ -243,24 +241,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                Auth_Token AuthToken = null;
+                UID _UID = default(UID);
 
                 var IdentificationXML = AuthorizeStartXML.Element(OICPNS.Authorization + "Identification");
                 if (IdentificationXML != null)
                 {
 
-                    AuthToken = IdentificationXML.MapValueOrFail(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                                                 OICPNS.CommonTypes + "UID",
-                                                                 Auth_Token.Parse);
+                    _UID = IdentificationXML.MapValueOrFail(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
+                                                            OICPNS.CommonTypes + "UID",
+                                                            UID.Parse);
 
                 }
 
                 AuthorizeStart = new AuthorizeStartRequest(
 
                                      AuthorizeStartXML.MapValueOrFail(OICPNS.Authorization + "OperatorID",
-                                                                      ChargingStationOperator_Id.Parse),
+                                                                      Operator_Id.Parse),
 
-                                     AuthToken,
+                                     _UID,
 
                                      AuthorizeStartXML.MapValueOrNullable(OICPNS.Authorization + "EVSEID",
                                                                           EVSE_Id.Parse),
@@ -348,7 +346,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                  new XElement(OICPNS.Authorization + "Identification",
                                      new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                        new XElement(OICPNS.CommonTypes + "UID", AuthToken.ToString())
+                                        new XElement(OICPNS.CommonTypes + "UID", UID.ToString())
                                      )
                                  ),
 
@@ -442,13 +440,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if ((Object) AuthorizeStart == null)
                 return false;
 
-            return EVSEStatusRecords.Count().Equals(AuthorizeStart.EVSEStatusRecords.Count()) &&
-                   OperatorId.               Equals(AuthorizeStart.OperatorId)              &&
+            return OperatorId.Equals(AuthorizeStart.OperatorId) &&
+                   UID.       Equals(AuthorizeStart.UID)        &&
 
-                   ((OperatorName == null && AuthorizeStart.OperatorName == null) ||
-                    (OperatorName != null && AuthorizeStart.OperatorName != null && OperatorName.Equals(AuthorizeStart.OperatorName))) &&
+                   ((!EVSEId.          HasValue && !AuthorizeStart.EVSEId.          HasValue) ||
+                     (EVSEId.          HasValue &&  AuthorizeStart.EVSEId.          HasValue && EVSEId.          Value.Equals(AuthorizeStart.EVSEId.          Value))) &&
 
-                   Action.                   Equals(AuthorizeStart.Action);
+                   ((!PartnerProductId.HasValue && !AuthorizeStart.PartnerProductId.HasValue) ||
+                     (PartnerProductId.HasValue &&  AuthorizeStart.PartnerProductId.HasValue && PartnerProductId.Value.Equals(AuthorizeStart.PartnerProductId.Value))) &&
+
+                   ((!SessionId.       HasValue && !AuthorizeStart.SessionId.       HasValue) ||
+                     (SessionId.       HasValue &&  AuthorizeStart.SessionId.       HasValue && SessionId.       Value.Equals(AuthorizeStart.SessionId.       Value))) &&
+
+                   ((!PartnerSessionId.HasValue && !AuthorizeStart.PartnerSessionId.HasValue) ||
+                     (PartnerSessionId.HasValue &&  AuthorizeStart.PartnerSessionId.HasValue && PartnerSessionId.Value.Equals(AuthorizeStart.PartnerSessionId.Value)));
 
         }
 
@@ -467,14 +472,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             unchecked
             {
 
-                return EVSEStatusRecords.GetHashCode() * 17 ^
-                       OperatorId.     GetHashCode() * 11 ^
+                return OperatorId.GetHashCode() * 19 ^
+                       UID.       GetHashCode() * 17 ^
 
-                       (OperatorName != null
-                            ? OperatorName.GetHashCode() * 5
+                       (EVSEId           != null
+                            ? EVSEId.          GetHashCode() * 11
                             : 0) ^
 
-                       Action.GetHashCode();
+                       (PartnerProductId != null
+                            ? PartnerProductId.GetHashCode() * 7
+                            : 0) ^
+
+                       (SessionId        != null
+                            ? SessionId.       GetHashCode() * 5
+                            : 0) ^
+
+                       (PartnerSessionId != null
+                            ? PartnerSessionId.GetHashCode() * 3
+                            : 0);
 
             }
         }
@@ -488,7 +503,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public override String ToString()
 
-            => String.Concat(AuthToken,
+            => String.Concat(UID,
 
                              EVSEId.HasValue
                                  ? " at " + EVSEId

@@ -28,11 +28,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The unique identification of an OICP charging session.
+    /// The unique identification of an OICP RFID card.
     /// </summary>
-    public struct Session_Id : IId,
-                               IEquatable<Session_Id>,
-                               IComparable<Session_Id>
+    public struct UID : IId,
+                        IEquatable <UID>,
+                        IComparable<UID>
 
     {
 
@@ -45,17 +45,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
         /// <summary>
-        /// The regular expression for parsing a charging session identification.
+        /// The regular expression for parsing a RFID card identification.
         /// </summary>
-        public static readonly Regex SessionId_RegEx  = new Regex(@"^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$",
-                                                                  RegexOptions.IgnorePatternWhitespace);
+        public static readonly Regex UID_RegEx  = new Regex(@"^([A-F0-9]{8})$ | ^([A-F0-9]{14})$ | ^([A-F0-9]{20})$",
+                                                            RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// The length of the charging session identificator.
+        /// The length of the RFID card identificator.
         /// </summary>
         public UInt64 Length
             => (UInt64) InternalId.Length;
@@ -65,10 +65,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new charging session identification.
+        /// Create a new RFID card identification.
         /// based on the given string.
         /// </summary>
-        private Session_Id(String Text)
+        private UID(String Text)
         {
             InternalId = Text;
         }
@@ -79,45 +79,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Parse(Text)
 
         /// <summary>
-        /// Parse the given string as a charging session identification.
+        /// Parse the given string as a RFID card identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging session identification.</param>
-        public static Session_Id Parse(String Text)
+        /// <param name="Text">A text representation of a RFID card identification.</param>
+        public static UID Parse(String Text)
 {
 
             #region Initial checks
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a charging session identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text representation of a RFID card identification must not be null or empty!");
 
             #endregion
 
-            var MatchCollection = SessionId_RegEx.Matches(Text);
+            var MatchCollection = UID_RegEx.Matches(Text);
 
             if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal text representation of a charging session identification: '" + Text + "'!", nameof(Text));
+                throw new ArgumentException("Illegal text representation of a RFID card identification: '" + Text + "'!", nameof(Text));
 
-            return new Session_Id(Text);
+            return new UID(Text);
 
         }
 
         #endregion
 
-        #region TryParse(Text, out SessionId)
+        #region TryParse(Text, out UID)
 
         /// <summary>
-        /// Parse the given string as a charging session identification.
+        /// Parse the given string as a RFID card identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging session identification.</param>
-        /// <param name="SessionId">The parsed charging session identification.</param>
-        public static Boolean TryParse(String Text, out Session_Id SessionId)
+        /// <param name="Text">A text representation of a RFID card identification.</param>
+        /// <param name="UID">The parsed RFID card identification.</param>
+        public static Boolean TryParse(String Text, out UID UID)
         {
 
             #region Initial checks
 
             if (Text.IsNullOrEmpty())
             {
-                SessionId = default(Session_Id);
+                UID = default(UID);
                 return false;
             }
 
@@ -126,15 +126,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
-                var MatchCollection = SessionId_RegEx.Matches(Text);
+                var MatchCollection = UID_RegEx.Matches(Text);
 
                 if (MatchCollection.Count != 1)
                 {
-                    SessionId = default(Session_Id);
+                    UID = default(UID);
                     return false;
                 }
 
-                SessionId = new Session_Id(Text);
+                UID = new UID(Text);
 
                 return true;
 
@@ -147,7 +147,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            SessionId = default(Session_Id);
+            UID = default(UID);
             return false;
 
         }
@@ -157,11 +157,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Clone
 
         /// <summary>
-        /// Clone this charging session identification.
+        /// Clone this RFID card identification.
         /// </summary>
-        public Session_Id Clone
+        public UID Clone
 
-            => new Session_Id(
+            => new UID(
                    new String(InternalId.ToCharArray())
                );
 
@@ -170,113 +170,113 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Operator overloading
 
-        #region Operator == (SessionId1, SessionId2)
+        #region Operator == (UID1, UID2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SessionId1">A charging session identification.</param>
-        /// <param name="SessionId2">Another charging session identification.</param>
+        /// <param name="UID1">A RFID card identification.</param>
+        /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (Session_Id SessionId1, Session_Id SessionId2)
+        public static Boolean operator == (UID UID1, UID UID2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(SessionId1, SessionId2))
+            if (Object.ReferenceEquals(UID1, UID2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) SessionId1 == null) || ((Object) SessionId2 == null))
+            if (((Object) UID1 == null) || ((Object) UID2 == null))
                 return false;
 
-            return SessionId1.Equals(SessionId2);
+            return UID1.Equals(UID2);
 
         }
 
         #endregion
 
-        #region Operator != (SessionId1, SessionId2)
+        #region Operator != (UID1, UID2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SessionId1">A charging session identification.</param>
-        /// <param name="SessionId2">Another charging session identification.</param>
+        /// <param name="UID1">A RFID card identification.</param>
+        /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (Session_Id SessionId1, Session_Id SessionId2)
-            => !(SessionId1 == SessionId2);
+        public static Boolean operator != (UID UID1, UID UID2)
+            => !(UID1 == UID2);
 
         #endregion
 
-        #region Operator <  (SessionId1, SessionId2)
+        #region Operator <  (UID1, UID2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SessionId1">A charging session identification.</param>
-        /// <param name="SessionId2">Another charging session identification.</param>
+        /// <param name="UID1">A RFID card identification.</param>
+        /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (Session_Id SessionId1, Session_Id SessionId2)
+        public static Boolean operator < (UID UID1, UID UID2)
         {
 
-            if ((Object) SessionId1 == null)
-                throw new ArgumentNullException(nameof(SessionId1), "The given SessionId1 must not be null!");
+            if ((Object) UID1 == null)
+                throw new ArgumentNullException(nameof(UID1), "The given UID1 must not be null!");
 
-            return SessionId1.CompareTo(SessionId2) < 0;
+            return UID1.CompareTo(UID2) < 0;
 
         }
 
         #endregion
 
-        #region Operator <= (SessionId1, SessionId2)
+        #region Operator <= (UID1, UID2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SessionId1">A charging session identification.</param>
-        /// <param name="SessionId2">Another charging session identification.</param>
+        /// <param name="UID1">A RFID card identification.</param>
+        /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (Session_Id SessionId1, Session_Id SessionId2)
-            => !(SessionId1 > SessionId2);
+        public static Boolean operator <= (UID UID1, UID UID2)
+            => !(UID1 > UID2);
 
         #endregion
 
-        #region Operator >  (SessionId1, SessionId2)
+        #region Operator >  (UID1, UID2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SessionId1">A charging session identification.</param>
-        /// <param name="SessionId2">Another charging session identification.</param>
+        /// <param name="UID1">A RFID card identification.</param>
+        /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (Session_Id SessionId1, Session_Id SessionId2)
+        public static Boolean operator > (UID UID1, UID UID2)
         {
 
-            if ((Object) SessionId1 == null)
-                throw new ArgumentNullException(nameof(SessionId1), "The given SessionId1 must not be null!");
+            if ((Object) UID1 == null)
+                throw new ArgumentNullException(nameof(UID1), "The given UID1 must not be null!");
 
-            return SessionId1.CompareTo(SessionId2) > 0;
+            return UID1.CompareTo(UID2) > 0;
 
         }
 
         #endregion
 
-        #region Operator >= (SessionId1, SessionId2)
+        #region Operator >= (UID1, UID2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SessionId1">A charging session identification.</param>
-        /// <param name="SessionId2">Another charging session identification.</param>
+        /// <param name="UID1">A RFID card identification.</param>
+        /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (Session_Id SessionId1, Session_Id SessionId2)
-            => !(SessionId1 < SessionId2);
+        public static Boolean operator >= (UID UID1, UID UID2)
+            => !(UID1 < UID2);
 
         #endregion
 
         #endregion
 
-        #region IComparable<SessionId> Members
+        #region IComparable<UID> Members
 
         #region CompareTo(Object)
 
@@ -290,33 +290,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            if (!(Object is Session_Id))
-                throw new ArgumentException("The given object is not a charging session identification!",
+            if (!(Object is UID))
+                throw new ArgumentException("The given object is not a RFID card identification!",
                                             nameof(Object));
 
-            return CompareTo((Session_Id) Object);
+            return CompareTo((UID) Object);
 
         }
 
         #endregion
 
-        #region CompareTo(SessionId)
+        #region CompareTo(UID)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SessionId">An object to compare with.</param>
-        public Int32 CompareTo(Session_Id SessionId)
+        /// <param name="UID">An object to compare with.</param>
+        public Int32 CompareTo(UID UID)
         {
 
-            if ((Object) SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId),  "The given charging session identification must not be null!");
+            if ((Object) UID == null)
+                throw new ArgumentNullException(nameof(UID),  "The given RFID card identification must not be null!");
 
-            // Compare the length of the SessionIds
-            var _Result = this.Length.CompareTo(SessionId.Length);
+            // Compare the length of the UIDs
+            var _Result = this.Length.CompareTo(UID.Length);
 
             if (_Result == 0)
-                _Result = String.Compare(InternalId, SessionId.InternalId, StringComparison.Ordinal);
+                _Result = String.Compare(InternalId, UID.InternalId, StringComparison.Ordinal);
 
             return _Result;
 
@@ -326,7 +326,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region IEquatable<SessionId> Members
+        #region IEquatable<UID> Members
 
         #region Equals(Object)
 
@@ -341,29 +341,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 return false;
 
-            if (!(Object is Session_Id))
+            if (!(Object is UID))
                 return false;
 
-            return Equals((Session_Id) Object);
+            return Equals((UID) Object);
 
         }
 
         #endregion
 
-        #region Equals(SessionId)
+        #region Equals(UID)
 
         /// <summary>
-        /// Compares two SessionIds for equality.
+        /// Compares two UIDs for equality.
         /// </summary>
-        /// <param name="SessionId">A charging session identification to compare with.</param>
+        /// <param name="UID">A RFID card identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(Session_Id SessionId)
+        public Boolean Equals(UID UID)
         {
 
-            if ((Object) SessionId == null)
+            if ((Object) UID == null)
                 return false;
 
-            return InternalId.Equals(SessionId.InternalId);
+            return InternalId.Equals(UID.InternalId);
 
         }
 

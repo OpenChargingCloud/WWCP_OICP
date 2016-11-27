@@ -38,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                 String                     SenderId,
                                                                 EventTracking_Id           EventTrackingId,
                                                                 EVSE_Id                    EVSEId,
-                                                                eMAIdWithPIN               eMAIdWithPIN,
+                                                                EVCOIdWithPIN              EVCOIdWithPIN,
                                                                 String                     ProductId,
                                                                 Boolean?                   GetNewSession,
                                                                 TimeSpan?                  RequestTimeout);
@@ -52,7 +52,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                 String                     SenderId,
                                                                 EventTracking_Id           EventTrackingId,
                                                                 EVSE_Id                    EVSEId,
-                                                                eMAIdWithPIN               eMAIdWithPIN,
+                                                                EVCOIdWithPIN              EVCOIdWithPIN,
                                                                 String                     ProductId,
                                                                 Boolean?                   GetNewSession,
                                                                 TimeSpan?                  RequestTimeout,
@@ -71,7 +71,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                              MobileClient         Sender,
                                                              String               SenderId,
                                                              EventTracking_Id     EventTrackingId,
-                                                             Session_Id   SessionId,
+                                                             Session_Id           SessionId,
                                                              TimeSpan?            RequestTimeout);
 
     /// <summary>
@@ -82,7 +82,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                              MobileClient         Sender,
                                                              String               SenderId,
                                                              EventTracking_Id     EventTrackingId,
-                                                             Session_Id   SessionId,
+                                                             Session_Id           SessionId,
                                                              TimeSpan?            RequestTimeout,
                                                              Acknowledgement      Result,
                                                              TimeSpan             Duration);
@@ -99,7 +99,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             MobileClient          Sender,
                                                             String                SenderId,
                                                             EventTracking_Id      EventTrackingId,
-                                                            Session_Id    SessionId,
+                                                            Session_Id            SessionId,
                                                             TimeSpan?             RequestTimeout);
 
     /// <summary>
@@ -110,7 +110,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                             MobileClient          Sender,
                                                             String                SenderId,
                                                             EventTracking_Id      EventTrackingId,
-                                                            Session_Id    SessionId,
+                                                            Session_Id            SessionId,
                                                             TimeSpan?             RequestTimeout,
                                                             Acknowledgement       Result,
                                                             TimeSpan              Duration);

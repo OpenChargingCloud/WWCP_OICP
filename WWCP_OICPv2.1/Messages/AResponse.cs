@@ -56,8 +56,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="Request">The OICP request leading to this result.</param>
         /// <param name="CustomMapper">An optional mapper for customer-specific semi-structured data.</param>
-        public AResponse(TRequest           Request,
-                         Action<TResponse>  CustomMapper = null)
+        protected AResponse(TRequest           Request,
+                            Action<TResponse>  CustomMapper = null)
 
             : base(CustomMapper)
 
@@ -121,7 +121,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new generic OICP response.
         /// </summary>
         /// <param name="CustomMapper">An optional mapper for customer-specific semi-structured data.</param>
-        public AResponse(Action<TResponse>  CustomMapper = null)
+        protected AResponse(Action<TResponse>  CustomMapper = null)
         {
 
             this.CustomMapper       = CustomMapper;
