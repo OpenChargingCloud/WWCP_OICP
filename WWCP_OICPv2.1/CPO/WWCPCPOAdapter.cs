@@ -1850,7 +1850,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<WWCP.Acknowledgement>
 
             IRemotePushStatus.UpdateEVSEAdminStatus(IEnumerable<EVSEAdminStatusUpdate>  AdminStatusUpdates,
                                                     TransmissionTypes                   TransmissionType,
@@ -1861,7 +1861,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     TimeSpan?                           RequestTimeout)
 
 
-                => new WWCP.Acknowledgement(ResultType.NoOperation);
+                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -2313,7 +2313,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<WWCP.Acknowledgement>
 
             IRemotePushStatus.UpdateChargingStationAdminStatus(IEnumerable<ChargingStationAdminStatusUpdate>  AdminStatusUpdates,
                                                                TransmissionTypes                              TransmissionType,
@@ -2324,7 +2324,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                TimeSpan?                                      RequestTimeout)
 
 
-                => new WWCP.Acknowledgement(ResultType.NoOperation);
+                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -2340,7 +2340,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<WWCP.Acknowledgement>
 
             IRemotePushStatus.UpdateChargingStationStatus(IEnumerable<ChargingStationStatusUpdate>  StatusUpdates,
                                                           TransmissionTypes                         TransmissionType,
@@ -2351,7 +2351,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                           TimeSpan?                                 RequestTimeout)
 
 
-                => new WWCP.Acknowledgement(ResultType.NoOperation);
+                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -2717,7 +2717,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<WWCP.Acknowledgement>
 
             IRemotePushStatus.UpdateChargingPoolAdminStatus(IEnumerable<ChargingPoolAdminStatusUpdate>  AdminStatusUpdates,
                                                             TransmissionTypes                           TransmissionType,
@@ -2728,7 +2728,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                             TimeSpan?                                   RequestTimeout)
 
 
-                => new WWCP.Acknowledgement(ResultType.NoOperation);
+                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -2744,7 +2744,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<WWCP.Acknowledgement>
 
             IRemotePushStatus.UpdateChargingPoolStatus(IEnumerable<ChargingPoolStatusUpdate>  StatusUpdates,
                                                        TransmissionTypes                      TransmissionType,
@@ -2755,7 +2755,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                        TimeSpan?                              RequestTimeout)
 
 
-                => new WWCP.Acknowledgement(ResultType.NoOperation);
+                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -3121,7 +3121,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<WWCP.Acknowledgement>
 
             IRemotePushStatus.UpdateChargingStationOperatorAdminStatus(IEnumerable<ChargingStationOperatorAdminStatusUpdate>  AdminStatusUpdates,
                                                                        TransmissionTypes                                      TransmissionType,
@@ -3132,7 +3132,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                        TimeSpan?                                              RequestTimeout)
 
 
-                => new WWCP.Acknowledgement(ResultType.NoOperation);
+                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -3148,7 +3148,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<WWCP.Acknowledgement>
 
             IRemotePushStatus.UpdateChargingStationOperatorStatus(IEnumerable<ChargingStationOperatorStatusUpdate>  StatusUpdates,
                                                                   TransmissionTypes                                 TransmissionType,
@@ -3159,7 +3159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                   TimeSpan?                                         RequestTimeout)
 
 
-                => new WWCP.Acknowledgement(ResultType.NoOperation);
+                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -3352,7 +3352,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<WWCP.Acknowledgement>
 
             IRemotePushStatus.UpdateRoamingNetworkAdminStatus(IEnumerable<RoamingNetworkAdminStatusUpdate>  AdminStatusUpdates,
                                                               TransmissionTypes                             TransmissionType,
@@ -3363,7 +3363,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               TimeSpan?                                     RequestTimeout)
 
 
-                => new WWCP.Acknowledgement(ResultType.NoOperation);
+                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -3379,7 +3379,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<WWCP.Acknowledgement>
 
             IRemotePushStatus.UpdateRoamingNetworkStatus(IEnumerable<RoamingNetworkStatusUpdate>  StatusUpdates,
                                                          TransmissionTypes                        TransmissionType,
@@ -3390,7 +3390,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                          TimeSpan?                                RequestTimeout)
 
 
-                => new WWCP.Acknowledgement(ResultType.NoOperation);
+                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
