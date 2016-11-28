@@ -163,11 +163,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         public static readonly HTTPContentType         OICPPlusHTMLContentType  = new HTTPContentType("application/vnd.OICPPlus+html", CharSetType.UTF8);
 
 
-        private readonly XMLNamespacesDelegate         XMLNamespaces;
-        private readonly EVSE2EVSEDataRecordDelegate   EVSE2EVSEDataRecord;
-        private readonly EVSEDataRecord2XMLDelegate    EVSEDataRecord2XML;
-        private readonly EVSEStatusRecord2XMLDelegate  EVSEStatusRecord2XML;
-        private readonly XMLPostProcessingDelegate     XMLPostProcessing;
+        private readonly XMLNamespacesDelegate                      XMLNamespaces;
+        private readonly EVSE2EVSEDataRecordDelegate                EVSE2EVSEDataRecord;
+        private readonly EVSEStatusUpdate2EVSEStatusRecordDelegate  EVSEStatusUpdate2EVSEStatusRecord;
+        private readonly EVSEDataRecord2XMLDelegate                 EVSEDataRecord2XML;
+        private readonly EVSEStatusRecord2XMLDelegate               EVSEStatusRecord2XML;
+        private readonly XMLPostProcessingDelegate                  XMLPostProcessing;
 
         #endregion
 
@@ -287,15 +288,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         /// <param name="EVSEStatusRecord2XML">An optional delegate to process an EVSE status record XML before sending it somewhere.</param>
         /// <param name="XMLPostProcessing">An optional delegate to process the XML after its final creation.</param>
         public OICPWebAPI(HTTPServer<RoamingNetworks, RoamingNetwork>  HTTPServer,
-                          String                                       URIPrefix             = DefaultURIPrefix,
-                          String                                       HTTPRealm             = DefaultHTTPRealm,
-                          IEnumerable<KeyValuePair<String, String>>    HTTPLogins            = null,
+                          String                                       URIPrefix                           = DefaultURIPrefix,
+                          String                                       HTTPRealm                           = DefaultHTTPRealm,
+                          IEnumerable<KeyValuePair<String, String>>    HTTPLogins                          = null,
 
-                          XMLNamespacesDelegate                        XMLNamespaces         = null,
-                          EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord   = null,
-                          EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML    = null,
-                          EVSEStatusRecord2XMLDelegate                 EVSEStatusRecord2XML  = null,
-                          XMLPostProcessingDelegate                    XMLPostProcessing     = null)
+                          XMLNamespacesDelegate                        XMLNamespaces                       = null,
+                          EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord                 = null,
+                          EVSEStatusUpdate2EVSEStatusRecordDelegate    EVSEStatusUpdate2EVSEStatusRecord   = null,
+                          EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML                  = null,
+                          EVSEStatusRecord2XMLDelegate                 EVSEStatusRecord2XML                = null,
+                          XMLPostProcessingDelegate                    XMLPostProcessing                   = null)
         {
 
             #region Initial checks
@@ -311,17 +313,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
             #endregion
 
-            this.HTTPServer            = HTTPServer;
-            this.URIPrefix             = URIPrefix;
-            this.HTTPRealm             = HTTPRealm.IsNotNullOrEmpty() ? HTTPRealm : DefaultHTTPRealm;
-            this.HTTPLogins            = HTTPLogins ?? new KeyValuePair<String, String>[0];
-            this.DNSClient             = HTTPServer.DNSClient;
+            this.HTTPServer                         = HTTPServer;
+            this.URIPrefix                          = URIPrefix;
+            this.HTTPRealm                          = HTTPRealm.IsNotNullOrEmpty() ? HTTPRealm : DefaultHTTPRealm;
+            this.HTTPLogins                         = HTTPLogins ?? new KeyValuePair<String, String>[0];
+            this.DNSClient                          = HTTPServer.DNSClient;
 
-            this.XMLNamespaces         = XMLNamespaces;
-            this.EVSE2EVSEDataRecord   = EVSE2EVSEDataRecord;
-            this.EVSEDataRecord2XML    = EVSEDataRecord2XML;
-            this.EVSEStatusRecord2XML  = EVSEStatusRecord2XML;
-            this.XMLPostProcessing     = XMLPostProcessing;
+            this.XMLNamespaces                      = XMLNamespaces;
+            this.EVSE2EVSEDataRecord                = EVSE2EVSEDataRecord;
+            this.EVSEStatusUpdate2EVSEStatusRecord  = EVSEStatusUpdate2EVSEStatusRecord;
+            this.EVSEDataRecord2XML                 = EVSEDataRecord2XML;
+            this.EVSEStatusRecord2XML               = EVSEStatusRecord2XML;
+            this.XMLPostProcessing                  = XMLPostProcessing;
 
             RegisterURITemplates();
 

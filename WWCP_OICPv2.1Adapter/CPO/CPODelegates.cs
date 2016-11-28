@@ -23,7 +23,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// </summary>
     /// <param name="EVSE">A WWCP EVSE.</param>
     /// <param name="EVSEDataRecord">An EVSE data record.</param>
-    public delegate EVSEDataRecord EVSE2EVSEDataRecordDelegate (EVSE            EVSE,
-                                                                EVSEDataRecord  EVSEDataRecord);
+    public delegate EVSEDataRecord    EVSE2EVSEDataRecordDelegate              (EVSE              EVSE,
+                                                                                EVSEDataRecord    EVSEDataRecord);
+
+
+    /// <summary>
+    /// A delegate which allows you to modify EVSE status records before sending them upstream.
+    /// </summary>
+    /// <param name="EVSEStatusUpdate">A WWCP EVSE status update.</param>
+    /// <param name="EVSEStatusRecord">An OICP EVSE status record.</param>
+    public delegate EVSEStatusRecord  EVSEStatusUpdate2EVSEStatusRecordDelegate(EVSEStatusUpdate  EVSEStatusUpdate,
+                                                                                EVSEStatusRecord  EVSEStatusRecord);
 
 }

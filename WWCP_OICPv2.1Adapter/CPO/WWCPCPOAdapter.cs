@@ -124,7 +124,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         private        readonly  EVSE2EVSEDataRecordDelegate                   _EVSE2EVSEDataRecord;
 
+        private        readonly  EVSEStatusUpdate2EVSEStatusRecordDelegate     _EVSEStatusUpdate2EVSEStatusRecord;
+
         private        readonly  EVSEDataRecord2XMLDelegate                    _EVSEDataRecord2XML;
+
+        private        readonly  EVSEStatusRecord2XMLDelegate                  _EVSEStatusRecord2XML;
 
         private        readonly  ChargingStationOperatorNameSelectorDelegate   _OperatorNameSelector;
 
@@ -444,15 +448,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               RoamingNetwork                               RoamingNetwork,
 
                               CPORoaming                                   CPORoaming,
-                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord    = null,
-                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML     = null,
+                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord                 = null,
+                              EVSEStatusUpdate2EVSEStatusRecordDelegate    EVSEStatusUpdate2EVSEStatusRecord   = null,
+                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML                  = null,
+                              EVSEStatusRecord2XMLDelegate                 EVSEStatusRecord2XML                = null,
 
-                              ChargingStationOperator                  DefaultOperator        = null,
-                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector   = null,
-                              IncludeEVSEDelegate                          IncludeEVSEs           = null,
-                              TimeSpan?                                    ServiceCheckEvery      = null,
-                              TimeSpan?                                    StatusCheckEvery       = null,
-                              Boolean                                      DisableAutoUploads     = false)
+                              ChargingStationOperator                      DefaultOperator                     = null,
+                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector                = null,
+                              IncludeEVSEDelegate                          IncludeEVSEs                        = null,
+                              TimeSpan?                                    ServiceCheckEvery                   = null,
+                              TimeSpan?                                    StatusCheckEvery                    = null,
+                              Boolean                                      DisableAutoUploads                  = false)
 
             : base(Id,
                    RoamingNetwork)
@@ -470,47 +476,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
             this.Name = Name;
-            this._IRemotePushData       = this as IRemotePushData;
-            this._IRemotePushStatus     = this as IRemotePushStatus;
+            this._IRemotePushData                     = this as IRemotePushData;
+            this._IRemotePushStatus                   = this as IRemotePushStatus;
 
-            this.CPORoaming             = CPORoaming;
-            this._EVSE2EVSEDataRecord   = EVSE2EVSEDataRecord;
-            this._EVSEDataRecord2XML    = EVSEDataRecord2XML;
-            this.DefaultOperatorId      = DefaultOperator.Id.ToOICP();
-            this.DefaultOperatorName    = DefaultOperatorNameSelector(DefaultOperator.Name);
-            this._OperatorNameSelector  = OperatorNameSelector;
-
-
-            this._IncludeEVSEs                   = IncludeEVSEs;
-
-            this._ServiceCheckEvery              = (UInt32) (ServiceCheckEvery.HasValue
-                                                                ? ServiceCheckEvery.Value. TotalMilliseconds
-                                                                : DefaultServiceCheckEvery.TotalMilliseconds);
-
-            this.ServiceCheckLock                = new Object();
-            this.ServiceCheckTimer               = new Timer(ServiceCheck, null, 0, _ServiceCheckEvery);
-
-            this._StatusCheckEvery               = (UInt32) (StatusCheckEvery.HasValue
-                                                                ? StatusCheckEvery.Value.  TotalMilliseconds
-                                                                : DefaultStatusCheckEvery. TotalMilliseconds);
-
-            this.StatusCheckLock                 = new Object();
-            this.StatusCheckTimer                = new Timer(StatusCheck, null, 0, _StatusCheckEvery);
-
-            this.DisableAutoUploads              = DisableAutoUploads;
+            this.CPORoaming                           = CPORoaming;
+            this._EVSE2EVSEDataRecord                 = EVSE2EVSEDataRecord;
+            this._EVSEStatusUpdate2EVSEStatusRecord   = EVSEStatusUpdate2EVSEStatusRecord;
+            this._EVSEDataRecord2XML                  = EVSEDataRecord2XML;
+            this._EVSEStatusRecord2XML                = EVSEStatusRecord2XML;
+            this.DefaultOperatorId                    = DefaultOperator.Id.ToOICP();
+            this.DefaultOperatorName                  = DefaultOperatorNameSelector(DefaultOperator.Name);
+            this._OperatorNameSelector                = OperatorNameSelector;
 
 
-            this.EVSEsToAddQueue                 = new HashSet<EVSE>();
-            this.EVSEDataUpdatesQueue            = new HashSet<EVSE>();
-            this.EVSEStatusChangesFastQueue      = new List<EVSEStatusUpdate>();
-            this.EVSEStatusChangesDelayedQueue   = new List<EVSEStatusUpdate>();
-            this.EVSEsToRemoveQueue              = new HashSet<EVSE>();
-            this.ChargeDetailRecordQueue         = new List<WWCP.ChargeDetailRecord>();
+            this._IncludeEVSEs                        = IncludeEVSEs;
+
+            this._ServiceCheckEvery                   = (UInt32) (ServiceCheckEvery.HasValue
+                                                                     ? ServiceCheckEvery.Value. TotalMilliseconds
+                                                                     : DefaultServiceCheckEvery.TotalMilliseconds);
+
+            this.ServiceCheckLock                     = new Object();
+            this.ServiceCheckTimer                    = new Timer(ServiceCheck, null, 0, _ServiceCheckEvery);
+
+            this._StatusCheckEvery                    = (UInt32) (StatusCheckEvery.HasValue
+                                                                     ? StatusCheckEvery.Value.  TotalMilliseconds
+                                                                     : DefaultStatusCheckEvery. TotalMilliseconds);
+
+            this.StatusCheckLock                      = new Object();
+            this.StatusCheckTimer                     = new Timer(StatusCheck, null, 0, _StatusCheckEvery);
+
+            this.DisableAutoUploads                   = DisableAutoUploads;
 
 
-
-
-
+            this.EVSEsToAddQueue                      = new HashSet<EVSE>();
+            this.EVSEDataUpdatesQueue                 = new HashSet<EVSE>();
+            this.EVSEStatusChangesFastQueue           = new List<EVSEStatusUpdate>();
+            this.EVSEStatusChangesDelayedQueue        = new List<EVSEStatusUpdate>();
+            this.EVSEsToRemoveQueue                   = new HashSet<EVSE>();
+            this.ChargeDetailRecordQueue              = new List<WWCP.ChargeDetailRecord>();
 
 
             // Link events...
@@ -899,18 +902,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                               CPOClient                                    CPOClient,
                               CPOServer                                    CPOServer,
-                              String                                       ServerLoggingContext   = CPOServerLogger.DefaultContext,
-                              Func<String, String, String>                 LogFileCreator         = null,
+                              String                                       ServerLoggingContext                = CPOServerLogger.DefaultContext,
+                              Func<String, String, String>                 LogFileCreator                      = null,
 
-                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord    = null,
-                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML     = null,
+                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord                 = null,
+                              EVSEStatusUpdate2EVSEStatusRecordDelegate    EVSEStatusUpdate2EVSEStatusRecord   = null,
+                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML                  = null,
+                              EVSEStatusRecord2XMLDelegate                 EVSEStatusRecord2XML                = null,
 
-                              ChargingStationOperator                      DefaultOperator        = null,
-                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector   = null,
-                              IncludeEVSEDelegate                          IncludeEVSEs           = null,
-                              TimeSpan?                                    ServiceCheckEvery      = null,
-                              TimeSpan?                                    StatusCheckEvery       = null,
-                              Boolean                                      DisableAutoUploads     = false)
+                              ChargingStationOperator                      DefaultOperator                     = null,
+                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector                = null,
+                              IncludeEVSEDelegate                          IncludeEVSEs                        = null,
+                              TimeSpan?                                    ServiceCheckEvery                   = null,
+                              TimeSpan?                                    StatusCheckEvery                    = null,
+                              Boolean                                      DisableAutoUploads                  = false)
 
             : this(Id,
                    Name,
@@ -922,7 +927,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                   LogFileCreator),
 
                    EVSE2EVSEDataRecord,
+                   EVSEStatusUpdate2EVSEStatusRecord,
                    EVSEDataRecord2XML,
+                   EVSEStatusRecord2XML,
 
                    DefaultOperator,
                    OperatorNameSelector,
@@ -977,36 +984,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               RoamingNetwork                               RoamingNetwork,
 
                               String                                       RemoteHostname,
-                              IPPort                                       RemoteTCPPort                   = null,
-                              RemoteCertificateValidationCallback          RemoteCertificateValidator      = null,
-                              X509Certificate                              ClientCert                      = null,
-                              String                                       RemoteHTTPVirtualHost           = null,
-                              String                                       URIPrefix                       = CPOClient.DefaultURIPrefix,
-                              String                                       HTTPUserAgent                   = CPOClient.DefaultHTTPUserAgent,
-                              TimeSpan?                                    RequestTimeout                  = null,
+                              IPPort                                       RemoteTCPPort                       = null,
+                              RemoteCertificateValidationCallback          RemoteCertificateValidator          = null,
+                              X509Certificate                              ClientCert                          = null,
+                              String                                       RemoteHTTPVirtualHost               = null,
+                              String                                       URIPrefix                           = CPOClient.DefaultURIPrefix,
+                              String                                       HTTPUserAgent                       = CPOClient.DefaultHTTPUserAgent,
+                              TimeSpan?                                    RequestTimeout                      = null,
 
-                              String                                       ServerName                      = CPOServer.DefaultHTTPServerName,
-                              IPPort                                       ServerTCPPort                   = null,
-                              String                                       ServerURIPrefix                 = CPOServer.DefaultURIPrefix,
-                              HTTPContentType                              ServerContentType               = null,
-                              Boolean                                      ServerRegisterHTTPRootService   = true,
-                              Boolean                                      ServerAutoStart                 = false,
+                              String                                       ServerName                          = CPOServer.DefaultHTTPServerName,
+                              IPPort                                       ServerTCPPort                       = null,
+                              String                                       ServerURIPrefix                     = CPOServer.DefaultURIPrefix,
+                              HTTPContentType                              ServerContentType                   = null,
+                              Boolean                                      ServerRegisterHTTPRootService       = true,
+                              Boolean                                      ServerAutoStart                     = false,
 
-                              String                                       ClientLoggingContext            = CPOClient.CPOClientLogger.DefaultContext,
-                              String                                       ServerLoggingContext            = CPOServerLogger.DefaultContext,
-                              Func<String, String, String>                 LogFileCreator                  = null,
+                              String                                       ClientLoggingContext                = CPOClient.CPOClientLogger.DefaultContext,
+                              String                                       ServerLoggingContext                = CPOServerLogger.DefaultContext,
+                              Func<String, String, String>                 LogFileCreator                      = null,
 
-                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord             = null,
-                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML              = null,
+                              EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord                 = null,
+                              EVSEStatusUpdate2EVSEStatusRecordDelegate    EVSEStatusUpdate2EVSEStatusRecord   = null,
+                              EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML                  = null,
+                              EVSEStatusRecord2XMLDelegate                 EVSEStatusRecord2XML                = null,
 
-                              ChargingStationOperator                      DefaultOperator                 = null,
-                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector            = null,
-                              IncludeEVSEDelegate                          IncludeEVSEs                    = null,
-                              TimeSpan?                                    ServiceCheckEvery               = null,
-                              TimeSpan?                                    StatusCheckEvery                = null,
-                              Boolean                                      DisableAutoUploads              = false,
+                              ChargingStationOperator                      DefaultOperator                     = null,
+                              ChargingStationOperatorNameSelectorDelegate  OperatorNameSelector                = null,
+                              IncludeEVSEDelegate                          IncludeEVSEs                        = null,
+                              TimeSpan?                                    ServiceCheckEvery                   = null,
+                              TimeSpan?                                    StatusCheckEvery                    = null,
+                              Boolean                                      DisableAutoUploads                  = false,
 
-                              DNSClient                                    DNSClient                       = null)
+                              DNSClient                                    DNSClient                           = null)
 
             : this(Id,
                    Name,
@@ -1036,7 +1045,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                   DNSClient),
 
                    EVSE2EVSEDataRecord,
+                   EVSEStatusUpdate2EVSEStatusRecord,
                    EVSEDataRecord2XML,
+                   EVSEStatusRecord2XML,
 
                    DefaultOperator,
                    OperatorNameSelector,

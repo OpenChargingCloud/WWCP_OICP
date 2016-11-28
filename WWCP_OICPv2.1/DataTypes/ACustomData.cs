@@ -25,7 +25,7 @@ using System.Collections.Generic;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public abstract class ACustomData
+    public abstract class ACustomData : ICustomData
     {
 
         #region Data
@@ -100,6 +100,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             if (_CustomData.TryGetValue(Key, out _Value))
                 ValueDelegate(_Value);
+
+        }
+
+        public void IfDefinedAs<T>(String     Key,
+                                   Action<T>  ValueDelegate)
+        {
+
+            if (ValueDelegate == null)
+                return;
+
+            Object _Value;
+
+            if (_CustomData.TryGetValue(Key, out _Value))
+                ValueDelegate((T) _Value);
 
         }
 
