@@ -53,14 +53,16 @@
     <Compile Include="CPO\CPOClient\CPOClientDelegates.cs" />
     <Compile Include="CPO\CPOClient\CPOClientLogger.cs" />
     <Compile Include="CPO\CPODelegates.cs" />
-    <Compile Include="CPO\CPOExtentions.cs" />
     <Compile Include="CPO\CPORoaming.cs" />
-    <Compile Include="CPO\WWCPCPOAdapter.cs" />
     <Compile Include="CPO\CPOServer\CPOServer.cs" />
     <Compile Include="CPO\CPOServer\CPOServerDelegates.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
+    <Compile Include="DataTypes\ACustomData.cs" />
     <Compile Include="DataTypes\Enums\DeltaTypes.cs" />
     <Compile Include="DataTypes\Enums\ResultCodes.cs" />
+    <Compile Include="DataTypes\Data\Address.cs" />
+    <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
+    <Compile Include="DataTypes\Enums\PINCrypto.cs" />
     <Compile Include="DataTypes\Simple\EVSE_Id.cs" />
     <Compile Include="DataTypes\Simple\HubOperator_Id.cs" />
     <Compile Include="DataTypes\Simple\ClearingHouse_Id.cs" />
@@ -104,9 +106,7 @@
     <Compile Include="EMP\EMPClient\EMPClientLogger.cs" />
     <Compile Include="EMP\EMPClient\EMPClientXMLMethods.cs" />
     <Compile Include="EMP\EMPDelegates.cs" />
-    <Compile Include="EMP\EMPExtentions.cs" />
     <Compile Include="EMP\EMPRoaming.cs" />
-    <Compile Include="EMP\WWCPEMPAdapter.cs" />
     <Compile Include="EMP\EMPServer\EMPServer.cs" />
     <Compile Include="EMP\EMPServer\EMPServerDelegates.cs" />
     <Compile Include="EMP\EMPServer\EMPServerLogger.cs" />
@@ -120,7 +120,7 @@
     <Compile Include="DataTypes\Enums\ChargingFacilities.cs" />
     <Compile Include="DataTypes\Enums\PlugTypes.cs" />
     <Compile Include="DataTypes\Enums\ChargingModes.cs" />
-    <Compile Include="DataTypes\Data\PaymentOptions.cs" />
+    <Compile Include="DataTypes\Enums\PaymentOptions.cs" />
     <Compile Include="DataTypes\Enums\ValueAddedServices.cs" />
     <Compile Include="DataTypes\Enums\AuthenticationModes.cs" />
     <Compile Include="DataTypes\Data\AuthorizationIdentification.cs" />
@@ -128,7 +128,6 @@
     <Compile Include="DataTypes\Data\EVCOIdWithPIN.cs" />
     <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />
     <Compile Include="DataTypes\Enums\GeoCoordinatesResponseFormatTypes.cs" />
-    <Compile Include="IO\OICPMapper.cs" />
     <Compile Include="DataTypes\EVSEDataRecord.cs" />
     <Compile Include="DataTypes\EVSEMatch.cs" />
     <Compile Include="DataTypes\EVSEStatusRecord.cs" />
@@ -147,12 +146,6 @@
     <Compile Include="DataTypes\EVSEStatusById.cs" />
     <Compile Include="DataTypes\MobileAuthorizationStart.cs" />
     <Compile Include="DataTypes\Data\StatusCode.cs" />
-    <Compile Include="OICPImporter\Helper\ChargeStationInfo.cs" />
-    <Compile Include="OICPImporter\Helper\ChargingPoolInfo.cs" />
-    <Compile Include="OICPImporter\Helper\CPInfoList.cs" />
-    <Compile Include="OICPImporter\Helper\EVSEIdLookup.cs" />
-    <Compile Include="OICPImporter\Helper\EVSEInfo.cs" />
-    <Compile Include="OICPImporter\OICPImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -179,10 +172,6 @@
     <ProjectReference Include="..\..\Styx\Styx\Styx.csproj">
       <Project>{af76ecc0-2ca5-4cff-9e1e-ff5478c4b6e4}</Project>
       <Name>Styx</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\WWCP_Core\WWCP_Core\WWCP_Core.csproj">
-      <Project>{33836742-af1d-4aa4-963f-b0a8e60e6480}</Project>
-      <Name>WWCP_Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

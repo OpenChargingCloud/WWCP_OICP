@@ -15,8 +15,15 @@
  * limitations under the License.
  */
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
+    /// <summary>
+    /// A delegate which allows you to modify EVSE data records before sending them upstream.
+    /// </summary>
+    /// <param name="EVSE">A WWCP EVSE.</param>
+    /// <param name="EVSEDataRecord">An EVSE data record.</param>
+    public delegate EVSEDataRecord EVSE2EVSEDataRecordDelegate (EVSE            EVSE,
+                                                                EVSEDataRecord  EVSEDataRecord);
 
 }

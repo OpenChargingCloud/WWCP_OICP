@@ -76,10 +76,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #region Properties
 
-        /// <summary>
-        /// The attached e-mobility roaming network.
-        /// </summary>
-        public RoamingNetwork  RoamingNetwork           { get; }
+        ///// <summary>
+        ///// The attached e-mobility roaming network.
+        ///// </summary>
+        //public RoamingNetwork  RoamingNetwork           { get; }
 
         #endregion
 
@@ -138,7 +138,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         {
 
-            this.RoamingNetwork           = RoamingNetwork;
+            //this.RoamingNetwork           = RoamingNetwork;
             this._EVSEDataRecords         = new Dictionary<EVSE_Id, EVSEDataRecord>();
 
             if (AutoStart)
@@ -299,15 +299,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                     //Log.WriteLine("Invalid XML request!");
                     //Log.WriteLine(HTTPRequest.Content.ToUTF8String());
 
-                    SOAPServer.GetEventSource(Semantics.DebugLog).
-                        SubmitSubEvent("InvalidXMLRequest",
-                                       new JObject(
-                                           new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
-                                           new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
-                                           new JProperty("XMLRequest",    Request.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
-                                       ).ToString().
-                                         Replace(Environment.NewLine, ""));
+                    //SOAPServer.GetEventSource(Semantics.DebugLog).
+                    //    SubmitSubEvent("InvalidXMLRequest",
+                    //                   new JObject(
+                    //                       new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
+                    //                       new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
+                    //                       new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
+                    //                       new JProperty("XMLRequest",    Request.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
+                    //                   ).ToString().
+                    //                     Replace(Environment.NewLine, ""));
 
                     return XMLRequest.Error;
 
@@ -446,11 +446,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                         foreach (var SingleOperatorEvseStatusXML in OperatorEvseStatusXML)
                         {
 
-                            ChargingStationOperator_Id         OperatorId;
+                            Operator_Id         OperatorId;
                             String                  OperatorName;
                             IEnumerable<XElement>   EVSEStatusRecordsXML;
 
-                            if (!ChargingStationOperator_Id.TryParse(SingleOperatorEvseStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "OperatorID", "No OperatorID XML tag provided!"), out OperatorId))
+                            if (!Operator_Id.TryParse(SingleOperatorEvseStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "OperatorID", "No OperatorID XML tag provided!"), out OperatorId))
                                 throw new ApplicationException("Invalid OperatorID XML tag provided!");
 
                             OperatorName          = SingleOperatorEvseStatusXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName",     "");
@@ -550,16 +550,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                     //Log.WriteLine("Invalid XML request!");
 
-                    SOAPServer.GetEventSource(Semantics.DebugLog).
-                        SubmitSubEvent("InvalidXMLRequest",
-                                       new JObject(
-                                           new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
-                                           new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                                           new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
-                                           new JProperty("Exception",     e.Message),
-                                           new JProperty("XMLRequest",    XMLRequest.ToString())
-                                       ).ToString().
-                                         Replace(Environment.NewLine, ""));
+                    //SOAPServer.GetEventSource(Semantics.DebugLog).
+                    //    SubmitSubEvent("InvalidXMLRequest",
+                    //                   new JObject(
+                    //                       new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
+                    //                       new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
+                    //                       new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
+                    //                       new JProperty("Exception",     e.Message),
+                    //                       new JProperty("XMLRequest",    XMLRequest.ToString())
+                    //                   ).ToString().
+                    //                     Replace(Environment.NewLine, ""));
 
                     return new HTTPResponseBuilder(Request) {
 

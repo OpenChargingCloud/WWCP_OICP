@@ -347,14 +347,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Parse request parameters
 
-                Session_Id?                 SessionId          = null;
-                PartnerSession_Id?          PartnerSessionId   = null;
-                ChargingStationOperator_Id  OperatorId         = default(ChargingStationOperator_Id);
-                EVSE_Id                     EVSEId             = default(EVSE_Id);
-                PartnerProduct_Id?          PartnerProductId   = null;
-                Auth_Token                  AuthToken          = null;
+                Session_Id?         SessionId          = null;
+                PartnerSession_Id?  PartnerSessionId   = null;
+                Operator_Id         OperatorId         = default(Operator_Id);
+                EVSE_Id             EVSEId             = default(EVSE_Id);
+                PartnerProduct_Id?  PartnerProductId   = null;
+                UID                 UID                = default(UID);
 
-                AuthorizationStart          response           = null;
+                AuthorizationStart  response           = null;
 
                 try
                 {
@@ -373,7 +373,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     if (PartnerSessionIdXML != null)
                         PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                    OperatorId               = ChargingStationOperator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
+                    OperatorId               = Operator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
 
                     EVSEIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "EVSEID");
                     if (EVSEIdXML != null)
@@ -390,7 +390,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             var UIDXML = RFIDmifarefamilyIdentificationXML.Element(OICPNS.CommonTypes + "UID");
 
                             if (UIDXML != null)
-                                AuthToken = Auth_Token.Parse(UIDXML.Value);
+                                UID = UID.Parse(UIDXML.Value);
 
                         }
 
@@ -429,7 +429,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                        Request.CancellationToken,
                                        Request.EventTrackingId,
                                        OperatorId,
-                                       AuthToken,
+                                       UID,
                                        EVSEId,
                                        SessionId,
                                        PartnerProductId,
@@ -548,13 +548,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Parse request parameters
 
-                Session_Id?                 SessionId          = null;
-                PartnerSession_Id?          PartnerSessionId   = null;
-                ChargingStationOperator_Id  OperatorId         = default(ChargingStationOperator_Id);
-                EVSE_Id                     EVSEId             = default(EVSE_Id);
-                Auth_Token                  AuthToken          = null;
+                Session_Id?         SessionId          = null;
+                PartnerSession_Id?  PartnerSessionId   = null;
+                Operator_Id         OperatorId         = default(Operator_Id);
+                EVSE_Id             EVSEId             = default(EVSE_Id);
+                UID                 UID                = default(UID);
 
-                AuthorizationStop           response           = null;
+                AuthorizationStop   response           = null;
 
                 try
                 {
@@ -568,7 +568,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     if (PartnerSessionIdXML != null)
                         PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
 
-                    OperatorId        = ChargingStationOperator_Id.   Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
+                    OperatorId        = Operator_Id.   Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
                     EVSEId            = EVSE_Id.           Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",      "No EVSEID XML tag provided!"));
 
                     IdentificationXML = AuthorizeStopXML.Element(OICPNS.Authorization + "Identification");
@@ -583,7 +583,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             var UIDXML = RFIDmifarefamilyIdentificationXML.Element(OICPNS.CommonTypes + "UID");
 
                             if (UIDXML != null)
-                                AuthToken = Auth_Token.Parse(UIDXML.Value);
+                                UID = UID.Parse(UIDXML.Value);
 
                         }
 
@@ -619,7 +619,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                            PartnerSessionId,
                                            OperatorId,
                                            EVSEId,
-                                           AuthToken,
+                                           UID,
                                            DefaultRequestTimeout)).
                                       ToArray();
 

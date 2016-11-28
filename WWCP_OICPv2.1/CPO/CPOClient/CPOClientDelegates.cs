@@ -49,7 +49,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// </summary>
     public delegate Task OnPushEVSEDataRequestDelegate (DateTime                                LogTimestamp,
                                                         DateTime                                RequestTimestamp,
-                                                        CPOClient                               Sender,
+                                                        ICPOClient                              Sender,
                                                         String                                  SenderId,
                                                         EventTracking_Id                        EventTrackingId,
                                                         ActionTypes                             Action,
@@ -62,7 +62,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// </summary>
     public delegate Task OnPushEVSEDataResponseDelegate(DateTime                                LogTimestamp,
                                                         DateTime                                RequestTimestamp,
-                                                        CPOClient                               Sender,
+                                                        ICPOClient                              Sender,
                                                         String                                  SenderId,
                                                         EventTracking_Id                        EventTrackingId,
                                                         ActionTypes                             Action,
@@ -78,7 +78,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// </summary>
     public delegate Task OnPushEVSEStatusRequestDelegate (DateTime                                 LogTimestamp,
                                                           DateTime                                 RequestTimestamp,
-                                                          CPOClient                                Sender,
+                                                          ICPOClient                               Sender,
                                                           String                                   SenderId,
                                                           EventTracking_Id                         EventTrackingId,
                                                           ActionTypes                              Action,
@@ -91,7 +91,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// </summary>
     public delegate Task OnPushEVSEStatusResponseDelegate(DateTime                                 LogTimestamp,
                                                           DateTime                                 RequestTimestamp,
-                                                          CPOClient                                Sender,
+                                                          ICPOClient                               Sender,
                                                           String                                   SenderId,
                                                           EventTracking_Id                         EventTrackingId,
                                                           ActionTypes                              Action,

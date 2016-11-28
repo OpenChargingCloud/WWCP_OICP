@@ -238,10 +238,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                           _ChargingPool.Description           = EvseDataRecord.AdditionalInfo;
                                                                                           _ChargingPool.LocationLanguage      = LocationLanguage;
                                                                                           _ChargingPool.EntranceLocation      = EvseDataRecord.GeoChargingPointEntrance;
-                                                                                          _ChargingPool.OpeningTimes          = EvseDataRecord.OpeningTime;
+                                                                                          _ChargingPool.OpeningTimes          = OpeningTimes.Parse(EvseDataRecord.OpeningTime);
                                                                                           _ChargingPool.AuthenticationModes   = new ReactiveSet<WWCP.AuthenticationModes>(EvseDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                                           _ChargingPool.PaymentOptions        = new ReactiveSet<WWCP.PaymentOptions>     (EvseDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                                                                                          _ChargingPool.Accessibility         = EvseDataRecord.Accessibility;
+                                                                                          _ChargingPool.Accessibility         = EvseDataRecord.Accessibility.ToWWCP();
                                                                                           _ChargingPool.HotlinePhoneNumber    = EvseDataRecord.HotlinePhoneNumber;
 
                                                                                       }
@@ -258,10 +258,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                                                                 pool.GeoLocation                 = EvseDataRecord.GeoCoordinate;
                                                                                                                                 pool.LocationLanguage            = LocationLanguage;
                                                                                                                                 pool.EntranceLocation            = EvseDataRecord.GeoChargingPointEntrance;
-                                                                                                                                pool.OpeningTimes                = EvseDataRecord.OpeningTime;
+                                                                                                                                pool.OpeningTimes                = OpeningTimes.Parse(EvseDataRecord.OpeningTime);
                                                                                                                                 pool.AuthenticationModes         = new ReactiveSet<WWCP.AuthenticationModes>(EvseDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                                                                                 pool.PaymentOptions              = new ReactiveSet<WWCP.PaymentOptions>     (EvseDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                                                                                                                                pool.Accessibility               = EvseDataRecord.Accessibility;
+                                                                                                                                pool.Accessibility               = EvseDataRecord.Accessibility.ToWWCP();
                                                                                                                                 pool.HotlinePhoneNumber          = EvseDataRecord.HotlinePhoneNumber;
                                                                                                                                 //pool.StatusAggregationDelegate   = ChargingStationStatusAggregationDelegate;
 
@@ -282,7 +282,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                   _ChargingStation.Description                = EvseDataRecord.AdditionalInfo;
                                                                   _ChargingStation.AuthenticationModes        = new ReactiveSet<WWCP.AuthenticationModes>(EvseDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                   _ChargingStation.PaymentOptions             = new ReactiveSet<WWCP.PaymentOptions>     (EvseDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                                                                  _ChargingStation.Accessibility              = EvseDataRecord.Accessibility;
+                                                                  _ChargingStation.Accessibility              = EvseDataRecord.Accessibility.ToWWCP();
                                                                   _ChargingStation.HotlinePhoneNumber         = EvseDataRecord.HotlinePhoneNumber;
                                                                   _ChargingStation.IsHubjectCompatible        = EvseDataRecord.IsHubjectCompatible;
                                                                   _ChargingStation.DynamicInfoAvailable       = EvseDataRecord.DynamicInfoAvailable;
@@ -302,7 +302,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                                            station.Description                = EvseDataRecord.AdditionalInfo;
                                                                                                            station.AuthenticationModes        = new ReactiveSet<WWCP.AuthenticationModes>(EvseDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                                                            station.PaymentOptions             = new ReactiveSet<WWCP.PaymentOptions>     (EvseDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                                                                                                           station.Accessibility              = EvseDataRecord.Accessibility;
+                                                                                                           station.Accessibility              = EvseDataRecord.Accessibility.ToWWCP();
                                                                                                            station.HotlinePhoneNumber         = EvseDataRecord.HotlinePhoneNumber;
                                                                                                            station.IsHubjectCompatible        = EvseDataRecord.IsHubjectCompatible;
                                                                                                            station.DynamicInfoAvailable       = EvseDataRecord.DynamicInfoAvailable;

@@ -15,25 +15,19 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-
-#endregion
-
-namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
+namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The OICP version.
+    /// The current OICP version.
     /// </summary>
     public static class Version
     {
 
         /// <summary>
-        /// The OICP version.
+        /// The current OICP version.
         /// </summary>
-        public const String Number = "v2.1";
+        public const string Number = "v2.1";
 
     }
 

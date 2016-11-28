@@ -48,8 +48,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                  EMPServer                   Sender,
                                  CancellationToken           CancellationToken,
                                  EventTracking_Id            EventTrackingId,
-                                 ChargingStationOperator_Id  OperatorId,
-                                 Auth_Token                  AuthToken,
+                                 Operator_Id                 OperatorId,
+                                 UID                         UID,
                                  EVSE_Id?                    EVSEId             = null,
                                  Session_Id?                 SessionId          = null,
                                  PartnerProduct_Id?          PartnerProductId   = null,
@@ -78,9 +78,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                 EventTracking_Id            EventTrackingId,
                                 Session_Id?                 SessionId,
                                 PartnerSession_Id?          PartnerSessionId,
-                                ChargingStationOperator_Id  OperatorId,
+                                Operator_Id                 OperatorId,
                                 EVSE_Id                     EVSEId,
-                                Auth_Token                  AuthToken,
+                                UID                         UID,
                                 TimeSpan?                   RequestTimeout  = null);
 
 

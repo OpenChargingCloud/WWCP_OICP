@@ -320,16 +320,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new XElement(OICPNS.Authorization + "eRoamingAuthorizeStop",
 
-                                new XElement(OICPNS.Authorization + "SessionID",               SessionId.ToString()),
+                                new XElement(OICPNS.Authorization + "SessionID",               SessionId.       ToString()),
 
                                 PartnerSessionId.HasValue
                                     ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
                                     : null,
 
-                                new XElement(OICPNS.Authorization + "OperatorID",              OperatorId.OriginId),
+                                new XElement(OICPNS.Authorization + "OperatorID",              OperatorId.      ToString()),
 
                                 EVSEId.HasValue
-                                    ? new XElement(OICPNS.Authorization + "EVSEID",            EVSEId.ToString())
+                                    ? new XElement(OICPNS.Authorization + "EVSEID",            EVSEId.          ToString())
                                     : null,
 
                                 new XElement(OICPNS.Authorization + "Identification",

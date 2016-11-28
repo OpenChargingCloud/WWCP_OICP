@@ -511,7 +511,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        CancellationToken,
                                                        EventTrackingId,
                                                        OperatorId,
-                                                       AuthToken,
+                                                       UID,
                                                        EVSEId,
                                                        SessionId,
                                                        PartnerProductId,
@@ -519,11 +519,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        RequestTimeout) => {
 
 
-                var response = await RoamingNetwork.AuthorizeStart(AuthToken,
+                var response = await RoamingNetwork.AuthorizeStart(UID.ToWWCP(),
                                                                    EVSEId.Value.ToWWCP(),
                                                                    PartnerProductId.ToWWCP(),
                                                                    SessionId.ToWWCP(),
-                                                                   OperatorId,
+                                                                   OperatorId.ToWWCP(),
 
                                                                    Timestamp,
                                                                    CancellationToken,
@@ -599,10 +599,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                       RequestTimeout) => {
 
 
-                var response = await RoamingNetwork.AuthorizeStop(SessionId.ToWWCP().Value,
-                                                                  AuthToken,
-                                                                  EVSEId.ToWWCP(),
-                                                                  OperatorId,
+                var response = await RoamingNetwork.AuthorizeStop(SessionId. ToWWCP().Value,
+                                                                  AuthToken. ToWWCP(),
+                                                                  EVSEId.    ToWWCP(),
+                                                                  OperatorId.ToWWCP(),
 
                                                                   Timestamp,
                                                                   CancellationToken,
@@ -1056,10 +1056,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                     _ChargingPool.Description          = evsedatarecord.AdditionalInfo;
                                     _ChargingPool.LocationLanguage     = LocationLanguage;
                                     _ChargingPool.EntranceLocation     = evsedatarecord.GeoChargingPointEntrance;
-                                    _ChargingPool.OpeningTimes         = evsedatarecord.OpeningTime;
+                                    _ChargingPool.OpeningTimes         = OpeningTimes.Parse(evsedatarecord.OpeningTime);
                                     _ChargingPool.AuthenticationModes  = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => mode.  AsWWCPAuthenticationMode()));
                                     _ChargingPool.PaymentOptions       = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => option.AsWWCPPaymentOption()));
-                                    _ChargingPool.Accessibility        = evsedatarecord.Accessibility;
+                                    _ChargingPool.Accessibility        = evsedatarecord.Accessibility.ToWWCP();
                                     _ChargingPool.HotlinePhoneNumber   = evsedatarecord.HotlinePhoneNumber;
 
                                 }
@@ -1076,10 +1076,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                           pool.GeoLocation          = _EVSEInfo.PoolLocation;
                                                                           pool.LocationLanguage     = LocationLanguage;
                                                                           pool.EntranceLocation     = evsedatarecord.GeoChargingPointEntrance;
-                                                                          pool.OpeningTimes         = evsedatarecord.OpeningTime;
+                                                                          pool.OpeningTimes         = OpeningTimes.Parse(evsedatarecord.OpeningTime);
                                                                           pool.AuthenticationModes  = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                           pool.PaymentOptions       = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                                                                          pool.Accessibility        = evsedatarecord.Accessibility;
+                                                                          pool.Accessibility        = evsedatarecord.Accessibility.ToWWCP();
                                                                           pool.HotlinePhoneNumber   = evsedatarecord.HotlinePhoneNumber;
                                                                       }
 
@@ -1097,7 +1097,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                     _ChargingStation.HubjectStationId      = evsedatarecord.ChargingStationId;
                                     _ChargingStation.AuthenticationModes   = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                     _ChargingStation.PaymentOptions        = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                                    _ChargingStation.Accessibility         = evsedatarecord.Accessibility;
+                                    _ChargingStation.Accessibility         = evsedatarecord.Accessibility.ToWWCP();
                                     _ChargingStation.HotlinePhoneNumber    = evsedatarecord.HotlinePhoneNumber;
                                     _ChargingStation.Description           = evsedatarecord.AdditionalInfo;
                                     _ChargingStation.IsHubjectCompatible   = evsedatarecord.IsHubjectCompatible;
@@ -1115,7 +1115,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                              station.HubjectStationId      = evsedatarecord.ChargingStationId;
                                                                              station.AuthenticationModes   = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                              station.PaymentOptions        = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                                                                             station.Accessibility         = evsedatarecord.Accessibility;
+                                                                             station.Accessibility         = evsedatarecord.Accessibility.ToWWCP();
                                                                              station.HotlinePhoneNumber    = evsedatarecord.HotlinePhoneNumber;
                                                                              station.Description           = evsedatarecord.AdditionalInfo;
                                                                              station.IsHubjectCompatible   = evsedatarecord.IsHubjectCompatible;

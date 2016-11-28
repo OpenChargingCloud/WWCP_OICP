@@ -217,7 +217,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new XElement(OICPNS.AuthenticationData + "eRoamingPullAuthenticationData",
 
-                   new XElement(OICPNS.AuthenticationData + "OperatorID",  OperatorId.OriginId)
+                   new XElement(OICPNS.AuthenticationData + "OperatorID",  OperatorId.ToString())
 
                );
 

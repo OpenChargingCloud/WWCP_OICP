@@ -274,7 +274,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                 new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
-                                    new XElement(OICPNS.EVSEData + "OperatorID",          OperatorId.OriginId),
+                                    new XElement(OICPNS.EVSEData + "OperatorID",          OperatorId.ToString()),
 
                                     OperatorName.IsNotNullOrEmpty()
                                         ? new XElement(OICPNS.EVSEData + "OperatorName",  OperatorName)

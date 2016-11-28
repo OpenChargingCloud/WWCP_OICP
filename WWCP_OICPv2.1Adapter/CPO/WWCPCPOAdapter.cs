@@ -37,6 +37,75 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
     /// <summary>
+    /// A delegate called whenever new EVSE data will be send upstream.
+    /// </summary>
+    public delegate void OnPushEVSEDataWWCPRequestDelegate   (DateTime                         LogTimestamp,
+                                                              DateTime                         RequestTimestamp,
+                                                              Object                           Sender,
+                                                              CSORoamingProvider_Id            SenderId,
+                                                              EventTracking_Id                 EventTrackingId,
+                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              ActionTypes                      ServerAction,
+                                                              UInt64                           NumberOfEVSEDataRecords,
+                                                              IEnumerable<EVSEDataRecord>      EVSEDataRecords,
+                                                              IEnumerable<String>              Warnings,
+                                                              TimeSpan?                        RequestTimeout);
+
+
+    /// <summary>
+    /// A delegate called whenever new EVSE data had been send upstream.
+    /// </summary>
+    public delegate void OnPushEVSEDataWWCPResponseDelegate  (DateTime                         LogTimestamp,
+                                                              DateTime                         RequestTimestamp,
+                                                              Object                           Sender,
+                                                              CSORoamingProvider_Id            SenderId,
+                                                              EventTracking_Id                 EventTrackingId,
+                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              ActionTypes                      ServerAction,
+                                                              UInt64                           NumberOfEVSEDataRecords,
+                                                              IEnumerable<EVSEDataRecord>      EVSEDataRecords,
+                                                              IEnumerable<String>              Warnings,
+                                                              TimeSpan?                        RequestTimeout,
+                                                              WWCP.Acknowledgement             Result,
+                                                              TimeSpan                         Runtime);
+
+
+    /// <summary>
+    /// A delegate called whenever new EVSE status will be send upstream.
+    /// </summary>
+    public delegate void OnPushEVSEStatusWWCPRequestDelegate (DateTime                         LogTimestamp,
+                                                              DateTime                         RequestTimestamp,
+                                                              Object                           Sender,
+                                                              CSORoamingProvider_Id            SenderId,
+                                                              EventTracking_Id                 EventTrackingId,
+                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              ActionTypes                      ServerAction,
+                                                              UInt64                           NumberOfEVSEDataRecords,
+                                                              IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
+                                                              IEnumerable<String>              Warnings,
+                                                              TimeSpan?                        RequestTimeout);
+
+
+    /// <summary>
+    /// A delegate called whenever new EVSE status had been send upstream.
+    /// </summary>
+    public delegate void OnPushEVSEStatusWWCPResponseDelegate(DateTime                         LogTimestamp,
+                                                              DateTime                         RequestTimestamp,
+                                                              Object                           Sender,
+                                                              CSORoamingProvider_Id            SenderId,
+                                                              EventTracking_Id                 EventTrackingId,
+                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              ActionTypes                      ServerAction,
+                                                              UInt64                           NumberOfEVSEDataRecords,
+                                                              IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
+                                                              IEnumerable<String>              Warnings,
+                                                              TimeSpan?                        RequestTimeout,
+                                                              WWCP.Acknowledgement             Result,
+                                                              TimeSpan                         Runtime);
+
+
+
+    /// <summary>
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
@@ -204,8 +273,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-
-
         /// <summary>
         /// An optional default charging station operator identification.
         /// </summary>
@@ -222,99 +289,100 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         // Client logging...
 
-        #region OnPushEVSEDataRequest/-Response
+        #region OnPushEVSEDataWWCPRequest/-Response
 
         /// <summary>
         /// An event fired whenever new EVSE data will be send upstream.
         /// </summary>
-        public event WWCP.OnPushEVSEDataRequestDelegate   OnPushEVSEDataRequest;
+        public event OnPushEVSEDataWWCPRequestDelegate   OnPushEVSEDataWWCPRequest;
 
         /// <summary>
         /// An event fired whenever new EVSE data had been sent upstream.
         /// </summary>
-        public event WWCP.OnPushEVSEDataResponseDelegate  OnPushEVSEDataResponse;
+        public event OnPushEVSEDataWWCPResponseDelegate  OnPushEVSEDataWWCPResponse;
 
         #endregion
 
-        #region OnPushEVSEStatusRequest/-Response
+        #region OnPushEVSEStatusWWCPRequest/-Response
 
         /// <summary>
         /// An event fired whenever new EVSE status will be send upstream.
         /// </summary>
-        public event WWCP.OnPushEVSEStatusRequestDelegate   OnPushEVSEStatusRequest;
+        public event OnPushEVSEStatusWWCPRequestDelegate   OnPushEVSEStatusWWCPRequest;
 
         /// <summary>
         /// An event fired whenever new EVSE status had been sent upstream.
         /// </summary>
-        public event WWCP.OnPushEVSEStatusResponseDelegate  OnPushEVSEStatusResponse;
+        public event OnPushEVSEStatusWWCPResponseDelegate  OnPushEVSEStatusWWCPResponse;
 
         #endregion
 
-        #region OnAuthorizeStart/-Started
+
+        #region OnAuthorizeStartRequest/-Response
 
         /// <summary>
         /// An event fired whenever an authentication token will be verified for charging.
         /// </summary>
-        public event WWCP.OnAuthorizeStartRequestDelegate              OnAuthorizeStart;
+        public event OnAuthorizeStartRequestDelegate                  OnAuthorizeStartRequest;
 
         /// <summary>
         /// An event fired whenever an authentication token had been verified for charging.
         /// </summary>
-        public event OnAuthorizeStartResponseDelegate                 OnAuthorizeStarted;
+        public event OnAuthorizeStartResponseDelegate                 OnAuthorizeStartResponse;
 
         /// <summary>
         /// An event fired whenever an authentication token will be verified for charging at the given EVSE.
         /// </summary>
-        public event OnAuthorizeEVSEStartRequestDelegate               OnAuthorizeEVSEStart;
+        public event OnAuthorizeEVSEStartRequestDelegate              OnAuthorizeEVSEStartRequest;
 
         /// <summary>
         /// An event fired whenever an authentication token had been verified for charging at the given EVSE.
         /// </summary>
-        public event OnAuthorizeEVSEStartResponseDelegate             OnAuthorizeEVSEStarted;
+        public event OnAuthorizeEVSEStartResponseDelegate             OnAuthorizeEVSEStartResponse;
 
         /// <summary>
         /// An event fired whenever an authentication token will be verified for charging at the given charging station.
         /// </summary>
-        public event OnAuthorizeChargingStationStartRequestDelegate    OnAuthorizeChargingStationStart;
+        public event OnAuthorizeChargingStationStartRequestDelegate   OnAuthorizeChargingStationStartRequest;
 
         /// <summary>
         /// An event fired whenever an authentication token had been verified for charging at the given charging station.
         /// </summary>
-        public event OnAuthorizeChargingStationStartResponseDelegate  OnAuthorizeChargingStationStarted;
+        public event OnAuthorizeChargingStationStartResponseDelegate  OnAuthorizeChargingStationStartResponse;
 
         #endregion
 
-        #region OnAuthorizeStop/-Stopped
+        #region OnAuthorizeStopRequest/-Response
 
         /// <summary>
         /// An event fired whenever an authentication token will be verified to stop a charging process.
         /// </summary>
-        public event WWCP.OnAuthorizeStopRequestDelegate               OnAuthorizeStop;
+        public event OnAuthorizeStopRequestDelegate                  OnAuthorizeStopRequest;
 
         /// <summary>
         /// An event fired whenever an authentication token had been verified to stop a charging process.
         /// </summary>
-        public event OnAuthorizeStopResponseDelegate                 OnAuthorizeStopped;
+        public event OnAuthorizeStopResponseDelegate                 OnAuthorizeStopResponse;
 
         /// <summary>
         /// An event fired whenever an authentication token will be verified to stop a charging process at the given EVSE.
         /// </summary>
-        public event OnAuthorizeEVSEStopRequestDelegate                OnAuthorizeEVSEStop;
+        public event OnAuthorizeEVSEStopRequestDelegate              OnAuthorizeEVSEStopRequest;
 
         /// <summary>
         /// An event fired whenever an authentication token had been verified to stop a charging process at the given EVSE.
         /// </summary>
-        public event OnAuthorizeEVSEStopResponseDelegate             OnAuthorizeEVSEStopped;
+        public event OnAuthorizeEVSEStopResponseDelegate             OnAuthorizeEVSEStopResponse;
 
         /// <summary>
         /// An event fired whenever an authentication token will be verified to stop a charging process at the given charging station.
         /// </summary>
-        public event OnAuthorizeChargingStationStopRequestDelegate     OnAuthorizeChargingStationStop;
+        public event OnAuthorizeChargingStationStopRequestDelegate   OnAuthorizeChargingStationStopRequest;
 
         /// <summary>
         /// An event fired whenever an authentication token had been verified to stop a charging process at the given charging station.
         /// </summary>
-        public event OnAuthorizeChargingStationStopResponseDelegate  OnAuthorizeChargingStationStopped;
+        public event OnAuthorizeChargingStationStopResponseDelegate  OnAuthorizeChargingStationStopResponse;
 
         #endregion
 
@@ -338,14 +406,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
+        #region OnWWCPCPOAdapterException
 
-        #region OnEVSEOperatorRoamingProviderException
+        public delegate Task OnWWCPCPOAdapterExceptionDelegate(DateTime        Timestamp,
+                                                               WWCPCPOAdapter  Sender,
+                                                               Exception       Exception);
 
-        public delegate Task OnEVSEOperatorRoamingProviderExceptionDelegate(DateTime   Timestamp,
-                                                                            Object     Sender,
-                                                                            Exception  Exception);
-
-        public event OnEVSEOperatorRoamingProviderExceptionDelegate OnEVSEOperatorRoamingProviderException;
+        public event OnWWCPCPOAdapterExceptionDelegate OnWWCPCPOAdapterException;
 
         #endregion
 
@@ -990,11 +1057,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        // Outgoing requests...
+        // RN -> External service requests...
 
         #region PushEVSEData/-Status directly...
 
-        #region (private) PushEVSEData  (EVSEs,      ServerAction, ...)
+        #region (private) PushEVSEData  (EVSEs,             ServerAction, ...)
 
         /// <summary>
         /// Upload the EVSE data of the given enumeration of EVSEs.
@@ -1025,10 +1092,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            var StartTime = DateTime.Now;
-            var Now       = StartTime;
-            var Runtime   = TimeSpan.Zero;
-
             #region Get effective number of EVSE status to upload
 
             var Warnings = new List<String>();
@@ -1057,20 +1120,50 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            var response = await CPORoaming.PushEVSEData(_EVSEs,
-                                                         DefaultOperatorId,
-                                                         DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
-                                                         ServerAction,
-                                                         null,
+            #region Send OnPushEVSEDataWWCPRequest event
 
-                                                         Timestamp,
-                                                         CancellationToken,
-                                                         EventTrackingId,
-                                                         RequestTimeout).ConfigureAwait(false);
+            var StartTime = DateTime.Now;
+
+            try
+            {
+
+                OnPushEVSEDataWWCPRequest?.Invoke(StartTime,
+                                                  Timestamp.Value,
+                                                  this,
+                                                  Id,
+                                                  EventTrackingId,
+                                                  RoamingNetwork.Id,
+                                                  ServerAction,
+                                                  _EVSEs.ULongCount(),
+                                                  _EVSEs,
+                                                  Warnings,
+                                                  RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEDataWWCPRequest));
+            }
+
+            #endregion
 
 
-            Now     = DateTime.Now;
-            Runtime = Now - Timestamp.Value;
+            var response = await CPORoaming.
+                                     PushEVSEData(_EVSEs,
+                                                  DefaultOperatorId,
+                                                  DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
+                                                  ServerAction,
+                                                  null,
+
+                                                  Timestamp,
+                                                  CancellationToken,
+                                                  EventTrackingId,
+                                                  RequestTimeout).
+                                     ConfigureAwait(false);
+
+
+            var Endtime = DateTime.Now;
+            var Runtime = Endtime - StartTime;
 
             if (response.HTTPStatusCode == HTTPStatusCode.OK &&
                 response.Content        != null)
@@ -1096,6 +1189,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                       ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
                                                       : Warnings.AddAndReturnList("No HTTP body received!"),
                                                   Runtime);
+
+
+            #region Send OnPushEVSEDataResponse event
+
+            try
+            {
+
+                OnPushEVSEDataWWCPResponse?.Invoke(Endtime,
+                                                   Timestamp.Value,
+                                                   this,
+                                                   Id,
+                                                   EventTrackingId,
+                                                   RoamingNetwork.Id,
+                                                   ServerAction,
+                                                   _EVSEs.ULongCount(),
+                                                   _EVSEs,
+                                                   Warnings,
+                                                   RequestTimeout,
+                                                   result,
+                                                   Runtime);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEDataWWCPResponse));
+            }
+
+            #endregion
 
             return result;
 
@@ -1145,11 +1266,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
 
-
-            var StartTime  = DateTime.Now;
-            var Now        = StartTime;
-            var Runtime    = TimeSpan.Zero;
-
             #endregion
 
             #region Get effective number of EVSE status to upload
@@ -1185,43 +1301,48 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Send OnEVSEStatusPush event
 
-            //try
-            //{
+            var StartTime = DateTime.Now;
 
-            //    OnPushEVSEStatusRequest?.Invoke(StartTime,
-            //                                    Timestamp.Value,
-            //                                    this,
-            //                                    this.Id,
-            //                                    EventTrackingId,
-            //                                    RoamingNetwork.Id,
-            //                                    ActionType,
-            //                                    GroupedEVSEStatus,
-            //                                    (UInt32) _NumberOfEVSEStatus,
-            //                                    RequestTimeout);
+            try
+            {
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEStatusRequest));
-            //}
+                OnPushEVSEStatusWWCPRequest?.Invoke(StartTime,
+                                                    Timestamp.Value,
+                                                    this,
+                                                    Id,
+                                                    EventTrackingId,
+                                                    RoamingNetwork.Id,
+                                                    ServerAction,
+                                                    _EVSEStatus.ULongCount(),
+                                                    _EVSEStatus,
+                                                    Warnings,
+                                                    RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEStatusWWCPRequest));
+            }
 
             #endregion
 
 
-            var response = await CPORoaming.PushEVSEStatus(_EVSEStatus,
-                                                           DefaultOperatorId,
-                                                           DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
-                                                           ServerAction,
-                                                           null,
+            var response = await CPORoaming.
+                                     PushEVSEStatus(_EVSEStatus,
+                                                    DefaultOperatorId,
+                                                    DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
+                                                    ServerAction,
+                                                    null,
 
-                                                           Timestamp,
-                                                           CancellationToken,
-                                                           EventTrackingId,
-                                                           RequestTimeout).ConfigureAwait(false);
+                                                    Timestamp,
+                                                    CancellationToken,
+                                                    EventTrackingId,
+                                                    RequestTimeout).
+                                     ConfigureAwait(false);
 
 
-            Now     = DateTime.Now;
-            Runtime = Now - Timestamp.Value;
+            var Endtime = DateTime.Now;
+            var Runtime = Endtime - StartTime;
 
             if (response.HTTPStatusCode == HTTPStatusCode.OK &&
                 response.Content        != null)
@@ -1249,32 +1370,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                   Runtime);
 
 
-            #region Send OnEVSEStatusPushed event
+            #region Send OnPushEVSEStatusResponse event
 
-            //try
-            //{
+            try
+            {
 
-            //    OnPushEVSEStatusResponse?.Invoke(Now,
-            //                                     Timestamp.Value,
-            //                                     this,
-            //                                     this.Id,
-            //                                     EventTrackingId,
-            //                                     RoamingNetwork.Id,
-            //                                     ActionType,
-            //                                     GroupedEVSEStatus,
-            //                                     (UInt32) _NumberOfEVSEStatus,
-            //                                     RequestTimeout,
-            //                                     result,
-            //                                     Runtime);
+                OnPushEVSEStatusWWCPResponse?.Invoke(Endtime,
+                                                     Timestamp.Value,
+                                                     this,
+                                                     Id,
+                                                     EventTrackingId,
+                                                     RoamingNetwork.Id,
+                                                     ServerAction,
+                                                     _EVSEStatus.ULongCount(),
+                                                     _EVSEStatus,
+                                                     Warnings,
+                                                     RequestTimeout,
+                                                     result,
+                                                     Runtime);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEStatusResponse));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEStatusWWCPResponse));
+            }
 
             #endregion
-
 
             return result;
 
@@ -3454,7 +3575,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStart?.Invoke(StartTime,
+                OnAuthorizeStartRequest?.Invoke(StartTime,
                                          Timestamp.Value,
                                          this,
                                          EventTrackingId,
@@ -3468,7 +3589,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStart));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStartRequest));
             }
 
             #endregion
@@ -3521,7 +3642,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStarted?.Invoke(Endtime,
+                OnAuthorizeStartResponse?.Invoke(Endtime,
                                            Timestamp.Value,
                                            this,
                                            EventTrackingId,
@@ -3537,7 +3658,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStarted));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStartResponse));
             }
 
             #endregion
@@ -3605,7 +3726,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeEVSEStart?.Invoke(StartTime,
+                OnAuthorizeEVSEStartRequest?.Invoke(StartTime,
                                              Timestamp.Value,
                                              this,
                                              EventTrackingId,
@@ -3620,7 +3741,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStart));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStartRequest));
             }
 
             #endregion
@@ -3673,7 +3794,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeEVSEStarted?.Invoke(Endtime,
+                OnAuthorizeEVSEStartResponse?.Invoke(Endtime,
                                                Timestamp.Value,
                                                this,
                                                EventTrackingId,
@@ -3690,7 +3811,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStarted));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStartResponse));
             }
 
             #endregion
@@ -3758,7 +3879,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeChargingStationStart?.Invoke(StartTime,
+                OnAuthorizeChargingStationStartRequest?.Invoke(StartTime,
                                                         Timestamp.Value,
                                                         this,
                                                         EventTrackingId,
@@ -3773,7 +3894,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStart));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStartRequest));
             }
 
             #endregion
@@ -3791,7 +3912,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeChargingStationStarted?.Invoke(Endtime,
+                OnAuthorizeChargingStationStartResponse?.Invoke(Endtime,
                                                           Timestamp.Value,
                                                           this,
                                                           EventTrackingId,
@@ -3808,7 +3929,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStarted));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStartResponse));
             }
 
             #endregion
@@ -3876,7 +3997,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStop?.Invoke(StartTime,
+                OnAuthorizeStopRequest?.Invoke(StartTime,
                                         Timestamp.Value,
                                         this,
                                         EventTrackingId,
@@ -3889,7 +4010,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStop));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStopRequest));
             }
 
             #endregion
@@ -3937,7 +4058,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStopped?.Invoke(Endtime,
+                OnAuthorizeStopResponse?.Invoke(Endtime,
                                            Timestamp.Value,
                                            this,
                                            EventTrackingId,
@@ -3952,7 +4073,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStopped));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStopResponse));
             }
 
             #endregion
@@ -4018,7 +4139,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeEVSEStop?.Invoke(StartTime,
+                OnAuthorizeEVSEStopRequest?.Invoke(StartTime,
                                             Timestamp.Value,
                                             this,
                                             EventTrackingId,
@@ -4032,7 +4153,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStop));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStopRequest));
             }
 
             #endregion
@@ -4080,7 +4201,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeEVSEStopped?.Invoke(Endtime,
+                OnAuthorizeEVSEStopResponse?.Invoke(Endtime,
                                                Timestamp.Value,
                                                this,
                                                EventTrackingId,
@@ -4096,7 +4217,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStopped));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeEVSEStopResponse));
             }
 
             #endregion
@@ -4162,7 +4283,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeChargingStationStop?.Invoke(StartTime,
+                OnAuthorizeChargingStationStopRequest?.Invoke(StartTime,
                                                        Timestamp.Value,
                                                        this,
                                                        EventTrackingId,
@@ -4176,7 +4297,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStop));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStopRequest));
             }
 
             #endregion
@@ -4194,7 +4315,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeChargingStationStopped?.Invoke(Endtime,
+                OnAuthorizeChargingStationStopResponse?.Invoke(Endtime,
                                                           Timestamp.Value,
                                                           this,
                                                           EventTrackingId,
@@ -4210,7 +4331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStopped));
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStopResponse));
             }
 
             #endregion
@@ -4531,9 +4652,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     while (e.InnerException != null)
                         e = e.InnerException;
 
-                    OnEVSEOperatorRoamingProviderException?.Invoke(DateTime.Now,
-                                                                   this,
-                                                                   e);
+                    OnWWCPCPOAdapterException?.Invoke(DateTime.Now,
+                                                      this,
+                                                      e);
 
                 }
 

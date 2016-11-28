@@ -18,5 +18,13 @@
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    /// <summary>
+    /// A delegate which allows you to modify EVSE data records
+    /// after receiving them.
+    /// </summary>
+    /// <param name="EVSEDataRecord">An OICP EVSE data record.</param>
+    /// <param name="EVSE">A WWCP EVSE.</param>
+    public delegate EVSE EVSEDataRecord2EVSEDelegate(EVSEDataRecord  EVSEDataRecord,
+                                                     EVSE            EVSE);
 
 }

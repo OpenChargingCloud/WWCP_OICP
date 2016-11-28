@@ -494,11 +494,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                               : null,
 
                                           (Plug             != null && Plug.HasValue)
-                                              ? new XElement(OICPNS.EVSESearch + "Plug", OICPMapper.AsString(Plug.Value))
+                                              ? new XElement(OICPNS.EVSESearch + "Plug", XML_IO.AsString(Plug.Value))
                                               : null,
 
                                           (ChargingFacility != null && ChargingFacility.HasValue)
-                                              ? new XElement(OICPNS.EVSESearch + "ChargingFacility", OICPMapper.AsString(ChargingFacility.Value))
+                                              ? new XElement(OICPNS.EVSESearch + "ChargingFacility", XML_IO.AsString(ChargingFacility.Value))
                                               : null
 
                                      ));

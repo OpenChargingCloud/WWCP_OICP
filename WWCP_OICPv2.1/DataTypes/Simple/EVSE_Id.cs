@@ -81,8 +81,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Returns the length of the identificator.
         /// </summary>
         public UInt64 Length
+        {
+            get
+            {
 
-            => OperatorId.Length + 2 + (UInt64) Suffix.Length;
+                switch (Format)
+                {
+
+                    case OperatorIdFormats.DIN:
+                        return OperatorId.Length + 1 + (UInt64) Suffix.Length;
+
+                    case OperatorIdFormats.ISO_STAR:
+                        return OperatorId.Length + 2 + (UInt64) Suffix.Length;
+
+                    default:  // ISO
+                        return OperatorId.Length + 1 + (UInt64) Suffix.Length;
+
+                }
+
+            }
+        }
 
         #endregion
 
@@ -267,7 +285,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public EVSE_Id Clone
 
             => new EVSE_Id(OperatorId.Clone,
-                           Suffix);
+                           new String(Suffix.ToCharArray()));
 
         #endregion
 
@@ -503,10 +521,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Return a string representation of this object.
         /// </summary>
         public override String ToString()
+        {
 
-            => Format == OperatorIdFormats.ISO
-                   ? String.Concat(OperatorId, "*E", Suffix)
-                   : String.Concat(OperatorId, "*",  Suffix);
+            switch (Format)
+            {
+
+                case OperatorIdFormats.DIN:
+                    return String.Concat(OperatorId,  "*", Suffix);
+
+                case OperatorIdFormats.ISO_STAR:
+                    return String.Concat(OperatorId, "*E", Suffix);
+
+                default:  // ISO
+                    return String.Concat(OperatorId,  "E", Suffix);
+
+            }
+
+        }
 
         #endregion
 

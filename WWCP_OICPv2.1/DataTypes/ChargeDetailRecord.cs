@@ -32,7 +32,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// An OICP charge detail record.
     /// </summary>
-    public class ChargeDetailRecord : IEquatable <ChargeDetailRecord>,
+    public class ChargeDetailRecord : ACustomData,
+                                      IEquatable <ChargeDetailRecord>,
                                       IComparable<ChargeDetailRecord>,
                                       IComparable
     {

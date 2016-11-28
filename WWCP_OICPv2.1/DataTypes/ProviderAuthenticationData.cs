@@ -40,12 +40,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The unique identification of an Electric Vehicle Service Provider.
         /// </summary>
-        public eMobilityProvider_Id                      ProviderId                    { get; }
+        public Provider_Id                               ProviderId                     { get; }
 
         /// <summary>
         /// An enumeration of authorization identifications records.
         /// </summary>
-        public IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications  { get; }
+        public IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications   { get; }
 
         #endregion
 
@@ -56,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ProviderId">The unique identification of an Electric Vehicle Service Provider.</param>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications records.</param>
-        public ProviderAuthenticationData(eMobilityProvider_Id                      ProviderId,
+        public ProviderAuthenticationData(Provider_Id                               ProviderId,
                                           IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications)
         {
 
@@ -153,7 +153,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             {
 
                 return new ProviderAuthenticationData(ProviderAuthenticationDataXML.MapValueOrFail(OICPNS.AuthenticationData + "ProviderID",
-                                                                                                   eMobilityProvider_Id.Parse,
+                                                                                                   Provider_Id.Parse,
                                                                                                    "Missing ProviderID!"),
 
                                                       ProviderAuthenticationDataXML.Elements(OICPNS.AuthenticationData + "AuthenticationDataRecord").

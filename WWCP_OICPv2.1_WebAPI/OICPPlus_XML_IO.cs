@@ -83,7 +83,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                                                                        ? new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
-                                                                             new XElement(OICPNS.EVSEData + "OperatorID", group.Key.Id.OriginId),
+                                                                             new XElement(OICPNS.EVSEData + "OperatorID", group.Key.Id.ToString()),
 
                                                                              group.Key.Name.Any()
                                                                                  ? new XElement(OICPNS.EVSEData + "OperatorName", group.Key.Name.FirstText)
@@ -177,7 +177,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                                                             ? new XElement(OICPNS.EVSEStatus + "OperatorEvseStatus",
 
-                                                                new XElement(OICPNS.EVSEStatus + "OperatorID", group.Key.Id.OriginId),
+                                                                new XElement(OICPNS.EVSEStatus + "OperatorID", group.Key.Id.ToString()),
 
                                                                 group.Key.Name.Any()
                                                                     ? new XElement(OICPNS.EVSEStatus + "OperatorName", group.Key.Name.FirstText)

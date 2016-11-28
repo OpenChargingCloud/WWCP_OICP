@@ -29,55 +29,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The current dynamic status of an OICP Electric Vehicle Supply Equipment.
+    /// The current dynamic status of an OICP EVSE.
     /// </summary>
-    public class EVSEStatusRecord
+    public class EVSEStatusRecord : ACustomData,
+                                    IEquatable<EVSEStatusRecord>,
+                                    IComparable<EVSEStatusRecord>,
+                                    IComparable
+
     {
 
         #region Properties
 
         /// <summary>
-        /// The unique identification of an EVSE.
+        /// The unique identification of the EVSE.
         /// </summary>
-        public EVSE_Id         Id       { get; }
+        public EVSE_Id          Id       { get; }
 
         /// <summary>
-        /// The current status of an EVSE.
+        /// The current status of the EVSE.
         /// </summary>
         public EVSEStatusTypes  Status   { get; }
 
         #endregion
 
         #region Constructor(s)
-
-        #region EVSEStatusRecord(EVSE)
-
-        /// <summary>
-        /// Create a new OICP EVSE status record based on the given EVSE.
-        /// </summary>
-        /// <param name="EVSE">The current status of an EVSE.</param>
-        public EVSEStatusRecord(EVSE EVSE)
-
-        {
-
-            #region Initial checks
-
-            if (EVSE == null)
-                throw new ArgumentNullException(nameof(EVSE),  "The given EVSE must not be null!");
-
-            if (!EVSE_Id.EVSEId_RegEx.IsMatch(EVSE.Id.ToString()))
-                throw new ArgumentException("The given EVSE identification '" + EVSE.Id + "' does not match the OICP definition!", nameof(EVSE));
-
-            #endregion
-
-            this.Id      = EVSE.Id.ToOICP();
-            this.Status  = OICPMapper.AsOICPEVSEStatus(EVSE.Status.Value);
-
-        }
-
-        #endregion
-
-        #region EVSEStatusRecord(Id, Status)
 
         /// <summary>
         /// Create a new OICP EVSE status record.
@@ -93,8 +68,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this.Status  = Status;
 
         }
-
-        #endregion
 
         #endregion
 
@@ -154,9 +127,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     throw new Exception("Illegal EVSEStatusRecord XML!");
 
                 return new EVSEStatusRecord(
-                    EVSE_Id.Parse(EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseId")),
-                    (EVSEStatusTypes) Enum.Parse(typeof(EVSEStatusTypes), EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus"))
-                );
+
+                           EVSEStatusRecordXML.MapValueOrFail(OICPNS.EVSEStatus + "EvseId",
+                                                              EVSE_Id.Parse),
+
+                           (EVSEStatusTypes) Enum.Parse(typeof(EVSEStatusTypes), EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus"))
+
+                       );
 
             }
             catch (Exception e)
@@ -183,6 +160,138 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+
+        #region Operator overloading
+
+        #region Operator == (EVSEStatusRecord1, EVSEStatusRecord2)
+
+        /// <summary>
+        /// Compares two EVSE status records for equality.
+        /// </summary>
+        /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
+        /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public static Boolean operator == (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
+        {
+
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(EVSEStatusRecord1, EVSEStatusRecord2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (((Object) EVSEStatusRecord1 == null) || ((Object) EVSEStatusRecord2 == null))
+                return false;
+
+            return EVSEStatusRecord1.Equals(EVSEStatusRecord2);
+
+        }
+
+        #endregion
+
+        #region Operator != (EVSEStatusRecord1, EVSEStatusRecord2)
+
+        /// <summary>
+        /// Compares two EVSE status records for inequality.
+        /// </summary>
+        /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
+        /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
+        /// <returns>False if both match; True otherwise.</returns>
+        public static Boolean operator != (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
+
+            => !(EVSEStatusRecord1 == EVSEStatusRecord2);
+
+        #endregion
+
+        #endregion
+
+        #region IEquatable<EVSEStatusRecord> Members
+
+        #region Equals(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        /// <returns>true|false</returns>
+        public override Boolean Equals(Object Object)
+        {
+
+            if (Object == null)
+                return false;
+
+            if (!(Object is EVSEStatusRecord))
+                return false;
+
+            return this.Equals((EVSEStatusRecord) Object);
+
+        }
+
+        #endregion
+
+        #region Equals(EVSEStatusRecord)
+
+        /// <summary>
+        /// Compares two EVSE status records for equality.
+        /// </summary>
+        /// <param name="EVSEStatusRecord">An EVSE status record to compare with.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public Boolean Equals(EVSEStatusRecord EVSEStatusRecord)
+        {
+
+            if ((Object) EVSEStatusRecord == null)
+                return false;
+
+            return Id.    Equals(EVSEStatusRecord.Id) &&
+                   Status.Equals(EVSEStatusRecord.Status);
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Return the HashCode of this object.
+        /// </summary>
+        /// <returns>The HashCode of this object.</returns>
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+
+                return Id.    GetHashCode() * 5 ^
+                       Status.GetHashCode();
+
+            }
+        }
+
+        #endregion
+
+        #region (override) ToString()
+
+        /// <summary>
+        /// Return a string representation of this object.
+        /// </summary>
+        public override String ToString()
+
+            => String.Concat(Id,
+                             " -> ",
+                             Status);
+
+        #endregion
+
+
+        public int CompareTo(EVSEStatusRecord other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CompareTo(object obj)
+        {
+            throw new NotImplementedException();
+        }
 
     }
 
