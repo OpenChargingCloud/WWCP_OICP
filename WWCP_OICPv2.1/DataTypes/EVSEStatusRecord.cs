@@ -20,6 +20,7 @@
 using System;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -32,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// The current dynamic status of an OICP EVSE.
     /// </summary>
     public class EVSEStatusRecord : ACustomData,
-                                    IEquatable<EVSEStatusRecord>,
+                                    IEquatable <EVSEStatusRecord>,
                                     IComparable<EVSEStatusRecord>,
                                     IComparable
 
@@ -43,11 +44,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The unique identification of the EVSE.
         /// </summary>
+        [Mandatory]
         public EVSE_Id          Id       { get; }
 
         /// <summary>
         /// The current status of the EVSE.
         /// </summary>
+        [Mandatory]
         public EVSEStatusTypes  Status   { get; }
 
         #endregion
@@ -59,8 +62,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="Id">The unique identification of an EVSE.</param>
         /// <param name="Status">The current status of an EVSE.</param>
-        public EVSEStatusRecord(EVSE_Id          Id,
-                                EVSEStatusTypes  Status)
+        /// <param name="CustomData">A dictionary of customer-specific data.</param>
+        public EVSEStatusRecord(EVSE_Id                             Id,
+                                EVSEStatusTypes                     Status,
+                                ReadOnlyDictionary<String, Object>  CustomData  = null)
+
+            : base(CustomData)
 
         {
 
@@ -72,52 +79,83 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region Parse(KeyValuePair)
-
-        /// <summary>
-        /// Convert the given key-value-pair into an EVSE status record.
-        /// </summary>
-        public static EVSEStatusRecord Parse(KeyValuePair<EVSE_Id, EVSEStatusTypes> KeyValuePair)
-
-            => new EVSEStatusRecord(KeyValuePair.Key, KeyValuePair.Value);
-
-        #endregion
-
-        #region ToKeyValuePair()
-
-        /// <summary>
-        /// Conversion this EVSE status record to a key-value-pair.
-        /// </summary>
-        public KeyValuePair<EVSE_Id, EVSEStatusTypes> ToKeyValuePair()
-
-            => new KeyValuePair<EVSE_Id, EVSEStatusTypes>(Id, Status);
-
-        #endregion
-
-
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv    = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/EVSEData.0">
+        //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/evsestatus/v2.0">
         //
         // [...]
         //
         //   <EVSEStatus:EvseStatusRecord>
-        //      <EVSEStatus:EvseId>?</EVSEData:EvseId>
-        //      <EVSEStatus:EvseStatus>?</EVSEData:EvseStatus>
+        //      <EVSEStatus:EvseId>DE*GEF*123456789*1</EVSEStatus:EvseId>
+        //      <EVSEStatus:EvseStatus>Available</EVSEStatus:EvseStatus>
         //   </EVSEStatus:EvseStatusRecord>
         //
         // [...]
 
         #endregion
 
-        #region Parse(EVSEStatusRecordXML)
+        #region (static) Parse   (EVSEStatusRecordXML,  CustomDataMapper = null, OnException = null)
 
         /// <summary>
-        /// Parse the EVSE identification and its current status from the given OICP XML.
+        /// Parse the given XML representation of an OICP EVSE status record.
         /// </summary>
-        /// <param name="EVSEStatusRecordXML">An OICP XML.</param>
-        public static EVSEStatusRecord Parse(XElement EVSEStatusRecordXML)
+        /// <param name="EVSEStatusRecordXML">The XML to parse.</param>
+        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static EVSEStatusRecord Parse(XElement                                EVSEStatusRecordXML,
+                                             CustomMapperDelegate<EVSEStatusRecord>  CustomDataMapper  = null,
+                                             OnExceptionDelegate                     OnException       = null)
+        {
+
+            EVSEStatusRecord _EVSEStatusRecord;
+
+            if (TryParse(EVSEStatusRecordXML, out _EVSEStatusRecord, CustomDataMapper, OnException))
+                return _EVSEStatusRecord;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) Parse   (EVSEStatusRecordText, CustomDataMapper = null, OnException = null)
+
+        /// <summary>
+        /// Parse the given text representation of an OICP EVSE status record.
+        /// </summary>
+        /// <param name="EVSEStatusRecordText">The text to parse.</param>
+        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static EVSEStatusRecord Parse(String                                  EVSEStatusRecordText,
+                                             CustomMapperDelegate<EVSEStatusRecord>  CustomDataMapper  = null,
+                                             OnExceptionDelegate                     OnException       = null)
+        {
+
+            EVSEStatusRecord _EVSEStatusRecord;
+
+            if (TryParse(EVSEStatusRecordText, out _EVSEStatusRecord, CustomDataMapper, OnException))
+                return _EVSEStatusRecord;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(EVSEStatusRecordXML,  out EVSEStatusRecord, CustomDataMapper = null, OnException = null)
+
+        /// <summary>
+        /// Try to parse the given XML representation of an OICP EVSE status record.
+        /// </summary>
+        /// <param name="EVSEStatusRecordXML">The XML to parse.</param>
+        /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
+        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(XElement                                EVSEStatusRecordXML,
+                                       out EVSEStatusRecord                    EVSEStatusRecord,
+                                       CustomMapperDelegate<EVSEStatusRecord>  CustomDataMapper  = null,
+                                       OnExceptionDelegate                     OnException       = null)
         {
 
             try
@@ -126,36 +164,85 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (EVSEStatusRecordXML.Name != OICPNS.EVSEStatus + "EvseStatusRecord")
                     throw new Exception("Illegal EVSEStatusRecord XML!");
 
-                return new EVSEStatusRecord(
+                EVSEStatusRecord = new EVSEStatusRecord(
 
-                           EVSEStatusRecordXML.MapValueOrFail(OICPNS.EVSEStatus + "EvseId",
-                                                              EVSE_Id.Parse),
+                                       EVSEStatusRecordXML.MapValueOrFail(OICPNS.EVSEStatus + "EvseId",
+                                                                          EVSE_Id.Parse),
 
-                           (EVSEStatusTypes) Enum.Parse(typeof(EVSEStatusTypes), EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus"))
+                                       EVSEStatusRecordXML.MapValueOrFail(OICPNS.EVSEStatus + "EvseStatus",
+                                                                          XML_IO.AsEVSEStatusType)
 
-                       );
+                                   );
+
+                if (CustomDataMapper != null)
+                    EVSEStatusRecord = CustomDataMapper(EVSEStatusRecordXML, EVSEStatusRecord);
+
+                return true;
 
             }
             catch (Exception e)
             {
-                return null;
+
+                OnException?.Invoke(DateTime.Now, EVSEStatusRecordXML, e);
+
+                EVSEStatusRecord = null;
+                return false;
+
             }
 
         }
 
         #endregion
 
-        #region ToXML()
+        #region (static) TryParse(EVSEStatusRecordText, out EVSEStatusRecord, CustomDataMapper = null, OnException = null)
 
         /// <summary>
-        /// Return an OICP XML representation of this EVSE status record.
+        /// Try to parse the given text representation of an OICP EVSE status record.
         /// </summary>
-        /// <returns></returns>
-        public XElement ToXML()
+        /// <param name="EVSEStatusRecordText">The text to parse.</param>
+        /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
+        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(String                                  EVSEStatusRecordText,
+                                       out EVSEStatusRecord                    EVSEStatusRecord,
+                                       CustomMapperDelegate<EVSEStatusRecord>  CustomDataMapper  = null,
+                                       OnExceptionDelegate                     OnException       = null)
+        {
 
-            => new XElement(OICPNS.EVSEStatus + "EvseStatusRecord",
-                   new XElement(OICPNS.EVSEStatus + "EvseId",     Id.    ToString()),
-                   new XElement(OICPNS.EVSEStatus + "EvseStatus", Status.ToString())
+            try
+            {
+
+                if (TryParse(XDocument.Parse(EVSEStatusRecordText).Root,
+                             out EVSEStatusRecord,
+                             CustomDataMapper,
+                             OnException))
+
+                    return true;
+
+            }
+            catch (Exception e)
+            {
+                OnException?.Invoke(DateTime.Now, EVSEStatusRecordText, e);
+            }
+
+            EVSEStatusRecord = null;
+            return false;
+
+        }
+
+        #endregion
+
+        #region ToXML(XName = null)
+
+        /// <summary>
+        /// Return a XML representation of this object.
+        /// </summary>
+        /// <param name="XName">The XML name to use.</param>
+        public XElement ToXML(XName XName = null)
+
+            => new XElement(XName ?? OICPNS.EVSEStatus + "EvseStatusRecord",
+                   new XElement(OICPNS.EVSEStatus + "EvseId",      Id.    ToString()),
+                   new XElement(OICPNS.EVSEStatus + "EvseStatus",  XML_IO.AsText(Status))
                );
 
         #endregion
@@ -166,11 +253,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Operator == (EVSEStatusRecord1, EVSEStatusRecord2)
 
         /// <summary>
-        /// Compares two EVSE status records for equality.
+        /// Compares two instances of this object.
         /// </summary>
         /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
         /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <returns>true|false</returns>
         public static Boolean operator == (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
         {
 
@@ -191,14 +278,130 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Operator != (EVSEStatusRecord1, EVSEStatusRecord2)
 
         /// <summary>
-        /// Compares two EVSE status records for inequality.
+        /// Compares two instances of this object.
         /// </summary>
         /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
         /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
-        /// <returns>False if both match; True otherwise.</returns>
+        /// <returns>true|false</returns>
         public static Boolean operator != (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
-
             => !(EVSEStatusRecord1 == EVSEStatusRecord2);
+
+        #endregion
+
+        #region Operator <  (EVSEStatusRecord1, EVSEStatusRecord2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
+        /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator < (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
+        {
+
+            if ((Object) EVSEStatusRecord1 == null)
+                throw new ArgumentNullException(nameof(EVSEStatusRecord1), "The given EVSEStatusRecord1 must not be null!");
+
+            return EVSEStatusRecord1.CompareTo(EVSEStatusRecord2) < 0;
+
+        }
+
+        #endregion
+
+        #region Operator <= (EVSEStatusRecord1, EVSEStatusRecord2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
+        /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator <= (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
+            => !(EVSEStatusRecord1 > EVSEStatusRecord2);
+
+        #endregion
+
+        #region Operator >  (EVSEStatusRecord1, EVSEStatusRecord2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
+        /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator > (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
+        {
+
+            if ((Object) EVSEStatusRecord1 == null)
+                throw new ArgumentNullException(nameof(EVSEStatusRecord1), "The given EVSEStatusRecord1 must not be null!");
+
+            return EVSEStatusRecord1.CompareTo(EVSEStatusRecord2) > 0;
+
+        }
+
+        #endregion
+
+        #region Operator >= (EVSEStatusRecord1, EVSEStatusRecord2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
+        /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator >= (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
+            => !(EVSEStatusRecord1 < EVSEStatusRecord2);
+
+        #endregion
+
+        #endregion
+
+        #region IComparable<EVSEStatusRecord> Members
+
+        #region CompareTo(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        public Int32 CompareTo(Object Object)
+        {
+
+            if (Object == null)
+                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
+
+            var EVSEStatusRecord = Object as EVSEStatusRecord;
+            if ((Object) EVSEStatusRecord == null)
+                throw new ArgumentException("The given object is not an EVSE status record identification!", nameof(Object));
+
+            return CompareTo(EVSEStatusRecord);
+
+        }
+
+        #endregion
+
+        #region CompareTo(EVSEStatusRecord)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEStatusRecord">An object to compare with.</param>
+        public Int32 CompareTo(EVSEStatusRecord EVSEStatusRecord)
+        {
+
+            if ((Object) EVSEStatusRecord == null)
+                throw new ArgumentNullException(nameof(EVSEStatusRecord), "The given EVSE status record must not be null!");
+
+            // Compare the EVSE Ids
+            var _Result = Id.CompareTo(EVSEStatusRecord.Id);
+
+            // If equal: Compare the EVSE status
+            if (_Result == 0)
+                _Result = Status.CompareTo(EVSEStatusRecord.Status);
+
+            return _Result;
+
+        }
 
         #endregion
 
@@ -219,10 +422,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 return false;
 
-            if (!(Object is EVSEStatusRecord))
+            var EVSEStatusRecord = Object as EVSEStatusRecord;
+            if ((Object) EVSEStatusRecord == null)
                 return false;
 
-            return this.Equals((EVSEStatusRecord) Object);
+            return this.Equals(EVSEStatusRecord);
 
         }
 
@@ -282,16 +486,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-
-        public int CompareTo(EVSEStatusRecord other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int CompareTo(object obj)
-        {
-            throw new NotImplementedException();
-        }
 
     }
 

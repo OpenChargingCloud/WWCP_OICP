@@ -888,6 +888,78 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     Where(flag => e.HasFlag(flag) && flag != ValueAddedServices.None);
 
 
+
+        #region AsEVSEStatusType(EVSEStatusType)
+
+        /// <summary>
+        /// Parses the OICP ValueAddedService.
+        /// </summary>
+        /// <param name="EVSEStatusType">A value added service.</param>
+        public static EVSEStatusTypes AsEVSEStatusType(String EVSEStatusType)
+        {
+
+            switch (EVSEStatusType.Trim())
+            {
+
+                case "Available":
+                    return EVSEStatusTypes.Available;
+
+                case "Reserved":
+                    return EVSEStatusTypes.Reserved;
+
+                case "Occupied":
+                    return EVSEStatusTypes.Occupied;
+
+                case "OutOfService":
+                    return EVSEStatusTypes.OutOfService;
+
+                case "EvseNotFound":
+                    return EVSEStatusTypes.EvseNotFound;
+
+
+                default:
+                    return EVSEStatusTypes.Unknown;
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsString(EVSEStatusType)
+
+        public static String AsText(this EVSEStatusTypes EVSEStatusType)
+        {
+
+            switch (EVSEStatusType)
+            {
+
+                case EVSEStatusTypes.Available:
+                    return "Available";
+
+                case EVSEStatusTypes.Reserved:
+                    return "Reserved";
+
+                case EVSEStatusTypes.Occupied:
+                    return "Occupied";
+
+                case EVSEStatusTypes.OutOfService:
+                    return "OutOfService";
+
+                case EVSEStatusTypes.EvseNotFound:
+                    return "EvseNotFound";
+
+
+                default:
+                    return "Unknown";
+
+            }
+
+        }
+
+        #endregion
+
+
     }
 
 }

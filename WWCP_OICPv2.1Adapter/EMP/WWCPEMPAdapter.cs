@@ -975,7 +975,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             {
 
                                 _CPInfoList.AddOrUpdateCPInfo(ChargingPool_Id.Generate(operatorevsedata.OperatorId.ToWWCP(),
-                                                                                       evsedatarecord.  Address,
+                                                                                       evsedatarecord.  Address.ToWWCP(),
                                                                                        evsedatarecord.  GeoCoordinate),
                                                               evsedatarecord.Address,
                                                               evsedatarecord.GeoCoordinate,
@@ -1072,7 +1072,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                                       Configurator: pool => {
                                                                           pool.Description          = evsedatarecord.AdditionalInfo;
-                                                                          pool.Address              = _EVSEInfo.PoolAddress;
+                                                                          pool.Address              = _EVSEInfo.PoolAddress.ToWWCP();
                                                                           pool.GeoLocation          = _EVSEInfo.PoolLocation;
                                                                           pool.LocationLanguage     = LocationLanguage;
                                                                           pool.EntranceLocation     = evsedatarecord.GeoChargingPointEntrance;

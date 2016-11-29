@@ -64,7 +64,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             var _EVSEDataRecords = EVSEDataRecords.ToArray();
 
             if (EVSEDataRecord2XML == null)
-                EVSEDataRecord2XML = (rn, evsedatarecord, xml) => xml;
+                EVSEDataRecord2XML = (evsedatarecord, xml) => xml;
 
             if (XMLPostProcessing == null)
                 XMLPostProcessing = xml => xml;
@@ -78,31 +78,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                                                   _EVSEDataRecords.Any()
 
                                                       ? _EVSEDataRecords.
-                                                            ToLookup(evsedatarecord => evsedatarecord.EVSE?.Operator).
+                                                            ToLookup(evsedatarecord => evsedatarecord.Id.OperatorId).
                                                             Select(group => group.Any(evsedatarecord => evsedatarecord != null)
 
                                                                        ? new XElement(OICPNS.EVSEData + "OperatorEvseData",
 
-                                                                             new XElement(OICPNS.EVSEData + "OperatorID", group.Key.Id.ToString()),
+                                                                             new XElement(OICPNS.EVSEData + "OperatorID", group.Key.ToString()),
 
-                                                                             group.Key.Name.Any()
-                                                                                 ? new XElement(OICPNS.EVSEData + "OperatorName", group.Key.Name.FirstText)
+                                                                             RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP()).Name.Any()
+                                                                                 ? new XElement(OICPNS.EVSEData + "OperatorName", RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP()).Name.FirstText)
                                                                                  : null,
 
                                                                              new XElement(OICPPlusNS.EVSEOperator + "DataLicenses",
-                                                                                 group.Key.DataLicenses.SafeSelect(license => new XElement(OICPPlusNS.EVSEOperator + "DataLicense",
-                                                                                                                                  new XElement(OICPPlusNS.EVSEOperator + "Id", license.Id),
-                                                                                                                                  new XElement(OICPPlusNS.EVSEOperator + "Description", license.Description),
-                                                                                                                                  license.URIs.Any()
-                                                                                                                                      ? new XElement(OICPPlusNS.EVSEOperator + "DataLicenseURIs",
-                                                                                                                                            license.URIs.SafeSelect(uri => new XElement(OICPPlusNS.EVSEOperator + "DataLicenseURI", uri)))
-                                                                                                                                      : null
-                                                                                                                              ))
+                                                                                 RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP()).DataLicenses.
+                                                                                     SafeSelect(license => new XElement(OICPPlusNS.EVSEOperator + "DataLicense",
+                                                                                                               new XElement(OICPPlusNS.EVSEOperator + "Id",           license.Id),
+                                                                                                               new XElement(OICPPlusNS.EVSEOperator + "Description",  license.Description),
+                                                                                                               license.URIs.Any()
+                                                                                                                   ? new XElement(OICPPlusNS.EVSEOperator + "DataLicenseURIs",
+                                                                                                                         license.URIs.SafeSelect(uri => new XElement(OICPPlusNS.EVSEOperator + "DataLicenseURI", uri)))
+                                                                                                                   : null
+                                                                                                           ))
                                                                              ),
 
                                                                              // <EvseDataRecord> ... </EvseDataRecord>
-                                                                             group.Where(evsedatarecord => evsedatarecord != null).
-                                                                                   Select(evsedatarecord => EVSEDataRecord2XML(RoamingNetwork, evsedatarecord, evsedatarecord.ToXML())).
+                                                                             group.Where (evsedatarecord => evsedatarecord != null).
+                                                                                   Select(evsedatarecord => EVSEDataRecord2XML(evsedatarecord, evsedatarecord.ToXML())).
                                                                                    ToArray()
 
                                                                          )
@@ -144,7 +145,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                 throw new ArgumentNullException(nameof(EVSEs),  "The given enumeration of EVSEs must not be null!");
 
             if (EVSEStatusRecord2XML == null)
-                EVSEStatusRecord2XML = (rn, evsestatusrecord, xml) => xml;
+                EVSEStatusRecord2XML = (evsestatusrecord, xml) => xml;
 
             if (XMLPostProcessing == null)
                 XMLPostProcessing = xml => xml;
@@ -160,7 +161,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                                                                      try
                                                                      {
-                                                                         return new EVSEStatusRecord(evse);
+                                                                         return WWCP.EVSEStatus.Snapshot(evse).AsOICPEVSEStatus();
                                                                      }
 #pragma warning disable RCS1075 // Avoid empty catch clause that catches System.Exception.
 #pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
@@ -196,7 +197,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                                                                 // <EvseStatusRecord> ... </EvseStatusRecord>
                                                                 group.Where (evsestatusrecord => evsestatusrecord != null).
-                                                                      Select(evsestatusrecord => EVSEStatusRecord2XML(RoamingNetwork, evsestatusrecord, evsestatusrecord.ToXML())).
+                                                                      Select(evsestatusrecord => EVSEStatusRecord2XML(evsestatusrecord, evsestatusrecord.ToXML())).
                                                                       ToArray()
 
                                                             )

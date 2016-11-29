@@ -3,7 +3,7 @@
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public interface ICustomData
+    public interface ICustomDataBuilder
     {
 
         void AddCustomData(string Key, object Value);

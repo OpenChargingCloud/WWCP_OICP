@@ -142,7 +142,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                       {
 
                                                           PoolId  = ChargingPool_Id.Generate(EvseDataRecord.Id.OperatorId.ToWWCP(),
-                                                                                             EvseDataRecord.Address,
+                                                                                             EvseDataRecord.Address.      ToWWCP(),
                                                                                              EvseDataRecord.GeoCoordinate);
 
                                                           _CPInfoList.AddOrUpdateCPInfo(PoolId,
@@ -254,7 +254,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                                                             Configurator: pool => {
 
                                                                                                                                 pool.Description                 = EvseDataRecord.AdditionalInfo;
-                                                                                                                                pool.Address                     = EvseDataRecord.Address;
+                                                                                                                                pool.Address                     = EvseDataRecord.Address.ToWWCP();
                                                                                                                                 pool.GeoLocation                 = EvseDataRecord.GeoCoordinate;
                                                                                                                                 pool.LocationLanguage            = LocationLanguage;
                                                                                                                                 pool.EntranceLocation            = EvseDataRecord.GeoChargingPointEntrance;

@@ -30,9 +30,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// An electric vehicle contract identification with (hashed) pin.
     /// </summary>
-    public class EVCOIdWithPIN : IEquatable <EVCOIdWithPIN>,
-                                 IComparable<EVCOIdWithPIN>,
-                                 IComparable
+    public struct EVCOIdWithPIN : IEquatable <EVCOIdWithPIN>,
+                                  IComparable<EVCOIdWithPIN>,
+                                  IComparable
     {
 
         #region Properties
@@ -75,6 +75,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this.EVCOId    = EVCOId;
             this.PIN       = PIN;
             this.Function  = PINCrypto.none;
+            this.Salt      = "";
 
         }
 
@@ -178,15 +179,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToXML(Namespace = null)
+        #region ToXML(XName = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        /// <param name="XMLNamespace">The XML namespace to use.</param>
-        public XElement ToXML(XNamespace Namespace = null)
+        /// <param name="XName">The XML name to use.</param>
+        public XElement ToXML(XName XName = null)
 
-            => new XElement((Namespace ?? OICPNS.CommonTypes) + "QRCodeIdentification",
+            => new XElement(XName ?? OICPNS.CommonTypes + "QRCodeIdentification",
 
                    new XElement(OICPNS.CommonTypes + "EVCOID", EVCOId.ToString()),
 
@@ -204,7 +205,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-
         #region IComparable<EVCOIdWithPIN> Members
 
         #region CompareTo(Object)
@@ -219,12 +219,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object),  "The given object must not be null!");
 
-            // Check if the given object is an electric vehicle contract identification with (hashed) pin.
-            var EVCOIdWithPIN = Object as EVCOIdWithPIN;
-            if ((Object) EVCOIdWithPIN == null)
-                throw new ArgumentException("The given object is not an electric vehicle contract identification with (hashed) pin!");
+            if (!(Object is EVCOIdWithPIN))
+                throw new ArgumentException("The given object is not an electric vehicle contract identification with (hashed) pin!", nameof(Object));
 
-            return CompareTo(EVCOIdWithPIN);
+            return CompareTo((EVCOIdWithPIN) Object);
 
         }
 
@@ -277,12 +275,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 return false;
 
-            // Check if the given object is an electric vehicle contract identification with (hashed) pin.
-            var EVCOIdWithPIN = Object as EVCOIdWithPIN;
-            if ((Object) EVCOIdWithPIN == null)
+            if (!(Object is EVCOIdWithPIN))
                 return false;
 
-            return this.Equals(EVCOIdWithPIN);
+            return this.Equals((EVCOIdWithPIN) Object);
 
         }
 
@@ -327,7 +323,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
             unchecked
             {
-                return EVCOId.GetHashCode() * 23 ^ PIN.GetHashCode() * 17 ^ Function.GetHashCode() * 7 ^ Salt.GetHashCode();
+
+                return EVCOId.  GetHashCode() * 7 ^
+                       PIN.     GetHashCode() * 5 ^
+                       Function.GetHashCode() * 3 ^
+                       Salt.    GetHashCode();
+
             }
         }
 
@@ -340,7 +341,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public override String ToString()
 
-            => String.Concat(EVCOId.ToString(), " -", Function != PINCrypto.none ? Function.ToString(): "", "-> ", PIN );
+            => String.Concat(EVCOId.ToString(),
+                             " -",
+                             Function != PINCrypto.none ? Function.ToString(): "",
+                             "-> ",
+                             PIN );
 
         #endregion
 

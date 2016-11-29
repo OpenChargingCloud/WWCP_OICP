@@ -38,22 +38,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// An RFID Id.
         /// </summary>
-        public UID            RFIDId                       { get; }
+        public UID?            RFIDId                       { get; }
 
         /// <summary>
         /// An e-mobility account identification and its PIN.
         /// </summary>
-        public EVCOIdWithPIN  QRCodeIdentification         { get; }
+        public EVCOIdWithPIN?  QRCodeIdentification         { get; }
 
         /// <summary>
         /// An e-mobility account identification (PnC).
         /// </summary>
-        public EVCO_Id?       PlugAndChargeIdentification  { get; }
+        public EVCO_Id?        PlugAndChargeIdentification  { get; }
 
         /// <summary>
         /// An e-mobility account identification.
         /// </summary>
-        public EVCO_Id?       RemoteIdentification         { get; }
+        public EVCO_Id?        RemoteIdentification         { get; }
 
         #endregion
 
@@ -204,21 +204,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new XElement(XMLNamespace + "Identification",
 
-                   RFIDId != null
+                   RFIDId.HasValue
                        ? new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
                              new XElement(OICPNS.CommonTypes + "UID", RFIDId.ToString()))
                        : null,
 
-                   QRCodeIdentification != null
-                       ? QRCodeIdentification.ToXML()
+                   QRCodeIdentification.HasValue
+                       ? QRCodeIdentification.Value.ToXML()
                        : null,
 
-                   PlugAndChargeIdentification != null
+                   PlugAndChargeIdentification.HasValue
                        ? new XElement(OICPNS.CommonTypes + "PlugAndChargeIdentification",
                              new XElement(OICPNS.CommonTypes + "EVCOID", PlugAndChargeIdentification.ToString()))
                        : null,
 
-                   RemoteIdentification != null
+                   RemoteIdentification.HasValue
                        ? new XElement(OICPNS.CommonTypes + "RemoteIdentification",
                              new XElement(OICPNS.CommonTypes + "EVCOID", RemoteIdentification.ToString()))
                        : null);
@@ -234,16 +234,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public override String ToString()
         {
 
-            if (RFIDId                   != null)
+            if (RFIDId.HasValue)
                 return RFIDId.ToString();
 
-            if (QRCodeIdentification        != null)
+            if (QRCodeIdentification.HasValue)
                 return QRCodeIdentification.ToString();
 
-            if (PlugAndChargeIdentification != null)
+            if (PlugAndChargeIdentification.HasValue)
                 return PlugAndChargeIdentification.ToString();
 
-            if (RemoteIdentification        != null)
+            if (RemoteIdentification.HasValue)
                 return RemoteIdentification.ToString();
 
             return String.Empty;

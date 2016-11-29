@@ -104,7 +104,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region AsOICPEVSEDataRecord(this EVSE, EVSE2EVSEDataRecord = null)
+        #region ToOICP(this EVSE, EVSE2EVSEDataRecord = null)
 
         /// <summary>
         /// Convert a WWCP EVSE into a corresponding OICP EVSE data record.
@@ -112,8 +112,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSE">A WWCP EVSE.</param>
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to a roaming provider.</param>
         /// <returns>The corresponding OICP EVSE data record.</returns>
-        public static EVSEDataRecord AsOICPEVSEDataRecord(this WWCP.EVSE                   EVSE,
-                                                          CPO.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord = null)
+        public static EVSEDataRecord ToOICP(this WWCP.EVSE                   EVSE,
+                                            CPO.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord = null)
         {
 
             var _EVSEDataRecord = new EVSEDataRecord(EVSE.Id.ToOICP(),
@@ -121,7 +121,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      new DateTime?(),
                                                      EVSE.ChargingStation.Id.ToString(),
                                                      EVSE.ChargingStation.Name,
-                                                     EVSE.ChargingStation.Address,
+                                                     EVSE.ChargingStation.Address.ToOICP(),
                                                      EVSE.ChargingStation.GeoLocation,
                                                      EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug).AsOICPPlugTypes(),
                                                      AsChargingFacilities(EVSE).Reduce(),
@@ -600,9 +600,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region ToOICP(this PinCrypto)
 
         /// <summary>
-        /// Maps a WWCP accessibility type to an OICP  accessibility type.
+        /// Maps a WWCP pin crypto type to an OICP pin crypto type.
         /// </summary>
-        /// <param name="PinCrypto">A accessibility type.</param>
+        /// <param name="PinCrypto">A pin crypto type.</param>
         public static PINCrypto ToOICP(this WWCP.PINCrypto PinCrypto)
         {
 
@@ -623,9 +623,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region ToWWCP(this PinCrypto)
 
         /// <summary>
-        /// Maps an OICP accessibility type to a WWCP accessibility type.
+        /// Maps an OICP pin crypto type to a WWCP pin crypto type.
         /// </summary>
-        /// <param name="PinCrypto">A accessibility type.</param>
+        /// <param name="PinCrypto">A pin crypto type.</param>
         public static WWCP.PINCrypto ToWWCP(this PINCrypto PinCrypto)
         {
 
@@ -640,6 +640,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
 
         }
+
+        #endregion
+
+
+        #region ToOICP(this PinCrypto)
+
+        /// <summary>
+        /// Maps a WWCP address to an OICP address.
+        /// </summary>
+        /// <param name="WWCPAddress">A WWCP address.</param>
+        public static Address ToOICP(this WWCP.Address WWCPAddress)
+
+            => new Address(WWCPAddress.Street,
+                           WWCPAddress.HouseNumber,
+                           WWCPAddress.FloorLevel,
+                           WWCPAddress.PostalCode,
+                           WWCPAddress.PostalCodeSub,
+                           WWCPAddress.City,
+                           WWCPAddress.Country,
+                           WWCPAddress.Comment);
+
+        #endregion
+
+        #region ToWWCP(this PinCrypto)
+
+        /// <summary>
+        /// Maps an OICP accessibility type to a WWCP accessibility type.
+        /// </summary>
+        /// <param name="OICPAddress">A accessibility type.</param>
+        public static WWCP.Address ToWWCP(this Address OICPAddress)
+
+            => new WWCP.Address(OICPAddress.Street,
+                                OICPAddress.HouseNumber,
+                                OICPAddress.FloorLevel,
+                                OICPAddress.PostalCode,
+                                OICPAddress.PostalCodeSub,
+                                OICPAddress.City,
+                                OICPAddress.Country,
+                                OICPAddress.Comment);
 
         #endregion
 

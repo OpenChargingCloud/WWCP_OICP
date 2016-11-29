@@ -408,7 +408,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                                                                         try
                                                                         {
-                                                                            return OICPMapper.AsOICPEVSEDataRecord(evse, EVSE2EVSEDataRecord);
+                                                                            return OICPMapper.ToOICP(evse, EVSE2EVSEDataRecord);
                                                                         }
 #pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
 #pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body

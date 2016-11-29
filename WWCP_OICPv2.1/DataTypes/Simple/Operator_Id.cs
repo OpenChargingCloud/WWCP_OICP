@@ -301,9 +301,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (Operator_Id OperatorId1, Operator_Id OperatorId2)
-        {
-            return !(OperatorId1 == OperatorId2);
-        }
+            => !(OperatorId1 == OperatorId2);
 
         #endregion
 
@@ -319,7 +317,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             if ((Object) OperatorId1 == null)
-                throw new ArgumentNullException("The given OperatorId1 must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId1), "The given OperatorId1 must not be null!");
 
             return OperatorId1.CompareTo(OperatorId2) < 0;
 
@@ -336,9 +334,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (Operator_Id OperatorId1, Operator_Id OperatorId2)
-        {
-            return !(OperatorId1 > OperatorId2);
-        }
+            => !(OperatorId1 > OperatorId2);
 
         #endregion
 
@@ -354,7 +350,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             if ((Object) OperatorId1 == null)
-                throw new ArgumentNullException("The given OperatorId1 must not be null!");
+                throw new ArgumentNullException(nameof(OperatorId1), "The given OperatorId1 must not be null!");
 
             return OperatorId1.CompareTo(OperatorId2) > 0;
 
@@ -371,9 +367,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (Operator_Id OperatorId1, Operator_Id OperatorId2)
-        {
-            return !(OperatorId1 < OperatorId2);
-        }
+            => !(OperatorId1 < OperatorId2);
 
         #endregion
 
