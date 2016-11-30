@@ -950,7 +950,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         #region Find Charging Station Operator, or create a new one...
 
                         if (!RoamingNetwork.TryGetChargingStationOperatorById(operatorevsedata.OperatorId.ToWWCP(), out _EVSEOperator))
-                            _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(operatorevsedata.OperatorId.ToWWCP(), I18NString.Create(Languages.unknown, operatorevsedata.OperatorName));
+                            _EVSEOperator = RoamingNetwork.CreateChargingStationOperator(operatorevsedata.OperatorId.ToWWCP(), I18NString.Create(Languages.unknown, operatorevsedata.OperatorName));
 
                         else
                         {
@@ -1066,7 +1066,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                 else
 
-                                    _ChargingPool = _EVSEOperator.CreateNewChargingPool(
+                                    _ChargingPool = _EVSEOperator.CreateChargingPool(
 
                                                                       _EVSEInfo.PoolId,
 
@@ -1106,7 +1106,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                 }
 
                                 else
-                                    _ChargingStation = _ChargingPool.CreateNewStation(
+                                    _ChargingStation = _ChargingPool.CreateChargingStation(
 
                                                                          _EVSEInfo.StationId,
 
@@ -1143,7 +1143,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                 }
 
                                 else
-                                    _ChargingStation.CreateNewEVSE(evsedatarecord.Id.ToWWCP(),
+                                    _ChargingStation.CreateEVSE(evsedatarecord.Id.ToWWCP(),
 
                                                                    Configurator: evse => {
                                                                        evse.Description         = evsedatarecord.AdditionalInfo;

@@ -127,7 +127,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                        Request,
 
                        ChargeDetailRecordsXML.MapElements(OICPNS.Authorization + "eRoamingChargeDetailRecord",
-                                                          (XML, e) => ChargeDetailRecord.Parse(XML, e, CustomChargeDetailRecordMapper),
+                                                          (XML, e) => ChargeDetailRecord.Parse(XML, CustomChargeDetailRecordMapper, e),
                                                           OnException),
 
                        responsebuilder => CustomObjectMapper != null

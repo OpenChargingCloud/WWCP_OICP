@@ -40,11 +40,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVCOIdWithPIN">The eMA identification with its PIN.</param>
         /// <param name="PartnerProductId">The optional charging product identification.</param>
         /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
-        public static XElement MobileAuthorizeStartXML(EVSE_Id       EVSEId,
+        public static XElement MobileAuthorizeStartXML(EVSE_Id        EVSEId,
                                                        EVCOIdWithPIN  EVCOIdWithPIN,
-                                                       String        PartnerProductId  = null,
-                                                       Boolean?      GetNewSession     = null)
-        {
+                                                       String         PartnerProductId  = null,
+                                                       Boolean?       GetNewSession     = null)
 
             #region Documentation
 
@@ -87,33 +86,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            #region Initial checks
 
-            if (EVSEId == null)
-                throw new ArgumentNullException(nameof(EVSEId),        "The given EVSE identification must not be null!");
+            => SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileAuthorizeStart",
 
-            if (EVCOIdWithPIN == null)
-                throw new ArgumentNullException(nameof(EVCOIdWithPIN),  "The given e-mobility account identification with PIN must not be null!");
+                                      new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.ToString()),
 
-            #endregion
+                                      EVCOIdWithPIN.ToXML(OICPNS.MobileAuthorization + "QRCodeIdentification"),
 
-            return SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileAuthorizeStart",
+                                      PartnerProductId != null
+                                          ? new XElement(OICPNS.MobileAuthorization + "PartnerProductID", PartnerProductId.ToString())
+                                          : null,
 
-                                          new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.ToString()),
+                                      (GetNewSession != null && GetNewSession.HasValue)
+                                          ? new XElement(OICPNS.MobileAuthorization + "GetNewSession", GetNewSession.Value ? "true" : "false")
+                                          : null
 
-                                          EVCOIdWithPIN.ToXML(OICPNS.MobileAuthorization),
-
-                                          (PartnerProductId != null)
-                                              ? new XElement(OICPNS.MobileAuthorization + "PartnerProductID", PartnerProductId.ToString())
-                                              : null,
-
-                                          (GetNewSession != null && GetNewSession.HasValue)
-                                              ? new XElement(OICPNS.MobileAuthorization + "GetNewSession", GetNewSession.Value ? "true" : "false")
-                                              : null
-
-                                     ));
-
-        }
+                                 ));
 
         #endregion
 

@@ -73,7 +73,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             Action<String, DateTime, XElement>                        EVSEStatusXMLHandler           = null,
                             Action<String, DateTime, EVSE_Id, EVSEStatusTypes>        EVSEStatusHandler              = null,
 
-                            Func<EVSEStatusReport, ChargingStationStatusType>         EVSEStatusAggregationDelegate  = null
+                            Func<EVSEStatusReport, ChargingStationStatusTypes>         EVSEStatusAggregationDelegate  = null
 
             )
 
@@ -122,7 +122,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                       #region Find a matching EVSE Operator and maybe update its properties... or create a new one!
 
                                                       if (!RoamingNetwork.TryGetChargingStationOperatorById(_OperatorEvseData.OperatorId.ToWWCP(), out _EVSEOperator))
-                                                          _EVSEOperator = RoamingNetwork.CreateNewChargingStationOperator(_OperatorEvseData.OperatorId.ToWWCP(), I18NString.Create(Languages.unknown, _OperatorEvseData.OperatorName));
+                                                          _EVSEOperator = RoamingNetwork.CreateChargingStationOperator(_OperatorEvseData.OperatorId.ToWWCP(), I18NString.Create(Languages.unknown, _OperatorEvseData.OperatorName));
 
                                                       else
                                                       {
@@ -247,7 +247,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                       }
 
                                                                                       else
-                                                                                          _ChargingPool = _EVSEOperator.CreateNewChargingPool(
+                                                                                          _ChargingPool = _EVSEOperator.CreateChargingPool(
 
                                                                                                                             EVSEInfo.PoolId,
 
@@ -291,7 +291,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                               }
 
                                                               else
-                                                                  _ChargingStation = _ChargingPool.CreateNewStation(
+                                                                  _ChargingStation = _ChargingPool.CreateChargingStation(
 
                                                                                                        EVSEInfo.StationId,
 
@@ -331,18 +331,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                               }
 
                                                               else
-                                                                  _ChargingStation.CreateNewEVSE(EvseDataRecord.Id.ToWWCP(),
+                                                                  _ChargingStation.CreateEVSE(EvseDataRecord.Id.ToWWCP(),
 
-                                                                                                 Configurator: evse => {
+                                                                                              Configurator: evse => {
 
-                                                                                                     evse.Description     = EvseDataRecord.AdditionalInfo;
-                                                                                                     evse.ChargingModes   = new ReactiveSet<WWCP.ChargingModes>(EvseDataRecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
-                                                                                                     OICPMapper.ApplyChargingFacilities(_EVSE, EvseDataRecord.ChargingFacilities);
-                                                                                                     evse.MaxCapacity     = EvseDataRecord.MaxCapacity;
-                                                                                                     evse.SocketOutlets   = new ReactiveSet<SocketOutlet>(EvseDataRecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
+                                                                                                  evse.Description     = EvseDataRecord.AdditionalInfo;
+                                                                                                  evse.ChargingModes   = new ReactiveSet<WWCP.ChargingModes>(EvseDataRecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
+                                                                                                  OICPMapper.ApplyChargingFacilities(_EVSE, EvseDataRecord.ChargingFacilities);
+                                                                                                  evse.MaxCapacity     = EvseDataRecord.MaxCapacity;
+                                                                                                  evse.SocketOutlets   = new ReactiveSet<SocketOutlet>(EvseDataRecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
 
-                                                                                                 }
-                                                                                                );
+                                                                                              }
+                                                                                             );
 
                                                               #endregion
 

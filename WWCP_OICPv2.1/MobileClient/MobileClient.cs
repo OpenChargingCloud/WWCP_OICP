@@ -384,13 +384,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
-            if (EVSEId == null)
-                throw new ArgumentNullException(nameof(EVSEId),        "The given EVSE identification must not be null!");
-
-            if (EVCOIdWithPIN == null)
-                throw new ArgumentNullException(nameof(EVCOIdWithPIN),  "The given e-mobility account identification with PIN must not be null!");
-
-
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
