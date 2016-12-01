@@ -1101,6 +1101,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (EVSEs == null)
                 throw new ArgumentNullException(nameof(EVSEs), "The given enumeration of EVSEs must not be null!");
 
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
+
             #endregion
 
             #region Get effective number of EVSE status to upload

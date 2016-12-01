@@ -756,35 +756,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="NewEVSEId">An optional new EVSE identification.</param>
         public Builder ToBuilder(EVSE_Id? NewEVSEId = null)
 
-            => new Builder(NewEVSEId ?? Id) {
+            => new Builder(NewEVSEId ?? Id,
 
-                   DeltaType                 = DeltaType,
-                   LastUpdate                = LastUpdate,
+                   DeltaType                 : DeltaType,
+                   LastUpdate                : LastUpdate,
 
-                   ChargingStationId         = ChargingStationId,
-                   ChargingStationName       = ChargingStationName,
-                   Address                   = Address,
-                   GeoCoordinate             = GeoCoordinate,
-                   Plugs                     = Plugs,
-                   ChargingModes             = ChargingModes,
-                   ChargingFacilities        = ChargingFacilities,
-                   AuthenticationModes       = AuthenticationModes,
-                   MaxCapacity               = MaxCapacity,
-                   PaymentOptions            = PaymentOptions,
-                   ValueAddedServices        = ValueAddedServices,
-                   Accessibility             = Accessibility,
-                   HotlinePhoneNumber        = HotlinePhoneNumber,
-                   AdditionalInfo            = AdditionalInfo,
-                   GeoChargingPointEntrance  = GeoChargingPointEntrance,
-                   IsOpen24Hours             = IsOpen24Hours,
-                   OpeningTime               = OpeningTime,
-                   HubOperatorId             = HubOperatorId,
-                   ClearingHouseId           = ClearingHouseId,
-                   IsHubjectCompatible       = IsHubjectCompatible,
-                   DynamicInfoAvailable      = DynamicInfoAvailable,
-
-
-               };
+                   ChargingStationId         : ChargingStationId,
+                   ChargingStationName       : ChargingStationName,
+                   Address                   : Address,
+                   GeoCoordinate             : GeoCoordinate,
+                   Plugs                     : Plugs,
+                   ChargingModes             : ChargingModes,
+                   ChargingFacilities        : ChargingFacilities,
+                   AuthenticationModes       : AuthenticationModes,
+                   MaxCapacity               : MaxCapacity,
+                   PaymentOptions            : PaymentOptions,
+                   ValueAddedServices        : ValueAddedServices,
+                   Accessibility             : Accessibility,
+                   HotlinePhoneNumber        : HotlinePhoneNumber,
+                   AdditionalInfo            : AdditionalInfo,
+                   GeoChargingPointEntrance  : GeoChargingPointEntrance,
+                   IsOpen24Hours             : IsOpen24Hours,
+                   OpeningTime               : OpeningTime,
+                   HubOperatorId             : HubOperatorId,
+                   ClearingHouseId           : ClearingHouseId,
+                   IsHubjectCompatible       : IsHubjectCompatible,
+                   DynamicInfoAvailable      : DynamicInfoAvailable);
 
         #endregion
 
@@ -987,6 +984,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region Initial checks
 
+                if (Id == null)
+                    throw new ArgumentNullException(nameof(Id),                   "The given unique EVSE identification must not be null!");
+
                 if (Address == null)
                     throw new ArgumentNullException(nameof(Address),              "The given address must not be null!");
 
@@ -1003,6 +1003,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     throw new ArgumentNullException(nameof(HotlinePhoneNumber),   "The given hotline phone number must not be null or empty!");
 
                 #endregion
+
+                this.Id                        = Id;
 
                 this.DeltaType                 = DeltaType;
                 this.LastUpdate                = LastUpdate;
