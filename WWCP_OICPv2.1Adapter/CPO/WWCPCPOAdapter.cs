@@ -4667,6 +4667,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 try
                 {
 
+                    var aaa = org.GraphDefined.WWCP.Net.IO.GeoJSON.GeoJSON_IO.ToFeatureCollection(RoamingNetwork.ChargingStations);
+                    //https://www.rewag.de/fileadmin/img/hp/rewag_logo_205.png
+
                     FlushServiceQueues().Wait();
 
                 }

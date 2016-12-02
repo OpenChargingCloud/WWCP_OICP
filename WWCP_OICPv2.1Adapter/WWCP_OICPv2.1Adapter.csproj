@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Hermod\libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -77,6 +81,10 @@
     <ProjectReference Include="..\..\WWCP_Core\WWCP_Core\WWCP_Core.csproj">
       <Project>{33836742-af1d-4aa4-963f-b0a8e60e6480}</Project>
       <Name>WWCP_Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WWCP_Net\WWCP_GeoJSON\WWCP_GeoJSON.csproj">
+      <Project>{5fecd89d-80c3-407a-9ccd-2b6180882f17}</Project>
+      <Name>WWCP_GeoJSON</Name>
     </ProjectReference>
     <ProjectReference Include="..\WWCP_OICPv2.1\WWCP_OICPv2.1.csproj">
       <Project>{a01e9361-39c7-4705-9173-7cea79364dd0}</Project>
