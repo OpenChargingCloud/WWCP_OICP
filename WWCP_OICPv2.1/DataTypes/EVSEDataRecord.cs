@@ -82,7 +82,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The geo coordinate of this EVSE.
         /// </summary>
-        public GeoCoordinate        GeoCoordinate               { get; }
+        public GeoCoordinate?       GeoCoordinate               { get; }
 
         /// <summary>
         /// The types of charging plugs attached to this EVSE.
@@ -137,7 +137,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The geo coordinate of the entrance to this EVSE.
         /// </summary>
-        public GeoCoordinate        GeoChargingPointEntrance    { get; }
+        public GeoCoordinate?       GeoChargingPointEntrance    { get; }
 
         /// <summary>
         /// Whether this EVSE is open 24/7.
@@ -207,7 +207,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               String                              ChargingStationId           = null,
                               I18NString                          ChargingStationName         = null,
                               Address                             Address                     = null,
-                              GeoCoordinate                       GeoCoordinate               = null,
+                              GeoCoordinate?                      GeoCoordinate               = null,
                               PlugTypes                           Plugs                       = PlugTypes.Unspecified,
                               ChargingFacilities                  ChargingFacilities          = ChargingFacilities.Unspecified,
                               ChargingModes                       ChargingModes               = ChargingModes.Unspecified,
@@ -218,7 +218,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               AccessibilityTypes                  Accessibility               = AccessibilityTypes.Free_publicly_accessible,
                               String                              HotlinePhoneNumber          = null,
                               I18NString                          AdditionalInfo              = null,
-                              GeoCoordinate                       GeoChargingPointEntrance    = null,
+                              GeoCoordinate?                      GeoChargingPointEntrance    = null,
                               Boolean                             IsOpen24Hours               = true,
                               String                              OpeningTime                 = null,
                               HubOperator_Id?                     HubOperatorId               = null,
@@ -664,8 +664,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                    new XElement(OICPNS.EVSEData + "GeoCoordinates",
                        new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                           new XElement(OICPNS.CommonTypes + "Longitude",  GeoCoordinate.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-                           new XElement(OICPNS.CommonTypes + "Latitude",   GeoCoordinate.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                           new XElement(OICPNS.CommonTypes + "Longitude",  GeoCoordinate.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                           new XElement(OICPNS.CommonTypes + "Latitude",   GeoCoordinate.Value.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
                        )
                    ),
 
@@ -720,8 +720,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    GeoChargingPointEntrance != null
                        ? new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
                            new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                               new XElement(OICPNS.CommonTypes + "Longitude", GeoChargingPointEntrance.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-                               new XElement(OICPNS.CommonTypes + "Latitude",  GeoChargingPointEntrance.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                               new XElement(OICPNS.CommonTypes + "Longitude", GeoChargingPointEntrance.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                               new XElement(OICPNS.CommonTypes + "Latitude",  GeoChargingPointEntrance.Value.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
                            )
                        )
                        : null,
@@ -831,7 +831,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             /// <summary>
             /// The geo coordinate of this EVSE.
             /// </summary>
-            public GeoCoordinate        GeoCoordinate               { get; set; }
+            public GeoCoordinate?       GeoCoordinate               { get; set; }
 
             /// <summary>
             /// The types of charging plugs attached to this EVSE.
@@ -886,7 +886,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             /// <summary>
             /// The geo coordinate of the entrance to this EVSE.
             /// </summary>
-            public GeoCoordinate        GeoChargingPointEntrance    { get; set; }
+            public GeoCoordinate?       GeoChargingPointEntrance    { get; set; }
 
             /// <summary>
             /// Whether this EVSE is open 24/7.
@@ -957,7 +957,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            String                      ChargingStationId          = null,
                            I18NString                  ChargingStationName        = null,
                            Address                     Address                    = null,
-                           GeoCoordinate               GeoCoordinate              = null,
+                           GeoCoordinate?              GeoCoordinate              = null,
                            PlugTypes                   Plugs                      = PlugTypes.Unspecified,
                            ChargingFacilities          ChargingFacilities         = ChargingFacilities.Unspecified,
                            ChargingModes               ChargingModes              = ChargingModes.Unspecified,
@@ -968,7 +968,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            AccessibilityTypes          Accessibility              = AccessibilityTypes.Free_publicly_accessible,
                            String                      HotlinePhoneNumber         = null,
                            I18NString                  AdditionalInfo             = null,
-                           GeoCoordinate               GeoChargingPointEntrance   = null,
+                           GeoCoordinate?              GeoChargingPointEntrance   = null,
                            Boolean                     IsOpen24Hours              = true,
                            String                      OpeningTime                = null,
                            HubOperator_Id?             HubOperatorId              = null,

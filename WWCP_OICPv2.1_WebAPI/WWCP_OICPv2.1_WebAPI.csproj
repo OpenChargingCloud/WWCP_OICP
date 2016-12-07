@@ -54,9 +54,6 @@
     <Compile Include="Version.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HTTPRoot\Logos\REWAG_Logo.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\Aegir\Aegir\Aegir.csproj">
       <Project>{4d8ffccd-738d-41aa-a527-8cfdfe0a681d}</Project>
       <Name>Aegir</Name>
@@ -105,6 +102,9 @@
     <None Include="HTTPRoot\styles.scss" />
     <None Include="LICENSE" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HTTPRoot\Logos\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

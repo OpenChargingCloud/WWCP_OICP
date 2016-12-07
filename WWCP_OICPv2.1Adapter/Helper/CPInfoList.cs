@@ -91,7 +91,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         public void AddOrUpdateCPInfo(ChargingPool_Id  ChargingPoolId,
                                       Address          Address,
-                                      GeoCoordinate    PoolLocation,
+                                      GeoCoordinate?   PoolLocation,
                                       String           ChargingStationXMLId,
                                       EVSE_Id          EVSEId)
         {

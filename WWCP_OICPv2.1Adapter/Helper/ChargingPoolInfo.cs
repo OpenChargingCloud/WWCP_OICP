@@ -41,7 +41,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         public Address          Address       { get; }
 
-        public GeoCoordinate    GeoLocation   { get; }
+        public GeoCoordinate?   GeoLocation   { get; }
 
         #region ChargingStations
 
@@ -59,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public ChargingPoolInfo(CPInfoList       CPInfoList,
                                 ChargingPool_Id  PoolId,
                                 Address          Address,
-                                GeoCoordinate    GeoLocation)
+                                GeoCoordinate?   GeoLocation)
         {
 
             #region Initial checks

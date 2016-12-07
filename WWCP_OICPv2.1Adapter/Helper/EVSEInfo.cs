@@ -34,13 +34,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         public ChargingPool_Id      PoolId        { get; private set; }
         public Address              PoolAddress   { get; private set; }
-        public GeoCoordinate        PoolLocation  { get; private set; }
+        public GeoCoordinate?       PoolLocation  { get; private set; }
         public ChargingStation_Id   StationId     { get; private set; }
 
 
         public EVSEInfo(ChargingPool_Id      PoolId,
                         Address              PoolAddress,
-                        GeoCoordinate        PoolLocation,
+                        GeoCoordinate?       PoolLocation,
                         ChargingStation_Id   StationId)
         {
 

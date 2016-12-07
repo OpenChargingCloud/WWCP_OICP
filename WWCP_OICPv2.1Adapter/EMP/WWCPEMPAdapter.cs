@@ -892,7 +892,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public async Task
 
             PullEVSEData(RoamingNetwork         RoamingNetwork,
-                         GeoCoordinate          SearchCenter       = null,
+                         GeoCoordinate?         SearchCenter       = null,
                          Double                 DistanceKM         = 0.0,
                          DateTime?              LastCall           = null,
                          eMobilityProvider_Id?  ProviderId         = null,
@@ -1209,7 +1209,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public async Task<EVSESearchResult>
 
             SearchEVSE(eMobilityProvider_Id  ProviderId,
-                       GeoCoordinate         SearchCenter       = null,
+                       GeoCoordinate?        SearchCenter       = null,
                        Double                DistanceKM         = 0.0,
                        Address               Address            = null,
                        PlugTypes?            Plug               = null,
@@ -1266,7 +1266,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<IEnumerable<WWCP.EVSEStatus>>
 
-            PullEVSEStatus(GeoCoordinate          SearchCenter        = null,
+            PullEVSEStatus(GeoCoordinate?         SearchCenter        = null,
                            Double                 DistanceKM          = 0.0,
                            EVSEStatusTypes?       EVSEStatusFilter    = null,
                            eMobilityProvider_Id?  ProviderId          = null,

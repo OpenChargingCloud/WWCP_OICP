@@ -93,7 +93,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="GeoCoordinatesResponseFormat">An optional response format for the geo coordinates [default: DecimalDegree]</param>
         public static XElement PullEVSEDataRequestXML(Provider_Id                        ProviderId,
-                                                      GeoCoordinate                      SearchCenter                  = null,
+                                                      GeoCoordinate?                     SearchCenter                  = null,
                                                       Double                             DistanceKM                    = 0.0,
                                                       DateTime?                          LastCall                      = null,
                                                       GeoCoordinatesResponseFormatTypes  GeoCoordinatesResponseFormat  = GeoCoordinatesResponseFormatTypes.DecimalDegree)
@@ -168,8 +168,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                               ? new XElement(OICPNS.EVSEData + "SearchCenter",
                                                   new XElement(OICPNS.CommonTypes + "GeoCoordinates",
                                                       new XElement(OICPNS.CommonTypes + "DecimalDegree",
-                                                          new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}").Replace(",", ".")),
-                                                          new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}").Replace(",", "."))
+                                                          new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),
+                                                          new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Value.Latitude. ToString("{0:0.######}").Replace(",", "."))
                                                       )
                                                   ),
                                                   new XElement(OICPNS.CommonTypes + "Radius", String.Format("{0:0.}", DistanceKM).Replace(",", "."))
@@ -199,7 +199,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatus">An optional EVSE status as filter criteria.</param>
         public static XElement PullEVSEStatusRequestXML(Provider_Id       ProviderId,
-                                                        GeoCoordinate     SearchCenter  = null,
+                                                        GeoCoordinate?    SearchCenter  = null,
                                                         Double            DistanceKM    = 0.0,
                                                         EVSEStatusTypes?  EVSEStatus    = null)
         {
@@ -266,13 +266,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                           new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
 
-                                          (SearchCenter != null && DistanceKM > 0)
+                                          (SearchCenter.HasValue && DistanceKM > 0)
                                               ? new XElement(OICPNS.EVSEStatus + "SearchCenter",
 
                                                     new XElement(OICPNS.CommonTypes + "GeoCoordinates",
                                                         new XElement(OICPNS.CommonTypes + "DecimalDegree",
-                                                           new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}").Replace(",", ".")),
-                                                           new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}").Replace(",", "."))
+                                                           new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),
+                                                           new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Value.Latitude. ToString("{0:0.######}").Replace(",", "."))
                                                         )
                                                     ),
 
@@ -362,7 +362,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="Plug">Optional plugs of the charging station.</param>
         /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
         public static XElement SearchEvseRequestXML(Provider_Id          ProviderId,
-                                                    GeoCoordinate        SearchCenter      = null,
+                                                    GeoCoordinate?       SearchCenter      = null,
                                                     Double               DistanceKM        = 0.0,
                                                     Address              Address           = null,
                                                     PlugTypes?           Plug              = null,
@@ -447,11 +447,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             return SOAP.Encapsulation(new XElement(OICPNS.EVSESearch + "eRoamingSearchEvse",
 
-                                          (SearchCenter != null && DistanceKM > 0)
+                                          (SearchCenter.HasValue && DistanceKM > 0)
                                               ? new XElement(OICPNS.EVSESearch + "GeoCoordinates",
                                                     new XElement(OICPNS.CommonTypes + "DecimalDegree",
-                                                        new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Longitude.ToString("{0:0.######}").Replace(",", ".")),
-                                                        new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Latitude. ToString("{0:0.######}").Replace(",", "."))
+                                                        new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),
+                                                        new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Value.Latitude. ToString("{0:0.######}").Replace(",", "."))
                                                     )
                                                 )
                                               : null,

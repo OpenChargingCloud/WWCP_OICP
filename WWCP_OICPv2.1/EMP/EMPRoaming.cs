@@ -1524,7 +1524,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public async Task<HTTPResponse<EVSEData>>
 
             PullEVSEData(Provider_Id         ProviderId,
-                         GeoCoordinate       SearchCenter        = null,
+                         GeoCoordinate?      SearchCenter        = null,
                          Double              DistanceKM          = 0.0,
                          DateTime?           LastCall            = null,
 
@@ -1565,7 +1565,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public async Task<HTTPResponse<EVSESearchResult>>
 
             SearchEVSE(Provider_Id          ProviderId,
-                       GeoCoordinate        SearchCenter        = null,
+                       GeoCoordinate?       SearchCenter        = null,
                        Double               DistanceKM          = 0.0,
                        Address              Address             = null,
                        PlugTypes?           Plug                = null,
@@ -1609,7 +1609,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public async Task<HTTPResponse<EVSEStatus>>
 
             PullEVSEStatus(Provider_Id         ProviderId,
-                           GeoCoordinate       SearchCenter        = null,
+                           GeoCoordinate?      SearchCenter        = null,
                            Double              DistanceKM          = 0.0,
                            EVSEStatusTypes?    EVSEStatusFilter    = null,
 

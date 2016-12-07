@@ -109,7 +109,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                   EVSEInfo         EVSEInfo              = null;
                                                   CPInfoList       _CPInfoList           = null;
-                                                  ChargingPool_Id  PoolId                = null;
+                                                  ChargingPool_Id  PoolId;
                                                   EVSEIdLookup     EVSEIdLookup          = null;
 
                                                   #endregion

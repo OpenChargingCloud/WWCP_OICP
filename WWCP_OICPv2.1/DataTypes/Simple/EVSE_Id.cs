@@ -510,6 +510,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <returns>The HashCode of this object.</returns>
         public override Int32 GetHashCode()
+
             => OperatorId.GetHashCode() ^
                Suffix.    GetHashCode();
 

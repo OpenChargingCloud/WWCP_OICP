@@ -153,7 +153,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         private readonly        Timer                                          StatusCheckTimer;
 
         private readonly        HashSet<EVSE>                                  EVSEsToAddQueue;
-        private readonly        HashSet<EVSE>                                  EVSEDataUpdatesQueue;
+        private readonly        HashSet<EVSE>                                  EVSEsToUpdateQueue;
         private readonly        List<EVSEStatusUpdate>                         EVSEStatusChangesFastQueue;
         private readonly        List<EVSEStatusUpdate>                         EVSEStatusChangesDelayedQueue;
         private readonly        HashSet<EVSE>                                  EVSEsToRemoveQueue;
@@ -509,7 +509,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
             this.EVSEsToAddQueue                      = new HashSet<EVSE>();
-            this.EVSEDataUpdatesQueue                 = new HashSet<EVSE>();
+            this.EVSEsToUpdateQueue                 = new HashSet<EVSE>();
             this.EVSEStatusChangesFastQueue           = new List<EVSEStatusUpdate>();
             this.EVSEStatusChangesDelayedQueue        = new List<EVSEStatusUpdate>();
             this.EVSEsToRemoveQueue                   = new HashSet<EVSE>();
@@ -1160,7 +1160,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                   ServerAction,
                                                   _EVSEs.ULongCount(),
                                                   _EVSEs,
-                                                  Warnings,
+                                                  Warnings.Where(warning => warning.IsNotNullOrEmpty()),
                                                   RequestTimeout);
 
             }
@@ -1196,13 +1196,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 if (response.Content.Result)
                     result = new WWCP.Acknowledgement(ResultType.True,
                                                       response.Content.StatusCode.Description,
-                                                      Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
+                                                      response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                          ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
+                                                          : Warnings,
                                                       Runtime);
 
                 else
                     result = new WWCP.Acknowledgement(ResultType.False,
                                                       response.Content.StatusCode.Description,
-                                                      Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
+                                                      response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                          ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
+                                                          : Warnings,
                                                       Runtime);
 
             }
@@ -1229,7 +1233,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                    ServerAction,
                                                    _EVSEs.ULongCount(),
                                                    _EVSEs,
-                                                   Warnings,
+                                                   Warnings.Where(warning => warning.IsNotNullOrEmpty()),
                                                    RequestTimeout,
                                                    result,
                                                    Runtime);
@@ -1265,7 +1269,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             PushEVSEStatus(IEnumerable<EVSEStatusUpdate>  EVSEStatusUpdates,
                            ActionTypes                    ServerAction,
 
-                           DateTime?                      Timestamp,
+                           DateTime?                      Timestamp           = null,
                            CancellationToken?             CancellationToken   = null,
                            EventTracking_Id               EventTrackingId     = null,
                            TimeSpan?                      RequestTimeout      = null)
@@ -1297,15 +1301,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             var Warnings = new List<String>();
 
             var _EVSEStatus = EVSEStatusUpdates.
-                                  Where (evsestatusupdate => _IncludeEVSEs(RoamingNetwork.GetEVSEbyId(evsestatusupdate.Id))).
-                                  Select(evsestatusupdate => {
+                                  Where       (evsestatusupdate => _IncludeEVSEs(RoamingNetwork.GetEVSEbyId(evsestatusupdate.Id))).
+                                  ToLookup    (evsestatusupdate => evsestatusupdate.Id,
+                                               evsestatusupdate => evsestatusupdate).
+                                  ToDictionary(group            => group.Key,
+                                               group            => group.AsEnumerable().OrderByDescending(item => item.NewStatus.Timestamp)).
+                                  Select      (evsestatusupdate => {
 
                                       try
                                       {
 
+                                          // Only push the current status of the latest status update!
                                           return new EVSEStatusRecord(
-                                                     evsestatusupdate.Id.ToOICP(),
-                                                     evsestatusupdate.NewStatus.Value.AsOICPEVSEStatus()
+                                                     evsestatusupdate.Key.ToOICP(),
+                                                     evsestatusupdate.Value.First().NewStatus.Value.AsOICPEVSEStatus()
                                                  );
 
                                       }
@@ -1339,7 +1348,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     ServerAction,
                                                     _EVSEStatus.ULongCount(),
                                                     _EVSEStatus,
-                                                    Warnings,
+                                                    Warnings.Where(warning => warning.IsNotNullOrEmpty()),
                                                     RequestTimeout);
 
             }
@@ -1375,13 +1384,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 if (response.Content.Result)
                     result = new WWCP.Acknowledgement(ResultType.True,
                                                       response.Content.StatusCode.Description,
-                                                      Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
+                                                      response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                          ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
+                                                          : Warnings,
                                                       Runtime);
 
                 else
                     result = new WWCP.Acknowledgement(ResultType.False,
                                                       response.Content.StatusCode.Description,
-                                                      Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo),
+                                                      response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                          ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
+                                                          : Warnings,
                                                       Runtime);
 
             }
@@ -1408,7 +1421,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      ServerAction,
                                                      _EVSEStatus.ULongCount(),
                                                      _EVSEStatus,
-                                                     Warnings,
+                                                     Warnings.Where(warning => warning.IsNotNullOrEmpty()),
                                                      RequestTimeout,
                                                      result,
                                                      Runtime);
@@ -1687,7 +1700,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                        (_IncludeEVSEs != null && _IncludeEVSEs(EVSE)))
                     {
 
-                        EVSEDataUpdatesQueue.Add(EVSE);
+                        EVSEsToUpdateQueue.Add(EVSE);
 
                         ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
 
@@ -4586,7 +4599,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                        (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
                     {
 
-                        EVSEDataUpdatesQueue.Add(evse);
+                        EVSEsToUpdateQueue.Add(evse);
 
                         ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
 
@@ -4634,7 +4647,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                        (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
                     {
 
-                        EVSEDataUpdatesQueue.Add(evse);
+                        EVSEsToUpdateQueue.Add(evse);
 
                         ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
 
@@ -4666,9 +4679,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 try
                 {
-
-                    var aaa = org.GraphDefined.WWCP.Net.IO.GeoJSON.GeoJSON_IO.ToFeatureCollection(RoamingNetwork.ChargingStations);
-                    //https://www.rewag.de/fileadmin/img/hp/rewag_logo_205.png
 
                     FlushServiceQueues().Wait();
 
@@ -4713,7 +4723,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 {
 
                     if (EVSEsToAddQueue.               Count == 0 &&
-                        EVSEDataUpdatesQueue.          Count == 0 &&
+                        EVSEsToUpdateQueue.          Count == 0 &&
                         EVSEStatusChangesDelayedQueue. Count == 0 &&
                         EVSEsToRemoveQueue.            Count == 0 &&
                         ChargeDetailRecordQueue.       Count == 0)
@@ -4728,8 +4738,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     EVSEsToAddQueue.Clear();
 
                     // Copy 'EVSEs to update', remove originals...
-                    EVSEDataQueueCopy.Value            = new HashSet<EVSE>           (EVSEDataUpdatesQueue);
-                    EVSEDataUpdatesQueue.Clear();
+                    EVSEDataQueueCopy.Value            = new HashSet<EVSE>           (EVSEsToUpdateQueue);
+                    EVSEsToUpdateQueue.Clear();
 
                     // Copy 'EVSE status changes', remove originals...
                     EVSEStatusQueueCopy.Value          = new List<EVSEStatusUpdate>  (EVSEStatusChangesDelayedQueue);
@@ -4791,14 +4801,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 if (EVSEsToAddQueueCopy.Value.Count > 0)
                 {
 
-                    //var EVSEsToAddTask = AddEVSEs(EVSEsToAddQueueCopy.Value,
-                    //                                  _ServiceRunId == 1
-                    //                                      ? ActionType.fullLoad
-                    //                                      : ActionType.insert);
-
                     var EVSEsToAddTask = _ServiceRunId == 1
-                                             ? (this as IRemotePushData).SetStaticData(EVSEsToAddQueueCopy.Value)
-                                             : (this as IRemotePushData).AddStaticData(EVSEsToAddQueueCopy.Value);
+                                             ? (this as IRemotePushData).SetStaticData(EVSEsToAddQueueCopy.Value, EventTrackingId: EventTrackingId)
+                                             : (this as IRemotePushData).AddStaticData(EVSEsToAddQueueCopy.Value, EventTrackingId: EventTrackingId);
 
                     EVSEsToAddTask.Wait();
 
@@ -4820,7 +4825,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     if (EVSEsWithoutNewEVSEs.Length > 0)
                     {
 
-                        var PushEVSEDataTask = (this as IRemotePushData).UpdateStaticData(EVSEsWithoutNewEVSEs);
+                        var PushEVSEDataTask = (this as IRemotePushData).UpdateStaticData(EVSEsWithoutNewEVSEs, EventTrackingId: EventTrackingId);
 
                         PushEVSEDataTask.Wait();
 
@@ -4835,10 +4840,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 if (EVSEStatusQueueCopy.Value.Count > 0)
                 {
 
-                    var PushEVSEStatusTask = _IRemotePushStatus.UpdateEVSEStatus(EVSEStatusQueueCopy.Value);
-                                                     //         _ServiceRunId == 1
-                                                     //             ? ActionType.fullLoad
-                                                     //             : ActionType.update);
+                    var PushEVSEStatusTask = PushEVSEStatus(EVSEStatusQueueCopy.Value,
+                                                            _ServiceRunId == 1
+                                                                ? ActionTypes.fullLoad
+                                                                : ActionTypes.update,
+                                                            EventTrackingId: EventTrackingId);
 
                     PushEVSEStatusTask.Wait();
 
