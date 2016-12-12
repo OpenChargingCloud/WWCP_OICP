@@ -140,22 +140,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             if (Provider_Id.TryParse(_MatchCollection[0].Groups[1].Value, out _ProviderId))
                 return new EVCO_Id(_ProviderId,
-                                       _MatchCollection[0].Groups[2].Value,
-                                       _MatchCollection[0].Groups[3].Value[0]);
+                                   _MatchCollection[0].Groups[2].Value,
+                                   _MatchCollection[0].Groups[3].Value[0]);
 
             if (Provider_Id.TryParse(_MatchCollection[0].Groups[4].Value, out _ProviderId))
-                return new EVCO_Id(_ProviderId,
-                                       _MatchCollection[0].Groups[5].Value,
-                                       _MatchCollection[0].Groups[6].Value[0]);
+                return new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN),
+                                   _MatchCollection[0].Groups[5].Value,
+                                   _MatchCollection[0].Groups[6].Value[0]);
 
             if (Provider_Id.TryParse(_MatchCollection[0].Groups[7].Value, out _ProviderId))
                 return new EVCO_Id(_ProviderId,
-                                       _MatchCollection[0].Groups[8].Value,
-                                       _MatchCollection[0].Groups[9].Value[0]);
+                                   _MatchCollection[0].Groups[8].Value,
+                                   _MatchCollection[0].Groups[9].Value[0]);
 
             if (Provider_Id.TryParse(_MatchCollection[0].Groups[10].Value, out _ProviderId))
                 return new EVCO_Id(_ProviderId,
-                                       _MatchCollection[0].Groups[11].Value);
+                                   _MatchCollection[0].Groups[11].Value);
 
 
             throw new ArgumentException("Illegal contract identification '" + Text + "'!");
@@ -559,11 +559,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             switch (ProviderId.Format)
             {
 
+                case ProviderIdFormats.DIN:
+                    return String.Concat(ProviderId,
+                                         Suffix,
+                                         CheckDigit.HasValue
+                                             ? "" + CheckDigit
+                                             : "");
+
                 case ProviderIdFormats.DIN_STAR:
                     return String.Concat(ProviderId, "*",
                                          Suffix,
                                          CheckDigit.HasValue
                                              ? "*" + CheckDigit
+                                             : "");
+
+                case ProviderIdFormats.DIN_HYPHEN:
+                    return String.Concat(ProviderId, "-",
+                                         Suffix,
+                                         CheckDigit.HasValue
+                                             ? "-" + CheckDigit
+                                             : "");
+
+
+                case ProviderIdFormats.ISO:
+                    return String.Concat(ProviderId,
+                                         "C", Suffix,
+                                         CheckDigit.HasValue
+                                             ? "" + CheckDigit
                                              : "");
 
                 default: // ISO_HYPHEN

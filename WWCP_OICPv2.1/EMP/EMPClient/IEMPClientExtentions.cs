@@ -36,14 +36,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     public static class IEMPClientExtentions
     {
 
-        #region PushAuthenticationData(ProviderAuthenticationDataRecords, ProviderId, OICPAction = fullLoad, ...)
+        #region PushAuthenticationData(ProviderAuthenticationDataRecords, ProviderId, Action = fullLoad, ...)
 
         /// <summary>
         /// Create a new task pushing provider authentication data records onto the OICP server.
         /// </summary>
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
-        /// <param name="OICPAction">An optional OICP action.</param>
+        /// <param name="Action">An optional OICP action.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -54,7 +54,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             PushAuthenticationData(this IEMPClient                           IEMPClient,
                                    IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
                                    Provider_Id                               ProviderId,
-                                   ActionTypes                               OICPAction          = ActionTypes.fullLoad,
+                                   ActionTypes                               Action              = ActionTypes.fullLoad,
 
                                    DateTime?                                 Timestamp           = null,
                                    CancellationToken?                        CancellationToken   = null,
@@ -64,7 +64,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             => await IEMPClient.PushAuthenticationData(new PushAuthenticationDataRequest(AuthorizationIdentifications,
                                                                                          ProviderId,
-                                                                                         OICPAction,
+                                                                                         Action,
 
                                                                                          Timestamp,
                                                                                          CancellationToken,
