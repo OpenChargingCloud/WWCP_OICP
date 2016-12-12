@@ -52,8 +52,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// </summary>
         public new static readonly IPPort  DefaultRemotePort     = IPPort.Parse(443);
 
-        private readonly Random _Random;
-
         #endregion
 
         #region Events
@@ -109,15 +107,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                    RequestTimeout,
                    DNSClient)
 
-        {
-
-            this._Random     = new Random(DateTime.Now.Millisecond);
-
-        }
+        { }
 
         #endregion
-
-
 
 
         // Towards CPOs
@@ -250,9 +242,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                                #region OnSuccess
 
-                                               OnSuccess: XMLResponse => {
-                                                   return XMLResponse.ConvertContent(Acknowledgement.Parse);
-                                               },
+                                               OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
 
                                                #endregion
 
@@ -367,14 +357,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 var XML = SOAP.Encapsulation(new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStop",
 
-                                                 new XElement(OICPNS.Reservation + "SessionID",   SessionId. ToString()),
+                                                 new XElement(OICPNS.Reservation + "SessionID",               SessionId.       ToString()),
 
-                                                 PartnerSessionId != null
-                                                     ? new XElement(OICPNS.Reservation + "PartnerSessionID", PartnerSessionId.ToString())
+                                                 PartnerSessionId.HasValue
+                                                     ? new XElement(OICPNS.Reservation + "PartnerSessionID",  PartnerSessionId.ToString())
                                                      : null,
 
-                                                 new XElement(OICPNS.Reservation + "ProviderID",  ProviderId.ToString()),
-                                                 new XElement(OICPNS.Reservation + "EVSEID",      EVSEId.    ToString())
+                                                 new XElement(OICPNS.Reservation + "ProviderID",              ProviderId.      ToString()),
+                                                 new XElement(OICPNS.Reservation + "EVSEID",                  EVSEId.          ToString())
 
                                              ));
 
@@ -386,9 +376,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                                #region OnSuccess
 
-                                               OnSuccess: XMLResponse => {
-                                                   return XMLResponse.ConvertContent(Acknowledgement.Parse);
-                                               },
+                                               OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
 
                                                #endregion
 
@@ -545,23 +533,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 var XML = SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart",
 
-                                                 new XElement(OICPNS.Authorization + "SessionID",  SessionId. ToString()),
+                                                 new XElement(OICPNS.Authorization + "SessionID",               SessionId.        ToString()),
 
                                                  PartnerSessionId != null
-                                                     ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())
+                                                     ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId. ToString())
                                                      : null,
 
-                                                 new XElement(OICPNS.Authorization + "ProviderID", ProviderId.ToString()),
-                                                 new XElement(OICPNS.Authorization + "EVSEID",     EVSEId.    ToString()),
+                                                 new XElement(OICPNS.Authorization + "ProviderID",              ProviderId.       ToString()),
+                                                 new XElement(OICPNS.Authorization + "EVSEID",                  EVSEId.           ToString()),
 
                                                  new XElement(OICPNS.Authorization + "Identification",
                                                      new XElement(OICPNS.CommonTypes + "QRCodeIdentification",
-                                                         new XElement(OICPNS.CommonTypes + "EVCOID", EVCOId.ToString())
+                                                         new XElement(OICPNS.CommonTypes + "EVCOID",            EVCOId.           ToString())
                                                      )
                                                  ),
 
                                                  ChargingProductId != null
-                                                     ? new XElement(OICPNS.Authorization + "PartnerProductID", ChargingProductId.ToString())
+                                                     ? new XElement(OICPNS.Authorization + "PartnerProductID",  ChargingProductId.ToString())
                                                      : null
 
                                              ));
@@ -574,9 +562,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                                #region OnSuccess
 
-                                               OnSuccess: XMLResponse => {
-                                                   return XMLResponse.ConvertContent(Acknowledgement.Parse);
-                                               },
+                                               OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
 
                                                #endregion
 
@@ -692,14 +678,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 var XML = SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop",
 
-                                                 new XElement(OICPNS.Authorization + "SessionID",   SessionId. ToString()),
+                                                 new XElement(OICPNS.Authorization + "SessionID",               SessionId.       ToString()),
 
                                                  PartnerSessionId.HasValue
-                                                     ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString())
+                                                     ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
                                                      : null,
 
-                                                 new XElement(OICPNS.Authorization + "ProviderID",  ProviderId.ToString()),
-                                                 new XElement(OICPNS.Authorization + "EVSEID",      EVSEId.    ToString())
+                                                 new XElement(OICPNS.Authorization + "ProviderID",              ProviderId.      ToString()),
+                                                 new XElement(OICPNS.Authorization + "EVSEID",                  EVSEId.          ToString())
 
                                              ));
 
@@ -711,9 +697,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                                #region OnSuccess
 
-                                               OnSuccess: XMLResponse => {
-                                                   return XMLResponse.ConvertContent(Acknowledgement.Parse);
-                                               },
+                                               OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
 
                                                #endregion
 
