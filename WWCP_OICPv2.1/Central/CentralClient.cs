@@ -122,7 +122,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         // Towards CPOs
 
-        #region AuthorizeRemoteReservationStart(SessionId, ProviderId, EVSEId, eMAId, ChargingProductId = null, PartnerSessionId = null, RequestTimeout = null)
+        #region AuthorizeRemoteReservationStart(ProviderId, EVSEId, EVCOId, SessionId = null, PartnerProductId = null, PartnerSessionId = null, RequestTimeout = null)
 
         /// <summary>
         /// Create an OICP authorize remote start request.
@@ -130,19 +130,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
-        /// <param name="EVCOId">An e-mobility account indentification.</param>
-        /// <param name="ChargingProductId">An optional charging product identification.</param>
+        /// <param name="EVCOId">An e-mobility contract indentification.</param>
+        /// <param name="PartnerProductId">An optional charging product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="RequestTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            AuthorizeRemoteReservationStart(Session_Id          SessionId,
-                                            Provider_Id         ProviderId,
+            AuthorizeRemoteReservationStart(Provider_Id         ProviderId,
                                             EVSE_Id             EVSEId,
                                             EVCO_Id             EVCOId,
-                                            PartnerProduct_Id?  ChargingProductId   = null,
-                                            PartnerSession_Id?  PartnerSessionId    = null,
-                                            TimeSpan?           RequestTimeout      = null)
+                                            Session_Id?         SessionId          = null,
+                                            PartnerProduct_Id?  PartnerProductId   = null,
+                                            PartnerSession_Id?  PartnerSessionId   = null,
+                                            TimeSpan?           RequestTimeout     = null)
 
         {
 
@@ -219,9 +219,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 var XML = SOAP.Encapsulation(new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart",
 
-                                                 new XElement(OICPNS.Reservation + "SessionID",   SessionId. ToString()),
+                                                 SessionId.HasValue
+                                                     ? new XElement(OICPNS.Reservation + "SessionID",   SessionId. ToString())
+                                                     : null,
 
-                                                 PartnerSessionId != null
+                                                 PartnerSessionId.HasValue
                                                      ? new XElement(OICPNS.Reservation + "PartnerSessionID", PartnerSessionId.ToString())
                                                      : null,
 
@@ -234,8 +236,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                      )
                                                  ),
 
-                                                 ChargingProductId != null
-                                                     ? new XElement(OICPNS.Reservation + "PartnerProductID", ChargingProductId.ToString())
+                                                 PartnerProductId.HasValue
+                                                     ? new XElement(OICPNS.Reservation + "PartnerProductID", PartnerProductId.ToString())
                                                      : null
 
                                              ));
@@ -441,7 +443,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         #endregion
 
 
-        #region AuthorizeRemoteStart(SessionId, ProviderId, EVSEId, eMAId, ChargingProductId = null, PartnerSessionId = null, RequestTimeout = null)
+        #region AuthorizeRemoteStart(SessionId, ProviderId, EVSEId, EVCOId, ChargingProductId = null, PartnerSessionId = null, RequestTimeout = null)
 
         /// <summary>
         /// Create an OICP authorize remote start request.
@@ -449,7 +451,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
-        /// <param name="eMAId">An e-mobility account indentification.</param>
+        /// <param name="EVCOId">An e-mobility contract indentification.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="RequestTimeout">An optional timeout for this query.</param>
