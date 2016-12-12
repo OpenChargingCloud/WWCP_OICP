@@ -435,24 +435,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         #endregion
 
 
-        #region AuthorizeRemoteStart(SessionId, ProviderId, EVSEId, EVCOId, ChargingProductId = null, PartnerSessionId = null, RequestTimeout = null)
+        #region AuthorizeRemoteStart(ProviderId, EVSEId, EVCOId, SessionId = null, ChargingProductId = null, PartnerSessionId = null, RequestTimeout = null)
 
         /// <summary>
         /// Create an OICP authorize remote start request.
         /// </summary>
-        /// <param name="SessionId">An optional session identification.</param>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="EVCOId">An e-mobility contract indentification.</param>
+        /// <param name="SessionId">An optional session identification.</param>
         /// <param name="ChargingProductId">An optional charging product identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="RequestTimeout">An optional timeout for this query.</param>
         public async Task<HTTPResponse<Acknowledgement>>
 
-            AuthorizeRemoteStart(Session_Id          SessionId,
-                                 Provider_Id         ProviderId,
+            AuthorizeRemoteStart(Provider_Id         ProviderId,
                                  EVSE_Id             EVSEId,
                                  EVCO_Id             EVCOId,
+                                 Session_Id?         SessionId           = null,
                                  PartnerProduct_Id?  ChargingProductId   = null,
                                  PartnerSession_Id?  PartnerSessionId    = null,
                                  TimeSpan?           RequestTimeout      = null)
@@ -533,9 +533,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 var XML = SOAP.Encapsulation(new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart",
 
-                                                 new XElement(OICPNS.Authorization + "SessionID",               SessionId.        ToString()),
+                                                 SessionId.HasValue
+                                                     ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.        ToString())
+                                                     : null,
 
-                                                 PartnerSessionId != null
+                                                 PartnerSessionId.HasValue
                                                      ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId. ToString())
                                                      : null,
 
@@ -548,7 +550,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                      )
                                                  ),
 
-                                                 ChargingProductId != null
+                                                 ChargingProductId.HasValue
                                                      ? new XElement(OICPNS.Authorization + "PartnerProductID",  ChargingProductId.ToString())
                                                      : null
 
