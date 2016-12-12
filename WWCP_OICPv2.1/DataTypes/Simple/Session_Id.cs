@@ -78,8 +78,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        public static Session_Id New
-            => Session_Id.Parse(Guid.NewGuid().ToString());
+        #region NewRandom
+
+        /// <summary>
+        /// Create a new random charging session identification.
+        /// </summary>
+        public static Session_Id NewRandom
+            => Parse(Guid.NewGuid().ToString());
+
+        #endregion
 
         #region Parse(Text)
 
