@@ -220,24 +220,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                 var XML = SOAP.Encapsulation(new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart",
 
                                                  SessionId.HasValue
-                                                     ? new XElement(OICPNS.Reservation + "SessionID",   SessionId. ToString())
+                                                     ? new XElement(OICPNS.Reservation + "SessionID",         SessionId.       ToString())
                                                      : null,
 
                                                  PartnerSessionId.HasValue
-                                                     ? new XElement(OICPNS.Reservation + "PartnerSessionID", PartnerSessionId.ToString())
+                                                     ? new XElement(OICPNS.Reservation + "PartnerSessionID",  PartnerSessionId.ToString())
                                                      : null,
 
-                                                 new XElement(OICPNS.Reservation + "ProviderID",  ProviderId.ToString()),
-                                                 new XElement(OICPNS.Reservation + "EVSEID",      EVSEId.    ToString()),
+                                                 new XElement(OICPNS.Reservation + "ProviderID",              ProviderId.      ToString()),
+                                                 new XElement(OICPNS.Reservation + "EVSEID",                  EVSEId.          ToString()),
 
                                                  new XElement(OICPNS.Reservation + "Identification",
                                                      new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                                                         new XElement(OICPNS.CommonTypes + "EVCOID", EVCOId.ToString())
+                                                         new XElement(OICPNS.CommonTypes + "EVCOID",          EVCOId.          ToString())
                                                      )
                                                  ),
 
                                                  PartnerProductId.HasValue
-                                                     ? new XElement(OICPNS.Reservation + "PartnerProductID", PartnerProductId.ToString())
+                                                     ? new XElement(OICPNS.Reservation + "PartnerProductID",  PartnerProductId.ToString())
                                                      : null
 
                                              ));
