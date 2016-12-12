@@ -515,16 +515,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        public static Acknowledgement Success(Session_Id          SessionId,
+        public static Acknowledgement Success(Session_Id?         SessionId                 = null,
                                               PartnerSession_Id?  PartnerSessionId          = null,
                                               String              StatusCodeDescription     = null,
                                               String              StatusCodeAdditionalInfo  = null)
 
             => new Acknowledgement(
                    true,
-                   new StatusCode(StatusCodes.Success,
-                                  StatusCodeDescription,
-                                  StatusCodeAdditionalInfo),
+                   new StatusCode(
+                       StatusCodes.Success,
+                       StatusCodeDescription,
+                       StatusCodeAdditionalInfo
+                   ),
                    SessionId,
                    PartnerSessionId
                );
@@ -548,9 +550,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new Acknowledgement(
                    false,
-                   new StatusCode(StatusCodes.DataError,
-                                  StatusCodeDescription ?? "Data Error!",
-                                  StatusCodeAdditionalInfo),
+                   new StatusCode(
+                       StatusCodes.DataError,
+                       StatusCodeDescription ?? "Data Error!",
+                       StatusCodeAdditionalInfo
+                   ),
                    SessionId,
                    PartnerSessionId
                );
@@ -573,9 +577,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new Acknowledgement(
                    false,
-                   new StatusCode(StatusCodes.SystemError,
-                                  StatusCodeDescription ?? "System Error!",
-                                  StatusCodeAdditionalInfo),
+                   new StatusCode(
+                       StatusCodes.SystemError,
+                       StatusCodeDescription ?? "System Error!",
+                       StatusCodeAdditionalInfo
+                   ),
                    SessionId,
                    PartnerSessionId
                );
@@ -598,9 +604,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new Acknowledgement(
                    false,
-                   new StatusCode(StatusCodes.ServiceNotAvailable,
-                                  StatusCodeDescription ?? "Service not available!",
-                                  StatusCodeAdditionalInfo),
+                   new StatusCode(
+                       StatusCodes.ServiceNotAvailable,
+                       StatusCodeDescription ?? "Service not available!",
+                       StatusCodeAdditionalInfo
+                   ),
                    SessionId,
                    PartnerSessionId
                );
@@ -623,9 +631,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new Acknowledgement(
                    false,
-                   new StatusCode(StatusCodes.SessionIsInvalid,
-                                  StatusCodeDescription ?? "Session is invalid",
-                                  StatusCodeAdditionalInfo),
+                   new StatusCode(
+                       StatusCodes.SessionIsInvalid,
+                       StatusCodeDescription ?? "Session is invalid",
+                       StatusCodeAdditionalInfo
+                   ),
                    SessionId,
                    PartnerSessionId
                );
@@ -648,9 +658,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new Acknowledgement(
                    false,
-                   new StatusCode(StatusCodes.CommunicationToEVSEFailed,
-                                  StatusCodeDescription ?? "Communication to EVSE failed!",
-                                  StatusCodeAdditionalInfo),
+                   new StatusCode(
+                       StatusCodes.CommunicationToEVSEFailed,
+                       StatusCodeDescription ?? "Communication to EVSE failed!",
+                       StatusCodeAdditionalInfo
+                   ),
                    SessionId,
                    PartnerSessionId
                );
@@ -673,9 +685,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new Acknowledgement(
                    false,
-                   new StatusCode(StatusCodes.EVSEAlreadyReserved,
-                                  StatusCodeDescription ?? "EVSE already reserved!",
-                                  StatusCodeAdditionalInfo),
+                   new StatusCode(
+                       StatusCodes.EVSEAlreadyReserved,
+                       StatusCodeDescription ?? "EVSE already reserved!",
+                       StatusCodeAdditionalInfo
+                   ),
                    SessionId,
                    PartnerSessionId
                );
@@ -698,9 +712,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new Acknowledgement(
                    false,
-                   new StatusCode(StatusCodes.EVSEAlreadyInUse_WrongToken,
-                                  StatusCodeDescription ?? "EVSE is already in use!",
-                                  StatusCodeAdditionalInfo),
+                   new StatusCode(
+                       StatusCodes.EVSEAlreadyInUse_WrongToken,
+                       StatusCodeDescription ?? "EVSE is already in use!",
+                       StatusCodeAdditionalInfo
+                   ),
                    SessionId,
                    PartnerSessionId
                );
@@ -723,9 +739,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new Acknowledgement(
                    false,
-                   new StatusCode(StatusCodes.UnknownEVSEID,
-                                  StatusCodeDescription ?? "Unknown EVSE ID!",
-                                  StatusCodeAdditionalInfo),
+                   new StatusCode(
+                       StatusCodes.UnknownEVSEID,
+                       StatusCodeDescription ?? "Unknown EVSE ID!",
+                       StatusCodeAdditionalInfo
+                   ),
                    SessionId,
                    PartnerSessionId
                );
@@ -748,9 +766,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new Acknowledgement(
                    false,
-                   new StatusCode(StatusCodes.EVSEOutOfService,
-                                  StatusCodeDescription ?? "EVSE out of service!",
-                                  StatusCodeAdditionalInfo),
+                   new StatusCode(
+                       StatusCodes.EVSEOutOfService,
+                       StatusCodeDescription ?? "EVSE out of service!",
+                       StatusCodeAdditionalInfo
+                   ),
                    SessionId,
                    PartnerSessionId
                );
@@ -773,9 +793,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new Acknowledgement(
                    false,
-                   new StatusCode(StatusCodes.NoValidContract,
-                                  StatusCodeDescription ?? "No valid contract!",
-                                  StatusCodeAdditionalInfo),
+                   new StatusCode(
+                       StatusCodes.NoValidContract,
+                       StatusCodeDescription ?? "No valid contract!",
+                       StatusCodeAdditionalInfo
+                   ),
                    SessionId,
                    PartnerSessionId
                );
@@ -908,7 +930,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public override String ToString()
 
-            => String.Concat("Result: " + Result + "; " + StatusCode.Code, " / ", StatusCode.Description, " / ", StatusCode.AdditionalInfo);
+            => String.Concat("Result: " + Result + "; " +
+                             StatusCode.Code,        " / ",
+                             StatusCode.Description, " / ",
+                             StatusCode.AdditionalInfo);
 
         #endregion
 

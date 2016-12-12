@@ -533,11 +533,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 var response = await RoamingNetwork.Reserve(EVSEId.ToWWCP(),
                                                             Duration:           Duration,
-                                                            ReservationId:      SessionId.HasValue ? ChargingReservation_Id.Parse(SessionId.ToString()) : new ChargingReservation_Id?(),
+                                                            ReservationId:      SessionId.HasValue
+                                                                                    ? ChargingReservation_Id.Parse(
+                                                                                          EVSEId.OperatorId.ToWWCP(),
+                                                                                          SessionId.        ToString()
+                                                                                      )
+                                                                                    : new ChargingReservation_Id?(),
                                                             ProviderId:         ProviderId.      ToWWCP(),
                                                             eMAId:              EVCOId.          ToWWCP(),
                                                             ChargingProductId:  PartnerProductId.ToWWCP(),
-                                                            eMAIds:             new eMobilityAccount_Id[] { EVCOId.Value.ToWWCP() },
+                                                            eMAIds:             new eMobilityAccount_Id[] {
+                                                                                    EVCOId.Value.ToWWCP()
+                                                                                },
                                                             Timestamp:          Timestamp,
                                                             CancellationToken:  CancellationToken,
                                                             EventTrackingId:    EventTrackingId,
@@ -552,8 +559,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         case ReservationResultType.Success:
                             return Acknowledgement.Success(
-                                       Session_Id.Parse(response.Reservation.Id.ToString()),
-                                       StatusCodeDescription: "Ready to charge!"
+                                       StatusCodeDescription:     "Reservation successful!",
+                                       StatusCodeAdditionalInfo:  response.Reservation != null ? "ReservationId: " + response.Reservation.Id : null
                                    );
 
                         case ReservationResultType.InvalidCredentials:
@@ -581,7 +588,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 }
 
                 return Acknowledgement.ServiceNotAvailable(
-                           
                            SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
                        );
 
@@ -603,7 +609,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               ProviderId,
                                                               RequestTimeout) => {
 
-                var response = await RoamingNetwork.CancelReservation(ChargingReservation_Id.Parse(SessionId.ToString()),
+                var response = await RoamingNetwork.CancelReservation(ChargingReservation_Id.Parse(
+                                                                          EVSEId.OperatorId.ToWWCP(),
+                                                                          SessionId.ToString()
+                                                                      ),
                                                                       ChargingReservationCancellationReason.Deleted,
                                                                       ProviderId.ToWWCP(),
                                                                       EVSEId.    ToWWCP(),
@@ -622,7 +631,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         case CancelReservationResultType.Success:
                             return Acknowledgement.Success(
-                                       Session_Id.Parse(response.ReservationId.ToString()),
                                        StatusCodeDescription: "Reservation deleted!"
                                    );
 
