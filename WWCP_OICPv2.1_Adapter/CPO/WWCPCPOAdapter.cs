@@ -1164,6 +1164,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                    return null;
 
                                }).
+                               Where(evsedatarecord => evsedatarecord != null).
                                ToArray();
 
             WWCP.Acknowledgement result;
@@ -1352,7 +1353,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                       return null;
 
-                                  }).ToArray();
+                                  }).
+                                  Where(evsestatusrecord => evsestatusrecord != null).
+                                  ToArray();
 
             WWCP.Acknowledgement result = null;
 
