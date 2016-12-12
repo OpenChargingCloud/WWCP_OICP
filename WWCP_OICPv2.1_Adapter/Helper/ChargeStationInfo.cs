@@ -110,12 +110,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public void Check()
         {
 
-            _StationId = null;
+            ChargingStation_Id? _StationId = null;
 
             // 1st: Try to use the given ChargingStationId from the XML...
             if (StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(WWCP.OperatorIdFormats.DIN), StringComparison.Ordinal) ||
                 StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(WWCP.OperatorIdFormats.ISO), StringComparison.Ordinal))
-                ChargingStation_Id.TryParse(StationXMLId, out _StationId);
+            {
+                _StationId  = ChargingStation_Id.Parse(StationXMLId);
+            }
 
             // 2nd: Try to use the given EVSE Ids to find a common prefix...
             if (_StationId == null)
@@ -125,7 +127,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (_StationId == null)
             {
                 var rgx = new Regex("[^A-Z0-9]");
-                ChargingStation_Id.TryParse(ChargePoolInfo.PoolId.OperatorId, rgx.Replace(StationXMLId.ToUpper(), ""), out _StationId);
+                _StationId = ChargingStation_Id.Parse(ChargePoolInfo.PoolId.OperatorId, rgx.Replace(StationXMLId.ToUpper(), ""));
             }
 
         }

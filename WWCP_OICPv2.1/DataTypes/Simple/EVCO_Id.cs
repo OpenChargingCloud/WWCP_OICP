@@ -75,7 +75,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public Char?                 CheckDigit    { get; }
 
         /// <summary>
-        /// Returns the length of the identificator.
+        /// Returns the length of the identification.
         /// </summary>
         public UInt64 Length
 
@@ -447,7 +447,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             // Compare the length of the contract identifications
             var _Result = this.Length.CompareTo(eMobilityAccountId.Length);
 
-            // If equal: Compare OperatorIds
+            // If equal: Compare charging operator identifications
             if (_Result == 0)
                 _Result = ProviderId.CompareTo(eMobilityAccountId.ProviderId);
 

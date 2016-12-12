@@ -34,7 +34,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Unknown.
         /// </summary>
-        Unkown              =  0,
+        Unknown              =  0,
 
         /// <summary>
         /// Using MiFare classic RFID cards.

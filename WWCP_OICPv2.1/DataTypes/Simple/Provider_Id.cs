@@ -88,7 +88,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             => ToFormat(Format);
 
         /// <summary>
-        /// Returns the length of the identificator.
+        /// Returns the length of the identification.
         /// </summary>
         public UInt64 Length
         {

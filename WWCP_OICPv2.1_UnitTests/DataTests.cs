@@ -50,12 +50,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                     DateTime.Now,
                     //EVSEOperator:         RN.CreateNewEVSEOperator(EVSEOperator_Id.Parse("TEST"), I18NString.Create(Languages.de, "TEST")),
                     ChargingStationId:    ChargingStation_Id.Parse("DE*GEF*S123456789").ToString(),
-                    ChargingStationName:  I18NString.Create(Languages.de, "Testbox 1").
-                                                        Add(Languages.en, "Testbox One"),
+                    ChargingStationName:  I18NString.Create(Languages.deu, "Testbox 1").
+                                                        Add(Languages.eng, "Testbox One"),
 
                     Address:              Address.Create(
                                               Country.Germany,
-                                              "07749", I18NString.Create(Languages.de, "Jena"),
+                                              "07749", I18NString.Create(Languages.deu, "Jena"),
                                               "Biberweg", "18"
                                           ),
 

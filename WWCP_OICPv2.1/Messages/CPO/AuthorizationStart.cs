@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An OICP Authorization Start result.
+    /// An OICP AuthorizationStart result.
     /// </summary>
     public class AuthorizationStart
     {
@@ -71,8 +71,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
-        #region (private) AuthorizationStart(AuthorizationStatus, ...)
-
         /// <summary>
         /// Create a new OICP Authorization Start result.
         /// </summary>
@@ -101,10 +99,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region AuthorizationStart(SessionId, ...)
+
+        #region (static) Authorized               (SessionId = null, PartnerSessionId = null, ProviderId = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'Authorized' Authorization Start result.
+        /// Create a new OICP 'Authorized' AuthorizationStart result.
         /// </summary>
         /// <param name="SessionId">The charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
@@ -112,30 +111,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
-        public AuthorizationStart(Session_Id                                SessionId,
-                                  PartnerSession_Id?                        PartnerSessionId                  = null,
-                                  Provider_Id?                              ProviderId                        = null,
-                                  String                                    StatusCodeDescription             = null,
-                                  String                                    StatusCodeAdditionalInfo          = null,
-                                  IEnumerable<AuthorizationIdentification>  AuthorizationStopIdentifications  = null)
+        public static AuthorizationStart Authorized(Session_Id?                               SessionId                         = null,
+                                                    PartnerSession_Id?                        PartnerSessionId                  = null,
+                                                    Provider_Id?                              ProviderId                        = null,
+                                                    String                                    StatusCodeDescription             = null,
+                                                    String                                    StatusCodeAdditionalInfo          = null,
+                                                    IEnumerable<AuthorizationIdentification>  AuthorizationStopIdentifications  = null)
 
-            : this(AuthorizationStatusTypes.Authorized,
-                   SessionId,
-                   PartnerSessionId,
-                   ProviderId,
-                   new StatusCode(StatusCodes.Success,
-                                  StatusCodeDescription,
-                                  StatusCodeAdditionalInfo),
-                   AuthorizationStopIdentifications)
 
-        { }
+            => new AuthorizationStart(AuthorizationStatusTypes.Authorized,
+                                      SessionId,
+                                      PartnerSessionId,
+                                      ProviderId,
+                                      new StatusCode(
+                                          StatusCodes.Success,
+                                          StatusCodeDescription,
+                                          StatusCodeAdditionalInfo
+                                      ),
+                                      AuthorizationStopIdentifications);
 
         #endregion
 
-        #region AuthorizationStart(StatusCode, ...)
+        #region (static) NotAuthorized            (StatusCode, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'NotAuthorized' Authorization Start result.
+        /// Create a new OICP 'NotAuthorized' AuthorizationStart result.
         /// </summary>
         /// <param name="StatusCode">The status code of the operation.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -143,168 +143,422 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public AuthorizationStart(StatusCodes         StatusCode,
-                                  String              StatusCodeDescription      = null,
-                                  String              StatusCodeAdditionalInfo   = null,
-                                  Session_Id?         SessionId                  = null,
-                                  PartnerSession_Id?  PartnerSessionId           = null,
-                                  Provider_Id?        ProviderId                 = null)
+        public static AuthorizationStart NotAuthorized(StatusCodes         StatusCode,
+                                                       String              StatusCodeDescription      = null,
+                                                       String              StatusCodeAdditionalInfo   = null,
+                                                       Session_Id?         SessionId                  = null,
+                                                       PartnerSession_Id?  PartnerSessionId           = null,
+                                                       Provider_Id?        ProviderId                 = null)
 
-            : this(AuthorizationStatusTypes.NotAuthorized,
-                   SessionId,
-                   PartnerSessionId,
-                   ProviderId,
-                   new StatusCode(StatusCode,
-                                  StatusCodeDescription,
-                                  StatusCodeAdditionalInfo))
-
-        { }
+            => new AuthorizationStart(AuthorizationStatusTypes.NotAuthorized,
+                                      SessionId,
+                                      PartnerSessionId,
+                                      ProviderId,
+                                      new StatusCode(
+                                          StatusCode,
+                                          StatusCodeDescription,
+                                          StatusCodeAdditionalInfo
+                                      ));
 
         #endregion
+
+        #region (static) SessionIsInvalid         (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'SessionIsInvalid' AuthorizationStart result.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        public static AuthorizationStart SessionIsInvalid(String              StatusCodeDescription      = null,
+                                                          String              StatusCodeAdditionalInfo   = null,
+                                                          Session_Id?         SessionId                  = null,
+                                                          PartnerSession_Id?  PartnerSessionId           = null,
+                                                          Provider_Id?        ProviderId                 = null)
+
+            => new AuthorizationStart(AuthorizationStatusTypes.NotAuthorized,
+                                      SessionId,
+                                      PartnerSessionId,
+                                      ProviderId,
+                                      new StatusCode(
+                                          StatusCodes.SessionIsInvalid,
+                                          StatusCodeDescription ?? "Session is invalid",
+                                          StatusCodeAdditionalInfo
+                                      ));
+
+        #endregion
+
+        #region (static) CommunicationToEVSEFailed(StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'CommunicationToEVSEFailed' AuthorizationStart result.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        public static AuthorizationStart CommunicationToEVSEFailed(String              StatusCodeDescription      = null,
+                                                                   String              StatusCodeAdditionalInfo   = null,
+                                                                   Session_Id?         SessionId                  = null,
+                                                                   PartnerSession_Id?  PartnerSessionId           = null,
+                                                                   Provider_Id?        ProviderId                 = null)
+
+            => new AuthorizationStart(AuthorizationStatusTypes.NotAuthorized,
+                                      SessionId,
+                                      PartnerSessionId,
+                                      ProviderId,
+                                      new StatusCode(
+                                          StatusCodes.CommunicationToEVSEFailed,
+                                          StatusCodeDescription ?? "Communication to EVSE failed!",
+                                          StatusCodeAdditionalInfo
+                                      ));
+
+        #endregion
+
+        #region (static) NoEVConnectedToEVSE      (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'NoEVConnectedToEVSE' AuthorizationStart result.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        public static AuthorizationStart NoEVConnectedToEVSE(String              StatusCodeDescription      = null,
+                                                             String              StatusCodeAdditionalInfo   = null,
+                                                             Session_Id?         SessionId                  = null,
+                                                             PartnerSession_Id?  PartnerSessionId           = null,
+                                                             Provider_Id?        ProviderId                 = null)
+
+            => new AuthorizationStart(AuthorizationStatusTypes.NotAuthorized,
+                                      SessionId,
+                                      PartnerSessionId,
+                                      ProviderId,
+                                      new StatusCode(
+                                          StatusCodes.NoEVConnectedToEVSE,
+                                          StatusCodeDescription ?? "No EV connected to EVSE!",
+                                          StatusCodeAdditionalInfo
+                                      ));
+
+        #endregion
+
+        #region (static) EVSEAlreadyReserved      (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'EVSEAlreadyReserved' AuthorizationStart result.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        public static AuthorizationStart EVSEAlreadyReserved(String              StatusCodeDescription      = null,
+                                                             String              StatusCodeAdditionalInfo   = null,
+                                                             Session_Id?         SessionId                  = null,
+                                                             PartnerSession_Id?  PartnerSessionId           = null,
+                                                             Provider_Id?        ProviderId                 = null)
+
+            => new AuthorizationStart(AuthorizationStatusTypes.NotAuthorized,
+                                      SessionId,
+                                      PartnerSessionId,
+                                      ProviderId,
+                                      new StatusCode(
+                                          StatusCodes.EVSEAlreadyReserved,
+                                          StatusCodeDescription ?? "EVSE already reserved!",
+                                          StatusCodeAdditionalInfo
+                                      ));
+
+        #endregion
+
+        #region (static) UnknownEVSEID            (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'UnknownEVSEID' AuthorizationStart result.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        public static AuthorizationStart UnknownEVSEID(String              StatusCodeDescription      = null,
+                                                       String              StatusCodeAdditionalInfo   = null,
+                                                       Session_Id?         SessionId                  = null,
+                                                       PartnerSession_Id?  PartnerSessionId           = null,
+                                                       Provider_Id?        ProviderId                 = null)
+
+            => new AuthorizationStart(AuthorizationStatusTypes.NotAuthorized,
+                                      SessionId,
+                                      PartnerSessionId,
+                                      ProviderId,
+                                      new StatusCode(
+                                          StatusCodes.UnknownEVSEID,
+                                          StatusCodeDescription ?? "Unknown EVSE ID!",
+                                          StatusCodeAdditionalInfo
+                                      ));
+
+        #endregion
+
+        #region (static) EVSEOutOfService         (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'EVSEOutOfService' AuthorizationStart result.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        public static AuthorizationStart EVSEOutOfService(String              StatusCodeDescription      = null,
+                                                          String              StatusCodeAdditionalInfo   = null,
+                                                          Session_Id?         SessionId                  = null,
+                                                          PartnerSession_Id?  PartnerSessionId           = null,
+                                                          Provider_Id?        ProviderId                 = null)
+
+            => new AuthorizationStart(AuthorizationStatusTypes.NotAuthorized,
+                                      SessionId,
+                                      PartnerSessionId,
+                                      ProviderId,
+                                      new StatusCode(
+                                          StatusCodes.EVSEOutOfService,
+                                          StatusCodeDescription ?? "EVSE out of service!",
+                                          StatusCodeAdditionalInfo
+                                      ));
+
+        #endregion
+
+        #region (static) ServiceNotAvailable      (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'ServiceNotAvailable' AuthorizationStart result.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        public static AuthorizationStart ServiceNotAvailable(String              StatusCodeDescription      = null,
+                                                             String              StatusCodeAdditionalInfo   = null,
+                                                             Session_Id?         SessionId                  = null,
+                                                             PartnerSession_Id?  PartnerSessionId           = null,
+                                                             Provider_Id?        ProviderId                 = null)
+
+            => new AuthorizationStart(AuthorizationStatusTypes.NotAuthorized,
+                                      SessionId,
+                                      PartnerSessionId,
+                                      ProviderId,
+                                      new StatusCode(
+                                          StatusCodes.ServiceNotAvailable,
+                                          StatusCodeDescription ?? "Service not available!",
+                                          StatusCodeAdditionalInfo
+                                      ));
+
+        #endregion
+
+        #region (static) DataError                (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'DataError' AuthorizationStart result.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        public static AuthorizationStart DataError(String              StatusCodeDescription      = null,
+                                                   String              StatusCodeAdditionalInfo   = null,
+                                                   Session_Id?         SessionId                  = null,
+                                                   PartnerSession_Id?  PartnerSessionId           = null,
+                                                   Provider_Id?        ProviderId                 = null)
+
+            => new AuthorizationStart(AuthorizationStatusTypes.NotAuthorized,
+                                      SessionId,
+                                      PartnerSessionId,
+                                      ProviderId,
+                                      new StatusCode(
+                                          StatusCodes.DataError,
+                                          StatusCodeDescription ?? "Data Error!",
+                                          StatusCodeAdditionalInfo
+                                      ));
+
+        #endregion
+
+        #region (static) SystemError              (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'SystemError' AuthorizationStart result.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        public static AuthorizationStart SystemError(String              StatusCodeDescription      = null,
+                                                     String              StatusCodeAdditionalInfo   = null,
+                                                     Session_Id?         SessionId                  = null,
+                                                     PartnerSession_Id?  PartnerSessionId           = null,
+                                                     Provider_Id?        ProviderId                 = null)
+
+            => new AuthorizationStart(AuthorizationStatusTypes.NotAuthorized,
+                                      SessionId,
+                                      PartnerSessionId,
+                                      ProviderId,
+                                      new StatusCode(
+                                          StatusCodes.SystemError,
+                                          StatusCodeDescription ?? "System Error!",
+                                          StatusCodeAdditionalInfo
+                                      ));
 
         #endregion
 
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-        //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //
-        // [...]
-        //
-        //    <Authorization:eRoamingAuthorizationStart>
-        //
-        //       <!--Optional:-->
-        //       <Authorization:SessionID>?</Authorization:SessionID>
-        //       <!--Optional:-->
-        //       <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
-        //       <!--Optional:-->
-        //       <Authorization:ProviderID>?</Authorization:ProviderID>
-        //
-        //       <Authorization:AuthorizationStatus>?</Authorization:AuthorizationStatus>
-        //
-        //       <Authorization:StatusCode>
-        //
-        //          <CommonTypes:Code>?</CommonTypes:Code>
-        //
-        //          <!--Optional:-->
-        //          <CommonTypes:Description>?</CommonTypes:Description>
-        //
-        //          <!--Optional:-->
-        //          <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-        //
-        //       </Authorization:StatusCode>
-        //
-        //       <!--Optional:-->
-        //       <Authorization:AuthorizationStopIdentifications>
-        //          <!--Zero or more repetitions:-->
-        //          <Authorization:Identification>
-        //
-        //             <!--You have a CHOICE of the next 4 items at this level-->
-        //             <CommonTypes:RFIDmifarefamilyIdentification>
-        //                <CommonTypes:UID>?</CommonTypes:UID>
-        //             </CommonTypes:RFIDmifarefamilyIdentification>
-        //
-        //             <CommonTypes:QRCodeIdentification>
-        //
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //
-        //                <!--You have a CHOICE of the next 2 items at this level-->
-        //                <CommonTypes:PIN>?</CommonTypes:PIN>
-        //
-        //                <CommonTypes:HashedPIN>
-        //                   <CommonTypes:Value>?</CommonTypes:Value>
-        //                   <CommonTypes:Function>?</CommonTypes:Function>
-        //                   <CommonTypes:Salt>?</CommonTypes:Salt>
-        //                </CommonTypes:HashedPIN>
-        //
-        //             </CommonTypes:QRCodeIdentification>
-        //
-        //             <CommonTypes:PlugAndChargeIdentification>
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //             </CommonTypes:PlugAndChargeIdentification>
-        //
-        //             <CommonTypes:RemoteIdentification>
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //             </CommonTypes:RemoteIdentification>
-        //
-        //          </Authorization:Identification>
-        //       </Authorization:AuthorizationStopIdentifications>
-        //    </Authorization:eRoamingAuthorizationStart>
-        //
-        // [...]
-        //
-        // </soapenv:Envelope>
+// <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+//                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+//                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+//
+// [...]
+//
+//    <Authorization:eRoamingAuthorizationStart>
+//
+//       <!--Optional:-->
+//       <Authorization:SessionID>?</Authorization:SessionID>
+//
+//       <!--Optional:-->
+//       <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+//
+//       <!--Optional:-->
+//       <Authorization:ProviderID>?</Authorization:ProviderID>
+//
+//       <Authorization:AuthorizationStatus>?</Authorization:AuthorizationStatus>
+//
+//       <Authorization:StatusCode>
+//
+//          <CommonTypes:Code>?</CommonTypes:Code>
+//
+//          <!--Optional:-->
+//          <CommonTypes:Description>?</CommonTypes:Description>
+//
+//          <!--Optional:-->
+//          <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+//
+//       </Authorization:StatusCode>
+//
+//       <!--Optional:-->
+//       <Authorization:AuthorizationStopIdentifications>
+//
+//          <!--Zero or more repetitions:-->
+//          <Authorization:Identification>
+//
+//             <!--You have a CHOICE of the next 4 items at this level-->
+//             <CommonTypes:RFIDmifarefamilyIdentification>
+//                <CommonTypes:UID>?</CommonTypes:UID>
+//             </CommonTypes:RFIDmifarefamilyIdentification>
+//
+//             <CommonTypes:QRCodeIdentification>
+//
+//                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+//
+//                <!--You have a CHOICE of the next 2 items at this level-->
+//                <CommonTypes:PIN>?</CommonTypes:PIN>
+//
+//                <CommonTypes:HashedPIN>
+//                   <CommonTypes:Value>?</CommonTypes:Value>
+//                   <CommonTypes:Function>?</CommonTypes:Function>
+//                   <CommonTypes:Salt>?</CommonTypes:Salt>
+//                </CommonTypes:HashedPIN>
+//
+//             </CommonTypes:QRCodeIdentification>
+//
+//             <CommonTypes:PlugAndChargeIdentification>
+//                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+//             </CommonTypes:PlugAndChargeIdentification>
+//
+//             <CommonTypes:RemoteIdentification>
+//                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+//             </CommonTypes:RemoteIdentification>
+//
+//          </Authorization:Identification>
+//       </Authorization:AuthorizationStopIdentifications>
+//
+//    </Authorization:eRoamingAuthorizationStart>
+//
+// [...]
+//
+// </soapenv:Envelope>
 
 
-        // <Authorization:eRoamingAuthorizationStart>
-        //
-        //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
-        //
-        //   <Authorization:StatusCode>
-        //     <CommonTypes:Code>102</CommonTypes:Code>
-        //     <CommonTypes:Description>RFID Authentication failed – invalid UID</CommonTypes:Description>
-        //   </Authorization:StatusCode>
-        //
-        // </Authorization:eRoamingAuthorizationStart>
+// <Authorization:eRoamingAuthorizationStart>
+//
+//   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
+//
+//   <Authorization:StatusCode>
+//     <CommonTypes:Code>102</CommonTypes:Code>
+//     <CommonTypes:Description>RFID Authentication failed – invalid UID</CommonTypes:Description>
+//   </Authorization:StatusCode>
+//
+// </Authorization:eRoamingAuthorizationStart>
 
 
-        // <Authorization:eRoamingAuthorizationStart>
-        //
-        //   <Authorization:SessionID>8fade8bd-0a88-1296-0f2f-41ae8a80af1b</Authorization:SessionID>
-        //   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
-        //   <Authorization:ProviderID>BMW</Authorization:ProviderID>
-        //   <Authorization:AuthorizationStatus>Authorized</Authorization:AuthorizationStatus>
-        //
-        //   <Authorization:StatusCode>
-        //     <CommonTypes:Code>000</CommonTypes:Code>
-        //     <CommonTypes:Description>Success</CommonTypes:Description>
-        //   </Authorization:StatusCode>
-        //
-        // </Authorization:eRoamingAuthorizationStart>
+// <Authorization:eRoamingAuthorizationStart>
+//
+//   <Authorization:SessionID>8fade8bd-0a88-1296-0f2f-41ae8a80af1b</Authorization:SessionID>
+//   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+//   <Authorization:ProviderID>BMW</Authorization:ProviderID>
+//   <Authorization:AuthorizationStatus>Authorized</Authorization:AuthorizationStatus>
+//
+//   <Authorization:StatusCode>
+//     <CommonTypes:Code>000</CommonTypes:Code>
+//     <CommonTypes:Description>Success</CommonTypes:Description>
+//   </Authorization:StatusCode>
+//
+// </Authorization:eRoamingAuthorizationStart>
 
 
-        // <Authorization:eRoamingAuthorizationStart>
-        //
-        //   <Authorization:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</Authorization:SessionID>
-        //   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
-        //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
-        //
-        //   <Authorization:StatusCode>
-        //     <CommonTypes:Code>017</CommonTypes:Code>
-        //     <CommonTypes:Description>Unauthorized Access</CommonTypes:Description>
-        //     <CommonTypes:AdditionalInfo>The identification criterion for the provider/operator with the ID "812" doesn't match the given identification information "/C=DE/ST=Thueringen/L=Jena/O=Hubject/OU=GraphDefined GmbH/CN=GraphDefined Software Development/emailAddress=achim.friedland@graphdefined.com" from the certificate.</CommonTypes:AdditionalInfo>
-        //   </Authorization:StatusCode>
-        //
-        // </Authorization:eRoamingAuthorizationStart>
+// <Authorization:eRoamingAuthorizationStart>
+//
+//   <Authorization:SessionID>8f9cbd74-0a88-1296-1078-6e9cca762de2</Authorization:SessionID>
+//   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+//   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
+//
+//   <Authorization:StatusCode>
+//     <CommonTypes:Code>017</CommonTypes:Code>
+//     <CommonTypes:Description>Unauthorized Access</CommonTypes:Description>
+//     <CommonTypes:AdditionalInfo>The identification criterion for the provider/operator with the ID "812" doesn't match the given identification information "/C=DE/ST=Thueringen/L=Jena/O=Hubject/OU=GraphDefined GmbH/CN=GraphDefined Software Development/emailAddress=achim.friedland@graphdefined.com" from the certificate.</CommonTypes:AdditionalInfo>
+//   </Authorization:StatusCode>
+//
+// </Authorization:eRoamingAuthorizationStart>
 
 
-        // <Authorization:eRoamingAuthorizationStart>
-        //
-        //   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
-        //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
-        //
-        //   <Authorization:StatusCode>
-        //     <CommonTypes:Code>320</CommonTypes:Code>
-        //     <CommonTypes:Description>Service not available</CommonTypes:Description>
-        //   </Authorization:StatusCode>
-        //
-        // </Authorization:eRoamingAuthorizationStart>
+// <Authorization:eRoamingAuthorizationStart>
+//
+//   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+//   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
+//
+//   <Authorization:StatusCode>
+//     <CommonTypes:Code>320</CommonTypes:Code>
+//     <CommonTypes:Description>Service not available</CommonTypes:Description>
+//   </Authorization:StatusCode>
+//
+// </Authorization:eRoamingAuthorizationStart>
 
-        // <Authorization:eRoamingAuthorizationStart>
-        //
-        //   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
-        //   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
-        //
-        //   <Authorization:StatusCode>
-        //     <CommonTypes:Code>102</CommonTypes:Code>
-        //     <CommonTypes:Description>RFID Authentication failed – invalid UID</CommonTypes:Description>
-        //   </Authorization:StatusCode>
-        //
-        // </Authorization:eRoamingAuthorizationStart>
+// <Authorization:eRoamingAuthorizationStart>
+//
+//   <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+//   <Authorization:AuthorizationStatus>NotAuthorized</Authorization:AuthorizationStatus>
+//
+//   <Authorization:StatusCode>
+//     <CommonTypes:Code>102</CommonTypes:Code>
+//     <CommonTypes:Description>RFID Authentication failed – invalid UID</CommonTypes:Description>
+//   </Authorization:StatusCode>
+//
+// </Authorization:eRoamingAuthorizationStart>
 
-        #endregion
+#endregion
 
         #region (static) Parse(AuthorizationStartXML)
 

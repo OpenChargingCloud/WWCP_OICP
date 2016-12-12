@@ -33,7 +33,7 @@ namespace org.GraphDefined.WWCP
 {
 
     /// <summary>
-    /// Extentions methods for the WWCP wrapper for OICP roaming clients for Charging Station Operators/CPOs.
+    /// Extentions methods for the WWCP wrapper for OICP roaming clients for charging station operators.
     /// </summary>
     public static class CPOExtentions
     {

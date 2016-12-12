@@ -211,7 +211,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               PlugTypes                           Plugs                       = PlugTypes.Unspecified,
                               ChargingFacilities                  ChargingFacilities          = ChargingFacilities.Unspecified,
                               ChargingModes                       ChargingModes               = ChargingModes.Unspecified,
-                              AuthenticationModes                 AuthenticationModes         = AuthenticationModes.Unkown,
+                              AuthenticationModes                 AuthenticationModes         = AuthenticationModes.Unknown,
                               Double?                             MaxCapacity                 = null,
                               PaymentOptions                      PaymentOptions              = PaymentOptions.Unspecified,
                               ValueAddedServices                  ValueAddedServices          = ValueAddedServices.None,
@@ -243,7 +243,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Plugs == PlugTypes.Unspecified)
                 throw new ArgumentNullException(nameof(Plugs),                "The given plugs must not be empty!");
 
-            if (AuthenticationModes == AuthenticationModes.Unkown)
+            if (AuthenticationModes == AuthenticationModes.Unknown)
                 throw new ArgumentNullException(nameof(AuthenticationModes),  "The given authentication modes must not be null or empty!");
 
             if (HotlinePhoneNumber == null || HotlinePhoneNumber.IsNullOrEmpty())
@@ -431,10 +431,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             var _ChargingStationName = new I18NString();
 
             EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "ChargingStationName",
-                                                      v => _ChargingStationName.Add(Languages.de, v));
+                                                      v => _ChargingStationName.Add(Languages.deu, v));
 
             EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnChargingStationName",
-                                                      v => _ChargingStationName.Add(Languages.en, v));
+                                                      v => _ChargingStationName.Add(Languages.eng, v));
 
             #endregion
 
@@ -479,7 +479,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             var _AdditionalInfo = new I18NString();
 
             EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "AdditionalInfo",
-                                                      v => _AdditionalInfo.Add(Languages.de, v));
+                                                      v => _AdditionalInfo.Add(Languages.deu, v));
 
             // EnAdditionalInfo not parsed as OICP v2.0 multi-language string!
             EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnAdditionalInfo",
@@ -514,7 +514,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           }
 
                                                           else
-                                                              _AdditionalInfo.Add(Languages.en, EnAdditionalInfo);
+                                                              _AdditionalInfo.Add(Languages.eng, EnAdditionalInfo);
 
                                                       });
 
@@ -634,8 +634,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                    new XElement(OICPNS.EVSEData + "EvseId",                Id.ToString()),
                    new XElement(OICPNS.EVSEData + "ChargingStationId",     ChargingStationId),
-                   new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.de].SubstringMax(50)),
-                   new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.en].SubstringMax(50)),
+                   new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.deu].SubstringMax(50)),
+                   new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.eng].SubstringMax(50)),
 
                    new XElement(OICPNS.EVSEData + "Address",
                        new XElement(OICPNS.CommonTypes + "Country",        Address.Country.Alpha3Code),
@@ -709,12 +709,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    new XElement(OICPNS.EVSEData + "Accessibility",     Accessibility.ToString().Replace("_", " ")),
                    new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
 
-                   AdditionalInfo.has(Languages.de)
-                       ? new XElement(OICPNS.EVSEData + "AdditionalInfo", AdditionalInfo[Languages.de])
+                   AdditionalInfo.has(Languages.deu)
+                       ? new XElement(OICPNS.EVSEData + "AdditionalInfo", AdditionalInfo[Languages.deu])
                        : null,
 
-                   AdditionalInfo.has(Languages.en)
-                       ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", AdditionalInfo[Languages.en])
+                   AdditionalInfo.has(Languages.eng)
+                       ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", AdditionalInfo[Languages.eng])
                        : null,
 
                    GeoChargingPointEntrance != null
@@ -961,7 +961,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            PlugTypes                   Plugs                      = PlugTypes.Unspecified,
                            ChargingFacilities          ChargingFacilities         = ChargingFacilities.Unspecified,
                            ChargingModes               ChargingModes              = ChargingModes.Unspecified,
-                           AuthenticationModes         AuthenticationModes        = AuthenticationModes.Unkown,
+                           AuthenticationModes         AuthenticationModes        = AuthenticationModes.Unknown,
                            Double?                     MaxCapacity                = null,
                            PaymentOptions              PaymentOptions             = PaymentOptions.Unspecified,
                            ValueAddedServices          ValueAddedServices         = ValueAddedServices.None,
@@ -996,7 +996,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (Plugs == PlugTypes.Unspecified)
                     throw new ArgumentNullException(nameof(Plugs),                "The given plugs must not be empty!");
 
-                if (AuthenticationModes == AuthenticationModes.Unkown)
+                if (AuthenticationModes == AuthenticationModes.Unknown)
                     throw new ArgumentNullException(nameof(AuthenticationModes),  "The given authentication modes must not be null or empty!");
 
                 if (HotlinePhoneNumber == null || HotlinePhoneNumber.IsNullOrEmpty())

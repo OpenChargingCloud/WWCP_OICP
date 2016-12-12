@@ -334,6 +334,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public event OnAuthorizeStartResponseDelegate                 OnAuthorizeStartResponse;
 
+
         /// <summary>
         /// An event fired whenever an authentication token will be verified for charging at the given EVSE.
         /// </summary>
@@ -344,6 +345,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public event OnAuthorizeEVSEStartResponseDelegate             OnAuthorizeEVSEStartResponse;
 
+
         /// <summary>
         /// An event fired whenever an authentication token will be verified for charging at the given charging station.
         /// </summary>
@@ -353,6 +355,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// An event fired whenever an authentication token had been verified for charging at the given charging station.
         /// </summary>
         public event OnAuthorizeChargingStationStartResponseDelegate  OnAuthorizeChargingStationStartResponse;
+
+
+        /// <summary>
+        /// An event fired whenever an authentication token will be verified for charging at the given charging pool.
+        /// </summary>
+        public event OnAuthorizeChargingPoolStartRequestDelegate      OnAuthorizeChargingPoolStartRequest;
+
+        /// <summary>
+        /// An event fired whenever an authentication token had been verified for charging at the given charging pool.
+        /// </summary>
+        public event OnAuthorizeChargingPoolStartResponseDelegate     OnAuthorizeChargingPoolStartResponse;
 
         #endregion
 
@@ -368,6 +381,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public event OnAuthorizeStopResponseDelegate                 OnAuthorizeStopResponse;
 
+
         /// <summary>
         /// An event fired whenever an authentication token will be verified to stop a charging process at the given EVSE.
         /// </summary>
@@ -378,6 +392,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public event OnAuthorizeEVSEStopResponseDelegate             OnAuthorizeEVSEStopResponse;
 
+
         /// <summary>
         /// An event fired whenever an authentication token will be verified to stop a charging process at the given charging station.
         /// </summary>
@@ -387,6 +402,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// An event fired whenever an authentication token had been verified to stop a charging process at the given charging station.
         /// </summary>
         public event OnAuthorizeChargingStationStopResponseDelegate  OnAuthorizeChargingStationStopResponse;
+
+
+        /// <summary>
+        /// An event fired whenever an authentication token will be verified to stop a charging process at the given charging pool.
+        /// </summary>
+        public event OnAuthorizeChargingPoolStopRequestDelegate      OnAuthorizeChargingPoolStopRequest;
+
+        /// <summary>
+        /// An event fired whenever an authentication token had been verified to stop a charging process at the given charging pool.
+        /// </summary>
+        public event OnAuthorizeChargingPoolStopResponseDelegate     OnAuthorizeChargingPoolStopResponse;
 
         #endregion
 
@@ -1279,7 +1305,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region Initial checks
 
             if (EVSEStatusUpdates == null)
-                throw new ArgumentNullException(nameof(EVSEStatusUpdates), "The given enumeration of EVSE status udpates must not be null!");
+                throw new ArgumentNullException(nameof(EVSEStatusUpdates), "The given enumeration of EVSE status updates must not be null!");
 
 
             if (!Timestamp.HasValue)
@@ -3605,7 +3631,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            #region Send OnAuthorizeStart event
+            #region Send OnAuthorizeStartRequest event
 
             var StartTime = DateTime.Now;
 
@@ -3613,15 +3639,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeStartRequest?.Invoke(StartTime,
-                                         Timestamp.Value,
-                                         this,
-                                         EventTrackingId,
-                                         RoamingNetwork.Id,
-                                         OperatorId,
-                                         AuthToken,
-                                         ChargingProductId,
-                                         SessionId,
-                                         RequestTimeout);
+                                                Timestamp.Value,
+                                                this,
+                                                EventTrackingId,
+                                                RoamingNetwork.Id,
+                                                OperatorId,
+                                                AuthToken,
+                                                ChargingProductId,
+                                                SessionId,
+                                                RequestTimeout);
 
             }
             catch (Exception e)
@@ -3657,40 +3683,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
             {
 
-                result = AuthStartResult.Authorized(Id,
-                                                    response.Content.SessionId. ToWWCP().Value,
-                                                    response.Content.ProviderId.ToWWCP(),
-                                                    response.Content.StatusCode.Description,
-                                                    response.Content.StatusCode.AdditionalInfo,
-                                                    Runtime);
+                result = AuthStartResult.Authorized(
+                             Id,
+                             response.Content.SessionId. ToWWCP().Value,
+                             ProviderId:      response.Content.ProviderId.ToWWCP(),
+                             Description:     response.Content.StatusCode.Description,
+                             AdditionalInfo:  response.Content.StatusCode.AdditionalInfo,
+                             Runtime:         Runtime
+                         );
 
             }
 
             else
-                result = AuthStartResult.NotAuthorized(Id,
-                                                       response.Content.ProviderId.ToWWCP(),
-                                                       response.Content.StatusCode.Description,
-                                                       response.Content.StatusCode.AdditionalInfo,
-                                                       Runtime);
+                result = AuthStartResult.NotAuthorized(
+                             Id,
+                             SessionId,
+                             response.Content.ProviderId.ToWWCP(),
+                             response.Content.StatusCode.Description,
+                             response.Content.StatusCode.AdditionalInfo,
+                             Runtime
+                         );
 
 
-            #region Send OnAuthorizeStarted event
+            #region Send OnAuthorizeStartResponse event
 
             try
             {
 
                 OnAuthorizeStartResponse?.Invoke(Endtime,
-                                           Timestamp.Value,
-                                           this,
-                                           EventTrackingId,
-                                           RoamingNetwork.Id,
-                                           OperatorId,
-                                           AuthToken,
-                                           ChargingProductId,
-                                           SessionId,
-                                           RequestTimeout,
-                                           result,
-                                           Runtime);
+                                                 Timestamp.Value,
+                                                 this,
+                                                 EventTrackingId,
+                                                 RoamingNetwork.Id,
+                                                 OperatorId,
+                                                 AuthToken,
+                                                 ChargingProductId,
+                                                 SessionId,
+                                                 RequestTimeout,
+                                                 result,
+                                                 Runtime);
 
             }
             catch (Exception e)
@@ -3756,7 +3787,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            #region Send OnAuthorizeEVSEStart event
+            #region Send OnAuthorizeEVSEStartRequest event
 
             var StartTime = DateTime.Now;
 
@@ -3764,16 +3795,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeEVSEStartRequest?.Invoke(StartTime,
-                                             Timestamp.Value,
-                                             this,
-                                             EventTrackingId,
-                                             RoamingNetwork.Id,
-                                             OperatorId,
-                                             AuthToken,
-                                             EVSEId,
-                                             ChargingProductId,
-                                             SessionId,
-                                             RequestTimeout);
+                                                    Timestamp.Value,
+                                                    this,
+                                                    EventTrackingId,
+                                                    RoamingNetwork.Id,
+                                                    OperatorId,
+                                                    AuthToken,
+                                                    EVSEId,
+                                                    ChargingProductId,
+                                                    SessionId,
+                                                    RequestTimeout);
 
             }
             catch (Exception e)
@@ -3809,41 +3840,46 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
             {
 
-                result = AuthStartEVSEResult.Authorized(Id,
-                                                        response.Content.SessionId. ToWWCP().Value,
-                                                        response.Content.ProviderId.ToWWCP(),
-                                                        response.Content.StatusCode.Description,
-                                                        response.Content.StatusCode.AdditionalInfo,
-                                                        Runtime);
+                result = AuthStartEVSEResult.Authorized(
+                             Id,
+                             response.Content.SessionId.ToWWCP().Value,
+                             ProviderId:      response.Content.ProviderId.ToWWCP(),
+                             Description:     response.Content.StatusCode.Description,
+                             AdditionalInfo:  response.Content.StatusCode.AdditionalInfo,
+                             Runtime:         Runtime
+                         );
 
             }
 
             else
-                result = AuthStartEVSEResult.NotAuthorized(Id,
-                                                           response.Content.ProviderId.ToWWCP(),
-                                                           response.Content.StatusCode.Description,
-                                                           response.Content.StatusCode.AdditionalInfo,
-                                                           Runtime);
+                result = AuthStartEVSEResult.NotAuthorized(
+                             Id,
+                             SessionId,
+                             response.Content.ProviderId.ToWWCP(),
+                             response.Content.StatusCode.Description,
+                             response.Content.StatusCode.AdditionalInfo,
+                             Runtime
+                         );
 
 
-            #region Send OnAuthorizeEVSEStarted event
+            #region Send OnAuthorizeEVSEStartResponse event
 
             try
             {
 
                 OnAuthorizeEVSEStartResponse?.Invoke(Endtime,
-                                               Timestamp.Value,
-                                               this,
-                                               EventTrackingId,
-                                               RoamingNetwork.Id,
-                                               OperatorId,
-                                               AuthToken,
-                                               EVSEId,
-                                               ChargingProductId,
-                                               SessionId,
-                                               RequestTimeout,
-                                               result,
-                                               Runtime);
+                                                     Timestamp.Value,
+                                                     this,
+                                                     EventTrackingId,
+                                                     RoamingNetwork.Id,
+                                                     OperatorId,
+                                                     AuthToken,
+                                                     EVSEId,
+                                                     ChargingProductId,
+                                                     SessionId,
+                                                     RequestTimeout,
+                                                     result,
+                                                     Runtime);
 
             }
             catch (Exception e)
@@ -3909,7 +3945,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            #region Send OnAuthorizeChargingStationStart event
+            #region Send OnAuthorizeChargingStationStartRequest event
 
             var StartTime = DateTime.Now;
 
@@ -3917,16 +3953,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeChargingStationStartRequest?.Invoke(StartTime,
-                                                        Timestamp.Value,
-                                                        this,
-                                                        EventTrackingId,
-                                                        RoamingNetwork.Id,
-                                                        OperatorId,
-                                                        AuthToken,
-                                                        ChargingStationId,
-                                                        ChargingProductId,
-                                                        SessionId,
-                                                        RequestTimeout);
+                                                               Timestamp.Value,
+                                                               this,
+                                                               EventTrackingId,
+                                                               RoamingNetwork.Id,
+                                                               OperatorId,
+                                                               AuthToken,
+                                                               ChargingStationId,
+                                                               ChargingProductId,
+                                                               SessionId,
+                                                               RequestTimeout);
 
             }
             catch (Exception e)
@@ -3937,36 +3973,160 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            //ToDo: Implement AuthorizeStart(...ChargingStationId...)
-            var result = AuthStartChargingStationResult.Error(Id, "Not implemented!");
+            var result   = AuthStartChargingStationResult.Error(
+                               Id,
+                               SessionId,
+                               "Not implemented!"
+                           );
+
+            var Endtime  = DateTime.Now;
+            var Runtime  = Endtime - StartTime;
 
 
-            var Endtime = DateTime.Now;
-            var Runtime = Endtime - StartTime;
-
-            #region Send OnAuthorizeChargingStationStarted event
+            #region Send OnAuthorizeChargingStationStartResponse event
 
             try
             {
 
                 OnAuthorizeChargingStationStartResponse?.Invoke(Endtime,
-                                                          Timestamp.Value,
-                                                          this,
-                                                          EventTrackingId,
-                                                          RoamingNetwork.Id,
-                                                          OperatorId,
-                                                          AuthToken,
-                                                          ChargingStationId,
-                                                          ChargingProductId,
-                                                          SessionId,
-                                                          RequestTimeout,
-                                                          result,
-                                                          Runtime);
+                                                                Timestamp.Value,
+                                                                this,
+                                                                EventTrackingId,
+                                                                RoamingNetwork.Id,
+                                                                OperatorId,
+                                                                AuthToken,
+                                                                ChargingStationId,
+                                                                ChargingProductId,
+                                                                SessionId,
+                                                                RequestTimeout,
+                                                                result,
+                                                                Runtime);
 
             }
             catch (Exception e)
             {
                 e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStartResponse));
+            }
+
+            #endregion
+
+            return Task.FromResult(result);
+
+        }
+
+        #endregion
+
+        #region AuthorizeStart(AuthToken, ChargingPoolId,    ChargingProductId = null, SessionId = null, OperatorId = null, ...)
+
+        /// <summary>
+        /// Create an authorize start request at the given charging pool.
+        /// </summary>
+        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="ChargingPoolId">The unique identification charging pool.</param>
+        /// <param name="ChargingProductId">An optional charging product identification.</param>
+        /// <param name="SessionId">An optional session identification.</param>
+        /// <param name="OperatorId">An optional charging station operator identification.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public Task<AuthStartChargingPoolResult>
+
+            AuthorizeStart(Auth_Token                   AuthToken,
+                           ChargingPool_Id              ChargingPoolId,
+                           ChargingProduct_Id?          ChargingProductId   = null,   // [maxlength: 100]
+                           ChargingSession_Id?          SessionId           = null,
+                           ChargingStationOperator_Id?  OperatorId          = null,
+
+                           DateTime?                    Timestamp           = null,
+                           CancellationToken?           CancellationToken   = null,
+                           EventTracking_Id             EventTrackingId     = null,
+                           TimeSpan?                    RequestTimeout      = null)
+
+        {
+
+            #region Initial checks
+
+            if (AuthToken == null)
+                throw new ArgumentNullException(nameof(AuthToken), "The given authentication token must not be null!");
+
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
+
+            #endregion
+
+            #region Send OnAuthorizeChargingPoolStartRequest event
+
+            var StartTime = DateTime.Now;
+
+            try
+            {
+
+                OnAuthorizeChargingPoolStartRequest?.Invoke(StartTime,
+                                                            Timestamp.Value,
+                                                            this,
+                                                            EventTrackingId,
+                                                            RoamingNetwork.Id,
+                                                            OperatorId,
+                                                            AuthToken,
+                                                            ChargingPoolId,
+                                                            ChargingProductId,
+                                                            SessionId,
+                                                            RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingPoolStartRequest));
+            }
+
+            #endregion
+
+
+            var result   = AuthStartChargingPoolResult.Error(
+                               Id,
+                               SessionId,
+                               "Not implemented!"
+                           );
+
+            var Endtime  = DateTime.Now;
+            var Runtime  = Endtime - StartTime;
+
+
+            #region Send OnAuthorizeChargingPoolStartResponse event
+
+            try
+            {
+
+                OnAuthorizeChargingPoolStartResponse?.Invoke(Endtime,
+                                                             Timestamp.Value,
+                                                             this,
+                                                             EventTrackingId,
+                                                             RoamingNetwork.Id,
+                                                             OperatorId,
+                                                             AuthToken,
+                                                             ChargingPoolId,
+                                                             ChargingProductId,
+                                                             SessionId,
+                                                             RequestTimeout,
+                                                             result,
+                                                             Runtime);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingPoolStartResponse));
             }
 
             #endregion
@@ -4027,7 +4187,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            #region Send OnAuthorizeStop event
+            #region Send OnAuthorizeStopRequest event
 
             var StartTime = DateTime.Now;
 
@@ -4035,14 +4195,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeStopRequest?.Invoke(StartTime,
-                                        Timestamp.Value,
-                                        this,
-                                        EventTrackingId,
-                                        RoamingNetwork.Id,
-                                        OperatorId,
-                                        SessionId,
-                                        AuthToken,
-                                        RequestTimeout);
+                                               Timestamp.Value,
+                                               this,
+                                               EventTrackingId,
+                                               RoamingNetwork.Id,
+                                               OperatorId,
+                                               SessionId,
+                                               AuthToken,
+                                               RequestTimeout);
 
             }
             catch (Exception e)
@@ -4077,35 +4237,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
             {
 
-                result = AuthStopResult.Authorized(Id,
-                                                   response.Content.ProviderId.ToWWCP(),
-                                                   response.Content?.StatusCode?.Description,
-                                                   response.Content?.StatusCode?.AdditionalInfo);
+                result = AuthStopResult.Authorized(
+                             Id,
+                             SessionId,
+                             response.Content.ProviderId.ToWWCP(),
+                             response.Content?.StatusCode?.Description,
+                             response.Content?.StatusCode?.AdditionalInfo
+                         );
 
             }
             else
-                result = AuthStopResult.NotAuthorized(Id,
-                                                      response.Content?.ProviderId.ToWWCP(),
-                                                      response.Content?.StatusCode?.Description,
-                                                      response.Content?.StatusCode?.AdditionalInfo);
+                result = AuthStopResult.NotAuthorized(
+                             Id,
+                             SessionId,
+                             response.Content?.ProviderId.ToWWCP(),
+                             response.Content?.StatusCode?.Description,
+                             response.Content?.StatusCode?.AdditionalInfo
+                         );
 
 
-            #region Send OnAuthorizeStopped event
+            #region Send OnAuthorizeStopResponse event
 
             try
             {
 
                 OnAuthorizeStopResponse?.Invoke(Endtime,
-                                           Timestamp.Value,
-                                           this,
-                                           EventTrackingId,
-                                           RoamingNetwork.Id,
-                                           OperatorId,
-                                           SessionId,
-                                           AuthToken,
-                                           RequestTimeout,
-                                           result,
-                                           Runtime);
+                                                Timestamp.Value,
+                                                this,
+                                                EventTrackingId,
+                                                RoamingNetwork.Id,
+                                                OperatorId,
+                                                SessionId,
+                                                AuthToken,
+                                                RequestTimeout,
+                                                result,
+                                                Runtime);
 
             }
             catch (Exception e)
@@ -4151,7 +4317,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region Initial checks
 
             if (AuthToken  == null)
-                throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
+                throw new ArgumentNullException(nameof(AuthToken), "The given authentication token must not be null!");
 
 
             if (!Timestamp.HasValue)
@@ -4166,26 +4332,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
 
-
-            var StartTime = DateTime.Now;
-
             #endregion
 
-            #region Send OnAuthorizeEVSEStop event
+            #region Send OnAuthorizeEVSEStopRequest event
+
+            var StartTime = DateTime.Now;
 
             try
             {
 
                 OnAuthorizeEVSEStopRequest?.Invoke(StartTime,
-                                            Timestamp.Value,
-                                            this,
-                                            EventTrackingId,
-                                            RoamingNetwork.Id,
-                                            OperatorId,
-                                            EVSEId,
-                                            SessionId,
-                                            AuthToken,
-                                            RequestTimeout);
+                                                   Timestamp.Value,
+                                                   this,
+                                                   EventTrackingId,
+                                                   RoamingNetwork.Id,
+                                                   OperatorId,
+                                                   EVSEId,
+                                                   SessionId,
+                                                   AuthToken,
+                                                   RequestTimeout);
 
             }
             catch (Exception e)
@@ -4220,36 +4385,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
             {
 
-                result = AuthStopEVSEResult.Authorized(Id,
-                                                       response.Content?.ProviderId.ToWWCP(),
-                                                       response.Content?.StatusCode?.Description,
-                                                       response.Content?.StatusCode?.AdditionalInfo);
+                result = AuthStopEVSEResult.Authorized(
+                             Id,
+                             SessionId,
+                             response.Content?.ProviderId.ToWWCP(),
+                             response.Content?.StatusCode?.Description,
+                             response.Content?.StatusCode?.AdditionalInfo
+                         );
 
             }
             else
-                result = AuthStopEVSEResult.NotAuthorized(Id,
-                                                          response.Content?.ProviderId.ToWWCP(),
-                                                          response.Content?.StatusCode?.Description,
-                                                          response.Content?.StatusCode?.AdditionalInfo);
+                result = AuthStopEVSEResult.NotAuthorized(
+                             Id,
+                             SessionId,
+                             response.Content?.ProviderId.ToWWCP(),
+                             response.Content?.StatusCode?.Description,
+                             response.Content?.StatusCode?.AdditionalInfo
+                         );
 
 
-            #region Send OnAuthorizeEVSEStopped event
+            #region Send OnAuthorizeEVSEStopResponse event
 
             try
             {
 
                 OnAuthorizeEVSEStopResponse?.Invoke(Endtime,
-                                               Timestamp.Value,
-                                               this,
-                                               EventTrackingId,
-                                               RoamingNetwork.Id,
-                                               OperatorId,
-                                               EVSEId,
-                                               SessionId,
-                                               AuthToken,
-                                               RequestTimeout,
-                                               result,
-                                               Runtime);
+                                                    Timestamp.Value,
+                                                    this,
+                                                    EventTrackingId,
+                                                    RoamingNetwork.Id,
+                                                    OperatorId,
+                                                    EVSEId,
+                                                    SessionId,
+                                                    AuthToken,
+                                                    RequestTimeout,
+                                                    result,
+                                                    Runtime);
 
             }
             catch (Exception e)
@@ -4313,7 +4484,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            #region Send OnAuthorizeChargingStationStop event
+            #region Send OnAuthorizeChargingStationStopRequest event
 
             var StartTime = DateTime.Now;
 
@@ -4321,15 +4492,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 OnAuthorizeChargingStationStopRequest?.Invoke(StartTime,
-                                                       Timestamp.Value,
-                                                       this,
-                                                       EventTrackingId,
-                                                       RoamingNetwork.Id,
-                                                       OperatorId,
-                                                       ChargingStationId,
-                                                       SessionId,
-                                                       AuthToken,
-                                                       RequestTimeout);
+                                                              Timestamp.Value,
+                                                              this,
+                                                              EventTrackingId,
+                                                              RoamingNetwork.Id,
+                                                              OperatorId,
+                                                              ChargingStationId,
+                                                              SessionId,
+                                                              AuthToken,
+                                                              RequestTimeout);
 
             }
             catch (Exception e)
@@ -4340,35 +4511,155 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var result = AuthStopChargingStationResult.Error(Id,
-                                                             "OICP does not support this request!");
+            var result   = AuthStopChargingStationResult.Error(
+                               Id,
+                               SessionId,
+                               "OICP does not support this request!"
+                           );
+
+            var Endtime  = DateTime.Now;
+            var Runtime  = Endtime - StartTime;
 
 
-            var Endtime = DateTime.Now;
-            var Runtime = Endtime - StartTime;
-
-            #region Send OnAuthorizeChargingStationStopped event
+            #region Send OnAuthorizeChargingStationStopResponse event
 
             try
             {
 
                 OnAuthorizeChargingStationStopResponse?.Invoke(Endtime,
-                                                          Timestamp.Value,
-                                                          this,
-                                                          EventTrackingId,
-                                                          RoamingNetwork.Id,
-                                                          OperatorId,
-                                                          ChargingStationId,
-                                                          SessionId,
-                                                          AuthToken,
-                                                          RequestTimeout,
-                                                          result,
-                                                          Runtime);
+                                                               Timestamp.Value,
+                                                               this,
+                                                               EventTrackingId,
+                                                               RoamingNetwork.Id,
+                                                               OperatorId,
+                                                               ChargingStationId,
+                                                               SessionId,
+                                                               AuthToken,
+                                                               RequestTimeout,
+                                                               result,
+                                                               Runtime);
 
             }
             catch (Exception e)
             {
                 e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingStationStopResponse));
+            }
+
+            #endregion
+
+            return Task.FromResult(result);
+
+        }
+
+        #endregion
+
+        #region AuthorizeStop(SessionId, AuthToken, ChargingPoolId,    OperatorId = null, ...)
+
+        /// <summary>
+        /// Create an authorize stop request at the given charging pool.
+        /// </summary>
+        /// <param name="SessionId">The session identification from the AuthorizeStart request.</param>
+        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="ChargingPoolId">The unique identification of a charging pool.</param>
+        /// <param name="OperatorId">An optional charging station operator identification.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public Task<AuthStopChargingPoolResult>
+
+            AuthorizeStop(ChargingSession_Id           SessionId,
+                          Auth_Token                   AuthToken,
+                          ChargingPool_Id              ChargingPoolId,
+                          ChargingStationOperator_Id?  OperatorId          = null,
+
+                          DateTime?                    Timestamp           = null,
+                          CancellationToken?           CancellationToken   = null,
+                          EventTracking_Id             EventTrackingId     = null,
+                          TimeSpan?                    RequestTimeout      = null)
+
+        {
+
+            #region Initial checks
+
+            if (AuthToken == null)
+                throw new ArgumentNullException(nameof(AuthToken), "The given authentication token must not be null!");
+
+
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = CPOClient?.RequestTimeout;
+
+            #endregion
+
+            #region Send OnAuthorizeChargingPoolStopRequest event
+
+            var StartTime = DateTime.Now;
+
+            try
+            {
+
+                OnAuthorizeChargingPoolStopRequest?.Invoke(StartTime,
+                                                           Timestamp.Value,
+                                                           this,
+                                                           EventTrackingId,
+                                                           RoamingNetwork.Id,
+                                                           OperatorId,
+                                                           ChargingPoolId,
+                                                           SessionId,
+                                                           AuthToken,
+                                                           RequestTimeout);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingPoolStopRequest));
+            }
+
+            #endregion
+
+
+            var result   = AuthStopChargingPoolResult.Error(
+                               Id,
+                               SessionId,
+                               "OICP does not support this request!"
+                           );
+
+            var Endtime  = DateTime.Now;
+            var Runtime  = Endtime - StartTime;
+
+
+            #region Send OnAuthorizeChargingPoolStopResponse event
+
+            try
+            {
+
+                OnAuthorizeChargingPoolStopResponse?.Invoke(Endtime,
+                                                            Timestamp.Value,
+                                                            this,
+                                                            EventTrackingId,
+                                                            RoamingNetwork.Id,
+                                                            OperatorId,
+                                                            ChargingPoolId,
+                                                            SessionId,
+                                                            AuthToken,
+                                                            RequestTimeout,
+                                                            result,
+                                                            Runtime);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeChargingPoolStopResponse));
             }
 
             #endregion
@@ -4490,21 +4781,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var response = await CPORoaming.SendChargeDetailRecord(new ChargeDetailRecord(
-                                                                       ChargeDetailRecord.EVSEId.Value.ToOICP(),
-                                                                       ChargeDetailRecord.SessionId.ToOICP(),
-                                                                       ChargeDetailRecord.SessionTime.Value.StartTime,
-                                                                       ChargeDetailRecord.SessionTime.Value.EndTime.Value,
-                                                                       ChargeDetailRecord.IdentificationStart.ToOICP(),
-                                                                       ChargeDetailRecord.ChargingProductId.  ToOICP(),
-                                                                       null, // PartnerSessionId
-                                                                       ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.StartTime : new DateTime?(),
-                                                                       ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.EndTime   : null,
-                                                                       ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.First().Value : new Double?(),
-                                                                       ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value : new Double?(),
-                                                                       ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<double> v) => v.Value) : null,
-                                                                       ChargeDetailRecord.ConsumedEnergy,
-                                                                       ChargeDetailRecord.MeteringSignature),
+            var response = await CPORoaming.SendChargeDetailRecord(ChargeDetailRecord.ToOICP(),
 
                                                                    Timestamp,
                                                                    CancellationToken,
@@ -4559,8 +4836,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         }
 
         #endregion
-
-
 
 
 

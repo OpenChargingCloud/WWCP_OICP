@@ -78,7 +78,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             => OperatorId.Format;
 
         /// <summary>
-        /// Returns the length of the identificator.
+        /// Returns the length of the identification.
         /// </summary>
         public UInt64 Length
         {
@@ -440,7 +440,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             // Compare the length of the charge point identifications
             var _Result = this.Length.CompareTo(EVSEId.Length);
 
-            // If equal: Compare OperatorIds
+            // If equal: Compare charging operator identifications
             if (_Result == 0)
                 _Result = OperatorId.CompareTo(EVSEId.OperatorId);
 

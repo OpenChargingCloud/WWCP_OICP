@@ -57,9 +57,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
             {
 
                 Console.WriteLine("Ready to charge at charging station: " +
-                                  MobileAuthorizationStart.Content.ChargingStationName[Languages.de] +
+                                  MobileAuthorizationStart.Content.ChargingStationName[Languages.deu] +
                                   Environment.NewLine +
-                                  MobileAuthorizationStart.Content.AdditionalInfo[Languages.de]);
+                                  MobileAuthorizationStart.Content.AdditionalInfo[Languages.deu]);
 
                 var SessionId = MobileAuthorizationStart.Content.SessionId;
 

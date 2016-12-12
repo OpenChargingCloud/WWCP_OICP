@@ -78,9 +78,9 @@
       <Project>{33836742-af1d-4aa4-963f-b0a8e60e6480}</Project>
       <Name>WWCP_Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WWCP_OICPv2.1Adapter\WWCP_OICPv2.1Adapter.csproj">
+    <ProjectReference Include="..\WWCP_OICPv2.1_Adapter\WWCP_OICPv2.1_Adapter.csproj">
       <Project>{b2df7361-21f8-4ed8-af7b-0df3a863891f}</Project>
-      <Name>WWCP_OICPv2.1Adapter</Name>
+      <Name>WWCP_OICPv2.1_Adapter</Name>
     </ProjectReference>
     <ProjectReference Include="..\WWCP_OICPv2.1\WWCP_OICPv2.1.csproj">
       <Project>{a01e9361-39c7-4705-9173-7cea79364dd0}</Project>

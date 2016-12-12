@@ -519,11 +519,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        RequestTimeout) => {
 
 
-                var response = await RoamingNetwork.AuthorizeStart(UID.ToWWCP(),
-                                                                   EVSEId.Value.ToWWCP(),
+                var response = await RoamingNetwork.AuthorizeStart(UID.             ToWWCP(),
+                                                                   EVSEId.Value.    ToWWCP(),
                                                                    PartnerProductId.ToWWCP(),
-                                                                   SessionId.ToWWCP(),
-                                                                   OperatorId.ToWWCP(),
+                                                                   SessionId.       ToWWCP(),
+                                                                   OperatorId.      ToWWCP(),
 
                                                                    Timestamp,
                                                                    CancellationToken,
@@ -537,49 +537,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     {
 
                         case AuthStartEVSEResultType.Authorized:
-                            return new AuthorizationStart(response.SessionId.ToOICP(),
-                                                          null,
-                                                          response.ProviderId.ToOICP(),
-                                                          "Ready to charge!",
-                                                          null,
-                                                          response.ListOfAuthStopTokens.
-                                                              SafeSelect(token => AuthorizationIdentification.FromRFIDId(token.ToOICP())));
+                            return AuthorizationStart.Authorized(response.SessionId. HasValue ? response.SessionId. Value.ToOICP() : default(Session_Id?),
+                                                                 default(PartnerSession_Id?),
+                                                                 response.ProviderId.HasValue ? response.ProviderId.Value.ToOICP() : default(Provider_Id?),
+                                                                 "Ready to charge!",
+                                                                 null,
+                                                                 response.ListOfAuthStopTokens.
+                                                                     SafeSelect(token => AuthorizationIdentification.FromRFIDId(token.ToOICP()))
+                                                                );
 
                         case AuthStartEVSEResultType.NotAuthorized:
-                            return new AuthorizationStart(StatusCodes.RFIDAuthenticationfailed_InvalidUID,
-                                                          "RFID Authentication failed - invalid UID");
+                            return AuthorizationStart.NotAuthorized(StatusCodes.RFIDAuthenticationfailed_InvalidUID,
+                                                                    "RFID Authentication failed - invalid UID");
 
                         case AuthStartEVSEResultType.InvalidSessionId:
-                            return new AuthorizationStart(StatusCodes.SessionIsInvalid,
-                                                          "Session is invalid");
+                            return AuthorizationStart.SessionIsInvalid(SessionId:         SessionId,
+                                                                       PartnerSessionId:  PartnerSessionId);
 
                         case AuthStartEVSEResultType.CommunicationTimeout:
-                            return new AuthorizationStart(StatusCodes.CommunicationToEVSEFailed,
-                                                          "Communication to EVSE failed!");
+                            return AuthorizationStart.CommunicationToEVSEFailed();
 
                         case AuthStartEVSEResultType.StartChargingTimeout:
-                            return new AuthorizationStart(StatusCodes.NoEVConnectedToEVSE,
-                                                          "No EV connected to EVSE!");
+                            return AuthorizationStart.NoEVConnectedToEVSE();
 
                         case AuthStartEVSEResultType.Reserved:
-                            return new AuthorizationStart(StatusCodes.EVSEAlreadyReserved,
-                                                          "EVSE already reserved!");
+                            return AuthorizationStart.EVSEAlreadyReserved();
 
                         case AuthStartEVSEResultType.UnknownEVSE:
-                            return new AuthorizationStart(StatusCodes.UnknownEVSEID,
-                                                          "Unknown EVSE ID!");
+                            return AuthorizationStart.UnknownEVSEID();
 
                         case AuthStartEVSEResultType.OutOfService:
-                            return new AuthorizationStart(StatusCodes.EVSEOutOfService,
-                                                          "EVSE out of service!");
+                            return AuthorizationStart.EVSEOutOfService();
 
                     }
                 }
 
-                return new AuthorizationStart(StatusCodes.ServiceNotAvailable,
-                                              "Service not available!",
-                                              SessionId:  response?.SessionId. ToOICP() ?? SessionId,
-                                              ProviderId: response?.ProviderId.ToOICP());
+                return AuthorizationStart.ServiceNotAvailable(
+                           SessionId:  response?.SessionId. ToOICP() ?? SessionId,
+                           ProviderId: response?.ProviderId.ToOICP()
+                       );
 
             };
 
@@ -616,38 +612,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     {
 
                         case AuthStopEVSEResultType.Authorized:
-                            return new AuthorizationStop(response.SessionId. ToOICP(),
-                                                         response.ProviderId.ToOICP(),
-                                                         null,
-                                                         "Ready to stop charging!");
+                            return AuthorizationStop.Authorized(
+                                       response.SessionId. ToOICP(),
+                                       null,
+                                       response.ProviderId.ToOICP(),
+                                       "Ready to stop charging!"
+                                   );
 
                         case AuthStopEVSEResultType.InvalidSessionId:
-                            return new AuthorizationStop(StatusCodes.SessionIsInvalid,
-                                                         "Session is invalid");
+                            return AuthorizationStop.SessionIsInvalid();
 
-                        case AuthStopEVSEResultType.EVSECommunicationTimeout:
-                            return new AuthorizationStop(StatusCodes.CommunicationToEVSEFailed,
-                                                         "Communication to EVSE failed!");
+                        case AuthStopEVSEResultType.CommunicationTimeout:
+                            return AuthorizationStop.CommunicationToEVSEFailed();
 
                         case AuthStopEVSEResultType.StopChargingTimeout:
-                            return new AuthorizationStop(StatusCodes.NoEVConnectedToEVSE,
-                                                         "No EV connected to EVSE!");
+                            return AuthorizationStop.NoEVConnectedToEVSE();
 
                         case AuthStopEVSEResultType.UnknownEVSE:
-                            return new AuthorizationStop(StatusCodes.UnknownEVSEID,
-                                                         "Unknown EVSE ID!");
+                            return AuthorizationStop.UnknownEVSEID();
 
                         case AuthStopEVSEResultType.OutOfService:
-                            return new AuthorizationStop(StatusCodes.EVSEOutOfService,
-                                                         "EVSE out of service!");
+                            return AuthorizationStop.EVSEOutOfService();
 
                     }
                 }
 
-                return new AuthorizationStop(StatusCodes.ServiceNotAvailable,
-                                             "Service not available!",
-                                             SessionId:  response?.SessionId. ToOICP() ?? SessionId,
-                                             ProviderId: response?.ProviderId.ToOICP());
+                return AuthorizationStop.ServiceNotAvailable(
+                           SessionId:  response?.SessionId. ToOICP() ?? SessionId,
+                           ProviderId: response?.ProviderId.ToOICP()
+                       );
 
             };
 
@@ -1013,8 +1006,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                 switch (_EVSEInfo.PoolAddress.Country.Alpha2Code.ToLower())
                                 {
 
-                                    case "de": LocationLanguage = Languages.de; break;
-                                    case "fr": LocationLanguage = Languages.fr; break;
+                                    case "de": LocationLanguage = Languages.deu; break;
+                                    case "fr": LocationLanguage = Languages.fra; break;
                                     case "dk": LocationLanguage = Languages.dk; break;
                                     case "no": LocationLanguage = Languages.no; break;
                                     case "fi": LocationLanguage = Languages.fi; break;
@@ -1022,10 +1015,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                     case "sk": LocationLanguage = Languages.sk; break;
                                     //case "be": LocationLanguage = Languages.; break;
-                                    case "us": LocationLanguage = Languages.en; break;
-                                    case "nl": LocationLanguage = Languages.nl; break;
+                                    case "us": LocationLanguage = Languages.eng; break;
+                                    case "nl": LocationLanguage = Languages.nld; break;
                                     //case "fo": LocationLanguage = Languages.; break;
-                                    case "at": LocationLanguage = Languages.de; break;
+                                    case "at": LocationLanguage = Languages.deu; break;
                                     case "ru": LocationLanguage = Languages.ru; break;
                                     //case "ch": LocationLanguage = Languages.; break;
 
@@ -1034,13 +1027,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                 }
 
                                 if (_EVSEInfo.PoolAddress.Country == Country.Germany)
-                                    LocalChargingStationLanguage = Languages.de;
+                                    LocalChargingStationLanguage = Languages.deu;
 
                                 else if (_EVSEInfo.PoolAddress.Country == Country.Denmark)
                                     LocalChargingStationLanguage = Languages.dk;
 
                                 else if (_EVSEInfo.PoolAddress.Country == Country.France)
-                                    LocalChargingStationLanguage = Languages.fr;
+                                    LocalChargingStationLanguage = Languages.fra;
 
                                 else
                                     LocalChargingStationLanguage = Languages.unknown;

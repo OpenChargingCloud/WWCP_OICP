@@ -406,11 +406,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 catch (Exception e)
                 {
 
-                    response = new AuthorizationStart(StatusCodes.DataError,
-                                                      "The AuthorizeStart request led to an exception!",
-                                                      e.Message,
-                                                      SessionId,
-                                                      PartnerSessionId);
+                    response = AuthorizationStart.DataError(
+                                   "The AuthorizeStart request led to an exception!",
+                                   e.Message,
+                                   SessionId,
+                                   PartnerSessionId
+                               );
 
                 }
 
@@ -447,11 +448,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     }
 
                     if (results.Length == 0 || response == null)
-                        response = new AuthorizationStart(StatusCodes.SystemError,
-                                                                  "Could not process the incoming AuthorizationStart request!",
-                                                                  null,
-                                                                  SessionId,
-                                                                  PartnerSessionId);
+                        response = AuthorizationStart.SystemError(
+                                       "Could not process the incoming AuthorizationStart request!",
+                                       null,
+                                       SessionId,
+                                       PartnerSessionId
+                                   );
 
                 }
 
@@ -593,11 +595,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 catch (Exception e)
                 {
 
-                    response = new AuthorizationStop(StatusCodes.DataError,
-                                                             "The AuthorizeStop request led to an exception!",
-                                                             e.Message,
-                                                             SessionId,
-                                                             PartnerSessionId);
+                    response = AuthorizationStop.DataError(
+                                   "The AuthorizeStop request led to an exception!",
+                                   e.Message,
+                                   SessionId,
+                                   PartnerSessionId
+                               );
 
                 }
 
@@ -633,11 +636,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     }
 
                     if (results.Length == 0 || response == null)
-                        response = new AuthorizationStop(StatusCodes.SystemError,
-                                                                 "Could not process the incoming AuthorizeStop request!",
-                                                                 null,
-                                                                 SessionId,
-                                                                 PartnerSessionId);
+                        response = AuthorizationStop.SystemError(
+                                       "Could not process the incoming AuthorizeStop request!",
+                                       null,
+                                       SessionId,
+                                       PartnerSessionId
+                                   );
 
                 }
 

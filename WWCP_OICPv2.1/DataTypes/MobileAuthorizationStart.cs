@@ -249,12 +249,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 throw new Exception("Invalid eRoamingMobileAuthorizationStart XML!");
 
             var ChargingStationName = new I18NString();
-            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "ChargingStationName",   v => ChargingStationName.Add(Languages.de, v));
-            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "EnChargingStationName", v => ChargingStationName.Add(Languages.en, v));
+            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "ChargingStationName",   v => ChargingStationName.Add(Languages.deu, v));
+            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "EnChargingStationName", v => ChargingStationName.Add(Languages.eng, v));
 
             var AdditionalInfo = new I18NString();
-            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "AdditionalInfo",        v => AdditionalInfo.Add(Languages.de, v));
-            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "EnAdditionalInfo",      v => AdditionalInfo.Add(Languages.en, v));
+            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "AdditionalInfo",        v => AdditionalInfo.Add(Languages.deu, v));
+            MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "EnAdditionalInfo",      v => AdditionalInfo.Add(Languages.eng, v));
 
             return new MobileAuthorizationStart((AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), MobileAuthorizationStartXML.ElementValueOrFail(OICPNS.MobileAuthorization + "AuthorizationStatus")),
                                                 GeoCoordinates:       XML_IO.ParseGeoCoordinatesXML(MobileAuthorizationStartXML.ElementOrFail(OICPNS.MobileAuthorization + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
@@ -262,7 +262,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                 Address:              MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "Address",    XML_IO.ParseAddressXML, null),
                                                 SessionId:            MobileAuthorizationStartXML.MapValueOrNullable(OICPNS.MobileAuthorization + "SessionID",  Session_Id.Parse),
                                                 StatusCode:           MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "StatusCode", StatusCode.Parse,           null),
-                                                TermsOfUse:           MobileAuthorizationStartXML.MapValueOrDefault (OICPNS.MobileAuthorization + "TermsOfUse", s => new I18NString(Languages.de, s), null),
+                                                TermsOfUse:           MobileAuthorizationStartXML.MapValueOrDefault (OICPNS.MobileAuthorization + "TermsOfUse", s => new I18NString(Languages.deu, s), null),
                                                 AdditionalInfo:       AdditionalInfo);
 
         }

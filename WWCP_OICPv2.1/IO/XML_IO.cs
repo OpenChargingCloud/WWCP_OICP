@@ -354,13 +354,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         public static IEnumerable<PlugTypes> ToEnumeration(this PlugTypes e)
-        {
 
-            return Enum.GetValues(typeof(PlugTypes)).
-                        Cast<PlugTypes>().
-                        Where(flag => e.HasFlag(flag) && flag != PlugTypes.Unspecified);
-
-        }
+            => Enum.GetValues(typeof(PlugTypes)).
+                    Cast<PlugTypes>().
+                    Where(flag => e.HasFlag(flag) && flag != PlugTypes.Unspecified);
 
 
         #region AsChargingMode(ChargingMode)
@@ -462,7 +459,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 case "REMOTE":             return AuthenticationModes.REMOTE;
                 case "Direct Payment":     return AuthenticationModes.DirectPayment;
 
-                default:                   return AuthenticationModes.Unkown;
+                default:                   return AuthenticationModes.Unknown;
 
             }
 
@@ -506,7 +503,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static AuthenticationModes Reduce(this IEnumerable<AuthenticationModes> AuthenticationModes)
         {
 
-            var _AuthenticationModes = OICPv2_1.AuthenticationModes.Unkown;
+            var _AuthenticationModes = OICPv2_1.AuthenticationModes.Unknown;
 
             foreach (var _AuthenticationMode in AuthenticationModes)
                 _AuthenticationModes |= _AuthenticationMode;
@@ -516,13 +513,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         public static IEnumerable<AuthenticationModes> ToEnumeration(this AuthenticationModes e)
-        {
 
-            return Enum.GetValues(typeof(AuthenticationModes)).
-                        Cast<AuthenticationModes>().
-                        Where(flag => e.HasFlag(flag) && flag != AuthenticationModes.Unkown);
-
-        }
+            => Enum.GetValues(typeof(AuthenticationModes)).
+                    Cast<AuthenticationModes>().
+                    Where(flag => e.HasFlag(flag) && flag != AuthenticationModes.Unknown);
 
 
         #region AsPaymetOptions(PaymetOption)

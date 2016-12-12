@@ -128,7 +128,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      EVSE.ChargingModes.AsOICPChargingMode(),
                                                      EVSE.ChargingStation.AuthenticationModes.
                                                                               Select(mode => AsOICPAuthenticationMode(mode)).
-                                                                              Where(mode => mode != AuthenticationModes.Unkown).
+                                                                              Where(mode => mode != AuthenticationModes.Unknown).
                                                                               Reduce(),
                                                      null, // MaxCapacity [kWh]
                                                      EVSE.ChargingStation.PaymentOptions.SafeSelect(option => AsOICPPaymentOption(option)).Reduce(),
@@ -644,7 +644,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region ToOICP(this PinCrypto)
+        #region ToOICP(this WWCPAddress)
 
         /// <summary>
         /// Maps a WWCP address to an OICP address.
@@ -663,7 +663,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToWWCP(this PinCrypto)
+        #region ToWWCP(this OICPAddress)
 
         /// <summary>
         /// Maps an OICP accessibility type to a WWCP accessibility type.
@@ -764,7 +764,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static AuthenticationModes AsOICPAuthenticationMode(this WWCP.AuthenticationModes WWCPAuthMode)
         {
 
-            var _AuthenticationModes = OICPv2_1.AuthenticationModes.Unkown;
+            var _AuthenticationModes = OICPv2_1.AuthenticationModes.Unknown;
 
             switch (WWCPAuthMode.Type)
             {
@@ -831,7 +831,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static AuthenticationModes AsOICPAuthenticationModes(this IEnumerable<WWCP.AuthenticationModes> WWCPAuthenticationModes)
         {
 
-            var _AuthenticationModes = AuthenticationModes.Unkown;
+            var _AuthenticationModes = AuthenticationModes.Unknown;
 
             foreach (var WWCPAuthenticationMode in WWCPAuthenticationModes)
                 _AuthenticationModes |= WWCPAuthenticationMode.AsOICPAuthenticationMode();
@@ -1206,10 +1206,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region ToWWCP(this ChargeDetailRecord)
 
         /// <summary>
-        /// Convert an OICP EVSE charge detail record into a corresponding WWCP charge detail record.
+        /// Convert an OICP charge detail record into a corresponding WWCP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecord">An OICP charge detail record.</param>
-        /// <returns>The corresponding WWCP EVSE status.</returns>
         public static WWCP.ChargeDetailRecord ToWWCP(this ChargeDetailRecord ChargeDetailRecord)
 
             => new WWCP.ChargeDetailRecord(ChargeDetailRecord.SessionId.ToWWCP(),
@@ -1235,8 +1234,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+        #region ToOICP(this ChargeDetailRecord)
 
+        /// <summary>
+        /// Convert a WWCP charge detail record into a corresponding OICP charge detail record.
+        /// </summary>
+        /// <param name="ChargeDetailRecord">A WWCP charge detail record.</param>
+        public static ChargeDetailRecord ToOICP(this WWCP.ChargeDetailRecord ChargeDetailRecord)
 
+            => new ChargeDetailRecord(
+                   ChargeDetailRecord.EVSEId.Value.ToOICP(),
+                   ChargeDetailRecord.SessionId.ToOICP(),
+                   ChargeDetailRecord.SessionTime.Value.StartTime,
+                   ChargeDetailRecord.SessionTime.Value.EndTime.Value,
+                   ChargeDetailRecord.IdentificationStart.ToOICP(),
+                   ChargeDetailRecord.ChargingProductId.ToOICP(),
+                   null, // PartnerSessionId
+                   ChargeDetailRecord.SessionTime.HasValue? ChargeDetailRecord.SessionTime.Value.StartTime : new DateTime?(),
+                   ChargeDetailRecord.SessionTime.HasValue? ChargeDetailRecord.SessionTime.Value.EndTime   : null,
+                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.First().Value : new Double?(),
+                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value : new Double?(),
+                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<double> v) => v.Value) : null,
+                   ChargeDetailRecord.ConsumedEnergy,
+                   ChargeDetailRecord.MeteringSignature
+               );
+
+        #endregion
 
 
     }

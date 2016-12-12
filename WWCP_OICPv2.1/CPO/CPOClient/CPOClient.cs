@@ -1142,8 +1142,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      SendSOAPError(timestamp, this, httpresponse.Content);
 
                                                      return new HTTPResponse<AuthorizationStart>(httpresponse,
-                                                                                                 new AuthorizationStart(StatusCodes.DataError,
-                                                                                                                        httpresponse.Content.ToString()),
+                                                                                                 AuthorizationStart.DataError(
+                                                                                                     httpresponse.Content.ToString()
+                                                                                                 ),
                                                                                                  IsFault: true);
 
                                                  },
@@ -1157,9 +1158,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      SendHTTPError(timestamp, this, httpresponse);
 
                                                      return new HTTPResponse<AuthorizationStart>(httpresponse,
-                                                                                                 new AuthorizationStart(StatusCodes.DataError,
-                                                                                                                        httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                        httpresponse.HTTPBody.ToUTF8String()),
+                                                                                                 AuthorizationStart.DataError(
+                                                                                                     httpresponse.HTTPStatusCode.ToString(),
+                                                                                                     httpresponse.HTTPBody.ToUTF8String()
+                                                                                                 ),
                                                                                                  IsFault: true);
 
                                                  },
@@ -1172,9 +1174,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      SendException(timestamp, sender, exception);
 
-                                                     return HTTPResponse<AuthorizationStart>.ExceptionThrown(new AuthorizationStart(StatusCodes.SystemError,
-                                                                                                                                    exception.Message,
-                                                                                                                                    exception.StackTrace),
+                                                     return HTTPResponse<AuthorizationStart>.ExceptionThrown(AuthorizationStart.SystemError(
+                                                                                                                 exception.Message,
+                                                                                                                 exception.StackTrace
+                                                                                                             ),
                                                                                                              Exception: exception);
 
                                                  }
@@ -1315,8 +1318,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      SendSOAPError(timestamp, this, httpresponse.Content);
 
                                                      return new HTTPResponse<AuthorizationStop>(httpresponse,
-                                                                                                new AuthorizationStop(StatusCodes.DataError,
-                                                                                                                      httpresponse.Content.ToString()),
+                                                                                                AuthorizationStop.DataError(httpresponse.Content.ToString()),
                                                                                                 IsFault: true);
 
                                                  },
@@ -1330,9 +1332,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      SendHTTPError(timestamp, this, httpresponse);
 
                                                      return new HTTPResponse<AuthorizationStop>(httpresponse,
-                                                                                                new AuthorizationStop(StatusCodes.DataError,
-                                                                                                                      httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                      httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                AuthorizationStop.DataError(
+                                                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                                                ),
                                                                                                 IsFault: true);
 
                                                  },
@@ -1345,9 +1348,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      SendException(timestamp, sender, exception);
 
-                                                     return HTTPResponse<AuthorizationStop>.ExceptionThrown(new AuthorizationStop(StatusCodes.SystemError,
-                                                                                                                                  exception.Message,
-                                                                                                                                  exception.StackTrace),
+                                                     return HTTPResponse<AuthorizationStop>.ExceptionThrown(AuthorizationStop.SystemError(
+                                                                                                                exception.Message,
+                                                                                                                exception.StackTrace
+                                                                                                            ),
                                                                                                             Exception: exception);
 
                                                  }
