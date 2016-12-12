@@ -50,6 +50,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static readonly Regex SessionId_RegEx  = new Regex(@"^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$",
                                                                   RegexOptions.IgnorePatternWhitespace);
 
+        private static readonly Random _random = new Random(DateTime.Now.Millisecond);
+
         #endregion
 
         #region Properties
@@ -75,6 +77,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+
+        public static Session_Id New
+            => Session_Id.Parse(Guid.NewGuid().ToString());
 
         #region Parse(Text)
 

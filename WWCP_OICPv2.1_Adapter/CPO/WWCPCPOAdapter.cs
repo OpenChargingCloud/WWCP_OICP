@@ -533,18 +533,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 var response = await RoamingNetwork.Reserve(EVSEId.ToWWCP(),
                                                             Duration:           Duration,
-                                                            ReservationId:      SessionId.HasValue
-                                                                                    ? ChargingReservation_Id.Parse(
-                                                                                          EVSEId.OperatorId.ToWWCP(),
-                                                                                          SessionId.        ToString()
-                                                                                      )
-                                                                                    : new ChargingReservation_Id?(),
+
+                                                            // Always create a reservation identification usable for OICP!
+                                                            ReservationId:      ChargingReservation_Id.Parse(
+                                                                                    EVSEId.OperatorId.ToWWCP(),
+                                                                                    SessionId.HasValue
+                                                                                        ? SessionId.ToString()
+                                                                                        : Session_Id.New.ToString()
+                                                                                ),
+
                                                             ProviderId:         ProviderId.      ToWWCP(),
                                                             eMAId:              EVCOId.          ToWWCP(),
                                                             ChargingProductId:  PartnerProductId.ToWWCP(),
+
                                                             eMAIds:             new eMobilityAccount_Id[] {
                                                                                     EVCOId.Value.ToWWCP()
                                                                                 },
+
                                                             Timestamp:          Timestamp,
                                                             CancellationToken:  CancellationToken,
                                                             EventTrackingId:    EventTrackingId,
@@ -559,8 +564,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         case ReservationResultType.Success:
                             return Acknowledgement.Success(
-                                       StatusCodeDescription:     "Reservation successful!",
+
+                                       response.Reservation != null
+                                           ? Session_Id.Parse(response.Reservation.Id.Suffix)
+                                           : new Session_Id?(),
+
+                                       StatusCodeDescription :    "Reservation successful!",
                                        StatusCodeAdditionalInfo:  response.Reservation != null ? "ReservationId: " + response.Reservation.Id : null
+
                                    );
 
                         case ReservationResultType.InvalidCredentials:
