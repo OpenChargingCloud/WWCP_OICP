@@ -483,8 +483,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
-        #region (private) Acknowledgement(Result, StatusCode, ...)
-
         /// <summary>
         /// Create a new OICP acknowledgement.
         /// </summary>
@@ -507,7 +505,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region Acknowledgement(SessionId, ...)
+
+        #region (static) Success(SessionId, ...)
 
         /// <summary>
         /// Create a new OICP 'positive' acknowledgement.
@@ -516,101 +515,277 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        public Acknowledgement(Session_Id          SessionId,
-                               PartnerSession_Id?  PartnerSessionId          = null,
-                               String              StatusCodeDescription     = null,
-                               String              StatusCodeAdditionalInfo  = null)
+        public static Acknowledgement Success(Session_Id          SessionId,
+                                              PartnerSession_Id?  PartnerSessionId          = null,
+                                              String              StatusCodeDescription     = null,
+                                              String              StatusCodeAdditionalInfo  = null)
 
-            : this(true,
+            => new Acknowledgement(
+                   true,
                    new StatusCode(StatusCodes.Success,
                                   StatusCodeDescription,
                                   StatusCodeAdditionalInfo),
                    SessionId,
-                   PartnerSessionId)
-
-        { }
+                   PartnerSessionId
+               );
 
         #endregion
 
-        #region Acknowledgement(StatusCode, ...)
+
+        #region (static) DataError(StatusCode, ...)
 
         /// <summary>
-        /// Create a new OICP 'negative' acknowledgement.
+        /// Create a new OICP 'DataError' acknowledgement.
         /// </summary>
-        /// <param name="StatusCode">The status code of the operation.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
-        public Acknowledgement(StatusCodes         StatusCode,
-                               String              StatusCodeDescription     = null,
-                               String              StatusCodeAdditionalInfo  = null,
-                               Session_Id?         SessionId                 = null,
-                               PartnerSession_Id?  PartnerSessionId          = null)
+        public static Acknowledgement DataError(String              StatusCodeDescription     = null,
+                                                String              StatusCodeAdditionalInfo  = null,
+                                                Session_Id?         SessionId                 = null,
+                                                PartnerSession_Id?  PartnerSessionId          = null)
 
-            : this(false,
-                   new StatusCode(StatusCode,
-                                  StatusCodeDescription,
+            => new Acknowledgement(
+                   false,
+                   new StatusCode(StatusCodes.DataError,
+                                  StatusCodeDescription ?? "Data Error!",
                                   StatusCodeAdditionalInfo),
                    SessionId,
-                   PartnerSessionId)
+                   PartnerSessionId
+               );
 
-        { }
+        #endregion
+
+        #region (static) SystemError(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'SystemError' acknowledgement.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement SystemError(String              StatusCodeDescription     = null,
+                                                  String              StatusCodeAdditionalInfo  = null,
+                                                  Session_Id?         SessionId                 = null,
+                                                  PartnerSession_Id?  PartnerSessionId          = null)
+
+            => new Acknowledgement(
+                   false,
+                   new StatusCode(StatusCodes.SystemError,
+                                  StatusCodeDescription ?? "System Error!",
+                                  StatusCodeAdditionalInfo),
+                   SessionId,
+                   PartnerSessionId
+               );
 
         #endregion
 
+        #region (static) ServiceNotAvailable(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'ServiceNotAvailable' acknowledgement.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement ServiceNotAvailable(String              StatusCodeDescription     = null,
+                                                          String              StatusCodeAdditionalInfo  = null,
+                                                          Session_Id?         SessionId                 = null,
+                                                          PartnerSession_Id?  PartnerSessionId          = null)
+
+            => new Acknowledgement(
+                   false,
+                   new StatusCode(StatusCodes.ServiceNotAvailable,
+                                  StatusCodeDescription ?? "Service not available!",
+                                  StatusCodeAdditionalInfo),
+                   SessionId,
+                   PartnerSessionId
+               );
+
         #endregion
+
+        #region (static) SessionIsInvalid(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'SessionIsInvalid' acknowledgement.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement SessionIsInvalid(String              StatusCodeDescription     = null,
+                                                       String              StatusCodeAdditionalInfo  = null,
+                                                       Session_Id?         SessionId                 = null,
+                                                       PartnerSession_Id?  PartnerSessionId          = null)
+
+            => new Acknowledgement(
+                   false,
+                   new StatusCode(StatusCodes.SessionIsInvalid,
+                                  StatusCodeDescription ?? "Session is invalid",
+                                  StatusCodeAdditionalInfo),
+                   SessionId,
+                   PartnerSessionId
+               );
+
+        #endregion
+
+        #region (static) CommunicationToEVSEFailed(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'CommunicationToEVSEFailed' acknowledgement.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement CommunicationToEVSEFailed(String              StatusCodeDescription     = null,
+                                                                String              StatusCodeAdditionalInfo  = null,
+                                                                Session_Id?         SessionId                 = null,
+                                                                PartnerSession_Id?  PartnerSessionId          = null)
+
+            => new Acknowledgement(
+                   false,
+                   new StatusCode(StatusCodes.CommunicationToEVSEFailed,
+                                  StatusCodeDescription ?? "Communication to EVSE failed!",
+                                  StatusCodeAdditionalInfo),
+                   SessionId,
+                   PartnerSessionId
+               );
+
+        #endregion
+
+        #region (static) EVSEAlreadyReserved(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'EVSEAlreadyReserved' acknowledgement.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement EVSEAlreadyReserved(String              StatusCodeDescription     = null,
+                                                          String              StatusCodeAdditionalInfo  = null,
+                                                          Session_Id?         SessionId                 = null,
+                                                          PartnerSession_Id?  PartnerSessionId          = null)
+
+            => new Acknowledgement(
+                   false,
+                   new StatusCode(StatusCodes.EVSEAlreadyReserved,
+                                  StatusCodeDescription ?? "EVSE already reserved!",
+                                  StatusCodeAdditionalInfo),
+                   SessionId,
+                   PartnerSessionId
+               );
+
+        #endregion
+
+        #region (static) EVSEAlreadyInUse_WrongToken(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'EVSEAlreadyInUse_WrongToken' acknowledgement.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement EVSEAlreadyInUse_WrongToken(String              StatusCodeDescription     = null,
+                                                                  String              StatusCodeAdditionalInfo  = null,
+                                                                  Session_Id?         SessionId                 = null,
+                                                                  PartnerSession_Id?  PartnerSessionId          = null)
+
+            => new Acknowledgement(
+                   false,
+                   new StatusCode(StatusCodes.EVSEAlreadyInUse_WrongToken,
+                                  StatusCodeDescription ?? "EVSE is already in use!",
+                                  StatusCodeAdditionalInfo),
+                   SessionId,
+                   PartnerSessionId
+               );
+
+        #endregion
+
+        #region (static) UnknownEVSEID(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'UnknownEVSEID' acknowledgement.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement UnknownEVSEID(String              StatusCodeDescription     = null,
+                                                    String              StatusCodeAdditionalInfo  = null,
+                                                    Session_Id?         SessionId                 = null,
+                                                    PartnerSession_Id?  PartnerSessionId          = null)
+
+            => new Acknowledgement(
+                   false,
+                   new StatusCode(StatusCodes.UnknownEVSEID,
+                                  StatusCodeDescription ?? "Unknown EVSE ID!",
+                                  StatusCodeAdditionalInfo),
+                   SessionId,
+                   PartnerSessionId
+               );
+
+        #endregion
+
+        #region (static) EVSEOutOfService(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'EVSEOutOfService' acknowledgement.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement EVSEOutOfService(String              StatusCodeDescription     = null,
+                                                       String              StatusCodeAdditionalInfo  = null,
+                                                       Session_Id?         SessionId                 = null,
+                                                       PartnerSession_Id?  PartnerSessionId          = null)
+
+            => new Acknowledgement(
+                   false,
+                   new StatusCode(StatusCodes.EVSEOutOfService,
+                                  StatusCodeDescription ?? "EVSE out of service!",
+                                  StatusCodeAdditionalInfo),
+                   SessionId,
+                   PartnerSessionId
+               );
+
+        #endregion
+
+        #region (static) NoValidContract(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'NoValidContract' acknowledgement.
+        /// </summary>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement NoValidContract(String              StatusCodeDescription     = null,
+                                                      String              StatusCodeAdditionalInfo  = null,
+                                                      Session_Id?         SessionId                 = null,
+                                                      PartnerSession_Id?  PartnerSessionId          = null)
+
+            => new Acknowledgement(
+                   false,
+                   new StatusCode(StatusCodes.NoValidContract,
+                                  StatusCodeDescription ?? "No valid contract!",
+                                  StatusCodeAdditionalInfo),
+                   SessionId,
+                   PartnerSessionId
+               );
+
+        #endregion
+
 
 
         #region Documentation
 
-        // <?xml version='1.0' encoding='UTF-8'?>
-        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //
-        //   <soapenv:Body>
-        //     <CommonTypes:eRoamingAcknowledgement>
-        //
-        //       <CommonTypes:Result>true</CommonTypes:Result>
-        //
-        //       <CommonTypes:StatusCode>
-        //         <CommonTypes:Code>000</CommonTypes:Code>
-        //         <CommonTypes:Description>Success</CommonTypes:Description>
-        //         <CommonTypes:AdditionalInfo />
-        //       </CommonTypes:StatusCode>
-        //
-        //     </CommonTypes:eRoamingAcknowledgement>
-        //   </soapenv:Body>
-        //
-        // </soapenv:Envelope>
-
-        // <?xml version='1.0' encoding='UTF-8'?>
-        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //
-        //   <soapenv:Body>
-        //     <CommonTypes:eRoamingAcknowledgement>
-        //
-        //       <CommonTypes:Result>true</CommonTypes:Result>
-        //
-        //       <CommonTypes:StatusCode>
-        //         <CommonTypes:Code>009</CommonTypes:Code>
-        //         <CommonTypes:Description>Data transaction error</CommonTypes:Description>
-        //         <CommonTypes:AdditionalInfo>The Push of data is already in progress.</CommonTypes:AdditionalInfo>
-        //       </CommonTypes:StatusCode>
-        //
-        //     </CommonTypes:eRoamingAcknowledgement>
-        //   </soapenv:Body>
-        //
-        // </soapenv:Envelope>
-
-        // HTTP/1.1 200 OK
-        // Date: Tue, 31 May 2016 03:15:36 GMT
-        // Content-Type: text/xml;charset=utf-8
-        // Connection: close
-        // Transfer-Encoding: chunked
-        // 
-        // <?xml version='1.0' encoding='UTF-8'?>
         // <soapenv:Envelope xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/v2.0"
         //                   xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/">
         //
@@ -624,7 +799,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         //         <CommonTypes:Description>Success</CommonTypes:Description>
         //       </CommonTypes:StatusCode>
         //
+        //       <!--Optional:-->
         //       <CommonTypes:SessionID>04cf39ad-0a88-1295-27dc-d593d1a076ac</CommonTypes:SessionID>
+        //
+        //       <!--Optional:-->
+        //       <CommonTypes:PartnerSessionID>04cf39ad0a88129527dcd593d1a076ac</CommonTypes:PartnerSessionID>
         //
         //     </CommonTypes:eRoamingAcknowledgement>
         //   </soapenv:Body>
@@ -709,12 +888,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                    StatusCode.ToXML(),
 
-                   SessionId != null
+                   SessionId.HasValue
                        ? new XElement(OICPNS.CommonTypes + "SessionID",         SessionId.ToString())
                        : null,
 
-                   PartnerSessionId != null
-                       ? new XElement(OICPNS.CommonTypes + "PartnerSessionID",  PartnerSessionId.ToString())
+                   PartnerSessionId.HasValue
+                       ? new XElement(OICPNS.CommonTypes + "PartnerSessionID",  PartnerSessionId.ToString().SubstringMax(50))
                        : null
 
              );

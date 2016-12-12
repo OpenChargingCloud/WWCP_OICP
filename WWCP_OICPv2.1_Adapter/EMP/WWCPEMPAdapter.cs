@@ -670,47 +670,43 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     {
 
                         case SendCDRResultType.Forwarded:
-                            return new Acknowledgement(StatusCodes.Success,
-                                                       "Charge detail record forwarded!",
-                                                       null,
-                                                       ChargeDetailRecord?.SessionId,
-                                                       ChargeDetailRecord?.PartnerSessionId);
+                            return Acknowledgement.Success(
+                                       ChargeDetailRecord.SessionId,
+                                       ChargeDetailRecord.PartnerSessionId,
+                                       "Charge detail record forwarded!"
+                                   );
 
                         case SendCDRResultType.NotForwared:
-                            return new Acknowledgement(StatusCodes.SystemError,
-                                                       "Communication to EVSE failed!",
-                                                       null,
-                                                       ChargeDetailRecord?.SessionId,
-                                                       ChargeDetailRecord?.PartnerSessionId);
+                            return Acknowledgement.SystemError(
+                                       "Communication to EVSE failed!",
+                                       SessionId:         ChargeDetailRecord.SessionId,
+                                       PartnerSessionId:  ChargeDetailRecord.PartnerSessionId
+                                   );
 
                         case SendCDRResultType.InvalidSessionId:
-                            return new Acknowledgement(StatusCodes.SessionIsInvalid,
-                                                       "Session is invalid",
-                                                       null,
-                                                       ChargeDetailRecord?.SessionId,
-                                                       ChargeDetailRecord?.PartnerSessionId);
+                            return Acknowledgement.SessionIsInvalid(
+                                       SessionId:         ChargeDetailRecord.SessionId,
+                                       PartnerSessionId:  ChargeDetailRecord.PartnerSessionId
+                                   );
 
                         case SendCDRResultType.UnknownEVSE:
-                            return new Acknowledgement(StatusCodes.UnknownEVSEID,
-                                                       "Unknown EVSE ID!",
-                                                       null,
-                                                       ChargeDetailRecord?.SessionId,
-                                                       ChargeDetailRecord?.PartnerSessionId);
+                            return Acknowledgement.UnknownEVSEID(
+                                       SessionId:         ChargeDetailRecord.SessionId,
+                                       PartnerSessionId:  ChargeDetailRecord.PartnerSessionId
+                                   );
 
                         case SendCDRResultType.Error:
-                            return new Acknowledgement(StatusCodes.DataError,
-                                                       "Data Error!",
-                                                       null,
-                                                       ChargeDetailRecord?.SessionId,
-                                                       ChargeDetailRecord?.PartnerSessionId);
+                            return Acknowledgement.DataError(
+                                       SessionId:         ChargeDetailRecord.SessionId,
+                                       PartnerSessionId:  ChargeDetailRecord.PartnerSessionId
+                                   );
 
                     }
                 }
 
-                return new Acknowledgement(StatusCodes.ServiceNotAvailable,
-                                                   "Service not available!",
-                                                   null,
-                                                   ChargeDetailRecord?.SessionId);
+                return Acknowledgement.ServiceNotAvailable(
+                           SessionId: ChargeDetailRecord.SessionId
+                       );
 
             };
 

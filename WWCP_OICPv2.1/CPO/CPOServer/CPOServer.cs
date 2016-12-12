@@ -322,10 +322,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         XElement            QRCodeIdentificationXML;
                         XElement            PnCIdentificationXML;
                         XElement            RemoteIdentificationXML;
+                        XElement            SessionIdXML;
                         XElement            PartnerSessionIdXML;
                         XElement            ChargingProductIdXML;
 
-                        SessionId                = Session_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Reservation + "SessionID",        null));
+                        SessionIdXML             = RemoteStartXML.Element(OICPNS.Reservation + "SessionID");
+                        if (SessionIdXML != null)
+                            SessionId        = Session_Id.Parse(SessionIdXML.Value);
 
                         PartnerSessionIdXML      = RemoteStartXML.Element(OICPNS.Reservation + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
@@ -361,9 +364,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     catch (Exception e)
                     {
 
-                        response = new Acknowledgement(StatusCodes.DataError,
-                                                               "Request led to an exception!",
-                                                               e.Message);
+                        response = Acknowledgement.DataError(
+                                       "Request led to an exception!",
+                                       e.Message
+                                   );
 
                     }
 
@@ -437,11 +441,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         }
 
                         if (results.Length == 0 || response == null)
-                            response = new Acknowledgement(StatusCodes.SystemError,
-                                                           "Could not process the incoming AuthorizeRemoteReservationStart request!",
-                                                           null,
-                                                           SessionId,
-                                                           PartnerSessionId);
+                            response = Acknowledgement.SystemError(
+                                           "Could not process the incoming AuthorizeRemoteReservationStart request!",
+                                           null,
+                                           SessionId,
+                                           PartnerSessionId
+                                       );
 
                     }
 
@@ -562,9 +567,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     catch (Exception e)
                     {
 
-                        response = new Acknowledgement(StatusCodes.DataError,
-                                                               "Request led to an exception!",
-                                                               e.Message);
+                        response = Acknowledgement.DataError(
+                                       "Request led to an exception!",
+                                       e.Message
+                                   );
 
                     }
 
@@ -636,11 +642,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         }
 
                         if (results.Length == 0 || response == null)
-                            response = new Acknowledgement(StatusCodes.SystemError,
-                                                                   "Could not process the incoming AuthorizeRemoteReservationStop request!",
-                                                                   null,
-                                                                   SessionId,
-                                                                   PartnerSessionId);
+                            response = Acknowledgement.SystemError(
+                                           "Could not process the incoming AuthorizeRemoteReservationStop request!",
+                                           null,
+                                           SessionId,
+                                           PartnerSessionId
+                                       );
 
                     }
 
@@ -828,9 +835,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     catch (Exception e)
                     {
 
-                        response = new Acknowledgement(StatusCodes.DataError,
-                                                               "Request led to an exception!",
-                                                               e.Message);
+                        response = Acknowledgement.DataError(
+                                       "Request led to an exception!",
+                                       e.Message
+                                   );
 
                     }
 
@@ -904,11 +912,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         }
 
                         if (results.Length == 0 || response == null)
-                            response = new Acknowledgement(StatusCodes.SystemError,
-                                                                   "Could not process the incoming AuthorizeRemoteStart request!",
-                                                                   null,
-                                                                   SessionId,
-                                                                   PartnerSessionId);
+                            response = Acknowledgement.SystemError(
+                                           "Could not process the incoming AuthorizeRemoteStart request!",
+                                           null,
+                                           SessionId,
+                                           PartnerSessionId
+                                       );
 
                     }
 
@@ -1030,9 +1039,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     catch (Exception e)
                     {
 
-                        response = new Acknowledgement(StatusCodes.DataError,
-                                                               "Request led to an exception!",
-                                                               e.Message);
+                        response = Acknowledgement.DataError(
+                                       "Request led to an exception!",
+                                       e.Message
+                                   );
 
                     }
 
@@ -1104,11 +1114,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         }
 
                         if (results.Length == 0 || response == null)
-                            response = new Acknowledgement(StatusCodes.SystemError,
-                                                                   "Could not process the incoming AuthorizeRemoteStop request!",
-                                                                   null,
-                                                                   SessionId,
-                                                                   PartnerSessionId);
+                            response = Acknowledgement.SystemError(
+                                           "Could not process the incoming AuthorizeRemoteStop request!",
+                                           null,
+                                           SessionId,
+                                           PartnerSessionId
+                                       );
 
                     }
 

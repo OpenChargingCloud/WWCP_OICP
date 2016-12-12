@@ -15,6 +15,15 @@
  * limitations under the License.
  */
 
+#region Usings
+
+using System;
+using System.Collections.Generic;
+
+using org.GraphDefined.Vanaheimr.Illias;
+
+#endregion
+
 namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
@@ -34,5 +43,75 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// <param name="EVSEStatusRecord">An OICP EVSE status record.</param>
     public delegate EVSEStatusRecord  EVSEStatusUpdate2EVSEStatusRecordDelegate(EVSEStatusUpdate  EVSEStatusUpdate,
                                                                                 EVSEStatusRecord  EVSEStatusRecord);
+
+
+
+    /// <summary>
+    /// A delegate called whenever new EVSE data will be send upstream.
+    /// </summary>
+    public delegate void OnPushEVSEDataWWCPRequestDelegate   (DateTime                         LogTimestamp,
+                                                              DateTime                         RequestTimestamp,
+                                                              Object                           Sender,
+                                                              CSORoamingProvider_Id            SenderId,
+                                                              EventTracking_Id                 EventTrackingId,
+                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              ActionTypes                      ServerAction,
+                                                              UInt64                           NumberOfEVSEDataRecords,
+                                                              IEnumerable<EVSEDataRecord>      EVSEDataRecords,
+                                                              IEnumerable<String>              Warnings,
+                                                              TimeSpan?                        RequestTimeout);
+
+
+    /// <summary>
+    /// A delegate called whenever new EVSE data had been send upstream.
+    /// </summary>
+    public delegate void OnPushEVSEDataWWCPResponseDelegate  (DateTime                         LogTimestamp,
+                                                              DateTime                         RequestTimestamp,
+                                                              Object                           Sender,
+                                                              CSORoamingProvider_Id            SenderId,
+                                                              EventTracking_Id                 EventTrackingId,
+                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              ActionTypes                      ServerAction,
+                                                              UInt64                           NumberOfEVSEDataRecords,
+                                                              IEnumerable<EVSEDataRecord>      EVSEDataRecords,
+                                                              IEnumerable<String>              Warnings,
+                                                              TimeSpan?                        RequestTimeout,
+                                                              WWCP.Acknowledgement             Result,
+                                                              TimeSpan                         Runtime);
+
+
+    /// <summary>
+    /// A delegate called whenever new EVSE status will be send upstream.
+    /// </summary>
+    public delegate void OnPushEVSEStatusWWCPRequestDelegate (DateTime                         LogTimestamp,
+                                                              DateTime                         RequestTimestamp,
+                                                              Object                           Sender,
+                                                              CSORoamingProvider_Id            SenderId,
+                                                              EventTracking_Id                 EventTrackingId,
+                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              ActionTypes                      ServerAction,
+                                                              UInt64                           NumberOfEVSEDataRecords,
+                                                              IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
+                                                              IEnumerable<String>              Warnings,
+                                                              TimeSpan?                        RequestTimeout);
+
+
+    /// <summary>
+    /// A delegate called whenever new EVSE status had been send upstream.
+    /// </summary>
+    public delegate void OnPushEVSEStatusWWCPResponseDelegate(DateTime                         LogTimestamp,
+                                                              DateTime                         RequestTimestamp,
+                                                              Object                           Sender,
+                                                              CSORoamingProvider_Id            SenderId,
+                                                              EventTracking_Id                 EventTrackingId,
+                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              ActionTypes                      ServerAction,
+                                                              UInt64                           NumberOfEVSEDataRecords,
+                                                              IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
+                                                              IEnumerable<String>              Warnings,
+                                                              TimeSpan?                        RequestTimeout,
+                                                              WWCP.Acknowledgement             Result,
+                                                              TimeSpan                         Runtime);
+
 
 }
