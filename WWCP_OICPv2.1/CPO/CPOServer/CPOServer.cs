@@ -322,10 +322,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         XElement            QRCodeIdentificationXML;
                         XElement            PnCIdentificationXML;
                         XElement            RemoteIdentificationXML;
+                        XElement            SessionIdXML;
                         XElement            PartnerSessionIdXML;
                         XElement            ChargingProductIdXML;
 
-                        SessionId                = Session_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Reservation + "SessionID",        null));
+                        SessionIdXML             = RemoteStartXML.Element(OICPNS.Reservation + "SessionID");
+                        if (SessionIdXML != null)
+                            SessionId        = Session_Id.Parse(SessionIdXML.Value);
 
                         PartnerSessionIdXML      = RemoteStartXML.Element(OICPNS.Reservation + "PartnerSessionID");
                         if (PartnerSessionIdXML != null)
