@@ -37,75 +37,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
     /// <summary>
-    /// A delegate called whenever new EVSE data will be send upstream.
-    /// </summary>
-    public delegate void OnPushEVSEDataWWCPRequestDelegate   (DateTime                         LogTimestamp,
-                                                              DateTime                         RequestTimestamp,
-                                                              Object                           Sender,
-                                                              CSORoamingProvider_Id            SenderId,
-                                                              EventTracking_Id                 EventTrackingId,
-                                                              RoamingNetwork_Id                RoamingNetworkId,
-                                                              ActionTypes                      ServerAction,
-                                                              UInt64                           NumberOfEVSEDataRecords,
-                                                              IEnumerable<EVSEDataRecord>      EVSEDataRecords,
-                                                              IEnumerable<String>              Warnings,
-                                                              TimeSpan?                        RequestTimeout);
-
-
-    /// <summary>
-    /// A delegate called whenever new EVSE data had been send upstream.
-    /// </summary>
-    public delegate void OnPushEVSEDataWWCPResponseDelegate  (DateTime                         LogTimestamp,
-                                                              DateTime                         RequestTimestamp,
-                                                              Object                           Sender,
-                                                              CSORoamingProvider_Id            SenderId,
-                                                              EventTracking_Id                 EventTrackingId,
-                                                              RoamingNetwork_Id                RoamingNetworkId,
-                                                              ActionTypes                      ServerAction,
-                                                              UInt64                           NumberOfEVSEDataRecords,
-                                                              IEnumerable<EVSEDataRecord>      EVSEDataRecords,
-                                                              IEnumerable<String>              Warnings,
-                                                              TimeSpan?                        RequestTimeout,
-                                                              WWCP.Acknowledgement             Result,
-                                                              TimeSpan                         Runtime);
-
-
-    /// <summary>
-    /// A delegate called whenever new EVSE status will be send upstream.
-    /// </summary>
-    public delegate void OnPushEVSEStatusWWCPRequestDelegate (DateTime                         LogTimestamp,
-                                                              DateTime                         RequestTimestamp,
-                                                              Object                           Sender,
-                                                              CSORoamingProvider_Id            SenderId,
-                                                              EventTracking_Id                 EventTrackingId,
-                                                              RoamingNetwork_Id                RoamingNetworkId,
-                                                              ActionTypes                      ServerAction,
-                                                              UInt64                           NumberOfEVSEDataRecords,
-                                                              IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
-                                                              IEnumerable<String>              Warnings,
-                                                              TimeSpan?                        RequestTimeout);
-
-
-    /// <summary>
-    /// A delegate called whenever new EVSE status had been send upstream.
-    /// </summary>
-    public delegate void OnPushEVSEStatusWWCPResponseDelegate(DateTime                         LogTimestamp,
-                                                              DateTime                         RequestTimestamp,
-                                                              Object                           Sender,
-                                                              CSORoamingProvider_Id            SenderId,
-                                                              EventTracking_Id                 EventTrackingId,
-                                                              RoamingNetwork_Id                RoamingNetworkId,
-                                                              ActionTypes                      ServerAction,
-                                                              UInt64                           NumberOfEVSEDataRecords,
-                                                              IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
-                                                              IEnumerable<String>              Warnings,
-                                                              TimeSpan?                        RequestTimeout,
-                                                              WWCP.Acknowledgement             Result,
-                                                              TimeSpan                         Runtime);
-
-
-
-    /// <summary>
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
@@ -535,7 +466,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
             this.EVSEsToAddQueue                      = new HashSet<EVSE>();
-            this.EVSEsToUpdateQueue                 = new HashSet<EVSE>();
+            this.EVSEsToUpdateQueue                   = new HashSet<EVSE>();
             this.EVSEStatusChangesFastQueue           = new List<EVSEStatusUpdate>();
             this.EVSEStatusChangesDelayedQueue        = new List<EVSEStatusUpdate>();
             this.EVSEsToRemoveQueue                   = new HashSet<EVSE>();
@@ -620,41 +551,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case ReservationResultType.Success:
-                            return new Acknowledgement(Session_Id.Parse(response.Reservation.Id.ToString()),
-                                                       StatusCodeDescription: "Ready to charge!");
+                            return Acknowledgement.Success(
+                                       Session_Id.Parse(response.Reservation.Id.ToString()),
+                                       StatusCodeDescription: "Ready to charge!"
+                                   );
 
                         case ReservationResultType.InvalidCredentials:
-                            return new Acknowledgement(StatusCodes.SessionIsInvalid,
-                                                       "Session is invalid",
-                                                       SessionId: Session_Id.Parse(response.Reservation.Id.ToString()));
+                            return Acknowledgement.SessionIsInvalid(
+                                       SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
+                                   );
 
                         case ReservationResultType.Timeout:
                         case ReservationResultType.CommunicationError:
-                            return new Acknowledgement(StatusCodes.CommunicationToEVSEFailed,
-                                                       "Communication to EVSE failed!");
+                            return Acknowledgement.CommunicationToEVSEFailed();
 
                         case ReservationResultType.AlreadyReserved:
-                            return new Acknowledgement(StatusCodes.EVSEAlreadyReserved,
-                                                       "EVSE already reserved!");
+                            return Acknowledgement.EVSEAlreadyReserved();
 
                         case ReservationResultType.AlreadyInUse:
-                            return new Acknowledgement(StatusCodes.EVSEAlreadyInUse_WrongToken,
-                                                       "EVSE is already in use!");
+                            return Acknowledgement.EVSEAlreadyInUse_WrongToken();
 
                         case ReservationResultType.UnknownEVSE:
-                            return new Acknowledgement(StatusCodes.UnknownEVSEID,
-                                                       "Unknown EVSE ID!");
+                            return Acknowledgement.UnknownEVSEID();
 
                         case ReservationResultType.OutOfService:
-                            return new Acknowledgement(StatusCodes.EVSEOutOfService,
-                                                       "EVSE out of service!");
+                            return Acknowledgement.EVSEOutOfService();
 
                     }
                 }
 
-                return new Acknowledgement(StatusCodes.ServiceNotAvailable,
-                                           "Service not available!",
-                                           SessionId: Session_Id.Parse(response.Reservation.Id.ToString()));
+                return Acknowledgement.ServiceNotAvailable(
+                           
+                           SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
+                       );
 
                 #endregion
 
@@ -692,34 +621,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case CancelReservationResultType.Success:
-                            return new Acknowledgement(Session_Id.Parse(response.ReservationId.ToString()),
-                                                       StatusCodeDescription: "Reservation deleted!");
+                            return Acknowledgement.Success(
+                                       Session_Id.Parse(response.ReservationId.ToString()),
+                                       StatusCodeDescription: "Reservation deleted!"
+                                   );
 
                         case CancelReservationResultType.UnknownReservationId:
-                            return new Acknowledgement(StatusCodes.SessionIsInvalid,
-                                                       "Session is invalid!",
-                                                       SessionId: SessionId);
+                            return Acknowledgement.SessionIsInvalid(
+                                       SessionId: SessionId
+                                   );
 
                         case CancelReservationResultType.Offline:
                         case CancelReservationResultType.Timeout:
                         case CancelReservationResultType.CommunicationError:
-                            return new Acknowledgement(StatusCodes.CommunicationToEVSEFailed,
-                                                       "Communication to EVSE failed!");
+                            return Acknowledgement.CommunicationToEVSEFailed();
 
                         case CancelReservationResultType.UnknownEVSE:
-                            return new Acknowledgement(StatusCodes.UnknownEVSEID,
-                                                       "Unknown EVSE ID!");
+                            return Acknowledgement.UnknownEVSEID();
 
                         case CancelReservationResultType.OutOfService:
-                            return new Acknowledgement(StatusCodes.EVSEOutOfService,
-                                                       "EVSE out of service!");
+                            return Acknowledgement.EVSEOutOfService();
 
                     }
                 }
 
-                return new Acknowledgement(StatusCodes.ServiceNotAvailable,
-                                           "Service not available!",
-                                           SessionId: SessionId);
+                return Acknowledgement.ServiceNotAvailable(
+                           SessionId: SessionId
+                       );
 
                 #endregion
 
@@ -781,49 +709,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case RemoteStartEVSEResultType.Success:
-                            return new Acknowledgement(response.Session.Id.ToOICP(),
-                                                       StatusCodeDescription: "Ready to charge!");
+                            return Acknowledgement.Success(
+                                       response.Session.Id.ToOICP(),
+                                       StatusCodeDescription: "Ready to charge!"
+                                   );
 
                         case RemoteStartEVSEResultType.InvalidSessionId:
-                            return new Acknowledgement(StatusCodes.SessionIsInvalid,
-                                                       "Session is invalid!",
-                                                       SessionId: SessionId);
+                            return Acknowledgement.SessionIsInvalid(
+                                       SessionId: SessionId
+                                   );
 
                         case RemoteStartEVSEResultType.InvalidCredentials:
-                            return new Acknowledgement(StatusCodes.NoValidContract,
-                                                       "No valid contract!");
+                            return Acknowledgement.NoValidContract();
 
                         case RemoteStartEVSEResultType.Offline:
-                            return new Acknowledgement(StatusCodes.CommunicationToEVSEFailed,
-                                                       "Communication to EVSE failed!");
+                            return Acknowledgement.CommunicationToEVSEFailed();
 
                         case RemoteStartEVSEResultType.Timeout:
                         case RemoteStartEVSEResultType.CommunicationError:
-                            return new Acknowledgement(StatusCodes.CommunicationToEVSEFailed,
-                                                       "Communication to EVSE failed!");
+                            return Acknowledgement.CommunicationToEVSEFailed();
 
                         case RemoteStartEVSEResultType.Reserved:
-                            return new Acknowledgement(StatusCodes.EVSEAlreadyReserved,
-                                                       "EVSE already reserved!");
+                            return Acknowledgement.EVSEAlreadyReserved();
 
                         case RemoteStartEVSEResultType.AlreadyInUse:
-                            return new Acknowledgement(StatusCodes.EVSEAlreadyInUse_WrongToken,
-                                                       "EVSE is already in use!");
+                            return Acknowledgement.EVSEAlreadyInUse_WrongToken();
 
                         case RemoteStartEVSEResultType.UnknownEVSE:
-                            return new Acknowledgement(StatusCodes.UnknownEVSEID,
-                                                       "Unknown EVSE ID!");
+                            return Acknowledgement.UnknownEVSEID();
 
                         case RemoteStartEVSEResultType.OutOfService:
-                            return new Acknowledgement(StatusCodes.EVSEOutOfService,
-                                                       "EVSE out of service!");
+                            return Acknowledgement.EVSEOutOfService();
 
                     }
                 }
 
-                return new Acknowledgement(StatusCodes.ServiceNotAvailable,
-                                           "Service not available!",
-                                           SessionId: SessionId);
+                return Acknowledgement.ServiceNotAvailable(
+                           SessionId: SessionId
+                       );
 
                 #endregion
 
@@ -862,34 +785,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case RemoteStopEVSEResultType.Success:
-                            return new Acknowledgement(response.SessionId.ToOICP(),
-                                                       StatusCodeDescription: "Ready to stop charging!");
+                            return Acknowledgement.Success(
+                                       response.SessionId.ToOICP(),
+                                       StatusCodeDescription: "Ready to stop charging!"
+                                   );
 
                         case RemoteStopEVSEResultType.InvalidSessionId:
-                            return new Acknowledgement(StatusCodes.SessionIsInvalid,
-                                                       "Session is invalid!",
-                                                       SessionId: SessionId);
+                            return Acknowledgement.SessionIsInvalid(
+                                       SessionId: SessionId
+                                   );
 
                         case RemoteStopEVSEResultType.Offline:
                         case RemoteStopEVSEResultType.Timeout:
                         case RemoteStopEVSEResultType.CommunicationError:
-                            return new Acknowledgement(StatusCodes.CommunicationToEVSEFailed,
-                                                       "Communication to EVSE failed!");
+                            return Acknowledgement.CommunicationToEVSEFailed();
 
                         case RemoteStopEVSEResultType.UnknownEVSE:
-                            return new Acknowledgement(StatusCodes.UnknownEVSEID,
-                                                       "Unknown EVSE ID!");
+                            return Acknowledgement.UnknownEVSEID();
 
                         case RemoteStopEVSEResultType.OutOfService:
-                            return new Acknowledgement(StatusCodes.EVSEOutOfService,
-                                                       "EVSE out of service!");
+                            return Acknowledgement.EVSEOutOfService();
 
                     }
                 }
 
-                return new Acknowledgement(StatusCodes.ServiceNotAvailable,
-                                           "Service not available!",
-                                           SessionId: SessionId);
+                return Acknowledgement.ServiceNotAvailable(
+                           SessionId: SessionId
+                       );
 
                 #endregion
 

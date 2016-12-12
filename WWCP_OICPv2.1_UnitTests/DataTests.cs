@@ -18,11 +18,12 @@
 #region Usings
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
+using org.GraphDefined.WWCP.OICPv2_1;
 using org.GraphDefined.WWCP.OICPv2_1.EMP;
 using org.GraphDefined.WWCP.OICPv2_1.CPO;
 
@@ -311,8 +312,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                                                     "1234") //DE**GDF*CAETE4*3"), "1234") //
 
                                            ),
-                                           ProviderId:     Provider_Id.Parse("DE*GDF"),
-                                           OICPAction:     ActionTypes.fullLoad,
+                                           Provider_Id.Parse("DE*GDF"),
+                                           ActionTypes.fullLoad,
                                            RequestTimeout: TimeSpan.  FromSeconds(120));
 
 

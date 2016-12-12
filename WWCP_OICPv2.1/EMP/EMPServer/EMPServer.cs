@@ -723,9 +723,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     }
                     catch (Exception e)
                     {
-                        response = new Acknowledgement(StatusCodes.DataError,
-                                                               "The ChargeDetailRecord request led to an exception!",
-                                                               e.Message);
+                        response = Acknowledgement.DataError(
+                                       "The ChargeDetailRecord request led to an exception!",
+                                       e.Message
+                                   );
                     }
 
                     #endregion
@@ -756,8 +757,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         }
 
                         if (results.Length == 0 || response == null)
-                            response = new Acknowledgement(StatusCodes.SystemError,
-                                                                   "Could not process the incoming request!");
+                            response = Acknowledgement.SystemError("Could not process the incoming request!");
 
                     }
 
