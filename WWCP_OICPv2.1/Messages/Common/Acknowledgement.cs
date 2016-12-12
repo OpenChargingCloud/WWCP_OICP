@@ -880,10 +880,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 Acknowledgement = new Acknowledgement((AcknowledgementXML.ElementValueOrFail(OICPNS.CommonTypes + "Result", "Missing 'Result'-XML-tag!") == "true")
                                                           ? true
                                                           : false,
-                                                      StatusCode.Parse(AcknowledgementXML.ElementOrFail(OICPNS.CommonTypes + "StatusCode",
-                                                                                                        "Missing 'StatusCode'-XML-tag!")),
-                                                      AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "SessionID",        Session_Id.Parse),
-                                                      AcknowledgementXML.MapValueOrDefault(OICPNS.CommonTypes + "PartnerSessionID", PartnerSession_Id.Parse));
+
+                                                      AcknowledgementXML.MapElementOrFail  (OICPNS.CommonTypes + "StatusCode",
+                                                                                            StatusCode.Parse),
+
+                                                      AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "SessionID",
+                                                                                            Session_Id.Parse),
+
+                                                      AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "PartnerSessionID",
+                                                                                            PartnerSession_Id.Parse)
+
+                                                     );
 
                 return true;
 
