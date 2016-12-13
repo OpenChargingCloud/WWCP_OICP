@@ -99,25 +99,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// An optional initial value of the energy meter.
         /// </summary>
         [Optional]
-        public Double?                      MeterValueStart         { get; }
+        public Single?                      MeterValueStart         { get; }
 
         /// <summary>
         /// An optional final value of the energy meter.
         /// </summary>
         [Optional]
-        public Double?                      MeterValueEnd           { get; }
+        public Single?                      MeterValueEnd           { get; }
 
         /// <summary>
         /// An optional enumeration of meter values during the charging session.
         /// </summary>
         [Optional]
-        public IEnumerable<Double>          MeterValuesInBetween    { get; }
+        public IEnumerable<Single>          MeterValuesInBetween    { get; }
 
         /// <summary>
         /// The optional amount of consumed energy.
         /// </summary>
         [Optional]
-        public Double?                      ConsumedEnergy          { get; }
+        public Single?                      ConsumedEnergy          { get; }
 
         /// <summary>
         /// An optional signature for the metering values.
@@ -170,11 +170,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                   PartnerSession_Id?                  PartnerSessionId       = null,
                                   DateTime?                           ChargingStart          = null,
                                   DateTime?                           ChargingEnd            = null,
-                                  Double?                             MeterValueStart        = null,
-                                  Double?                             MeterValueEnd          = null,
-                                  IEnumerable<Double>                 MeterValuesInBetween   = null,
-                                  Double?                             ConsumedEnergy         = null,
-                                  String                              MeteringSignature      = null,
+                                  Single?                             MeterValueStart        = null,  // xx.yyy
+                                  Single?                             MeterValueEnd          = null,  // xx.yyy
+                                  IEnumerable<Single>                 MeterValuesInBetween   = null,  // xx.yyy
+                                  Single?                             ConsumedEnergy         = null,  // xx.yyy
+                                  String                              MeteringSignature      = null,  // maxlength: 200
                                   HubOperator_Id?                     HubOperatorId          = null,
                                   HubProvider_Id?                     HubProviderId          = null,
 
@@ -193,11 +193,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this.PartnerSessionId      = PartnerSessionId;
             this.ChargingStart         = ChargingStart;
             this.ChargingEnd           = ChargingEnd;
-            this.MeterValueStart       = MeterValueStart;
-            this.MeterValueEnd         = MeterValueEnd;
-            this.MeterValuesInBetween  = MeterValuesInBetween;
-            this.ConsumedEnergy        = ConsumedEnergy;
-            this.MeteringSignature     = MeteringSignature;
+            this.MeterValueStart       = MeterValueStart.HasValue ? (Single) Math.Round(MeterValueStart.Value, 3) : new Single?();
+            this.MeterValueEnd         = MeterValueEnd.  HasValue ? (Single) Math.Round(MeterValueEnd.  Value, 3) : new Single?();
+            this.MeterValuesInBetween  = MeterValuesInBetween.Any() ? MeterValuesInBetween.Select(metervalue => (Single) Math.Round(metervalue, 3)) : null;
+            this.ConsumedEnergy        = ConsumedEnergy. HasValue ? (Single) Math.Round(ConsumedEnergy. Value, 3) : new Single?();
+            this.MeteringSignature     = MeteringSignature.SubstringMax(200);
             this.HubOperatorId         = HubOperatorId;
             this.HubProviderId         = HubProviderId;
 
@@ -392,17 +392,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                                      DateTime.Parse),
 
                                          ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "MeterValueStart",
-                                                                                     Double.Parse),
+                                                                                     Single.Parse),
 
                                          ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "MeterValueEnd",
-                                                                                     Double.Parse),
+                                                                                     Single.Parse),
 
                                          ChargeDetailRecordXML.MapValues            (OICPNS.Authorization + "MeterValuesInBetween",
                                                                                      OICPNS.Authorization + "MeterValue",
-                                                                                     Double.Parse),
+                                                                                     Single.Parse),
 
                                          ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "ConsumedEnergy",
-                                                                                     Double.Parse),
+                                                                                     Single.Parse),
 
                                          ChargeDetailRecordXML.ElementValueOrDefault(OICPNS.Authorization + "MeteringSignature"),
 

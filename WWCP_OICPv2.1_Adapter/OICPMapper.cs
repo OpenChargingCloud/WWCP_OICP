@@ -1215,15 +1215,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            EVSEId:                ChargeDetailRecord.EVSEId.ToWWCP(),
                                            ChargingProductId:     ChargeDetailRecord.PartnerProductId.ToWWCP(),
                                            SessionTime:           new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
-                                           EnergyMeteringValues:  new List<Timestamped<Double>> {
+                                           EnergyMeteringValues:  new List<Timestamped<Single>> {
 
-                                                                      new Timestamped<Double>(
-                                                                          ChargeDetailRecord.ChargingStart.Value,
+                                                                      new Timestamped<Single>(
+                                                                          ChargeDetailRecord.ChargingStart.  Value,
                                                                           ChargeDetailRecord.MeterValueStart.Value
                                                                       ),
 
-                                                                      new Timestamped<Double>(
-                                                                          ChargeDetailRecord.ChargingEnd.Value,
+                                                                      new Timestamped<Single>(
+                                                                          ChargeDetailRecord.ChargingEnd.  Value,
                                                                           ChargeDetailRecord.MeterValueEnd.Value
                                                                       )
 
@@ -1252,9 +1252,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    null, // PartnerSessionId
                    ChargeDetailRecord.SessionTime.HasValue? ChargeDetailRecord.SessionTime.Value.StartTime : new DateTime?(),
                    ChargeDetailRecord.SessionTime.HasValue? ChargeDetailRecord.SessionTime.Value.EndTime   : null,
-                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.First().Value : new Double?(),
-                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value : new Double?(),
-                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<double> v) => v.Value) : null,
+                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.First().Value : new Single?(),
+                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value : new Single?(),
+                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Single> v) => v.Value) : null,
                    ChargeDetailRecord.ConsumedEnergy,
                    ChargeDetailRecord.MeteringSignature
                );
