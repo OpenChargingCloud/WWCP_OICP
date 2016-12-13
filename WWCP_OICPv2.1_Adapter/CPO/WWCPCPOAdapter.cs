@@ -696,9 +696,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #region Request mapping
 
-                ChargingReservation_Id ReservationId    = default(ChargingReservation_Id);
-                TimeSpan?              PlannedDuration  = null;
-                Single?                PlannedEnergy    = null;
+                ChargingReservation_Id? ReservationId    = null;
+                TimeSpan?               PlannedDuration  = null;
+                Single?                 PlannedEnergy    = null;
+                ChargingProduct_Id?     ProductId        = null;
 
                 if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
                 {
@@ -708,8 +709,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     if (ProductIdElements.Any())
                     {
 
-                        if (ProductIdElements.ContainsKey("R"))
-                            ChargingReservation_Id.TryParse(EVSEId.OperatorId.ToWWCP(), ProductIdElements["R"], out ReservationId);
+                        ChargingReservation_Id _ReservationId;
+
+                        if (ProductIdElements.ContainsKey("R") &&
+                            ChargingReservation_Id.TryParse(EVSEId.OperatorId.ToWWCP(), ProductIdElements["R"], out _ReservationId))
+                            ReservationId = _ReservationId;
+
 
                         if (ProductIdElements.ContainsKey("D"))
                         {
@@ -724,11 +729,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         }
 
+
                         Single _PlannedEnergy = 0;
 
                         if (ProductIdElements.ContainsKey("E") &&
                             Single.TryParse(ProductIdElements["E"], out _PlannedEnergy))
                             PlannedEnergy = _PlannedEnergy;
+
+
+                        ChargingProduct_Id _ProductId;
+
+                        if (ProductIdElements.ContainsKey("P") &&
+                            ChargingProduct_Id.TryParse(ProductIdElements["P"], out _ProductId))
+                            ProductId = _ProductId;
 
                     }
 
@@ -736,12 +749,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                var response = await RoamingNetwork.RemoteStart(EVSEId.ToWWCP(),
-                                                                ChargingProductId.ToWWCP(),
+                var response = await RoamingNetwork.RemoteStart(EVSEId.    ToWWCP(),
+                                                                ProductId,
                                                                 PlannedDuration,
                                                                 PlannedEnergy,
                                                                 ReservationId,
-                                                                SessionId. ToWWCP().Value,
+                                                                SessionId. ToWWCP(),
                                                                 ProviderId.ToWWCP(),
                                                                 EVCOId.    ToWWCP(),
 
