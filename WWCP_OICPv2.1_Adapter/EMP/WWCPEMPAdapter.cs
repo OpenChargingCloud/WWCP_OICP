@@ -1805,12 +1805,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 result.Content.Result)
             {
 
-                return CancelReservationResult.Success(ReservationId);
+                return CancelReservationResult.Success(ReservationId,
+                                                       Reason);
 
             }
 
-            return CancelReservationResult.Error(result.HTTPStatusCode.ToString(),
-                                                 result);
+            return CancelReservationResult.Error(ReservationId,
+                                                 Reason,
+                                                 result.HTTPStatusCode.ToString(),
+                                                 result.EntirePDU);
 
         }
 
@@ -1824,8 +1827,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="EVSEId">The unique identification of the EVSE to be started remotely.</param>
         /// <param name="ChargingProductId">An optional identification of the charging product to use.</param>
-        /// <param name="Duration">An optional maximum time span to charge. When it is reached, the charging process will stop automatically.</param>
-        /// <param name="MaxEnergy">An optional maximum amount of energy to charge. When it is reached, the charging process will stop automatically.</param>
+        /// <param name="PlannedDuration">An optional maximum time span to charge. When it is reached, the charging process will stop automatically.</param>
+        /// <param name="PlannedEnergy">An optional maximum amount of energy to charge. When it is reached, the charging process will stop automatically.</param>
         /// <param name="ReservationId">An optional identification of a charging reservation.</param>
         /// <param name="SessionId">An optional identification of this charging session.</param>
         /// <param name="ProviderId">An optional identification of the e-mobility service provider, whenever this identification is different from the current message sender.</param>
@@ -1839,8 +1842,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             IReserveRemoteStartStop.RemoteStart(WWCP.EVSE_Id             EVSEId,
                                                 ChargingProduct_Id?      ChargingProductId,  // = null,
-//                                              TimeSpan?                Duration            // = null,
-//                                              Double?                  MaxEnergy           // = null,
+                                                TimeSpan?                PlannedDuration,    // = null,
+                                                Double?                  PlannedEnergy,      // = null,
                                                 ChargingReservation_Id?  ReservationId,      // = null,
                                                 ChargingSession_Id?      SessionId,          // = null,
                                                 eMobilityProvider_Id?    ProviderId,         // = null,
@@ -1874,12 +1877,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (!RequestTimeout.HasValue)
                 RequestTimeout = EMPClient?.RequestTimeout;
 
-
-            var StartTime = DateTime.Now;
-
             #endregion
 
             #region Send OnRemoteStartEVSERequest event
+
+            var StartTime = DateTime.Now;
 
             try
             {
@@ -1891,6 +1893,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  RoamingNetwork.Id,
                                                  EVSEId,
                                                  ChargingProductId,
+                                                 PlannedDuration,
+                                                 PlannedEnergy,
                                                  ReservationId,
                                                  SessionId,
                                                  ProviderId,
@@ -1922,9 +1926,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            #region Copy the 'Duration' value into the PartnerProductId "D=...min"
+            #region Copy the 'PlannedDuration' value into the PartnerProductId "D=...min"
 
-            //if (Duration.HasValue && Duration.Value >= TimeSpan.FromSeconds(1))
+            //if (PlannedDuration.HasValue && PlannedDuration.Value >= TimeSpan.FromSeconds(1))
             //{
             //
             //    if (Duration.Value.Minutes > 0 && Duration.Value.Seconds == 0)
@@ -1947,9 +1951,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            #region Copy the 'MaxEnergy' value into the PartnerProductId
+            #region Copy the 'PlannedEnergy' value into the PartnerProductId
 
-            //if (MaxEnergy.HasValue && MaxEnergy.Value > 0))
+            //if (PlannedEnergy.HasValue && PlannedEnergy.Value > 0))
             //{
             //
             //    if (Duration.Value.Minutes > 0 && Duration.Value.Seconds == 0)
@@ -1978,9 +1982,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             {
 
                 if (!PartnerProductIdElements.ContainsKey("R"))
-                    PartnerProductIdElements.Add("R", ReservationId.ToString());
+                    PartnerProductIdElements.Add("R", ReservationId.Value.Suffix);
                 else
-                    PartnerProductIdElements["R"] = ReservationId.ToString();
+                    PartnerProductIdElements["R"] = ReservationId.Value.Suffix;
 
             }
 

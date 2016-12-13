@@ -492,19 +492,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #region Request transformation
 
-                TimeSpan? Duration = null;
+                TimeSpan? Duration   = null;
+                DateTime? StartTime  = null;
 
                 // Analyse the ChargingProductId field and apply the found key/value-pairs
                 if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
                 {
 
-                    var Elements = pattern.Replace(PartnerProductId.ToString(), "=").Split('|').ToArray();
+                    var Elements = pattern.Replace(PartnerProductId.ToString(), "=").Split(';').ToArray();
 
                     if (Elements.Length > 0)
                     {
 
                         var DurationText = Elements.FirstOrDefault(element => element.StartsWith("D=", StringComparison.InvariantCulture));
-                        if (DurationText != null)
+                        if (DurationText.IsNotNullOrEmpty())
                         {
 
                             DurationText = DurationText.Substring(2);
@@ -518,11 +519,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         }
 
                         var PartnerProductText = Elements.FirstOrDefault(element => element.StartsWith("P=", StringComparison.InvariantCulture));
-                        if (PartnerProductText != null)
+                        if (PartnerProductText.IsNotNullOrEmpty())
                         {
+                            PartnerProductId = PartnerProduct_Id.Parse(PartnerProductText.Substring(2));
+                        }
 
-                            PartnerProductId = PartnerProduct_Id.Parse(DurationText.Substring(2));
-
+                        var StartTimeText = Elements.FirstOrDefault(element => element.StartsWith("S=", StringComparison.InvariantCulture));
+                        if (StartTimeText.IsNotNullOrEmpty())
+                        {
+                            StartTime = DateTime.Parse(StartTimeText.Substring(2));
                         }
 
                     }
@@ -532,6 +537,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 #endregion
 
                 var response = await RoamingNetwork.Reserve(EVSEId.ToWWCP(),
+                                                            StartTime:          StartTime,
                                                             Duration:           Duration,
 
                                                             // Always create a reservation identification usable for OICP!
@@ -539,7 +545,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                     EVSEId.OperatorId.ToWWCP(),
                                                                                     SessionId.HasValue
                                                                                         ? SessionId.ToString()
-                                                                                        : Session_Id.New.ToString()
+                                                                                        : Session_Id.NewRandom.ToString()
                                                                                 ),
 
                                                             ProviderId:         ProviderId.      ToWWCP(),
@@ -640,25 +646,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     switch (response.Result)
                     {
 
-                        case CancelReservationResultType.Success:
+                        case CancelReservationResults.Success:
                             return Acknowledgement.Success(
                                        StatusCodeDescription: "Reservation deleted!"
                                    );
 
-                        case CancelReservationResultType.UnknownReservationId:
+                        case CancelReservationResults.UnknownReservationId:
                             return Acknowledgement.SessionIsInvalid(
                                        SessionId: SessionId
                                    );
 
-                        case CancelReservationResultType.Offline:
-                        case CancelReservationResultType.Timeout:
-                        case CancelReservationResultType.CommunicationError:
+                        case CancelReservationResults.Offline:
+                        case CancelReservationResults.Timeout:
+                        case CancelReservationResults.CommunicationError:
                             return Acknowledgement.CommunicationToEVSEFailed();
 
-                        case CancelReservationResultType.UnknownEVSE:
+                        case CancelReservationResults.UnknownEVSE:
                             return Acknowledgement.UnknownEVSEID();
 
-                        case CancelReservationResultType.OutOfService:
+                        case CancelReservationResults.OutOfService:
                             return Acknowledgement.EVSEOutOfService();
 
                     }
@@ -691,17 +697,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 #region Request mapping
 
                 ChargingReservation_Id ReservationId = default(ChargingReservation_Id);
+                TimeSpan? Duration = null;
 
                 if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
                 {
 
-                    var Elements = ChargingProductId.ToString().Split('|').ToArray();
+                    var Elements = ChargingProductId.ToString().Split(';').ToArray();
 
                     if (Elements.Length > 0)
                     {
-                        var ChargingReservationIdText = Elements.FirstOrDefault(element => element.StartsWith("R=", StringComparison.InvariantCulture));
-                        if (ChargingReservationIdText.IsNotNullOrEmpty())
-                            ReservationId = ChargingReservation_Id.Parse(ChargingReservationIdText.Substring(2));
+
+                        var ReservationIdText = Elements.FirstOrDefault(element => element.StartsWith("R=", StringComparison.InvariantCulture));
+                        if (ReservationIdText.IsNotNullOrEmpty())
+                            ReservationId = ChargingReservation_Id.Parse(ReservationIdText.Substring(2));
+
+                        var DurationText      = Elements.FirstOrDefault(element => element.StartsWith("D=", StringComparison.InvariantCulture));
+                        if (DurationText.IsNotNullOrEmpty())
+                        {
+
+                            DurationText = DurationText.Substring(2);
+
+                            if (DurationText.EndsWith("sec", StringComparison.InvariantCulture))
+                                Duration = TimeSpan.FromSeconds(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+
+                            if (DurationText.EndsWith("min", StringComparison.InvariantCulture))
+                                Duration = TimeSpan.FromMinutes(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+
+                        }
+
                     }
 
                 }
@@ -710,6 +733,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 var response = await RoamingNetwork.RemoteStart(EVSEId.ToWWCP(),
                                                                 ChargingProductId.ToWWCP(),
+                                                                null,
+                                                                null,
                                                                 ReservationId,
                                                                 SessionId. ToWWCP().Value,
                                                                 ProviderId.ToWWCP(),
