@@ -1843,7 +1843,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             IReserveRemoteStartStop.RemoteStart(WWCP.EVSE_Id             EVSEId,
                                                 ChargingProduct_Id?      ChargingProductId,  // = null,
                                                 TimeSpan?                PlannedDuration,    // = null,
-                                                Double?                  PlannedEnergy,      // = null,
+                                                Single?                  PlannedEnergy,      // = null,
                                                 ChargingReservation_Id?  ReservationId,      // = null,
                                                 ChargingSession_Id?      SessionId,          // = null,
                                                 eMobilityProvider_Id?    ProviderId,         // = null,

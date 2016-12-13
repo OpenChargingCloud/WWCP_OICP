@@ -499,7 +499,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
                 {
 
-                    var Elements = pattern.Replace(PartnerProductId.ToString(), "=").Split(';').ToArray();
+                    var Elements = pattern.Replace(PartnerProductId.ToString(), "=").Split('|').ToArray();
 
                     if (Elements.Length > 0)
                     {
@@ -696,34 +696,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #region Request mapping
 
-                ChargingReservation_Id ReservationId = default(ChargingReservation_Id);
-                TimeSpan? Duration = null;
+                ChargingReservation_Id ReservationId    = default(ChargingReservation_Id);
+                TimeSpan?              PlannedDuration  = null;
+                Single?                PlannedEnergy    = null;
 
                 if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
                 {
 
-                    var Elements = ChargingProductId.ToString().Split(';').ToArray();
+                    var ProductIdElements = ChargingProductId.ToString().DoubleSplit('|', '=');
 
-                    if (Elements.Length > 0)
+                    if (ProductIdElements.Any())
                     {
 
-                        var ReservationIdText = Elements.FirstOrDefault(element => element.StartsWith("R=", StringComparison.InvariantCulture));
-                        if (ReservationIdText.IsNotNullOrEmpty())
-                            ReservationId = ChargingReservation_Id.Parse(ReservationIdText.Substring(2));
+                        if (ProductIdElements.ContainsKey("R"))
+                            ChargingReservation_Id.TryParse(EVSEId.OperatorId.ToWWCP(), ProductIdElements["R"], out ReservationId);
 
-                        var DurationText      = Elements.FirstOrDefault(element => element.StartsWith("D=", StringComparison.InvariantCulture));
-                        if (DurationText.IsNotNullOrEmpty())
+                        if (ProductIdElements.ContainsKey("D"))
                         {
 
-                            DurationText = DurationText.Substring(2);
+                            var DurationText = ProductIdElements["D"];
 
                             if (DurationText.EndsWith("sec", StringComparison.InvariantCulture))
-                                Duration = TimeSpan.FromSeconds(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+                                PlannedDuration = TimeSpan.FromSeconds(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
 
                             if (DurationText.EndsWith("min", StringComparison.InvariantCulture))
-                                Duration = TimeSpan.FromMinutes(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+                                PlannedDuration = TimeSpan.FromMinutes(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
 
                         }
+
+                        Single _PlannedEnergy = 0;
+
+                        if (ProductIdElements.ContainsKey("E") &&
+                            Single.TryParse(ProductIdElements["E"], out _PlannedEnergy))
+                            PlannedEnergy = _PlannedEnergy;
 
                     }
 
@@ -733,8 +738,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 var response = await RoamingNetwork.RemoteStart(EVSEId.ToWWCP(),
                                                                 ChargingProductId.ToWWCP(),
-                                                                null,
-                                                                null,
+                                                                PlannedDuration,
+                                                                PlannedEnergy,
                                                                 ReservationId,
                                                                 SessionId. ToWWCP().Value,
                                                                 ProviderId.ToWWCP(),
