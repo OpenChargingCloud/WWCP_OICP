@@ -669,33 +669,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     switch (response.Status)
                     {
 
-                        case SendCDRResultType.Forwarded:
+                        case SendCDRsResultType.Forwarded:
                             return Acknowledgement.Success(
                                        ChargeDetailRecord.SessionId,
                                        ChargeDetailRecord.PartnerSessionId,
                                        "Charge detail record forwarded!"
                                    );
 
-                        case SendCDRResultType.NotForwared:
+                        case SendCDRsResultType.NotForwared:
                             return Acknowledgement.SystemError(
                                        "Communication to EVSE failed!",
                                        SessionId:         ChargeDetailRecord.SessionId,
                                        PartnerSessionId:  ChargeDetailRecord.PartnerSessionId
                                    );
 
-                        case SendCDRResultType.InvalidSessionId:
+                        case SendCDRsResultType.InvalidSessionId:
                             return Acknowledgement.SessionIsInvalid(
                                        SessionId:         ChargeDetailRecord.SessionId,
                                        PartnerSessionId:  ChargeDetailRecord.PartnerSessionId
                                    );
 
-                        case SendCDRResultType.UnknownEVSE:
+                        case SendCDRsResultType.UnknownEVSE:
                             return Acknowledgement.UnknownEVSEID(
                                        SessionId:         ChargeDetailRecord.SessionId,
                                        PartnerSessionId:  ChargeDetailRecord.PartnerSessionId
                                    );
 
-                        case SendCDRResultType.Error:
+                        case SendCDRsResultType.Error:
                             return Acknowledgement.DataError(
                                        SessionId:         ChargeDetailRecord.SessionId,
                                        PartnerSessionId:  ChargeDetailRecord.PartnerSessionId

@@ -199,14 +199,43 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region DisableAutoUploads
+
+        #region DisablePushData
 
         /// <summary>
         /// This service can be disabled, e.g. for debugging reasons.
         /// </summary>
-        public Boolean DisableAutoUploads { get; set; }
+        public Boolean  DisablePushData                  { get; set; }
 
         #endregion
+
+        #region DisablePushStatus
+
+        /// <summary>
+        /// This service can be disabled, e.g. for debugging reasons.
+        /// </summary>
+        public Boolean  DisablePushStatus                { get; set; }
+
+        #endregion
+
+        #region DisableAuthentication
+
+        /// <summary>
+        /// This service can be disabled, e.g. for debugging reasons.
+        /// </summary>
+        public Boolean  DisableAuthentication            { get; set; }
+
+        #endregion
+
+        #region DisableSendChargeDetailRecords
+
+        /// <summary>
+        /// This service can be disabled, e.g. for debugging reasons.
+        /// </summary>
+        public Boolean  DisableSendChargeDetailRecords   { get; set; }
+
+        #endregion
+
 
         /// <summary>
         /// An optional default charging station operator identification.
@@ -399,7 +428,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
-        /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
+        /// 
+        /// <param name="DisablePushData">This service can be disabled, e.g. for debugging reasons.</param>
+        /// <param name="DisablePushStatus">This service can be disabled, e.g. for debugging reasons.</param>
+        /// <param name="DisableAuthentication">This service can be disabled, e.g. for debugging reasons.</param>
+        /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
         public WWCPCPOAdapter(CSORoamingProvider_Id                        Id,
                               I18NString                                   Name,
                               RoamingNetwork                               RoamingNetwork,
@@ -415,7 +448,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               IncludeEVSEDelegate                          IncludeEVSEs                        = null,
                               TimeSpan?                                    ServiceCheckEvery                   = null,
                               TimeSpan?                                    StatusCheckEvery                    = null,
-                              Boolean                                      DisableAutoUploads                  = false)
+
+                              Boolean                                      DisablePushData                     = false,
+                              Boolean                                      DisablePushStatus                   = false,
+                              Boolean                                      DisableAuthentication               = false,
+                              Boolean                                      DisableSendChargeDetailRecords      = false)
 
             : base(Id,
                    RoamingNetwork)
@@ -462,8 +499,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this.StatusCheckLock                      = new Object();
             this.StatusCheckTimer                     = new Timer(StatusCheck, null, 0, _StatusCheckEvery);
 
-            this.DisableAutoUploads                   = DisableAutoUploads;
-
+            this.DisablePushData                      = DisablePushData;
+            this.DisablePushStatus                    = DisablePushStatus;
+            this.DisableAuthentication                = DisableAuthentication;
+            this.DisableSendChargeDetailRecords       = DisableSendChargeDetailRecords;
 
             this.EVSEsToAddQueue                      = new HashSet<EVSE>();
             this.EVSEsToUpdateQueue                   = new HashSet<EVSE>();
@@ -905,7 +944,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
-        /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
+        /// 
+        /// <param name="DisablePushData">This service can be disabled, e.g. for debugging reasons.</param>
+        /// <param name="DisablePushStatus">This service can be disabled, e.g. for debugging reasons.</param>
+        /// <param name="DisableAuthentication">This service can be disabled, e.g. for debugging reasons.</param>
+        /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
         public WWCPCPOAdapter(CSORoamingProvider_Id                        Id,
                               I18NString                                   Name,
                               RoamingNetwork                               RoamingNetwork,
@@ -925,7 +968,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               IncludeEVSEDelegate                          IncludeEVSEs                        = null,
                               TimeSpan?                                    ServiceCheckEvery                   = null,
                               TimeSpan?                                    StatusCheckEvery                    = null,
-                              Boolean                                      DisableAutoUploads                  = false)
+
+                              Boolean                                      DisablePushData                     = false,
+                              Boolean                                      DisablePushStatus                   = false,
+                              Boolean                                      DisableAuthentication               = false,
+                              Boolean                                      DisableSendChargeDetailRecords      = false)
 
             : this(Id,
                    Name,
@@ -946,7 +993,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    IncludeEVSEs,
                    ServiceCheckEvery,
                    StatusCheckEvery,
-                   DisableAutoUploads)
+
+                   DisablePushData,
+                   DisablePushStatus,
+                   DisableAuthentication,
+                   DisableSendChargeDetailRecords)
 
         { }
 
@@ -986,7 +1037,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
-        /// <param name="DisableAutoUploads">This service can be disabled, e.g. for debugging reasons.</param>
+        /// 
+        /// <param name="DisablePushData">This service can be disabled, e.g. for debugging reasons.</param>
+        /// <param name="DisablePushStatus">This service can be disabled, e.g. for debugging reasons.</param>
+        /// <param name="DisableAuthentication">This service can be disabled, e.g. for debugging reasons.</param>
+        /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public WWCPCPOAdapter(CSORoamingProvider_Id                        Id,
@@ -1023,7 +1078,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               IncludeEVSEDelegate                          IncludeEVSEs                        = null,
                               TimeSpan?                                    ServiceCheckEvery                   = null,
                               TimeSpan?                                    StatusCheckEvery                    = null,
-                              Boolean                                      DisableAutoUploads                  = false,
+
+                              Boolean                                      DisablePushData                     = false,
+                              Boolean                                      DisablePushStatus                   = false,
+                              Boolean                                      DisableAuthentication               = false,
+                              Boolean                                      DisableSendChargeDetailRecords      = false,
 
                               DNSClient                                    DNSClient                           = null)
 
@@ -1064,7 +1123,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    IncludeEVSEs,
                    ServiceCheckEvery,
                    StatusCheckEvery,
-                   DisableAutoUploads)
+
+                   DisablePushData,
+                   DisablePushStatus,
+                   DisableAuthentication,
+                   DisableSendChargeDetailRecords)
 
         {
 
@@ -3645,51 +3708,65 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var response = await CPORoaming.AuthorizeStart(OperatorId.HasValue
-                                                               ? OperatorId.Value.ToOICP()
-                                                               : DefaultOperatorId,
-                                                           AuthToken.        ToOICP(),
-                                                           null,
-                                                           ChargingProductId.ToOICP(),
-                                                           SessionId.        ToOICP(),
-                                                           null,
+            DateTime         Endtime;
+            TimeSpan         Runtime;
+            AuthStartResult  result;
 
-                                                           Timestamp,
-                                                           CancellationToken,
-                                                           EventTrackingId,
-                                                           RequestTimeout).ConfigureAwait(false);
-
-
-            var Endtime = DateTime.Now;
-            var Runtime = Endtime - StartTime;
-
-            AuthStartResult result = null;
-
-            if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
-                response.Content                     != null              &&
-                response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
+            if (DisableAuthentication)
             {
-
-                result = AuthStartResult.Authorized(
-                             Id,
-                             response.Content.SessionId. ToWWCP().Value,
-                             ProviderId:      response.Content.ProviderId.ToWWCP(),
-                             Description:     response.Content.StatusCode.Description,
-                             AdditionalInfo:  response.Content.StatusCode.AdditionalInfo,
-                             Runtime:         Runtime
-                         );
-
+                Endtime  = DateTime.Now;
+                Runtime  = Endtime - StartTime;
+                result   = AuthStartResult.OutOfService(Id, SessionId, Runtime);
             }
 
             else
-                result = AuthStartResult.NotAuthorized(
-                             Id,
-                             SessionId,
-                             response.Content.ProviderId.ToWWCP(),
-                             response.Content.StatusCode.Description,
-                             response.Content.StatusCode.AdditionalInfo,
-                             Runtime
-                         );
+            {
+
+                var response = await CPORoaming.AuthorizeStart(OperatorId.HasValue
+                                                                   ? OperatorId.Value.ToOICP()
+                                                                   : DefaultOperatorId,
+                                                               AuthToken.        ToOICP(),
+                                                               null,
+                                                               ChargingProductId.ToOICP(),
+                                                               SessionId.        ToOICP(),
+                                                               null,
+
+                                                               Timestamp,
+                                                               CancellationToken,
+                                                               EventTrackingId,
+                                                               RequestTimeout).ConfigureAwait(false);
+
+
+                Endtime  = DateTime.Now;
+                Runtime  = Endtime - StartTime;
+
+                if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
+                    response.Content                     != null              &&
+                    response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
+                {
+
+                    result = AuthStartResult.Authorized(
+                                 Id,
+                                 response.Content.SessionId. ToWWCP().Value,
+                                 ProviderId:      response.Content.ProviderId.ToWWCP(),
+                                 Description:     response.Content.StatusCode.Description,
+                                 AdditionalInfo:  response.Content.StatusCode.AdditionalInfo,
+                                 Runtime:         Runtime
+                             );
+
+                }
+
+                else
+                    result = AuthStartResult.NotAuthorized(
+                                 Id,
+                                 SessionId,
+                                 response.Content.ProviderId.ToWWCP(),
+                                 response.Content.StatusCode.Description,
+                                 response.Content.StatusCode.AdditionalInfo,
+                                 Runtime
+                             );
+
+            }
 
 
             #region Send OnAuthorizeStartResponse event
@@ -3802,51 +3879,65 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var response  = await CPORoaming.AuthorizeStart(OperatorId.HasValue
-                                                               ? OperatorId.Value.ToOICP()
-                                                               : DefaultOperatorId,
-                                                            AuthToken.        ToOICP(),
-                                                            EVSEId.           ToOICP(),
-                                                            ChargingProductId.ToOICP(),
-                                                            SessionId.        ToOICP(),
-                                                            null,
+            DateTime             Endtime;
+            TimeSpan             Runtime;
+            AuthStartEVSEResult  result;
 
-                                                            Timestamp,
-                                                            CancellationToken,
-                                                            EventTrackingId,
-                                                            RequestTimeout).ConfigureAwait(false);
-
-
-            var Endtime = DateTime.Now;
-            var Runtime = Endtime - StartTime;
-
-            AuthStartEVSEResult result = null;
-
-            if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
-                response.Content                     != null              &&
-                response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
+            if (DisableAuthentication)
             {
-
-                result = AuthStartEVSEResult.Authorized(
-                             Id,
-                             response.Content.SessionId.ToWWCP().Value,
-                             ProviderId:      response.Content.ProviderId.ToWWCP(),
-                             Description:     response.Content.StatusCode.Description,
-                             AdditionalInfo:  response.Content.StatusCode.AdditionalInfo,
-                             Runtime:         Runtime
-                         );
-
+                Endtime  = DateTime.Now;
+                Runtime  = Endtime - StartTime;
+                result   = AuthStartEVSEResult.OutOfService(Id, SessionId, Runtime);
             }
 
             else
-                result = AuthStartEVSEResult.NotAuthorized(
-                             Id,
-                             SessionId,
-                             response.Content.ProviderId.ToWWCP(),
-                             response.Content.StatusCode.Description,
-                             response.Content.StatusCode.AdditionalInfo,
-                             Runtime
-                         );
+            {
+
+                var response  = await CPORoaming.AuthorizeStart(OperatorId.HasValue
+                                                                   ? OperatorId.Value.ToOICP()
+                                                                   : DefaultOperatorId,
+                                                                AuthToken.        ToOICP(),
+                                                                EVSEId.           ToOICP(),
+                                                                ChargingProductId.ToOICP(),
+                                                                SessionId.        ToOICP(),
+                                                                null,
+
+                                                                Timestamp,
+                                                                CancellationToken,
+                                                                EventTrackingId,
+                                                                RequestTimeout).ConfigureAwait(false);
+
+
+                Endtime  = DateTime.Now;
+                Runtime  = Endtime - StartTime;
+
+                if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
+                    response.Content                     != null              &&
+                    response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
+                {
+
+                    result = AuthStartEVSEResult.Authorized(
+                                 Id,
+                                 response.Content.SessionId.ToWWCP().Value,
+                                 ProviderId:      response.Content.ProviderId.ToWWCP(),
+                                 Description:     response.Content.StatusCode.Description,
+                                 AdditionalInfo:  response.Content.StatusCode.AdditionalInfo,
+                                 Runtime:         Runtime
+                             );
+
+                }
+
+                else
+                    result = AuthStartEVSEResult.NotAuthorized(
+                                 Id,
+                                 SessionId,
+                                 response.Content.ProviderId.ToWWCP(),
+                                 response.Content.StatusCode.Description,
+                                 response.Content.StatusCode.AdditionalInfo,
+                                 Runtime
+                             );
+
+            }
 
 
             #region Send OnAuthorizeEVSEStartResponse event
@@ -4200,47 +4291,61 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var response = await CPORoaming.AuthorizeStop(OperatorId.HasValue
-                                                              ? OperatorId.Value.ToOICP()
-                                                              : DefaultOperatorId,
-                                                          SessionId. ToOICP(),
-                                                          AuthToken. ToOICP(),
-                                                          null,
-                                                          null,
+            DateTime        Endtime;
+            TimeSpan        Runtime;
+            AuthStopResult  result;
 
-                                                          Timestamp,
-                                                          CancellationToken,
-                                                          EventTrackingId,
-                                                          RequestTimeout).ConfigureAwait(false);
+            if (DisableAuthentication)
+            {
+                Endtime  = DateTime.Now;
+                Runtime  = Endtime - StartTime;
+                result   = AuthStopResult.OutOfService(Id, SessionId, Runtime);
+            }
 
-
-            var Endtime = DateTime.Now;
-            var Runtime = Endtime - StartTime;
-
-            AuthStopResult result = null;
-
-            if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
-                response.Content                     != null              &&
-                response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
+            else
             {
 
-                result = AuthStopResult.Authorized(
-                             Id,
-                             SessionId,
-                             response.Content.ProviderId.ToWWCP(),
-                             response.Content?.StatusCode?.Description,
-                             response.Content?.StatusCode?.AdditionalInfo
-                         );
+                var response = await CPORoaming.AuthorizeStop(OperatorId.HasValue
+                                                                  ? OperatorId.Value.ToOICP()
+                                                                  : DefaultOperatorId,
+                                                              SessionId. ToOICP(),
+                                                              AuthToken. ToOICP(),
+                                                              null,
+                                                              null,
+
+                                                              Timestamp,
+                                                              CancellationToken,
+                                                              EventTrackingId,
+                                                              RequestTimeout).ConfigureAwait(false);
+
+
+                Endtime  = DateTime.Now;
+                Runtime  = Endtime - StartTime;
+
+                if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
+                    response.Content                     != null              &&
+                    response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
+                {
+
+                    result = AuthStopResult.Authorized(
+                                 Id,
+                                 SessionId,
+                                 response.Content.ProviderId.ToWWCP(),
+                                 response.Content?.StatusCode?.Description,
+                                 response.Content?.StatusCode?.AdditionalInfo
+                             );
+
+                }
+                else
+                    result = AuthStopResult.NotAuthorized(
+                                 Id,
+                                 SessionId,
+                                 response.Content?.ProviderId.ToWWCP(),
+                                 response.Content?.StatusCode?.Description,
+                                 response.Content?.StatusCode?.AdditionalInfo
+                             );
 
             }
-            else
-                result = AuthStopResult.NotAuthorized(
-                             Id,
-                             SessionId,
-                             response.Content?.ProviderId.ToWWCP(),
-                             response.Content?.StatusCode?.Description,
-                             response.Content?.StatusCode?.AdditionalInfo
-                         );
 
 
             #region Send OnAuthorizeStopResponse event
@@ -4348,47 +4453,61 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var response  = await CPORoaming.AuthorizeStop(OperatorId.HasValue
-                                                              ? OperatorId.Value.ToOICP()
-                                                              : DefaultOperatorId,
-                                                           SessionId. ToOICP(),
-                                                           AuthToken. ToOICP(),
-                                                           EVSEId.    ToOICP(),
-                                                           null,
+            DateTime            Endtime;
+            TimeSpan            Runtime;
+            AuthStopEVSEResult  result;
 
-                                                           Timestamp,
-                                                           CancellationToken,
-                                                           EventTrackingId,
-                                                           RequestTimeout).ConfigureAwait(false);
+            if (DisableAuthentication)
+            {
+                Endtime  = DateTime.Now;
+                Runtime  = Endtime - StartTime;
+                result   = AuthStopEVSEResult.OutOfService(Id, SessionId, Runtime);
+            }
 
-
-            var Endtime = DateTime.Now;
-            var Runtime = Endtime - StartTime;
-
-            AuthStopEVSEResult result = null;
-
-            if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
-                response.Content                     != null              &&
-                response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
+            else
             {
 
-                result = AuthStopEVSEResult.Authorized(
-                             Id,
-                             SessionId,
-                             response.Content?.ProviderId.ToWWCP(),
-                             response.Content?.StatusCode?.Description,
-                             response.Content?.StatusCode?.AdditionalInfo
-                         );
+                var response  = await CPORoaming.AuthorizeStop(OperatorId.HasValue
+                                                                  ? OperatorId.Value.ToOICP()
+                                                                  : DefaultOperatorId,
+                                                               SessionId. ToOICP(),
+                                                               AuthToken. ToOICP(),
+                                                               EVSEId.    ToOICP(),
+                                                               null,
+
+                                                               Timestamp,
+                                                               CancellationToken,
+                                                               EventTrackingId,
+                                                               RequestTimeout).ConfigureAwait(false);
+
+
+                Endtime  = DateTime.Now;
+                Runtime  = Endtime - StartTime;
+
+                if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
+                    response.Content                     != null              &&
+                    response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
+                {
+
+                    result = AuthStopEVSEResult.Authorized(
+                                 Id,
+                                 SessionId,
+                                 response.Content?.ProviderId.ToWWCP(),
+                                 response.Content?.StatusCode?.Description,
+                                 response.Content?.StatusCode?.AdditionalInfo
+                             );
+
+                }
+                else
+                    result = AuthStopEVSEResult.NotAuthorized(
+                                 Id,
+                                 SessionId,
+                                 response.Content?.ProviderId.ToWWCP(),
+                                 response.Content?.StatusCode?.Description,
+                                 response.Content?.StatusCode?.AdditionalInfo
+                             );
 
             }
-            else
-                result = AuthStopEVSEResult.NotAuthorized(
-                             Id,
-                             SessionId,
-                             response.Content?.ProviderId.ToWWCP(),
-                             response.Content?.StatusCode?.Description,
-                             response.Content?.StatusCode?.AdditionalInfo
-                         );
 
 
             #region Send OnAuthorizeEVSEStopResponse event
@@ -4671,7 +4790,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<SendCDRResult>
+        public async Task<SendCDRsResult>
 
             SendChargeDetailRecord(WWCP.ChargeDetailRecord  ChargeDetailRecord,
                                    TransmissionTypes        TransmissionType    = TransmissionTypes.Enqueued,
@@ -4738,7 +4857,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return SendCDRResult.Enqueued(Id);
+                return SendCDRsResult.Enqueued(Id);
 
             }
 
@@ -4768,31 +4887,43 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var response = await CPORoaming.SendChargeDetailRecord(ChargeDetailRecord.ToOICP(),
+            DateTime        Endtime;
+            TimeSpan        Runtime;
+            SendCDRsResult  result;
 
-                                                                   Timestamp,
-                                                                   CancellationToken,
-                                                                   EventTrackingId,
-                                                                   RequestTimeout).ConfigureAwait(false);
-
-
-            var Endtime = DateTime.Now;
-            var Runtime = Endtime - StartTime;
-
-            SendCDRResult result = null;
-
-            if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                response.Content        != null              &&
-                response.Content.Result)
+            if (DisableSendChargeDetailRecords)
             {
-
-                result = SendCDRResult.Forwarded(Id);
-
+                Endtime  = DateTime.Now;
+                Runtime  = Endtime - StartTime;
+                result   = SendCDRsResult.OutOfService(Id, Runtime: Runtime);
             }
 
             else
-                result = SendCDRResult.NotForwared(Id,
-                                                   response?.Content?.StatusCode?.Description);
+            {
+
+                var response = await CPORoaming.SendChargeDetailRecord(ChargeDetailRecord.ToOICP(),
+
+                                                                       Timestamp,
+                                                                       CancellationToken,
+                                                                       EventTrackingId,
+                                                                       RequestTimeout).ConfigureAwait(false);
+
+
+                Endtime  = DateTime.Now;
+                Runtime  = Endtime - StartTime;
+
+                if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                    response.Content        != null              &&
+                    response.Content.Result)
+                {
+                    result = SendCDRsResult.Forwarded(Id);
+                }
+
+                else
+                    result = SendCDRsResult.NotForwared(Id,
+                                                        response?.Content?.StatusCode?.Description);
+
+            }
 
 
             #region Send OnSendCDRResponse event
@@ -4823,8 +4954,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         }
 
         #endregion
-
-
 
 
         #region Delayed upstream methods...
@@ -4936,7 +5065,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         private void ServiceCheck(Object State)
         {
 
-            if (!DisableAutoUploads)
+            if (!DisablePushData)
             {
 
                 try
@@ -5119,7 +5248,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 if (ChargeDetailRecordQueueCopy.Value.Count > 0)
                 {
 
-                    var SendCDRResults   = new Dictionary<WWCP.ChargeDetailRecord, SendCDRResult>();
+                    var SendCDRResults   = new Dictionary<WWCP.ChargeDetailRecord, SendCDRsResult>();
 
                     foreach (var _ChargeDetailRecord in ChargeDetailRecordQueueCopy.Value)
                     {
@@ -5156,7 +5285,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         private void StatusCheck(Object State)
         {
 
-            if (!DisableAutoUploads)
+            if (!DisablePushStatus)
             {
 
                 FlushStatusQueues().Wait();
