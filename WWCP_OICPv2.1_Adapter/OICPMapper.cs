@@ -1110,15 +1110,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    : new ChargingSession_Id?();
 
 
-        public static PartnerProduct_Id? ToOICP(this WWCP.ChargingProduct_Id? ProductId)
-            => ProductId.HasValue
-                   ? PartnerProduct_Id.Parse(ProductId.ToString())
-                   : new PartnerProduct_Id?();
+        public static PartnerProduct_Id? ToOICP(this WWCP.ChargingProduct_Id ProductId)
+            => PartnerProduct_Id.Parse(ProductId.ToString());
 
-        public static WWCP.ChargingProduct_Id? ToWWCP(this PartnerProduct_Id? ProductId)
-            => ProductId.HasValue
-                   ? WWCP.ChargingProduct_Id.Parse(ProductId.ToString())
-                   : new ChargingProduct_Id?();
+        public static WWCP.ChargingProduct_Id ToWWCP(this PartnerProduct_Id ProductId)
+            => WWCP.ChargingProduct_Id.Parse(ProductId.ToString());
 
 
         public static Operator_Id ToOICP(this WWCP.ChargingStationOperator_Id OperatorId)
@@ -1213,7 +1209,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => new WWCP.ChargeDetailRecord(ChargeDetailRecord.SessionId.ToWWCP(),
                                            EVSEId:                ChargeDetailRecord.EVSEId.ToWWCP(),
-                                           ChargingProductId:     ChargeDetailRecord.PartnerProductId.ToWWCP(),
+                                           ChargingProduct:       ChargeDetailRecord.PartnerProductId.HasValue
+                                                                      ? new ChargingProduct(ChargeDetailRecord.PartnerProductId.Value.ToWWCP())
+                                                                      : null,
                                            SessionTime:           new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
                                            EnergyMeteringValues:  new List<Timestamped<Single>> {
 
@@ -1248,7 +1246,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    ChargeDetailRecord.SessionTime.Value.StartTime,
                    ChargeDetailRecord.SessionTime.Value.EndTime.Value,
                    ChargeDetailRecord.IdentificationStart.ToOICP(),
-                   ChargeDetailRecord.ChargingProductId.ToOICP(),
+                   ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
                    null, // PartnerSessionId
                    ChargeDetailRecord.SessionTime.HasValue? ChargeDetailRecord.SessionTime.Value.StartTime : new DateTime?(),
                    ChargeDetailRecord.SessionTime.HasValue? ChargeDetailRecord.SessionTime.Value.EndTime   : null,

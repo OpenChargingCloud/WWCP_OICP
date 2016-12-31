@@ -589,7 +589,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                             ProviderId:         ProviderId.      ToWWCP(),
                                                             eMAId:              EVCOId.          ToWWCP(),
-                                                            ChargingProductId:  PartnerProductId.ToWWCP(),
+                                                            ChargingProduct:    PartnerProductId.HasValue
+                                                                                    ? new ChargingProduct(PartnerProductId.Value.ToWWCP())
+                                                                                    : null,
 
                                                             eMAIds:             new eMobilityAccount_Id[] {
                                                                                     EVCOId.Value.ToWWCP()
@@ -726,7 +728,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     CancellationToken,
                                                     EventTrackingId,
                                                     EVSEId,
-                                                    ChargingProductId,
+                                                    PartnerProductId,
                                                     SessionId,
                                                     PartnerSessionId,
                                                     ProviderId,
@@ -736,51 +738,71 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 #region Request mapping
 
                 ChargingReservation_Id? ReservationId    = null;
-                TimeSpan?               PlannedDuration  = null;
+                TimeSpan?               MinDuration      = null;
                 Single?                 PlannedEnergy    = null;
-                ChargingProduct_Id?     ProductId        = null;
+                ChargingProduct_Id?     ProductId        = ChargingProduct_Id.Parse("AC1");
+                ChargingProduct         ChargingProduct  = null;
 
-                if (ChargingProductId != null && ChargingProductId.ToString().IsNotNullOrEmpty())
+                if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
                 {
 
-                    var ProductIdElements = ChargingProductId.ToString().DoubleSplit('|', '=');
+                    // The PartnerProductId is a simple string...
+                    if (!PartnerProductId.Value.ToString().Contains("="))
+                    {
+                        ChargingProduct = new ChargingProduct(
+                                              ChargingProduct_Id.Parse(PartnerProductId.Value.ToString())
+                                          );
+                    }
 
-                    if (ProductIdElements.Any())
+                    else
                     {
 
-                        ChargingReservation_Id _ReservationId;
+                        var ProductIdElements = PartnerProductId.ToString().DoubleSplit('|', '=');
 
-                        if (ProductIdElements.ContainsKey("R") &&
-                            ChargingReservation_Id.TryParse(EVSEId.OperatorId.ToWWCP(), ProductIdElements["R"], out _ReservationId))
-                            ReservationId = _ReservationId;
-
-
-                        if (ProductIdElements.ContainsKey("D"))
+                        if (ProductIdElements.Any())
                         {
 
-                            var DurationText = ProductIdElements["D"];
+                            ChargingReservation_Id _ReservationId;
 
-                            if (DurationText.EndsWith("sec", StringComparison.InvariantCulture))
-                                PlannedDuration = TimeSpan.FromSeconds(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+                            if (ProductIdElements.ContainsKey("R") &&
+                                ChargingReservation_Id.TryParse(EVSEId.OperatorId.ToWWCP(), ProductIdElements["R"], out _ReservationId))
+                                ReservationId = _ReservationId;
 
-                            if (DurationText.EndsWith("min", StringComparison.InvariantCulture))
-                                PlannedDuration = TimeSpan.FromMinutes(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+
+                            if (ProductIdElements.ContainsKey("D"))
+                            {
+
+                                var MinDurationText = ProductIdElements["D"];
+
+                                if (MinDurationText.EndsWith("sec", StringComparison.InvariantCulture))
+                                    MinDuration = TimeSpan.FromSeconds(UInt32.Parse(MinDurationText.Substring(0, MinDurationText.Length - 3)));
+
+                                if (MinDurationText.EndsWith("min", StringComparison.InvariantCulture))
+                                    MinDuration = TimeSpan.FromMinutes(UInt32.Parse(MinDurationText.Substring(0, MinDurationText.Length - 3)));
+
+                            }
+
+
+                            Single _PlannedEnergy = 0;
+
+                            if (ProductIdElements.ContainsKey("E") &&
+                                Single.TryParse(ProductIdElements["E"], out _PlannedEnergy))
+                                PlannedEnergy = _PlannedEnergy;
+
+
+                            ChargingProduct_Id _ProductId;
+
+                            if (ProductIdElements.ContainsKey("P") &&
+                                ChargingProduct_Id.TryParse(ProductIdElements["P"], out _ProductId))
+                                ProductId = _ProductId;
+
+
+                            ChargingProduct = new ChargingProduct(
+                                                      ProductId.Value,
+                                                      MinDuration
+                                                  );
 
                         }
-
-
-                        Single _PlannedEnergy = 0;
-
-                        if (ProductIdElements.ContainsKey("E") &&
-                            Single.TryParse(ProductIdElements["E"], out _PlannedEnergy))
-                            PlannedEnergy = _PlannedEnergy;
-
-
-                        ChargingProduct_Id _ProductId;
-
-                        if (ProductIdElements.ContainsKey("P") &&
-                            ChargingProduct_Id.TryParse(ProductIdElements["P"], out _ProductId))
-                            ProductId = _ProductId;
 
                     }
 
@@ -788,19 +810,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                var response = await RoamingNetwork.RemoteStart(EVSEId.    ToWWCP(),
-                                                                ProductId,
-                                                                PlannedDuration,
-                                                                PlannedEnergy,
-                                                                ReservationId,
-                                                                SessionId. ToWWCP(),
-                                                                ProviderId.ToWWCP(),
-                                                                EVCOId.    ToWWCP(),
+                var response = await RoamingNetwork.
+                                         RemoteStart(EVSEId.    ToWWCP(),
+                                                     ChargingProduct,
+                                                     ReservationId,
+                                                     SessionId. ToWWCP(),
+                                                     ProviderId.ToWWCP(),
+                                                     EVCOId.    ToWWCP(),
 
-                                                                Timestamp,
-                                                                CancellationToken,
-                                                                EventTrackingId,
-                                                                RequestTimeout).ConfigureAwait(false);
+                                                     Timestamp,
+                                                     CancellationToken,
+                                                     EventTrackingId,
+                                                     RequestTimeout).ConfigureAwait(false);
 
                 #region Response mapping
 
@@ -3634,13 +3655,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region AuthorizeStart/-Stop  directly...
 
-        #region AuthorizeStart(AuthToken,                    ChargingProductId = null, SessionId = null, OperatorId = null, ...)
+        #region AuthorizeStart(AuthToken,                    ChargingProduct = null, SessionId = null, OperatorId = null, ...)
 
         /// <summary>
         /// Create an authorize start request.
         /// </summary>
         /// <param name="AuthToken">A (RFID) user identification.</param>
-        /// <param name="ChargingProductId">An optional charging product identification.</param>
+        /// <param name="ChargingProduct">An optional charging product.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="OperatorId">An optional charging station operator identification.</param>
         /// 
@@ -3651,7 +3672,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public async Task<AuthStartResult>
 
             AuthorizeStart(Auth_Token                   AuthToken,
-                           ChargingProduct_Id?          ChargingProductId   = null,
+                           ChargingProduct              ChargingProduct     = null,
                            ChargingSession_Id?          SessionId           = null,
                            ChargingStationOperator_Id?  OperatorId          = null,
 
@@ -3695,7 +3716,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                 RoamingNetwork.Id,
                                                 OperatorId,
                                                 AuthToken,
-                                                ChargingProductId,
+                                                ChargingProduct,
                                                 SessionId,
                                                 RequestTimeout);
 
@@ -3722,19 +3743,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             else
             {
 
-                var response = await CPORoaming.AuthorizeStart(OperatorId.HasValue
-                                                                   ? OperatorId.Value.ToOICP()
-                                                                   : DefaultOperatorId,
-                                                               AuthToken.        ToOICP(),
-                                                               null,
-                                                               ChargingProductId.ToOICP(),
-                                                               SessionId.        ToOICP(),
-                                                               null,
+                var response = await CPORoaming.
+                                         AuthorizeStart(OperatorId.HasValue
+                                                            ? OperatorId.Value.ToOICP()
+                                                            : DefaultOperatorId,
+                                                        AuthToken.          ToOICP(),
+                                                        null,
+                                                        ChargingProduct?.Id.ToOICP(),
+                                                        SessionId.          ToOICP(),
+                                                        null,
 
-                                                               Timestamp,
-                                                               CancellationToken,
-                                                               EventTrackingId,
-                                                               RequestTimeout).ConfigureAwait(false);
+                                                        Timestamp,
+                                                        CancellationToken,
+                                                        EventTrackingId,
+                                                        RequestTimeout).ConfigureAwait(false);
 
 
                 Endtime  = DateTime.Now;
@@ -3781,7 +3803,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  RoamingNetwork.Id,
                                                  OperatorId,
                                                  AuthToken,
-                                                 ChargingProductId,
+                                                 ChargingProduct,
                                                  SessionId,
                                                  RequestTimeout,
                                                  result,
@@ -3801,14 +3823,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AuthorizeStart(AuthToken, EVSEId,            ChargingProductId = null, SessionId = null, OperatorId = null, ...)
+        #region AuthorizeStart(AuthToken, EVSEId,            ChargingProduct = null, SessionId = null, OperatorId = null, ...)
 
         /// <summary>
         /// Create an authorize start request at the given EVSE.
         /// </summary>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="EVSEId">The unique identification of an EVSE.</param>
-        /// <param name="ChargingProductId">An optional charging product identification.</param>
+        /// <param name="ChargingProduct">An optional charging product.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="OperatorId">An optional charging station operator identification.</param>
         /// 
@@ -3820,7 +3842,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             AuthorizeStart(Auth_Token                   AuthToken,
                            WWCP.EVSE_Id                 EVSEId,
-                           ChargingProduct_Id?          ChargingProductId   = null,   // [maxlength: 100]
+                           ChargingProduct              ChargingProduct     = null,   // [maxlength: 100]
                            ChargingSession_Id?          SessionId           = null,
                            ChargingStationOperator_Id?  OperatorId          = null,
 
@@ -3866,7 +3888,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     OperatorId,
                                                     AuthToken,
                                                     EVSEId,
-                                                    ChargingProductId,
+                                                    ChargingProduct,
                                                     SessionId,
                                                     RequestTimeout);
 
@@ -3893,19 +3915,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             else
             {
 
-                var response  = await CPORoaming.AuthorizeStart(OperatorId.HasValue
-                                                                   ? OperatorId.Value.ToOICP()
-                                                                   : DefaultOperatorId,
-                                                                AuthToken.        ToOICP(),
-                                                                EVSEId.           ToOICP(),
-                                                                ChargingProductId.ToOICP(),
-                                                                SessionId.        ToOICP(),
-                                                                null,
+                var response  = await CPORoaming.
+                                          AuthorizeStart(OperatorId.HasValue
+                                                            ? OperatorId.Value.ToOICP()
+                                                            : DefaultOperatorId,
+                                                         AuthToken.          ToOICP(),
+                                                         EVSEId.             ToOICP(),
+                                                         ChargingProduct?.Id.ToOICP(),
+                                                         SessionId.          ToOICP(),
+                                                         null,
 
-                                                                Timestamp,
-                                                                CancellationToken,
-                                                                EventTrackingId,
-                                                                RequestTimeout).ConfigureAwait(false);
+                                                         Timestamp,
+                                                         CancellationToken,
+                                                         EventTrackingId,
+                                                         RequestTimeout).ConfigureAwait(false);
 
 
                 Endtime  = DateTime.Now;
@@ -3953,7 +3976,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      OperatorId,
                                                      AuthToken,
                                                      EVSEId,
-                                                     ChargingProductId,
+                                                     ChargingProduct,
                                                      SessionId,
                                                      RequestTimeout,
                                                      result,
@@ -3973,14 +3996,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AuthorizeStart(AuthToken, ChargingStationId, ChargingProductId = null, SessionId = null, OperatorId = null, ...)
+        #region AuthorizeStart(AuthToken, ChargingStationId, ChargingProduct = null, SessionId = null, OperatorId = null, ...)
 
         /// <summary>
         /// Create an authorize start request at the given charging station.
         /// </summary>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="ChargingStationId">The unique identification charging station.</param>
-        /// <param name="ChargingProductId">An optional charging product identification.</param>
+        /// <param name="ChargingProduct">An optional charging product.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="OperatorId">An optional charging station operator identification.</param>
         /// 
@@ -3992,7 +4015,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             AuthorizeStart(Auth_Token                   AuthToken,
                            ChargingStation_Id           ChargingStationId,
-                           ChargingProduct_Id?          ChargingProductId   = null,   // [maxlength: 100]
+                           ChargingProduct              ChargingProduct     = null,   // [maxlength: 100]
                            ChargingSession_Id?          SessionId           = null,
                            ChargingStationOperator_Id?  OperatorId          = null,
 
@@ -4038,7 +4061,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                OperatorId,
                                                                AuthToken,
                                                                ChargingStationId,
-                                                               ChargingProductId,
+                                                               ChargingProduct,
                                                                SessionId,
                                                                RequestTimeout);
 
@@ -4074,7 +4097,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                 OperatorId,
                                                                 AuthToken,
                                                                 ChargingStationId,
-                                                                ChargingProductId,
+                                                                ChargingProduct,
                                                                 SessionId,
                                                                 RequestTimeout,
                                                                 result,
@@ -4094,14 +4117,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AuthorizeStart(AuthToken, ChargingPoolId,    ChargingProductId = null, SessionId = null, OperatorId = null, ...)
+        #region AuthorizeStart(AuthToken, ChargingPoolId,    ChargingProduct = null, SessionId = null, OperatorId = null, ...)
 
         /// <summary>
         /// Create an authorize start request at the given charging pool.
         /// </summary>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="ChargingPoolId">The unique identification charging pool.</param>
-        /// <param name="ChargingProductId">An optional charging product identification.</param>
+        /// <param name="ChargingProduct">An optional charging product.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="OperatorId">An optional charging station operator identification.</param>
         /// 
@@ -4113,7 +4136,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             AuthorizeStart(Auth_Token                   AuthToken,
                            ChargingPool_Id              ChargingPoolId,
-                           ChargingProduct_Id?          ChargingProductId   = null,   // [maxlength: 100]
+                           ChargingProduct              ChargingProduct     = null,   // [maxlength: 100]
                            ChargingSession_Id?          SessionId           = null,
                            ChargingStationOperator_Id?  OperatorId          = null,
 
@@ -4159,7 +4182,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                             OperatorId,
                                                             AuthToken,
                                                             ChargingPoolId,
-                                                            ChargingProductId,
+                                                            ChargingProduct,
                                                             SessionId,
                                                             RequestTimeout);
 
@@ -4195,7 +4218,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                              OperatorId,
                                                              AuthToken,
                                                              ChargingPoolId,
-                                                             ChargingProductId,
+                                                             ChargingProduct,
                                                              SessionId,
                                                              RequestTimeout,
                                                              result,
