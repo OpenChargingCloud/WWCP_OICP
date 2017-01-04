@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2016 GraphDefined GmbH
+ * Copyright (c) 2014-2017 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -756,32 +756,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="NewEVSEId">An optional new EVSE identification.</param>
         public Builder ToBuilder(EVSE_Id? NewEVSEId = null)
 
-            => new Builder(NewEVSEId ?? Id,
+            => new Builder(
+                   NewEVSEId ?? Id,
 
-                   DeltaType                 : DeltaType,
-                   LastUpdate                : LastUpdate,
+                   DeltaType,
+                   LastUpdate,
 
-                   ChargingStationId         : ChargingStationId,
-                   ChargingStationName       : ChargingStationName,
-                   Address                   : Address,
-                   GeoCoordinate             : GeoCoordinate,
-                   Plugs                     : Plugs,
-                   ChargingModes             : ChargingModes,
-                   ChargingFacilities        : ChargingFacilities,
-                   AuthenticationModes       : AuthenticationModes,
-                   MaxCapacity               : MaxCapacity,
-                   PaymentOptions            : PaymentOptions,
-                   ValueAddedServices        : ValueAddedServices,
-                   Accessibility             : Accessibility,
-                   HotlinePhoneNumber        : HotlinePhoneNumber,
-                   AdditionalInfo            : AdditionalInfo,
-                   GeoChargingPointEntrance  : GeoChargingPointEntrance,
-                   IsOpen24Hours             : IsOpen24Hours,
-                   OpeningTime               : OpeningTime,
-                   HubOperatorId             : HubOperatorId,
-                   ClearingHouseId           : ClearingHouseId,
-                   IsHubjectCompatible       : IsHubjectCompatible,
-                   DynamicInfoAvailable      : DynamicInfoAvailable);
+                   ChargingStationId,
+                   ChargingStationName,
+                   Address,
+                   GeoCoordinate,
+                   Plugs,
+                   ChargingFacilities,
+                   ChargingModes,
+                   AuthenticationModes,
+                   MaxCapacity,
+                   PaymentOptions,
+                   ValueAddedServices,
+                   Accessibility,
+                   HotlinePhoneNumber,
+                   AdditionalInfo,
+                   GeoChargingPointEntrance,
+                   IsOpen24Hours,
+                   OpeningTime,
+                   HubOperatorId,
+                   ClearingHouseId,
+                   IsHubjectCompatible,
+                   DynamicInfoAvailable,
+
+                   _CustomData != null
+                       ? _CustomData.ToDictionary(kvp => kvp.Key,
+                                                  kvp => kvp.Value)
+                       : null);
 
         #endregion
 

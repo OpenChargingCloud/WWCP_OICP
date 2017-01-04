@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2016 GraphDefined GmbH
+ * Copyright (c) 2014-2017 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -88,49 +88,51 @@ namespace org.GraphDefined.WWCP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public static ICSORoamingProvider
 
-            CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork                                     RoamingNetwork,
-                                              CSORoamingProvider_Id                                   Id,
-                                              I18NString                                              Name,
+            CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork                                                 RoamingNetwork,
+                                              CSORoamingProvider_Id                                               Id,
+                                              I18NString                                                          Name,
 
-                                              String                                                  RemoteHostname,
-                                              IPPort                                                  RemoteTCPPort                       = null,
-                                              String                                                  RemoteHTTPVirtualHost               = null,
-                                              RemoteCertificateValidationCallback                     RemoteCertificateValidator          = null,
-                                              X509Certificate                                         ClientCert                          = null,
-                                              String                                                  URIPrefix                           = OICPv2_1.CPO.CPOClient.DefaultURIPrefix,
-                                              String                                                  HTTPUserAgent                       = OICPv2_1.CPO.CPOClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                                               QueryTimeout                        = null,
+                                              String                                                              RemoteHostname,
+                                              IPPort                                                              RemoteTCPPort                                   = null,
+                                              String                                                              RemoteHTTPVirtualHost                           = null,
+                                              RemoteCertificateValidationCallback                                 RemoteCertificateValidator                      = null,
+                                              X509Certificate                                                     ClientCert                                      = null,
+                                              String                                                              URIPrefix                                       = OICPv2_1.CPO.CPOClient.DefaultURIPrefix,
+                                              String                                                              HTTPUserAgent                                   = OICPv2_1.CPO.CPOClient.DefaultHTTPUserAgent,
+                                              TimeSpan?                                                           QueryTimeout                                    = null,
 
-                                              String                                                  ServerName                          = OICPv2_1.CPO.CPOServer.DefaultHTTPServerName,
-                                              IPPort                                                  ServerTCPPort                       = null,
-                                              String                                                  ServerURIPrefix                     = OICPv2_1.CPO.CPOServer.DefaultURIPrefix,
-                                              HTTPContentType                                         ServerContentType                   = null,
-                                              Boolean                                                 ServerRegisterHTTPRootService       = true,
-                                              Boolean                                                 ServerAutoStart                     = false,
+                                              String                                                              ServerName                                      = OICPv2_1.CPO.CPOServer.DefaultHTTPServerName,
+                                              IPPort                                                              ServerTCPPort                                   = null,
+                                              String                                                              ServerURIPrefix                                 = OICPv2_1.CPO.CPOServer.DefaultURIPrefix,
+                                              HTTPContentType                                                     ServerContentType                               = null,
+                                              Boolean                                                             ServerRegisterHTTPRootService                   = true,
+                                              Boolean                                                             ServerAutoStart                                 = false,
 
-                                              String                                                  ClientLoggingContext                = OICPv2_1.CPO.CPOClient.CPOClientLogger.DefaultContext,
-                                              String                                                  ServerLoggingContext                = OICPv2_1.CPO.CPOServerLogger.DefaultContext,
-                                              Func<String, String, String>                            LogFileCreator                      = null,
+                                              String                                                              ClientLoggingContext                            = OICPv2_1.CPO.CPOClient.CPOClientLogger.DefaultContext,
+                                              String                                                              ServerLoggingContext                            = OICPv2_1.CPO.CPOServerLogger.DefaultContext,
+                                              Func<String, String, String>                                        LogFileCreator                                  = null,
 
-                                              OICPv2_1.CPO.EVSE2EVSEDataRecordDelegate                EVSE2EVSEDataRecord                 = null,
-                                              OICPv2_1.CPO.EVSEStatusUpdate2EVSEStatusRecordDelegate  EVSEStatusUpdate2EVSEStatusRecord   = null,
-                                              OICPv2_1.CPO.EVSEDataRecord2XMLDelegate                 EVSEDataRecord2XML                  = null,
-                                              OICPv2_1.CPO.EVSEStatusRecord2XMLDelegate               EVSEStatusRecord2XML                = null,
+                                              OICPv2_1.CPO.EVSE2EVSEDataRecordDelegate                            EVSE2EVSEDataRecord                             = null,
+                                              OICPv2_1.CPO.EVSEStatusUpdate2EVSEStatusRecordDelegate              EVSEStatusUpdate2EVSEStatusRecord               = null,
+                                              OICPv2_1.CPO.WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
+                                              OICPv2_1.CPO.EVSEDataRecord2XMLDelegate                             EVSEDataRecord2XML                              = null,
+                                              OICPv2_1.CPO.EVSEStatusRecord2XMLDelegate                           EVSEStatusRecord2XML                            = null,
+                                              OICPv2_1.CPO.ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
 
-                                              ChargingStationOperator                                 DefaultOperator                     = null,
-                                              ChargingStationOperatorNameSelectorDelegate             OperatorNameSelector                = null,
-                                              IncludeEVSEDelegate                                     IncludeEVSEs                        = null,
-                                              TimeSpan?                                               ServiceCheckEvery                   = null,
-                                              TimeSpan?                                               StatusCheckEvery                    = null,
+                                              ChargingStationOperator                                             DefaultOperator                                 = null,
+                                              ChargingStationOperatorNameSelectorDelegate                         OperatorNameSelector                            = null,
+                                              IncludeEVSEDelegate                                                 IncludeEVSEs                                    = null,
+                                              TimeSpan?                                                           ServiceCheckEvery                               = null,
+                                              TimeSpan?                                                           StatusCheckEvery                                = null,
 
-                                              Boolean                                                 DisablePushData                     = false,
-                                              Boolean                                                 DisablePushStatus                   = false,
-                                              Boolean                                                 DisableAuthentication               = false,
-                                              Boolean                                                 DisableSendChargeDetailRecords      = false,
+                                              Boolean                                                             DisablePushData                                 = false,
+                                              Boolean                                                             DisablePushStatus                               = false,
+                                              Boolean                                                             DisableAuthentication                           = false,
+                                              Boolean                                                             DisableSendChargeDetailRecords                  = false,
 
-                                              Action<OICPv2_1.CPO.WWCPCPOAdapter>                     OICPConfigurator                    = null,
-                                              Action<ICSORoamingProvider>                             Configurator                        = null,
-                                              DNSClient                                               DNSClient                           = null)
+                                              Action<OICPv2_1.CPO.WWCPCPOAdapter>                                 OICPConfigurator                                = null,
+                                              Action<ICSORoamingProvider>                                         Configurator                                    = null,
+                                              DNSClient                                                           DNSClient                                       = null)
 
         {
 
@@ -176,8 +178,10 @@ namespace org.GraphDefined.WWCP
 
                                                                      EVSE2EVSEDataRecord,
                                                                      EVSEStatusUpdate2EVSEStatusRecord,
+                                                                     WWCPChargeDetailRecord2OICPChargeDetailRecord,
                                                                      EVSEDataRecord2XML,
                                                                      EVSEStatusRecord2XML,
+                                                                     ChargeDetailRecord2XML,
 
                                                                      DefaultOperator,
                                                                      OperatorNameSelector,
@@ -248,45 +252,47 @@ namespace org.GraphDefined.WWCP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public static ICSORoamingProvider
 
-            CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork                                     RoamingNetwork,
-                                              CSORoamingProvider_Id                                   Id,
-                                              I18NString                                              Name,
-                                              SOAPServer                                              SOAPServer,
+            CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork                                                 RoamingNetwork,
+                                              CSORoamingProvider_Id                                               Id,
+                                              I18NString                                                          Name,
+                                              SOAPServer                                                          SOAPServer,
 
-                                              String                                                  RemoteHostname,
-                                              IPPort                                                  RemoteTCPPort                       = null,
-                                              RemoteCertificateValidationCallback                     RemoteCertificateValidator          = null,
-                                              X509Certificate                                         ClientCert                          = null,
-                                              String                                                  RemoteHTTPVirtualHost               = null,
-                                              String                                                  URIPrefix                           = OICPv2_1.CPO.CPOClient.DefaultURIPrefix,
-                                              String                                                  HTTPUserAgent                       = OICPv2_1.CPO.CPOClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                                               QueryTimeout                        = null,
+                                              String                                                              RemoteHostname,
+                                              IPPort                                                              RemoteTCPPort                                   = null,
+                                              RemoteCertificateValidationCallback                                 RemoteCertificateValidator                      = null,
+                                              X509Certificate                                                     ClientCert                                      = null,
+                                              String                                                              RemoteHTTPVirtualHost                           = null,
+                                              String                                                              URIPrefix                                       = OICPv2_1.CPO.CPOClient.DefaultURIPrefix,
+                                              String                                                              HTTPUserAgent                                   = OICPv2_1.CPO.CPOClient.DefaultHTTPUserAgent,
+                                              TimeSpan?                                                           QueryTimeout                                    = null,
 
-                                              String                                                  ServerURIPrefix                     = null,
+                                              String                                                              ServerURIPrefix                                 = null,
 
-                                              String                                                  ClientLoggingContext                = OICPv2_1.CPO.CPOClient.CPOClientLogger.DefaultContext,
-                                              String                                                  ServerLoggingContext                = OICPv2_1.CPO.CPOServerLogger.DefaultContext,
-                                              Func<String, String, String>                            LogFileCreator                      = null,
+                                              String                                                              ClientLoggingContext                            = OICPv2_1.CPO.CPOClient.CPOClientLogger.DefaultContext,
+                                              String                                                              ServerLoggingContext                            = OICPv2_1.CPO.CPOServerLogger.DefaultContext,
+                                              Func<String, String, String>                                        LogFileCreator                                  = null,
 
-                                              OICPv2_1.CPO.EVSE2EVSEDataRecordDelegate                EVSE2EVSEDataRecord                 = null,
-                                              OICPv2_1.CPO.EVSEStatusUpdate2EVSEStatusRecordDelegate  EVSEStatusUpdate2EVSEStatusRecord   = null,
-                                              OICPv2_1.CPO.EVSEDataRecord2XMLDelegate                 EVSEDataRecord2XML                  = null,
-                                              OICPv2_1.CPO.EVSEStatusRecord2XMLDelegate               EVSEStatusRecord2XML                = null,
+                                              OICPv2_1.CPO.EVSE2EVSEDataRecordDelegate                            EVSE2EVSEDataRecord                             = null,
+                                              OICPv2_1.CPO.EVSEStatusUpdate2EVSEStatusRecordDelegate              EVSEStatusUpdate2EVSEStatusRecord               = null,
+                                              OICPv2_1.CPO.WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
+                                              OICPv2_1.CPO.EVSEDataRecord2XMLDelegate                             EVSEDataRecord2XML                              = null,
+                                              OICPv2_1.CPO.EVSEStatusRecord2XMLDelegate                           EVSEStatusRecord2XML                            = null,
+                                              OICPv2_1.CPO.ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
 
-                                              ChargingStationOperator                                 DefaultOperator                     = null,
-                                              ChargingStationOperatorNameSelectorDelegate             OperatorNameSelector                = null,
-                                              IncludeEVSEDelegate                                     IncludeEVSEs                        = null,
-                                              TimeSpan?                                               ServiceCheckEvery                   = null,
-                                              TimeSpan?                                               StatusCheckEvery                    = null,
+                                              ChargingStationOperator                                             DefaultOperator                                 = null,
+                                              ChargingStationOperatorNameSelectorDelegate                         OperatorNameSelector                            = null,
+                                              IncludeEVSEDelegate                                                 IncludeEVSEs                                    = null,
+                                              TimeSpan?                                                           ServiceCheckEvery                               = null,
+                                              TimeSpan?                                                           StatusCheckEvery                                = null,
 
-                                              Boolean                                                 DisablePushData                     = false,
-                                              Boolean                                                 DisablePushStatus                   = false,
-                                              Boolean                                                 DisableAuthentication               = false,
-                                              Boolean                                                 DisableSendChargeDetailRecords      = false,
+                                              Boolean                                                             DisablePushData                                 = false,
+                                              Boolean                                                             DisablePushStatus                               = false,
+                                              Boolean                                                             DisableAuthentication                           = false,
+                                              Boolean                                                             DisableSendChargeDetailRecords                  = false,
 
-                                              Action<OICPv2_1.CPO.WWCPCPOAdapter>                     OICPConfigurator                    = null,
-                                              Action<ICSORoamingProvider>                             Configurator                        = null,
-                                              DNSClient                                               DNSClient                           = null)
+                                              Action<OICPv2_1.CPO.WWCPCPOAdapter>                                 OICPConfigurator                                = null,
+                                              Action<ICSORoamingProvider>                                         Configurator                                    = null,
+                                              DNSClient                                                           DNSClient                                       = null)
 
         {
 
@@ -335,8 +341,10 @@ namespace org.GraphDefined.WWCP
 
                                                                      EVSE2EVSEDataRecord,
                                                                      EVSEStatusUpdate2EVSEStatusRecord,
+                                                                     WWCPChargeDetailRecord2OICPChargeDetailRecord,
                                                                      EVSEDataRecord2XML,
                                                                      EVSEStatusRecord2XML,
+                                                                     ChargeDetailRecord2XML,
 
                                                                      DefaultOperator,
                                                                      OperatorNameSelector,

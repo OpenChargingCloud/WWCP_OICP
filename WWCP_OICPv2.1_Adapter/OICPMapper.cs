@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2016 GraphDefined GmbH
+ * Copyright (c) 2014-2017 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1232,30 +1232,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToOICP(this ChargeDetailRecord)
+        #region ToOICP(this ChargeDetailRecord, WWCPChargeDetailRecord2OICPChargeDetailRecord = null)
 
         /// <summary>
         /// Convert a WWCP charge detail record into a corresponding OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecord">A WWCP charge detail record.</param>
-        public static ChargeDetailRecord ToOICP(this WWCP.ChargeDetailRecord ChargeDetailRecord)
+        public static ChargeDetailRecord ToOICP(this WWCP.ChargeDetailRecord                               ChargeDetailRecord,
+                                                CPO.WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord = null)
 
-            => new ChargeDetailRecord(
-                   ChargeDetailRecord.EVSEId.Value.ToOICP(),
-                   ChargeDetailRecord.SessionId.ToOICP(),
-                   ChargeDetailRecord.SessionTime.Value.StartTime,
-                   ChargeDetailRecord.SessionTime.Value.EndTime.Value,
-                   ChargeDetailRecord.IdentificationStart.ToOICP(),
-                   ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
-                   null, // PartnerSessionId
-                   ChargeDetailRecord.SessionTime.HasValue? ChargeDetailRecord.SessionTime.Value.StartTime : new DateTime?(),
-                   ChargeDetailRecord.SessionTime.HasValue? ChargeDetailRecord.SessionTime.Value.EndTime   : null,
-                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.First().Value : new Single?(),
-                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value : new Single?(),
-                   ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Single> v) => v.Value) : null,
-                   ChargeDetailRecord.ConsumedEnergy,
-                   ChargeDetailRecord.MeteringSignature
-               );
+        {
+
+            var CDR = new ChargeDetailRecord(
+                          ChargeDetailRecord.EVSEId.Value.ToOICP(),
+                          ChargeDetailRecord.SessionId.ToOICP(),
+                          ChargeDetailRecord.SessionTime.Value.StartTime,
+                          ChargeDetailRecord.SessionTime.Value.EndTime.Value,
+                          ChargeDetailRecord.IdentificationStart.ToOICP(),
+                          ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
+                          null, // PartnerSessionId
+                          ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.StartTime : new DateTime?(),
+                          ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.EndTime : null,
+                          ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.First().Value : new Single?(),
+                          ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value : new Single?(),
+                          ChargeDetailRecord.EnergyMeteringValues != null && ChargeDetailRecord.EnergyMeteringValues.Any() ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Single> v) => v.Value) : null,
+                          ChargeDetailRecord.ConsumedEnergy,
+                          ChargeDetailRecord.MeteringSignature
+                      );
+
+            if (WWCPChargeDetailRecord2OICPChargeDetailRecord != null)
+                CDR = WWCPChargeDetailRecord2OICPChargeDetailRecord(ChargeDetailRecord, CDR);
+
+            return CDR;
+
+        }
 
         #endregion
 

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2016 GraphDefined GmbH
+ * Copyright (c) 2014-2017 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -338,7 +338,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         EVSEId                   = EVSE_Id.    Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Reservation + "EVSEID",     "No EVSEID XML tag provided!"));
 
                         ChargingProductIdXML = RemoteStartXML.Element(OICPNS.Reservation + "PartnerProductID");
-                        if (ChargingProductIdXML != null)
+                        if (ChargingProductIdXML != null && ChargingProductIdXML.Value.IsNotNullOrEmpty())
                             PartnerProductId = PartnerProduct_Id.Parse(ChargingProductIdXML.Value);
 
                         IdentificationXML        = RemoteStartXML.   ElementOrFail(OICPNS.Reservation   + "Identification",       "No EVSEID XML tag provided!");
@@ -809,7 +809,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         EVSEId                   = EVSE_Id.    Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "EVSEID",     "No EVSEID XML tag provided!"));
 
                         ChargingProductIdXML = RemoteStartXML.Element(OICPNS.Authorization + "PartnerProductID");
-                        if (ChargingProductIdXML != null)
+                        if (ChargingProductIdXML != null && ChargingProductIdXML.Value.IsNotNullOrEmpty())
                             PartnerProductId = PartnerProduct_Id.Parse(ChargingProductIdXML.Value);
 
                         IdentificationXML        = RemoteStartXML.   ElementOrFail(OICPNS.Authorization + "Identification",       "No EVSEID XML tag provided!");

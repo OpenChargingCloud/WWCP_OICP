@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2016 GraphDefined GmbH
+ * Copyright (c) 2014-2017 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Data
 
-        private IReadOnlyDictionary<String, Object> _CustomData;
+        protected IReadOnlyDictionary<String, Object> _CustomData;
 
         #endregion
 

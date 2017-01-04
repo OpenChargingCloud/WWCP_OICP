@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2016 GraphDefined GmbH
+ * Copyright (c) 2014-2017 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -776,6 +776,251 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+
+        #region ToBuilder(NewEVSEId = null)
+
+        /// <summary>
+        /// Return a builder for this charge detail record.
+        /// </summary>
+        public Builder ToBuilder()
+
+            => new Builder(
+
+                   EVSEId,
+                   SessionId,
+                   SessionStart,
+                   SessionEnd,
+                   Identification,
+                   PartnerProductId,
+                   PartnerSessionId,
+                   ChargingStart,
+                   ChargingEnd,
+                   MeterValueStart,
+                   MeterValueEnd,
+                   MeterValuesInBetween,
+                   ConsumedEnergy,
+                   MeteringSignature,
+                   HubOperatorId,
+                   HubProviderId,
+
+                   _CustomData != null
+                       ? _CustomData.ToDictionary(kvp => kvp.Key,
+                                                  kvp => kvp.Value)
+                       : null);
+
+        #endregion
+
+        #region (class) Builder
+
+        /// <summary>
+        /// An OICP charge detail record.
+        /// </summary>
+        public class Builder : ACustomDataBuilder
+        {
+
+            #region Properties
+
+            /// <summary>
+            /// An EVSE identification.
+            /// </summary>
+            [Mandatory]
+            public EVSE_Id                      EVSEId                  { get; set; }
+
+            /// <summary>
+            /// A charging session identification.
+            /// </summary>
+            [Mandatory]
+            public Session_Id                   SessionId               { get; set; }
+
+            /// <summary>
+            /// The timestamp of the session start.
+            /// </summary>
+            [Mandatory]
+            public DateTime                     SessionStart            { get; set; }
+
+            /// <summary>
+            /// The timestamp of the session end.
+            /// </summary>
+            [Mandatory]
+            public DateTime                     SessionEnd              { get; set; }
+
+            /// <summary>
+            /// An identification.
+            /// </summary>
+            [Optional]
+            public AuthorizationIdentification  Identification          { get; set; }
+
+            /// <summary>
+            /// An unqiue identification for the consumed charging product.
+            /// </summary>
+            [Mandatory]
+            public PartnerProduct_Id?           PartnerProductId        { get; set; }
+
+            /// <summary>
+            /// An optional partner session identification.
+            /// </summary>
+            [Optional]
+            public PartnerSession_Id?           PartnerSessionId        { get; set; }
+
+            /// <summary>
+            /// An optional charging start timestamp.
+            /// </summary>
+            [Optional]
+            public DateTime?                    ChargingStart           { get; set; }
+
+            /// <summary>
+            /// An optional charging end timestamp.
+            /// </summary>
+            [Optional]
+            public DateTime?                    ChargingEnd             { get; set; }
+
+            /// <summary>
+            /// An optional initial value of the energy meter.
+            /// </summary>
+            [Optional]
+            public Single?                      MeterValueStart         { get; set; }
+
+            /// <summary>
+            /// An optional final value of the energy meter.
+            /// </summary>
+            [Optional]
+            public Single?                      MeterValueEnd           { get; set; }
+
+            /// <summary>
+            /// An optional enumeration of meter values during the charging session.
+            /// </summary>
+            [Optional]
+            public IEnumerable<Single>          MeterValuesInBetween    { get; set; }
+
+            /// <summary>
+            /// The optional amount of consumed energy.
+            /// </summary>
+            [Optional]
+            public Single?                      ConsumedEnergy          { get; set; }
+
+            /// <summary>
+            /// An optional signature for the metering values.
+            /// </summary>
+            [Optional]
+            public String                       MeteringSignature       { get; set; }
+
+            /// <summary>
+            /// An optional identification of the hub operator.
+            /// </summary>
+            [Optional]
+            public HubOperator_Id?              HubOperatorId           { get; set; }
+
+            /// <summary>
+            /// An optional identification of the hub provider.
+            /// </summary>
+            [Optional]
+            public HubProvider_Id?              HubProviderId           { get; set; }
+
+            #endregion
+
+            #region Constructor(s)
+
+            /// <summary>
+            /// Create a new OICP charge detail record.
+            /// </summary>
+            /// <param name="EVSEId">An EVSE identification.</param>
+            /// <param name="SessionId">A charging session identification.</param>
+            /// <param name="SessionStart">The timestamp of the session start.</param>
+            /// <param name="SessionEnd">The timestamp of the session end.</param>
+            /// <param name="Identification">An identification.</param>
+            /// <param name="PartnerProductId">An unqiue identification for the consumed charging product.</param>
+            /// <param name="PartnerSessionId">An optional partner session identification.</param>
+            /// <param name="ChargingStart">An optional charging start timestamp.</param>
+            /// <param name="ChargingEnd">An optional charging end timestamp.</param>
+            /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
+            /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
+            /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
+            /// <param name="ConsumedEnergy">The optional amount of consumed energy.</param>
+            /// <param name="MeteringSignature">An optional signature for the metering values.</param>
+            /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
+            /// <param name="HubProviderId">An optional identification of the hub provider.</param>
+            /// <param name="CustomData">A dictionary of customer-specific data.</param>
+            public Builder(EVSE_Id                      EVSEId,
+                           Session_Id                   SessionId,
+                           DateTime                     SessionStart,
+                           DateTime                     SessionEnd,
+                           AuthorizationIdentification  Identification,
+                           PartnerProduct_Id?           PartnerProductId       = null,
+                           PartnerSession_Id?           PartnerSessionId       = null,
+                           DateTime?                    ChargingStart          = null,
+                           DateTime?                    ChargingEnd            = null,
+                           Single?                      MeterValueStart        = null,  // xx.yyy
+                           Single?                      MeterValueEnd          = null,  // xx.yyy
+                           IEnumerable<Single>          MeterValuesInBetween   = null,  // xx.yyy
+                           Single?                      ConsumedEnergy         = null,  // xx.yyy
+                           String                       MeteringSignature      = null,  // maxlength: 200
+                           HubOperator_Id?              HubOperatorId          = null,
+                           HubProvider_Id?              HubProviderId          = null,
+
+                           Dictionary<String, Object>   CustomData             = null)
+
+                : base(CustomData)
+
+            {
+
+                #region Initial checks
+
+                if (Identification == null)
+                    throw new ArgumentNullException(nameof(Identification),  "The given identification must not be null!");
+
+                #endregion
+
+                this.EVSEId                = EVSEId;
+                this.SessionId             = SessionId;
+                this.SessionStart          = SessionStart;
+                this.SessionEnd            = SessionEnd;
+                this.Identification        = Identification;
+                this.PartnerProductId      = PartnerProductId;
+                this.PartnerSessionId      = PartnerSessionId;
+                this.ChargingStart         = ChargingStart;
+                this.ChargingEnd           = ChargingEnd;
+                this.MeterValueStart       = MeterValueStart;
+                this.MeterValueEnd         = MeterValueEnd;
+                this.MeterValuesInBetween  = MeterValuesInBetween;
+                this.ConsumedEnergy        = ConsumedEnergy;
+                this.MeteringSignature     = MeteringSignature;
+                this.HubOperatorId         = HubOperatorId;
+                this.HubProviderId         = HubProviderId;
+
+            }
+
+            #endregion
+
+
+            #region Build()
+
+            /// <summary>
+            /// Return an immutable version of the charge detail record.
+            /// </summary>
+            public ChargeDetailRecord Build()
+
+                => new ChargeDetailRecord(EVSEId,
+                                          SessionId,
+                                          SessionStart,
+                                          SessionEnd,
+                                          Identification,
+                                          PartnerProductId,
+                                          PartnerSessionId,
+                                          ChargingStart,
+                                          ChargingEnd,
+                                          MeterValueStart,
+                                          MeterValueEnd,
+                                          MeterValuesInBetween,
+                                          ConsumedEnergy,
+                                          MeteringSignature,
+                                          HubOperatorId,
+                                          HubProviderId);
+
+            #endregion
+
+        }
+
+        #endregion
 
     }
 

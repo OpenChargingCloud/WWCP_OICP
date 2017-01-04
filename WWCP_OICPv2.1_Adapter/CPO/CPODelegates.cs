@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2016 GraphDefined GmbH
+ * Copyright (c) 2014-2017 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +35,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     public delegate EVSEDataRecord    EVSE2EVSEDataRecordDelegate              (EVSE              EVSE,
                                                                                 EVSEDataRecord    EVSEDataRecord);
 
-
     /// <summary>
     /// A delegate which allows you to modify EVSE status records before sending them upstream.
     /// </summary>
@@ -44,6 +43,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     public delegate EVSEStatusRecord  EVSEStatusUpdate2EVSEStatusRecordDelegate(EVSEStatusUpdate  EVSEStatusUpdate,
                                                                                 EVSEStatusRecord  EVSEStatusRecord);
 
+    /// <summary>
+    /// A delegate which allows you to modify charge detail records before sending them upstream.
+    /// </summary>
+    /// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
+    /// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
+    public delegate ChargeDetailRecord WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate(WWCP.ChargeDetailRecord  WWCPChargeDetailRecord,
+                                                                                             ChargeDetailRecord       OCIPChargeDetailRecord);
 
 
     /// <summary>

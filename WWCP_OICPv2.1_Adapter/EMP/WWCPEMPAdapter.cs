@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2016 GraphDefined GmbH
+ * Copyright (c) 2014-2017 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -658,12 +658,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                            RequestTimeout) => {
 
 
-                var response = await RoamingNetwork.SendChargeDetailRecord(ChargeDetailRecord.ToWWCP(),
-                                                                           DateTime.Now,
-                                                                           Timestamp,
-                                                                           CancellationToken,
-                                                                           EventTrackingId,
-                                                                           RequestTimeout).
+                var response = await RoamingNetwork.SendChargeDetailRecords(new WWCP.ChargeDetailRecord[] { ChargeDetailRecord.ToWWCP() },
+
+                                                                            Timestamp,
+                                                                            CancellationToken,
+                                                                            EventTrackingId,
+                                                                            RequestTimeout).
                                                     ConfigureAwait(false);
 
                 if (response != null)
