@@ -802,7 +802,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         SessionId                = Session_Id.Parse(RemoteStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",        null));
 
                         PartnerSessionIdXML      = RemoteStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
-                        if (PartnerSessionIdXML != null)
+                        if (PartnerSessionIdXML != null && PartnerSessionIdXML.Value.IsNotNullOrEmpty())
                             PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
 
                         ProviderId               = Provider_Id.Parse(RemoteStartXML.ElementValueOrFail   (OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
@@ -1026,10 +1026,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         XElement  PartnerSessionIdXML;
 
-                        SessionId         = Session_Id.          Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
+                        SessionId         = Session_Id. Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
 
                         PartnerSessionIdXML = RemoteStopXML.Element(OICPNS.Authorization + "PartnerSessionID");
-                        if (PartnerSessionIdXML != null)
+                        if (PartnerSessionIdXML != null && PartnerSessionIdXML.Value.IsNotNullOrEmpty())
                             PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
 
                         ProviderId        = Provider_Id.Parse(RemoteStopXML.ElementValueOrFail(OICPNS.Authorization + "ProviderID", "No ProviderID XML tag provided!"));
