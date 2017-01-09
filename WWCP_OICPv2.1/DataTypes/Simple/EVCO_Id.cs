@@ -178,28 +178,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ProviderId">The unique identification of an e-mobility provider.</param>
         /// <param name="IdSuffix">The suffix of the electric vehicle contract identification.</param>
         public static EVCO_Id Parse(Provider_Id  ProviderId,
-                                                String                IdSuffix)
+                                    String       IdSuffix)
 
             => new EVCO_Id(ProviderId,
-                                       IdSuffix);
+                           IdSuffix);
 
         #endregion
 
-        #region TryParse(Text, out eMobilityAccountId)
+        #region TryParse(Text, out EVCOId)
 
         /// <summary>
         /// Parse the given string as an electric vehicle contract identification.
         /// </summary>
         /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
-        /// <param name="eMobilityAccountId">The parsed electric vehicle contract identification.</param>
-        public static Boolean TryParse(String Text, out EVCO_Id eMobilityAccountId)
+        /// <param name="EVCOId">The parsed electric vehicle contract identification.</param>
+        public static Boolean TryParse(String Text, out EVCO_Id EVCOId)
         {
 
             #region Initial checks
 
             if (Text.IsNullOrEmpty())
             {
-                eMobilityAccountId = default(EVCO_Id);
+                EVCOId = default(EVCO_Id);
                 return false;
             }
 
@@ -208,45 +208,65 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
-                eMobilityAccountId = default(EVCO_Id);
+                EVCOId = default(EVCO_Id);
 
                 var _MatchCollection = EVCOId_RegEx.Matches(Text.Trim().ToUpper());
 
                 if (_MatchCollection.Count != 1)
                     return false;
 
-                Provider_Id _Provider;
+                Provider_Id _ProviderId;
 
-                // ISO...
-                if (Provider_Id.TryParse(_MatchCollection[0].Groups[1].Value, out _Provider))
+                if (Provider_Id.TryParse(_MatchCollection[0].Groups[1].Value, out _ProviderId))
                 {
 
-                    eMobilityAccountId = new EVCO_Id(_Provider,
-                                                                 _MatchCollection[0].Groups[2].Value,
-                                                                 _MatchCollection[0].Groups[3].Value[0]);
+                    EVCOId = new EVCO_Id(_ProviderId,
+                                         _MatchCollection[0].Groups[2].Value,
+                                         _MatchCollection[0].Groups[3].Value[0]);
 
                     return true;
 
                 }
 
-                // DIN...
-                if (Provider_Id.TryParse(_MatchCollection[0].Groups[4].Value, out _Provider))
+                if (Provider_Id.TryParse(_MatchCollection[0].Groups[4].Value,  out _ProviderId))
                 {
 
-                    eMobilityAccountId = new EVCO_Id(_Provider,
-                                                                 _MatchCollection[0].Groups[5].Value,
-                                                                 _MatchCollection[0].Groups[6].Value[0]);
+                    EVCOId = new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN),
+                                         _MatchCollection[0].Groups[5].Value,
+                                         _MatchCollection[0].Groups[6].Value[0]);
 
                     return true;
 
                 }
 
-                // Without check digit...
-                if (Provider_Id.TryParse(_MatchCollection[0].Groups[7].Value, out _Provider))
+                if (Provider_Id.TryParse(_MatchCollection[0].Groups[7].Value,  out _ProviderId))
                 {
 
-                    eMobilityAccountId = new EVCO_Id(_Provider,
-                                                 _MatchCollection[0].Groups[8].Value);
+                    EVCOId = new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.DIN),
+                                         _MatchCollection[0].Groups[8].Value,
+                                         _MatchCollection[0].Groups[9].Value[0]);
+
+                    return true;
+
+                }
+
+                if (Provider_Id.TryParse(_MatchCollection[0].Groups[10].Value, out _ProviderId))
+                {
+
+                    EVCOId = new EVCO_Id(_ProviderId,
+                                         _MatchCollection[0].Groups[11].Value,
+                                         _MatchCollection[0].Groups[12].Value[0]);
+
+                    return true;
+
+                }
+
+                if (Provider_Id.TryParse(_MatchCollection[0].Groups[13].Value, out _ProviderId))
+                {
+
+                    EVCOId = new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.ISO_HYPHEN),
+                                         _MatchCollection[0].Groups[14].Value,
+                                         _MatchCollection[0].Groups[15].Value[0]);
 
                     return true;
 
@@ -260,7 +280,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            eMobilityAccountId = default(EVCO_Id);
+            EVCOId = default(EVCO_Id);
             return false;
 
         }
