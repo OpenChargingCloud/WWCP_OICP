@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                @"^([A-Za-z]{2}[A-Za-z0-9]{3})([A-Za-z0-9]{6})([0-9|X])$ |"        +   // Hubject DIN:       DEBMW0010LY3
 
                                                                @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-C([A-Za-z0-9]{8})-([0-9|X])$ |"    +   // Hubject ISO Hypen: DE-BMW-001000LY-3
-                                                               @"^([A-Za-z]{2}[A-Za-z0-9]{3})C([A-Za-z0-9]{8})([0-9|X])$",            // Hubject ISO:       DEBMW001000LY3
+                                                               @"^([A-Za-z]{2}[A-Za-z0-9]{3})C([A-Za-z0-9]{8})([0-9|X])$",            // Hubject ISO:       DEBMWC001000LY3
 
                                                                RegexOptions.IgnorePatternWhitespace);
 
@@ -138,24 +138,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             Provider_Id _ProviderId;
 
-            if (Provider_Id.TryParse(_MatchCollection[0].Groups[1].Value, out _ProviderId))
+            if (Provider_Id.TryParse(_MatchCollection[0].Groups[1].Value,  out _ProviderId))
                 return new EVCO_Id(_ProviderId,
                                    _MatchCollection[0].Groups[2].Value,
                                    _MatchCollection[0].Groups[3].Value[0]);
 
-            if (Provider_Id.TryParse(_MatchCollection[0].Groups[4].Value, out _ProviderId))
+            if (Provider_Id.TryParse(_MatchCollection[0].Groups[4].Value,  out _ProviderId))
                 return new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN),
                                    _MatchCollection[0].Groups[5].Value,
                                    _MatchCollection[0].Groups[6].Value[0]);
 
-            if (Provider_Id.TryParse(_MatchCollection[0].Groups[7].Value, out _ProviderId))
-                return new EVCO_Id(_ProviderId,
+            if (Provider_Id.TryParse(_MatchCollection[0].Groups[7].Value,  out _ProviderId))
+                return new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.DIN),
                                    _MatchCollection[0].Groups[8].Value,
                                    _MatchCollection[0].Groups[9].Value[0]);
 
             if (Provider_Id.TryParse(_MatchCollection[0].Groups[10].Value, out _ProviderId))
                 return new EVCO_Id(_ProviderId,
-                                   _MatchCollection[0].Groups[11].Value);
+                                   _MatchCollection[0].Groups[11].Value,
+                                   _MatchCollection[0].Groups[12].Value[0]);
+
+            if (Provider_Id.TryParse(_MatchCollection[0].Groups[13].Value, out _ProviderId))
+                return new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.ISO_HYPHEN),
+                                   _MatchCollection[0].Groups[14].Value,
+                                   _MatchCollection[0].Groups[15].Value[0]);
 
 
             throw new ArgumentException("Illegal contract identification '" + Text + "'!");
