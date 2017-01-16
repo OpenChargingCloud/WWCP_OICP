@@ -32,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
     /// <summary>
-    /// Extention methods for the CPO client interface.
+    /// Extention methods for the OICP CPO client interface.
     /// </summary>
     public static class ICPOClientExtentions
     {
@@ -410,7 +410,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                              RequestTimeout.HasValue ? RequestTimeout.Value : ICPOClient.RequestTimeout));
 
         #endregion
-
 
     }
 

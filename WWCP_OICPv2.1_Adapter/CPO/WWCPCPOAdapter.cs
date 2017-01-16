@@ -104,6 +104,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region Properties
 
+        IId IRemoteAuthorizeStartStop.AuthId
+            => Id;
+
         #region Name
 
         /// <summary>
@@ -1169,6 +1172,162 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (ServerAutoStart)
                 CPOServer.Start();
 
+        }
+
+        event OnAuthorizeStartRequestDelegate IRemoteAuthorizeStartStop.OnAuthorizeStartRequest
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeStartResponseDelegate IRemoteAuthorizeStartStop.OnAuthorizeStartResponse
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeEVSEStartRequestDelegate IRemoteAuthorizeStartStop.OnAuthorizeEVSEStartRequest
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeEVSEStartResponseDelegate IRemoteAuthorizeStartStop.OnAuthorizeEVSEStartResponse
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeChargingStationStartRequestDelegate IRemoteAuthorizeStartStop.OnAuthorizeChargingStationStartRequest
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeChargingStationStartResponseDelegate IRemoteAuthorizeStartStop.OnAuthorizeChargingStationStartResponse
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeStopRequestDelegate IRemoteAuthorizeStartStop.OnAuthorizeStopRequest
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeStopResponseDelegate IRemoteAuthorizeStartStop.OnAuthorizeStopResponse
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeEVSEStopRequestDelegate IRemoteAuthorizeStartStop.OnAuthorizeEVSEStopRequest
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeEVSEStopResponseDelegate IRemoteAuthorizeStartStop.OnAuthorizeEVSEStopResponse
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeChargingStationStopRequestDelegate IRemoteAuthorizeStartStop.OnAuthorizeChargingStationStopRequest
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnAuthorizeChargingStationStopResponseDelegate IRemoteAuthorizeStartStop.OnAuthorizeChargingStationStopResponse
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
         }
 
         #endregion
@@ -4529,7 +4688,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     result = AuthStopEVSEResult.Authorized(
                                  Id,
                                  SessionId,
-                                 response.Content?.ProviderId.ToWWCP(),
+                                 response.Content?.ProviderId?.ToWWCP(),
                                  response.Content?.StatusCode?.Description,
                                  response.Content?.StatusCode?.AdditionalInfo
                              );
@@ -4539,7 +4698,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     result = AuthStopEVSEResult.NotAuthorized(
                                  Id,
                                  SessionId,
-                                 response.Content?.ProviderId.ToWWCP(),
+                                 response.Content?.ProviderId?.ToWWCP(),
                                  response.Content?.StatusCode?.Description,
                                  response.Content?.StatusCode?.AdditionalInfo
                              );

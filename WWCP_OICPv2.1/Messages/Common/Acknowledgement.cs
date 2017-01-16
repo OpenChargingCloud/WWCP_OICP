@@ -385,52 +385,57 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
 
-        public class Builder
+        public class Builder : ABuilder
         {
 
             #region Properties
 
-            public TRequest                   Request             { get; set; }
+            public TRequest                    Request            { get; set; }
 
             /// <summary>
             /// The result of the operation.
             /// </summary>
-            public Boolean             Result              { get; set; }
+            public Boolean                     Result             { get; set; }
 
             /// <summary>
             /// The status code of the operation.
             /// </summary>
-            public StatusCode          StatusCode          { get; set; }
+            public StatusCode                  StatusCode         { get; set; }
 
             /// <summary>
             /// An optional charging session identification for
             /// RemoteReservationStart and RemoteStart requests.
             /// </summary>
-            public Session_Id?         SessionId           { get; set; }
+            public Session_Id?                 SessionId          { get; set; }
 
             /// <summary>
             /// An optional partner charging session identification for
             /// RemoteReservationStart and RemoteStart requests.
             /// </summary>
-            public PartnerSession_Id?  PartnerSessionId    { get; set; }
+            public PartnerSession_Id?          PartnerSessionId   { get; set; }
 
-            public Dictionary<String, Object> CustomData { get; set; }
+            public Dictionary<String, Object>  CustomData         { get; set; }
 
             #endregion
 
             public Builder(Acknowledgement<TRequest> Acknowledgement = null)
             {
 
-                this.Request            = Acknowledgement.Request;
-                this.Result             = Acknowledgement.Result;
-                this.StatusCode         = Acknowledgement.StatusCode;
-                this.SessionId          = Acknowledgement.SessionId;
-                this.PartnerSessionId   = Acknowledgement.PartnerSessionId;
-                this.CustomData         = new Dictionary<String, Object>();
+                if (Acknowledgement != null)
+                {
 
-                if (Acknowledgement.CustomData != null)
-                    foreach (var item in Acknowledgement.CustomData)
-                        CustomData.Add(item.Key, item.Value);
+                    this.Request           = Acknowledgement.Request;
+                    this.Result            = Acknowledgement.Result;
+                    this.StatusCode        = Acknowledgement.StatusCode;
+                    this.SessionId         = Acknowledgement.SessionId;
+                    this.PartnerSessionId  = Acknowledgement.PartnerSessionId;
+                    this.CustomData        = new Dictionary<String, Object>();
+
+                    if (Acknowledgement.CustomData != null)
+                        foreach (var item in Acknowledgement.CustomData)
+                            CustomData.Add(item.Key, item.Value);
+
+                }
 
             }
 

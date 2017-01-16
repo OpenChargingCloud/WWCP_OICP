@@ -457,10 +457,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             return new AuthorizationStop(
                            (AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), AuthorizationStopXML.ElementValueOrFail(OICPNS.Authorization + "AuthorizationStatus")),
-                           AuthorizationStopXML.MapValueOrNull(OICPNS.Authorization + "SessionID",         Session_Id.       Parse),
-                           AuthorizationStopXML.MapValueOrNull(OICPNS.Authorization + "PartnerSessionID",  PartnerSession_Id.Parse),
-                           AuthorizationStopXML.MapValueOrNull(OICPNS.Authorization + "ProviderID",        Provider_Id.      Parse),
-                           AuthorizationStopXML.MapElement    (OICPNS.Authorization + "StatusCode",        StatusCode.       Parse)
+                           AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",         Session_Id.       Parse),
+                           AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",  PartnerSession_Id.Parse),
+                           AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "ProviderID",        Provider_Id.      Parse),
+                           AuthorizationStopXML.MapElement        (OICPNS.Authorization + "StatusCode",        StatusCode.       Parse)
                        );
 
         }

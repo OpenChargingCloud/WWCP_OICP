@@ -31,7 +31,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// The unique identification of an OICP Electric Vehicle Supply Equipment (EVSE).
     /// </summary>
     public struct EVSE_Id : IId,
-                            IEquatable <EVSE_Id>,
+                            IEquatable<EVSE_Id>,
                             IComparable<EVSE_Id>
 
     {
@@ -41,21 +41,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The regular expression for parsing an EVSE identification.
         /// </summary>
-        public static readonly Regex EVSEId_RegEx       = new Regex(@"^([A-Za-z]{2}\*?[A-Za-z0-9]{3})\*?E([A-Za-z0-9\*]{1,30})$ |" +
-                                                                    @"^(\+?[0-9]{1,3}\*[0-9]{3,6})\*([0-9\*]{1,32})$",
-                                                                    RegexOptions.IgnorePatternWhitespace);
-
-        /// <summary>
-        /// The regular expression for parsing an ISO EVSE identification suffix.
-        /// </summary>
-        public static readonly Regex IdSuffixISO_RegEx  = new Regex(@"^([A-Za-z0-9\*]{1,30})$",
-                                                                    RegexOptions.IgnorePatternWhitespace);
-
-        /// <summary>
-        /// The regular expression for parsing a DIN EVSE identification suffix.
-        /// </summary>
-        public static readonly Regex IdSuffixDIN_RegEx  = new Regex(@"^([0-9\*]{1,32})$",
-                                                                    RegexOptions.IgnorePatternWhitespace);
+        public static readonly Regex EVSEId_RegEx = new Regex(@"^([A-Za-z]{2}\*?[A-Za-z0-9]{3})\*?E([A-Za-z0-9\*]{1,30})$ |" +
+                                                              @"^(\+?[0-9]{1,3}\*[0-9]{3})\*([0-9\*]{1,32})$",
+                                                              RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
@@ -185,24 +173,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             switch (OperatorId.Format)
             {
 
-                case OperatorIdFormats.ISO:
-                    if (!IdSuffixISO_RegEx.IsMatch(Suffix))
-                        throw new ArgumentException("Illegal EVSE identification suffix '" + Suffix + "'!",
-                                                    nameof(Suffix));
-                    return new EVSE_Id(OperatorId,
-                                       Suffix);
-
                 case OperatorIdFormats.DIN:
-                    if (!IdSuffixDIN_RegEx.IsMatch(Suffix))
-                        throw new ArgumentException("Illegal EVSE identification suffix '" + Suffix + "'!",
-                                                    nameof(Suffix));
-                    return new EVSE_Id(OperatorId,
-                                       Suffix);
+                    return Parse(OperatorId +  "*" + Suffix);
+
+                case OperatorIdFormats.ISO:
+                    return Parse(OperatorId +  "E" + Suffix);
+
+                default: // ISO_STAR
+                    return Parse(OperatorId + "*E" + Suffix);
 
             }
 
-            throw new ArgumentException("Illegal EVSE identification suffix '" + Suffix + "'!",
-                                                    nameof(Suffix));
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parse the given string as an EVSE identification.
+        /// </summary>
+        /// <param name="Text">A text representation of an EVSE identification.</param>
+        public static EVSE_Id? TryParse(String Text)
+        {
+
+            EVSE_Id _EVSEId;
+
+            if (TryParse(Text, out _EVSEId))
+                return _EVSEId;
+
+            return new EVSE_Id?();
 
         }
 
@@ -297,8 +297,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="EVSEId1">A charge point identification.</param>
-        /// <param name="EVSEId2">Another charge point identification.</param>
+        /// <param name="EVSEId1">An EVSE identification.</param>
+        /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
         {
@@ -312,7 +312,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 return false;
 
             if ((Object) EVSEId1 == null)
-                throw new ArgumentNullException(nameof(EVSEId1),  "The given charge point identification must not be null!");
+                throw new ArgumentNullException(nameof(EVSEId1),  "The given EVSE identification must not be null!");
 
             return EVSEId1.Equals(EVSEId2);
 
@@ -325,8 +325,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="EVSEId1">A charge point identification.</param>
-        /// <param name="EVSEId2">Another charge point identification.</param>
+        /// <param name="EVSEId1">An EVSE identification.</param>
+        /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
             => !(EVSEId1 == EVSEId2);
@@ -338,14 +338,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="EVSEId1">A charge point identification.</param>
-        /// <param name="EVSEId2">Another charge point identification.</param>
+        /// <param name="EVSEId1">An EVSE identification.</param>
+        /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
         {
 
             if ((Object) EVSEId1 == null)
-                throw new ArgumentNullException(nameof(EVSEId1),  "The given charge point identification must not be null!");
+                throw new ArgumentNullException(nameof(EVSEId1),  "The given EVSE identification must not be null!");
 
             return EVSEId1.CompareTo(EVSEId2) < 0;
 
@@ -358,8 +358,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="EVSEId1">A charge point identification.</param>
-        /// <param name="EVSEId2">Another charge point identification.</param>
+        /// <param name="EVSEId1">An EVSE identification.</param>
+        /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
             => !(EVSEId1 > EVSEId2);
@@ -371,14 +371,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="EVSEId1">A charge point identification.</param>
-        /// <param name="EVSEId2">Another charge point identification.</param>
+        /// <param name="EVSEId1">An EVSE identification.</param>
+        /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
         {
 
             if ((Object) EVSEId1 == null)
-                throw new ArgumentNullException(nameof(EVSEId1),  "The given charge point identification must not be null!");
+                throw new ArgumentNullException(nameof(EVSEId1),  "The given EVSE identification must not be null!");
 
             return EVSEId1.CompareTo(EVSEId2) > 0;
 
@@ -391,8 +391,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="EVSEId1">A charge point identification.</param>
-        /// <param name="EVSEId2">Another charge point identification.</param>
+        /// <param name="EVSEId1">An EVSE identification.</param>
+        /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
             => !(EVSEId1 < EVSEId2);
@@ -415,9 +415,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object),  "The given object must not be null!");
 
-            // Check if the given object is a charge point identification.
             if (!(Object is EVSE_Id))
-                throw new ArgumentException("The given object is not a EVSEId!", nameof(Object));
+                throw new ArgumentException("The given object is not a EVSE identification!", nameof(Object));
 
             return CompareTo((EVSE_Id) Object);
 
@@ -435,16 +434,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             if ((Object) EVSEId == null)
-                throw new ArgumentNullException(nameof(EVSEId),  "The given charge point identification must not be null!");
+                throw new ArgumentNullException(nameof(EVSEId),  "The given EVSE identification must not be null!");
 
-            // Compare the length of the charge point identifications
-            var _Result = this.Length.CompareTo(EVSEId.Length);
+            // Compare the length of the EVSE identifications
+            var _Result = Length.CompareTo(EVSEId.Length);
 
-            // If equal: Compare charging operator identifications
+            // If equal: Compare operator identifications
             if (_Result == 0)
                 _Result = OperatorId.CompareTo(EVSEId.OperatorId);
 
-            // If equal: Compare charge point identification suffix
+            // If equal: Compare EVSE identification suffix
             if (_Result == 0)
                 _Result = String.Compare(Suffix, EVSEId.Suffix, StringComparison.Ordinal);
 
@@ -471,11 +470,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 return false;
 
-            // Check if the given object is a charge point identification.
             if (!(Object is EVSE_Id))
                 return false;
 
-            return this.Equals((EVSE_Id) Object);
+            return Equals((EVSE_Id) Object);
 
         }
 
@@ -484,9 +482,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Equals(EVSEId)
 
         /// <summary>
-        /// Compares two charge point identifications for equality.
+        /// Compares two EVSE identifications for equality.
         /// </summary>
-        /// <param name="EVSEId">A charge point identification to compare with.</param>
+        /// <param name="EVSEId">An EVSE identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(EVSE_Id EVSEId)
         {
@@ -530,11 +528,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 case OperatorIdFormats.DIN:
                     return String.Concat(OperatorId,  "*", Suffix);
 
-                case OperatorIdFormats.ISO_STAR:
-                    return String.Concat(OperatorId, "*E", Suffix);
-
-                default:  // ISO
+                case OperatorIdFormats.ISO:
                     return String.Concat(OperatorId,  "E", Suffix);
+
+                default: // ISO_STAR
+                    return String.Concat(OperatorId, "*E", Suffix);
 
             }
 

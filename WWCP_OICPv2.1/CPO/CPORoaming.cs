@@ -1186,7 +1186,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="Request">An AuthorizeStart request.</param>
         public async Task<HTTPResponse<AuthorizationStart>>
 
-            AuthorizeStart(AuthorizeStartRequest  Request)
+            AuthorizeStart(AuthorizeStartRequest Request)
 
                 => await CPOClient.AuthorizeStart(Request);
 

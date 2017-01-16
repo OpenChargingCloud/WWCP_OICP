@@ -79,6 +79,7 @@
     <Compile Include="EMP\EMPClient\IEMPClientExtentions.cs" />
     <Compile Include="EMP\EMPClient\IEMPClient.cs" />
     <Compile Include="IO\XML_IO.cs" />
+    <Compile Include="Messages\ABuilder.cs" />
     <Compile Include="Messages\ARequest.cs" />
     <Compile Include="Messages\AResponse.cs" />
     <Compile Include="Messages\Common\PushEVSEDataResponse.cs" />

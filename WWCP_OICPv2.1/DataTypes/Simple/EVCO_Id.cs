@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The unique identification of an Electric Vehicle Contract identification (EVCOId).
+    /// The unique identification of an electric vehicle contract identification (EVCOId).
     /// </summary>
     public struct EVCO_Id : IId,
                             IEquatable<EVCO_Id>,
@@ -40,20 +40,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The regular expression for parsing an electric vehicle contract identification.
         /// </summary>
-        public static readonly Regex EVCOId_RegEx  = new Regex(@"^([A-Za-z]{2}\*[A-Za-z0-9]{3})\*([A-Za-z0-9]{6})\*([0-9|X])$ |"  +   // Hubject DIN STAR:  DE*BMW*0010LY*3
-                                                               @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-([A-Za-z0-9]{6})-([0-9|X])$ |"     +   // Hubject DIN HYPEN: DE-BMW-0010LY-3
-                                                               @"^([A-Za-z]{2}[A-Za-z0-9]{3})([A-Za-z0-9]{6})([0-9|X])$ |"        +   // Hubject DIN:       DEBMW0010LY3
+        public static readonly Regex EVCOId_RegEx  = new Regex(@"^([A-Za-z]{2}\*[A-Za-z0-9]{3})\*([A-Za-z0-9]{6})\*([0-9|X])$ |"  +   // DIN STAR:  DE*BMW*0010LY*3
+                                                               @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-([A-Za-z0-9]{6})-([0-9|X])$ |"     +   // DIN HYPEN: DE-BMW-0010LY-3
+                                                               @"^([A-Za-z]{2}[A-Za-z0-9]{3})([A-Za-z0-9]{6})([0-9|X])$ |"        +   // DIN:       DEBMW0010LY3
 
-                                                               @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-C([A-Za-z0-9]{8})-([0-9|X])$ |"    +   // Hubject ISO Hypen: DE-BMW-001000LY-3
-                                                               @"^([A-Za-z]{2}[A-Za-z0-9]{3})C([A-Za-z0-9]{8})([0-9|X])$",            // Hubject ISO:       DEBMWC001000LY3
+                                                               @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-C([A-Za-z0-9]{8})-([0-9|X])$ |"    +   // ISO Hypen: DE-BMW-C001000LY-3
+                                                               @"^([A-Za-z]{2}[A-Za-z0-9]{3})C([A-Za-z0-9]{8})([0-9|X])$",            // ISO:       DEBMWC001000LY3
 
                                                                RegexOptions.IgnorePatternWhitespace);
-
-        /// <summary>
-        /// The regular expression for parsing an electric vehicle contract identification suffix.
-        /// </summary>
-        public static readonly Regex IdSuffix_RegEx  = new Regex(@"^[A-Za-z0-9]{9}-[A-Za-z0-9]$ | ^[A-Za-z0-9]{9}[A-Za-z0-9]$ | ^[A-Za-z0-9]{9}$",
-                                                                 RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
@@ -62,17 +56,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The e-mobility provider identification.
         /// </summary>
-        public Provider_Id  ProviderId    { get; }
+        public Provider_Id  ProviderId   { get; }
 
         /// <summary>
         /// The suffix of the identification.
         /// </summary>
-        public String                Suffix        { get; }
+        public String       Suffix       { get; }
 
         /// <summary>
         /// An optional check digit of the electric vehicle contract identification.
         /// </summary>
-        public Char?                 CheckDigit    { get; }
+        public Char?        CheckDigit   { get; }
 
         /// <summary>
         /// Returns the length of the identification.
@@ -89,26 +83,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Constructor(s)
 
         /// <summary>
-        /// Generate a new electric vehicle contract identification
-        /// based on the given string.
+        /// Create a new electric vehicle contract identification.
         /// </summary>
         /// <param name="ProviderId">The unique identification of an e-mobility provider.</param>
-        /// <param name="IdSuffix">The suffix of the electric vehicle contract identification.</param>
+        /// <param name="Suffix">The suffix of the electric vehicle contract identification.</param>
         /// <param name="CheckDigit">An optional check digit of the electric vehicle contract identification.</param>
         private EVCO_Id(Provider_Id  ProviderId,
-                        String                IdSuffix,
-                        Char?                 CheckDigit = null)
+                        String       Suffix,
+                        Char?        CheckDigit = null)
         {
 
             #region Initial checks
 
-            if (IdSuffix.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(IdSuffix),  "The identification suffix must not be null or empty!");
+            if (Suffix.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Suffix),  "The identification suffix must not be null or empty!");
 
             #endregion
 
             this.ProviderId  = ProviderId;
-            this.Suffix      = IdSuffix;
+            this.Suffix      = Suffix;
             this.CheckDigit  = CheckDigit;
 
         }
@@ -119,69 +112,124 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Parse(Text)
 
         /// <summary>
-        /// Parse the given string as a contract identification.
+        /// Parse the given text representation of an electric vehicle contract identification.
         /// </summary>
+        /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
         public static EVCO_Id Parse(String Text)
         {
 
             #region Initial checks
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The parameter must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The text representation of the electric vehicle contract identification must not be null or empty!");
 
             #endregion
 
             var _MatchCollection = EVCOId_RegEx.Matches(Text);
 
             if (_MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal contract identification '" + Text + "'!");
+                throw new ArgumentException("Illegal electric vehicle contract identification '" + Text + "'!");
 
             Provider_Id _ProviderId;
 
+            // DIN STAR:  DE*BMW*0010LY*3
             if (Provider_Id.TryParse(_MatchCollection[0].Groups[1].Value,  out _ProviderId))
                 return new EVCO_Id(_ProviderId,
                                    _MatchCollection[0].Groups[2].Value,
                                    _MatchCollection[0].Groups[3].Value[0]);
 
+            // DIN HYPEN: DE-BMW-0010LY-3
             if (Provider_Id.TryParse(_MatchCollection[0].Groups[4].Value,  out _ProviderId))
                 return new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN),
                                    _MatchCollection[0].Groups[5].Value,
                                    _MatchCollection[0].Groups[6].Value[0]);
 
+            // DIN:       DEBMW0010LY3
             if (Provider_Id.TryParse(_MatchCollection[0].Groups[7].Value,  out _ProviderId))
                 return new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.DIN),
                                    _MatchCollection[0].Groups[8].Value,
                                    _MatchCollection[0].Groups[9].Value[0]);
 
+
+            // ISO Hypen: DE-BMW-C001000LY-3
             if (Provider_Id.TryParse(_MatchCollection[0].Groups[10].Value, out _ProviderId))
                 return new EVCO_Id(_ProviderId,
                                    _MatchCollection[0].Groups[11].Value,
                                    _MatchCollection[0].Groups[12].Value[0]);
 
+            // ISO:       DEBMWC001000LY3
             if (Provider_Id.TryParse(_MatchCollection[0].Groups[13].Value, out _ProviderId))
                 return new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.ISO_HYPHEN),
                                    _MatchCollection[0].Groups[14].Value,
                                    _MatchCollection[0].Groups[15].Value[0]);
 
 
-            throw new ArgumentException("Illegal contract identification '" + Text + "'!");
+            throw new ArgumentException("Illegal electric vehicle contract identification '" + Text + "'!");
 
         }
 
         #endregion
 
-        #region Parse(ProviderId, IdSuffix)
+        #region Parse(ProviderId, Suffix)
 
         /// <summary>
-        /// Parse the given string as an contract identification.
+        /// Parse the given electric vehicle contract identification.
         /// </summary>
         /// <param name="ProviderId">The unique identification of an e-mobility provider.</param>
-        /// <param name="IdSuffix">The suffix of the electric vehicle contract identification.</param>
+        /// <param name="Suffix">The suffix of the electric vehicle contract identification.</param>
         public static EVCO_Id Parse(Provider_Id  ProviderId,
-                                    String       IdSuffix)
+                                    String       Suffix)
+        {
 
-            => new EVCO_Id(ProviderId,
-                           IdSuffix);
+            #region Initial checks
+
+            if (Suffix.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Suffix), "The given electric vehicle contract identification suffix must not be null or empty!");
+
+            #endregion
+
+            switch (ProviderId.Format)
+            {
+
+                case ProviderIdFormats.DIN:
+                    return Parse(ProviderId +       Suffix);
+
+                case ProviderIdFormats.DIN_STAR:
+                    return Parse(ProviderId + "*" + Suffix);
+
+                case ProviderIdFormats.DIN_HYPHEN:
+                    return Parse(ProviderId + "-" + Suffix);
+
+
+                case ProviderIdFormats.ISO:
+                    return Parse(ProviderId +       Suffix);
+
+                default: // ISO_HYPHEN
+                    return Parse(ProviderId + "-" + Suffix);
+
+            }
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parse the given string as an electric vehicle contract identification.
+        /// </summary>
+        /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
+        public static EVCO_Id? TryParse(String Text)
+        {
+
+            EVCO_Id _EVCOId;
+
+            if (TryParse(Text, out _EVCOId))
+                return _EVCOId;
+
+            return new EVCO_Id?();
+
+        }
 
         #endregion
 
@@ -217,6 +265,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 Provider_Id _ProviderId;
 
+                #region DIN STAR:  DE*BMW*0010LY*3
+
                 if (Provider_Id.TryParse(_MatchCollection[0].Groups[1].Value, out _ProviderId))
                 {
 
@@ -227,6 +277,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     return true;
 
                 }
+
+                #endregion
+
+                #region DIN HYPEN: DE-BMW-0010LY-3
 
                 if (Provider_Id.TryParse(_MatchCollection[0].Groups[4].Value,  out _ProviderId))
                 {
@@ -239,6 +293,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 }
 
+                #endregion
+
+                #region DIN:       DEBMW0010LY3
+
                 if (Provider_Id.TryParse(_MatchCollection[0].Groups[7].Value,  out _ProviderId))
                 {
 
@@ -249,6 +307,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     return true;
 
                 }
+
+                #endregion
+
+
+                #region ISO Hypen: DE-BMW-C001000LY-3
 
                 if (Provider_Id.TryParse(_MatchCollection[0].Groups[10].Value, out _ProviderId))
                 {
@@ -261,6 +324,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 }
 
+                #endregion
+
+                #region ISO:       DEBMWC001000LY3
+
                 if (Provider_Id.TryParse(_MatchCollection[0].Groups[13].Value, out _ProviderId))
                 {
 
@@ -272,6 +339,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 }
 
+                #endregion
+
             }
 #pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
 #pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
@@ -281,29 +350,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             { }
 
             EVCOId = default(EVCO_Id);
-            return false;
-
-        }
-
-
-        /// <summary>
-        /// Parse the given string as an electric vehicle contract identification.
-        /// </summary>
-        /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
-        /// <param name="eMobilityAccountId">The parsed electric vehicle contract identification.</param>
-        public static Boolean TryParse(String Text, out EVCO_Id? eMobilityAccountId)
-        {
-
-            EVCO_Id eMAId;
-
-            if (TryParse(Text, out eMAId))
-            {
-                eMobilityAccountId = eMAId;
-                return true;
-            }
-
-            eMobilityAccountId = new EVCO_Id?();
-
             return false;
 
         }
@@ -325,116 +371,116 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Operator overloading
 
-        #region Operator == (eMobilityAccountId1, eMobilityAccountId2)
+        #region Operator == (EVCOId1, EVCOId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="eMobilityAccountId1">A contract identification.</param>
-        /// <param name="eMobilityAccountId2">Another contract identification.</param>
+        /// <param name="EVCOId1">A contract identification.</param>
+        /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (EVCO_Id eMobilityAccountId1, EVCO_Id eMobilityAccountId2)
+        public static Boolean operator == (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(eMobilityAccountId1, eMobilityAccountId2))
+            if (Object.ReferenceEquals(EVCOId1, EVCOId2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) eMobilityAccountId1 == null) || ((Object) eMobilityAccountId2 == null))
+            if (((Object) EVCOId1 == null) || ((Object) EVCOId2 == null))
                 return false;
 
-            if ((Object) eMobilityAccountId1 == null)
-                throw new ArgumentNullException(nameof(eMobilityAccountId1),  "The given contract identification must not be null!");
+            if ((Object) EVCOId1 == null)
+                throw new ArgumentNullException(nameof(EVCOId1),  "The given contract identification must not be null!");
 
-            return eMobilityAccountId1.Equals(eMobilityAccountId2);
+            return EVCOId1.Equals(EVCOId2);
 
         }
 
         #endregion
 
-        #region Operator != (eMobilityAccountId1, eMobilityAccountId2)
+        #region Operator != (EVCOId1, EVCOId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="eMobilityAccountId1">A contract identification.</param>
-        /// <param name="eMobilityAccountId2">Another contract identification.</param>
+        /// <param name="EVCOId1">A contract identification.</param>
+        /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (EVCO_Id eMobilityAccountId1, EVCO_Id eMobilityAccountId2)
-            => !(eMobilityAccountId1 == eMobilityAccountId2);
+        public static Boolean operator != (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
+            => !(EVCOId1 == EVCOId2);
 
         #endregion
 
-        #region Operator <  (eMobilityAccountId1, eMobilityAccountId2)
+        #region Operator <  (EVCOId1, EVCOId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="eMobilityAccountId1">A contract identification.</param>
-        /// <param name="eMobilityAccountId2">Another contract identification.</param>
+        /// <param name="EVCOId1">A contract identification.</param>
+        /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (EVCO_Id eMobilityAccountId1, EVCO_Id eMobilityAccountId2)
+        public static Boolean operator < (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
         {
 
-            if ((Object) eMobilityAccountId1 == null)
-                throw new ArgumentNullException(nameof(eMobilityAccountId1),  "The given contract identification must not be null!");
+            if ((Object) EVCOId1 == null)
+                throw new ArgumentNullException(nameof(EVCOId1),  "The given contract identification must not be null!");
 
-            return eMobilityAccountId1.CompareTo(eMobilityAccountId2) < 0;
+            return EVCOId1.CompareTo(EVCOId2) < 0;
 
         }
 
         #endregion
 
-        #region Operator <= (eMobilityAccountId1, eMobilityAccountId2)
+        #region Operator <= (EVCOId1, EVCOId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="eMobilityAccountId1">A contract identification.</param>
-        /// <param name="eMobilityAccountId2">Another contract identification.</param>
+        /// <param name="EVCOId1">A contract identification.</param>
+        /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (EVCO_Id eMobilityAccountId1, EVCO_Id eMobilityAccountId2)
-            => !(eMobilityAccountId1 > eMobilityAccountId2);
+        public static Boolean operator <= (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
+            => !(EVCOId1 > EVCOId2);
 
         #endregion
 
-        #region Operator >  (eMobilityAccountId1, eMobilityAccountId2)
+        #region Operator >  (EVCOId1, EVCOId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="eMobilityAccountId1">A contract identification.</param>
-        /// <param name="eMobilityAccountId2">Another contract identification.</param>
+        /// <param name="EVCOId1">A contract identification.</param>
+        /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (EVCO_Id eMobilityAccountId1, EVCO_Id eMobilityAccountId2)
+        public static Boolean operator > (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
         {
 
-            if ((Object) eMobilityAccountId1 == null)
-                throw new ArgumentNullException(nameof(eMobilityAccountId1),  "The given contract identification must not be null!");
+            if ((Object) EVCOId1 == null)
+                throw new ArgumentNullException(nameof(EVCOId1),  "The given contract identification must not be null!");
 
-            return eMobilityAccountId1.CompareTo(eMobilityAccountId2) > 0;
+            return EVCOId1.CompareTo(EVCOId2) > 0;
 
         }
 
         #endregion
 
-        #region Operator >= (eMobilityAccountId1, eMobilityAccountId2)
+        #region Operator >= (EVCOId1, EVCOId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="eMobilityAccountId1">A contract identification.</param>
-        /// <param name="eMobilityAccountId2">Another contract identification.</param>
+        /// <param name="EVCOId1">A contract identification.</param>
+        /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (EVCO_Id eMobilityAccountId1, EVCO_Id eMobilityAccountId2)
-            => !(eMobilityAccountId1 < eMobilityAccountId2);
+        public static Boolean operator >= (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
+            => !(EVCOId1 < EVCOId2);
 
         #endregion
 
         #endregion
 
-        #region IComparable<eMobilityAccountId> Members
+        #region IComparable<EVCOId> Members
 
         #region CompareTo(Object)
 
@@ -448,9 +494,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object),  "The given object must not be null!");
 
-            // Check if the given object is a contract identification.
             if (!(Object is EVCO_Id))
-                throw new ArgumentException("The given object is not a eMobilityAccountId!", nameof(Object));
+                throw new ArgumentException("The given object is not a EVCOId!", nameof(Object));
 
             return CompareTo((EVCO_Id) Object);
 
@@ -458,38 +503,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region CompareTo(eMobilityAccountId)
+        #region CompareTo(EVCOId)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="eMobilityAccountId">An object to compare with.</param>
-        public Int32 CompareTo(EVCO_Id eMobilityAccountId)
+        /// <param name="EVCOId">An object to compare with.</param>
+        public Int32 CompareTo(EVCO_Id EVCOId)
         {
 
-            if ((Object) eMobilityAccountId == null)
-                throw new ArgumentNullException(nameof(eMobilityAccountId),  "The given contract identification must not be null!");
+            if ((Object) EVCOId == null)
+                throw new ArgumentNullException(nameof(EVCOId),  "The given contract identification must not be null!");
 
             // Compare the length of the contract identifications
-            var _Result = this.Length.CompareTo(eMobilityAccountId.Length);
+            var _Result = Length.CompareTo(EVCOId.Length);
 
             // If equal: Compare charging operator identifications
             if (_Result == 0)
-                _Result = ProviderId.CompareTo(eMobilityAccountId.ProviderId);
+                _Result = ProviderId.CompareTo(EVCOId.ProviderId);
 
             // If equal: Compare contract identification suffix
             if (_Result == 0)
-                _Result = String.Compare(Suffix, eMobilityAccountId.Suffix, StringComparison.Ordinal);
+                _Result = String.Compare(Suffix, EVCOId.Suffix, StringComparison.Ordinal);
 
             // If equal: Compare contract check digit
             if (_Result == 0)
             {
 
-                if (!CheckDigit.HasValue && !eMobilityAccountId.CheckDigit.HasValue)
+                if (!CheckDigit.HasValue && !EVCOId.CheckDigit.HasValue)
                     _Result = 0;
 
-                if ( CheckDigit.HasValue &&  eMobilityAccountId.CheckDigit.HasValue)
-                    _Result = CheckDigit.Value.CompareTo(eMobilityAccountId.CheckDigit.Value);
+                if ( CheckDigit.HasValue &&  EVCOId.CheckDigit.HasValue)
+                    _Result = CheckDigit.Value.CompareTo(EVCOId.CheckDigit.Value);
 
             }
 
@@ -501,7 +546,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region IEquatable<eMobilityAccountId> Members
+        #region IEquatable<EVCOId> Members
 
         #region Equals(Object)
 
@@ -516,34 +561,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 return false;
 
-            // Check if the given object is a contract identification.
             if (!(Object is EVCO_Id))
                 return false;
 
-            return this.Equals((EVCO_Id) Object);
+            return Equals((EVCO_Id) Object);
 
         }
 
         #endregion
 
-        #region Equals(eMobilityAccountId)
+        #region Equals(EVCOId)
 
         /// <summary>
         /// Compares two contract identifications for equality.
         /// </summary>
-        /// <param name="eMobilityAccountId">A contract identification to compare with.</param>
+        /// <param name="EVCOId">A contract identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(EVCO_Id eMobilityAccountId)
+        public Boolean Equals(EVCO_Id EVCOId)
         {
 
-            if ((Object) eMobilityAccountId == null)
+            if ((Object) EVCOId == null)
                 return false;
 
-            return ProviderId.Equals(eMobilityAccountId.ProviderId) &&
-                   Suffix.    Equals(eMobilityAccountId.Suffix)     &&
+            return ProviderId.Equals(EVCOId.ProviderId) &&
+                   Suffix.    Equals(EVCOId.Suffix)     &&
 
-                   ((!CheckDigit.HasValue && !eMobilityAccountId.CheckDigit.HasValue) ||
-                     (CheckDigit.HasValue &&  eMobilityAccountId.CheckDigit.HasValue && CheckDigit.Value.Equals(eMobilityAccountId.CheckDigit.Value)));
+                   ((!CheckDigit.HasValue && !EVCOId.CheckDigit.HasValue) ||
+                     (CheckDigit.HasValue &&  EVCOId.CheckDigit.HasValue && CheckDigit.Value.Equals(EVCOId.CheckDigit.Value)));
 
         }
 

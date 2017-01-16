@@ -113,8 +113,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             ChargingStation_Id? _StationId = null;
 
             // 1st: Try to use the given ChargingStationId from the XML...
-            if (StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(WWCP.OperatorIdFormats.DIN), StringComparison.Ordinal) ||
-                StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToFormat(WWCP.OperatorIdFormats.ISO), StringComparison.Ordinal))
+            if (StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToString(WWCP.OperatorIdFormats.DIN), StringComparison.Ordinal) ||
+                StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToString(WWCP.OperatorIdFormats.ISO), StringComparison.Ordinal))
             {
                 _StationId  = ChargingStation_Id.Parse(StationXMLId);
             }

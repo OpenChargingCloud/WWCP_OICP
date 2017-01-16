@@ -716,7 +716,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(_CustomPushEVSEDataSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML(false))),
+                result = await _OICPClient.Query(_CustomPushEVSEDataSOAPRequestMapper(Request,
+                                                                                      SOAP.Encapsulation(Request.ToXML(false))),
                                                  "eRoamingPushEvseData",
                                                  RequestLogDelegate:   OnPushEVSEDataSOAPRequest,
                                                  ResponseLogDelegate:  OnPushEVSEDataSOAPResponse,
@@ -847,7 +848,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
 
             #endregion
-
 
             return result;
 
@@ -1299,7 +1299,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(_CustomAuthorizeStopSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                result = await _OICPClient.Query(_CustomAuthorizeStopSOAPRequestMapper(Request,
+                                                                                       SOAP.Encapsulation(Request.ToXML())),
                                                  "eRoamingAuthorizeStop",
                                                  RequestLogDelegate:   OnAuthorizeStopSOAPRequest,
                                                  ResponseLogDelegate:  OnAuthorizeStopSOAPResponse,
