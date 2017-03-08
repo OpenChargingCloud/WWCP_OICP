@@ -48,7 +48,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Properties
 
         /// <summary>
-        /// The length of the partner product identificator.
+        /// The length of the partner product identification.
         /// </summary>
         public UInt64 Length
             => (UInt64) InternalId.Length;
@@ -69,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region Parse(Text)
+        #region (static) Parse(Text)
 
         /// <summary>
         /// Parse the given string as a partner product identification.
@@ -94,7 +94,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region TryParse(Text, out PartnerProductId)
+        #region (static) TryParse(Text, out PartnerProductId)
 
         /// <summary>
         /// Parse the given string as a partner product identification.
@@ -298,13 +298,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if ((Object) PartnerProductId == null)
                 throw new ArgumentNullException(nameof(PartnerProductId),  "The given partner product identification must not be null!");
 
-            // Compare the length of the PartnerProductIds
-            var _Result = this.Length.CompareTo(PartnerProductId.Length);
-
-            if (_Result == 0)
-                _Result = String.Compare(InternalId, PartnerProductId.InternalId, StringComparison.Ordinal);
-
-            return _Result;
+            return String.Compare(InternalId, PartnerProductId.InternalId, StringComparison.Ordinal);
 
         }
 

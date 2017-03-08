@@ -119,7 +119,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region Parse(Text)
+        #region (static) Parse(Text)
 
         /// <summary>
         /// Parse the given string as an EVSE identification.
@@ -159,7 +159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region Parse(OperatorId, Suffix)
+        #region (static) Parse(OperatorId, Suffix)
 
         /// <summary>
         /// Parse the given string as an EVSE identification.
@@ -188,7 +188,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Parse the given string as an EVSE identification.
@@ -208,7 +208,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region TryParse(Text, out EVSEId)
+        #region (static) TryParse(Text, out EVSEId)
 
         /// <summary>
         /// Parse the given string as an EVSE identification.
@@ -231,44 +231,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
-                EVSEId = default(EVSE_Id);
+                var MatchCollection = EVSEId_RegEx.Matches(Text.Trim().ToUpper());
 
-                var _MatchCollection = EVSEId_RegEx.Matches(Text.Trim().ToUpper());
-
-                if (_MatchCollection.Count != 1)
-                    return false;
-
-                Operator_Id __EVSEOperatorId;
-
-                // New format...
-                if (Operator_Id.TryParse(_MatchCollection[0].Groups[1].Value, out __EVSEOperatorId))
+                if (MatchCollection.Count == 1)
                 {
 
-                    EVSEId = new EVSE_Id(__EVSEOperatorId,
-                                         _MatchCollection[0].Groups[2].Value);
+                    Operator_Id _EVSEOperatorId;
 
-                    return true;
+                    // New format...
+                    if (Operator_Id.TryParse(MatchCollection[0].Groups[1].Value, out _EVSEOperatorId))
+                    {
 
-                }
+                        EVSEId = new EVSE_Id(_EVSEOperatorId,
+                                             MatchCollection[0].Groups[2].Value);
 
-                // Old format...
-                if (Operator_Id.TryParse(_MatchCollection[0].Groups[3].Value, out __EVSEOperatorId))
-                {
+                        return true;
 
-                    EVSEId = new EVSE_Id(__EVSEOperatorId,
-                                         _MatchCollection[0].Groups[4].Value);
+                    }
 
-                    return true;
+                    // Old format...
+                    if (Operator_Id.TryParse(MatchCollection[0].Groups[3].Value, out _EVSEOperatorId))
+                    {
+
+                        EVSEId = new EVSE_Id(_EVSEOperatorId,
+                                             MatchCollection[0].Groups[4].Value);
+
+                        return true;
+
+                    }
 
                 }
 
             }
 #pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
 #pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
-            catch (Exception e)
+            catch (Exception)
+            { }
 #pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
-            { }
 
             EVSEId = default(EVSE_Id);
             return false;

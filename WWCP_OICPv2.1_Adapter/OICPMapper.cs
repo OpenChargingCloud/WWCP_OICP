@@ -379,7 +379,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 10.0)
-                            EVSE.MaxCurrent = 10.0;
+                            EVSE.MaxCurrent = 10.0f;
 
                         break;
 
@@ -392,7 +392,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 16.0)
-                            EVSE.MaxCurrent = 16.0;
+                            EVSE.MaxCurrent = 16.0f;
 
                         break;
 
@@ -406,7 +406,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 32.0)
-                            EVSE.MaxCurrent = 32.0;
+                            EVSE.MaxCurrent = 32.0f;
 
                         break;
 
@@ -421,7 +421,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 10.0)
-                            EVSE.MaxCurrent = 10.0;
+                            EVSE.MaxCurrent = 10.0f;
 
                         break;
 
@@ -434,7 +434,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 16.0)
-                            EVSE.MaxCurrent = 16.0;
+                            EVSE.MaxCurrent = 16.0f;
 
                         break;
 
@@ -447,7 +447,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 32.0)
-                            EVSE.MaxCurrent = 32.0;
+                            EVSE.MaxCurrent = 32.0f;
 
                         break;
 
@@ -460,7 +460,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 32.0)
-                            EVSE.MaxCurrent = 32.0;
+                            EVSE.MaxCurrent = 32.0f;
 
                         break;
 
@@ -474,7 +474,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
 
                         if (EVSE.MaxCurrent < 16.0)
-                            EVSE.MaxCurrent = 16.0;
+                            EVSE.MaxCurrent = 16.0f;
 
                         break;
 
@@ -487,7 +487,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
 
                         if (EVSE.MaxCurrent < 32.0)
-                            EVSE.MaxCurrent = 32.0;
+                            EVSE.MaxCurrent = 32.0f;
 
                         break;
 
@@ -500,7 +500,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
 
                         if (EVSE.MaxCurrent < 63.0)
-                            EVSE.MaxCurrent = 63.0;
+                            EVSE.MaxCurrent = 63.0f;
 
                         break;
 
@@ -512,7 +512,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.DC;
 
                         if (EVSE.MaxPower < 20000.0)
-                            EVSE.MaxPower = 20000.0;
+                            EVSE.MaxPower = 20000.0f;
 
                         break;
 
@@ -522,7 +522,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.DC;
 
                         if (EVSE.MaxPower < 50000.0)
-                            EVSE.MaxPower = 50000.0;
+                            EVSE.MaxPower = 50000.0f;
 
                         break;
 
@@ -532,7 +532,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             EVSE.CurrentType = CurrentTypes.DC;
 
                         if (EVSE.MaxPower < 50000.0)
-                            EVSE.MaxPower = 50000.0;
+                            EVSE.MaxPower = 50000.0f;
 
                         break;
 
@@ -661,14 +661,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            WWCPAddress.Country,
                            WWCPAddress.Comment);
 
-        #endregion
-
-        #region ToWWCP(this OICPAddress)
 
         /// <summary>
-        /// Maps an OICP accessibility type to a WWCP accessibility type.
+        /// Maps an OICP address type to a WWCP address type.
         /// </summary>
-        /// <param name="OICPAddress">A accessibility type.</param>
+        /// <param name="OICPAddress">A address type.</param>
         public static WWCP.Address ToWWCP(this Address OICPAddress)
 
             => new WWCP.Address(OICPAddress.Street,

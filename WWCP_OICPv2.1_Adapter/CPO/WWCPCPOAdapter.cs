@@ -5783,7 +5783,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if ((Object) WWCPCPOAdapter == null)
                 return false;
 
-            return this.Equals(WWCPCPOAdapter);
+            return Equals(WWCPCPOAdapter);
 
         }
 
@@ -5828,7 +5828,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public override String ToString()
 
-            => "Hubject CPO " + Id;
+            => "OICP " + Version.Number + " CPO Adapter " + Id;
 
         #endregion
 

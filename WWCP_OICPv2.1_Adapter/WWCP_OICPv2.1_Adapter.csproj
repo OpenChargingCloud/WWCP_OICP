@@ -7,8 +7,8 @@
     <ProjectGuid>{B2DF7361-21F8-4ED8-AF7B-0DF3A863891F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WWCP_OICPv2._1Adapter</RootNamespace>
-    <AssemblyName>WWCP_OICPv2.1Adapter</AssemblyName>
+    <RootNamespace>org.GraphDefined.WWCP.OICPv2_1.Adapter</RootNamespace>
+    <AssemblyName>org.GraphDefined.WWCP.OICPv2.1.Adapter</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -59,7 +59,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CPO\WWCPCPOAdapter.cs" />
     <Compile Include="EMP\WWCPEMPAdapter.cs" />
-    <Compile Include="Version.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Aegir\Aegir\Aegir.csproj">

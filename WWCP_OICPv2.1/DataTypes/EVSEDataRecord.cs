@@ -107,7 +107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The maximum capacity this EVSE provides.
         /// </summary>
-        public Double?              MaxCapacity                 { get; }
+        public Single?              MaxCapacity                 { get; }
 
         /// <summary>
         /// The payment options this EVSE supports.
@@ -212,7 +212,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               ChargingFacilities                  ChargingFacilities          = ChargingFacilities.Unspecified,
                               ChargingModes                       ChargingModes               = ChargingModes.Unspecified,
                               AuthenticationModes                 AuthenticationModes         = AuthenticationModes.Unknown,
-                              Double?                             MaxCapacity                 = null,
+                              Single?                             MaxCapacity                 = null,
                               PaymentOptions                      PaymentOptions              = PaymentOptions.Unspecified,
                               ValueAddedServices                  ValueAddedServices          = ValueAddedServices.None,
                               AccessibilityTypes                  Accessibility               = AccessibilityTypes.Free_publicly_accessible,
@@ -468,9 +468,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        ElementValueOrDefault(OICPNS.EVSEData + "MaxCapacity", String.Empty).
                                        Trim();
 
-            Double _MaxCapacity = 0.0;
+            Single _MaxCapacity = 0.0f;
             if (_MaxCapacity_kWh.IsNotNullOrEmpty())
-                Double.TryParse(_MaxCapacity_kWh, out _MaxCapacity);
+                Single.TryParse(_MaxCapacity_kWh, out _MaxCapacity);
 
             #endregion
 
@@ -862,7 +862,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             /// <summary>
             /// The maximum capacity this EVSE provides.
             /// </summary>
-            public Double?              MaxCapacity                 { get; set; }
+            public Single?              MaxCapacity                 { get; set; }
 
             /// <summary>
             /// The payment options this EVSE supports.
