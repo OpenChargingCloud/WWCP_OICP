@@ -968,7 +968,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            ChargingFacilities          ChargingFacilities         = ChargingFacilities.Unspecified,
                            ChargingModes               ChargingModes              = ChargingModes.Unspecified,
                            AuthenticationModes         AuthenticationModes        = AuthenticationModes.Unknown,
-                           Double?                     MaxCapacity                = null,
+                           Single?                     MaxCapacity                = null,
                            PaymentOptions              PaymentOptions             = PaymentOptions.Unspecified,
                            ValueAddedServices          ValueAddedServices         = ValueAddedServices.None,
                            AccessibilityTypes          Accessibility              = AccessibilityTypes.Free_publicly_accessible,
