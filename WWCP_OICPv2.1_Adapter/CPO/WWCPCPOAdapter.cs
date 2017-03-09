@@ -2344,7 +2344,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 #endregion
 
 
-                lock (ServiceCheckLock)
+                lock (StatusCheckLock)
                 {
 
                     //if (_IncludeEVSEs == null ||
@@ -5517,7 +5517,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             var EVSEStatusFastQueueCopy = new ThreadLocal<List<EVSEStatusUpdate>>();
 
-            if (Monitor.TryEnter(ServiceCheckLock,
+            if (Monitor.TryEnter(StatusCheckLock,
                                  TimeSpan.FromMinutes(5)))
             {
 
@@ -5533,7 +5533,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     EVSEStatusFastQueueCopy.Value = new List<EVSEStatusUpdate>(EVSEStatusChangesFastQueue.Where(evsestatuschange => !EVSEsToAddQueue.Any(evse => evse.Id == evsestatuschange.Id)));
 
                     // Add all evse status changes of EVSE *NOT YET UPLOADED* into the delayed queue...
-                    EVSEStatusChangesDelayedQueue.AddRange(EVSEStatusChangesFastQueue.Where(evsestatuschange => EVSEsToAddQueue.Any(evse => evse.Id == evsestatuschange.Id)));
+                    var EVSEStatusChangesDelayed = EVSEStatusChangesFastQueue.Where(evsestatuschange => EVSEsToAddQueue.Any(evse => evse.Id == evsestatuschange.Id)).ToArray();
+
+                    if (EVSEStatusChangesDelayed.Length > 0)
+                        EVSEStatusChangesDelayedQueue.AddRange(EVSEStatusChangesDelayed);
 
                     EVSEStatusChangesFastQueue.Clear();
 
@@ -5553,7 +5556,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 finally
                 {
-                    Monitor.Exit(ServiceCheckLock);
+                    Monitor.Exit(StatusCheckLock);
                 }
 
             }
@@ -5581,8 +5584,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 if (EVSEStatusFastQueueCopy.Value.Count > 0)
                 {
 
+                    //lock (StatusCheckLock)
+                    //{
+                    //    _StatusRunId++;
+                    //}
+
                     var PushEVSEStatusTask = PushEVSEStatus(EVSEStatusFastQueueCopy.Value,
-                                                            _ServiceRunId == 1
+                                                            _StatusRunId == 1
                                                                 ? ActionTypes.fullLoad
                                                                 : ActionTypes.update,
                                                             EventTrackingId: EventTrackingId);
