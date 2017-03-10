@@ -4247,12 +4247,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var result   = AuthStartChargingStationResult.Error(
-                               Id,
-                               SessionId,
-                               "Not implemented!"
-                           );
-
+            var result   = AuthStartChargingStationResult.NotSupported(Id, SessionId);
             var Endtime  = DateTime.Now;
             var Runtime  = Endtime - StartTime;
 
@@ -4368,12 +4363,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var result   = AuthStartChargingPoolResult.Error(
-                               Id,
-                               SessionId,
-                               "Not implemented!"
-                           );
-
+            var result   = AuthStartChargingPoolResult.NotSupported(Id, SessionId);
             var Endtime  = DateTime.Now;
             var Runtime  = Endtime - StartTime;
 
@@ -4813,12 +4803,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var result   = AuthStopChargingStationResult.Error(
-                               Id,
-                               SessionId,
-                               "OICP does not support this request!"
-                           );
-
+            var result   = AuthStopChargingStationResult.NotSupported(Id, SessionId);
             var Endtime  = DateTime.Now;
             var Runtime  = Endtime - StartTime;
 
@@ -4930,12 +4915,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var result   = AuthStopChargingPoolResult.Error(
-                               Id,
-                               SessionId,
-                               "OICP does not support this request!"
-                           );
-
+            var result   = AuthStopChargingPoolResult.NotSupported(Id, SessionId);
             var Endtime  = DateTime.Now;
             var Runtime  = Endtime - StartTime;
 
