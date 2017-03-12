@@ -2469,12 +2469,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStaticData(ChargingStation, ...)
+        #region UpdateStaticData(ChargingStation, PropertyName = null, OldValue = null, NewValue = null, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Update the EVSE data of the given charging station within the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingStation">A charging station.</param>
+        /// <param name="PropertyName">The name of the charging station property to update.</param>
+        /// <param name="OldValue">The old value of the charging station property to update.</param>
+        /// <param name="NewValue">The new value of the charging station property to update.</param>
+        /// <param name="TransmissionType">Whether to send the charging station update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2483,6 +2487,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<WWCP.Acknowledgement>
 
             IRemotePushData.UpdateStaticData(ChargingStation     ChargingStation,
+                                             String              PropertyName,
+                                             Object              OldValue,
+                                             Object              NewValue,
+                                             TransmissionTypes   TransmissionType,
 
                                              DateTime?           Timestamp,
                                              CancellationToken?  CancellationToken,
@@ -2873,12 +2881,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStaticData(ChargingPool, ...)
+        #region UpdateStaticData(ChargingPool, PropertyName = null, OldValue = null, NewValue = null, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Update the EVSE data of the given charging pool within the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingPool">A charging pool.</param>
+        /// <param name="PropertyName">The name of the charging pool property to update.</param>
+        /// <param name="OldValue">The old value of the charging pool property to update.</param>
+        /// <param name="NewValue">The new value of the charging pool property to update.</param>
+        /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2887,6 +2899,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<WWCP.Acknowledgement>
 
             IRemotePushData.UpdateStaticData(ChargingPool        ChargingPool,
+                                             String              PropertyName,
+                                             Object              OldValue,
+                                             Object              NewValue,
+                                             TransmissionTypes   TransmissionType,
 
                                              DateTime?           Timestamp,
                                              CancellationToken?  CancellationToken,
@@ -5153,107 +5169,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region Delayed upstream methods...
-
-        #region EnqueueChargingPoolDataUpdate(ChargingPool, PropertyName, OldValue, NewValue)
-
-        /// <summary>
-        /// Enqueue the given EVSE data for a delayed upload.
-        /// </summary>
-        /// <param name="ChargingPool">A charging station.</param>
-        public Task<WWCP.Acknowledgement>
-
-            EnqueueChargingPoolDataUpdate(ChargingPool  ChargingPool,
-                                          String        PropertyName,
-                                          Object        OldValue,
-                                          Object        NewValue)
-
-        {
-
-            #region Initial checks
-
-            if (ChargingPool == null)
-                throw new ArgumentNullException(nameof(ChargingPool), "The given charging station must not be null!");
-
-            #endregion
-
-            lock (ServiceCheckLock)
-            {
-
-                foreach (var evse in ChargingPool.SelectMany(station => station.EVSEs))
-                {
-
-                    if (_IncludeEVSEs == null ||
-                       (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
-                    {
-
-                        EVSEsToUpdateQueue.Add(evse);
-
-                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
-
-                    }
-
-                }
-
-            }
-
-            return Task.FromResult(new WWCP.Acknowledgement(ResultType.True));
-
-        }
-
-        #endregion
-
-        #region EnqueueChargingStationDataUpdate(ChargingStation, PropertyName, OldValue, NewValue)
-
-        /// <summary>
-        /// Enqueue the given EVSE data for a delayed upload.
-        /// </summary>
-        /// <param name="ChargingStation">A charging station.</param>
-        public Task<WWCP.Acknowledgement>
-
-            EnqueueChargingStationDataUpdate(ChargingStation  ChargingStation,
-                                             String           PropertyName,
-                                             Object           OldValue,
-                                             Object           NewValue)
-
-        {
-
-            #region Initial checks
-
-            if (ChargingStation == null)
-                throw new ArgumentNullException(nameof(ChargingStation), "The given charging station must not be null!");
-
-            #endregion
-
-            lock (ServiceCheckLock)
-            {
-
-                foreach (var evse in ChargingStation.EVSEs)
-                {
-
-                    if (_IncludeEVSEs == null ||
-                       (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
-                    {
-
-                        EVSEsToUpdateQueue.Add(evse);
-
-                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
-
-                    }
-
-                }
-
-            }
-
-            return Task.FromResult(new WWCP.Acknowledgement(ResultType.True));
-
-        }
-
-        #endregion
-
-        #endregion
-
-
         // -----------------------------------------------------------------------------------------------------
 
 
@@ -5440,6 +5355,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
+                #region Send removed charging stations
+
+                if (EVSEsToRemoveQueueCopy.Value.Count > 0)
+                {
+
+                    var EVSEsToRemove = EVSEsToRemoveQueueCopy.Value.ToArray();
+
+                    if (EVSEsToRemove.Length > 0)
+                    {
+
+                        var EVSEsToRemoveTask = (this as IRemotePushData).DeleteStaticData(EVSEsToRemove, EventTrackingId: EventTrackingId);
+
+                        EVSEsToRemoveTask.Wait();
+
+                    }
+
+                }
+
+                #endregion
+
                 #region Send charge detail records
 
                 if (ChargeDetailRecordQueueCopy.Value.Count > 0)
@@ -5458,8 +5393,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 }
 
                 #endregion
-
-                //ToDo: Send removed EVSE data!
 
             }
 

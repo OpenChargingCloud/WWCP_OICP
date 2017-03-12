@@ -160,29 +160,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEStatusTypes">An OICP EVSE status.</param>
         /// <returns>The corresponding WWCP EVSE status.</returns>
-        public static WWCP.EVSEStatusType AsWWCPEVSEStatus(this EVSEStatusTypes EVSEStatusTypes)
+        public static WWCP.EVSEStatusTypes AsWWCPEVSEStatus(this EVSEStatusTypes EVSEStatusTypes)
         {
 
             switch (EVSEStatusTypes)
             {
 
                 case EVSEStatusTypes.Available:
-                    return WWCP.EVSEStatusType.Available;
+                    return WWCP.EVSEStatusTypes.Available;
 
                 case EVSEStatusTypes.Reserved:
-                    return WWCP.EVSEStatusType.Reserved;
+                    return WWCP.EVSEStatusTypes.Reserved;
 
                 case EVSEStatusTypes.Occupied:
-                    return WWCP.EVSEStatusType.Charging;
+                    return WWCP.EVSEStatusTypes.Charging;
 
                 case EVSEStatusTypes.OutOfService:
-                    return WWCP.EVSEStatusType.OutOfService;
+                    return WWCP.EVSEStatusTypes.OutOfService;
 
                 case EVSEStatusTypes.EvseNotFound:
-                    return WWCP.EVSEStatusType.UnknownEVSE;
+                    return WWCP.EVSEStatusTypes.UnknownEVSE;
 
                 default:
-                    return WWCP.EVSEStatusType.Unspecified;
+                    return WWCP.EVSEStatusTypes.Unspecified;
 
             }
 
@@ -197,25 +197,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEStatusType">An WWCP EVSE status.</param>
         /// <returns>The corresponding OICP EVSE status.</returns>
-        public static EVSEStatusTypes AsOICPEVSEStatus(this WWCP.EVSEStatusType EVSEStatusType)
+        public static EVSEStatusTypes AsOICPEVSEStatus(this WWCP.EVSEStatusTypes EVSEStatusType)
         {
 
             switch (EVSEStatusType)
             {
 
-                case WWCP.EVSEStatusType.Available:
+                case WWCP.EVSEStatusTypes.Available:
                     return EVSEStatusTypes.Available;
 
-                case WWCP.EVSEStatusType.Reserved:
+                case WWCP.EVSEStatusTypes.Reserved:
                     return EVSEStatusTypes.Reserved;
 
-                case WWCP.EVSEStatusType.Charging:
+                case WWCP.EVSEStatusTypes.Charging:
                     return EVSEStatusTypes.Occupied;
 
-                case WWCP.EVSEStatusType.OutOfService:
+                case WWCP.EVSEStatusTypes.OutOfService:
                     return EVSEStatusTypes.OutOfService;
 
-                case WWCP.EVSEStatusType.UnknownEVSE:
+                case WWCP.EVSEStatusTypes.UnknownEVSE:
                     return EVSEStatusTypes.EvseNotFound;
 
                 default:
