@@ -1984,6 +1984,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
+            return new WWCP.Acknowledgement(ResultType.NoOperation);
 
             return await PushEVSEData(new EVSE[] { EVSE },
                                       ActionTypes.update,
@@ -2506,6 +2507,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
+            return new WWCP.Acknowledgement(ResultType.NoOperation);
+
             return await PushEVSEData(ChargingStation.EVSEs,
                                       ActionTypes.update,
 
@@ -2917,6 +2920,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 throw new ArgumentNullException(nameof(ChargingPool), "The given charging pool must not be null!");
 
             #endregion
+
+            return new WWCP.Acknowledgement(ResultType.NoOperation);
 
             return await PushEVSEData(ChargingPool.EVSEs,
                                       ActionTypes.update,
