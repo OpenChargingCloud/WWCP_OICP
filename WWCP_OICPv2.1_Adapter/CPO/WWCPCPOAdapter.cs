@@ -1785,12 +1785,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.True);
+                return new WWCP.Acknowledgement(ResultType.Enqueued);
 
             }
 
             #endregion
-
 
             return await PushEVSEData(new EVSE[] { EVSE },
                                       ActionTypes.fullLoad,
@@ -1878,12 +1877,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.True);
+                return new WWCP.Acknowledgement(ResultType.Enqueued);
 
             }
 
             #endregion
-
 
             return await PushEVSEData(new EVSE[] { EVSE },
                                       ActionTypes.insert,
@@ -1978,13 +1976,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.True);
+                return new WWCP.Acknowledgement(ResultType.Enqueued);
 
             }
 
             #endregion
-
-            return new WWCP.Acknowledgement(ResultType.NoOperation);
 
             return await PushEVSEData(new EVSE[] { EVSE },
                                       ActionTypes.update,
@@ -2384,12 +2380,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region (Set/Add/Update/Delete) Charging station(s)...
 
-        #region SetStaticData   (ChargingStation, ...)
+        #region SetStaticData   (ChargingStation, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Set the EVSE data of the given charging station as new static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingStation">A charging station.</param>
+        /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2398,6 +2395,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<WWCP.Acknowledgement>
 
             IRemotePushData.SetStaticData(ChargingStation     ChargingStation,
+                                          TransmissionTypes   TransmissionType,
 
                                           DateTime?           Timestamp,
                                           CancellationToken?  CancellationToken,
@@ -2410,6 +2408,58 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             if (ChargingStation == null)
                 throw new ArgumentNullException(nameof(ChargingStation), "The given charging station must not be null!");
+
+            #endregion
+
+            #region Enqueue, if requested...
+
+            if (TransmissionType == TransmissionTypes.Enqueued)
+            {
+
+                #region Send OnEnqueueSendCDRRequest event
+
+                //try
+                //{
+
+                //    OnEnqueueSendCDRRequest?.Invoke(DateTime.Now,
+                //                                    Timestamp.Value,
+                //                                    this,
+                //                                    EventTrackingId,
+                //                                    RoamingNetwork.Id,
+                //                                    ChargeDetailRecord,
+                //                                    RequestTimeout);
+
+                //}
+                //catch (Exception e)
+                //{
+                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //}
+
+                #endregion
+
+                lock (ServiceCheckLock)
+                {
+
+                    foreach (var evse in ChargingStation)
+                    {
+
+                        if (_IncludeEVSEs == null ||
+                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                        {
+
+                            EVSEsToAddQueue.Add(evse);
+
+                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+
+                        }
+
+                    }
+
+                }
+
+                return new WWCP.Acknowledgement(ResultType.Enqueued);
+
+            }
 
             #endregion
 
@@ -2427,12 +2477,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AddStaticData   (ChargingStation, ...)
+        #region AddStaticData   (ChargingStation, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Add the EVSE data of the given charging station to the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingStation">A charging station.</param>
+        /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2441,6 +2492,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<WWCP.Acknowledgement>
 
             IRemotePushData.AddStaticData(ChargingStation     ChargingStation,
+                                          TransmissionTypes   TransmissionType,
 
                                           DateTime?           Timestamp,
                                           CancellationToken?  CancellationToken,
@@ -2453,6 +2505,58 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             if (ChargingStation == null)
                 throw new ArgumentNullException(nameof(ChargingStation), "The given charging station must not be null!");
+
+            #endregion
+
+            #region Enqueue, if requested...
+
+            if (TransmissionType == TransmissionTypes.Enqueued)
+            {
+
+                #region Send OnEnqueueSendCDRRequest event
+
+                //try
+                //{
+
+                //    OnEnqueueSendCDRRequest?.Invoke(DateTime.Now,
+                //                                    Timestamp.Value,
+                //                                    this,
+                //                                    EventTrackingId,
+                //                                    RoamingNetwork.Id,
+                //                                    ChargeDetailRecord,
+                //                                    RequestTimeout);
+
+                //}
+                //catch (Exception e)
+                //{
+                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //}
+
+                #endregion
+
+                lock (ServiceCheckLock)
+                {
+
+                    foreach (var evse in ChargingStation)
+                    {
+
+                        if (_IncludeEVSEs == null ||
+                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                        {
+
+                            EVSEsToAddQueue.Add(evse);
+
+                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+
+                        }
+
+                    }
+
+                }
+
+                return new WWCP.Acknowledgement(ResultType.Enqueued);
+
+            }
 
             #endregion
 
@@ -2507,9 +2611,59 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return new WWCP.Acknowledgement(ResultType.NoOperation);
+            #region Enqueue, if requested...
 
-            return await PushEVSEData(ChargingStation.EVSEs,
+            if (TransmissionType == TransmissionTypes.Enqueued)
+            {
+
+                #region Send OnEnqueueSendCDRRequest event
+
+                //try
+                //{
+
+                //    OnEnqueueSendCDRRequest?.Invoke(DateTime.Now,
+                //                                    Timestamp.Value,
+                //                                    this,
+                //                                    EventTrackingId,
+                //                                    RoamingNetwork.Id,
+                //                                    ChargeDetailRecord,
+                //                                    RequestTimeout);
+
+                //}
+                //catch (Exception e)
+                //{
+                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //}
+
+                #endregion
+
+                lock (ServiceCheckLock)
+                {
+
+                    foreach (var evse in ChargingStation)
+                    {
+
+                        if (_IncludeEVSEs == null ||
+                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                        {
+
+                            EVSEsToUpdateQueue.Add(evse);
+
+                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+
+                        }
+
+                    }
+
+                }
+
+                return new WWCP.Acknowledgement(ResultType.Enqueued);
+
+            }
+
+            #endregion
+
+            return await PushEVSEData(ChargingStation,
                                       ActionTypes.update,
 
                                       Timestamp,
@@ -2798,12 +2952,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region (Set/Add/Update/Delete) Charging pool(s)...
 
-        #region SetStaticData   (ChargingPool, ...)
+        #region SetStaticData   (ChargingPool, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Set the EVSE data of the given charging pool as new static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingPool">A charging pool.</param>
+        /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2812,6 +2967,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<WWCP.Acknowledgement>
 
             IRemotePushData.SetStaticData(ChargingPool        ChargingPool,
+                                          TransmissionTypes   TransmissionType,
 
                                           DateTime?           Timestamp,
                                           CancellationToken?  CancellationToken,
@@ -2824,6 +2980,58 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             if (ChargingPool == null)
                 throw new ArgumentNullException(nameof(ChargingPool), "The given charging pool must not be null!");
+
+            #endregion
+
+            #region Enqueue, if requested...
+
+            if (TransmissionType == TransmissionTypes.Enqueued)
+            {
+
+                #region Send OnEnqueueSendCDRRequest event
+
+                //try
+                //{
+
+                //    OnEnqueueSendCDRRequest?.Invoke(DateTime.Now,
+                //                                    Timestamp.Value,
+                //                                    this,
+                //                                    EventTrackingId,
+                //                                    RoamingNetwork.Id,
+                //                                    ChargeDetailRecord,
+                //                                    RequestTimeout);
+
+                //}
+                //catch (Exception e)
+                //{
+                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //}
+
+                #endregion
+
+                lock (ServiceCheckLock)
+                {
+
+                    foreach (var evse in ChargingPool.EVSEs)
+                    {
+
+                        if (_IncludeEVSEs == null ||
+                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                        {
+
+                            EVSEsToAddQueue.Add(evse);
+
+                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+
+                        }
+
+                    }
+
+                }
+
+                return new WWCP.Acknowledgement(ResultType.Enqueued);
+
+            }
 
             #endregion
 
@@ -2841,12 +3049,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AddStaticData   (ChargingPool, ...)
+        #region AddStaticData   (ChargingPool, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Add the EVSE data of the given charging pool to the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingPool">A charging pool.</param>
+        /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2855,6 +3064,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<WWCP.Acknowledgement>
 
             IRemotePushData.AddStaticData(ChargingPool        ChargingPool,
+                                          TransmissionTypes   TransmissionType,
 
                                           DateTime?           Timestamp,
                                           CancellationToken?  CancellationToken,
@@ -2867,6 +3077,58 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             if (ChargingPool == null)
                 throw new ArgumentNullException(nameof(ChargingPool), "The given charging pool must not be null!");
+
+            #endregion
+
+            #region Enqueue, if requested...
+
+            if (TransmissionType == TransmissionTypes.Enqueued)
+            {
+
+                #region Send OnEnqueueSendCDRRequest event
+
+                //try
+                //{
+
+                //    OnEnqueueSendCDRRequest?.Invoke(DateTime.Now,
+                //                                    Timestamp.Value,
+                //                                    this,
+                //                                    EventTrackingId,
+                //                                    RoamingNetwork.Id,
+                //                                    ChargeDetailRecord,
+                //                                    RequestTimeout);
+
+                //}
+                //catch (Exception e)
+                //{
+                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //}
+
+                #endregion
+
+                lock (ServiceCheckLock)
+                {
+
+                    foreach (var evse in ChargingPool.EVSEs)
+                    {
+
+                        if (_IncludeEVSEs == null ||
+                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                        {
+
+                            EVSEsToAddQueue.Add(evse);
+
+                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+
+                        }
+
+                    }
+
+                }
+
+                return new WWCP.Acknowledgement(ResultType.Enqueued);
+
+            }
 
             #endregion
 
@@ -2921,7 +3183,57 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return new WWCP.Acknowledgement(ResultType.NoOperation);
+            #region Enqueue, if requested...
+
+            if (TransmissionType == TransmissionTypes.Enqueued)
+            {
+
+                #region Send OnEnqueueSendCDRRequest event
+
+                //try
+                //{
+
+                //    OnEnqueueSendCDRRequest?.Invoke(DateTime.Now,
+                //                                    Timestamp.Value,
+                //                                    this,
+                //                                    EventTrackingId,
+                //                                    RoamingNetwork.Id,
+                //                                    ChargeDetailRecord,
+                //                                    RequestTimeout);
+
+                //}
+                //catch (Exception e)
+                //{
+                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //}
+
+                #endregion
+
+                lock (ServiceCheckLock)
+                {
+
+                    foreach (var evse in ChargingPool.EVSEs)
+                    {
+
+                        if (_IncludeEVSEs == null ||
+                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                        {
+
+                            EVSEsToUpdateQueue.Add(evse);
+
+                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+
+                        }
+
+                    }
+
+                }
+
+                return new WWCP.Acknowledgement(ResultType.Enqueued);
+
+            }
+
+            #endregion
 
             return await PushEVSEData(ChargingPool.EVSEs,
                                       ActionTypes.update,

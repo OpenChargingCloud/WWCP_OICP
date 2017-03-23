@@ -27,33 +27,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         Success                                          = 000,
         HubjectSystemError                               = 001,
         HubjectDatabaseError                             = 002,
+
         DataTransactionError                             = 009,
+
         UnauthorizedAccess                               = 017,
         InconsistentEVSEID                               = 018,
         InconsistentEVCOID                               = 019,
+
         SystemError                                      = 021,
         DataError                                        = 022,
+
         QRCodeAuthenticationFfailed_InvalidCredentials   = 101,
         RFIDAuthenticationfailed_InvalidUID              = 102,
         RFIDAuthenticationfailed_CardNotReadable         = 103,
         PLCAuthenticationfailed_InvalidEVCOID            = 105,
         NoPositiveAuthenticationResponse                 = 106,
+
         QRCodeAppAuthenticationFailed_TimeoutError       = 110,
+
         PLCAuthenticationFailed_InvalidUnderlyingEVCOID  = 120,
         PLCAuthenticationFailed_InvalidCertificate       = 121,
         PLCAuthenticationFailed_TimeoutError             = 122,
+
         EVCOIDLocked                                     = 200,
         NoValidContract                                  = 210,
+
         PartnerNotFound                                  = 300,
         PartnerDidNotRespond                             = 310,
         ServiceNotAvailable                              = 320,
+
         SessionIsInvalid                                 = 400,
+
         CommunicationToEVSEFailed                        = 501,
         NoEVConnectedToEVSE                              = 510,
+
         EVSEAlreadyReserved                              = 601,
         EVSEAlreadyInUse_WrongToken                      = 602,
         UnknownEVSEID                                    = 603,
         EVSEIDIsNotHubjectCompatible                     = 604,
+
         EVSEOutOfService                                 = 700
 
     }
