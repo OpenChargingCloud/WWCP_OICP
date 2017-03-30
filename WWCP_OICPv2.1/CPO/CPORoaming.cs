@@ -1058,7 +1058,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             this.CPOClient        = CPOClient;
             this.CPOServer        = CPOServer;
-            this.CPOServerLogger  = new CPOServerLogger(CPOServer, ServerLoggingContext, LogFileCreator);
+
+            this.CPOServerLogger  = new CPOServerLogger(CPOServer,
+                                                        ServerLoggingContext,
+                                                        LogFileCreator);
 
         }
 
