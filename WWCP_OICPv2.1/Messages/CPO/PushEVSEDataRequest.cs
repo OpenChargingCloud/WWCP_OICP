@@ -46,7 +46,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The unqiue identification of the charging station operator maintaining the given EVSE data records.
         /// </summary>
-        public Operator_Id   OperatorId        { get; }
+        public Operator_Id                  OperatorId        { get; }
 
         /// <summary>
         /// An optional name of the charging station operator maintaining the given EVSE data records.

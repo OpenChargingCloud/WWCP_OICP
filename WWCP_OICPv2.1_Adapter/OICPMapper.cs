@@ -1089,80 +1089,81 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             => WWCP.EVSE_Id.Parse(EVSEId.ToString());
 
 
-        public static Session_Id ToOICP(this WWCP.ChargingSession_Id SessionId)
+        public static Session_Id ToOICP(this ChargingSession_Id SessionId)
             => Session_Id.Parse(SessionId.ToString());
 
-        public static WWCP.ChargingSession_Id ToWWCP(this Session_Id SessionId)
-            => WWCP.ChargingSession_Id.Parse(SessionId.ToString());
+        public static ChargingSession_Id ToWWCP(this Session_Id SessionId)
+            => ChargingSession_Id.Parse(SessionId.ToString());
 
 
-        public static Session_Id? ToOICP(this WWCP.ChargingSession_Id? SessionId)
+        public static Session_Id? ToOICP(this ChargingSession_Id? SessionId)
             => SessionId.HasValue
                    ? Session_Id.Parse(SessionId.ToString())
                    : new Session_Id?();
 
-        public static WWCP.ChargingSession_Id? ToWWCP(this Session_Id? SessionId)
+        public static ChargingSession_Id? ToWWCP(this Session_Id? SessionId)
             => SessionId.HasValue
-                   ? WWCP.ChargingSession_Id.Parse(SessionId.ToString())
+                   ? ChargingSession_Id.Parse(SessionId.ToString())
                    : new ChargingSession_Id?();
 
 
-        public static PartnerProduct_Id? ToOICP(this WWCP.ChargingProduct_Id ProductId)
+        public static PartnerProduct_Id? ToOICP(this ChargingProduct_Id ProductId)
             => PartnerProduct_Id.Parse(ProductId.ToString());
 
-        public static WWCP.ChargingProduct_Id ToWWCP(this PartnerProduct_Id ProductId)
-            => WWCP.ChargingProduct_Id.Parse(ProductId.ToString());
+        public static ChargingProduct_Id ToWWCP(this PartnerProduct_Id ProductId)
+            => ChargingProduct_Id.Parse(ProductId.ToString());
 
 
-        public static Operator_Id ToOICP(this WWCP.ChargingStationOperator_Id OperatorId)
-            => Operator_Id.Parse(OperatorId.ToString());
+        public static Operator_Id ToOICP(this ChargingStationOperator_Id  OperatorId,
+                                         WWCP.OperatorIdFormats           Format = WWCP.OperatorIdFormats.ISO_STAR)
+            => Operator_Id.Parse(OperatorId.ToString(Format));
 
-        public static WWCP.ChargingStationOperator_Id ToWWCP(this Operator_Id OperatorId)
-            => WWCP.ChargingStationOperator_Id.Parse(OperatorId.ToString());
+        public static ChargingStationOperator_Id ToWWCP(this Operator_Id OperatorId)
+            => ChargingStationOperator_Id.Parse(OperatorId.ToString());
 
 
-        public static Provider_Id ToOICP(this WWCP.eMobilityProvider_Id ProviderId)
+        public static Provider_Id ToOICP(this eMobilityProvider_Id ProviderId)
             => Provider_Id.Parse(ProviderId.ToString());
 
-        public static WWCP.eMobilityProvider_Id ToWWCP(this Provider_Id ProviderId)
-            => WWCP.eMobilityProvider_Id.Parse(ProviderId.ToString());
+        public static eMobilityProvider_Id ToWWCP(this Provider_Id ProviderId)
+            => eMobilityProvider_Id.Parse(ProviderId.ToString());
 
 
-        public static Provider_Id? ToOICP(this WWCP.eMobilityProvider_Id? ProviderId)
+        public static Provider_Id? ToOICP(this eMobilityProvider_Id? ProviderId)
             => ProviderId.HasValue
                    ? Provider_Id.Parse(ProviderId.ToString())
                    : new Provider_Id?();
 
-        public static WWCP.eMobilityProvider_Id? ToWWCP(this Provider_Id? ProviderId)
+        public static eMobilityProvider_Id? ToWWCP(this Provider_Id? ProviderId)
             => ProviderId.HasValue
-                   ? WWCP.eMobilityProvider_Id.Parse(ProviderId.ToString())
+                   ? eMobilityProvider_Id.Parse(ProviderId.ToString())
                    : new eMobilityProvider_Id?();
 
 
-        public static EVCO_Id ToOICP(this WWCP.eMobilityAccount_Id eMAId)
+        public static EVCO_Id ToOICP(this eMobilityAccount_Id eMAId)
             => EVCO_Id.Parse(eMAId.ToString());
 
-        public static WWCP.eMobilityAccount_Id ToWWCP(this EVCO_Id EVCOId)
-            => WWCP.eMobilityAccount_Id.Parse(EVCOId.ToString());
+        public static eMobilityAccount_Id ToWWCP(this EVCO_Id EVCOId)
+            => eMobilityAccount_Id.Parse(EVCOId.ToString());
 
 
-        public static EVCO_Id? ToOICP(this WWCP.eMobilityAccount_Id? eMAId)
+        public static EVCO_Id? ToOICP(this eMobilityAccount_Id? eMAId)
             => eMAId.HasValue
                    ? EVCO_Id.Parse(eMAId.ToString())
                    : new EVCO_Id?();
 
-        public static WWCP.eMobilityAccount_Id? ToWWCP(this EVCO_Id? EVCOId)
+        public static eMobilityAccount_Id? ToWWCP(this EVCO_Id? EVCOId)
             => EVCOId.HasValue
-                   ? WWCP.eMobilityAccount_Id.Parse(EVCOId.ToString())
+                   ? eMobilityAccount_Id.Parse(EVCOId.ToString())
                    : new eMobilityAccount_Id?();
 
 
 
-        public static UID ToOICP(this WWCP.Auth_Token AuthToken)
+        public static UID ToOICP(this Auth_Token AuthToken)
             => UID.Parse(AuthToken.ToString());
 
-        public static WWCP.Auth_Token ToWWCP(this UID UID)
-            => WWCP.Auth_Token.Parse(UID.ToString());
+        public static Auth_Token ToWWCP(this UID UID)
+            => Auth_Token.Parse(UID.ToString());
 
 
         #region ToOICP(AuthInfo)

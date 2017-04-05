@@ -36,7 +36,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// An OICP Electric Vehicle Supply Equipment (EVSE).
     /// This is meant to be one electrical circuit which can charge an electric vehicle.
     /// </summary>
-    public class EVSEDataRecord : ACustomData
+    public class EVSEDataRecord : ACustomData,
+                                  IEquatable <EVSEDataRecord>,
+                                  IComparable<EVSEDataRecord>,
+                                  IComparable
     {
 
         #region Data
@@ -744,6 +747,226 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    new XElement(OICPNS.EVSEData + "DynamicInfoAvailable",  DynamicInfoAvailable ? "true" : "false")
 
                );
+
+        #endregion
+
+
+        #region Operator overloading
+
+        #region Operator == (EVSEDataRecord1, EVSEDataRecord2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEDataRecord1">An EVSE data record.</param>
+        /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator == (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+        {
+
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(EVSEDataRecord1, EVSEDataRecord2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (((Object) EVSEDataRecord1 == null) || ((Object) EVSEDataRecord2 == null))
+                return false;
+
+            return EVSEDataRecord1.Equals(EVSEDataRecord2);
+
+        }
+
+        #endregion
+
+        #region Operator != (EVSEDataRecord1, EVSEDataRecord2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEDataRecord1">An EVSE data record.</param>
+        /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator != (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+            => !(EVSEDataRecord1 == EVSEDataRecord2);
+
+        #endregion
+
+        #region Operator <  (EVSEDataRecord1, EVSEDataRecord2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEDataRecord1">An EVSE data record.</param>
+        /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator < (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+        {
+
+            if ((Object) EVSEDataRecord1 == null)
+                throw new ArgumentNullException(nameof(EVSEDataRecord1), "The given EVSEDataRecord1 must not be null!");
+
+            return EVSEDataRecord1.CompareTo(EVSEDataRecord2) < 0;
+
+        }
+
+        #endregion
+
+        #region Operator <= (EVSEDataRecord1, EVSEDataRecord2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEDataRecord1">An EVSE data record.</param>
+        /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator <= (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+            => !(EVSEDataRecord1 > EVSEDataRecord2);
+
+        #endregion
+
+        #region Operator >  (EVSEDataRecord1, EVSEDataRecord2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEDataRecord1">An EVSE data record.</param>
+        /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator > (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+        {
+
+            if ((Object) EVSEDataRecord1 == null)
+                throw new ArgumentNullException(nameof(EVSEDataRecord1), "The given EVSEDataRecord1 must not be null!");
+
+            return EVSEDataRecord1.CompareTo(EVSEDataRecord2) > 0;
+
+        }
+
+        #endregion
+
+        #region Operator >= (EVSEDataRecord1, EVSEDataRecord2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEDataRecord1">An EVSE data record.</param>
+        /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator >= (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+            => !(EVSEDataRecord1 < EVSEDataRecord2);
+
+        #endregion
+
+        #endregion
+
+        #region IComparable<EVSEDataRecord> Members
+
+        #region CompareTo(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        public Int32 CompareTo(Object Object)
+        {
+
+            if (Object == null)
+                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
+
+            var EVSEDataRecord = Object as EVSEDataRecord;
+            if ((Object) EVSEDataRecord == null)
+                throw new ArgumentException("The given object is not an EVSE data record identification!", nameof(Object));
+
+            return CompareTo(EVSEDataRecord);
+
+        }
+
+        #endregion
+
+        #region CompareTo(EVSEDataRecord)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="EVSEDataRecord">An object to compare with.</param>
+        public Int32 CompareTo(EVSEDataRecord EVSEDataRecord)
+        {
+
+            if ((Object) EVSEDataRecord == null)
+                throw new ArgumentNullException(nameof(EVSEDataRecord), "The given EVSE data record must not be null!");
+
+            return Id.CompareTo(EVSEDataRecord.Id);
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region IEquatable<EVSEDataRecord> Members
+
+        #region Equals(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        /// <returns>true|false</returns>
+        public override Boolean Equals(Object Object)
+        {
+
+            if (Object == null)
+                return false;
+
+            var EVSEDataRecord = Object as EVSEDataRecord;
+            if ((Object) EVSEDataRecord == null)
+                return false;
+
+            return Equals(EVSEDataRecord);
+
+        }
+
+        #endregion
+
+        #region Equals(EVSEDataRecord)
+
+        /// <summary>
+        /// Compares two EVSE data records for equality.
+        /// </summary>
+        /// <param name="EVSEDataRecord">An EVSE data record to compare with.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public Boolean Equals(EVSEDataRecord EVSEDataRecord)
+        {
+
+            if ((Object) EVSEDataRecord == null)
+                return false;
+
+            return Id.Equals(EVSEDataRecord.Id);
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Return the HashCode of this object.
+        /// </summary>
+        /// <returns>The HashCode of this object.</returns>
+        public override Int32 GetHashCode()
+            => Id.GetHashCode();
+
+        #endregion
+
+        #region (override) ToString()
+
+        /// <summary>
+        /// Return a string representation of this object.
+        /// </summary>
+        public override String ToString()
+            => Id.ToString();
 
         #endregion
 

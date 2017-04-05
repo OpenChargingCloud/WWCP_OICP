@@ -120,6 +120,7 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_1.CPO.ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
 
                                               ChargingStationOperator                                             DefaultOperator                                 = null,
+                                              OperatorIdFormats                                                   DefaultOperatorIdFormat                         = OperatorIdFormats.ISO_STAR,
                                               ChargingStationOperatorNameSelectorDelegate                         OperatorNameSelector                            = null,
                                               IncludeEVSEDelegate                                                 IncludeEVSEs                                    = null,
                                               TimeSpan?                                                           ServiceCheckEvery                               = null,
@@ -184,6 +185,7 @@ namespace org.GraphDefined.WWCP
                                                                      ChargeDetailRecord2XML,
 
                                                                      DefaultOperator,
+                                                                     DefaultOperatorIdFormat,
                                                                      OperatorNameSelector,
                                                                      IncludeEVSEs,
                                                                      ServiceCheckEvery,
@@ -280,6 +282,7 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_1.CPO.ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
 
                                               ChargingStationOperator                                             DefaultOperator                                 = null,
+                                              OperatorIdFormats                                                   DefaultOperatorIdFormat                         = OperatorIdFormats.ISO_STAR,
                                               ChargingStationOperatorNameSelectorDelegate                         OperatorNameSelector                            = null,
                                               IncludeEVSEDelegate                                                 IncludeEVSEs                                    = null,
                                               TimeSpan?                                                           ServiceCheckEvery                               = null,
@@ -347,6 +350,7 @@ namespace org.GraphDefined.WWCP
                                                                      ChargeDetailRecord2XML,
 
                                                                      DefaultOperator,
+                                                                     DefaultOperatorIdFormat,
                                                                      OperatorNameSelector,
                                                                      IncludeEVSEs,
                                                                      ServiceCheckEvery,

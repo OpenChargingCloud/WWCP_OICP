@@ -451,6 +451,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
 
                               ChargingStationOperator                                DefaultOperator                                 = null,
+                              WWCP.OperatorIdFormats                                 DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate            OperatorNameSelector                            = null,
                               IncludeEVSEDelegate                                    IncludeEVSEs                                    = null,
                               TimeSpan?                                              ServiceCheckEvery                               = null,
@@ -487,7 +488,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this._EVSEDataRecord2XML                             = EVSEDataRecord2XML;
             this._EVSEStatusRecord2XML                           = EVSEStatusRecord2XML;
             this._ChargeDetailRecord2XML                         = ChargeDetailRecord2XML;
-            this.DefaultOperatorId                               = DefaultOperator.Id.ToOICP();
+            this.DefaultOperatorId                               = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
             this.DefaultOperatorName                             = DefaultOperatorNameSelector(DefaultOperator.Name);
             this._OperatorNameSelector                           = OperatorNameSelector;
 
@@ -996,6 +997,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
 
                               ChargingStationOperator                                DefaultOperator                                 = null,
+                              WWCP.OperatorIdFormats                                 DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate            OperatorNameSelector                            = null,
                               IncludeEVSEDelegate                                    IncludeEVSEs                                    = null,
                               TimeSpan?                                              ServiceCheckEvery                               = null,
@@ -1023,6 +1025,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    ChargeDetailRecord2XML,
 
                    DefaultOperator,
+                   DefaultOperatorIdFormat,
                    OperatorNameSelector,
                    IncludeEVSEs,
                    ServiceCheckEvery,
@@ -1110,6 +1113,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
 
                               ChargingStationOperator                                DefaultOperator                                 = null,
+                              WWCP.OperatorIdFormats                                 DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate            OperatorNameSelector                            = null,
                               IncludeEVSEDelegate                                    IncludeEVSEs                                    = null,
                               TimeSpan?                                              ServiceCheckEvery                               = null,
@@ -1157,6 +1161,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    ChargeDetailRecord2XML,
 
                    DefaultOperator,
+                   DefaultOperatorIdFormat,
                    OperatorNameSelector,
                    IncludeEVSEs,
                    ServiceCheckEvery,
