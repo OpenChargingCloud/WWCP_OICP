@@ -247,6 +247,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public Operator_Id  DefaultOperatorId     { get; }
 
+
+        public WWCP.OperatorIdFormats DefaultOperatorIdFormat { get; }
+
         /// <summary>
         /// An optional default charging station operator name.
         /// </summary>
@@ -489,6 +492,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this._EVSEStatusRecord2XML                           = EVSEStatusRecord2XML;
             this._ChargeDetailRecord2XML                         = ChargeDetailRecord2XML;
             this.DefaultOperatorId                               = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
+            this.DefaultOperatorIdFormat                         = DefaultOperatorIdFormat;
             this.DefaultOperatorName                             = DefaultOperatorNameSelector(DefaultOperator.Name);
             this._OperatorNameSelector                           = OperatorNameSelector;
 
@@ -4100,7 +4104,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 var response = await CPORoaming.
                                          AuthorizeStart(OperatorId.HasValue
-                                                            ? OperatorId.Value.ToOICP()
+                                                            ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                             : DefaultOperatorId,
                                                         AuthToken.          ToOICP(),
                                                         null,
@@ -4272,7 +4276,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 var response  = await CPORoaming.
                                           AuthorizeStart(OperatorId.HasValue
-                                                            ? OperatorId.Value.ToOICP()
+                                                            ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                             : DefaultOperatorId,
                                                          AuthToken.          ToOICP(),
                                                          EVSEId.             ToOICP(),
@@ -4674,7 +4678,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 var response = await CPORoaming.AuthorizeStop(OperatorId.HasValue
-                                                                  ? OperatorId.Value.ToOICP()
+                                                                  ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                                   : DefaultOperatorId,
                                                               SessionId. ToOICP(),
                                                               AuthToken. ToOICP(),
@@ -4836,7 +4840,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 var response  = await CPORoaming.AuthorizeStop(OperatorId.HasValue
-                                                                  ? OperatorId.Value.ToOICP()
+                                                                  ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                                   : DefaultOperatorId,
                                                                SessionId. ToOICP(),
                                                                AuthToken. ToOICP(),
