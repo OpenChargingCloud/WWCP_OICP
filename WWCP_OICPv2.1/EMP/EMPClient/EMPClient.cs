@@ -1674,6 +1674,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteReservationStart request must not be null!");
 
+
+            HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>> result = null;
+
             #endregion
 
             #region Send OnReservationStartRequest event
@@ -1715,132 +1718,142 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStartSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
-                                                     "eRoamingAuthorizeRemoteReservationStart",
-                                                     RequestLogDelegate:   OnReservationStartSOAPRequest,
-                                                     ResponseLogDelegate:  OnReservationStartSOAPResponse,
-                                                     CancellationToken:    Request.CancellationToken,
-                                                     EventTrackingId:      Request.EventTrackingId,
-                                                     QueryTimeout:         Request.RequestTimeout,
+                result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStartSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                                                 "eRoamingAuthorizeRemoteReservationStart",
+                                                 RequestLogDelegate:   OnReservationStartSOAPRequest,
+                                                 ResponseLogDelegate:  OnReservationStartSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout,
 
-                                                     #region OnSuccess
+                                                 #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                          (request, xml, onexception) =>
-                                                                                                              Acknowledgement<AuthorizeRemoteReservationStartRequest>.Parse(request,
-                                                                                                                                                                            xml,
-                                                                                                                                                                            CustomAuthorizeRemoteReservationStartResponseMapper,
-                                                                                                                                                                            onexception)),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) =>
+                                                                                                          Acknowledgement<AuthorizeRemoteReservationStartRequest>.Parse(request,
+                                                                                                                                                                        xml,
+                                                                                                                                                                        CustomAuthorizeRemoteReservationStartResponseMapper,
+                                                                                                                                                                        onexception)),
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnSOAPFault
+                                                 #region OnSOAPFault
 
-                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                     SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                         return new HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>(
+                                                     return new HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>(
 
-                                                                    httpresponse,
+                                                                httpresponse,
 
-                                                                    new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
-                                                                        Request,
-                                                                        StatusCodes.DataError,
-                                                                        httpresponse.Content.ToString()
-                                                                    ),
+                                                                new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.Content.ToString()
+                                                                ),
 
-                                                                    IsFault: true
+                                                                IsFault: true
 
-                                                                );
+                                                            );
 
-                                                     },
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnHTTPError
+                                                 #region OnHTTPError
 
-                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendHTTPError(timestamp, soapclient, httpresponse);
+                                                     SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                         return new HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>(
+                                                     return new HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>(
 
-                                                                    httpresponse,
+                                                                httpresponse,
 
-                                                                    new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
-                                                                        Request,
-                                                                        StatusCodes.DataError,
-                                                                        httpresponse.HTTPStatusCode.ToString(),
-                                                                        httpresponse.HTTPBody.      ToUTF8String()
-                                                                    ),
+                                                                new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                ),
 
-                                                                    IsFault: true
+                                                                IsFault: true
 
-                                                                );
+                                                            );
 
-                                                     },
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnException
+                                                 #region OnException
 
-                                                     OnException: (timestamp, sender, exception) => {
+                                                 OnException: (timestamp, sender, exception) => {
 
-                                                         SendException(timestamp, sender, exception);
+                                                     SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.ExceptionThrown(
+                                                     return HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.ExceptionThrown(
 
-                                                                    new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
-                                                                        Request,
-                                                                        StatusCodes.ServiceNotAvailable,
-                                                                        exception.Message,
-                                                                        exception.StackTrace,
-                                                                        Request.SessionId
-                                                                    ),
+                                                                new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+                                                                    Request,
+                                                                    StatusCodes.ServiceNotAvailable,
+                                                                    exception.Message,
+                                                                    exception.StackTrace,
+                                                                    Request.SessionId
+                                                                ),
 
-                                                                    Exception: exception
+                                                                Exception: exception
 
-                                                                );
+                                                            );
 
-                                                     }
+                                                 }
 
-                                                     #endregion
+                                                 #endregion
 
-                                                    ).ConfigureAwait(false);
-
-                #region Send OnReservationStartResponse event
-
-                var Endtime = DateTime.Now;
-
-                try
-                {
-
-                    OnReservationStartResponse?.Invoke(Endtime,
-                                                       this,
-                                                       ClientId,
-                                                       Request.EventTrackingId,
-                                                       Request.ProviderId,
-                                                       Request.EVSEId,
-                                                       Request.EVCOId,
-                                                       Request.SessionId,
-                                                       Request.PartnerSessionId,
-                                                       Request.PartnerProductId,
-                                                       RequestTimeout,
-                                                       result.Content,
-                                                       Endtime - StartTime);
-
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(EMPClient) + "." + nameof(OnReservationStartResponse));
-                }
-
-                #endregion
-
-                return result;
+                                                ).ConfigureAwait(false);
 
             }
+
+            if (result == null)
+                result = HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.ClientError(
+                             new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+                                 Request,
+                                 StatusCodes.SystemError,
+                                 "HTTP request failed!"
+                             )
+                         );
+
+
+            #region Send OnReservationStartResponse event
+
+            var Endtime = DateTime.Now;
+
+            try
+            {
+
+                OnReservationStartResponse?.Invoke(Endtime,
+                                                   this,
+                                                   ClientId,
+                                                   Request.EventTrackingId,
+                                                   Request.ProviderId,
+                                                   Request.EVSEId,
+                                                   Request.EVCOId,
+                                                   Request.SessionId,
+                                                   Request.PartnerSessionId,
+                                                   Request.PartnerProductId,
+                                                   RequestTimeout,
+                                                   result.Content,
+                                                   Endtime - StartTime);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnReservationStartResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1867,6 +1880,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteReservationStop request must not be null!");
+
+
+            HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>> result = null;
 
             #endregion
 
@@ -1907,130 +1923,140 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStopSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
-                                                     "eRoamingAuthorizeRemoteReservationStop",
-                                                     RequestLogDelegate:   OnReservationStartSOAPRequest,
-                                                     ResponseLogDelegate:  OnReservationStopSOAPResponse,
-                                                     CancellationToken:    Request.CancellationToken,
-                                                     EventTrackingId:      Request.EventTrackingId,
-                                                     QueryTimeout:         Request.RequestTimeout,
+                result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStopSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                                                 "eRoamingAuthorizeRemoteReservationStop",
+                                                 RequestLogDelegate:   OnReservationStartSOAPRequest,
+                                                 ResponseLogDelegate:  OnReservationStopSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout,
 
-                                                     #region OnSuccess
+                                                 #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                          (request, xml, onexception) =>
-                                                                                                              Acknowledgement<AuthorizeRemoteReservationStopRequest>.Parse(request,
-                                                                                                                                                                           xml,
-                                                                                                                                                                           CustomAuthorizeRemoteReservationStopResponseMapper,
-                                                                                                                                                                           onexception)),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) =>
+                                                                                                          Acknowledgement<AuthorizeRemoteReservationStopRequest>.Parse(request,
+                                                                                                                                                                       xml,
+                                                                                                                                                                       CustomAuthorizeRemoteReservationStopResponseMapper,
+                                                                                                                                                                       onexception)),
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnSOAPFault
+                                                 #region OnSOAPFault
 
-                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                     SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                         return new HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>(
+                                                     return new HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>(
 
-                                                                    httpresponse,
+                                                                httpresponse,
 
-                                                                    new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
-                                                                        Request,
-                                                                        StatusCodes.DataError,
-                                                                        httpresponse.Content.ToString()
-                                                                    ),
+                                                                new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.Content.ToString()
+                                                                ),
 
-                                                                    IsFault: true
+                                                                IsFault: true
 
-                                                                );
+                                                            );
 
-                                                     },
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnHTTPError
+                                                 #region OnHTTPError
 
-                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendHTTPError(timestamp, soapclient, httpresponse);
+                                                     SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                         return new HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>(
+                                                     return new HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>(
 
-                                                                    httpresponse,
+                                                                httpresponse,
 
-                                                                    new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
-                                                                        Request,
-                                                                        StatusCodes.DataError,
-                                                                        httpresponse.HTTPStatusCode.ToString(),
-                                                                        httpresponse.HTTPBody.      ToUTF8String()
-                                                                    ),
+                                                                new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                ),
 
-                                                                    IsFault: true
+                                                                IsFault: true
 
-                                                                );
+                                                            );
 
-                                                     },
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnException
+                                                 #region OnException
 
-                                                     OnException: (timestamp, sender, exception) => {
+                                                 OnException: (timestamp, sender, exception) => {
 
-                                                         SendException(timestamp, sender, exception);
+                                                     SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.ExceptionThrown(
+                                                     return HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.ExceptionThrown(
 
-                                                                    new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
-                                                                        Request,
-                                                                        StatusCodes.ServiceNotAvailable,
-                                                                        exception.Message,
-                                                                        exception.StackTrace,
-                                                                        Request.SessionId
-                                                                    ),
+                                                                new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
+                                                                    Request,
+                                                                    StatusCodes.ServiceNotAvailable,
+                                                                    exception.Message,
+                                                                    exception.StackTrace,
+                                                                    Request.SessionId
+                                                                ),
 
-                                                                    Exception: exception
+                                                                Exception: exception
 
-                                                                );
+                                                            );
 
-                                                     }
+                                                 }
 
-                                                     #endregion
+                                                 #endregion
 
-                                                    ).ConfigureAwait(false);
-
-                #region Send OnReservationStopResponse event
-
-                var EndTime = DateTime.Now;
-
-                try
-                {
-
-                    OnReservationStopResponse?.Invoke(EndTime,
-                                                      this,
-                                                      ClientId,
-                                                      Request.EventTrackingId,
-                                                      Request.SessionId,
-                                                      Request.ProviderId,
-                                                      Request.EVSEId,
-                                                      Request.PartnerSessionId,
-                                                      RequestTimeout,
-                                                      result.Content,
-                                                      EndTime - StartTime);
-
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(EMPClient) + "." + nameof(OnReservationStartResponse));
-                }
-
-                #endregion
-
-                return result;
+                                                ).ConfigureAwait(false);
 
             }
+
+            if (result == null)
+                result = HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.ClientError(
+                             new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
+                                 Request,
+                                 StatusCodes.SystemError,
+                                 "HTTP request failed!"
+                             )
+                         );
+
+
+            #region Send OnReservationStopResponse event
+
+            var EndTime = DateTime.Now;
+
+            try
+            {
+
+                OnReservationStopResponse?.Invoke(EndTime,
+                                                  this,
+                                                  ClientId,
+                                                  Request.EventTrackingId,
+                                                  Request.SessionId,
+                                                  Request.ProviderId,
+                                                  Request.EVSEId,
+                                                  Request.PartnerSessionId,
+                                                  RequestTimeout,
+                                                  result.Content,
+                                                  EndTime - StartTime);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnReservationStartResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -2058,6 +2084,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteStart request must not be null!");
+
+
+            HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>> result = null;
 
             #endregion
 
@@ -2100,129 +2129,139 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(_CustomAuthorizeRemoteStartSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
-                                                     "eRoamingAuthorizeRemoteStart",
-                                                     RequestLogDelegate:   OnAuthorizeRemoteStartSOAPRequest,
-                                                     ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
-                                                     CancellationToken:    Request.CancellationToken,
-                                                     EventTrackingId:      Request.EventTrackingId,
-                                                     QueryTimeout:         Request.RequestTimeout,
+                result = await _OICPClient.Query(_CustomAuthorizeRemoteStartSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                                                 "eRoamingAuthorizeRemoteStart",
+                                                 RequestLogDelegate:   OnAuthorizeRemoteStartSOAPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout,
 
-                                                     #region OnSuccess
+                                                 #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                          (request, xml, onexception) =>
-                                                                                                              Acknowledgement<AuthorizeRemoteStartRequest>.Parse(request,
-                                                                                                                                                                 xml,
-                                                                                                                                                                 CustomAuthorizeRemoteStartResponseMapper,
-                                                                                                                                                                 onexception)),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) =>
+                                                                                                          Acknowledgement<AuthorizeRemoteStartRequest>.Parse(request,
+                                                                                                                                                             xml,
+                                                                                                                                                             CustomAuthorizeRemoteStartResponseMapper,
+                                                                                                                                                             onexception)),
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnSOAPFault
+                                                 #region OnSOAPFault
 
-                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                     SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                         return new HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>(
+                                                     return new HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>(
 
-                                                                    httpresponse,
-
-                                                                    new Acknowledgement<AuthorizeRemoteStartRequest>(
-                                                                        Request,
-                                                                        StatusCodes.DataError,
-                                                                        httpresponse.Content.ToString()
-                                                                    ),
-
-                                                                    IsFault: true
-                                                                );
-
-                                                     },
-
-                                                     #endregion
-
-                                                     #region OnHTTPError
-
-                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
-
-                                                         SendHTTPError(timestamp, soapclient, httpresponse);
-
-                                                         return new HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>(
-
-                                                                    httpresponse,
-
-                                                                    new Acknowledgement<AuthorizeRemoteStartRequest>(
-                                                                        Request,
-                                                                        StatusCodes.DataError,
-                                                                        httpresponse.HTTPStatusCode.ToString(),
-                                                                        httpresponse.HTTPBody.      ToUTF8String()
-                                                                    ),
-
-                                                                    IsFault: true
-
-                                                                );
-
-                                                     },
-
-                                                     #endregion
-
-                                                     #region OnException
-
-                                                     OnException: (timestamp, sender, exception) => {
-
-                                                         SendException(timestamp, sender, exception);
-
-                                                         return HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>.ExceptionThrown(
+                                                                httpresponse,
 
                                                                 new Acknowledgement<AuthorizeRemoteStartRequest>(
                                                                     Request,
-                                                                    StatusCodes.ServiceNotAvailable,
-                                                                    exception.Message,
-                                                                    exception.StackTrace,
-                                                                    Request.SessionId
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.Content.ToString()
                                                                 ),
 
-                                                                Exception: exception);
+                                                                IsFault: true
+                                                            );
 
-                                                     }
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                    ).ConfigureAwait(false);
+                                                 #region OnHTTPError
 
-                #region Send OnAuthorizeRemoteStartResponse event
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                var EndTime = DateTime.Now;
+                                                     SendHTTPError(timestamp, soapclient, httpresponse);
 
-                try
-                {
+                                                     return new HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>(
 
-                    OnAuthorizeRemoteStartResponse?.Invoke(EndTime,
-                                                           this,
-                                                           ClientId,
-                                                           Request.EventTrackingId,
-                                                           Request.ProviderId,
-                                                           Request.EVSEId,
-                                                           Request.EVCOId,
-                                                           Request.SessionId,
-                                                           Request.PartnerSessionId,
-                                                           Request.PartnerProductId,
-                                                           RequestTimeout,
-                                                           result.Content,
-                                                           EndTime - StartTime);
+                                                                httpresponse,
 
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStartResponse));
-                }
+                                                                new Acknowledgement<AuthorizeRemoteStartRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                ),
 
-                #endregion
+                                                                IsFault: true
 
-                return result;
+                                                            );
+
+                                                 },
+
+                                                 #endregion
+
+                                                 #region OnException
+
+                                                 OnException: (timestamp, sender, exception) => {
+
+                                                     SendException(timestamp, sender, exception);
+
+                                                     return HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>.ExceptionThrown(
+
+                                                            new Acknowledgement<AuthorizeRemoteStartRequest>(
+                                                                Request,
+                                                                StatusCodes.ServiceNotAvailable,
+                                                                exception.Message,
+                                                                exception.StackTrace,
+                                                                Request.SessionId
+                                                            ),
+
+                                                            Exception: exception);
+
+                                                 }
+
+                                                 #endregion
+
+                                                ).ConfigureAwait(false);
 
             }
+
+            if (result == null)
+                result = HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>.ClientError(
+                             new Acknowledgement<AuthorizeRemoteStartRequest>(
+                                 Request,
+                                 StatusCodes.SystemError,
+                                 "HTTP request failed!"
+                             )
+                         );
+
+
+            #region Send OnAuthorizeRemoteStartResponse event
+
+            var EndTime = DateTime.Now;
+
+            try
+            {
+
+                OnAuthorizeRemoteStartResponse?.Invoke(EndTime,
+                                                       this,
+                                                       ClientId,
+                                                       Request.EventTrackingId,
+                                                       Request.ProviderId,
+                                                       Request.EVSEId,
+                                                       Request.EVCOId,
+                                                       Request.SessionId,
+                                                       Request.PartnerSessionId,
+                                                       Request.PartnerProductId,
+                                                       RequestTimeout,
+                                                       result.Content,
+                                                       EndTime - StartTime);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStartResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -2249,6 +2288,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             if (Request == null)
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteStop request must not be null!");
+
 
             HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>> result = null;
 
@@ -2385,36 +2425,46 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                 ).ConfigureAwait(false);
 
-                #region Send OnAuthorizeRemoteStopResponse event
+            }
 
-                var EndTime = DateTime.Now;
+            if (result == null)
+                result = HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>.ClientError(
+                             new Acknowledgement<AuthorizeRemoteStopRequest>(
+                                 Request,
+                                 StatusCodes.SystemError,
+                                 "HTTP request failed!"
+                             )
+                         );
 
-                try
-                {
 
-                    OnAuthorizeRemoteStopResponse?.Invoke(EndTime,
-                                                          this,
-                                                          ClientId,
-                                                          Request.EventTrackingId,
-                                                          Request.SessionId,
-                                                          Request.ProviderId,
-                                                          Request.EVSEId,
-                                                          Request.PartnerSessionId,
-                                                          RequestTimeout,
-                                                          result.Content,
-                                                          EndTime - StartTime);
+            #region Send OnAuthorizeRemoteStopResponse event
 
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStopResponse));
-                }
+            var EndTime = DateTime.Now;
 
-                #endregion
+            try
+            {
 
-                return result;
+                OnAuthorizeRemoteStopResponse?.Invoke(EndTime,
+                                                      this,
+                                                      ClientId,
+                                                      Request.EventTrackingId,
+                                                      Request.SessionId,
+                                                      Request.ProviderId,
+                                                      Request.EVSEId,
+                                                      Request.PartnerSessionId,
+                                                      RequestTimeout,
+                                                      result.Content,
+                                                      EndTime - StartTime);
 
             }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStopResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 

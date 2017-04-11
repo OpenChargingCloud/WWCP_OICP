@@ -49,7 +49,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
 
             PushAuthenticationData(this IEMPClient                           IEMPClient,
                                    IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
@@ -62,14 +62,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                    TimeSpan?                                 RequestTimeout      = null)
 
 
-            => await IEMPClient.PushAuthenticationData(new PushAuthenticationDataRequest(AuthorizationIdentifications,
-                                                                                         ProviderId,
-                                                                                         Action,
+                => IEMPClient.PushAuthenticationData(new PushAuthenticationDataRequest(AuthorizationIdentifications,
+                                                                                       ProviderId,
+                                                                                       Action,
 
-                                                                                         Timestamp,
-                                                                                         CancellationToken,
-                                                                                         EventTrackingId,
-                                                                                         RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
+                                                                                       Timestamp,
+                                                                                       CancellationToken,
+                                                                                       EventTrackingId,
+                                                                                       RequestTimeout.HasValue
+                                                                                           ? RequestTimeout.Value
+                                                                                           : IEMPClient.RequestTimeout));
 
         #endregion
 
@@ -90,7 +92,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
 
             ReservationStart(this IEMPClient       IEMPClient,
                              Provider_Id           ProviderId,
@@ -106,21 +108,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                              TimeSpan?             RequestTimeout      = null)
 
 
-            => await IEMPClient.ReservationStart(new AuthorizeRemoteReservationStartRequest(ProviderId,
-                                                                                            EVSEId,
-                                                                                            EVCOId,
-                                                                                            SessionId,
-                                                                                            PartnerSessionId,
-                                                                                            PartnerProductId,
+                => IEMPClient.ReservationStart(new AuthorizeRemoteReservationStartRequest(ProviderId,
+                                                                                          EVSEId,
+                                                                                          EVCOId,
+                                                                                          SessionId,
+                                                                                          PartnerSessionId,
+                                                                                          PartnerProductId,
 
-                                                                                            Timestamp,
-                                                                                            CancellationToken,
-                                                                                            EventTrackingId,
-                                                                                            RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
+                                                                                          Timestamp,
+                                                                                          CancellationToken,
+                                                                                          EventTrackingId,
+                                                                                          RequestTimeout.HasValue
+                                                                                              ? RequestTimeout.Value
+                                                                                              : IEMPClient.RequestTimeout));
 
         #endregion
 
-        #region ReservationStop(SessionId, ProviderId, EVSEId, PartnerSessionId = null, ...)
+        #region ReservationStop (SessionId, ProviderId, EVSEId, PartnerSessionId = null, ...)
 
         /// <summary>
         /// Delete a reservation at the given EVSE.
@@ -133,7 +137,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
 
             ReservationStop(this IEMPClient       IEMPClient,
                             Session_Id            SessionId,
@@ -147,15 +151,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             TimeSpan?             RequestTimeout      = null)
 
 
-            => await IEMPClient.ReservationStop(new AuthorizeRemoteReservationStopRequest(SessionId,
-                                                                                          ProviderId,
-                                                                                          EVSEId,
-                                                                                          PartnerSessionId,
+                => IEMPClient.ReservationStop(new AuthorizeRemoteReservationStopRequest(SessionId,
+                                                                                        ProviderId,
+                                                                                        EVSEId,
+                                                                                        PartnerSessionId,
 
-                                                                                          Timestamp,
-                                                                                          CancellationToken,
-                                                                                          EventTrackingId,
-                                                                                          RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
+                                                                                        Timestamp,
+                                                                                        CancellationToken,
+                                                                                        EventTrackingId,
+                                                                                        RequestTimeout.HasValue
+                                                                                            ? RequestTimeout.Value
+                                                                                            : IEMPClient.RequestTimeout));
 
         #endregion
 
@@ -176,7 +182,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
 
             RemoteStart(this IEMPClient       IEMPClient,
                         Provider_Id           ProviderId,
@@ -191,21 +197,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         EventTracking_Id      EventTrackingId     = null,
                         TimeSpan?             RequestTimeout      = null)
 
-            => await IEMPClient.RemoteStart(new AuthorizeRemoteStartRequest(ProviderId,
-                                                                            EVSEId,
-                                                                            EVCOId,
-                                                                            SessionId,
-                                                                            PartnerSessionId,
-                                                                            PartnerProductId,
+                => IEMPClient.RemoteStart(new AuthorizeRemoteStartRequest(ProviderId,
+                                                                          EVSEId,
+                                                                          EVCOId,
+                                                                          SessionId,
+                                                                          PartnerSessionId,
+                                                                          PartnerProductId,
 
-                                                                            Timestamp,
-                                                                            CancellationToken,
-                                                                            EventTrackingId,
-                                                                            RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
+                                                                          Timestamp,
+                                                                          CancellationToken,
+                                                                          EventTrackingId,
+                                                                          RequestTimeout.HasValue
+                                                                              ? RequestTimeout.Value
+                                                                              : IEMPClient.RequestTimeout));
 
         #endregion
 
-        #region RemoteStop(EVSEId, SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
+        #region RemoteStop (EVSEId, SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
 
         /// <summary>
         /// Stop the given charging session at the given EVSE.
@@ -219,7 +227,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
 
             RemoteStop(this IEMPClient       IEMPClient,
                        Session_Id            SessionId,
@@ -233,15 +241,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                        TimeSpan?             RequestTimeout      = null)
 
 
-            => await IEMPClient.RemoteStop(new AuthorizeRemoteStopRequest(SessionId,
-                                                                          ProviderId,
-                                                                          EVSEId,
-                                                                          PartnerSessionId,
+                => IEMPClient.RemoteStop(new AuthorizeRemoteStopRequest(SessionId,
+                                                                        ProviderId,
+                                                                        EVSEId,
+                                                                        PartnerSessionId,
 
-                                                                          Timestamp,
-                                                                          CancellationToken,
-                                                                          EventTrackingId,
-                                                                          RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
+                                                                        Timestamp,
+                                                                        CancellationToken,
+                                                                        EventTrackingId,
+                                                                        RequestTimeout.HasValue
+                                                                            ? RequestTimeout.Value
+                                                                            : IEMPClient.RequestTimeout));
 
         #endregion
 
@@ -259,7 +269,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<GetChargeDetailRecordsResponse>>
+        public static Task<HTTPResponse<GetChargeDetailRecordsResponse>>
 
             GetChargeDetailRecords(this IEMPClient     IEMPClient,
                                    Provider_Id         ProviderId,
@@ -272,14 +282,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                    TimeSpan?           RequestTimeout      = null)
 
 
-            => await IEMPClient.GetChargeDetailRecords(new GetChargeDetailRecordsRequest(ProviderId,
-                                                                                         From,
-                                                                                         To,
+                => IEMPClient.GetChargeDetailRecords(new GetChargeDetailRecordsRequest(ProviderId,
+                                                                                       From,
+                                                                                       To,
 
-                                                                                         Timestamp,
-                                                                                         CancellationToken,
-                                                                                         EventTrackingId,
-                                                                                         RequestTimeout.HasValue ? RequestTimeout.Value : IEMPClient.RequestTimeout));
+                                                                                       Timestamp,
+                                                                                       CancellationToken,
+                                                                                       EventTrackingId,
+                                                                                       RequestTimeout.HasValue
+                                                                                           ? RequestTimeout.Value
+                                                                                           : IEMPClient.RequestTimeout));
 
         #endregion
 

@@ -1382,7 +1382,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStopResponse?.Invoke(DateTime.Now,
+                OnAuthorizeStopResponse?.Invoke(Endtime,
                                                 this,
                                                 ClientId,
                                                 Request.OperatorId,
@@ -1401,7 +1401,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
 
             #endregion
-
 
             return result;
 
@@ -1664,6 +1663,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
+
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
@@ -1731,33 +1731,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                 ).ConfigureAwait(false);
 
-                #region Send OnAuthenticationDataPulled event
+            }
 
-                var Endtime = DateTime.Now;
+            #region Send OnAuthenticationDataPulled event
 
-                try
-                {
+            var Endtime = DateTime.Now;
 
-                    OnPullAuthenticationDataResponse?.Invoke(DateTime.Now,
-                                                             this,
-                                                             ClientId,
-                                                             Request.EventTrackingId,
-                                                             Request.OperatorId,
-                                                             Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
-                                                             result.Content,
-                                                             Endtime - StartTime);
+            try
+            {
 
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(CPOClient) + "." + nameof(OnPullAuthenticationDataResponse));
-                }
-
-                #endregion
-
-                return result;
+                OnPullAuthenticationDataResponse?.Invoke(Endtime,
+                                                         this,
+                                                         ClientId,
+                                                         Request.EventTrackingId,
+                                                         Request.OperatorId,
+                                                         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                         result.Content,
+                                                         Endtime - StartTime);
 
             }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnPullAuthenticationDataResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 

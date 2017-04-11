@@ -52,7 +52,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
 
             PushEVSEData(this ICPOClient                 ICPOClient,
                          IEnumerable<EVSEDataRecord>     EVSEDataRecords,
@@ -67,17 +67,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          TimeSpan?                       RequestTimeout           = null)
 
 
-                => await ICPOClient.PushEVSEData(new PushEVSEDataRequest(IncludeEVSEDataRecords != null
-                                                                             ? EVSEDataRecords.Where(evsedatarecord => IncludeEVSEDataRecords(evsedatarecord))
-                                                                             : EVSEDataRecords,
-                                                                         OperatorId,
-                                                                         OperatorName,
-                                                                         Action,
+                => ICPOClient.PushEVSEData(new PushEVSEDataRequest(IncludeEVSEDataRecords != null
+                                                                       ? EVSEDataRecords.Where(evsedatarecord => IncludeEVSEDataRecords(evsedatarecord))
+                                                                       : EVSEDataRecords,
+                                                                   OperatorId,
+                                                                   OperatorName,
+                                                                   Action,
 
-                                                                         Timestamp,
-                                                                         CancellationToken,
-                                                                         EventTrackingId,
-                                                                         RequestTimeout.HasValue ? RequestTimeout.Value : ICPOClient.RequestTimeout));
+                                                                   Timestamp,
+                                                                   CancellationToken,
+                                                                   EventTrackingId,
+                                                                   RequestTimeout.HasValue
+                                                                       ? RequestTimeout.Value
+                                                                       : ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -95,7 +97,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
 
             PushEVSEData(this ICPOClient     ICPOClient,
                          EVSEDataRecord      EVSEDataRecord,
@@ -109,15 +111,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          TimeSpan?           RequestTimeout      = null)
 
 
-                => await ICPOClient.PushEVSEData(new PushEVSEDataRequest(new EVSEDataRecord[] { EVSEDataRecord },
-                                                                         OperatorId,
-                                                                         OperatorName,
-                                                                         Action,
+                => ICPOClient.PushEVSEData(new PushEVSEDataRequest(new EVSEDataRecord[] { EVSEDataRecord },
+                                                                   OperatorId,
+                                                                   OperatorName,
+                                                                   Action,
 
-                                                                         Timestamp,
-                                                                         CancellationToken,
-                                                                         EventTrackingId,
-                                                                         RequestTimeout.HasValue ? RequestTimeout.Value : ICPOClient.RequestTimeout));
+                                                                   Timestamp,
+                                                                   CancellationToken,
+                                                                   EventTrackingId,
+                                                                   RequestTimeout.HasValue
+                                                                       ? RequestTimeout.Value
+                                                                       : ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -129,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
         /// <param name="Action">The server-side data management operation.</param>
         /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
-        public static async Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
 
             PushEVSEData(this ICPOClient          ICPOClient,
                          Operator_Id              OperatorId,
@@ -137,11 +141,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          params EVSEDataRecord[]  EVSEDataRecords)
 
 
-            => await ICPOClient.PushEVSEData(new PushEVSEDataRequest(EVSEDataRecords,
-                                                                     OperatorId,
-                                                                     Action:          Action,
+            => ICPOClient.PushEVSEData(new PushEVSEDataRequest(EVSEDataRecords,
+                                                               OperatorId,
+                                                               Action:          Action,
 
-                                                                     RequestTimeout:  ICPOClient.RequestTimeout));
+                                                               RequestTimeout:  ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -161,7 +165,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
 
             PushEVSEStatus(this ICPOClient                   ICPOClient,
                            IEnumerable<EVSEStatusRecord>     EVSEStatusRecords,
@@ -176,17 +180,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                            TimeSpan?                         RequestTimeout             = null)
 
 
-                => await ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(IncludeEVSEStatusRecords != null
-                                                                                 ? EVSEStatusRecords.Where(evsestatusrecord => IncludeEVSEStatusRecords(evsestatusrecord))
-                                                                                 : EVSEStatusRecords,
-                                                                             OperatorId,
-                                                                             OperatorName,
-                                                                             Action,
+                => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(IncludeEVSEStatusRecords != null
+                                                                           ? EVSEStatusRecords.Where(evsestatusrecord => IncludeEVSEStatusRecords(evsestatusrecord))
+                                                                           : EVSEStatusRecords,
+                                                                       OperatorId,
+                                                                       OperatorName,
+                                                                       Action,
 
-                                                                             Timestamp,
-                                                                             CancellationToken,
-                                                                             EventTrackingId,
-                                                                             RequestTimeout.HasValue ? RequestTimeout.Value : ICPOClient.RequestTimeout));
+                                                                       Timestamp,
+                                                                       CancellationToken,
+                                                                       EventTrackingId,
+                                                                       RequestTimeout.HasValue
+                                                                           ? RequestTimeout.Value
+                                                                           : ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -204,7 +210,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
 
             PushEVSEStatus(this ICPOClient     ICPOClient,
                            EVSEStatusRecord    EVSEStatusRecord,
@@ -218,15 +224,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                            TimeSpan?           RequestTimeout      = null)
 
 
-                => await ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(new EVSEStatusRecord[] { EVSEStatusRecord },
-                                                                             OperatorId,
-                                                                             OperatorName,
-                                                                             Action,
+                => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(new EVSEStatusRecord[] { EVSEStatusRecord },
+                                                                       OperatorId,
+                                                                       OperatorName,
+                                                                       Action,
 
-                                                                             Timestamp,
-                                                                             CancellationToken,
-                                                                             EventTrackingId,
-                                                                             RequestTimeout.HasValue ? RequestTimeout.Value : ICPOClient.RequestTimeout));
+                                                                       Timestamp,
+                                                                       CancellationToken,
+                                                                       EventTrackingId,
+                                                                       RequestTimeout.HasValue
+                                                                           ? RequestTimeout.Value
+                                                                           : ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -238,7 +246,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE status records.</param>
         /// <param name="Action">The server-side status management operation.</param>
         /// <param name="EVSEStatusRecords">An array of EVSE status records.</param>
-        public static async Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
 
             PushEVSEStatus(this ICPOClient            ICPOClient,
                            Operator_Id                OperatorId,
@@ -246,11 +254,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                            params EVSEStatusRecord[]  EVSEStatusRecords)
 
 
-            => await ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(EVSEStatusRecords,
-                                                                         OperatorId,
-                                                                         Action:          Action,
+            => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(EVSEStatusRecords,
+                                                                   OperatorId,
+                                                                   Action:          Action,
 
-                                                                         RequestTimeout:  ICPOClient.RequestTimeout));
+                                                                   RequestTimeout:  ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -271,7 +279,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<AuthorizationStart>>
+        public static Task<HTTPResponse<AuthorizationStart>>
 
             AuthorizeStart(this ICPOClient     ICPOClient,
                            Operator_Id         OperatorId,
@@ -287,17 +295,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                            TimeSpan?           RequestTimeout      = null)
 
 
-                => await ICPOClient.AuthorizeStart(new AuthorizeStartRequest(OperatorId,
-                                                                             UID,
-                                                                             EVSEId,
-                                                                             PartnerProductId,
-                                                                             SessionId,
-                                                                             PartnerSessionId,
+                => ICPOClient.AuthorizeStart(new AuthorizeStartRequest(OperatorId,
+                                                                       UID,
+                                                                       EVSEId,
+                                                                       PartnerProductId,
+                                                                       SessionId,
+                                                                       PartnerSessionId,
 
-                                                                             Timestamp,
-                                                                             CancellationToken,
-                                                                             EventTrackingId,
-                                                                             RequestTimeout.HasValue ? RequestTimeout.Value : ICPOClient.RequestTimeout));
+                                                                       Timestamp,
+                                                                       CancellationToken,
+                                                                       EventTrackingId,
+                                                                       RequestTimeout.HasValue
+                                                                           ? RequestTimeout.Value
+                                                                           : ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -320,7 +330,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<AuthorizationStop>>
+        public static Task<HTTPResponse<AuthorizationStop>>
 
             AuthorizeStop(this ICPOClient     ICPOClient,
                           Operator_Id         OperatorId,
@@ -335,16 +345,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                           TimeSpan?           RequestTimeout      = null)
 
 
-                 => await ICPOClient.AuthorizeStop(new AuthorizeStopRequest(OperatorId,
-                                                                            SessionId,
-                                                                            UID,
-                                                                            EVSEId,
-                                                                            PartnerSessionId,
+                 => ICPOClient.AuthorizeStop(new AuthorizeStopRequest(OperatorId,
+                                                                      SessionId,
+                                                                      UID,
+                                                                      EVSEId,
+                                                                      PartnerSessionId,
 
-                                                                            Timestamp,
-                                                                            CancellationToken,
-                                                                            EventTrackingId,
-                                                                            RequestTimeout.HasValue ? RequestTimeout.Value : ICPOClient.RequestTimeout));
+                                                                      Timestamp,
+                                                                      CancellationToken,
+                                                                      EventTrackingId,
+                                                                      RequestTimeout.HasValue
+                                                                          ? RequestTimeout.Value
+                                                                          : ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -359,7 +371,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>>
+        public static Task<HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>>
 
             SendChargeDetailRecord(this ICPOClient     ICPOClient,
                                    ChargeDetailRecord  ChargeDetailRecord,
@@ -370,12 +382,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                    TimeSpan?           RequestTimeout     = null)
 
 
-                => await ICPOClient.SendChargeDetailRecord(new SendChargeDetailRecordRequest(ChargeDetailRecord,
+                => ICPOClient.SendChargeDetailRecord(new SendChargeDetailRecordRequest(ChargeDetailRecord,
 
-                                                                                             Timestamp,
-                                                                                             CancellationToken,
-                                                                                             EventTrackingId,
-                                                                                             RequestTimeout.HasValue ? RequestTimeout.Value : ICPOClient.RequestTimeout));
+                                                                                       Timestamp,
+                                                                                       CancellationToken,
+                                                                                       EventTrackingId,
+                                                                                       RequestTimeout.HasValue
+                                                                                           ? RequestTimeout.Value
+                                                                                           : ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -391,7 +405,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static async Task<HTTPResponse<AuthenticationData>>
+        public static Task<HTTPResponse<AuthenticationData>>
 
             PullAuthenticationData(this ICPOClient     ICPOClient,
                                    Operator_Id         OperatorId,
@@ -402,12 +416,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                    TimeSpan?           RequestTimeout      = null)
 
 
-                => await ICPOClient.PullAuthenticationData(new PullAuthenticationDataRequest(OperatorId,
+                => ICPOClient.PullAuthenticationData(new PullAuthenticationDataRequest(OperatorId,
 
-                                                                                             Timestamp,
-                                                                                             CancellationToken,
-                                                                                             EventTrackingId,
-                                                                                             RequestTimeout.HasValue ? RequestTimeout.Value : ICPOClient.RequestTimeout));
+                                                                                       Timestamp,
+                                                                                       CancellationToken,
+                                                                                       EventTrackingId,
+                                                                                       RequestTimeout.HasValue
+                                                                                           ? RequestTimeout.Value
+                                                                                           : ICPOClient.RequestTimeout));
 
         #endregion
 
