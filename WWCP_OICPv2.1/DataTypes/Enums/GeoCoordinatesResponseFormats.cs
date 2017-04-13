@@ -21,7 +21,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// Defines the format of geo coordinates that shall be provided with the response.
     /// </summary>
-    public enum GeoCoordinatesResponseFormatTypes
+    public enum GeoCoordinatesResponseFormats
     {
 
         /// <summary>

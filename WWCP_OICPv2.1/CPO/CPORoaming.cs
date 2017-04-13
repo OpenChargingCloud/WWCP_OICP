@@ -1158,11 +1158,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Upload the given EVSE data records.
         /// </summary>
         /// <param name="Request">A PushEVSEData request.</param>
-        public async Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
+        public Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
 
             PushEVSEData(PushEVSEDataRequest Request)
 
-                => await CPOClient.PushEVSEData(Request);
+                => CPOClient.PushEVSEData(Request);
 
         #endregion
 
@@ -1172,11 +1172,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Upload the given EVSE status records.
         /// </summary>
         /// <param name="Request">A PushEVSEStatus request.</param>
-        public async Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
+        public Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
 
             PushEVSEStatus(PushEVSEStatusRequest Request)
 
-                => await CPOClient.PushEVSEStatus(Request);
+                => CPOClient.PushEVSEStatus(Request);
 
         #endregion
 
@@ -1187,11 +1187,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Create an OICP authorize start request.
         /// </summary>
         /// <param name="Request">An AuthorizeStart request.</param>
-        public async Task<HTTPResponse<AuthorizationStart>>
+        public Task<HTTPResponse<AuthorizationStart>>
 
             AuthorizeStart(AuthorizeStartRequest Request)
 
-                => await CPOClient.AuthorizeStart(Request);
+                => CPOClient.AuthorizeStart(Request);
 
         #endregion
 
@@ -1201,11 +1201,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Create an OICP authorize stop request.
         /// </summary>
         /// <param name="Request">An AuthorizeStop request.</param>
-        public async Task<HTTPResponse<AuthorizationStop>>
+        public Task<HTTPResponse<AuthorizationStop>>
 
             AuthorizeStop(AuthorizeStopRequest Request)
 
-                => await CPOClient.AuthorizeStop(Request);
+                => CPOClient.AuthorizeStop(Request);
 
         #endregion
 
@@ -1215,11 +1215,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Send a charge detail record to an OICP server.
         /// </summary>
         /// <param name="Request">A SendChargeDetailRecord request.</param>
-        public async Task<HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>>
+        public Task<HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>>
 
             SendChargeDetailRecord(SendChargeDetailRecordRequest Request)
 
-                => await CPOClient.SendChargeDetailRecord(Request);
+                => CPOClient.SendChargeDetailRecord(Request);
 
         #endregion
 
@@ -1230,11 +1230,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Pull authentication data from the OICP server.
         /// </summary>
         /// <param name="Request">A PullAuthenticationData request.</param>
-        public async Task<HTTPResponse<AuthenticationData>>
+        public Task<HTTPResponse<AuthenticationData>>
 
             PullAuthenticationData(PullAuthenticationDataRequest Request)
 
-                => await CPOClient.PullAuthenticationData(Request);
+                => CPOClient.PullAuthenticationData(Request);
 
         #endregion
 

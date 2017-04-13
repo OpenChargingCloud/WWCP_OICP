@@ -74,6 +74,107 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Custom request mappers
 
+        #region CustomPullEVSEData(SOAP)RequestMapper
+
+        #region CustomPullEVSEDataRequestMapper
+
+        private Func<PullEVSEDataRequest, PullEVSEDataRequest> _CustomPullEVSEDataRequestMapper = _ => _;
+
+        public Func<PullEVSEDataRequest, PullEVSEDataRequest> CustomPullEVSEDataRequestMapper
+        {
+
+            get
+            {
+                return _CustomPullEVSEDataRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPullEVSEDataRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullEVSEDataSOAPRequestMapper
+
+        private Func<PullEVSEDataRequest, XElement, XElement> _CustomPullEVSEDataSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<PullEVSEDataRequest, XElement, XElement> CustomPullEVSEDataSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomPullEVSEDataSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPullEVSEDataSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PullEVSEDataRequest>, Acknowledgement<PullEVSEDataRequest>.Builder> CustomPullEVSEDataResponseMapper  { get; set; }
+
+        #endregion
+
+        #region CustomPullEVSEStatus(SOAP)RequestMapper
+
+        #region CustomPullEVSEStatusRequestMapper
+
+        private Func<PullEVSEStatusRequest, PullEVSEStatusRequest> _CustomPullEVSEStatusRequestMapper = _ => _;
+
+        public Func<PullEVSEStatusRequest, PullEVSEStatusRequest> CustomPullEVSEStatusRequestMapper
+        {
+
+            get
+            {
+                return _CustomPullEVSEStatusRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPullEVSEStatusRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullEVSEStatusSOAPRequestMapper
+
+        private Func<PullEVSEStatusRequest, XElement, XElement> _CustomPullEVSEStatusSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<PullEVSEStatusRequest, XElement, XElement> CustomPullEVSEStatusSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomPullEVSEStatusSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPullEVSEStatusSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PullEVSEStatusRequest>, Acknowledgement<PullEVSEStatusRequest>.Builder> CustomPullEVSEStatusResponseMapper  { get; set; }
+
+        #endregion
+
+
         #region CustomPushAuthenticationData(SOAP)RequestMapper
 
         #region CustomPushAuthenticationDataRequestMapper
@@ -770,46 +871,43 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSEData>>
 
-            PullEVSEData(Provider_Id           ProviderId,
-                         GeoCoordinate?        SearchCenter       = null,
-                         Double                DistanceKM         = 0.0,
-                         DateTime?             LastCall           = null,
-
-                         DateTime?             Timestamp          = null,
-                         CancellationToken?    CancellationToken  = null,
-                         EventTracking_Id      EventTrackingId    = null,
-                         TimeSpan?             RequestTimeout     = null)
+            PullEVSEData(PullEVSEDataRequest Request)
 
         {
 
             #region Initial checks
 
-            if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The given PullEVSEData request must not be null!");
 
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
+            Request = _CustomPullEVSEDataRequestMapper(Request);
 
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = this.RequestTimeout;
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The mapped PullEVSEData request must not be null!");
+
+
+            HTTPResponse<EVSEData> result = null;
 
             #endregion
 
             #region Send OnPullEVSEDataRequest event
 
+            var StartTime = DateTime.Now;
+
             try
             {
 
-                OnPullEVSEDataRequest?.Invoke(DateTime.Now,
-                                              Timestamp.Value,
+                OnPullEVSEDataRequest?.Invoke(StartTime,
+                                              Request.Timestamp.Value,
                                               this,
                                               ClientId,
-                                              EventTrackingId,
-                                              ProviderId,
-                                              SearchCenter,
-                                              DistanceKM,
-                                              LastCall,
-                                              RequestTimeout);
+                                              Request.EventTrackingId,
+                                              Request.ProviderId,
+                                              Request.SearchCenter,
+                                              Request.DistanceKM,
+                                              Request.LastCall,
+                                              Request.GeoCoordinatesResponseFormat,
+                                              Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
 
             }
             catch (Exception e)
@@ -830,97 +928,108 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(EMPClientXMLMethods.PullEVSEDataRequestXML(ProviderId,
-                                                                                                SearchCenter,
-                                                                                                DistanceKM,
-                                                                                                LastCall),
-                                                     "eRoamingPullEVSEData",
-                                                     RequestLogDelegate:   OnPullEVSEDataSOAPRequest,
-                                                     ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
-                                                     CancellationToken:    CancellationToken,
-                                                     EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                result = await _OICPClient.Query(_CustomPullEVSEDataSOAPRequestMapper(Request,
+                                                                                      SOAP.Encapsulation(Request.ToXML())),
+                                                 "eRoamingPullEVSEData",
+                                                 RequestLogDelegate:   OnPullEVSEDataSOAPRequest,
+                                                 ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
 
-                                                     #region OnSuccess
+                                                 #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(EVSEData.Parse, SendException),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(EVSEData.Parse, SendException),
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnSOAPFault
+                                                 #region OnSOAPFault
 
-                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                         DebugX.Log("'PullEVSEDataRequest' lead to a SOAP fault!");
+                                                     DebugX.Log("'PullEVSEDataRequest' lead to a SOAP fault!");
 
-                                                         return new HTTPResponse<EVSEData>(httpresponse,
-                                                                                                   IsFault: true);
+                                                     return new HTTPResponse<EVSEData>(httpresponse,
+                                                                                               IsFault: true);
 
-                                                     },
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnHTTPError
+                                                 #region OnHTTPError
 
-                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendHTTPError(timestamp, soapclient, httpresponse);
+                                                     SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                         return new HTTPResponse<EVSEData>(httpresponse,
-                                                                                                   new EVSEData(StatusCodes.DataError,
-                                                                                                                        Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                        AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                   IsFault: true);
+                                                     return new HTTPResponse<EVSEData>(httpresponse,
+                                                                                               new EVSEData(StatusCodes.DataError,
+                                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                    AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                               IsFault: true);
 
-                                                     },
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnException
+                                                 #region OnException
 
-                                                     OnException: (timestamp, sender, exception) => {
+                                                 OnException: (timestamp, sender, exception) => {
 
-                                                         SendException(timestamp, sender, exception);
+                                                     SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<EVSEData>.ExceptionThrown(new EVSEData(StatusCodes.ServiceNotAvailable,
-                                                                                                                                    exception.Message,
-                                                                                                                                    exception.StackTrace),
-                                                                                                               Exception: exception);
+                                                     return HTTPResponse<EVSEData>.ExceptionThrown(new EVSEData(StatusCodes.ServiceNotAvailable,
+                                                                                                                                exception.Message,
+                                                                                                                                exception.StackTrace),
+                                                                                                           Exception: exception);
 
-                                                     }
+                                                 }
 
-                                                     #endregion
+                                                 #endregion
 
-                                                    ).ConfigureAwait(false);
-
-                #region Send OnPullEVSEDataResponse event
-
-                try
-                {
-
-                    OnPullEVSEDataResponse?.Invoke(DateTime.Now,
-                                                   this,
-                                                   ClientId,
-                                                   EventTrackingId,
-                                                   ProviderId,
-                                                   SearchCenter,
-                                                   DistanceKM,
-                                                   LastCall,
-                                                   RequestTimeout,
-                                                   result.Content,
-                                                   DateTime.Now - Timestamp.Value);
-
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEDataResponse));
-                }
-
-                #endregion
-
-                return result;
+                                                ).ConfigureAwait(false);
 
             }
+
+            //if (result == null)
+            //    result = HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.ClientError(
+            //                 new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+            //                     Request,
+            //                     StatusCodes.SystemError,
+            //                     "HTTP request failed!"
+            //                 )
+            //             );
+
+
+            #region Send OnPullEVSEDataResponse event
+
+            var Endtime = DateTime.Now;
+
+            try
+            {
+
+                OnPullEVSEDataResponse?.Invoke(Endtime,
+                                               this,
+                                               ClientId,
+                                               Request.EventTrackingId,
+                                               Request.ProviderId,
+                                               Request.SearchCenter,
+                                               Request.DistanceKM,
+                                               Request.LastCall,
+                                               Request.GeoCoordinatesResponseFormat,
+                                               RequestTimeout,
+                                               result.Content,
+                                               Endtime - StartTime);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEDataResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1128,46 +1237,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<EVSEStatus>>
 
-            PullEVSEStatus(Provider_Id           ProviderId,
-                           GeoCoordinate?        SearchCenter       = null,
-                           Double                DistanceKM         = 0.0,
-                           EVSEStatusTypes?      EVSEStatusFilter   = null,
-
-                           DateTime?             Timestamp          = null,
-                           CancellationToken?    CancellationToken  = null,
-                           EventTracking_Id      EventTrackingId    = null,
-                           TimeSpan?             RequestTimeout     = null)
+            PullEVSEStatus(PullEVSEStatusRequest  Request)
 
         {
 
             #region Initial checks
 
-            if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The given PullEVSEData request must not be null!");
 
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
+            Request = _CustomPullEVSEStatusRequestMapper(Request);
 
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = this.RequestTimeout;
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The mapped PullEVSEData request must not be null!");
+
+
+            HTTPResponse<EVSEStatus> result = null;
 
             #endregion
 
             #region Send OnPullEVSEStatusRequest event
 
+            var StartTime = DateTime.Now;
+
             try
             {
 
-                OnPullEVSEStatusRequest?.Invoke(DateTime.Now,
-                                                Timestamp.Value,
+                OnPullEVSEStatusRequest?.Invoke(StartTime,
+                                                Request.Timestamp.Value,
                                                 this,
                                                 ClientId,
-                                                EventTrackingId,
-                                                ProviderId,
-                                                SearchCenter,
-                                                DistanceKM,
-                                                EVSEStatusFilter,
-                                                RequestTimeout);
+                                                Request.EventTrackingId,
+                                                Request.ProviderId,
+                                                Request.SearchCenter,
+                                                Request.DistanceKM,
+                                                Request.EVSEStatusFilter,
+                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
 
             }
             catch (Exception e)
@@ -1188,97 +1293,107 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                var result = await _OICPClient.Query(EMPClientXMLMethods.PullEVSEStatusRequestXML(ProviderId,
-                                                                                                  SearchCenter,
-                                                                                                  DistanceKM,
-                                                                                                  EVSEStatusFilter),
-                                                     "eRoamingPullEVSEStatus",
-                                                     RequestLogDelegate:   OnPullEVSEStatusSOAPRequest,
-                                                     ResponseLogDelegate:  OnPullEVSEStatusSOAPResponse,
-                                                     CancellationToken:    CancellationToken,
-                                                     EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                result = await _OICPClient.Query(_CustomPullEVSEStatusSOAPRequestMapper(Request,
+                                                                                        SOAP.Encapsulation(Request.ToXML())),
+                                                 "eRoamingPullEVSEStatus",
+                                                 RequestLogDelegate:   OnPullEVSEDataSOAPRequest,
+                                                 ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
 
-                                                     #region OnSuccess
+                                                 #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(EVSEStatus.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(EVSEStatus.Parse),
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnSOAPFault
+                                                 #region OnSOAPFault
 
-                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                         DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
+                                                     DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
-                                                         return new HTTPResponse<EVSEStatus>(httpresponse,
-                                                                                                     IsFault: true);
+                                                     return new HTTPResponse<EVSEStatus>(httpresponse,
+                                                                                                 IsFault: true);
 
-                                                     },
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnHTTPError
+                                                 #region OnHTTPError
 
-                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendHTTPError(timestamp, soapclient, httpresponse);
+                                                     SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                         return new HTTPResponse<EVSEStatus>(httpresponse,
-                                                                                                     new EVSEStatus(StatusCodes.DataError,
-                                                                                                                            Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                            AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                     IsFault: true);
+                                                     return new HTTPResponse<EVSEStatus>(httpresponse,
+                                                                                                 new EVSEStatus(StatusCodes.DataError,
+                                                                                                                        Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                        AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                                 IsFault: true);
 
-                                                     },
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnException
+                                                 #region OnException
 
-                                                     OnException: (timestamp, sender, exception) => {
+                                                 OnException: (timestamp, sender, exception) => {
 
-                                                         SendException(timestamp, sender, exception);
+                                                     SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<EVSEStatus>.ExceptionThrown(new EVSEStatus(StatusCodes.ServiceNotAvailable,
-                                                                                                                                        exception.Message,
-                                                                                                                                        exception.StackTrace),
-                                                                                                                 Exception: exception);
+                                                     return HTTPResponse<EVSEStatus>.ExceptionThrown(new EVSEStatus(StatusCodes.ServiceNotAvailable,
+                                                                                                                                    exception.Message,
+                                                                                                                                    exception.StackTrace),
+                                                                                                             Exception: exception);
 
-                                                     }
+                                                 }
 
-                                                     #endregion
+                                                 #endregion
 
-                                                    ).ConfigureAwait(false);
-
-                #region Send OnPullEVSEStatusResponse event
-
-                try
-                {
-
-                    OnPullEVSEStatusResponse?.Invoke(DateTime.Now,
-                                                     this,
-                                                     ClientId,
-                                                     EventTrackingId,
-                                                     ProviderId,
-                                                     SearchCenter,
-                                                     DistanceKM,
-                                                     EVSEStatusFilter,
-                                                     RequestTimeout,
-                                                     result.Content,
-                                                     DateTime.Now - Timestamp.Value);
-
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusResponse));
-                }
-
-                #endregion
-
-                return result;
+                                                ).ConfigureAwait(false);
 
             }
+
+            //if (result == null)
+            //    result = HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.ClientError(
+            //                 new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+            //                     Request,
+            //                     StatusCodes.SystemError,
+            //                     "HTTP request failed!"
+            //                 )
+            //             );
+
+
+            #region Send OnPullEVSEStatusResponse event
+
+            var Endtime = DateTime.Now;
+
+            try
+            {
+
+                OnPullEVSEStatusResponse?.Invoke(Endtime,
+                                                 this,
+                                                 ClientId,
+                                                 Request.EventTrackingId,
+                                                 Request.ProviderId,
+                                                 Request.SearchCenter,
+                                                 Request.DistanceKM,
+                                                 Request.EVSEStatusFilter,
+                                                 RequestTimeout,
+                                                 result.Content,
+                                                 Endtime - StartTime);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 

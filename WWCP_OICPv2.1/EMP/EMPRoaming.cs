@@ -1505,44 +1505,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, ...)
+        #region PullEVSEData(Request)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
         /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
         /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
-        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
-        /// <param name="LastCall">An optional timestamp of the last call.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<EVSEData>>
+        /// <param name="Request">An PullEVSEData request.</param>
+        public Task<HTTPResponse<EVSEData>>
 
-            PullEVSEData(Provider_Id         ProviderId,
-                         GeoCoordinate?      SearchCenter        = null,
-                         Double              DistanceKM          = 0.0,
-                         DateTime?           LastCall            = null,
+            PullEVSEData(PullEVSEDataRequest Request)
 
-                         DateTime?           Timestamp           = null,
-                         CancellationToken?  CancellationToken   = null,
-                         EventTracking_Id    EventTrackingId     = null,
-                         TimeSpan?           RequestTimeout      = null)
-
-
-            => await EMPClient.PullEVSEData(ProviderId,
-                                            SearchCenter,
-                                            DistanceKM,
-                                            LastCall,
-
-                                            Timestamp,
-                                            CancellationToken,
-                                            EventTrackingId,
-                                            RequestTimeout);
+                => EMPClient.PullEVSEData(Request);
 
         #endregion
 
@@ -1562,7 +1537,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<EVSESearchResult>>
+        public Task<HTTPResponse<EVSESearchResult>>
 
             SearchEVSE(Provider_Id          ProviderId,
                        GeoCoordinate?       SearchCenter        = null,
@@ -1577,7 +1552,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                        TimeSpan?            RequestTimeout      = null)
 
 
-            => await EMPClient.SearchEVSE(ProviderId,
+            => EMPClient.SearchEVSE(ProviderId,
                                           SearchCenter,
                                           DistanceKM,
                                           Address,
@@ -1592,42 +1567,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region PullEVSEStatus(ProviderId, SearchCenter = null, DistanceKM = 0.0, EVSEStatusFilter = null, ...)
+        #region PullEVSEStatus(Request)
 
         /// <summary>
         /// Create a new task requesting the current status of all EVSEs (within an optional search radius and status).
         /// </summary>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
-        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
-        /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<EVSEStatus>>
+        /// <param name="Request">An PullEVSEStatus request.</param>
+        public Task<HTTPResponse<EVSEStatus>>
 
-            PullEVSEStatus(Provider_Id         ProviderId,
-                           GeoCoordinate?      SearchCenter        = null,
-                           Double              DistanceKM          = 0.0,
-                           EVSEStatusTypes?    EVSEStatusFilter    = null,
+            PullEVSEStatus(PullEVSEStatusRequest Request)
 
-                           DateTime?           Timestamp           = null,
-                           CancellationToken?  CancellationToken   = null,
-                           EventTracking_Id    EventTrackingId     = null,
-                           TimeSpan?           RequestTimeout      = null)
-
-
-            => await EMPClient.PullEVSEStatus(ProviderId,
-                                              SearchCenter,
-                                              DistanceKM,
-                                              EVSEStatusFilter,
-
-                                              Timestamp,
-                                              CancellationToken,
-                                              EventTrackingId,
-                                              RequestTimeout);
+                => EMPClient.PullEVSEStatus(Request);
 
         #endregion
 
@@ -1671,11 +1621,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Create a new task pushing provider authentication data records onto the OICP server.
         /// </summary>
         /// <param name="Request">An PushAuthenticationData request.</param>
-        public async Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
+        public Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
 
             PushAuthenticationData(PushAuthenticationDataRequest Request)
 
-                => await EMPClient.PushAuthenticationData(Request);
+                => EMPClient.PushAuthenticationData(Request);
 
         #endregion
 
@@ -1686,11 +1636,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Create a reservation at the given EVSE.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
-        public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
+        public Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
 
             ReservationStart(AuthorizeRemoteReservationStartRequest  Request)
 
-                => await EMPClient.ReservationStart(Request);
+                => EMPClient.ReservationStart(Request);
 
         #endregion
 
@@ -1700,11 +1650,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Delete a reservation at the given EVSE.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
-        public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
+        public Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
 
             ReservationStop(AuthorizeRemoteReservationStopRequest Request)
 
-                => await EMPClient.ReservationStop(Request);
+                => EMPClient.ReservationStop(Request);
 
         #endregion
 
@@ -1715,11 +1665,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Start a charging session at the given EVSE.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteStart request.</param>
-        public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
+        public Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
 
             RemoteStart(AuthorizeRemoteStartRequest Request)
 
-                => await EMPClient.RemoteStart(Request);
+                => EMPClient.RemoteStart(Request);
 
         #endregion
 
@@ -1729,11 +1679,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Stop the given charging session at the given EVSE.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteStop request.</param>
-        public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
+        public Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
 
             RemoteStop(AuthorizeRemoteStopRequest Request)
 
-                => await EMPClient.RemoteStop(Request);
+                => EMPClient.RemoteStop(Request);
 
         #endregion
 
@@ -1744,11 +1694,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Create a new task querying charge detail records from the OICP server.
         /// </summary>
         /// <param name="Request">An GetChargeDetailRecords request.</param>
-        public async Task<HTTPResponse<GetChargeDetailRecordsResponse>>
+        public Task<HTTPResponse<GetChargeDetailRecordsResponse>>
 
             GetChargeDetailRecords(GetChargeDetailRecordsRequest Request)
 
-                => await EMPClient.GetChargeDetailRecords(Request);
+                => EMPClient.GetChargeDetailRecords(Request);
 
         #endregion
 

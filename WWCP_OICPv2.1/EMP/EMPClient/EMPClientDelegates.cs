@@ -34,31 +34,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// <summary>
     /// A delegate called whenever a 'pull EVSE data' request will be send.
     /// </summary>
-    public delegate Task OnPullEVSEDataRequestHandler (DateTime           LogTimestamp,
-                                                       DateTime           RequestTimestamp,
-                                                       EMPClient          Sender,
-                                                       String             SenderId,
-                                                       EventTracking_Id   EventTrackingId,
-                                                       Provider_Id        ProviderId,
-                                                       GeoCoordinate?     SearchCenter,
-                                                       Double             DistanceKM,
-                                                       DateTime?          LastCall,
-                                                       TimeSpan?          RequestTimeout);
+    public delegate Task OnPullEVSEDataRequestHandler (DateTime                        LogTimestamp,
+                                                       DateTime                        RequestTimestamp,
+                                                       IEMPClient                      Sender,
+                                                       String                          SenderId,
+                                                       EventTracking_Id                EventTrackingId,
+                                                       Provider_Id                     ProviderId,
+                                                       GeoCoordinate?                  SearchCenter,
+                                                       Single                          DistanceKM,
+                                                       DateTime?                       LastCall,
+                                                       GeoCoordinatesResponseFormats   GeoCoordinatesResponseFormat,
+                                                       TimeSpan?                       RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'pull EVSE data' request had been received.
     /// </summary>
-    public delegate Task OnPullEVSEDataResponseHandler(DateTime           Timestamp,
-                                                       EMPClient          Sender,
-                                                       String             SenderId,
-                                                       EventTracking_Id   EventTrackingId,
-                                                       Provider_Id        ProviderId,
-                                                       GeoCoordinate?     SearchCenter,
-                                                       Double             DistanceKM,
-                                                       DateTime?          LastCall,
-                                                       TimeSpan?          RequestTimeout,
-                                                       EVSEData           Result,
-                                                       TimeSpan           Duration);
+    public delegate Task OnPullEVSEDataResponseHandler(DateTime                        Timestamp,
+                                                       IEMPClient                      Sender,
+                                                       String                          SenderId,
+                                                       EventTracking_Id                EventTrackingId,
+                                                       Provider_Id                     ProviderId,
+                                                       GeoCoordinate?                  SearchCenter,
+                                                       Single                          DistanceKM,
+                                                       DateTime?                       LastCall,
+                                                       GeoCoordinatesResponseFormats   GeoCoordinatesResponseFormat,
+                                                       TimeSpan?                       RequestTimeout,
+                                                       EVSEData                        Result,
+                                                       TimeSpan                        Duration);
 
     #endregion
 

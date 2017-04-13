@@ -89,6 +89,8 @@
     <Compile Include="Messages\CPO\PullAuthenticationDataRequest.cs" />
     <Compile Include="Messages\CPO\PushEVSEStatusRequest.cs" />
     <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEDataRequest.cs" />
     <Compile Include="Messages\EMP\GetChargeDetailRecordsRequest.cs" />
     <Compile Include="Messages\EMP\PushAuthenticationDataRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteStopRequest.cs" />
@@ -129,7 +131,7 @@
     <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
     <Compile Include="DataTypes\Data\EVCOIdWithPIN.cs" />
     <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />
-    <Compile Include="DataTypes\Enums\GeoCoordinatesResponseFormatTypes.cs" />
+    <Compile Include="DataTypes\Enums\GeoCoordinatesResponseFormats.cs" />
     <Compile Include="DataTypes\EVSEDataRecord.cs" />
     <Compile Include="DataTypes\EVSEMatch.cs" />
     <Compile Include="DataTypes\EVSEStatusRecord.cs" />

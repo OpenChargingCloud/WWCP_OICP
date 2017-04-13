@@ -114,6 +114,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         // Client methods (logging)
 
+        #region OnPullEVSEDataRequest/-Response
+
+        /// <summary>
+        /// An event sent whenever a 'pull EVSE data' request will be send.
+        /// </summary>
+        public event OnPullEVSEDataRequestHandler         OnPullEVSEDataRequest;
+
+        /// <summary>
+        /// An event sent whenever a response for a 'pull EVSE data' request had been received.
+        /// </summary>
+        public event OnPullEVSEDataResponseHandler        OnPullEVSEDataResponse;
+
+        #endregion
+
+
         #region OnReserveEVSERequest/-Response
 
         /// <summary>
@@ -883,7 +898,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             PullEVSEData(RoamingNetwork         RoamingNetwork,
                          GeoCoordinate?         SearchCenter       = null,
-                         Double                 DistanceKM         = 0.0,
+                         Single                 DistanceKM         = 0f,
                          DateTime?              LastCall           = null,
                          eMobilityProvider_Id?  ProviderId         = null,
 
@@ -896,15 +911,55 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Initial checks
 
-            if (ProviderId == null || !ProviderId.HasValue)
-                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = EMPClient?.RequestTimeout;
 
             #endregion
 
-            var result = await EMPRoaming.PullEVSEData(ProviderId.Value.ToOICP(),
+            #region Send OnPullEVSEDataRequest event
+
+            //var StartTime = DateTime.Now;
+
+            //try
+            //{
+
+            //    OnPullEVSEDataRequest?.Invoke(StartTime,
+            //                                  Timestamp.Value,
+            //                                  this,
+            //                                  EventTrackingId,
+            //                                  ProviderId.HasValue
+            //                                               ? ProviderId.Value.ToOICP()
+            //                                               : DefaultProviderId.Value,
+            //                                  SearchCenter,
+            //                                  DistanceKM,
+            //                                  LastCall,
+            //                                  RequestTimeout);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnRemoteStartEVSERequest));
+            //}
+
+            #endregion
+
+
+            var result = await EMPRoaming.PullEVSEData(ProviderId.HasValue
+                                                           ? ProviderId.Value.ToOICP()
+                                                           : DefaultProviderId.Value,
                                                        SearchCenter,
                                                        DistanceKM,
                                                        LastCall,
+                                                       GeoCoordinatesResponseFormats.DecimalDegree,
 
                                                        Timestamp,
                                                        CancellationToken,
@@ -919,16 +974,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Data
 
-                ChargingStationOperator     _EVSEOperator                  = null;
-                CPInfoList       _CPInfoList                    = null;
-                EVSEIdLookup     _EVSEIdLookup                  = null;
-                EVSEInfo         _EVSEInfo                      = null;
-                Languages        LocationLanguage;
-                Languages        LocalChargingStationLanguage;
-                I18NString       AdditionalInfo                 = null;
-                ChargingPool     _ChargingPool                  = null;
-                ChargingStation  _ChargingStation               = null;
-                EVSE             _EVSE                          = null;
+                ChargingStationOperator  _EVSEOperator                  = null;
+                CPInfoList               _CPInfoList                    = null;
+                EVSEIdLookup             _EVSEIdLookup                  = null;
+                EVSEInfo                 _EVSEInfo                      = null;
+                Languages                LocationLanguage;
+                Languages                LocalChargingStationLanguage;
+                I18NString               AdditionalInfo                 = null;
+                ChargingPool             _ChargingPool                  = null;
+                ChargingStation          _ChargingStation               = null;
+                EVSE                     _EVSE                          = null;
 
                 #endregion
 
@@ -1257,7 +1312,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public async Task<IEnumerable<WWCP.EVSEStatus>>
 
             PullEVSEStatus(GeoCoordinate?         SearchCenter        = null,
-                           Double                 DistanceKM          = 0.0,
+                           Single                 DistanceKM          = 0f,
                            EVSEStatusTypes?       EVSEStatusFilter    = null,
                            eMobilityProvider_Id?  ProviderId          = null,
 
@@ -1270,12 +1325,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Initial checks
 
-            if (ProviderId == null || !ProviderId.HasValue)
-                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+            if (!Timestamp.HasValue)
+                Timestamp = DateTime.Now;
+
+            if (!CancellationToken.HasValue)
+                CancellationToken = new CancellationTokenSource().Token;
+
+            if (EventTrackingId == null)
+                EventTrackingId = EventTracking_Id.New;
+
+            if (!RequestTimeout.HasValue)
+                RequestTimeout = EMPClient?.RequestTimeout;
 
             #endregion
 
-            var result = await EMPRoaming.PullEVSEStatus(ProviderId.Value.ToOICP(),
+            var result = await EMPRoaming.PullEVSEStatus(ProviderId.HasValue
+                                                             ? ProviderId.Value.ToOICP()
+                                                             : DefaultProviderId.Value,
                                                          SearchCenter,
                                                          DistanceKM,
                                                          EVSEStatusFilter,
