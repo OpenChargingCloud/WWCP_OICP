@@ -5916,7 +5916,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public override String ToString()
 
-            => "OICP " + Version.Number + " CPO Adapter " + Id;
+            => "OICP" + Version.Number + " CPO Adapter " + Id;
 
         #endregion
 

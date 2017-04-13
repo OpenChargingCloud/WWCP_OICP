@@ -488,7 +488,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                               EMPRoaming                   EMPRoaming,
                               EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE   = null,
 
-                              eMobilityProvider            DefaultProvider       = null)
+                              IRemoteEMobilityProvider     DefaultProvider       = null)
 
             : base(Id,
                    RoamingNetwork)
@@ -754,7 +754,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                               Func<String, String, String>  LogFileCreator        = null,
 
                               EVSEDataRecord2EVSEDelegate   EVSEDataRecord2EVSE   = null,
-                              eMobilityProvider             DefaultProvider       = null)
+                              IRemoteEMobilityProvider      DefaultProvider       = null)
 
             : this(Id,
                    Name,
@@ -829,7 +829,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                               EVSEDataRecord2EVSEDelegate          EVSEDataRecord2EVSE             = null,
 
-                              eMobilityProvider                    DefaultProvider                 = null,
+                              IRemoteEMobilityProvider             DefaultProvider                 = null,
 
                               DNSClient                            DNSClient                       = null)
 
@@ -2341,6 +2341,236 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+
+        // -----------------------------------------------------------------------------------------------------
+
+
+        #region Operator overloading
+
+        #region Operator == (WWCPEMPAdapter1, WWCPEMPAdapter2)
+
+        /// <summary>
+        /// Compares two WWCPEMPAdapters for equality.
+        /// </summary>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public static Boolean operator == (WWCPEMPAdapter WWCPEMPAdapter1, WWCPEMPAdapter WWCPEMPAdapter2)
+        {
+
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(WWCPEMPAdapter1, WWCPEMPAdapter2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (((Object) WWCPEMPAdapter1 == null) || ((Object) WWCPEMPAdapter2 == null))
+                return false;
+
+            return WWCPEMPAdapter1.Equals(WWCPEMPAdapter2);
+
+        }
+
+        #endregion
+
+        #region Operator != (WWCPEMPAdapter1, WWCPEMPAdapter2)
+
+        /// <summary>
+        /// Compares two WWCPEMPAdapters for inequality.
+        /// </summary>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <returns>False if both match; True otherwise.</returns>
+        public static Boolean operator != (WWCPEMPAdapter WWCPEMPAdapter1, WWCPEMPAdapter WWCPEMPAdapter2)
+
+            => !(WWCPEMPAdapter1 == WWCPEMPAdapter2);
+
+        #endregion
+
+        #region Operator <  (WWCPEMPAdapter1, WWCPEMPAdapter2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator < (WWCPEMPAdapter  WWCPEMPAdapter1,
+                                          WWCPEMPAdapter  WWCPEMPAdapter2)
+        {
+
+            if ((Object) WWCPEMPAdapter1 == null)
+                throw new ArgumentNullException(nameof(WWCPEMPAdapter1),  "The given WWCPEMPAdapter must not be null!");
+
+            return WWCPEMPAdapter1.CompareTo(WWCPEMPAdapter2) < 0;
+
+        }
+
+        #endregion
+
+        #region Operator <= (WWCPEMPAdapter1, WWCPEMPAdapter2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator <= (WWCPEMPAdapter WWCPEMPAdapter1,
+                                           WWCPEMPAdapter WWCPEMPAdapter2)
+
+            => !(WWCPEMPAdapter1 > WWCPEMPAdapter2);
+
+        #endregion
+
+        #region Operator >  (WWCPEMPAdapter1, WWCPEMPAdapter2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator > (WWCPEMPAdapter WWCPEMPAdapter1,
+                                          WWCPEMPAdapter WWCPEMPAdapter2)
+        {
+
+            if ((Object) WWCPEMPAdapter1 == null)
+                throw new ArgumentNullException(nameof(WWCPEMPAdapter1),  "The given WWCPEMPAdapter must not be null!");
+
+            return WWCPEMPAdapter1.CompareTo(WWCPEMPAdapter2) > 0;
+
+        }
+
+        #endregion
+
+        #region Operator >= (WWCPEMPAdapter1, WWCPEMPAdapter2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator >= (WWCPEMPAdapter WWCPEMPAdapter1,
+                                           WWCPEMPAdapter WWCPEMPAdapter2)
+
+            => !(WWCPEMPAdapter1 < WWCPEMPAdapter2);
+
+        #endregion
+
+        #endregion
+
+        #region IComparable<WWCPEMPAdapter> Members
+
+        #region CompareTo(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        public Int32 CompareTo(Object Object)
+        {
+
+            if (Object == null)
+                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
+
+            var WWCPEMPAdapter = Object as WWCPEMPAdapter;
+            if ((Object) WWCPEMPAdapter == null)
+                throw new ArgumentException("The given object is not an WWCPEMPAdapter!", nameof(Object));
+
+            return CompareTo(WWCPEMPAdapter);
+
+        }
+
+        #endregion
+
+        #region CompareTo(WWCPEMPAdapter)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="WWCPEMPAdapter">An WWCPEMPAdapter object to compare with.</param>
+        public Int32 CompareTo(WWCPEMPAdapter WWCPEMPAdapter)
+        {
+
+            if ((Object) WWCPEMPAdapter == null)
+                throw new ArgumentNullException(nameof(WWCPEMPAdapter), "The given WWCPEMPAdapter must not be null!");
+
+            return Id.CompareTo(WWCPEMPAdapter.Id);
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region IEquatable<WWCPEMPAdapter> Members
+
+        #region Equals(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        /// <returns>true|false</returns>
+        public override Boolean Equals(Object Object)
+        {
+
+            if (Object == null)
+                return false;
+
+            var WWCPEMPAdapter = Object as WWCPEMPAdapter;
+            if ((Object) WWCPEMPAdapter == null)
+                return false;
+
+            return Equals(WWCPEMPAdapter);
+
+        }
+
+        #endregion
+
+        #region Equals(WWCPEMPAdapter)
+
+        /// <summary>
+        /// Compares two WWCPEMPAdapter for equality.
+        /// </summary>
+        /// <param name="WWCPEMPAdapter">An WWCPEMPAdapter to compare with.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public Boolean Equals(WWCPEMPAdapter WWCPEMPAdapter)
+        {
+
+            if ((Object) WWCPEMPAdapter == null)
+                return false;
+
+            return Id.Equals(WWCPEMPAdapter.Id);
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Get the hashcode of this object.
+        /// </summary>
+        public override Int32 GetHashCode()
+
+            => Id.GetHashCode();
+
+        #endregion
+
+        #region (override) ToString()
+
+        /// <summary>
+        /// Return a string representation of this object.
+        /// </summary>
+        public override String ToString()
+
+            => "OICP" + Version.Number + " EMP Adapter " + Id;
+
+        #endregion
 
     }
 

@@ -101,7 +101,7 @@ namespace org.GraphDefined.WWCP
 
                                               OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE             = null,
 
-                                              eMobilityProvider                     DefaultProvider                 = null,
+                                              IRemoteEMobilityProvider              DefaultProvider                 = null,
 
                                               DNSClient                             DNSClient                       = null,
 
