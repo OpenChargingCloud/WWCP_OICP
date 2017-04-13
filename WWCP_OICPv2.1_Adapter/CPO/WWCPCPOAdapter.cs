@@ -107,15 +107,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         IId IRemoteAuthorizeStartStop.AuthId
             => Id;
 
-        #region Name
-
         /// <summary>
         /// The offical (multi-language) name of the roaming provider.
         /// </summary>
         [Mandatory]
         public I18NString Name { get; }
 
-        #endregion
 
         /// <summary>
         /// The wrapped CPO roaming object.

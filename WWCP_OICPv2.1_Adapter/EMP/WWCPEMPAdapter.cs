@@ -95,29 +95,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public DNSClient DNSClient
             => EMPRoaming?.DNSClient;
 
-        EMPRoamingProvider_Id IEMPRoamingProvider.Id
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
 
-        I18NString IEMPRoamingProvider.Name
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        /// <summary>
+        /// The offical (multi-language) name of the roaming provider.
+        /// </summary>
+        [Mandatory]
+        public I18NString    Name                { get; }
 
-        RoamingNetwork IEMPRoamingProvider.RoamingNetwork
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+
+        /// <summary>
+        /// An optional default e-mobility provider identification.
+        /// </summary>
+        public Provider_Id?  DefaultProviderId   { get; }
 
         #endregion
 
@@ -482,7 +471,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                               RoamingNetwork               RoamingNetwork,
 
                               EMPRoaming                   EMPRoaming,
-                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE   = null)
+                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE   = null,
+
+                              eMobilityProvider            DefaultProvider       = null)
 
             : base(Id,
                    RoamingNetwork)
@@ -494,13 +485,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (Name.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Name),        "The given roaming provider name must not be null or empty!");
 
-            if (EMPRoaming     == null)
+            if (EMPRoaming == null)
                 throw new ArgumentNullException(nameof(EMPRoaming),  "The given OICP EMP Roaming object must not be null!");
 
             #endregion
 
+            this.Name                  = Name;
             this.EMPRoaming            = EMPRoaming;
             this._EVSEDataRecord2EVSE  = EVSEDataRecord2EVSE;
+
+            this.DefaultProviderId     = DefaultProvider != null
+                                             ? new Provider_Id?(DefaultProvider.Id.ToOICP())
+                                             : null;
 
             // Link events...
 
@@ -742,7 +738,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                               String                        ServerLoggingContext  = EMPServerLogger.DefaultContext,
                               Func<String, String, String>  LogFileCreator        = null,
 
-                              EVSEDataRecord2EVSEDelegate   EVSEDataRecord2EVSE   = null)
+                              EVSEDataRecord2EVSEDelegate   EVSEDataRecord2EVSE   = null,
+                              eMobilityProvider             DefaultProvider       = null)
 
             : this(Id,
                    Name,
@@ -753,7 +750,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                   ServerLoggingContext,
                                   LogFileCreator),
 
-                   EVSEDataRecord2EVSE)
+                   EVSEDataRecord2EVSE,
+                   DefaultProvider)
 
         { }
 
@@ -816,6 +814,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                               EVSEDataRecord2EVSEDelegate          EVSEDataRecord2EVSE             = null,
 
+                              eMobilityProvider                    DefaultProvider                 = null,
+
                               DNSClient                            DNSClient                       = null)
 
             : this(Id,
@@ -845,7 +845,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                   DNSClient),
 
-                   EVSEDataRecord2EVSE)
+                   EVSEDataRecord2EVSE,
+                   DefaultProvider)
 
         {
 
@@ -1542,10 +1543,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Initial checks
 
-            if (ProviderId == null || !ProviderId.HasValue)
-                throw new ArgumentNullException(nameof(ProviderId),  "The provider identification is mandatory in OICP!");
-
-
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
 
@@ -1558,12 +1555,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (!RequestTimeout.HasValue)
                 RequestTimeout = EMPClient?.RequestTimeout;
 
-
-            var StartTime = DateTime.Now;
-
             #endregion
 
             #region Send OnReserveEVSERequest event
+
+            var StartTime = DateTime.Now;
 
             try
             {
@@ -1658,7 +1654,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
             var result = await EMPRoaming.ReservationStart(EVSEId:             EVSEId.ToOICP(),
-                                                           ProviderId:         ProviderId.Value.ToOICP(),
+                                                           ProviderId:         ProviderId.HasValue
+                                                                                   ? ProviderId.Value.ToOICP()
+                                                                                   : DefaultProviderId.Value,
                                                            EVCOId:             eMAId.     Value.ToOICP(),
                                                            SessionId:          ReservationId != null ? Session_Id.Parse(ReservationId.ToString()) : new Session_Id?(),
                                                            PartnerSessionId:   null,
@@ -1679,7 +1677,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             {
 
                 return ReservationResult.Success(result.Content.SessionId != null
-                                                     ? new ChargingReservation(ReservationId:            ChargingReservation_Id.Parse(result.Content.SessionId.ToString()),
+                                                     ? new ChargingReservation(ReservationId:            ChargingReservation_Id.Parse(EVSEId.OperatorId.ToString() + "*R" + result.Content.SessionId.ToString()),
                                                                                Timestamp:                DateTime.Now,
                                                                                StartTime:                DateTime.Now,
                                                                                Duration:                 Duration.HasValue ? Duration.Value : DefaultReservationTime,
@@ -1737,8 +1735,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Initial checks
 
-            if (!ProviderId.HasValue)
-                throw new ArgumentNullException(nameof(ProviderId), "The provider identification is mandatory in OICP!");
+            if (!EVSEId.HasValue)
+                throw new ArgumentNullException(nameof(EVSEId),  "The EVSE identification is mandatory in OICP!");
 
 
             if (!Timestamp.HasValue)
@@ -1753,12 +1751,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (!RequestTimeout.HasValue)
                 RequestTimeout = EMPClient?.RequestTimeout;
 
-
-            var StartTime = DateTime.Now;
-
             #endregion
 
             #region Send OnCancelReservationRequest event
+
+            var StartTime = DateTime.Now;
 
             try
             {
@@ -1782,9 +1779,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #endregion
 
 
-            var result = await EMPRoaming.ReservationStop(SessionId:          Session_Id.Parse(ReservationId.ToString()),
-                                                          ProviderId:         ProviderId.Value.ToOICP(),
-                                                          EVSEId:             EVSEId.    Value.ToOICP(),
+            var result = await EMPRoaming.ReservationStop(SessionId:          Session_Id.Parse(ReservationId.Suffix),
+                                                          ProviderId:         ProviderId.HasValue
+                                                                                  ? ProviderId.Value.ToOICP()
+                                                                                  : DefaultProviderId.Value,
+                                                          EVSEId:             EVSEId.Value.ToOICP(),
                                                           PartnerSessionId:   null,
 
                                                           Timestamp:          Timestamp,
@@ -1847,11 +1846,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Initial checks
 
-            if (!ProviderId.HasValue)
-                throw new ArgumentNullException(nameof(ProviderId),  "The e-mobility provider identification is mandatory in OICP!");
-
             if (!eMAId.HasValue)
-                throw new ArgumentNullException(nameof(eMAId),       "The e-mobility account identification is mandatory in OICP!");
+                throw new ArgumentNullException(nameof(eMAId),  "The e-mobility account identification is mandatory in OICP!");
 
 
             if (!Timestamp.HasValue)
@@ -1971,19 +1967,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #endregion
 
 
-            var result = await EMPRoaming.RemoteStart(EVSEId:             EVSEId.ToOICP(),
-                                                      ProviderId:         ProviderId.Value.ToOICP(),
+            var result = await EMPRoaming.RemoteStart(ProviderId:         ProviderId.HasValue
+                                                                              ? ProviderId.Value.ToOICP()
+                                                                              : DefaultProviderId.Value,
+                                                      EVSEId:             EVSEId.ToOICP(),
                                                       EVCOId:             eMAId.     Value.ToOICP(),
                                                       SessionId:          SessionId.       ToOICP(),
                                                       PartnerSessionId:   null,
-                                                      PartnerProductId:   PartnerProduct_Id.Parse(PartnerProductIdElements.
-                                                                                                      Select(kvp => kvp.Key + "=" + kvp.Value).
-                                                                                                      AggregateWith("|")),
+                                                      PartnerProductId:   PartnerProductIdElements.Count > 0
+                                                                              ? new PartnerProduct_Id?(PartnerProduct_Id.Parse(PartnerProductIdElements.
+                                                                                                                               Select(kvp => kvp.Key + "=" + kvp.Value).
+                                                                                                                               AggregateWith("|")))
+                                                                              : null,
 
                                                       Timestamp:          Timestamp,
                                                       CancellationToken:  CancellationToken,
                                                       EventTrackingId:    EventTrackingId,
-                                                      RequestTimeout:     RequestTimeout).
+                                                      RequestTimeout:     RequestTimeout
+                                                      ).
                                           ConfigureAwait(false);
 
 
@@ -2044,7 +2045,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region RemoteStop(                   SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
+        #region RemoteStop(                   SessionId, ReservationHandling = null, ProviderId = null, eMAId = null, ...)
 
         /// <summary>
         /// Stop the given charging session.
@@ -2061,7 +2062,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         Task<RemoteStopResult>
 
             IReserveRemoteStartStop.RemoteStop(ChargingSession_Id     SessionId,
-                                               ReservationHandling    ReservationHandling,
+                                               ReservationHandling?   ReservationHandling,
                                                eMobilityProvider_Id?  ProviderId,         // = null,
                                                eMobilityAccount_Id?   eMAId,              // = null,
 
@@ -2075,7 +2076,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region RemoteStop(EVSEId,            SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
+        #region RemoteStop(EVSEId,            SessionId, ReservationHandling = null, ProviderId = null, eMAId = null, ...)
 
         /// <summary>
         /// Stop the given charging session at the given EVSE.
@@ -2094,7 +2095,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             RemoteStop(WWCP.EVSE_Id           EVSEId,
                        ChargingSession_Id     SessionId,
-                       ReservationHandling    ReservationHandling   = null,
+                       ReservationHandling?   ReservationHandling   = null,
                        eMobilityProvider_Id?  ProviderId            = null,
                        eMobilityAccount_Id?   eMAId                 = null,
 
@@ -2106,10 +2107,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         {
 
             #region Initial checks
-
-            if (!ProviderId.HasValue)
-                throw new ArgumentNullException(nameof(ProviderId),  "The e-mobility provider identification is mandatory in OICP!");
-
 
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.Now;
@@ -2123,27 +2120,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (!RequestTimeout.HasValue)
                 RequestTimeout = EMPClient?.RequestTimeout;
 
-
-            var StartTime = DateTime.Now;
-
             #endregion
 
             #region Send OnRemoteStopEVSERequest event
+
+            var StartTime = DateTime.Now;
 
             try
             {
 
                 OnRemoteStopEVSERequest?.Invoke(StartTime,
-                                                 Timestamp.Value,
-                                                 this,
-                                                 EventTrackingId,
-                                                 RoamingNetwork.Id,
-                                                 EVSEId,
-                                                 SessionId,
-                                                 ReservationHandling,
-                                                 ProviderId,
-                                                 eMAId,
-                                                 RequestTimeout);
+                                                Timestamp.Value,
+                                                this,
+                                                EventTrackingId,
+                                                RoamingNetwork.Id,
+                                                EVSEId,
+                                                SessionId,
+                                                ReservationHandling,
+                                                ProviderId,
+                                                eMAId,
+                                                RequestTimeout);
 
             }
             catch (Exception e)
@@ -2156,7 +2152,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
             var result = await EMPRoaming.RemoteStop(SessionId:          SessionId.       ToOICP(),
-                                                     ProviderId:         ProviderId.Value.ToOICP(),
+                                                     ProviderId:         ProviderId.HasValue
+                                                                              ? ProviderId.Value.ToOICP()
+                                                                              : DefaultProviderId.Value,
                                                      EVSEId:             EVSEId.          ToOICP(),
                                                      PartnerSessionId:   null,
 
@@ -2183,7 +2181,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region RemoteStop(ChargingStationId, SessionId, ReservationHandling, ProviderId = null, eMAId = null, ...)
+        #region RemoteStop(ChargingStationId, SessionId, ReservationHandling = null, ProviderId = null, eMAId = null, ...)
 
         /// <summary>
         /// Stop the given charging session at the given charging station.
@@ -2202,7 +2200,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             IReserveRemoteStartStop.RemoteStop(ChargingStation_Id     ChargingStationId,
                                                ChargingSession_Id     SessionId,
-                                               ReservationHandling    ReservationHandling,
+                                               ReservationHandling?   ReservationHandling,
                                                eMobilityProvider_Id?  ProviderId,         // = null,
                                                eMobilityAccount_Id?   eMAId,              // = null,
 

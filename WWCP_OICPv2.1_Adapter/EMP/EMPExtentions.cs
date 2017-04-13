@@ -101,6 +101,8 @@ namespace org.GraphDefined.WWCP
 
                                               OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE             = null,
 
+                                              eMobilityProvider                     DefaultProvider                 = null,
+
                                               DNSClient                             DNSClient                       = null,
 
                                               Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator                = null,
@@ -149,6 +151,7 @@ namespace org.GraphDefined.WWCP
                                                                      LogFileCreator,
 
                                                                      EVSEDataRecord2EVSE,
+                                                                     DefaultProvider,
 
                                                                      DNSClient);
 
@@ -218,6 +221,8 @@ namespace org.GraphDefined.WWCP
 
                                               OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE          = null,
 
+                                              eMobilityProvider                     DefaultProvider              = null,
+
                                               DNSClient                             DNSClient                    = null,
 
                                               Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator             = null,
@@ -268,7 +273,8 @@ namespace org.GraphDefined.WWCP
                                                                      ServerLoggingContext,
                                                                      LogFileCreator,
 
-                                                                     EVSEDataRecord2EVSE);
+                                                                     EVSEDataRecord2EVSE,
+                                                                     DefaultProvider);
 
 
             OICPConfigurator?.Invoke(NewRoamingProvider);
