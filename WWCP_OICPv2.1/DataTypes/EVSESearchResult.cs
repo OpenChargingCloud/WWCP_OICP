@@ -66,17 +66,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// An enumeration of EVSE matches.
         /// </summary>
-        public IEnumerable<EVSEMatch> EVSEMatches { get; }
+        public IEnumerable<EVSEMatch>  EVSEMatches    { get; }
+
+        /// <summary>
+        /// The status code for this request.
+        /// </summary>
+        public StatusCode              StatusCode     { get; }
 
         #endregion
 
         #region Constructor(s)
 
+        #region EVSESearchResult(EVSEMatches, StatusCode  = null)
+
         /// <summary>
         /// Create a new group of OICP EVSE search matches.
         /// </summary>
         /// <param name="EVSEMatches">An enumeration of EVSE matches.</param>
-        public EVSESearchResult(IEnumerable<EVSEMatch> EVSEMatches)
+        /// <param name="StatusCode">An optional status code for this request.</param>
+        public EVSESearchResult(IEnumerable<EVSEMatch>  EVSEMatches,
+                                StatusCode              StatusCode  = null)
         {
 
             #region Initial checks
@@ -87,8 +96,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             this.EVSEMatches  = EVSEMatches;
+            this.StatusCode   = StatusCode ?? new StatusCode(StatusCodes.Success);
 
         }
+
+        #endregion
+
+        #region EVSESearchResult(Code, Description = null, AdditionalInfo = null)
+
+        /// <summary>
+        /// Create a new group of OICP EVSE search matches.
+        /// </summary>
+        /// <param name="Code">The result code of the operation.</param>
+        /// <param name="Description">An optional description of the result code.</param>
+        /// <param name="AdditionalInfo">An optional additional information.</param>
+        public EVSESearchResult(StatusCodes  Code,
+                                String       Description     = null,
+                                String       AdditionalInfo  = null)
+
+            : this(new EVSEMatch[0],
+                   new StatusCode(Code,
+                                  Description,
+                                  AdditionalInfo))
+
+        { }
+
+        #endregion
 
         #endregion
 

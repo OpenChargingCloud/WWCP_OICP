@@ -44,8 +44,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Properties
 
-        //public Authorizator_Id  AuthorizatorId      { get; }
-
         /// <summary>
         /// The EMP client part.
         /// </summary>
@@ -383,6 +381,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+
         #region OnPushAuthenticationDataRequest/-Response
 
         /// <summary>
@@ -458,6 +457,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         }
 
         #endregion
+
 
         #region OnReservationStartRequest/-Response
 
@@ -762,6 +762,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         }
 
         #endregion
+
 
         #region OnGetChargeDetailRecordsRequest/-Response
 
@@ -1089,7 +1090,249 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Custom request mappers
 
-        #region CustomPushAuthenticationDataRequestMapper
+        #region CustomPullEVSEData(SOAP)RequestMapper
+
+        #region CustomPullEVSEDataRequestMapper
+
+        public Func<PullEVSEDataRequest, PullEVSEDataRequest> CustomPullEVSEDataRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEDataRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEDataRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullEVSEDataSOAPRequestMapper
+
+        public Func<PullEVSEDataRequest, XElement, XElement> CustomPullEVSEDataSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEDataSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEDataSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PullEVSEDataRequest>, Acknowledgement<PullEVSEDataRequest>.Builder> CustomPullEVSEDataResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEDataResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEDataResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomSearchEVSE(SOAP)RequestMapper
+
+        #region CustomSearchEVSERequestMapper
+
+        public Func<SearchEVSERequest, SearchEVSERequest> CustomSearchEVSERequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomSearchEVSERequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomSearchEVSERequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomSearchEVSESOAPRequestMapper
+
+        public Func<SearchEVSERequest, XElement, XElement> CustomSearchEVSESOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomSearchEVSESOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomSearchEVSESOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<SearchEVSERequest>, Acknowledgement<SearchEVSERequest>.Builder> CustomSearchEVSEResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomSearchEVSEResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomSearchEVSEResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region CustomPullEVSEStatus(SOAP)RequestMapper
+
+        #region CustomPullEVSEStatusRequestMapper
+
+        public Func<PullEVSEStatusRequest, PullEVSEStatusRequest> CustomPullEVSEStatusRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullEVSEStatusSOAPRequestMapper
+
+        public Func<PullEVSEStatusRequest, XElement, XElement> CustomPullEVSEStatusSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PullEVSEStatusRequest>, Acknowledgement<PullEVSEStatusRequest>.Builder> CustomPullEVSEStatusResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullEVSEStatusById(SOAP)RequestMapper
+
+        #region CustomPullEVSEStatusByIdRequestMapper
+
+        public Func<PullEVSEStatusByIdRequest, PullEVSEStatusByIdRequest> CustomPullEVSEStatusByIdRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusByIdRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusByIdRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullEVSEStatusByIdSOAPRequestMapper
+
+        public Func<PullEVSEStatusByIdRequest, XElement, XElement> CustomPullEVSEStatusByIdSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusByIdSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusByIdSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PullEVSEStatusByIdRequest>, Acknowledgement<PullEVSEStatusByIdRequest>.Builder> CustomPullEVSEStatusByIdResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusByIdResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusByIdResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region CustomPushAuthenticationData(SOAP)RequestMapper
 
         #region CustomPushAuthenticationDataRequestMapper
 
@@ -1111,6 +1354,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        #region CustomPushAuthenticationDataSOAPRequestMapper
+
+        public Func<PushAuthenticationDataRequest, XElement, XElement> CustomPushAuthenticationDataSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPushAuthenticationDataSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPushAuthenticationDataSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
         public CustomMapperDelegate<Acknowledgement<PushAuthenticationDataRequest>, Acknowledgement<PushAuthenticationDataRequest>.Builder> CustomPushAuthenticationDataResponseMapper
         {
 
@@ -1121,7 +1384,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomPushAuthenticationDataResponseMapper = value;
+                if (value != null)
+                    EMPClient.CustomPushAuthenticationDataResponseMapper = value;
             }
 
         }
@@ -1129,7 +1393,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region CustomAuthorizeRemoteReservationStartRequestMapper
+        #region CustomAuthorizeRemoteReservationStart(SOAP)RequestMapper
 
         #region CustomAuthorizeRemoteReservationStartRequestMapper
 
@@ -1143,7 +1407,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomAuthorizeRemoteReservationStartRequestMapper = value;
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStartRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteReservationStartSOAPRequestMapper
+
+        public Func<AuthorizeRemoteReservationStartRequest, XElement, XElement> CustomAuthorizeRemoteReservationStartSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteReservationStartSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStartSOAPRequestMapper = value;
             }
 
         }
@@ -1160,14 +1445,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomAuthorizeRemoteReservationStartResponseMapper = value;
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStartResponseMapper = value;
             }
 
         }
 
         #endregion
 
-        #region CustomAuthorizeRemoteReservationStopRequestMapper
+        #region CustomAuthorizeRemoteReservationStop(SOAP)RequestMapper
 
         #region CustomAuthorizeRemoteReservationStopRequestMapper
 
@@ -1181,7 +1467,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomAuthorizeRemoteReservationStopRequestMapper = value;
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStopRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteReservationStopSOAPRequestMapper
+
+        public Func<AuthorizeRemoteReservationStopRequest, XElement, XElement> CustomAuthorizeRemoteReservationStopSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteReservationStopSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStopSOAPRequestMapper = value;
             }
 
         }
@@ -1198,7 +1505,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomAuthorizeRemoteReservationStopResponseMapper = value;
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStopResponseMapper = value;
             }
 
         }
@@ -1220,7 +1528,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomAuthorizeRemoteStartRequestMapper = value;
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStartRequestMapper = value;
             }
 
         }
@@ -1239,7 +1548,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomAuthorizeRemoteStartSOAPRequestMapper = value;
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStartSOAPRequestMapper = value;
             }
 
         }
@@ -1256,7 +1566,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomAuthorizeRemoteStartResponseMapper = value;
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStartResponseMapper = value;
             }
 
         }
@@ -1277,7 +1588,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomAuthorizeRemoteStopRequestMapper = value;
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStopRequestMapper = value;
             }
 
         }
@@ -1296,7 +1608,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomAuthorizeRemoteStopSOAPRequestMapper = value;
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStopSOAPRequestMapper = value;
             }
 
         }
@@ -1313,7 +1626,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomAuthorizeRemoteStopResponseMapper = value;
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStopResponseMapper = value;
             }
 
         }
@@ -1321,7 +1635,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region CustomGetChargeDetailRecordsRequestMapper
+        #region CustomGetChargeDetailRecords(SOAP)RequestMapper
 
         #region CustomGetChargeDetailRecordsRequestMapper
 
@@ -1335,7 +1649,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomGetChargeDetailRecordsRequestMapper = value;
+                if (value != null)
+                    EMPClient.CustomGetChargeDetailRecordsRequestMapper = value;
             }
 
         }
@@ -1354,7 +1669,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomGetChargeDetailRecordsSOAPRequestMapper = value;
+                if (value != null)
+                    EMPClient.CustomGetChargeDetailRecordsSOAPRequestMapper = value;
             }
 
         }
@@ -1371,10 +1687,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomGetChargeDetailRecordsResponseMapper = value;
+                if (value != null)
+                    EMPClient.CustomGetChargeDetailRecordsResponseMapper = value;
             }
 
         }
+
 
         public CustomMapperDelegate<ChargeDetailRecord> CustomChargeDetailRecordXMLMapper
         {
@@ -1386,10 +1704,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             set
             {
-                EMPClient.CustomChargeDetailRecordXMLMapper = value;
+                if (value != null)
+                    EMPClient.CustomChargeDetailRecordXMLMapper = value;
             }
 
         }
+
 
         #endregion
 
@@ -1521,58 +1841,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region SearchEVSE(ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null, ...)
+        #region SearchEVSE  (Request)
 
         /// <summary>
         /// Create a new Search EVSE request.
         /// </summary>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="SearchCenter">An optional geocoordinate of the search center.</param>
-        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
-        /// <param name="Address">An optional address of the charging stations.</param>
-        /// <param name="Plug">Optional plugs of the charging station.</param>
-        /// <param name="ChargingFacility">Optional charging facilities of the charging station.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="Request">A SearchEVSE request.</param>
         public Task<HTTPResponse<EVSESearchResult>>
 
-            SearchEVSE(Provider_Id          ProviderId,
-                       GeoCoordinate?       SearchCenter        = null,
-                       Double               DistanceKM          = 0.0,
-                       Address              Address             = null,
-                       PlugTypes?           Plug                = null,
-                       ChargingFacilities?  ChargingFacility    = null,
+            SearchEVSE(SearchEVSERequest  Request)
 
-                       DateTime?            Timestamp           = null,
-                       CancellationToken?   CancellationToken   = null,
-                       EventTracking_Id     EventTrackingId     = null,
-                       TimeSpan?            RequestTimeout      = null)
-
-
-            => EMPClient.SearchEVSE(ProviderId,
-                                          SearchCenter,
-                                          DistanceKM,
-                                          Address,
-                                          Plug,
-                                          ChargingFacility,
-
-                                          Timestamp,
-                                          CancellationToken,
-                                          EventTrackingId,
-                                          RequestTimeout);
+                => EMPClient.SearchEVSE(Request);
 
         #endregion
 
 
-        #region PullEVSEStatus(Request)
+        #region PullEVSEStatus    (Request)
 
         /// <summary>
         /// Create a new task requesting the current status of all EVSEs (within an optional search radius and status).
         /// </summary>
-        /// <param name="Request">An PullEVSEStatus request.</param>
+        /// <param name="Request">A PullEVSEStatus request.</param>
         public Task<HTTPResponse<EVSEStatus>>
 
             PullEVSEStatus(PullEVSEStatusRequest Request)
@@ -1581,36 +1870,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region PullEVSEStatusById(ProviderId, EVSEIds, ...)
+        #region PullEVSEStatusById(Request)
 
         /// <summary>
         /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
         /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="EVSEIds">Up to 100 EVSE Ids.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<EVSEStatusById>>
+        /// <param name="Request">A PullEVSEStatusById request.</param>
+        public Task<HTTPResponse<EVSEStatusById>>
 
-            PullEVSEStatusById(Provider_Id           ProviderId,
-                               IEnumerable<EVSE_Id>  EVSEIds,
+            PullEVSEStatusById(PullEVSEStatusByIdRequest Request)
 
-                               DateTime?             Timestamp          = null,
-                               CancellationToken?    CancellationToken  = null,
-                               EventTracking_Id      EventTrackingId    = null,
-                               TimeSpan?             RequestTimeout     = null)
-
-
-            => await EMPClient.PullEVSEStatusById(ProviderId,
-                                                  EVSEIds,
-
-                                                  Timestamp,
-                                                  CancellationToken,
-                                                  EventTrackingId,
-                                                  RequestTimeout);
+                => EMPClient.PullEVSEStatusById(Request);
 
         #endregion
 

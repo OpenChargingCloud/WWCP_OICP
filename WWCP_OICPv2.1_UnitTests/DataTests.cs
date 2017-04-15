@@ -276,7 +276,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                     SearchEVSE(Provider_Id.Parse("DE*GDF"),
                                SearchCenter:    new GeoCoordinate(Latitude. Parse(49.731102),
                                                                   Longitude.Parse(10.142533)),
-                               DistanceKM:      100,
+                               DistanceKM:      100f,
                                Plug:            PlugTypes.Type2Outlet,
                                RequestTimeout:  TimeSpan.FromSeconds(120));
 

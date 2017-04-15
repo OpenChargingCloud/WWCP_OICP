@@ -89,6 +89,8 @@
     <Compile Include="Messages\CPO\PullAuthenticationDataRequest.cs" />
     <Compile Include="Messages\CPO\PushEVSEStatusRequest.cs" />
     <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusByIdRequest.cs" />
+    <Compile Include="Messages\EMP\SearchEVSERequest.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusRequest.cs" />
     <Compile Include="Messages\EMP\PullEVSEDataRequest.cs" />
     <Compile Include="Messages\EMP\GetChargeDetailRecordsRequest.cs" />

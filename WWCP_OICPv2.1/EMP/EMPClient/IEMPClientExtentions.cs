@@ -37,7 +37,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     public static class IEMPClientExtentions
     {
 
-        #region PullEVSEData  (ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, GeoCoordinatesResponseFormat = DecimalDegree, ...)
+        #region PullEVSEData(ProviderId, SearchCenter = null, DistanceKM = 0.0, LastCall = null, GeoCoordinatesResponseFormat = DecimalDegree, ...)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
@@ -84,8 +84,56 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        #region SearchEVSE  (ProviderId, SearchCenter = null, DistanceKM = 0.0, Address = null, Plug = null, ChargingFacility = null, ...)
 
-        #region PullEVSEStatus(ProviderId, SearchCenter = null, DistanceKM = 0.0, EVSEStatusFilter = null, ...)
+        /// <summary>
+        /// Create a new Search EVSE request.
+        /// </summary>
+        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
+        /// <param name="SearchCenter">An optional geocoordinate of the search center.</param>
+        /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
+        /// <param name="Address">An optional address of the charging stations.</param>
+        /// <param name="Plugs">Optional plugs of the charging station.</param>
+        /// <param name="ChargingFacilities">Optional charging facilities of the charging station.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<HTTPResponse<EVSESearchResult>>
+
+            SearchEVSE(this IEMPClient      IEMPClient,
+                       Provider_Id          ProviderId,
+                       GeoCoordinate?       SearchCenter        = null,
+                       Single               DistanceKM          = 0f,
+                       Address              Address             = null,
+                       PlugTypes?           Plug                = null,
+                       ChargingFacilities?  ChargingFacility    = null,
+
+                       DateTime?            Timestamp           = null,
+                       CancellationToken?   CancellationToken   = null,
+                       EventTracking_Id     EventTrackingId     = null,
+                       TimeSpan?            RequestTimeout      = null)
+
+
+                => IEMPClient.SearchEVSE(new SearchEVSERequest(ProviderId,
+                                                               SearchCenter,
+                                                               DistanceKM,
+                                                               Address,
+                                                               Plug,
+                                                               ChargingFacility,
+
+                                                               Timestamp,
+                                                               CancellationToken,
+                                                               EventTrackingId,
+                                                               RequestTimeout.HasValue
+                                                                   ? RequestTimeout.Value
+                                                                   : IEMPClient.RequestTimeout));
+
+        #endregion
+
+
+        #region PullEVSEStatus    (ProviderId, SearchCenter = null, DistanceKM = 0.0, EVSEStatusFilter = null, ...)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
@@ -124,6 +172,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                        RequestTimeout.HasValue
                                                                            ? RequestTimeout.Value
                                                                            : IEMPClient.RequestTimeout));
+
+        #endregion
+
+        #region PullEVSEStatusById(ProviderId, EVSEIds, ...)
+
+        /// <summary>
+        /// Create a new task querying EVSE data from the OICP server.
+        /// </summary>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="EVSEIds">An enumeration of up to 100 EVSE identifications.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<HTTPResponse<EVSEStatusById>>
+
+            PullEVSEStatusById(this IEMPClient       IEMPClient,
+                               Provider_Id           ProviderId,
+                               IEnumerable<EVSE_Id>  EVSEIds,
+
+                               DateTime?             Timestamp           = null,
+                               CancellationToken?    CancellationToken   = null,
+                               EventTracking_Id      EventTrackingId     = null,
+                               TimeSpan?             RequestTimeout      = null)
+
+
+                => IEMPClient.PullEVSEStatusById(new PullEVSEStatusByIdRequest(ProviderId,
+                                                                               EVSEIds,
+
+                                                                               Timestamp,
+                                                                               CancellationToken,
+                                                                               EventTrackingId,
+                                                                               RequestTimeout.HasValue
+                                                                                   ? RequestTimeout.Value
+                                                                                   : IEMPClient.RequestTimeout));
 
         #endregion
 

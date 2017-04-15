@@ -1255,7 +1255,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             SearchEVSE(eMobilityProvider_Id  ProviderId,
                        GeoCoordinate?        SearchCenter       = null,
-                       Double                DistanceKM         = 0.0,
+                       Single                DistanceKM         = 0f,
                        Address               Address            = null,
                        PlugTypes?            Plug               = null,
                        ChargingFacilities?   ChargingFacility   = null,

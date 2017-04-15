@@ -86,14 +86,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public EVSEData(StatusCodes  Code,
                         String       Description     = null,
                         String       AdditionalInfo  = null)
-        {
 
-            this.OperatorEVSEData  = new OperatorEVSEData[0];
-            this.StatusCode        = new StatusCode(Code,
-                                                    Description,
-                                                    AdditionalInfo);
+            : this(new OperatorEVSEData[0],
+                   new StatusCode(Code,
+                                  Description,
+                                  AdditionalInfo))
 
-        }
+        { }
 
         #endregion
 

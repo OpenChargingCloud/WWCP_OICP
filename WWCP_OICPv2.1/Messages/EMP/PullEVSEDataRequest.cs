@@ -239,7 +239,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     #region Parse Google format
 
-                    var GoogleXML = SearchCenterXML.Element(OICPNS.EVSEData + "Google");
+                    var GoogleXML = SearchCenterXML.Element(OICPNS.CommonTypes + "Google");
                     if (GoogleXML != null)
                     {
 
@@ -255,7 +255,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     #region Parse DecimalDegree format
 
-                    var DecimalDegreeXML = SearchCenterXML.Element(OICPNS.EVSEData + "DecimalDegree");
+                    var DecimalDegreeXML = SearchCenterXML.Element(OICPNS.CommonTypes + "DecimalDegree");
                     if (DecimalDegreeXML != null)
                     {
 

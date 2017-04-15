@@ -47,9 +47,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             PullEVSEData(PullEVSEDataRequest Request);
 
+        Task<HTTPResponse<EVSESearchResult>>
+
+            SearchEVSE(SearchEVSERequest Request);
+
+
         Task<HTTPResponse<EVSEStatus>>
 
             PullEVSEStatus(PullEVSEStatusRequest Request);
+
+        Task<HTTPResponse<EVSEStatusById>>
+
+            PullEVSEStatusById(PullEVSEStatusByIdRequest Request);
 
 
         Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
