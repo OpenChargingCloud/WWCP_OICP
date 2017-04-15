@@ -845,7 +845,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         /// <param name="LoggingContext">An optional context for logging client methods.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPClient(String                               ClientId,
                          String                               Hostname,
                          IPPort                               RemotePort                  = null,
@@ -857,7 +857,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          TimeSpan?                            RequestTimeout              = null,
                          DNSClient                            DNSClient                   = null,
                          String                               LoggingContext              = EMPClientLogger.DefaultContext,
-                         Func<String, String, String>         LogFileCreator              = null)
+                         LogfileCreatorDelegate               LogfileCreator              = null)
 
             : base(ClientId,
                    Hostname,
@@ -885,7 +885,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             this.Logger = new EMPClientLogger(this,
                                               LoggingContext,
-                                              LogFileCreator);
+                                              LogfileCreator);
 
         }
 

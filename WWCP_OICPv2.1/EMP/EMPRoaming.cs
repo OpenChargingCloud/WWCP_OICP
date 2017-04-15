@@ -1717,7 +1717,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Constructor(s)
 
-        #region EMPRoaming(EMPClient, EMPServer, ServerLoggingContext = EMPServerLogger.DefaultContext, LogFileCreator = null)
+        #region EMPRoaming(EMPClient, EMPServer, ServerLoggingContext = EMPServerLogger.DefaultContext, LogfileCreator = null)
 
         /// <summary>
         /// Create a new OICP roaming client for EMPs.
@@ -1725,16 +1725,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="EMPClient">A EMP client.</param>
         /// <param name="EMPServer">A EMP sever.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public EMPRoaming(EMPClient                     EMPClient,
-                          EMPServer                     EMPServer,
-                          String                        ServerLoggingContext   = EMPServerLogger.DefaultContext,
-                          Func<String, String, String>  LogFileCreator  = null)
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
+        public EMPRoaming(EMPClient               EMPClient,
+                          EMPServer               EMPServer,
+                          String                  ServerLoggingContext   = EMPServerLogger.DefaultContext,
+                          LogfileCreatorDelegate  LogfileCreator  = null)
         {
 
             this.EMPClient        = EMPClient;
             this.EMPServer        = EMPServer;
-            this.EMPServerLogger  = new EMPServerLogger(EMPServer, ServerLoggingContext, LogFileCreator);
+            this.EMPServerLogger  = new EMPServerLogger(EMPServer,
+                                                        ServerLoggingContext,
+                                                        LogfileCreator);
 
         }
 
@@ -1763,7 +1765,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public EMPRoaming(String                               ClientId,
@@ -1785,7 +1787,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                           String                               ClientLoggingContext            = EMPClient.EMPClientLogger.DefaultContext,
                           String                               ServerLoggingContext            = EMPServerLogger.DefaultContext,
-                          Func<String, String, String>         LogFileCreator                  = null,
+                          LogfileCreatorDelegate               LogfileCreator                  = null,
 
                           DNSClient                            DNSClient                       = null)
 
@@ -1800,7 +1802,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                  RequestTimeout,
                                  DNSClient,
                                  ClientLoggingContext,
-                                 LogFileCreator),
+                                 LogfileCreator),
 
                    new EMPServer(ServerName,
                                  ServerTCPPort,
@@ -1811,7 +1813,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                  false),
 
                    ServerLoggingContext,
-                   LogFileCreator)
+                   LogfileCreator)
 
         {
 

@@ -65,7 +65,7 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
         /// 
@@ -97,7 +97,7 @@ namespace org.GraphDefined.WWCP
 
                                               String                                ClientLoggingContext            = OICPv2_1.EMP.EMPClient.EMPClientLogger.DefaultContext,
                                               String                                ServerLoggingContext            = OICPv2_1.EMP.EMPServerLogger.DefaultContext,
-                                              Func<String, String, String>          LogFileCreator                  = null,
+                                              LogfileCreatorDelegate                LogfileCreator                  = null,
 
                                               OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE             = null,
 
@@ -148,7 +148,7 @@ namespace org.GraphDefined.WWCP
 
                                                                      ClientLoggingContext,
                                                                      ServerLoggingContext,
-                                                                     LogFileCreator,
+                                                                     LogfileCreator,
 
                                                                      EVSEDataRecord2EVSE,
                                                                      DefaultProvider,
@@ -189,7 +189,7 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
         /// 
@@ -217,7 +217,7 @@ namespace org.GraphDefined.WWCP
 
                                               String                                ClientLoggingContext         = OICPv2_1.EMP.EMPClient.EMPClientLogger.DefaultContext,
                                               String                                ServerLoggingContext         = OICPv2_1.EMP.EMPServerLogger.DefaultContext,
-                                              Func<String, String, String>          LogFileCreator               = null,
+                                              LogfileCreatorDelegate                LogfileCreator               = null,
 
                                               OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE          = null,
 
@@ -265,13 +265,13 @@ namespace org.GraphDefined.WWCP
                                                                                                 QueryTimeout,
                                                                                                 DNSClient,
                                                                                                 ClientLoggingContext,
-                                                                                                LogFileCreator),
+                                                                                                LogfileCreator),
 
                                                                      new OICPv2_1.EMP.EMPServer(SOAPServer,
                                                                                                 ServerURIPrefix),
 
                                                                      ServerLoggingContext,
-                                                                     LogFileCreator,
+                                                                     LogfileCreator,
 
                                                                      EVSEDataRecord2EVSE,
                                                                      DefaultProvider);

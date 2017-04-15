@@ -544,7 +544,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="LoggingContext">An optional context for logging client methods.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         public CPOClient(String                               ClientId,
                          String                               Hostname,
                          IPPort                               RemotePort                  = null,
@@ -556,7 +556,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          TimeSpan?                            QueryTimeout                = null,
                          DNSClient                            DNSClient                   = null,
                          String                               LoggingContext              = CPOClientLogger.DefaultContext,
-                         Func<String, String, String>         LogFileCreator              = null)
+                         LogfileCreatorDelegate               LogfileCreator              = null)
 
             : base(ClientId,
                    Hostname,
@@ -584,7 +584,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             this.Logger = new CPOClientLogger(this,
                                               LoggingContext,
-                                              LogFileCreator);
+                                              LogfileCreator);
 
         }
 

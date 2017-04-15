@@ -1041,7 +1041,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region Constructor(s)
 
-        #region CPORoaming(CPOClient, CPOServer, ServerLoggingContext = CPOServerLogger.DefaultContext, LogFileCreator = null)
+        #region CPORoaming(CPOClient, CPOServer, ServerLoggingContext = CPOServerLogger.DefaultContext, LogfileCreator = null)
 
         /// <summary>
         /// Create a new OICP roaming client for CPOs.
@@ -1049,11 +1049,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CPOClient">A CPO client.</param>
         /// <param name="CPOServer">A CPO sever.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public CPORoaming(CPOClient                     CPOClient,
-                          CPOServer                     CPOServer,
-                          String                        ServerLoggingContext  = CPOServerLogger.DefaultContext,
-                          Func<String, String, String>  LogFileCreator        = null)
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
+        public CPORoaming(CPOClient               CPOClient,
+                          CPOServer               CPOServer,
+                          String                  ServerLoggingContext  = CPOServerLogger.DefaultContext,
+                          LogfileCreatorDelegate  LogfileCreator        = null)
         {
 
             this.CPOClient        = CPOClient;
@@ -1061,7 +1061,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             this.CPOServerLogger  = new CPOServerLogger(CPOServer,
                                                         ServerLoggingContext,
-                                                        LogFileCreator);
+                                                        LogfileCreator);
 
         }
 
@@ -1090,7 +1090,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CPORoaming(String                               ClientId,
@@ -1112,7 +1112,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                           String                               ClientLoggingContext            = CPOClient.CPOClientLogger.DefaultContext,
                           String                               ServerLoggingContext            = CPOServerLogger.DefaultContext,
-                          Func<String, String, String>         LogFileCreator                  = null,
+                          LogfileCreatorDelegate               LogfileCreator                  = null,
 
                           DNSClient                            DNSClient                       = null)
 
@@ -1127,7 +1127,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                  RequestTimeout,
                                  DNSClient,
                                  ClientLoggingContext,
-                                 LogFileCreator),
+                                 LogfileCreator),
 
                    new CPOServer(ServerName,
                                  ServerTCPPort,
@@ -1138,7 +1138,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                  false),
 
                    ServerLoggingContext,
-                   LogFileCreator)
+                   LogfileCreator)
 
         {
 

@@ -729,7 +729,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region WWCPEMPAdapter(Id, Name, RoamingNetwork, EMPClient, EMPServer, Context = EMPRoaming.DefaultLoggingContext, LogFileCreator = null)
+        #region WWCPEMPAdapter(Id, Name, RoamingNetwork, EMPClient, EMPServer, Context = EMPRoaming.DefaultLoggingContext, LogfileCreator = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP EMP Roaming client for e-mobility providers/EMPs.
@@ -741,20 +741,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="EMPClient">An OICP EMP client.</param>
         /// <param name="EMPServer">An OICP EMP sever.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
-        public WWCPEMPAdapter(EMPRoamingProvider_Id         Id,
-                              I18NString                    Name,
-                              RoamingNetwork                RoamingNetwork,
+        public WWCPEMPAdapter(EMPRoamingProvider_Id        Id,
+                              I18NString                   Name,
+                              RoamingNetwork               RoamingNetwork,
 
-                              EMPClient                     EMPClient,
-                              EMPServer                     EMPServer,
-                              String                        ServerLoggingContext  = EMPServerLogger.DefaultContext,
-                              Func<String, String, String>  LogFileCreator        = null,
+                              EMPClient                    EMPClient,
+                              EMPServer                    EMPServer,
+                              String                       ServerLoggingContext   = EMPServerLogger.DefaultContext,
+                              LogfileCreatorDelegate       LogfileCreator         = null,
 
-                              EVSEDataRecord2EVSEDelegate   EVSEDataRecord2EVSE   = null,
-                              IRemoteEMobilityProvider      DefaultProvider       = null)
+                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE    = null,
+                              IRemoteEMobilityProvider     DefaultProvider        = null)
 
             : this(Id,
                    Name,
@@ -763,7 +763,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                    new EMPRoaming(EMPClient,
                                   EMPServer,
                                   ServerLoggingContext,
-                                  LogFileCreator),
+                                  LogfileCreator),
 
                    EVSEDataRecord2EVSE,
                    DefaultProvider)
@@ -798,7 +798,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// 
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
         /// 
@@ -825,7 +825,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                               String                               ClientLoggingContext            = EMPClient.EMPClientLogger.DefaultContext,
                               String                               ServerLoggingContext            = EMPServerLogger.DefaultContext,
-                              Func<String, String, String>         LogFileCreator                  = null,
+                              LogfileCreatorDelegate               LogfileCreator                  = null,
 
                               EVSEDataRecord2EVSEDelegate          EVSEDataRecord2EVSE             = null,
 
@@ -856,7 +856,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                   ClientLoggingContext,
                                   ServerLoggingContext,
-                                  LogFileCreator,
+                                  LogfileCreator,
 
                                   DNSClient),
 

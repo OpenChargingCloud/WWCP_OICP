@@ -59,17 +59,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Constructor(s)
 
-            #region MobileClientLogger(MobileClient, Context = DefaultContext, LogFileCreator = null)
+            #region MobileClientLogger(MobileClient, Context = DefaultContext, LogfileCreator = null)
 
             /// <summary>
             /// Create a new OICP Mobile client logger using the default logging delegates.
             /// </summary>
             /// <param name="MobileClient">A OICP Mobile client.</param>
             /// <param name="Context">A context of this API.</param>
-            /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public MobileClientLogger(MobileClient                  MobileClient,
-                                      String                        Context         = DefaultContext,
-                                      Func<String, String, String>  LogFileCreator  = null)
+            /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
+            public MobileClientLogger(MobileClient            MobileClient,
+                                      String                  Context         = DefaultContext,
+                                      LogfileCreatorDelegate  LogfileCreator  = null)
 
                 : this(MobileClient,
                        Context.IsNotNullOrEmpty() ? Context : DefaultContext,
@@ -78,7 +78,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                        null,
                        null,
 
-                       LogFileCreator: LogFileCreator)
+                       LogfileCreator: LogfileCreator)
 
             { }
 
@@ -107,26 +107,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             /// <param name="LogHTTPError_toNetwork">A delegate to log HTTP errors to a network target.</param>
             /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
             /// 
-            /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public MobileClientLogger(MobileClient                  MobileClient,
-                                      String                        Context,
+            /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
+            public MobileClientLogger(MobileClient                MobileClient,
+                                      String                      Context,
 
-                                      HTTPRequestLoggerDelegate     LogHTTPRequest_toConsole,
-                                      HTTPResponseLoggerDelegate    LogHTTPResponse_toConsole,
-                                      HTTPRequestLoggerDelegate     LogHTTPRequest_toDisc,
-                                      HTTPResponseLoggerDelegate    LogHTTPResponse_toDisc,
+                                      HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,
+                                      HTTPResponseLoggerDelegate  LogHTTPResponse_toConsole,
+                                      HTTPRequestLoggerDelegate   LogHTTPRequest_toDisc,
+                                      HTTPResponseLoggerDelegate  LogHTTPResponse_toDisc,
 
-                                      HTTPRequestLoggerDelegate     LogHTTPRequest_toNetwork   = null,
-                                      HTTPResponseLoggerDelegate    LogHTTPResponse_toNetwork  = null,
-                                      HTTPRequestLoggerDelegate     LogHTTPRequest_toHTTPSSE   = null,
-                                      HTTPResponseLoggerDelegate    LogHTTPResponse_toHTTPSSE  = null,
+                                      HTTPRequestLoggerDelegate   LogHTTPRequest_toNetwork    = null,
+                                      HTTPResponseLoggerDelegate  LogHTTPResponse_toNetwork   = null,
+                                      HTTPRequestLoggerDelegate   LogHTTPRequest_toHTTPSSE    = null,
+                                      HTTPResponseLoggerDelegate  LogHTTPResponse_toHTTPSSE   = null,
 
-                                      HTTPResponseLoggerDelegate    LogHTTPError_toConsole     = null,
-                                      HTTPResponseLoggerDelegate    LogHTTPError_toDisc        = null,
-                                      HTTPResponseLoggerDelegate    LogHTTPError_toNetwork     = null,
-                                      HTTPResponseLoggerDelegate    LogHTTPError_toHTTPSSE     = null,
+                                      HTTPResponseLoggerDelegate  LogHTTPError_toConsole      = null,
+                                      HTTPResponseLoggerDelegate  LogHTTPError_toDisc         = null,
+                                      HTTPResponseLoggerDelegate  LogHTTPError_toNetwork      = null,
+                                      HTTPResponseLoggerDelegate  LogHTTPError_toHTTPSSE      = null,
 
-                                      Func<String, String, String>  LogFileCreator             = null)
+                                      LogfileCreatorDelegate      LogfileCreator              = null)
 
                 : base(Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
@@ -145,7 +145,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                        LogHTTPError_toNetwork,
                        LogHTTPError_toHTTPSSE,
 
-                       LogFileCreator)
+                       LogfileCreator)
 
             {
 

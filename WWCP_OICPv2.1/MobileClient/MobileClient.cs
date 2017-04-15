@@ -158,7 +158,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         /// <param name="LoggingContext">An optional context for logging client methods.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         public MobileClient(String                               ClientId,
                             String                               Hostname,
                             IPPort                               RemotePort                  = null,
@@ -170,7 +170,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             TimeSpan?                            QueryTimeout                = null,
                             DNSClient                            DNSClient                   = null,
                             String                               LoggingContext              = MobileClientLogger.DefaultContext,
-                            Func<String, String, String>         LogFileCreator              = null)
+                            LogfileCreatorDelegate               LogfileCreator              = null)
 
             : base(ClientId,
                    Hostname,
@@ -198,7 +198,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             this.Logger = new MobileClientLogger(this,
                                                  LoggingContext,
-                                                 LogFileCreator);
+                                                 LogfileCreator);
 
         }
 
