@@ -30,6 +30,7 @@ using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using System.Xml.Linq;
 
 #endregion
 
@@ -107,6 +108,634 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// An optional default e-mobility provider identification.
         /// </summary>
         public Provider_Id?  DefaultProviderId   { get; }
+
+        #endregion
+
+
+        #region Custom request mappers
+
+        #region CustomPullEVSEData(SOAP)RequestMapper
+
+        #region CustomPullEVSEDataRequestMapper
+
+        public Func<PullEVSEDataRequest, PullEVSEDataRequest> CustomPullEVSEDataRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEDataRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEDataRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullEVSEDataSOAPRequestMapper
+
+        public Func<PullEVSEDataRequest, XElement, XElement> CustomPullEVSEDataSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEDataSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEDataSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PullEVSEDataRequest>, Acknowledgement<PullEVSEDataRequest>.Builder> CustomPullEVSEDataResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEDataResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEDataResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomSearchEVSE(SOAP)RequestMapper
+
+        #region CustomSearchEVSERequestMapper
+
+        public Func<SearchEVSERequest, SearchEVSERequest> CustomSearchEVSERequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomSearchEVSERequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomSearchEVSERequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomSearchEVSESOAPRequestMapper
+
+        public Func<SearchEVSERequest, XElement, XElement> CustomSearchEVSESOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomSearchEVSESOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomSearchEVSESOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<SearchEVSERequest>, Acknowledgement<SearchEVSERequest>.Builder> CustomSearchEVSEResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomSearchEVSEResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomSearchEVSEResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region CustomPullEVSEStatus(SOAP)RequestMapper
+
+        #region CustomPullEVSEStatusRequestMapper
+
+        public Func<PullEVSEStatusRequest, PullEVSEStatusRequest> CustomPullEVSEStatusRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullEVSEStatusSOAPRequestMapper
+
+        public Func<PullEVSEStatusRequest, XElement, XElement> CustomPullEVSEStatusSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PullEVSEStatusRequest>, Acknowledgement<PullEVSEStatusRequest>.Builder> CustomPullEVSEStatusResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullEVSEStatusById(SOAP)RequestMapper
+
+        #region CustomPullEVSEStatusByIdRequestMapper
+
+        public Func<PullEVSEStatusByIdRequest, PullEVSEStatusByIdRequest> CustomPullEVSEStatusByIdRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusByIdRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusByIdRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullEVSEStatusByIdSOAPRequestMapper
+
+        public Func<PullEVSEStatusByIdRequest, XElement, XElement> CustomPullEVSEStatusByIdSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusByIdSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusByIdSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PullEVSEStatusByIdRequest>, Acknowledgement<PullEVSEStatusByIdRequest>.Builder> CustomPullEVSEStatusByIdResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPullEVSEStatusByIdResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPullEVSEStatusByIdResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region CustomPushAuthenticationData(SOAP)RequestMapper
+
+        #region CustomPushAuthenticationDataRequestMapper
+
+        public Func<PushAuthenticationDataRequest, PushAuthenticationDataRequest> CustomPushAuthenticationDataRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPushAuthenticationDataRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPushAuthenticationDataRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPushAuthenticationDataSOAPRequestMapper
+
+        public Func<PushAuthenticationDataRequest, XElement, XElement> CustomPushAuthenticationDataSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPushAuthenticationDataSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPushAuthenticationDataSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PushAuthenticationDataRequest>, Acknowledgement<PushAuthenticationDataRequest>.Builder> CustomPushAuthenticationDataResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomPushAuthenticationDataResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomPushAuthenticationDataResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region CustomAuthorizeRemoteReservationStart(SOAP)RequestMapper
+
+        #region CustomAuthorizeRemoteReservationStartRequestMapper
+
+        public Func<AuthorizeRemoteReservationStartRequest, AuthorizeRemoteReservationStartRequest> CustomAuthorizeRemoteReservationStartRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteReservationStartRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStartRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteReservationStartSOAPRequestMapper
+
+        public Func<AuthorizeRemoteReservationStartRequest, XElement, XElement> CustomAuthorizeRemoteReservationStartSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteReservationStartSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStartSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>, Acknowledgement<AuthorizeRemoteReservationStartRequest>.Builder> CustomAuthorizeRemoteReservationStartResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteReservationStartResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStartResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteReservationStop(SOAP)RequestMapper
+
+        #region CustomAuthorizeRemoteReservationStopRequestMapper
+
+        public Func<AuthorizeRemoteReservationStopRequest, AuthorizeRemoteReservationStopRequest> CustomAuthorizeRemoteReservationStopRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteReservationStopRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStopRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteReservationStopSOAPRequestMapper
+
+        public Func<AuthorizeRemoteReservationStopRequest, XElement, XElement> CustomAuthorizeRemoteReservationStopSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteReservationStopSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStopSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>, Acknowledgement<AuthorizeRemoteReservationStopRequest>.Builder> CustomAuthorizeRemoteReservationStopResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteReservationStopResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteReservationStopResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region CustomAuthorizeRemoteStart(SOAP)RequestMapper
+
+        #region CustomAuthorizeRemoteStartRequestMapper
+
+        public Func<AuthorizeRemoteStartRequest, AuthorizeRemoteStartRequest> CustomAuthorizeRemoteStartRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteStartRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStartRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteStartSOAPRequestMapper
+
+        public Func<AuthorizeRemoteStartRequest, XElement, XElement> CustomAuthorizeRemoteStartSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteStartSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStartSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteStartRequest>, Acknowledgement<AuthorizeRemoteStartRequest>.Builder> CustomAuthorizeRemoteStartResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteStartResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStartResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteStop(SOAP)Mappers
+
+        #region CustomAuthorizeRemoteStopRequestMapper
+
+        public Func<AuthorizeRemoteStopRequest, AuthorizeRemoteStopRequest> CustomAuthorizeRemoteStopRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteStopRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStopRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeRemoteStopSOAPRequestMapper
+
+        public Func<AuthorizeRemoteStopRequest, XElement, XElement> CustomAuthorizeRemoteStopSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteStopSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStopSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteStopRequest>, Acknowledgement<AuthorizeRemoteStopRequest>.Builder> CustomAuthorizeRemoteStopResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomAuthorizeRemoteStopResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomAuthorizeRemoteStopResponseMapper = value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region CustomGetChargeDetailRecords(SOAP)RequestMapper
+
+        #region CustomGetChargeDetailRecordsRequestMapper
+
+        public Func<GetChargeDetailRecordsRequest, GetChargeDetailRecordsRequest> CustomGetChargeDetailRecordsRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomGetChargeDetailRecordsRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomGetChargeDetailRecordsRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomGetChargeDetailRecordsSOAPRequestMapper
+
+        public Func<XElement, XElement> CustomGetChargeDetailRecordsSOAPRequestMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomGetChargeDetailRecordsSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomGetChargeDetailRecordsSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<GetChargeDetailRecordsResponse, GetChargeDetailRecordsResponse.Builder> CustomGetChargeDetailRecordsResponseMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomGetChargeDetailRecordsResponseMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomGetChargeDetailRecordsResponseMapper = value;
+            }
+
+        }
+
+
+        public CustomMapperDelegate<ChargeDetailRecord> CustomChargeDetailRecordXMLMapper
+        {
+
+            get
+            {
+                return EMPClient.CustomChargeDetailRecordXMLMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    EMPClient.CustomChargeDetailRecordXMLMapper = value;
+            }
+
+        }
+
+
+        #endregion
 
         #endregion
 

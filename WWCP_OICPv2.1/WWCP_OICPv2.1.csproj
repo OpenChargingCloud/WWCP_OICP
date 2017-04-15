@@ -104,7 +104,7 @@
     <Compile Include="MobileClient\MobileClientDelegates.cs" />
     <Compile Include="MobileClient\MobileClientLogger.cs" />
     <Compile Include="DataTypes\Enums\StatusCodes.cs" />
-    <Compile Include="Central\CentralClient.cs" />
+    <Compile Include="Central\CentralClient\CentralClient.cs" />
     <Compile Include="Central\CentralServer\CentralServer.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="EMP\EMPClient\EMPClient.cs" />
