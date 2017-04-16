@@ -252,30 +252,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 #region ReservationStart/-Stop
 
                 RegisterEvent("ReservationStartRequest",
-                              handler => EMPClient.OnReservationStartSOAPRequest  += handler,
-                              handler => EMPClient.OnReservationStartSOAPRequest  -= handler,
+                              handler => EMPClient.OnAuthorizeRemoteReservationStartSOAPRequest  += handler,
+                              handler => EMPClient.OnAuthorizeRemoteReservationStartSOAPRequest  -= handler,
                               "ReservationStart", "Reservation", "Requests", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent("ReservationStartResponse",
-                              handler => EMPClient.OnReservationStartSOAPResponse += handler,
-                              handler => EMPClient.OnReservationStartSOAPResponse -= handler,
+                              handler => EMPClient.OnAuthorizeRemoteReservationStartSOAPResponse += handler,
+                              handler => EMPClient.OnAuthorizeRemoteReservationStartSOAPResponse -= handler,
                               "ReservationStart", "Reservation", "Responses", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
                 RegisterEvent("ReservationStopRequest",
-                              handler => EMPClient.OnReservationStopSOAPRequest += handler,
-                              handler => EMPClient.OnReservationStopSOAPRequest -= handler,
+                              handler => EMPClient.OnAuthorizeRemoteReservationStopSOAPRequest += handler,
+                              handler => EMPClient.OnAuthorizeRemoteReservationStopSOAPRequest -= handler,
                               "ReservationStop", "Reservation", "Requests", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent("ReservationStopResponse",
-                              handler => EMPClient.OnReservationStopSOAPResponse += handler,
-                              handler => EMPClient.OnReservationStopSOAPResponse -= handler,
+                              handler => EMPClient.OnAuthorizeRemoteReservationStopSOAPResponse += handler,
+                              handler => EMPClient.OnAuthorizeRemoteReservationStopSOAPResponse -= handler,
                               "ReservationStop", "Reservation", "Responses", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);

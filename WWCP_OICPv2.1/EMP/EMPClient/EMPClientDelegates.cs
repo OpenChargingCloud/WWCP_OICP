@@ -44,7 +44,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        Single                          DistanceKM,
                                                        DateTime?                       LastCall,
                                                        GeoCoordinatesResponseFormats   GeoCoordinatesResponseFormat,
-                                                       TimeSpan?                       RequestTimeout);
+                                                       TimeSpan                        RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'pull EVSE data' request had been received.
@@ -58,7 +58,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        Single                          DistanceKM,
                                                        DateTime?                       LastCall,
                                                        GeoCoordinatesResponseFormats   GeoCoordinatesResponseFormat,
-                                                       TimeSpan?                       RequestTimeout,
+                                                       TimeSpan                        RequestTimeout,
                                                        EVSEData                        Result,
                                                        TimeSpan                        Duration);
 
@@ -80,7 +80,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      Address                    Address,
                                                      PlugTypes?                 Plug,
                                                      ChargingFacilities?        ChargingFacility,
-                                                     TimeSpan?                  RequestTimeout);
+                                                     TimeSpan                   RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'search EVSE' request had been received.
@@ -95,7 +95,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      Address                    Address,
                                                      PlugTypes?                 Plug,
                                                      ChargingFacilities?        ChargingFacility,
-                                                     TimeSpan?                  RequestTimeout,
+                                                     TimeSpan                   RequestTimeout,
                                                      EVSESearchResult           Result,
                                                      TimeSpan                   Duration);
 
@@ -115,7 +115,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                          GeoCoordinate?       SearchCenter,
                                                          Single               DistanceKM,
                                                          EVSEStatusTypes?     EVSEStatusFilter,
-                                                         TimeSpan?            RequestTimeout);
+                                                         TimeSpan             RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'pull EVSE status' request had been received.
@@ -128,7 +128,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                          GeoCoordinate?       SearchCenter,
                                                          Single               DistanceKM,
                                                          EVSEStatusTypes?     EVSEStatusFilter,
-                                                         TimeSpan?            RequestTimeout,
+                                                         TimeSpan             RequestTimeout,
                                                          EVSEStatus           Result,
                                                          TimeSpan             Duration);
 
@@ -146,7 +146,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                              EventTracking_Id         EventTrackingId,
                                                              Provider_Id              ProviderId,
                                                              IEnumerable<EVSE_Id>     EVSEIds,
-                                                             TimeSpan?                RequestTimeout);
+                                                             TimeSpan                 RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'pull EVSE status by id' request had been received.
@@ -157,7 +157,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                              EventTracking_Id         EventTrackingId,
                                                              Provider_Id              ProviderId,
                                                              IEnumerable<EVSE_Id>     EVSEIds,
-                                                             TimeSpan?                RequestTimeout,
+                                                             TimeSpan                 RequestTimeout,
                                                              EVSEStatusById           Result,
                                                              TimeSpan                 Duration);
 
@@ -176,7 +176,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                  IEnumerable<AuthorizationIdentification>         AuthorizationIdentifications,
                                                                  Provider_Id                                      ProviderId,
                                                                  ActionTypes                                      OICPAction,
-                                                                 TimeSpan?                                        RequestTimeout);
+                                                                 TimeSpan                                         RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'push authentication data' request had been received.
@@ -188,76 +188,76 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                  IEnumerable<AuthorizationIdentification>         AuthorizationIdentifications,
                                                                  Provider_Id                                      ProviderId,
                                                                  ActionTypes                                      OICPAction,
-                                                                 TimeSpan?                                        RequestTimeout,
+                                                                 TimeSpan                                         RequestTimeout,
                                                                  Acknowledgement<PushAuthenticationDataRequest>   Result,
                                                                  TimeSpan                                         Duration);
 
     #endregion
 
-    #region OnReservationStart/-Stop
+    #region OnAuthorizeRemoteReservationStart/-Stop
 
     /// <summary>
     /// A delegate called whenever a 'reservation start' request will be send.
     /// </summary>
-    public delegate Task OnReservationStartRequestHandler (DateTime                                                  LogTimestamp,
-                                                           DateTime                                                  RequestTimestamp,
-                                                           EMPClient                                                 Sender,
-                                                           String                                                    SenderId,
-                                                           EventTracking_Id                                          EventTrackingId,
-                                                           Provider_Id                                               ProviderId,
-                                                           EVSE_Id                                                   EVSEId,
-                                                           EVCO_Id                                                   EVCOId,
-                                                           Session_Id?                                               SessionId,
-                                                           PartnerSession_Id?                                        PartnerSessionId,
-                                                           PartnerProduct_Id?                                        PartnerProductId,
-                                                           TimeSpan?                                                 RequestTimeout);
+    public delegate Task OnAuthorizeRemoteReservationStartRequestHandler (DateTime                                                  LogTimestamp,
+                                                                          DateTime                                                  RequestTimestamp,
+                                                                          EMPClient                                                 Sender,
+                                                                          String                                                    SenderId,
+                                                                          EventTracking_Id                                          EventTrackingId,
+                                                                          Provider_Id                                               ProviderId,
+                                                                          EVSE_Id                                                   EVSEId,
+                                                                          EVCO_Id                                                   EVCOId,
+                                                                          Session_Id?                                               SessionId,
+                                                                          PartnerSession_Id?                                        PartnerSessionId,
+                                                                          PartnerProduct_Id?                                        PartnerProductId,
+                                                                          TimeSpan                                                  RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'reservation start' request had been received.
     /// </summary>
-    public delegate Task OnReservationStartResponseHandler(DateTime                                                  Timestamp,
-                                                           EMPClient                                                 Sender,
-                                                           String                                                    SenderId,
-                                                           EventTracking_Id                                          EventTrackingId,
-                                                           Provider_Id                                               ProviderId,
-                                                           EVSE_Id                                                   EVSEId,
-                                                           EVCO_Id                                                   EVCOId,
-                                                           Session_Id?                                               SessionId,
-                                                           PartnerSession_Id?                                        PartnerSessionId,
-                                                           PartnerProduct_Id?                                        PartnerProductId,
-                                                           TimeSpan?                                                 RequestTimeout,
-                                                           Acknowledgement<AuthorizeRemoteReservationStartRequest>   Result,
-                                                           TimeSpan                                                  Duration);
+    public delegate Task OnAuthorizeRemoteReservationStartResponseHandler(DateTime                                                  Timestamp,
+                                                                          EMPClient                                                 Sender,
+                                                                          String                                                    SenderId,
+                                                                          EventTracking_Id                                          EventTrackingId,
+                                                                          Provider_Id                                               ProviderId,
+                                                                          EVSE_Id                                                   EVSEId,
+                                                                          EVCO_Id                                                   EVCOId,
+                                                                          Session_Id?                                               SessionId,
+                                                                          PartnerSession_Id?                                        PartnerSessionId,
+                                                                          PartnerProduct_Id?                                        PartnerProductId,
+                                                                          TimeSpan                                                  RequestTimeout,
+                                                                          Acknowledgement<AuthorizeRemoteReservationStartRequest>   Result,
+                                                                          TimeSpan                                                  Duration);
 
 
     /// <summary>
     /// A delegate called whenever a reservation stop request will be send.
     /// </summary>
-    public delegate Task OnReservationStopRequestHandler  (DateTime                                                  LogTimestamp,
-                                                           DateTime                                                  RequestTimestamp,
-                                                           EMPClient                                                 Sender,
-                                                           String                                                    SenderId,
-                                                           EventTracking_Id                                          EventTrackingId,
-                                                           Session_Id                                                SessionId,
-                                                           Provider_Id                                               ProviderId,
-                                                           EVSE_Id                                                   EVSEId,
-                                                           PartnerSession_Id?                                        PartnerSessionId,
-                                                           TimeSpan?                                                 RequestTimeout);
+    public delegate Task OnAuthorizeRemoteReservationStopRequestHandler  (DateTime                                                  LogTimestamp,
+                                                                          DateTime                                                  RequestTimestamp,
+                                                                          EMPClient                                                 Sender,
+                                                                          String                                                    SenderId,
+                                                                          EventTracking_Id                                          EventTrackingId,
+                                                                          Session_Id                                                SessionId,
+                                                                          Provider_Id                                               ProviderId,
+                                                                          EVSE_Id                                                   EVSEId,
+                                                                          PartnerSession_Id?                                        PartnerSessionId,
+                                                                          TimeSpan                                                  RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a reservation stop request had been received.
     /// </summary>
-    public delegate Task OnReservationStopResponseHandler (DateTime                                                  Timestamp,
-                                                           EMPClient                                                 Sender,
-                                                           String                                                    SenderId,
-                                                           EventTracking_Id                                          EventTrackingId,
-                                                           Session_Id                                                SessionId,
-                                                           Provider_Id                                               ProviderId,
-                                                           EVSE_Id                                                   EVSEId,
-                                                           PartnerSession_Id?                                        PartnerSessionId,
-                                                           TimeSpan?                                                 RequestTimeout,
-                                                           Acknowledgement<AuthorizeRemoteReservationStopRequest>    Result,
-                                                           TimeSpan                                                  Duration);
+    public delegate Task OnAuthorizeRemoteReservationStopResponseHandler (DateTime                                                  Timestamp,
+                                                                          EMPClient                                                 Sender,
+                                                                          String                                                    SenderId,
+                                                                          EventTracking_Id                                          EventTrackingId,
+                                                                          Session_Id                                                SessionId,
+                                                                          Provider_Id                                               ProviderId,
+                                                                          EVSE_Id                                                   EVSEId,
+                                                                          PartnerSession_Id?                                        PartnerSessionId,
+                                                                          TimeSpan                                                  RequestTimeout,
+                                                                          Acknowledgement<AuthorizeRemoteReservationStopRequest>    Result,
+                                                                          TimeSpan                                                  Duration);
 
     #endregion
 
@@ -277,7 +277,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                Session_Id?                                    SessionId,
                                                                PartnerSession_Id?                             PartnerSessionId,
                                                                PartnerProduct_Id?                             PartnerProductId,
-                                                               TimeSpan?                                      RequestTimeout);
+                                                               TimeSpan                                       RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for an 'authorize remote start' request had been received.
@@ -292,7 +292,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                Session_Id?                                    SessionId,
                                                                PartnerSession_Id?                             PartnerSessionId,
                                                                PartnerProduct_Id?                             PartnerProductId,
-                                                               TimeSpan?                                      RequestTimeout,
+                                                               TimeSpan                                       RequestTimeout,
                                                                Acknowledgement<AuthorizeRemoteStartRequest>   Result,
                                                                TimeSpan                                       Duration);
 
@@ -309,7 +309,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                Provider_Id                                    ProviderId,
                                                                EVSE_Id                                        EVSEId,
                                                                PartnerSession_Id?                             PartnerSessionId,
-                                                               TimeSpan?                                      RequestTimeout);
+                                                               TimeSpan                                       RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for an 'authorize remote stop' request had been received.
@@ -322,7 +322,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                Provider_Id                                    ProviderId,
                                                                EVSE_Id                                        EVSEId,
                                                                PartnerSession_Id?                             PartnerSessionId,
-                                                               TimeSpan?                                      RequestTimeout,
+                                                               TimeSpan                                       RequestTimeout,
                                                                Acknowledgement<AuthorizeRemoteStopRequest>    Result,
                                                                TimeSpan                                       Duration);
 
@@ -341,7 +341,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                  Provider_Id                      ProviderId,
                                                                  DateTime                         From,
                                                                  DateTime                         To,
-                                                                 TimeSpan?                        RequestTimeout);
+                                                                 TimeSpan                         RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'get charge detail records' request had been received.
@@ -353,7 +353,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                  Provider_Id                      ProviderId,
                                                                  DateTime                         From,
                                                                  DateTime                         To,
-                                                                 TimeSpan?                        RequestTimeout,
+                                                                 TimeSpan                         RequestTimeout,
                                                                  GetChargeDetailRecordsResponse   Result,
                                                                  TimeSpan                         Duration);
 

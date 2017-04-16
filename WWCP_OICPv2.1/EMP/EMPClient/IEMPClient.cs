@@ -38,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// The default request timeout for this client.
         /// </summary>
-        TimeSpan?  RequestTimeout   { get; }
+        TimeSpan  RequestTimeout   { get; }
 
         #endregion
 
@@ -69,23 +69,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
 
-            ReservationStart(AuthorizeRemoteReservationStartRequest  Request);
+            AuthorizeRemoteReservationStart(AuthorizeRemoteReservationStartRequest  Request);
 
 
         Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
 
-            ReservationStop (AuthorizeRemoteReservationStopRequest   Request);
+            AuthorizeRemoteReservationStop (AuthorizeRemoteReservationStopRequest   Request);
 
 
 
         Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
 
-            RemoteStart(AuthorizeRemoteStartRequest Request);
+            AuthorizeRemoteStart(AuthorizeRemoteStartRequest Request);
 
 
         Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
 
-            RemoteStop(AuthorizeRemoteStopRequest Request);
+            AuthorizeRemoteStop(AuthorizeRemoteStopRequest Request);
 
 
 

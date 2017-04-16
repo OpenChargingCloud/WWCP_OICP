@@ -459,22 +459,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region OnReservationStartRequest/-Response
+        #region OnAuthorizeRemoteReservationStartRequest/-Response
 
         /// <summary>
         /// An event fired whenever a 'reservation start' request will be send.
         /// </summary>
-        public event OnReservationStartRequestHandler OnReservationStartRequest
+        public event OnAuthorizeRemoteReservationStartRequestHandler OnAuthorizeRemoteReservationStartRequest
         {
 
             add
             {
-                EMPClient.OnReservationStartRequest += value;
+                EMPClient.OnAuthorizeRemoteReservationStartRequest += value;
             }
 
             remove
             {
-                EMPClient.OnReservationStartRequest -= value;
+                EMPClient.OnAuthorizeRemoteReservationStartRequest -= value;
             }
 
         }
@@ -482,17 +482,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event fired whenever a 'reservation start' SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler OnReservationStartSOAPRequest
+        public event ClientRequestLogHandler OnAuthorizeRemoteReservationStartSOAPRequest
+
         {
 
             add
             {
-                EMPClient.OnReservationStartSOAPRequest += value;
+                EMPClient.OnAuthorizeRemoteReservationStartSOAPRequest += value;
             }
 
             remove
             {
-                EMPClient.OnReservationStartSOAPRequest -= value;
+                EMPClient.OnAuthorizeRemoteReservationStartSOAPRequest -= value;
             }
 
         }
@@ -500,17 +501,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event fired whenever a response to a 'reservation start' SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnReservationStartSOAPResponse
+        public event ClientResponseLogHandler OnAuthorizeRemoteReservationStartSOAPResponse
         {
 
             add
             {
-                EMPClient.OnReservationStartSOAPResponse += value;
+                EMPClient.OnAuthorizeRemoteReservationStartSOAPResponse += value;
             }
 
             remove
             {
-                EMPClient.OnReservationStartSOAPResponse -= value;
+                EMPClient.OnAuthorizeRemoteReservationStartSOAPResponse -= value;
             }
 
         }
@@ -518,39 +519,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event fired whenever a response to a 'reservation start' request had been received.
         /// </summary>
-        public event OnReservationStartResponseHandler OnReservationStartResponse
+        public event OnAuthorizeRemoteReservationStartResponseHandler OnAuthorizeRemoteReservationStartResponse
         {
 
             add
             {
-                EMPClient.OnReservationStartResponse += value;
+                EMPClient.OnAuthorizeRemoteReservationStartResponse += value;
             }
 
             remove
             {
-                EMPClient.OnReservationStartResponse -= value;
+                EMPClient.OnAuthorizeRemoteReservationStartResponse -= value;
             }
 
         }
 
         #endregion
 
-        #region OnReservationStopRequest/-Response
+        #region OnAuthorizeRemoteReservationStopRequest/-Response
 
         /// <summary>
         /// An event fired whenever a 'reservation stop' request will be send.
         /// </summary>
-        public event OnReservationStopRequestHandler OnReservationStopRequest
+        public event OnAuthorizeRemoteReservationStopRequestHandler OnAuthorizeRemoteReservationStopRequest
         {
 
             add
             {
-                EMPClient.OnReservationStopRequest += value;
+                EMPClient.OnAuthorizeRemoteReservationStopRequest += value;
             }
 
             remove
             {
-                EMPClient.OnReservationStopRequest -= value;
+                EMPClient.OnAuthorizeRemoteReservationStopRequest -= value;
             }
 
         }
@@ -558,17 +559,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event fired whenever a 'reservation stop' SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler OnReservationStopSOAPRequest
+        public event ClientRequestLogHandler OnAuthorizeRemoteReservationStopSOAPRequest
         {
 
             add
             {
-                EMPClient.OnReservationStopSOAPRequest += value;
+                EMPClient.OnAuthorizeRemoteReservationStopSOAPRequest += value;
             }
 
             remove
             {
-                EMPClient.OnReservationStopSOAPRequest -= value;
+                EMPClient.OnAuthorizeRemoteReservationStopSOAPRequest -= value;
             }
 
         }
@@ -576,17 +577,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event fired whenever a response to a 'reservation stop' SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnReservationStopSOAPResponse
+        public event ClientResponseLogHandler OnAuthorizeRemoteReservationStopSOAPResponse
         {
 
             add
             {
-                EMPClient.OnReservationStopSOAPResponse += value;
+                EMPClient.OnAuthorizeRemoteReservationStopSOAPResponse += value;
             }
 
             remove
             {
-                EMPClient.OnReservationStopSOAPResponse -= value;
+                EMPClient.OnAuthorizeRemoteReservationStopSOAPResponse -= value;
             }
 
         }
@@ -594,17 +595,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event fired whenever a response to a 'reservation stop' request had been received.
         /// </summary>
-        public event OnReservationStopResponseHandler OnReservationStopResponse
+        public event OnAuthorizeRemoteReservationStopResponseHandler OnAuthorizeRemoteReservationStopResponse
         {
 
             add
             {
-                EMPClient.OnReservationStopResponse += value;
+                EMPClient.OnAuthorizeRemoteReservationStopResponse += value;
             }
 
             remove
             {
-                EMPClient.OnReservationStopResponse -= value;
+                EMPClient.OnAuthorizeRemoteReservationStopResponse -= value;
             }
 
         }
@@ -1910,9 +1911,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
         public Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
 
-            ReservationStart(AuthorizeRemoteReservationStartRequest  Request)
+            AuthorizeRemoteReservationStart(AuthorizeRemoteReservationStartRequest  Request)
 
-                => EMPClient.ReservationStart(Request);
+                => EMPClient.AuthorizeRemoteReservationStart(Request);
 
         #endregion
 
@@ -1924,9 +1925,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
         public Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
 
-            ReservationStop(AuthorizeRemoteReservationStopRequest Request)
+            AuthorizeRemoteReservationStop(AuthorizeRemoteReservationStopRequest Request)
 
-                => EMPClient.ReservationStop(Request);
+                => EMPClient.AuthorizeRemoteReservationStop(Request);
 
         #endregion
 
@@ -1939,9 +1940,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="Request">An AuthorizeRemoteStart request.</param>
         public Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
 
-            RemoteStart(AuthorizeRemoteStartRequest Request)
+            AuthorizeRemoteStart(AuthorizeRemoteStartRequest Request)
 
-                => EMPClient.RemoteStart(Request);
+                => EMPClient.AuthorizeRemoteStart(Request);
 
         #endregion
 
@@ -1953,9 +1954,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="Request">An AuthorizeRemoteStop request.</param>
         public Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
 
-            RemoteStop(AuthorizeRemoteStopRequest Request)
+            AuthorizeRemoteStop(AuthorizeRemoteStopRequest Request)
 
-                => EMPClient.RemoteStop(Request);
+                => EMPClient.AuthorizeRemoteStop(Request);
 
         #endregion
 

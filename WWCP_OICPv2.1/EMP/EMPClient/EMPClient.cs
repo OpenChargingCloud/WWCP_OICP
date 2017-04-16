@@ -710,22 +710,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event fired whenever a 'reservation start' request will be send.
         /// </summary>
-        public event OnReservationStartRequestHandler   OnReservationStartRequest;
+        public event OnAuthorizeRemoteReservationStartRequestHandler   OnAuthorizeRemoteReservationStartRequest;
 
         /// <summary>
         /// An event fired whenever a 'reservation start' SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler            OnReservationStartSOAPRequest;
+        public event ClientRequestLogHandler            OnAuthorizeRemoteReservationStartSOAPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a 'reservation start' SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler           OnReservationStartSOAPResponse;
+        public event ClientResponseLogHandler           OnAuthorizeRemoteReservationStartSOAPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a 'reservation start' request had been received.
         /// </summary>
-        public event OnReservationStartResponseHandler  OnReservationStartResponse;
+        public event OnAuthorizeRemoteReservationStartResponseHandler  OnAuthorizeRemoteReservationStartResponse;
 
         #endregion
 
@@ -734,22 +734,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event fired whenever a 'reservation stop' request will be send.
         /// </summary>
-        public event OnReservationStopRequestHandler   OnReservationStopRequest;
+        public event OnAuthorizeRemoteReservationStopRequestHandler   OnAuthorizeRemoteReservationStopRequest;
 
         /// <summary>
         /// An event fired whenever a 'reservation stop' SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler           OnReservationStopSOAPRequest;
+        public event ClientRequestLogHandler           OnAuthorizeRemoteReservationStopSOAPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a 'reservation stop' SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler          OnReservationStopSOAPResponse;
+        public event ClientResponseLogHandler          OnAuthorizeRemoteReservationStopSOAPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a 'reservation stop' request had been received.
         /// </summary>
-        public event OnReservationStopResponseHandler  OnReservationStopResponse;
+        public event OnAuthorizeRemoteReservationStopResponseHandler  OnAuthorizeRemoteReservationStopResponse;
 
         #endregion
 
@@ -1000,7 +1000,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                               Request.DistanceKM,
                                               Request.LastCall,
                                               Request.GeoCoordinatesResponseFormat,
-                                              Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
+                                              Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout);
 
             }
             catch (Exception e)
@@ -1028,7 +1028,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
 
                                                  #region OnSuccess
 
@@ -1109,7 +1109,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                Request.DistanceKM,
                                                Request.LastCall,
                                                Request.GeoCoordinatesResponseFormat,
-                                               Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                               Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
                                                result.Content,
                                                Endtime - StartTime);
 
@@ -1172,7 +1172,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                             Request.Address,
                                             Request.Plug,
                                             Request.ChargingFacility,
-                                            Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
+                                            Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout);
 
             }
             catch (Exception e)
@@ -1200,7 +1200,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnSearchEVSESOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
 
                                                  #region OnSuccess
 
@@ -1285,7 +1285,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                              Request.Address,
                                              Request.Plug,
                                              Request.ChargingFacility,
-                                             Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                             Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
                                              result.Content,
                                              Endtime - StartTime);
 
@@ -1347,7 +1347,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                 Request.SearchCenter,
                                                 Request.DistanceKM,
                                                 Request.EVSEStatusFilter,
-                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
+                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout);
 
             }
             catch (Exception e)
@@ -1375,7 +1375,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
 
                                                  #region OnSuccess
 
@@ -1455,7 +1455,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  Request.SearchCenter,
                                                  Request.DistanceKM,
                                                  Request.EVSEStatusFilter,
-                                                 Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
                                                  result.Content,
                                                  Endtime - StartTime);
 
@@ -1514,7 +1514,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     Request.EventTrackingId,
                                                     Request.ProviderId,
                                                     Request.EVSEIds,
-                                                    Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
+                                                    Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout);
 
             }
             catch (Exception e)
@@ -1542,7 +1542,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnPullEVSEStatusByIdSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
 
                                                  #region OnSuccess
 
@@ -1620,7 +1620,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      Request.EventTrackingId,
                                                      Request.ProviderId,
                                                      Request.EVSEIds,
-                                                     Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                     Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
                                                      result.Content,
                                                      Endtime - StartTime);
 
@@ -1822,7 +1822,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                          Request.AuthorizationIdentifications,
                                                          Request.ProviderId,
                                                          Request.OICPAction,
-                                                         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
                                                          result.Content,
                                                          Endtime - StartTime);
 
@@ -1841,7 +1841,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region ReservationStart(Request)
+        #region AuthorizeRemoteReservationStart(Request)
 
         /// <summary>
         /// Create a reservation at the given EVSE.
@@ -1849,7 +1849,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
         public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
 
-            ReservationStart(AuthorizeRemoteReservationStartRequest  Request)
+            AuthorizeRemoteReservationStart(AuthorizeRemoteReservationStartRequest  Request)
 
         {
 
@@ -1868,30 +1868,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            #region Send OnReservationStartRequest event
+            #region Send OnAuthorizeRemoteReservationStartRequest event
 
             var StartTime = DateTime.Now;
 
             try
             {
 
-                OnReservationStartRequest?.Invoke(StartTime,
-                                                  Request.Timestamp.Value,
-                                                  this,
-                                                  ClientId,
-                                                  Request.EventTrackingId,
-                                                  Request.ProviderId,
-                                                  Request.EVSEId,
-                                                  Request.EVCOId,
-                                                  Request.SessionId,
-                                                  Request.PartnerSessionId,
-                                                  Request.PartnerProductId,
-                                                  RequestTimeout);
+                OnAuthorizeRemoteReservationStartRequest?.Invoke(StartTime,
+                                                                 Request.Timestamp.Value,
+                                                                 this,
+                                                                 ClientId,
+                                                                 Request.EventTrackingId,
+                                                                 Request.ProviderId,
+                                                                 Request.EVSEId,
+                                                                 Request.EVCOId,
+                                                                 Request.SessionId,
+                                                                 Request.PartnerSessionId,
+                                                                 Request.PartnerProductId,
+                                                                 RequestTimeout);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnReservationStartRequest));
+                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
             }
 
             #endregion
@@ -1909,8 +1909,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStartSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
                                                  "eRoamingAuthorizeRemoteReservationStart",
-                                                 RequestLogDelegate:   OnReservationStartSOAPRequest,
-                                                 ResponseLogDelegate:  OnReservationStartSOAPResponse,
+                                                 RequestLogDelegate:   OnAuthorizeRemoteReservationStartSOAPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeRemoteReservationStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
                                                  QueryTimeout:         Request.RequestTimeout,
@@ -2013,31 +2013,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          );
 
 
-            #region Send OnReservationStartResponse event
+            #region Send OnAuthorizeRemoteReservationStartResponse event
 
             var Endtime = DateTime.Now;
 
             try
             {
 
-                OnReservationStartResponse?.Invoke(Endtime,
-                                                   this,
-                                                   ClientId,
-                                                   Request.EventTrackingId,
-                                                   Request.ProviderId,
-                                                   Request.EVSEId,
-                                                   Request.EVCOId,
-                                                   Request.SessionId,
-                                                   Request.PartnerSessionId,
-                                                   Request.PartnerProductId,
-                                                   Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
-                                                   result.Content,
-                                                   Endtime - StartTime);
+                OnAuthorizeRemoteReservationStartResponse?.Invoke(Endtime,
+                                                                  this,
+                                                                  ClientId,
+                                                                  Request.EventTrackingId,
+                                                                  Request.ProviderId,
+                                                                  Request.EVSEId,
+                                                                  Request.EVCOId,
+                                                                  Request.SessionId,
+                                                                  Request.PartnerSessionId,
+                                                                  Request.PartnerProductId,
+                                                                  Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
+                                                                  result.Content,
+                                                                  Endtime - StartTime);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnReservationStartResponse));
+                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
             }
 
             #endregion
@@ -2048,7 +2048,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region ReservationStop (Request)
+        #region AuthorizeRemoteReservationStop (Request)
 
         /// <summary>
         /// Delete a reservation at the given EVSE.
@@ -2056,7 +2056,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
         public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
 
-            ReservationStop(AuthorizeRemoteReservationStopRequest Request)
+            AuthorizeRemoteReservationStop(AuthorizeRemoteReservationStopRequest Request)
 
         {
 
@@ -2075,28 +2075,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            #region Send OnReservationStopRequest event
+            #region Send OnAuthorizeRemoteReservationStopRequest event
 
             var StartTime = DateTime.Now;
 
             try
             {
 
-                OnReservationStopRequest?.Invoke(StartTime,
-                                                 Request.Timestamp.Value,
-                                                 this,
-                                                 ClientId,
-                                                 Request.EventTrackingId,
-                                                 Request.SessionId,
-                                                 Request.ProviderId,
-                                                 Request.EVSEId,
-                                                 Request.PartnerSessionId,
-                                                 RequestTimeout);
+                OnAuthorizeRemoteReservationStopRequest?.Invoke(StartTime,
+                                                                Request.Timestamp.Value,
+                                                                this,
+                                                                ClientId,
+                                                                Request.EventTrackingId,
+                                                                Request.SessionId,
+                                                                Request.ProviderId,
+                                                                Request.EVSEId,
+                                                                Request.PartnerSessionId,
+                                                                RequestTimeout);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnReservationStopRequest));
+                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
             }
 
             #endregion
@@ -2114,8 +2114,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStopSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
                                                  "eRoamingAuthorizeRemoteReservationStop",
-                                                 RequestLogDelegate:   OnReservationStartSOAPRequest,
-                                                 ResponseLogDelegate:  OnReservationStopSOAPResponse,
+                                                 RequestLogDelegate:   OnAuthorizeRemoteReservationStartSOAPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeRemoteReservationStopSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
                                                  QueryTimeout:         Request.RequestTimeout,
@@ -2218,29 +2218,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          );
 
 
-            #region Send OnReservationStopResponse event
+            #region Send OnAuthorizeRemoteReservationStopResponse event
 
             var EndTime = DateTime.Now;
 
             try
             {
 
-                OnReservationStopResponse?.Invoke(EndTime,
-                                                  this,
-                                                  ClientId,
-                                                  Request.EventTrackingId,
-                                                  Request.SessionId,
-                                                  Request.ProviderId,
-                                                  Request.EVSEId,
-                                                  Request.PartnerSessionId,
-                                                  Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
-                                                  result.Content,
-                                                  EndTime - StartTime);
+                OnAuthorizeRemoteReservationStopResponse?.Invoke(EndTime,
+                                                                 this,
+                                                                 ClientId,
+                                                                 Request.EventTrackingId,
+                                                                 Request.SessionId,
+                                                                 Request.ProviderId,
+                                                                 Request.EVSEId,
+                                                                 Request.PartnerSessionId,
+                                                                 Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
+                                                                 result.Content,
+                                                                 EndTime - StartTime);
 
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnReservationStartResponse));
+                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
             }
 
             #endregion
@@ -2252,7 +2252,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region RemoteStart     (Request)
+        #region AuthorizeRemoteStart     (Request)
 
         /// <summary>
         /// Start a charging session at the given EVSE.
@@ -2260,7 +2260,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="Request">An AuthorizeRemoteStart request.</param>
         public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
 
-            RemoteStart(AuthorizeRemoteStartRequest Request)
+            AuthorizeRemoteStart(AuthorizeRemoteStartRequest Request)
 
         {
 
@@ -2438,7 +2438,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        Request.SessionId,
                                                        Request.PartnerSessionId,
                                                        Request.PartnerProductId,
-                                                       Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                       Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
                                                        result.Content,
                                                        EndTime - StartTime);
 
@@ -2456,7 +2456,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region RemoteStop      (Request)
+        #region AuthorizeRemoteStop      (Request)
 
         /// <summary>
         /// Stop the given charging session at the given EVSE.
@@ -2464,7 +2464,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="Request">An AuthorizeRemoteStop request.</param>
         public async Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
 
-            RemoteStop(AuthorizeRemoteStopRequest Request)
+            AuthorizeRemoteStop(AuthorizeRemoteStopRequest Request)
 
         {
 
@@ -2641,7 +2641,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                       Request.ProviderId,
                                                       Request.EVSEId,
                                                       Request.PartnerSessionId,
-                                                      Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                      Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
                                                       result.Content,
                                                       EndTime - StartTime);
 
@@ -2810,7 +2810,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                              Request.ProviderId,
                                                              Request.From,
                                                              Request.To,
-                                                             Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                             Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout,
                                                              result.Content,
                                                              EndTime - StartTime);
 

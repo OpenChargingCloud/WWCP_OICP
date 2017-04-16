@@ -20,7 +20,10 @@
 using System;
 using System.Xml.Linq;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod;
 
 #endregion
 
@@ -244,6 +247,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                    AdditionalInfo.IsNotNullOrEmpty()
                        ? new XElement(OICPNS.CommonTypes + "AdditionalInfo",  AdditionalInfo)
+                       : null
+
+               );
+
+        #endregion
+
+        #region ToJSON()
+
+        public JObject ToJSON()
+
+            => JSONObject.Create(
+
+                   new JProperty("Code",  Code),
+
+                   Description.IsNotNullOrEmpty()
+                       ? new JProperty("Description",     Description)
+                       : null,
+
+                   AdditionalInfo.IsNotNullOrEmpty()
+                       ? new JProperty("AdditionalInfo",  AdditionalInfo)
                        : null
 
                );

@@ -284,7 +284,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                              TimeSpan?             RequestTimeout      = null)
 
 
-                => IEMPClient.ReservationStart(new AuthorizeRemoteReservationStartRequest(ProviderId,
+                => IEMPClient.AuthorizeRemoteReservationStart(new AuthorizeRemoteReservationStartRequest(ProviderId,
                                                                                           EVSEId,
                                                                                           EVCOId,
                                                                                           SessionId,
@@ -327,7 +327,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             TimeSpan?             RequestTimeout      = null)
 
 
-                => IEMPClient.ReservationStop(new AuthorizeRemoteReservationStopRequest(SessionId,
+                => IEMPClient.AuthorizeRemoteReservationStop(new AuthorizeRemoteReservationStopRequest(SessionId,
                                                                                         ProviderId,
                                                                                         EVSEId,
                                                                                         PartnerSessionId,
@@ -373,7 +373,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         EventTracking_Id      EventTrackingId     = null,
                         TimeSpan?             RequestTimeout      = null)
 
-                => IEMPClient.RemoteStart(new AuthorizeRemoteStartRequest(ProviderId,
+                => IEMPClient.AuthorizeRemoteStart(new AuthorizeRemoteStartRequest(ProviderId,
                                                                           EVSEId,
                                                                           EVCOId,
                                                                           SessionId,
@@ -417,7 +417,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                        TimeSpan?             RequestTimeout      = null)
 
 
-                => IEMPClient.RemoteStop(new AuthorizeRemoteStopRequest(SessionId,
+                => IEMPClient.AuthorizeRemoteStop(new AuthorizeRemoteStopRequest(SessionId,
                                                                         ProviderId,
                                                                         EVSEId,
                                                                         PartnerSessionId,
