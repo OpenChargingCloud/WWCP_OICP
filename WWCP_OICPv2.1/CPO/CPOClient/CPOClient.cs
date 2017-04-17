@@ -695,7 +695,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                               Request.Action,
                                               Request.EVSEDataRecords.ULongCount(),
                                               Request.EVSEDataRecords,
-                                              Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
+                                              Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
 
             }
             catch (Exception e)
@@ -723,7 +723,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPushEVSEDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -837,7 +837,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                Request.Action,
                                                Request.EVSEDataRecords.ULongCount(),
                                                Request.EVSEDataRecords,
-                                               Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                               Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
                                                result.Content,
                                                Endtime - StartTime);
 
@@ -897,7 +897,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                 Request.Action,
                                                 Request.EVSEStatusRecords.ULongCount(),
                                                 Request.EVSEStatusRecords,
-                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
+                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
 
             }
             catch (Exception e)
@@ -924,7 +924,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPushEVSEStatusSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1038,7 +1038,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  Request.Action,
                                                  Request.EVSEStatusRecords.ULongCount(),
                                                  Request.EVSEStatusRecords,
-                                                 Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
                                                  result.Content,
                                                  Endtime - StartTime);
 
@@ -1049,7 +1049,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
 
             #endregion
-
 
             return result;
 
@@ -1102,7 +1101,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                 Request.SessionId,
                                                 Request.PartnerProductId,
                                                 Request.PartnerSessionId,
-                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
+                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
 
             }
             catch (Exception e)
@@ -1129,7 +1128,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnAuthorizeStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1216,7 +1215,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  Request.SessionId,
                                                  Request.PartnerProductId,
                                                  Request.PartnerSessionId,
-                                                 Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
                                                  result.Content,
                                                  Endtime - StartTime);
 
@@ -1278,7 +1277,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                Request.UID,
                                                Request.EVSEId,
                                                Request.PartnerSessionId,
-                                               Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
+                                               Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
 
             }
             catch (Exception e)
@@ -1306,7 +1305,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnAuthorizeStopSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1390,7 +1389,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                 Request.UID,
                                                 Request.EVSEId,
                                                 Request.PartnerSessionId,
-                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
                                                 result.Content,
                                                 Endtime - StartTime);
 
@@ -1448,7 +1447,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                         ClientId,
                                                         Request.EventTrackingId,
                                                         Request.ChargeDetailRecord,
-                                                        Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
+                                                        Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
 
             }
             catch (Exception e)
@@ -1475,7 +1474,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnSendChargeDetailRecordSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1593,7 +1592,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                          ClientId,
                                                          Request.EventTrackingId,
                                                          Request.ChargeDetailRecord,
-                                                         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
                                                          result.Content,
                                                          Endtime - StartTime);
 
@@ -1653,7 +1652,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                         ClientId,
                                                         Request.EventTrackingId,
                                                         Request.OperatorId,
-                                                        Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout);
+                                                        Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
 
             }
             catch (Exception e)
@@ -1680,7 +1679,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPullAuthenticationDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1745,7 +1744,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                          ClientId,
                                                          Request.EventTrackingId,
                                                          Request.OperatorId,
-                                                         Request.RequestTimeout.HasValue ? Request.RequestTimeout : RequestTimeout,
+                                                         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
                                                          result.Content,
                                                          Endtime - StartTime);
 

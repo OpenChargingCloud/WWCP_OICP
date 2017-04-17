@@ -69,80 +69,92 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region Properties
-
-        //#region AuthorizatorId
-
-        //private readonly Authorizator_Id _AuthorizatorId;
-
-        //public Authorizator_Id AuthorizatorId
-        //{
-        //    get
-        //    {
-        //        return _AuthorizatorId;
-        //    }
-        //}
-
-        //#endregion
-
-        #endregion
-
         #region Events
 
         #region OnAuthorizeStart
 
         /// <summary>
+        /// An event sent whenever a authorize start SOAP request was received.
+        /// </summary>
+        public event RequestLogHandler                 OnAuthorizeStartSOAPRequest;
+
+        /// <summary>
+        /// An event sent whenever a authorize start request was received.
+        /// </summary>
+        public event OnAuthorizeStartRequestHandler    OnAuthorizeStartRequest;
+
+        /// <summary>
         /// An event sent whenever a authorize start command was received.
         /// </summary>
-        public event RequestLogHandler         OnLogAuthorizeStart;
+        public event OnAuthorizeStartDelegate          OnAuthorizeStart;
 
         /// <summary>
         /// An event sent whenever a authorize start response was sent.
         /// </summary>
-        public event AccessLogHandler          OnLogAuthorizeStarted;
+        public event OnAuthorizeStartResponseHandler   OnAuthorizeStartResponse;
 
         /// <summary>
-        /// An event sent whenever a authorize start command was received.
+        /// An event sent whenever a authorize start SOAP response was sent.
         /// </summary>
-        public event OnAuthorizeStartDelegate  OnAuthorizeStart;
+        public event AccessLogHandler                  OnAuthorizeStartSOAPResponse;
 
         #endregion
 
         #region OnAuthorizeStop
 
         /// <summary>
-        /// An event sent whenever a authorize start command was received.
+        /// An event sent whenever a authorize start SOAP request was received.
         /// </summary>
-        public event RequestLogHandler         OnLogAuthorizeStop;
+        public event RequestLogHandler                OnAuthorizeStopSOAPRequest;
 
         /// <summary>
-        /// An event sent whenever a authorize start response was sent.
+        /// An event sent whenever a authorize stop request was received.
         /// </summary>
-        public event AccessLogHandler          OnLogAuthorizeStopped;
+        public event OnAuthorizeStopRequestHandler    OnAuthorizeStopRequest;
 
         /// <summary>
-        /// An event sent whenever a authorize start command was received.
+        /// An event sent whenever a authorize stop command was received.
         /// </summary>
-        public event OnAuthorizeStopDelegate   OnAuthorizeStop;
+        public event OnAuthorizeStopDelegate          OnAuthorizeStop;
+
+        /// <summary>
+        /// An event sent whenever a authorize stop response was sent.
+        /// </summary>
+        public event OnAuthorizeStopResponseHandler   OnAuthorizeStopResponse;
+
+        /// <summary>
+        /// An event sent whenever a authorize stop SOAP response was sent.
+        /// </summary>
+        public event AccessLogHandler                 OnAuthorizeStopSOAPResponse;
 
         #endregion
 
         #region OnChargeDetailRecord
 
         /// <summary>
+        /// An event sent whenever a charge detail record SOAP request was received.
+        /// </summary>
+        public event RequestLogHandler                      OnChargeDetailRecordSOAPRequest;
+
+        /// <summary>
+        /// An event sent whenever a charge detail record request was received.
+        /// </summary>
+        public event OnChargeDetailRecordRequestHandler     OnChargeDetailRecordRequest;
+
+        /// <summary>
         /// An event sent whenever a charge detail record was received.
         /// </summary>
-        public event RequestLogHandler             OnLogChargeDetailRecordSend;
+        public event OnChargeDetailRecordDelegate           OnChargeDetailRecord;
 
         /// <summary>
         /// An event sent whenever a charge detail record response was sent.
         /// </summary>
-        public event AccessLogHandler              OnLogChargeDetailRecordSent;
+        public event OnChargeDetailRecordResponseHandler    OnChargeDetailRecordResponse;
 
         /// <summary>
-        /// An event sent whenever a charge detail record was received.
+        /// An event sent whenever a charge detail record SOAP response was sent.
         /// </summary>
-        public event OnChargeDetailRecordDelegate  OnChargeDetailRecord;
+        public event AccessLogHandler                       OnChargeDetailRecordSOAPResponse;
 
         #endregion
 
@@ -327,19 +339,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #endregion
 
-                #region Send OnLogAuthorizeStart event
+                #region Send OnAuthorizeStartSOAPRequest event
+
+                var StartTime = DateTime.Now;
 
                 try
                 {
 
-                    OnLogAuthorizeStart?.Invoke(DateTime.Now,
-                                                this.SOAPServer,
-                                                Request);
+                    OnAuthorizeStartSOAPRequest?.Invoke(StartTime,
+                                                        this.SOAPServer,
+                                                        Request);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + "." + nameof(OnLogAuthorizeStart));
+                    e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartSOAPRequest));
                 }
 
                 #endregion
@@ -417,6 +431,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #endregion
 
+                #region Send OnAuthorizeStartRequest event
+
+                try
+                {
+
+                    OnAuthorizeStartRequest?.Invoke(StartTime,
+                                                    StartTime, //Request.Timestamp.Value,
+                                                    this,
+                                                    "EMPServer", //ClientId,
+                                                    Request.EventTrackingId,
+                                                    OperatorId,
+                                                    UID,
+                                                    EVSEId,
+                                                    SessionId,
+                                                    PartnerProductId,
+                                                    PartnerSessionId,
+                                                    Request.Timeout.HasValue ? Request.Timeout.Value : DefaultRequestTimeout); //RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeStartRequest));
+                }
+
+                #endregion
+
                 #region Call async subscribers
 
                 if (response == null)
@@ -459,12 +499,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #endregion
 
+                #region Send OnAuthorizeStartResponse event
+
+                var EndTime = DateTime.Now;
+
+                try
+                {
+
+                    OnAuthorizeStartResponse?.Invoke(EndTime,
+                                                     //EndTime, //Request.Timestamp.Value,
+                                                     this,
+                                                     "EMPServer", //ClientId,
+                                                     Request.EventTrackingId,
+                                                     OperatorId,
+                                                     UID,
+                                                     EVSEId,
+                                                     SessionId,
+                                                     PartnerProductId,
+                                                     PartnerSessionId,
+                                                     Request.Timeout.HasValue ? Request.Timeout.Value : DefaultRequestTimeout,
+                                                     response,
+                                                     EndTime - StartTime);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeStartResponse));
+                }
+
+                #endregion
+
                 #region Create SOAP response
 
                 var HTTPResponse = new HTTPResponseBuilder(Request) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.DefaultServerName,
-                    Date            = DateTime.Now,
+                    Date            = EndTime,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(response.ToXML()).ToUTF8Bytes()
                 };
@@ -472,20 +542,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 #endregion
 
 
-                #region Send OnLogAuthorizeStarted event
+                #region Send OnAuthorizeStartSOAPResponse event
 
                 try
                 {
 
-                    OnLogAuthorizeStarted?.Invoke(HTTPResponse.Timestamp,
-                                                  this.SOAPServer,
-                                                  Request,
-                                                  HTTPResponse);
+                    OnAuthorizeStartSOAPResponse?.Invoke(HTTPResponse.Timestamp,
+                                                         this.SOAPServer,
+                                                         Request,
+                                                         HTTPResponse);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + "." + nameof(OnLogAuthorizeStarted));
+                    e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartSOAPResponse));
                 }
 
                 #endregion
@@ -535,14 +605,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 try
                 {
 
-                    OnLogAuthorizeStop?.Invoke(DateTime.Now,
+                    OnAuthorizeStopSOAPRequest?.Invoke(DateTime.Now,
                                                this.SOAPServer,
                                                Request);
 
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + "." + nameof(OnLogAuthorizeStart));
+                    e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartSOAPRequest));
                 }
 
                 #endregion
@@ -665,7 +735,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 try
                 {
 
-                    OnLogAuthorizeStopped?.Invoke(HTTPResponse.Timestamp,
+                    OnAuthorizeStopSOAPResponse?.Invoke(HTTPResponse.Timestamp,
                                                   this.SOAPServer,
                                                   Request,
                                                   HTTPResponse);
@@ -673,7 +743,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + "." + nameof(OnLogAuthorizeStopped));
+                    e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStopSOAPResponse));
                 }
 
                 #endregion
@@ -697,14 +767,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     try
                     {
 
-                        OnLogChargeDetailRecordSend?.Invoke(DateTime.Now,
+                        OnChargeDetailRecordSOAPRequest?.Invoke(DateTime.Now,
                                                             this.SOAPServer,
                                                             Request);
 
                     }
                     catch (Exception e)
                     {
-                        e.Log(nameof(EMPServer) + "." + nameof(OnLogChargeDetailRecordSend));
+                        e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordSOAPRequest));
                     }
 
                     #endregion
@@ -782,7 +852,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     try
                     {
 
-                        OnLogChargeDetailRecordSent?.Invoke(HTTPResponse.Timestamp,
+                        OnChargeDetailRecordSOAPResponse?.Invoke(HTTPResponse.Timestamp,
                                                             this.SOAPServer,
                                                             Request,
                                                             HTTPResponse);
@@ -790,7 +860,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     }
                     catch (Exception e)
                     {
-                        e.Log(nameof(EMPServer) + "." + nameof(OnLogChargeDetailRecordSent));
+                        e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordSOAPResponse));
                     }
 
                     #endregion

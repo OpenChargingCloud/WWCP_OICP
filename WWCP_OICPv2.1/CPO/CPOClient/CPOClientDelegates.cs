@@ -55,7 +55,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                         ActionTypes                             Action,
                                                         UInt64                                  NumberOfEVSEDataRecords,
                                                         IEnumerable<EVSEDataRecord>             EVSEDataRecords,
-                                                        TimeSpan?                               RequestTimeout);
+                                                        TimeSpan                                RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever new EVSE data record had been send upstream.
@@ -68,7 +68,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                         ActionTypes                             Action,
                                                         UInt64                                  NumberOfEVSEDataRecords,
                                                         IEnumerable<EVSEDataRecord>             EVSEDataRecords,
-                                                        TimeSpan?                               RequestTimeout,
+                                                        TimeSpan                                RequestTimeout,
                                                         Acknowledgement<PushEVSEDataRequest>    Result,
                                                         TimeSpan                                Duration);
 
@@ -84,7 +84,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                           ActionTypes                              Action,
                                                           UInt64                                   NumberOfEVSEStatus,
                                                           IEnumerable<EVSEStatusRecord>            EVSEStatusRecords,
-                                                          TimeSpan?                                RequestTimeout);
+                                                          TimeSpan                                 RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever new EVSE status had been send upstream.
@@ -97,7 +97,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                           ActionTypes                              Action,
                                                           UInt64                                   NumberOfEVSEStatus,
                                                           IEnumerable<EVSEStatusRecord>            EVSEStatusRecords,
-                                                          TimeSpan?                                RequestTimeout,
+                                                          TimeSpan                                 RequestTimeout,
                                                           Acknowledgement<PushEVSEStatusRequest>   Result,
                                                           TimeSpan                                 Duration);
 
@@ -108,17 +108,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// <summary>
     /// A delegate called whenever an 'authorize start' request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeStartHandler(DateTime                       LogTimestamp,
-                                                 DateTime                       RequestTimestamp,
-                                                 CPOClient                      Sender,
-                                                 String                         SenderId,
-                                                 Operator_Id                    OperatorId,
-                                                 UID                            UID,
-                                                 EVSE_Id?                       EVSEId,
-                                                 Session_Id?                    SessionId,
-                                                 PartnerProduct_Id?             PartnerProductId,
-                                                 PartnerSession_Id?             PartnerSessionId,
-                                                 TimeSpan?                      RequestTimeout);
+    public delegate Task OnAuthorizeStartHandler  (DateTime                       LogTimestamp,
+                                                   DateTime                       RequestTimestamp,
+                                                   CPOClient                      Sender,
+                                                   String                         SenderId,
+                                                   Operator_Id                    OperatorId,
+                                                   UID                            UID,
+                                                   EVSE_Id?                       EVSEId,
+                                                   Session_Id?                    SessionId,
+                                                   PartnerProduct_Id?             PartnerProductId,
+                                                   PartnerSession_Id?             PartnerSessionId,
+                                                   TimeSpan                       RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response to a 'authorize start' request had been received.
@@ -132,7 +132,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                    Session_Id?                  SessionId,
                                                    PartnerProduct_Id?           PartnerProductId,
                                                    PartnerSession_Id?           PartnerSessionId,
-                                                   TimeSpan?                    RequestTimeout,
+                                                   TimeSpan                     RequestTimeout,
                                                    AuthorizationStart           Result,
                                                    TimeSpan                     Duration);
 
@@ -149,7 +149,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                        UID                          UID,
                                                        EVSE_Id?                     EVSEId,
                                                        PartnerSession_Id?           PartnerSessionId,
-                                                       TimeSpan?                    RequestTimeout);
+                                                       TimeSpan                     RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response to a 'authorize stop' request had been received.
@@ -162,7 +162,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                         UID                         UID,
                                                         EVSE_Id?                    EVSEId,
                                                         PartnerSession_Id?          PartnerSessionId,
-                                                        TimeSpan?                   RequestTimeout,
+                                                        TimeSpan                    RequestTimeout,
                                                         AuthorizationStop           Result,
                                                         TimeSpan                    Duration);
 
@@ -179,7 +179,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                  String                                           SenderId,
                                                                  EventTracking_Id                                 EventTrackingId,
                                                                  ChargeDetailRecord                               ChargeDetailRecord,
-                                                                 TimeSpan?                                        RequestTimeout);
+                                                                 TimeSpan                                         RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a sent 'charge detail record' had been received.
@@ -190,7 +190,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                  String                                           SenderId,
                                                                  EventTracking_Id                                 EventTrackingId,
                                                                  ChargeDetailRecord                               ChargeDetailRecord,
-                                                                 TimeSpan?                                        RequestTimeout,
+                                                                 TimeSpan                                         RequestTimeout,
                                                                  Acknowledgement<SendChargeDetailRecordRequest>   Result,
                                                                  TimeSpan                                         Duration);
 
@@ -207,7 +207,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                  String                       SenderId,
                                                                  EventTracking_Id             EventTrackingId,
                                                                  Operator_Id                  OperatorId,
-                                                                 TimeSpan?                    RequestTimeout);
+                                                                 TimeSpan                     RequestTimeout);
 
     /// <summary>
     /// A delegate called whenever a response for a 'pull authentication data' request had been received.
@@ -217,7 +217,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                  String                       SenderId,
                                                                  EventTracking_Id             EventTrackingId,
                                                                  Operator_Id                  OperatorId,
-                                                                 TimeSpan?                    RequestTimeout,
+                                                                 TimeSpan                     RequestTimeout,
                                                                  AuthenticationData           Result,
                                                                  TimeSpan                     Duration);
 

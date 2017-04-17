@@ -827,12 +827,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             add
             {
-                EMPRoaming.OnLogAuthorizeStart += value;
+                EMPRoaming.OnAuthorizeStartSOAPRequest += value;
             }
 
             remove
             {
-                EMPRoaming.OnLogAuthorizeStart -= value;
+                EMPRoaming.OnAuthorizeStartSOAPRequest -= value;
             }
 
         }
@@ -845,12 +845,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             add
             {
-                EMPRoaming.OnLogAuthorizeStarted += value;
+                EMPRoaming.OnAuthorizeStartSOAPResponse += value;
             }
 
             remove
             {
-                EMPRoaming.OnLogAuthorizeStarted -= value;
+                EMPRoaming.OnAuthorizeStartSOAPResponse -= value;
             }
 
         }
@@ -872,12 +872,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             add
             {
-                EMPRoaming.OnLogAuthorizeStop += value;
+                EMPRoaming.OnAuthorizeStopSOAPRequest += value;
             }
 
             remove
             {
-                EMPRoaming.OnLogAuthorizeStop -= value;
+                EMPRoaming.OnAuthorizeStopSOAPRequest -= value;
             }
 
         }
@@ -890,12 +890,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             add
             {
-                EMPRoaming.OnLogAuthorizeStopped += value;
+                EMPRoaming.OnAuthorizeStopSOAPResponse += value;
             }
 
             remove
             {
-                EMPRoaming.OnLogAuthorizeStopped -= value;
+                EMPRoaming.OnAuthorizeStopSOAPResponse -= value;
             }
 
         }
@@ -917,12 +917,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             add
             {
-                EMPRoaming.OnLogChargeDetailRecordSend += value;
+                EMPRoaming.OnChargeDetailRecordSOAPRequest += value;
             }
 
             remove
             {
-                EMPRoaming.OnLogChargeDetailRecordSend -= value;
+                EMPRoaming.OnChargeDetailRecordSOAPRequest -= value;
             }
 
         }
@@ -935,12 +935,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             add
             {
-                EMPRoaming.OnLogChargeDetailRecordSent += value;
+                EMPRoaming.OnChargeDetailRecordSOAPResponse += value;
             }
 
             remove
             {
-                EMPRoaming.OnLogChargeDetailRecordSent -= value;
+                EMPRoaming.OnChargeDetailRecordSOAPResponse -= value;
             }
 
         }

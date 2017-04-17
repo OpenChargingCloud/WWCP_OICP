@@ -38,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// The default request timeout for this client.
         /// </summary>
-        TimeSpan  RequestTimeout   { get; }
+        TimeSpan?  RequestTimeout   { get; }
 
         #endregion
 

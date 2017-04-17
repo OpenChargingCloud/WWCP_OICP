@@ -28,6 +28,27 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 {
 
+    #region OnAuthorizeStart    (Request|Response)Handler
+
+    /// <summary>
+    /// A delegate called whenever a authorize start request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeStartRequestHandler (DateTime              LogTimestamp,
+                                        DateTime              RequestTimestamp,
+                                        EMPServer             Sender,
+                                        String                SenderId,
+                                        EventTracking_Id      EventTrackingId,
+                                        Operator_Id           OperatorId,
+                                        UID                   UID,
+                                        EVSE_Id?              EVSEId,
+                                        Session_Id?           SessionId,
+                                        PartnerProduct_Id?    PartnerProductId,
+                                        PartnerSession_Id?    PartnerSessionId,
+                                        TimeSpan              RequestTimeout);
+
+
     /// <summary>
     /// Initiate an AuthorizeStart for the given AuthToken at the given EVSE.
     /// </summary>
@@ -44,17 +65,58 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
     public delegate Task<AuthorizationStart>
 
-        OnAuthorizeStartDelegate(DateTime                    Timestamp,
-                                 EMPServer                   Sender,
-                                 CancellationToken           CancellationToken,
-                                 EventTracking_Id            EventTrackingId,
-                                 Operator_Id                 OperatorId,
-                                 UID                         UID,
-                                 EVSE_Id?                    EVSEId             = null,
-                                 Session_Id?                 SessionId          = null,
-                                 PartnerProduct_Id?          PartnerProductId   = null,
-                                 PartnerSession_Id?          PartnerSessionId   = null,
-                                 TimeSpan?                   RequestTimeout     = null);
+        OnAuthorizeStartDelegate       (DateTime              Timestamp,
+                                        EMPServer             Sender,
+                                        CancellationToken     CancellationToken,
+                                        EventTracking_Id      EventTrackingId,
+                                        Operator_Id           OperatorId,
+                                        UID                   UID,
+                                        EVSE_Id?              EVSEId,
+                                        Session_Id?           SessionId,
+                                        PartnerProduct_Id?    PartnerProductId,
+                                        PartnerSession_Id?    PartnerSessionId,
+                                        TimeSpan?             RequestTimeout);
+
+
+    /// <summary>
+    /// A delegate called whenever a authorize start response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeStartResponseHandler(DateTime              Timestamp,
+                                        EMPServer             Sender,
+                                        String                SenderId,
+                                        EventTracking_Id      EventTrackingId,
+                                        Operator_Id           OperatorId,
+                                        UID                   UID,
+                                        EVSE_Id?              EVSEId,
+                                        Session_Id?           SessionId,
+                                        PartnerProduct_Id?    PartnerProductId,
+                                        PartnerSession_Id?    PartnerSessionId,
+                                        TimeSpan              RequestTimeout,
+                                        AuthorizationStart    Result,
+                                        TimeSpan              Duration);
+
+    #endregion
+
+    #region OnAuthorizeStop     (Request|Response)Handler
+
+    /// <summary>
+    /// A delegate called whenever a authorize stop request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeStopRequestHandler (DateTime              LogTimestamp,
+                                       DateTime              RequestTimestamp,
+                                       EMPServer             Sender,
+                                       String                SenderId,
+                                       EventTracking_Id      EventTrackingId,
+                                       Session_Id?           SessionId,
+                                       PartnerSession_Id?    PartnerSessionId,
+                                       Operator_Id           OperatorId,
+                                       EVSE_Id               EVSEId,
+                                       UID                   UID,
+                                       TimeSpan              RequestTimeout);
 
 
     /// <summary>
@@ -72,16 +134,52 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
     public delegate Task<AuthorizationStop>
 
-        OnAuthorizeStopDelegate(DateTime                    Timestamp,
-                                EMPServer                   Sender,
-                                CancellationToken           CancellationToken,
-                                EventTracking_Id            EventTrackingId,
-                                Session_Id?                 SessionId,
-                                PartnerSession_Id?          PartnerSessionId,
-                                Operator_Id                 OperatorId,
-                                EVSE_Id                     EVSEId,
-                                UID                         UID,
-                                TimeSpan?                   RequestTimeout  = null);
+        OnAuthorizeStopDelegate       (DateTime              Timestamp,
+                                       EMPServer             Sender,
+                                       CancellationToken     CancellationToken,
+                                       EventTracking_Id      EventTrackingId,
+                                       Session_Id?           SessionId,
+                                       PartnerSession_Id?    PartnerSessionId,
+                                       Operator_Id           OperatorId,
+                                       EVSE_Id               EVSEId,
+                                       UID                   UID,
+                                       TimeSpan?             RequestTimeout);
+
+
+    /// <summary>
+    /// A delegate called whenever a authorize stop response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeStopResponseHandler(DateTime              Timestamp,
+                                       EMPServer             Sender,
+                                       String                SenderId,
+                                       EventTracking_Id      EventTrackingId,
+                                       Session_Id?           SessionId,
+                                       PartnerSession_Id?    PartnerSessionId,
+                                       Operator_Id           OperatorId,
+                                       EVSE_Id               EVSEId,
+                                       UID                   UID,
+                                       TimeSpan              RequestTimeout,
+                                       AuthorizationStop     Result,
+                                       TimeSpan              Duration);
+
+    #endregion
+
+    #region OnChargeDetailRecord(Request|Response)Handler
+
+    /// <summary>
+    /// A delegate called whenever a charge detail record request was received.
+    /// </summary>
+    public delegate Task
+
+        OnChargeDetailRecordRequestHandler (DateTime              LogTimestamp,
+                                            DateTime              RequestTimestamp,
+                                            EMPServer             Sender,
+                                            String                SenderId,
+                                            EventTracking_Id      EventTrackingId,
+                                            ChargeDetailRecord    ChargeDetailRecord,
+                                            TimeSpan              RequestTimeout);
 
 
     /// <summary>
@@ -95,11 +193,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
     public delegate Task<Acknowledgement>
 
-        OnChargeDetailRecordDelegate(DateTime            Timestamp,
-                                     EMPServer           Sender,
-                                     CancellationToken   CancellationToken,
-                                     EventTracking_Id    EventTrackingId,
-                                     ChargeDetailRecord  ChargeDetailRecord,
-                                     TimeSpan?           RequestTimeout  = null);
+        OnChargeDetailRecordDelegate       (DateTime              Timestamp,
+                                            EMPServer             Sender,
+                                            CancellationToken     CancellationToken,
+                                            EventTracking_Id      EventTrackingId,
+                                            ChargeDetailRecord    ChargeDetailRecord,
+                                            TimeSpan?             RequestTimeout);
+
+
+    /// <summary>
+    /// A delegate called whenever a charge detail record response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnChargeDetailRecordResponseHandler(DateTime              Timestamp,
+                                            EMPServer             Sender,
+                                            String                SenderId,
+                                            EventTracking_Id      EventTrackingId,
+                                            ChargeDetailRecord    ChargeDetailRecord,
+                                            TimeSpan              RequestTimeout,
+                                            Acknowledgement       Result,
+                                            TimeSpan              Duration);
+
+    #endregion
 
 }

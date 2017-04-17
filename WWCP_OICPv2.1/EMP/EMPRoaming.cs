@@ -847,37 +847,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #region OnAuthorizeStart
 
         /// <summary>
-        /// An event sent whenever a authorize start command was received.
+        /// An event sent whenever a authorize start SOAP request was received.
         /// </summary>
-        public event RequestLogHandler OnLogAuthorizeStart
+        public event RequestLogHandler OnAuthorizeStartSOAPRequest
         {
 
             add
             {
-                EMPServer.OnLogAuthorizeStart += value;
+                EMPServer.OnAuthorizeStartSOAPRequest += value;
             }
 
             remove
             {
-                EMPServer.OnLogAuthorizeStart -= value;
+                EMPServer.OnAuthorizeStartSOAPRequest -= value;
             }
 
         }
 
         /// <summary>
-        /// An event sent whenever a authorize start response was sent.
+        /// An event sent whenever a authorize start request was received.
         /// </summary>
-        public event AccessLogHandler OnLogAuthorizeStarted
+        public event OnAuthorizeStartRequestHandler OnAuthorizeStartRequest
         {
 
             add
             {
-                EMPServer.OnLogAuthorizeStarted += value;
+                EMPServer.OnAuthorizeStartRequest += value;
             }
 
             remove
             {
-                EMPServer.OnLogAuthorizeStarted -= value;
+                EMPServer.OnAuthorizeStartRequest -= value;
             }
 
         }
@@ -900,42 +900,78 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         }
 
-        #endregion
-
-        #region OnAuthorizeStop
-
         /// <summary>
-        /// An event sent whenever a authorize stop command was received.
+        /// An event sent whenever a authorize start response was sent.
         /// </summary>
-        public event RequestLogHandler OnLogAuthorizeStop
+        public event OnAuthorizeStartResponseHandler OnAuthorizeStartResponse
         {
 
             add
             {
-                EMPServer.OnLogAuthorizeStop += value;
+                EMPServer.OnAuthorizeStartResponse += value;
             }
 
             remove
             {
-                EMPServer.OnLogAuthorizeStop -= value;
+                EMPServer.OnAuthorizeStartResponse -= value;
             }
 
         }
 
         /// <summary>
-        /// An event sent whenever a authorize stop response was sent.
+        /// An event sent whenever a authorize start SOAP response was sent.
         /// </summary>
-        public event AccessLogHandler OnLogAuthorizeStopped
+        public event AccessLogHandler OnAuthorizeStartSOAPResponse
         {
 
             add
             {
-                EMPServer.OnLogAuthorizeStopped += value;
+                EMPServer.OnAuthorizeStartSOAPResponse += value;
             }
 
             remove
             {
-                EMPServer.OnLogAuthorizeStopped -= value;
+                EMPServer.OnAuthorizeStartSOAPResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnAuthorizeStop
+
+        /// <summary>
+        /// An event sent whenever a authorize stop SOAP request was received.
+        /// </summary>
+        public event RequestLogHandler OnAuthorizeStopSOAPRequest
+        {
+
+            add
+            {
+                EMPServer.OnAuthorizeStopSOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPServer.OnAuthorizeStopSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event sent whenever a authorize stop SOAP request was received.
+        /// </summary>
+        public event OnAuthorizeStopRequestHandler OnAuthorizeStopRequest
+        {
+
+            add
+            {
+                EMPServer.OnAuthorizeStopRequest += value;
+            }
+
+            remove
+            {
+                EMPServer.OnAuthorizeStopRequest -= value;
             }
 
         }
@@ -958,42 +994,78 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         }
 
-        #endregion
-
-        #region OnChargeDetailRecord
-
         /// <summary>
-        /// An event sent whenever a charge detail record was received.
+        /// An event sent whenever a authorize stop SOAP response was sent.
         /// </summary>
-        public event RequestLogHandler OnLogChargeDetailRecordSend
+        public event OnAuthorizeStopResponseHandler OnAuthorizeStopResponse
         {
 
             add
             {
-                EMPServer.OnLogChargeDetailRecordSend += value;
+                EMPServer.OnAuthorizeStopResponse += value;
             }
 
             remove
             {
-                EMPServer.OnLogChargeDetailRecordSend -= value;
+                EMPServer.OnAuthorizeStopResponse -= value;
             }
 
         }
 
         /// <summary>
-        /// An event sent whenever a charge detail record response was sent.
+        /// An event sent whenever a authorize stop SOAP response was sent.
         /// </summary>
-        public event AccessLogHandler OnLogChargeDetailRecordSent
+        public event AccessLogHandler OnAuthorizeStopSOAPResponse
         {
 
             add
             {
-                EMPServer.OnLogChargeDetailRecordSent += value;
+                EMPServer.OnAuthorizeStopSOAPResponse += value;
             }
 
             remove
             {
-                EMPServer.OnLogChargeDetailRecordSent -= value;
+                EMPServer.OnAuthorizeStopSOAPResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnChargeDetailRecord
+
+        /// <summary>
+        /// An event sent whenever a charge detail record SOAP request was received.
+        /// </summary>
+        public event RequestLogHandler OnChargeDetailRecordSOAPRequest
+        {
+
+            add
+            {
+                EMPServer.OnChargeDetailRecordSOAPRequest += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargeDetailRecordSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event sent whenever a charge detail record request was received.
+        /// </summary>
+        public event OnChargeDetailRecordRequestHandler OnChargeDetailRecordRequest
+        {
+
+            add
+            {
+                EMPServer.OnChargeDetailRecordRequest += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargeDetailRecordRequest -= value;
             }
 
         }
@@ -1012,6 +1084,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             remove
             {
                 EMPServer.OnChargeDetailRecord -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event sent whenever a charge detail record response was sent.
+        /// </summary>
+        public event OnChargeDetailRecordResponseHandler OnChargeDetailRecordResponse
+        {
+
+            add
+            {
+                EMPServer.OnChargeDetailRecordResponse += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargeDetailRecordResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event sent whenever a charge detail record SOAP response was sent.
+        /// </summary>
+        public event AccessLogHandler OnChargeDetailRecordSOAPResponse
+        {
+
+            add
+            {
+                EMPServer.OnChargeDetailRecordSOAPResponse += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargeDetailRecordSOAPResponse -= value;
             }
 
         }

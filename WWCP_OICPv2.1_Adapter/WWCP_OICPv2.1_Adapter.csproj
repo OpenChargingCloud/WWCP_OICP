@@ -49,6 +49,7 @@
     <Compile Include="CPO\CPOExtentions.cs" />
     <Compile Include="EMP\EMPDelegates.cs" />
     <Compile Include="EMP\EMPExtentions.cs" />
+    <Compile Include="Helper\JSON_IO.cs" />
     <Compile Include="Helper\ChargeStationInfo.cs" />
     <Compile Include="Helper\ChargingPoolInfo.cs" />
     <Compile Include="Helper\CPInfoList.cs" />
