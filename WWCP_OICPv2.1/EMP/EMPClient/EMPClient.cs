@@ -2114,7 +2114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStopSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
                                                  "eRoamingAuthorizeRemoteReservationStop",
-                                                 RequestLogDelegate:   OnAuthorizeRemoteReservationStartSOAPRequest,
+                                                 RequestLogDelegate:   OnAuthorizeRemoteReservationStopSOAPRequest,
                                                  ResponseLogDelegate:  OnAuthorizeRemoteReservationStopSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
