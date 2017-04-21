@@ -267,35 +267,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         }
 
-        public async Task TestSearchEVSE(EMP.EMPClient HubjectEMP)
-        {
-
-            Task.Factory.StartNew(async () => {
-
-                var result = await HubjectEMP.
-                    SearchEVSE(Provider_Id.Parse("DE*GDF"),
-                               SearchCenter:    new GeoCoordinate(Latitude. Parse(49.731102),
-                                                                  Longitude.Parse(10.142533)),
-                               DistanceKM:      100f,
-                               Plug:            PlugTypes.Type2Outlet,
-                               RequestTimeout:  TimeSpan.FromSeconds(120));
-
-                if (result.Content.HasResults())
-                    Console.WriteLine(result.Content.
-                                          EVSEMatches.
-                                          Select(match => "'" + match.EVSEDataRecord.ChargingStationName.FirstText  + " / " +
-                                                                match.EVSEDataRecord.Id.             ToString() + "' in " +
-                                                                match.Distance + " km").
-                                          AggregateWith(Environment.NewLine) +
-                                          Environment.NewLine);
-
-            }).
-
-            // Wait for the task to complete...
-            Wait();
-
-        }
-
 
         public void TestPushAuthenticationData(EMPClient HubjectEMP)
         {

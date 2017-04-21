@@ -153,82 +153,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region OnSearchEVSERequest/-Response
-
-        /// <summary>
-        /// An event fired whenever a 'search EVSE' request will be send.
-        /// </summary>
-        public event OnSearchEVSERequestHandler OnSearchEVSERequest
-        {
-
-            add
-            {
-                EMPClient.OnSearchEVSERequest += value;
-            }
-
-            remove
-            {
-                EMPClient.OnSearchEVSERequest -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever a 'search EVSE' SOAP request will be send.
-        /// </summary>
-        public event ClientRequestLogHandler OnSearchEVSESOAPRequest
-        {
-
-            add
-            {
-                EMPClient.OnSearchEVSESOAPRequest += value;
-            }
-
-            remove
-            {
-                EMPClient.OnSearchEVSESOAPRequest -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever a response to a 'search EVSE' SOAP request had been received.
-        /// </summary>
-        public event ClientResponseLogHandler OnSearchEVSESOAPResponse
-        {
-
-            add
-            {
-                EMPClient.OnSearchEVSESOAPResponse += value;
-            }
-
-            remove
-            {
-                EMPClient.OnSearchEVSESOAPResponse -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever a response to a 'search EVSE' request had been received.
-        /// </summary>
-        public event OnSearchEVSEResponseHandler OnSearchEVSEResponse
-        {
-
-            add
-            {
-                EMPClient.OnSearchEVSEResponse += value;
-            }
-
-            remove
-            {
-                EMPClient.OnSearchEVSEResponse -= value;
-            }
-
-        }
-
-        #endregion
-
         #region OnPullEVSEStatusRequest/-Response
 
         /// <summary>
@@ -1199,7 +1123,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Custom request mappers
 
-        #region CustomPullEVSEData(SOAP)RequestMapper
+        #region CustomPullEVSEData      (SOAP)RequestMapper
 
         #region CustomPullEVSEDataRequestMapper
 
@@ -1259,68 +1183,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region CustomSearchEVSE(SOAP)RequestMapper
-
-        #region CustomSearchEVSERequestMapper
-
-        public Func<SearchEVSERequest, SearchEVSERequest> CustomSearchEVSERequestMapper
-        {
-
-            get
-            {
-                return EMPClient.CustomSearchEVSERequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    EMPClient.CustomSearchEVSERequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        #region CustomSearchEVSESOAPRequestMapper
-
-        public Func<SearchEVSERequest, XElement, XElement> CustomSearchEVSESOAPRequestMapper
-        {
-
-            get
-            {
-                return EMPClient.CustomSearchEVSESOAPRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    EMPClient.CustomSearchEVSESOAPRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        public CustomMapperDelegate<Acknowledgement<SearchEVSERequest>, Acknowledgement<SearchEVSERequest>.Builder> CustomSearchEVSEResponseMapper
-        {
-
-            get
-            {
-                return EMPClient.CustomSearchEVSEResponseMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    EMPClient.CustomSearchEVSEResponseMapper = value;
-            }
-
-        }
-
-        #endregion
-
-
-        #region CustomPullEVSEStatus(SOAP)RequestMapper
+        #region CustomPullEVSEStatus    (SOAP)RequestMapper
 
         #region CustomPullEVSEStatusRequestMapper
 
@@ -1936,7 +1799,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region PullEVSEData(Request)
+        #region PullEVSEData      (Request)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
@@ -1951,21 +1814,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 => EMPClient.PullEVSEData(Request);
 
         #endregion
-
-        #region SearchEVSE  (Request)
-
-        /// <summary>
-        /// Create a new Search EVSE request.
-        /// </summary>
-        /// <param name="Request">A SearchEVSE request.</param>
-        public Task<HTTPResponse<EVSESearchResult>>
-
-            SearchEVSE(SearchEVSERequest  Request)
-
-                => EMPClient.SearchEVSE(Request);
-
-        #endregion
-
 
         #region PullEVSEStatus    (Request)
 

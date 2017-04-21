@@ -101,6 +101,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
         }
 
+        public Boolean Contains(EVSE_Id EVSEId)
+            => _EVSEs.ContainsKey(EVSEId);
+
 
         #region (override) ToString()
 

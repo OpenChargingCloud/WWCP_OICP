@@ -1085,8 +1085,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static EVSE_Id ToOICP(this WWCP.EVSE_Id EVSEId)
             => EVSE_Id.Parse(EVSEId.ToString());
 
-        public static WWCP.EVSE_Id ToWWCP(this EVSE_Id EVSEId)
-            => WWCP.EVSE_Id.Parse(EVSEId.ToString());
+        public static WWCP.EVSE_Id? ToWWCP(this EVSE_Id EVSEId)
+        {
+
+            WWCP.EVSE_Id WWCPEVSEId;
+
+            if (WWCP.EVSE_Id.TryParse(EVSEId.ToString(), out WWCPEVSEId))
+                return WWCPEVSEId;
+
+            return null;
+
+        }
 
 
         public static Session_Id ToOICP(this ChargingSession_Id SessionId)
@@ -1118,8 +1127,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                          WWCP.OperatorIdFormats           Format = WWCP.OperatorIdFormats.ISO_STAR)
             => Operator_Id.Parse(OperatorId.ToString(Format));
 
-        public static ChargingStationOperator_Id ToWWCP(this Operator_Id OperatorId)
-            => ChargingStationOperator_Id.Parse(OperatorId.ToString());
+        public static ChargingStationOperator_Id? ToWWCP(this Operator_Id OperatorId)
+        {
+
+            ChargingStationOperator_Id ChargingStationOperatorId;
+
+            if (ChargingStationOperator_Id.TryParse(OperatorId.ToString(), out ChargingStationOperatorId))
+                return ChargingStationOperatorId;
+
+            return null;
+
+        }
 
 
         public static Provider_Id ToOICP(this eMobilityProvider_Id ProviderId)
@@ -1237,7 +1255,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ChargeDetailRecord">A WWCP charge detail record.</param>
         public static ChargeDetailRecord ToOICP(this WWCP.ChargeDetailRecord                               ChargeDetailRecord,
-                                                CPO.WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord = null)
+                                                CPO.WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord = null)
 
         {
 

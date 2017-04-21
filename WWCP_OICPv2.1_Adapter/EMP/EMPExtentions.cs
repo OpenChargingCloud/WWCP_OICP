@@ -26,6 +26,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
@@ -101,7 +102,19 @@ namespace org.GraphDefined.WWCP
 
                                               OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE             = null,
 
-                                              IRemoteEMobilityProvider              DefaultProvider                 = null,
+                                              OICPv2_1.EVSEOperatorFilterDelegate   EVSEOperatorFilter                = null,
+
+                                              TimeSpan?                             PullDataServiceEvery              = null,
+                                              Boolean                               DisablePullData                   = false,
+                                              TimeSpan?                             PullDataServiceRequestTimeout     = null,
+
+                                              TimeSpan?                             PullStatusServiceEvery            = null,
+                                              Boolean                               DisablePullStatus                 = false,
+                                              TimeSpan?                             PullStatusServiceRequestTimeout   = null,
+
+                                              IRemoteEMobilityProvider              DefaultProvider                   = null,
+                                              GeoCoordinate?                        DefaultSearchCenter               = null,
+                                              UInt64?                               DefaultDistanceKM                 = null,
 
                                               DNSClient                             DNSClient                       = null,
 
@@ -151,7 +164,20 @@ namespace org.GraphDefined.WWCP
                                                                      LogfileCreator,
 
                                                                      EVSEDataRecord2EVSE,
+
+                                                                     EVSEOperatorFilter,
+
+                                                                     PullDataServiceEvery,
+                                                                     DisablePullData,
+                                                                     PullDataServiceRequestTimeout,
+
+                                                                     PullStatusServiceEvery,
+                                                                     DisablePullStatus,
+                                                                     PullStatusServiceRequestTimeout,
+
                                                                      DefaultProvider,
+                                                                     DefaultSearchCenter,
+                                                                     DefaultDistanceKM,
 
                                                                      DNSClient);
 
@@ -205,28 +231,40 @@ namespace org.GraphDefined.WWCP
                                               SOAPServer                            SOAPServer,
 
                                               String                                RemoteHostname,
-                                              IPPort                                RemoteTCPPort                = null,
-                                              RemoteCertificateValidationCallback   RemoteCertificateValidator   = null,
-                                              X509Certificate                       ClientCert                   = null,
-                                              String                                RemoteHTTPVirtualHost        = null,
-                                              String                                URIPrefix                    = OICPv2_1.EMP.EMPClient.DefaultURIPrefix,
-                                              String                                HTTPUserAgent                = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                             QueryTimeout                 = null,
+                                              IPPort                                RemoteTCPPort                     = null,
+                                              RemoteCertificateValidationCallback   RemoteCertificateValidator        = null,
+                                              X509Certificate                       ClientCert                        = null,
+                                              String                                RemoteHTTPVirtualHost             = null,
+                                              String                                URIPrefix                         = OICPv2_1.EMP.EMPClient.DefaultURIPrefix,
+                                              String                                HTTPUserAgent                     = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
+                                              TimeSpan?                             QueryTimeout                      = null,
 
-                                              String                                ServerURIPrefix              = null,
+                                              String                                ServerURIPrefix                   = null,
 
-                                              String                                ClientLoggingContext         = OICPv2_1.EMP.EMPClient.EMPClientLogger.DefaultContext,
-                                              String                                ServerLoggingContext         = OICPv2_1.EMP.EMPServerLogger.DefaultContext,
-                                              LogfileCreatorDelegate                LogfileCreator               = null,
+                                              String                                ClientLoggingContext              = OICPv2_1.EMP.EMPClient.EMPClientLogger.DefaultContext,
+                                              String                                ServerLoggingContext              = OICPv2_1.EMP.EMPServerLogger.DefaultContext,
+                                              LogfileCreatorDelegate                LogfileCreator                    = null,
 
-                                              OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE          = null,
+                                              OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE               = null,
 
-                                              eMobilityProvider                     DefaultProvider              = null,
+                                              OICPv2_1.EVSEOperatorFilterDelegate   EVSEOperatorFilter                = null,
 
-                                              DNSClient                             DNSClient                    = null,
+                                              TimeSpan?                             PullDataServiceEvery              = null,
+                                              Boolean                               DisablePullData                   = false,
+                                              TimeSpan?                             PullDataServiceRequestTimeout     = null,
 
-                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator             = null,
-                                              Action<IEMPRoamingProvider>           Configurator                 = null)
+                                              TimeSpan?                             PullStatusServiceEvery            = null,
+                                              Boolean                               DisablePullStatus                 = false,
+                                              TimeSpan?                             PullStatusServiceRequestTimeout   = null,
+
+                                              IRemoteEMobilityProvider              DefaultProvider                   = null,
+                                              GeoCoordinate?                        DefaultSearchCenter               = null,
+                                              UInt64?                               DefaultDistanceKM                 = null,
+
+                                              DNSClient                             DNSClient                         = null,
+
+                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator                  = null,
+                                              Action<IEMPRoamingProvider>           Configurator                      = null)
 
         {
 
@@ -274,7 +312,20 @@ namespace org.GraphDefined.WWCP
                                                                      LogfileCreator,
 
                                                                      EVSEDataRecord2EVSE,
-                                                                     DefaultProvider);
+
+                                                                     EVSEOperatorFilter,
+
+                                                                     PullDataServiceEvery,
+                                                                     DisablePullData,
+                                                                     PullDataServiceRequestTimeout,
+
+                                                                     PullStatusServiceEvery,
+                                                                     DisablePullStatus,
+                                                                     PullStatusServiceRequestTimeout,
+
+                                                                     DefaultProvider,
+                                                                     DefaultSearchCenter,
+                                                                     DefaultDistanceKM);
 
 
             OICPConfigurator?.Invoke(NewRoamingProvider);

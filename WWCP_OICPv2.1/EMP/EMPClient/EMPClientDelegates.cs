@@ -64,44 +64,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
     #endregion
 
-    #region OnSearchEVSE
-
-    /// <summary>
-    /// A delegate called whenever a 'search EVSE' request will be send.
-    /// </summary>
-    public delegate Task OnSearchEVSERequestHandler (DateTime                   LogTimestamp,
-                                                     DateTime                   RequestTimestamp,
-                                                     EMPClient                  Sender,
-                                                     String                     SenderId,
-                                                     EventTracking_Id           EventTrackingId,
-                                                     Provider_Id                ProviderId,
-                                                     GeoCoordinate?             SearchCenter,
-                                                     Single                     DistanceKM,
-                                                     Address                    Address,
-                                                     PlugTypes?                 Plug,
-                                                     ChargingFacilities?        ChargingFacility,
-                                                     TimeSpan                   RequestTimeout);
-
-    /// <summary>
-    /// A delegate called whenever a response for a 'search EVSE' request had been received.
-    /// </summary>
-    public delegate Task OnSearchEVSEResponseHandler(DateTime                   Timestamp,
-                                                     EMPClient                  Sender,
-                                                     String                     SenderId,
-                                                     EventTracking_Id           EventTrackingId,
-                                                     Provider_Id                ProviderId,
-                                                     GeoCoordinate?             SearchCenter,
-                                                     Single                     DistanceKM,
-                                                     Address                    Address,
-                                                     PlugTypes?                 Plug,
-                                                     ChargingFacilities?        ChargingFacility,
-                                                     TimeSpan                   RequestTimeout,
-                                                     EVSESearchResult           Result,
-                                                     TimeSpan                   Duration);
-
-    #endregion
-
-    #region OnPullEVSEStatusById
+    #region OnPullEVSEStatus
 
     /// <summary>
     /// A delegate called whenever a 'pull EVSE status' request will be send.
@@ -163,6 +126,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
     #endregion
 
+
     #region OnPushAuthenticationData
 
     /// <summary>
@@ -193,6 +157,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                  TimeSpan                                         Duration);
 
     #endregion
+
 
     #region OnAuthorizeRemoteReservationStart/-Stop
 
@@ -261,7 +226,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
     #endregion
 
-    #region OnRemoteStart/-Stop
+    #region OnAuthorizeRemoteStart/-Stop
 
     /// <summary>
     /// A delegate called whenever an 'authorize remote start' request will be send.
@@ -327,6 +292,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                TimeSpan                                       Duration);
 
     #endregion
+
 
     #region OnGetChargeDetailRecords
 

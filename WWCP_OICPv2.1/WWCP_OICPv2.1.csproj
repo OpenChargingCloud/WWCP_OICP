@@ -76,6 +76,7 @@
     <Compile Include="DataTypes\Simple\UID.cs" />
     <Compile Include="DataTypes\Simple\Session_Id.cs" />
     <Compile Include="DataTypes\Simple\Provider_Id.cs" />
+    <Compile Include="Delegates.cs" />
     <Compile Include="EMP\EMPClient\IEMPClientExtentions.cs" />
     <Compile Include="EMP\EMPClient\IEMPClient.cs" />
     <Compile Include="IO\XML_IO.cs" />

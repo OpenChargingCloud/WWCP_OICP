@@ -57,7 +57,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         private        readonly  EVSEStatusUpdate2EVSEStatusRecordDelegate              _EVSEStatusUpdate2EVSEStatusRecord;
 
-        private        readonly  WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate  _WWCPChargeDetailRecord2OICPChargeDetailRecord;
+        private        readonly  WWCPChargeDetailRecord2ChargeDetailRecordDelegate      _WWCPChargeDetailRecord2OICPChargeDetailRecord;
 
         private        readonly  EVSEDataRecord2XMLDelegate                             _EVSEDataRecord2XML;
 
@@ -170,7 +170,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             set
             {
-                _ServiceCheckEvery = (UInt32)value.TotalSeconds;
+                _ServiceCheckEvery = (UInt32) value.TotalSeconds;
             }
 
         }
@@ -445,7 +445,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               CPORoaming                                             CPORoaming,
                               EVSE2EVSEDataRecordDelegate                            EVSE2EVSEDataRecord                             = null,
                               EVSEStatusUpdate2EVSEStatusRecordDelegate              EVSEStatusUpdate2EVSEStatusRecord               = null,
-                              WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
+                              WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
                               EVSEDataRecord2XMLDelegate                             EVSEDataRecord2XML                              = null,
                               EVSEStatusRecord2XMLDelegate                           EVSEStatusRecord2XML                            = null,
                               ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
@@ -586,13 +586,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                var response = await RoamingNetwork.Reserve(EVSEId.ToWWCP(),
+                var response = await RoamingNetwork.Reserve(EVSEId.ToWWCP().Value,
                                                             StartTime:          StartTime,
                                                             Duration:           Duration,
 
                                                             // Always create a reservation identification usable for OICP!
                                                             ReservationId:      ChargingReservation_Id.Parse(
-                                                                                    EVSEId.OperatorId.ToWWCP(),
+                                                                                    EVSEId.OperatorId.ToWWCP().Value,
                                                                                     SessionId.HasValue
                                                                                         ? SessionId.ToString()
                                                                                         : Session_Id.NewRandom.ToString()
@@ -679,7 +679,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               RequestTimeout) => {
 
                 var response = await RoamingNetwork.CancelReservation(ChargingReservation_Id.Parse(
-                                                                          EVSEId.OperatorId.ToWWCP(),
+                                                                          EVSEId.OperatorId.ToWWCP().Value,
                                                                           SessionId.ToString()
                                                                       ),
                                                                       ChargingReservationCancellationReason.Deleted,
@@ -776,7 +776,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                             ChargingReservation_Id _ReservationId;
 
                             if (ProductIdElements.ContainsKey("R") &&
-                                ChargingReservation_Id.TryParse(EVSEId.OperatorId.ToWWCP(), ProductIdElements["R"], out _ReservationId))
+                                ChargingReservation_Id.TryParse(EVSEId.OperatorId.ToWWCP().Value, ProductIdElements["R"], out _ReservationId))
                                 ReservationId = _ReservationId;
 
 
@@ -822,7 +822,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 #endregion
 
                 var response = await RoamingNetwork.
-                                         RemoteStart(EVSEId.    ToWWCP(),
+                                         RemoteStart(EVSEId.    ToWWCP().Value,
                                                      ChargingProduct,
                                                      ReservationId,
                                                      SessionId. ToWWCP(),
@@ -899,7 +899,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                    ProviderId,
                                                    RequestTimeout) => {
 
-                var response = await RoamingNetwork.RemoteStop(EVSEId.ToWWCP(),
+                var response = await RoamingNetwork.RemoteStop(EVSEId.ToWWCP().Value,
                                                                SessionId. ToWWCP(),
                                                                ReservationHandling.Close,
                                                                ProviderId.ToWWCP(),
@@ -992,7 +992,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                               EVSE2EVSEDataRecordDelegate                            EVSE2EVSEDataRecord                             = null,
                               EVSEStatusUpdate2EVSEStatusRecordDelegate              EVSEStatusUpdate2EVSEStatusRecord               = null,
-                              WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
+                              WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
                               EVSEDataRecord2XMLDelegate                             EVSEDataRecord2XML                              = null,
                               EVSEStatusRecord2XMLDelegate                           EVSEStatusRecord2XML                            = null,
                               ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
@@ -1108,7 +1108,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                               EVSE2EVSEDataRecordDelegate                            EVSE2EVSEDataRecord                             = null,
                               EVSEStatusUpdate2EVSEStatusRecordDelegate              EVSEStatusUpdate2EVSEStatusRecord               = null,
-                              WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
+                              WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
                               EVSEDataRecord2XMLDelegate                             EVSEDataRecord2XML                              = null,
                               EVSEStatusRecord2XMLDelegate                           EVSEStatusRecord2XML                            = null,
                               ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,

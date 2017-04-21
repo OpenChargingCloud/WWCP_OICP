@@ -19,12 +19,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// A delegate which allows you to modify EVSE data records
-    /// after receiving them.
+    /// A delegate which allows you to modify the convertion from EVSE data records to WWCP EVSEs.
     /// </summary>
     /// <param name="EVSEDataRecord">An OICP EVSE data record.</param>
     /// <param name="EVSE">A WWCP EVSE.</param>
-    public delegate EVSE EVSEDataRecord2EVSEDelegate(EVSEDataRecord  EVSEDataRecord,
-                                                     EVSE            EVSE);
+    public delegate EVSE                     EVSEDataRecord2EVSEDelegate                      (EVSEDataRecord           EVSEDataRecord,
+                                                                                               EVSE                     EVSE);
+
+    /// <summary>
+    /// A delegate which allows you to modify the convertion from EVSE status records to WWCP EVSE status updates.
+    /// </summary>
+    /// <param name="EVSEStatusRecord">An OICP EVSE status record.</param>
+    /// <param name="EVSEStatusUpdate">A WWCP EVSE status update.</param>
+    public delegate EVSEStatusUpdate         EVSEStatusRecord2EVSEStatusUpdateDelegate        (EVSEStatusRecord         EVSEStatusRecord,
+                                                                                               EVSEStatusUpdate         EVSEStatusUpdate);
+
+    /// <summary>
+    /// A delegate which allows you to modify the convertion from charge detail records to WWCP charge detail records.
+    /// </summary>
+    /// <param name="EVSEStatusRecord">An OICP charge detail record.</param>
+    /// <param name="EVSEStatus">A WWCP charge detail record.</param>
+    public delegate WWCP.ChargeDetailRecord  ChargeDetailRecord2WWCPChargeDetailRecordDelegate(ChargeDetailRecord       ChargeDetailRecord,
+                                                                                               WWCP.ChargeDetailRecord  WWCPChargeDetailRecord);
 
 }

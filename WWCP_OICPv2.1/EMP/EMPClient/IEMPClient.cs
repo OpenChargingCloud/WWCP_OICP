@@ -47,11 +47,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             PullEVSEData(PullEVSEDataRequest Request);
 
-        Task<HTTPResponse<EVSESearchResult>>
-
-            SearchEVSE(SearchEVSERequest Request);
-
-
         Task<HTTPResponse<EVSEStatus>>
 
             PullEVSEStatus(PullEVSEStatusRequest Request);
@@ -59,6 +54,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         Task<HTTPResponse<EVSEStatusById>>
 
             PullEVSEStatusById(PullEVSEStatusByIdRequest Request);
+
 
 
         Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
@@ -71,7 +67,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             AuthorizeRemoteReservationStart(AuthorizeRemoteReservationStartRequest  Request);
 
-
         Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
 
             AuthorizeRemoteReservationStop (AuthorizeRemoteReservationStopRequest   Request);
@@ -81,7 +76,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
 
             AuthorizeRemoteStart(AuthorizeRemoteStartRequest Request);
-
 
         Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
 

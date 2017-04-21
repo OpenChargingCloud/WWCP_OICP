@@ -19,13 +19,10 @@
 
 using System;
 using System.Xml.Linq;
-using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
-using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
@@ -609,30 +606,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region OnSearchEVSERequest/-Response
-
-        /// <summary>
-        /// An event fired whenever a 'search EVSE' request will be send.
-        /// </summary>
-        public event OnSearchEVSERequestHandler   OnSearchEVSERequest;
-
-        /// <summary>
-        /// An event fired whenever a 'search EVSE' SOAP request will be send.
-        /// </summary>
-        public event ClientRequestLogHandler      OnSearchEVSESOAPRequest;
-
-        /// <summary>
-        /// An event fired whenever a response to a 'search EVSE' SOAP request had been received.
-        /// </summary>
-        public event ClientResponseLogHandler     OnSearchEVSESOAPResponse;
-
-        /// <summary>
-        /// An event fired whenever a response to a 'search EVSE' request had been received.
-        /// </summary>
-        public event OnSearchEVSEResponseHandler  OnSearchEVSEResponse;
-
-        #endregion
-
         #region OnPullEVSEStatusRequest/-Response
 
         /// <summary>
@@ -681,6 +654,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+
         #region OnPushAuthenticationDataRequest/-Response
 
         /// <summary>
@@ -704,6 +678,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public event OnPushAuthenticationDataResponseHandler  OnPushAuthenticationDataResponse;
 
         #endregion
+
 
         #region OnReservationStartRequest/-Response
 
@@ -800,6 +775,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public event OnAuthorizeRemoteStopResponseHandler  OnAuthorizeRemoteStopResponse;
 
         #endregion
+
 
         #region OnGetChargeDetailRecordsRequest/-Response
 
@@ -954,7 +930,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region PullEVSEData(Request)
+        #region PullEVSEData      (Request)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
@@ -1020,6 +996,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     UserAgent,
                                                     DNSClient))
             {
+
+                _OICPClient.OnDataRead += async (TimeSpan, BytesRead, BytesExpected) => {
+                                                                                            Console.WriteLine(((Int32) TimeSpan.TotalMilliseconds) + "ms -> " +
+                                                                                            BytesRead + " bytes read" +
+                                                                                            (BytesExpected.HasValue ? " of " + BytesExpected + " bytes expected" : "") +
+                                                                                            "!");
+                                                                                        };
 
                 result = await _OICPClient.Query(_CustomPullEVSEDataSOAPRequestMapper(Request,
                                                                                       SOAP.Encapsulation(Request.ToXML())),
@@ -1127,183 +1110,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region SearchEVSE  (Request)
-
-        /// <summary>
-        /// Create a new Search EVSE request.
-        /// </summary>
-        /// <param name="Request">A SearchEVSE request.</param>
-        public async Task<HTTPResponse<EVSESearchResult>>
-
-            SearchEVSE(SearchEVSERequest  Request)
-
-        {
-
-            #region Initial checks
-
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given SearchEVSE request must not be null!");
-
-            Request = _CustomSearchEVSERequestMapper(Request);
-
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The mapped SearchEVSE request must not be null!");
-
-
-            HTTPResponse<EVSESearchResult> result = null;
-
-            #endregion
-
-            #region Send OnSearchEVSERequest event
-
-            var StartTime = DateTime.Now;
-
-            try
-            {
-
-                OnSearchEVSERequest?.Invoke(StartTime,
-                                            Request.Timestamp.Value,
-                                            this,
-                                            ClientId,
-                                            Request.EventTrackingId,
-                                            Request.ProviderId,
-                                            Request.SearchCenter,
-                                            Request.DistanceKM,
-                                            Request.Address,
-                                            Request.Plug,
-                                            Request.ChargingFacility,
-                                            Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
-
-            }
-            catch (Exception e)
-            {
-                e.Log(nameof(EMPClient) + "." + nameof(OnSearchEVSERequest));
-            }
-
-            #endregion
-
-
-            using (var _OICPClient = new SOAPClient(Hostname,
-                                                    RemotePort,
-                                                    HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingEvseSearch_V2.0",
-                                                    RemoteCertificateValidator,
-                                                    ClientCert,
-                                                    UserAgent,
-                                                    DNSClient))
-            {
-
-                result = await _OICPClient.Query(_CustomSearchEVSESOAPRequestMapper(Request,
-                                                                                    SOAP.Encapsulation(Request.ToXML())),
-                                                 "eRoamingSearchEvse",
-                                                 RequestLogDelegate:   OnSearchEVSESOAPRequest,
-                                                 ResponseLogDelegate:  OnSearchEVSESOAPResponse,
-                                                 CancellationToken:    Request.CancellationToken,
-                                                 EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
-
-                                                 #region OnSuccess
-
-                                                 OnSuccess: XMLResponse => {
-
-                                                     OICPException _OICPException = null;
-                                                     if (OICPClientHelper.IsHubjectError(XMLResponse.Content, out _OICPException, SendException))
-                                                         return new HTTPResponse<EVSESearchResult>(XMLResponse.HTTPRequest, _OICPException);
-
-                                                     return XMLResponse.ConvertContent(EVSESearchResult.Parse);
-
-                                                 },
-
-                                                 #endregion
-
-                                                 #region OnSOAPFault
-
-                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
-
-                                                     DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
-
-                                                     return new HTTPResponse<EVSESearchResult>(httpresponse,
-                                                                                                       IsFault: true);
-
-                                                 },
-
-                                                 #endregion
-
-                                                 #region OnHTTPError
-
-                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
-
-                                                     SendHTTPError(timestamp, soapclient, httpresponse);
-
-                                                     return new HTTPResponse<EVSESearchResult>(httpresponse,
-                                                                                                       IsFault: true);
-
-                                                 },
-
-                                                 #endregion
-
-                                                 #region OnException
-
-                                                 OnException: (timestamp, sender, exception) => {
-
-                                                     SendException(timestamp, sender, exception);
-
-                                                     return HTTPResponse<EVSESearchResult>.ExceptionThrown(new EVSESearchResult(new EVSEMatch[0]),
-                                                                                                                   Exception: exception);
-
-                                                 }
-
-                                                 #endregion
-
-                                                ).ConfigureAwait(false);
-
-            }
-
-            if (result == null)
-                result = HTTPResponse<EVSESearchResult>.ClientError(
-                             new EVSESearchResult(
-                                 StatusCodes.SystemError,
-                                 "HTTP request failed!"
-                             )
-                         );
-
-
-            #region Send OnSearchEVSEResponse event
-
-            var Endtime = DateTime.Now;
-
-            try
-            {
-
-                OnSearchEVSEResponse?.Invoke(Endtime,
-                                             this,
-                                             ClientId,
-                                             Request.EventTrackingId,
-                                             Request.ProviderId,
-                                             Request.SearchCenter,
-                                             Request.DistanceKM,
-                                             Request.Address,
-                                             Request.Plug,
-                                             Request.ChargingFacility,
-                                             Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
-                                             result.Content,
-                                             Endtime - StartTime);
-
-            }
-            catch (Exception e)
-            {
-                e.Log(nameof(EMPClient) + "." + nameof(OnSearchEVSEResponse));
-            }
-
-            #endregion
-
-            return result;
-
-        }
-
-        #endregion
-
-
         #region PullEVSEStatus    (Request)
 
         /// <summary>
@@ -1368,11 +1174,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
+                _OICPClient.OnDataRead += async (TimeSpan, BytesRead, BytesExpected) => {
+                                                                                            Console.WriteLine(((Int32) TimeSpan.TotalMilliseconds) + "ms -> " +
+                                                                                            BytesRead + " bytes read" +
+                                                                                            (BytesExpected.HasValue ? " of " + BytesExpected + " bytes expected" : "") +
+                                                                                            "!");
+                                                                                        };
+
                 result = await _OICPClient.Query(_CustomPullEVSEStatusSOAPRequestMapper(Request,
                                                                                         SOAP.Encapsulation(Request.ToXML())),
                                                  "eRoamingPullEVSEStatus",
-                                                 RequestLogDelegate:   OnPullEVSEDataSOAPRequest,
-                                                 ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
+                                                 RequestLogDelegate:   OnPullEVSEStatusSOAPRequest,
+                                                 ResponseLogDelegate:  OnPullEVSEStatusSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
                                                  QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
@@ -1709,7 +1522,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnPushAuthenticationDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1913,7 +1726,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteReservationStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2118,7 +1931,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteReservationStopSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2324,7 +2137,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2526,7 +2339,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteStopSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout,
+                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2726,7 +2539,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      ResponseLogDelegate:  OnGetChargeDetailRecordsSOAPResponse,
                                                      CancellationToken:    Request.CancellationToken,
                                                      EventTrackingId:      Request.EventTrackingId,
-                                                     QueryTimeout:         Request.RequestTimeout,
+                                                     QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
 
                                                      #region OnSuccess
 

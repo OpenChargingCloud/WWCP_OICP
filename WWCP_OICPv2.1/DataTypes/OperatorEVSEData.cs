@@ -138,12 +138,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 return new OperatorEVSEData(
 
                            OperatorEVSEDataXML.MapElements          (OICPNS.EVSEData + "EvseDataRecord",
-                                                                     (EvseDataRecordXML, e) => EVSEDataRecord.Parse(EvseDataRecordXML, e),
+                                                                     (EvseDataRecordXML, onexception) => EVSEDataRecord.Parse(EvseDataRecordXML, onexception),
                                                                      OnException),
 
                            OperatorEVSEDataXML.MapValueOrFail       (OICPNS.EVSEData + "OperatorID",
-                                                                     Operator_Id.Parse,
-                                                                     "Missing OperatorID!"),
+                                                                     Operator_Id.Parse),
 
                            OperatorEVSEDataXML.ElementValueOrDefault(OICPNS.EVSEData + "OperatorName")
 

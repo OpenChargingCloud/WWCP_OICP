@@ -422,196 +422,204 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            OnExceptionDelegate  OnException = null)
         {
 
-            #region XML Attribute: LastUpdate
+            EVSEDataRecord _EVSEDataRecord = null;
 
-            DateTime _LastUpdate;
-            DateTime.TryParse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), ""), out _LastUpdate);
-
-            #endregion
-
-            #region ChargingStationName
-
-            var _ChargingStationName = new I18NString();
-
-            EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "ChargingStationName",
-                                                      v => _ChargingStationName.Add(Languages.deu, v));
-
-            EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnChargingStationName",
-                                                      v => _ChargingStationName.Add(Languages.eng, v));
-
-            #endregion
-
-            #region Address
-
-            var AddressXML  = EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "Address", "Missing 'Address'-XML tag!");
-
-            var _CountryTXT = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
-
-            Country _Country;
-            if (!Country.TryParse(_CountryTXT, out _Country))
+            try
             {
 
-                if (_CountryTXT.ToUpper() == "UNKNOWN")
-                    _Country = Country.unknown;
+                #region XML Attribute: LastUpdate
 
-                else
-                    throw new Exception("'" + _CountryTXT + "' is an unknown country name!");
+                DateTime _LastUpdate;
+                DateTime.TryParse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), ""), out _LastUpdate);
 
-            }
+                #endregion
 
-            // Currently not used OICP address information!
-            //var _Region       = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Region",     "").Trim();
-            //var _Timezone     = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Timezone",   "").Trim();
+                #region ChargingStationName
 
-            #endregion
+                var _ChargingStationName = new I18NString();
 
-            #region MaxCapacity in kWh
+                EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "ChargingStationName",
+                                                          v => _ChargingStationName.Add(Languages.deu, v));
 
-            var _MaxCapacity_kWh = EVSEDataRecordXML.
-                                       ElementValueOrDefault(OICPNS.EVSEData + "MaxCapacity", String.Empty).
-                                       Trim();
+                EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnChargingStationName",
+                                                          v => _ChargingStationName.Add(Languages.eng, v));
 
-            Single _MaxCapacity = 0.0f;
-            if (_MaxCapacity_kWh.IsNotNullOrEmpty())
-                Single.TryParse(_MaxCapacity_kWh, out _MaxCapacity);
+                #endregion
 
-            #endregion
+                #region Address
 
-            #region AdditionalInfo
+                var AddressXML  = EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "Address", "Missing 'Address'-XML tag!");
 
-            var _AdditionalInfo = new I18NString();
+                var _CountryTXT = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
 
-            EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "AdditionalInfo",
-                                                      v => _AdditionalInfo.Add(Languages.deu, v));
+                Country _Country;
+                if (!Country.TryParse(_CountryTXT, out _Country))
+                {
 
-            // EnAdditionalInfo not parsed as OICP v2.0 multi-language string!
-            EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnAdditionalInfo",
-                                                      EnAdditionalInfo => {
+                    if (_CountryTXT.ToUpper() == "UNKNOWN")
+                        _Country = Country.unknown;
 
-                                                          // The section must end with the separator string "|||"
-                                                          // Example: "DEU:Inhalt|||GBR:Content|||FRA:Objet|||"
-                                                          if (EnAdditionalInfo.Contains("|||"))
-                                                          {
+                    else
+                        throw new Exception("'" + _CountryTXT + "' is an unknown country name!");
 
-                                                              foreach (var Token1 in EnAdditionalInfo.Split(new String[] { "|||" }, StringSplitOptions.RemoveEmptyEntries))
+                }
+
+                // Currently not used OICP address information!
+                //var _Region       = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Region",     "").Trim();
+                //var _Timezone     = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Timezone",   "").Trim();
+
+                #endregion
+
+                #region MaxCapacity in kWh
+
+                var _MaxCapacity_kWh = EVSEDataRecordXML.
+                                           ElementValueOrDefault(OICPNS.EVSEData + "MaxCapacity", String.Empty).
+                                           Trim();
+
+                Single _MaxCapacity = 0.0f;
+                if (_MaxCapacity_kWh.IsNotNullOrEmpty())
+                    Single.TryParse(_MaxCapacity_kWh, out _MaxCapacity);
+
+                #endregion
+
+                #region AdditionalInfo
+
+                var _AdditionalInfo = new I18NString();
+
+                EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "AdditionalInfo",
+                                                          v => _AdditionalInfo.Add(Languages.deu, v));
+
+                // EnAdditionalInfo not parsed as OICP v2.0 multi-language string!
+                EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnAdditionalInfo",
+                                                          EnAdditionalInfo => {
+
+                                                              // The section must end with the separator string "|||"
+                                                              // Example: "DEU:Inhalt|||GBR:Content|||FRA:Objet|||"
+                                                              if (EnAdditionalInfo.Contains("|||"))
                                                               {
 
-                                                                  var I18NTokens = Token1.Split(':');
+                                                                  String[]  I18NTokens;
+                                                                  Languages Language;
+                                                                  Char[]    Seperator = new Char[] { ':' };
 
-                                                                  try
+                                                                  foreach (var CurrentToken in EnAdditionalInfo.Trim().Split(new String[] { "|||" }, StringSplitOptions.RemoveEmptyEntries))
                                                                   {
-                                                                      if (I18NTokens.Length == 2)
-                                                                      {
-                                                                          _AdditionalInfo.Add((Languages)Enum.Parse(typeof(Languages),
-                                                                                                                    Country.ParseAlpha3Code(I18NTokens[0]).Alpha2Code.ToLower()),
-                                                                                             I18NTokens[1]);
-                                                                      }
-                                                                  }
-                                                                  catch (Exception e)
-                                                                  {
-                                                                      DebugX.Log("Could not parse 'EnAdditionalInfo': " + I18NTokens + Environment.NewLine + e.Message);
+
+                                                                      I18NTokens = CurrentToken.Trim().Split(Seperator, 2);
+
+                                                                      if (I18NTokens.Length == 2 && Enum.TryParse(I18NTokens[0].Trim().ToLower(), out Language))
+                                                                          _AdditionalInfo.Add(Language, I18NTokens[1].Trim());
+
+                                                                      else
+                                                                          DebugX.Log("Could not parse 'EnAdditionalInfo' token: " + CurrentToken);
+
                                                                   }
 
                                                               }
 
-                                                          }
+                                                              else
+                                                                  _AdditionalInfo.Add(Languages.eng, EnAdditionalInfo);
 
-                                                          else
-                                                              _AdditionalInfo.Add(Languages.eng, EnAdditionalInfo);
+                                                          });
 
-                                                      });
-
-            #endregion
+                #endregion
 
 
-            return new EVSEDataRecord(
+                _EVSEDataRecord = new EVSEDataRecord(
 
-                EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!")),
+                    EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!")),
 
-                XML_IO.AsDeltaType(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"), "")),
+                    XML_IO.AsDeltaType(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"), "")),
 
-                _LastUpdate,
+                    _LastUpdate,
 
-                EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationId", ""),
-                _ChargingStationName,
+                    EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationId", ""),
+                    _ChargingStationName,
 
-                new Address(AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Street", "Missing 'Street'-XML tag!").Trim(),
-                                                 AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum", "").Trim(),
-                                                 AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor", "").Trim(),
-                                                 AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
-                                                 "",
-                                                 I18NString.Create(Languages.unknown, AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City", "Missing 'City'-XML tag!").Trim()),
-                                                 _Country),
+                    new Address(AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Street", "Missing 'Street'-XML tag!").Trim(),
+                                                     AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum", "").Trim(),
+                                                     AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor", "").Trim(),
+                                                     AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
+                                                     "",
+                                                     I18NString.Create(Languages.unknown, AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City", "Missing 'City'-XML tag!").Trim()),
+                                                     _Country),
 
-                XML_IO.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
+                    XML_IO.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
 
-                EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "Plugs",
-                                                     OICPNS.EVSEData + "Plug",
-                                                     XML_IO.AsPlugType).
-                                                     Reduce(),
+                    EVSEDataRecordXML.MapValuesOrFail(OICPNS.EVSEData + "Plugs",
+                                                         OICPNS.EVSEData + "Plug",
+                                                         XML_IO.AsPlugType).
+                                                         Reduce(),
 
-                EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ChargingFacilities",
-                                                     OICPNS.EVSEData + "ChargingFacility",
-                                                     XML_IO.AsChargingFacility,
-                                                     ChargingFacilities.Unspecified).
-                                                     Reduce(),
+                    EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ChargingFacilities",
+                                                         OICPNS.EVSEData + "ChargingFacility",
+                                                         XML_IO.AsChargingFacility,
+                                                         ChargingFacilities.Unspecified).
+                                                         Reduce(),
 
-                EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ChargingModes",
-                                                     OICPNS.EVSEData + "ChargingMode",
-                                                     XML_IO.AsChargingMode,
-                                                     ChargingModes.Unspecified).
-                                                     Reduce(),
+                    EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ChargingModes",
+                                                         OICPNS.EVSEData + "ChargingMode",
+                                                         XML_IO.AsChargingMode,
+                                                         ChargingModes.Unspecified).
+                                                         Reduce(),
 
-                EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "AuthenticationModes",
-                                                     OICPNS.EVSEData + "AuthenticationMode",
-                                                     XML_IO.AsAuthenticationMode).
-                                                     Reduce(),
+                    EVSEDataRecordXML.MapValuesOrFail(OICPNS.EVSEData + "AuthenticationModes",
+                                                         OICPNS.EVSEData + "AuthenticationMode",
+                                                         XML_IO.AsAuthenticationMode).
+                                                         Reduce(),
 
-                _MaxCapacity,
+                    _MaxCapacity,
 
-                EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "PaymentOptions",
-                                                     OICPNS.EVSEData + "PaymentOption",
-                                                     XML_IO.AsPaymetOption,
-                                                     PaymentOptions.Unspecified).
-                                                     Reduce(),
+                    EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "PaymentOptions",
+                                                         OICPNS.EVSEData + "PaymentOption",
+                                                         XML_IO.AsPaymetOption,
+                                                         PaymentOptions.Unspecified).
+                                                         Reduce(),
 
-                EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ValueAddedServices",
-                                                     OICPNS.EVSEData + "ValueAddedService",
-                                                     XML_IO.AsValueAddedService,
-                                                     ValueAddedServices.None).
-                                                     Reduce(),
+                    EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ValueAddedServices",
+                                                         OICPNS.EVSEData + "ValueAddedService",
+                                                         XML_IO.AsValueAddedService,
+                                                         ValueAddedServices.None).
+                                                         Reduce(),
 
-                XML_IO.AsAccessibilityType(EVSEDataRecordXML.
-                                               ElementValueOrFail(OICPNS.EVSEData + "Accessibility").
-                                               Trim()),
+                    XML_IO.AsAccessibilityType(EVSEDataRecordXML.
+                                                   ElementValueOrFail(OICPNS.EVSEData + "Accessibility").
+                                                   Trim()),
 
-                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "HotlinePhoneNum").
-                                  Trim(),
+                    EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "HotlinePhoneNum").
+                                      Trim(),
 
-                _AdditionalInfo,
+                    _AdditionalInfo,
 
-                EVSEDataRecordXML.MapElement(OICPNS.CommonTypes + "GeoChargingPointEntrance",
-                                             XML_IO.ParseGeoCoordinatesXML),
+                    EVSEDataRecordXML.MapElement(OICPNS.CommonTypes + "GeoChargingPointEntrance",
+                                                 XML_IO.ParseGeoCoordinatesXML),
 
-                EVSEDataRecordXML.MapValueOrFail(OICPNS.EVSEData + "IsOpen24Hours",
-                                                 s => s == "true"),
+                    EVSEDataRecordXML.MapValueOrFail(OICPNS.EVSEData + "IsOpen24Hours",
+                                                     s => s == "true"),
 
-                EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "OpeningTime"),
+                    EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "OpeningTime"),
 
-                EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "HubOperatorID",
-                                                     HubOperator_Id.Parse),
+                    EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "HubOperatorID",
+                                                         HubOperator_Id.Parse),
 
-                EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ClearinghouseID",
-                                                     ClearingHouse_Id.Parse),
+                    EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ClearinghouseID",
+                                                         ClearingHouse_Id.Parse),
 
-                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible").
-                                  Trim() == "true",
+                    EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible").
+                                      Trim() == "true",
 
-                EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable").
-                                  Trim() != "false"
+                    EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable").
+                                      Trim() != "false"
 
-            );
+                );
 
+            }
+            catch (Exception e)
+            {
+                OnException?.Invoke(DateTime.Now, EVSEDataRecordXML, e);
+            }
+
+            return _EVSEDataRecord;
 
         }
 

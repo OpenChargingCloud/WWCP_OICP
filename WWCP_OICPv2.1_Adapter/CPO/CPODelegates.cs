@@ -28,29 +28,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
     /// <summary>
-    /// A delegate which allows you to modify EVSE data records before sending them upstream.
+    /// A delegate which allows you to modify the convertion from WWCP EVSEs to EVSE data records.
     /// </summary>
     /// <param name="EVSE">A WWCP EVSE.</param>
     /// <param name="EVSEDataRecord">An EVSE data record.</param>
-    public delegate EVSEDataRecord    EVSE2EVSEDataRecordDelegate              (EVSE              EVSE,
-                                                                                EVSEDataRecord    EVSEDataRecord);
+    public delegate EVSEDataRecord      EVSE2EVSEDataRecordDelegate                      (EVSE                     EVSE,
+                                                                                          EVSEDataRecord           EVSEDataRecord);
 
     /// <summary>
-    /// A delegate which allows you to modify EVSE status records before sending them upstream.
+    /// A delegate which allows you to modify the convertion from WWCP EVSE status updates to EVSE status records.
     /// </summary>
     /// <param name="EVSEStatusUpdate">A WWCP EVSE status update.</param>
     /// <param name="EVSEStatusRecord">An OICP EVSE status record.</param>
-    public delegate EVSEStatusRecord  EVSEStatusUpdate2EVSEStatusRecordDelegate(EVSEStatusUpdate  EVSEStatusUpdate,
-                                                                                EVSEStatusRecord  EVSEStatusRecord);
+    public delegate EVSEStatusRecord    EVSEStatusUpdate2EVSEStatusRecordDelegate        (EVSEStatusUpdate         EVSEStatusUpdate,
+                                                                                          EVSEStatusRecord         EVSEStatusRecord);
 
     /// <summary>
-    /// A delegate which allows you to modify charge detail records before sending them upstream.
+    /// A delegate which allows you to modify the convertion from WWCP charge detail records to charge detail records.
     /// </summary>
     /// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
     /// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
-    public delegate ChargeDetailRecord WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate(WWCP.ChargeDetailRecord  WWCPChargeDetailRecord,
-                                                                                             ChargeDetailRecord       OCIPChargeDetailRecord);
+    public delegate ChargeDetailRecord  WWCPChargeDetailRecord2ChargeDetailRecordDelegate(WWCP.ChargeDetailRecord  WWCPChargeDetailRecord,
+                                                                                          ChargeDetailRecord       OCIPChargeDetailRecord);
 
+
+    #region OnPushEVSEDataWWCPRequest/-Response
 
     /// <summary>
     /// A delegate called whenever new EVSE data will be send upstream.
@@ -85,6 +87,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               WWCP.Acknowledgement             Result,
                                                               TimeSpan                         Runtime);
 
+    #endregion
+
+    #region OnPushEVSEStatusWWCPRequest/-Response
 
     /// <summary>
     /// A delegate called whenever new EVSE status will be send upstream.
@@ -119,5 +124,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               WWCP.Acknowledgement             Result,
                                                               TimeSpan                         Runtime);
 
+    #endregion
 
 }

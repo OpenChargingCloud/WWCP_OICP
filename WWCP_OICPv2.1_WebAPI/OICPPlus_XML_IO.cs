@@ -85,12 +85,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                                                                              new XElement(OICPNS.EVSEData + "OperatorID", group.Key.ToString()),
 
-                                                                             RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP()).Name.Any()
-                                                                                 ? new XElement(OICPNS.EVSEData + "OperatorName", RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP()).Name.FirstText)
+                                                                             RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP().Value).Name.Any()
+                                                                                 ? new XElement(OICPNS.EVSEData + "OperatorName", RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP().Value).Name.FirstText)
                                                                                  : null,
 
                                                                              new XElement(OICPPlusNS.EVSEOperator + "DataLicenses",
-                                                                                 RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP()).DataLicenses.
+                                                                                 RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP().Value).DataLicenses.
                                                                                      SafeSelect(license => new XElement(OICPPlusNS.EVSEOperator + "DataLicense",
                                                                                                                new XElement(OICPPlusNS.EVSEOperator + "Id",           license.Id),
                                                                                                                new XElement(OICPPlusNS.EVSEOperator + "Description",  license.Description),

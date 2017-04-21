@@ -121,8 +121,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                       #region Find a matching EVSE Operator and maybe update its properties... or create a new one!
 
-                                                      if (!RoamingNetwork.TryGetChargingStationOperatorById(_OperatorEvseData.OperatorId.ToWWCP(), out _EVSEOperator))
-                                                          _EVSEOperator = RoamingNetwork.CreateChargingStationOperator(_OperatorEvseData.OperatorId.ToWWCP(), I18NString.Create(Languages.unknown, _OperatorEvseData.OperatorName));
+                                                      if (!RoamingNetwork.TryGetChargingStationOperatorById(_OperatorEvseData.OperatorId.ToWWCP().Value, out _EVSEOperator))
+                                                          _EVSEOperator = RoamingNetwork.CreateChargingStationOperator(_OperatorEvseData.OperatorId.ToWWCP().Value, I18NString.Create(Languages.unknown, _OperatorEvseData.OperatorName));
 
                                                       else
                                                       {
@@ -136,12 +136,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                       #region Generate a list of all charging pools/stations/EVSEs
 
-                                                      _CPInfoList = new CPInfoList(_OperatorEvseData.OperatorId.ToWWCP());
+                                                      _CPInfoList = new CPInfoList(_OperatorEvseData.OperatorId.ToWWCP().Value);
 
                                                       foreach (var EvseDataRecord in _OperatorEvseData.EVSEDataRecords)
                                                       {
 
-                                                          PoolId  = ChargingPool_Id.Generate(EvseDataRecord.Id.OperatorId.ToWWCP(),
+                                                          PoolId  = ChargingPool_Id.Generate(EvseDataRecord.Id.OperatorId.ToWWCP().Value,
                                                                                              EvseDataRecord.Address.      ToWWCP(),
                                                                                              EvseDataRecord.GeoCoordinate);
 
@@ -183,8 +183,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                   case "fr": LocationLanguage = Languages.fra; break;
                                                                   case "dk": LocationLanguage = Languages.dk; break;
                                                                   case "no": LocationLanguage = Languages.no; break;
-                                                                  case "fi": LocationLanguage = Languages.fi; break;
-                                                                  case "se": LocationLanguage = Languages.se; break;
+                                                                  case "fi": LocationLanguage = Languages.fin; break;
+                                                                  case "se": LocationLanguage = Languages.swe; break;
 
                                                                   case "sk": LocationLanguage = Languages.sk; break;
                                                                   //case "be": LocationLanguage = Languages.; break;
@@ -318,7 +318,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                               #region Update matching EVSE... or create a new one!
 
-                                                              if (_ChargingStation.TryGetEVSEbyId(EvseDataRecord.Id.ToWWCP(), out _EVSE))
+                                                              if (_ChargingStation.TryGetEVSEbyId(EvseDataRecord.Id.ToWWCP().Value, out _EVSE))
                                                               {
 
                                                                   // Update via events!
@@ -331,7 +331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                               }
 
                                                               else
-                                                                  _ChargingStation.CreateEVSE(EvseDataRecord.Id.ToWWCP(),
+                                                                  _ChargingStation.CreateEVSE(EvseDataRecord.Id.ToWWCP().Value,
 
                                                                                               Configurator: evse => {
 

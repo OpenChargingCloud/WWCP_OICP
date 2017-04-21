@@ -156,14 +156,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a charging station operator identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text representation of an EVSE operator identification must not be null or empty!");
 
             #endregion
 
             var MatchCollection = OperatorId_RegEx.Matches(Text);
 
             if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal text representation of a charging station operator identification: '" + Text + "'!", nameof(Text));
+                throw new ArgumentException("Illegal text representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
 
             Country _CountryCode;
 
@@ -179,7 +179,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        MatchCollection[0].Groups[5].Value,
                                        OperatorIdFormats.DIN);
 
-            throw new ArgumentException("Illegal text representation of a charging station operator identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Illegal text representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
 
         }
 

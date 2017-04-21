@@ -114,7 +114,7 @@ namespace org.GraphDefined.WWCP
 
                                               OICPv2_1.CPO.EVSE2EVSEDataRecordDelegate                            EVSE2EVSEDataRecord                             = null,
                                               OICPv2_1.CPO.EVSEStatusUpdate2EVSEStatusRecordDelegate              EVSEStatusUpdate2EVSEStatusRecord               = null,
-                                              OICPv2_1.CPO.WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate  WWCPCDR2OICPCDR   = null,
+                                              OICPv2_1.CPO.WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPCDR2OICPCDR                                 = null,
                                               OICPv2_1.CPO.EVSEDataRecord2XMLDelegate                             EVSEDataRecord2XML                              = null,
                                               OICPv2_1.CPO.EVSEStatusRecord2XMLDelegate                           EVSEStatusRecord2XML                            = null,
                                               OICPv2_1.CPO.ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
@@ -276,7 +276,7 @@ namespace org.GraphDefined.WWCP
 
                                               OICPv2_1.CPO.EVSE2EVSEDataRecordDelegate                            EVSE2EVSEDataRecord                             = null,
                                               OICPv2_1.CPO.EVSEStatusUpdate2EVSEStatusRecordDelegate              EVSEStatusUpdate2EVSEStatusRecord               = null,
-                                              OICPv2_1.CPO.WWCPChargeDetailRecord2OICPChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
+                                              OICPv2_1.CPO.WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
                                               OICPv2_1.CPO.EVSEDataRecord2XMLDelegate                             EVSEDataRecord2XML                              = null,
                                               OICPv2_1.CPO.EVSEStatusRecord2XMLDelegate                           EVSEStatusRecord2XML                            = null,
                                               OICPv2_1.CPO.ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,

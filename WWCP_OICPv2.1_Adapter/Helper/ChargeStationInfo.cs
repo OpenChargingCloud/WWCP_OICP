@@ -22,6 +22,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+using org.GraphDefined.Vanaheimr.Illias;
+
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPv2_1
@@ -110,25 +112,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public void Check()
         {
 
-            ChargingStation_Id? _StationId = null;
+            ChargingStation_Id? __StationId = null;
 
             // 1st: Try to use the given ChargingStationId from the XML...
             if (StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToString(WWCP.OperatorIdFormats.DIN), StringComparison.Ordinal) ||
                 StationXMLId.StartsWith(ChargePoolInfo.CPInfoList.OperatorId.ToString(WWCP.OperatorIdFormats.ISO), StringComparison.Ordinal))
             {
-                _StationId  = ChargingStation_Id.Parse(StationXMLId);
+                ChargingStation_Id ___StationId;
+                if (ChargingStation_Id.TryParse(StationXMLId, out ___StationId))
+                    __StationId = ___StationId;
             }
 
             // 2nd: Try to use the given EVSE Ids to find a common prefix...
-            if (_StationId == null)
-                _StationId = ChargingStation_Id.Create(_EVSEIds.Select(evse => evse.ToWWCP()));
+            if (__StationId == null && StationXMLId.IsNullOrEmpty())
+            {
+                var CSId = ChargingStation_Id.Create(_EVSEIds.Select(evse => evse.ToWWCP().Value));
+                if (CSId.HasValue)
+                    __StationId = CSId.Value;
+            }
 
             // Alternative: Try to use a modified StationXML Id...
-            if (_StationId == null)
+            if (__StationId == null && StationXMLId.IsNotNullOrEmpty())
             {
                 var rgx = new Regex("[^A-Z0-9]");
-                _StationId = ChargingStation_Id.Parse(ChargePoolInfo.PoolId.OperatorId, rgx.Replace(StationXMLId.ToUpper(), ""));
+                __StationId = ChargingStation_Id.Parse(ChargePoolInfo.PoolId.OperatorId, rgx.Replace(StationXMLId.ToUpper(), "").SubstringMax(30));
             }
+
+            if (!__StationId.HasValue)
+            {
+
+            }
+
+            _StationId = __StationId.Value;
 
         }
 

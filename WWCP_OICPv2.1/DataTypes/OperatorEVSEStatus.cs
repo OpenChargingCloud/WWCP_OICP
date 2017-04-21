@@ -102,7 +102,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                               OperatorEVSEStatusXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName", ""),
                                               OperatorEVSEStatusXML.Elements             (OICPNS.EVSEStatus + "EvseStatusRecord").
                                                                     SafeSelect(EvseStatusRecordXML => EVSEStatusRecord.Parse(EvseStatusRecordXML)).
-                                                                    Where     (statusrecord        => statusrecord != null));
+                                                                    SafeWhere (statusrecord        => statusrecord != null));
 
             }
             catch (Exception e)
@@ -134,7 +134,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             try
             {
-                return OperatorEVSEStatusXMLs.Select(OperatorEVSEStatusXML => OperatorEVSEStatus.Parse(OperatorEVSEStatusXML));
+                return OperatorEVSEStatusXMLs.SafeSelect(OperatorEVSEStatusXML => Parse(OperatorEVSEStatusXML));
             }
             catch (Exception e)
             {

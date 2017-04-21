@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
@@ -170,7 +171,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 var OperatorEvseStatusXMLs = _EVSEStatusXML.Elements(OICPNS.EVSEStatus + "OperatorEvseStatus");
 
                 if (OperatorEvseStatusXMLs != null)
-                    return new EVSEStatus(OICPv2_1.OperatorEVSEStatus.Parse(OperatorEvseStatusXMLs),
+                    return new EVSEStatus(OICPv2_1.OperatorEVSEStatus.Parse(OperatorEvseStatusXMLs).
+                                          SafeWhere(operatorevsestatus => operatorevsestatus != null),
                                           _StatusCode);
 
             }

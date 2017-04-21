@@ -180,24 +180,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #endregion
 
-                #region SearchEVSE
-
-                RegisterEvent("SearchEVSERequest",
-                              handler => EMPClient.OnSearchEVSESOAPRequest += handler,
-                              handler => EMPClient.OnSearchEVSESOAPRequest -= handler,
-                              "SearchEVSE", "Requests", "All").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
-
-                RegisterEvent("SearchEVSEResponse",
-                              handler => EMPClient.OnSearchEVSESOAPResponse += handler,
-                              handler => EMPClient.OnSearchEVSESOAPResponse -= handler,
-                              "SearchEVSE", "Responses", "All").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
-
-                #endregion
-
                 #region PullEVSEStatus/-ById
 
                 RegisterEvent("PullEVSEStatusRequest",
