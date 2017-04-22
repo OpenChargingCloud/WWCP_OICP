@@ -35,6 +35,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public class CPInfoList : IEnumerable<ChargingPoolInfo>
     {
 
+        #region Data
+
+        private static Regex InvalidCharactersRegEx = new Regex("[^A-Z0-9]");
+
+        #endregion
+
         #region Properties
 
         #region OperatorId
@@ -107,7 +113,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             {
 
                 _ChargingPoolInfo = new ChargingPoolInfo(this, ChargingPoolId, Address, PoolLocation);
-                _ChargingPoolInfo.AddOrUpdateCSInfo(ChargingStationXMLId, EVSEId);
+                _ChargingPoolInfo.AddOrUpdateCSInfo(ChargingStationXMLId.IsNotNullOrEmpty()
+                                                        ? ChargingStationXMLId
+                                                        : ChargingStation_Id.Create(EVSEId.ToWWCP().Value).ToString(),
+                                                    EVSEId);
 
                 _ChargingPools.Add(_ChargingPoolInfo.PoolId, _ChargingPoolInfo);
 
@@ -117,40 +126,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region AnalyseAndGenerateLookUp()
+        #region VerifyUniquenessOfChargingStationIds()
 
-        public EVSEIdLookup AnalyseAndGenerateLookUp()
+        public EVSEIdLookup VerifyUniquenessOfChargingStationIds()
         {
 
             _ChargingPools.ForEach(cp => cp.Value.Check());
 
             // ChargingStationIds are not unique!
-            var CS1 = _ChargingPools.Values.
-                          SelectMany(cpinfo   => cpinfo.ChargingStations).
-                          ToLookup  (csinfo   => csinfo.StationId,
-                                     csinfo   => csinfo.ChargePoolInfo.PoolId).
-                          Where     (grouping => grouping.Count() > 1);
+            var DuplicateChargingStationIds = _ChargingPools.Values.
+                                                   SelectMany(cpinfo   => cpinfo.ChargingStations).
+                                                   ToLookup  (csinfo   => csinfo.StationId, // <-- !!!
+                                                              csinfo   => csinfo.ChargePoolInfo.PoolId).
+                                                   Where     (grouping => grouping.Count() > 1).
+                                                   ToArray();
 
-            if (CS1.Any())
+            if (DuplicateChargingStationIds.Length > 0)
             {
 
-                var CS2 = _ChargingPools.Values.
-                              SelectMany(cpinfo   => cpinfo.ChargingStations).
-                              ToLookup  (csinfo   => csinfo.StationXMLId,
-                                         csinfo   => csinfo.ChargePoolInfo.PoolId).
-                              Where     (grouping => grouping.Count() > 1);
+                // ChargingStationXMLIds are not unique!
+                var DuplicateChargingStationXMLIds = _ChargingPools.Values.
+                                                          SelectMany(cpinfo   => cpinfo.ChargingStations).
+                                                          ToLookup  (csinfo   => csinfo.StationXMLId, // <-- !!!
+                                                                     csinfo   => csinfo.ChargePoolInfo.PoolId).
+                                                          Where     (grouping => grouping.Count() > 1).
+                                                          ToArray();
 
                 #region ChargingStationXMLIds are not unique...
 
-                if (!CS2.Any())
+                if (DuplicateChargingStationXMLIds.Length == 0)
                 {
-                    _ChargingPools.Values.SelectMany(cpinfo => cpinfo.ChargingStations).ForEach(csinfo => {
+                    _ChargingPools.Values.
+                         SelectMany(cpinfo => cpinfo.ChargingStations).
+                         ForEach   (csinfo => {
 
-                        //ToDo: Replace invalid characters BEFORE grouping!
-                        var rgx = new Regex("[^A-Z0-9]");
-                        csinfo.StationId = ChargingStation_Id.Parse(csinfo.ChargePoolInfo.PoolId.OperatorId, rgx.Replace(csinfo.StationXMLId.ToUpper(), ""));
+                             csinfo.StationId = ChargingStation_Id.Parse(csinfo.ChargePoolInfo.PoolId.OperatorId,
+                                                                         // Replace invalid characters BEFORE grouping!
+                                                                         InvalidCharactersRegEx.Replace(csinfo.StationXMLId.ToUpper(), "").Substring(30));
 
-                    });
+                         });
                 }
 
                 #endregion
@@ -158,19 +172,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 #region ...or they are!
 
                 else
-                {
-                    _ChargingPools.Values.SelectMany(cpinfo => cpinfo.ChargingStations).ForEach(csinfo => {
+                    _ChargingPools.Values.
+                         SelectMany(cpinfo => cpinfo.ChargingStations).
+                         ForEach   (csinfo => {
 
-                        var CSIdSuffix = new SHA1CryptoServiceProvider().
-                                             ComputeHash(Encoding.UTF8.GetBytes(csinfo.Select(evseid => evseid.ToString()).Aggregate())).
-                                                         ToHexString().
-                                                         Substring(0, 12).
-                                                         ToUpper();
+                             csinfo.StationId = ChargingStation_Id.Parse(csinfo.ChargePoolInfo.PoolId.OperatorId,
+                                                                         new SHA1CryptoServiceProvider().
+                                                                             ComputeHash(Encoding.UTF8.GetBytes(csinfo.Select(evseid => evseid.ToString()).Aggregate())).
+                                                                                         ToHexString().
+                                                                                         SubstringMax(50).
+                                                                                         ToUpper());
 
-                        csinfo.StationId = ChargingStation_Id.Parse(csinfo.ChargePoolInfo.PoolId.OperatorId, CSIdSuffix);
-
-                    });
-                }
+                          });
 
                 #endregion
 
@@ -185,13 +198,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     if (csinfo.StationId == null)
                     {
 
-                        var CSIdSuffix = new SHA1CryptoServiceProvider().
-                                             ComputeHash(Encoding.UTF8.GetBytes(csinfo.Select(evseid => evseid.ToString()).Aggregate())).
-                                                         ToHexString().
-                                                         Substring(0, 12).
-                                                         ToUpper();
-
-                        csinfo.StationId = ChargingStation_Id.Parse(csinfo.ChargePoolInfo.CPInfoList.OperatorId, CSIdSuffix);
+                        csinfo.StationId = ChargingStation_Id.Parse(csinfo.ChargePoolInfo.CPInfoList.OperatorId,
+                                                                    new SHA1CryptoServiceProvider().
+                                                                        ComputeHash(Encoding.UTF8.GetBytes(csinfo.Select(evseid => evseid.ToString()).Aggregate())).
+                                                                                    ToHexString().
+                                                                                    Substring(0, 12).
+                                                                                    ToUpper());
 
                     }
                 });

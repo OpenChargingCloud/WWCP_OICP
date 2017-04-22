@@ -64,7 +64,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// The default status check intervall.
         /// </summary>
-        public  readonly static TimeSpan                                                DefaultPullDataServiceEvery              = TimeSpan.FromMinutes(1);
+        public  readonly static TimeSpan                                                DefaultPullDataServiceEvery              = TimeSpan.FromMinutes(15);
 
         public  readonly static TimeSpan                                                DefaultPullDataServiceRequestTimeout     = TimeSpan.FromMinutes(30);
 
@@ -1258,7 +1258,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                     : DefaultPullStatusServiceEvery. TotalMilliseconds);
             this.PullStatusServiceRequestTimeout    = PullStatusServiceRequestTimeout.HasValue ? PullStatusServiceRequestTimeout.Value : DefaultPullStatusServiceRequestTimeout;
             this.PullStatusServiceLock              = new Object();
-            this.PullStatusServiceTimer             = new Timer(PullStatusService, null, 1000000, _PullStatusServiceEvery);
+            this.PullStatusServiceTimer             = new Timer(PullStatusService, null, 150000, _PullStatusServiceEvery);
             this.DisablePullStatus                  = DisablePullStatus;
 
             this.DefaultProviderId                  = DefaultProvider != null
@@ -1821,7 +1821,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                               evsedatarecord.ChargingStationId,
                                                               evsedatarecord.Id);
 
-                                _EVSEIdLookup = _CPInfoList.AnalyseAndGenerateLookUp();
+                                _EVSEIdLookup = _CPInfoList.VerifyUniquenessOfChargingStationIds();
 
                             }
                             catch (Exception e)
@@ -3142,6 +3142,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     //
                     //PullEVSEDataTask.Wait();
 
+                    var DownloadTime = DateTime.Now;
+
                     LastPullDataRun = TimestampBeforeLastPullDataRun;
 
                     #region Everything is ok!
@@ -3157,7 +3159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                         var SOAPXML = XDocument.Parse(File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "PullEVSEData_TestData001.xml", Encoding.UTF8)).
                                                       Root.
-                                                      Element(org.GraphDefined.Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope_v1_1 + "Body").
+                                                      Element(Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope_v1_1 + "Body").
                                                       Descendants().
                                                       FirstOrDefault();
 
@@ -3173,8 +3175,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             ChargingStationOperator_Id?  WWCPChargingStationOperatorId   = null;
                             UInt64                       IllegalOperatorsIds             = 0;
                             UInt64                       OperatorsSkipped                = 0;
+                            UInt64                       TotalEVSEsCreated               = 0;
                             UInt64                       TotalEVSEsUpdated               = 0;
                             UInt64                       TotalEVSEsSkipped               = 0;
+
+                            CPInfoList                   _CPInfoList;
 
                             foreach (var CurrentOperatorEVSEData in OperatorEVSEData.OrderBy(evseoperator => evseoperator.OperatorName))
                             {
@@ -3198,9 +3203,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                             // Update name (via events)!
                                             WWCPChargingStationOperator.Name = I18NString.Create(Languages.unknown, CurrentOperatorEVSEData.OperatorName);
 
-                                        CPInfoList     _CPInfoList;
-                                        WWCP.EVSE_Id?  CurrentEVSEId  = null;
-                                        UInt64         EVSEsSkipped   = 0;
+                                        WWCP.EVSE_Id?  CurrentEVSEId   = null;
+                                        UInt64         EVSEsSkipped    = 0;
 
                                         #region Generate a list of all charging pools/stations/EVSEs
 
@@ -3216,9 +3220,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                 try
                                                 {
-
+                                                                                  // Generate a stable charging pool identification
                                                     _CPInfoList.AddOrUpdateCPInfo(ChargingPool_Id.Generate(CurrentEVSEDataRecord.Id.OperatorId.ToWWCP().Value,
-                                                                                                           CurrentEVSEDataRecord.Address.ToWWCP(),
+                                                                                                           CurrentEVSEDataRecord.Address.      ToWWCP(),
                                                                                                            CurrentEVSEDataRecord.GeoCoordinate),
                                                                                   CurrentEVSEDataRecord.Address,
                                                                                   CurrentEVSEDataRecord.GeoCoordinate,
@@ -3234,27 +3238,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                             }
 
                                             else
+                                                // Invalid WWCP EVSE identification
                                                 EVSEsSkipped++;
 
                                         }
 
-                                        var EVSEIdLookup = _CPInfoList.AnalyseAndGenerateLookUp();
+                                        var EVSEIdLookup = _CPInfoList.VerifyUniquenessOfChargingStationIds();
 
                                         #endregion
 
                                         #region Data
 
-                                        WWCP.EVSE                   CurrentEVSE                    = null;
-                                        UInt64                      EVSEsCreated                   = 0;
-                                        UInt64                      EVSEsUpdated                   = 0;
-                                        Languages                   LocationLanguage               = Languages.unknown;
-                                        Languages                   LocalChargingStationLanguage   = Languages.unknown;
-                                        ChargingPool                _ChargingPool                  = null;
-                                        ChargingStation             _ChargingStation               = null;
-                                        EVSE                        _EVSE                          = null;
+                                        ChargingPool     _ChargingPool                  = null;
+                                        UInt64           ChargingPoolsCreated           = 0;
+                                        UInt64           ChargingPoolsUpdated           = 0;
+                                        Languages        LocationLanguage               = Languages.unknown;
+                                        Languages        LocalChargingStationLanguage   = Languages.unknown;
 
-                                        EVSEInfo                    EVSEInfo                       = null;
-                                        ChargingPool_Id             PoolId;
+                                        ChargingStation  _ChargingStation               = null;
+                                        UInt64           ChargingStationsCreated        = 0;
+                                        UInt64           ChargingStationsUpdated        = 0;
+
+                                        EVSEInfo         EVSEInfo                       = null;
+                                        EVSE             _EVSE                          = null;
+                                        UInt64           EVSEsCreated                   = 0;
+                                        UInt64           EVSEsUpdated                   = 0;
 
                                         #endregion
 
@@ -3271,65 +3279,60 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                     EVSEInfo = EVSEIdLookup[CurrentEVSEDataRecord.Id];
 
-                                                    #region Set derived WWCP properties
+                                                    #region Set LocationLanguage
 
-                                                              #region Set LocationLanguage
+                                                    switch (EVSEInfo.PoolAddress.Country.Alpha2Code.ToLower())
+                                                    {
 
-                                                              switch (EVSEInfo.PoolAddress.Country.Alpha2Code.ToLower())
-                                                              {
+                                                        case "de": LocationLanguage = Languages.deu; break;
+                                                        case "fr": LocationLanguage = Languages.fra; break;
+                                                        case "dk": LocationLanguage = Languages.dk; break;
+                                                        case "no": LocationLanguage = Languages.no; break;
+                                                        case "fi": LocationLanguage = Languages.fin; break;
+                                                        case "se": LocationLanguage = Languages.swe; break;
 
-                                                                  case "de": LocationLanguage = Languages.deu; break;
-                                                                  case "fr": LocationLanguage = Languages.fra; break;
-                                                                  case "dk": LocationLanguage = Languages.dk; break;
-                                                                  case "no": LocationLanguage = Languages.no; break;
-                                                                  case "fi": LocationLanguage = Languages.fin; break;
-                                                                  case "se": LocationLanguage = Languages.swe; break;
+                                                        case "sk": LocationLanguage = Languages.sk; break;
+                                                        case "it": LocationLanguage = Languages.ita; break;
+                                                        case "us": LocationLanguage = Languages.eng; break;
+                                                        case "nl": LocationLanguage = Languages.nld; break;
+                                                        case "at": LocationLanguage = Languages.deu; break;
+                                                        case "ru": LocationLanguage = Languages.ru; break;
+                                                        case "il": LocationLanguage = Languages.heb; break;
 
-                                                                  case "sk": LocationLanguage = Languages.sk; break;
-                                                                  case "it": LocationLanguage = Languages.ita; break;
-                                                                  case "us": LocationLanguage = Languages.eng; break;
-                                                                  case "nl": LocationLanguage = Languages.nld; break;
-                                                                  case "at": LocationLanguage = Languages.deu; break;
-                                                                  case "ru": LocationLanguage = Languages.ru; break;
-                                                                  case "il": LocationLanguage = Languages.heb; break;
+                                                        case "be":
+                                                        case "ch":
+                                                        case "al":
+                                                        default:   LocationLanguage = Languages.unknown; break;
 
-                                                                  case "be": LocationLanguage = Languages.unknown; break;
-                                                                  case "ch": LocationLanguage = Languages.unknown; break;
-                                                                  case "al": LocationLanguage = Languages.unknown; break;
+                                                    }
 
-                                                                  default:   LocationLanguage = Languages.unknown; break;
+                                                    if (EVSEInfo.PoolAddress.Country == Country.Germany)
+                                                        LocalChargingStationLanguage = Languages.deu;
 
-                                                              }
+                                                    else if (EVSEInfo.PoolAddress.Country == Country.Denmark)
+                                                        LocalChargingStationLanguage = Languages.dk;
 
-                                                              if (EVSEInfo.PoolAddress.Country == Country.Germany)
-                                                                  LocalChargingStationLanguage = Languages.deu;
+                                                    else if (EVSEInfo.PoolAddress.Country == Country.France)
+                                                        LocalChargingStationLanguage = Languages.fra;
 
-                                                              else if (EVSEInfo.PoolAddress.Country == Country.Denmark)
-                                                                  LocalChargingStationLanguage = Languages.dk;
+                                                    else
+                                                        LocalChargingStationLanguage = Languages.unknown;
 
-                                                              else if (EVSEInfo.PoolAddress.Country == Country.France)
-                                                                  LocalChargingStationLanguage = Languages.fra;
+                                                    #endregion
 
-                                                              else
-                                                                  LocalChargingStationLanguage = Languages.unknown;
+                                                    #region Guess the language of the 'ChargingStationName' by '_Address.Country'
 
-                                                              #endregion
+                                                    //_ChargingStationName = new I18NString();
 
-                                                              #region Guess the language of the 'ChargingStationName' by '_Address.Country'
+                                                    //if (LocalChargingStationName.IsNotNullOrEmpty())
+                                                    //    _ChargingStationName.Add(LocalChargingStationLanguage,
+                                                    //                             LocalChargingStationName);
 
-                                                              //_ChargingStationName = new I18NString();
+                                                    //if (EnChargingStationName.IsNotNullOrEmpty())
+                                                    //    _ChargingStationName.Add(Languages.en,
+                                                    //                             EnChargingStationName);
 
-                                                              //if (LocalChargingStationName.IsNotNullOrEmpty())
-                                                              //    _ChargingStationName.Add(LocalChargingStationLanguage,
-                                                              //                             LocalChargingStationName);
-
-                                                              //if (EnChargingStationName.IsNotNullOrEmpty())
-                                                              //    _ChargingStationName.Add(Languages.en,
-                                                              //                             EnChargingStationName);
-
-                                                              #endregion
-
-                                                              #endregion
+                                                    #endregion
 
 
                                                     #region Update matching charging pool...
@@ -3347,6 +3350,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                         _ChargingPool.Accessibility         = CurrentEVSEDataRecord.Accessibility.ToWWCP();
                                                         _ChargingPool.HotlinePhoneNumber    = CurrentEVSEDataRecord.HotlinePhoneNumber;
 
+                                                        ChargingPoolsUpdated++;
+
                                                     }
 
                                                     #endregion
@@ -3354,79 +3359,93 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     #region  ...or create a new one!
 
                                                     else
+                                                    {
+
+                                                        // An operator might have multiple suboperator ids!
+                                                        if (!WWCPChargingStationOperator.Ids.Contains(EVSEInfo.PoolId.OperatorId))
+                                                            WWCPChargingStationOperator.AddId(EVSEInfo.PoolId.OperatorId);
+
                                                         _ChargingPool = WWCPChargingStationOperator.CreateChargingPool(
 
-                                                                                          EVSEInfo.PoolId,
+                                                                            EVSEInfo.PoolId,
 
-                                                                                          Configurator: pool => {
+                                                                            Configurator: pool => {
 
-                                                                                              pool.Description                 = CurrentEVSEDataRecord.AdditionalInfo;
-                                                                                              pool.Address                     = CurrentEVSEDataRecord.Address.ToWWCP();
-                                                                                              pool.GeoLocation                 = CurrentEVSEDataRecord.GeoCoordinate;
-                                                                                              pool.LocationLanguage            = LocationLanguage;
-                                                                                              pool.EntranceLocation            = CurrentEVSEDataRecord.GeoChargingPointEntrance;
-                                                                                              pool.OpeningTimes                = CurrentEVSEDataRecord.OpeningTime != null ? OpeningTimes.Parse(CurrentEVSEDataRecord.OpeningTime) : null;
-                                                                                              pool.AuthenticationModes         = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
-                                                                                              pool.PaymentOptions              = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                                                                                              pool.Accessibility               = CurrentEVSEDataRecord.Accessibility.ToWWCP();
-                                                                                              pool.HotlinePhoneNumber          = CurrentEVSEDataRecord.HotlinePhoneNumber;
-                                                                                              //pool.StatusAggregationDelegate   = ChargingStationStatusAggregationDelegate;
+                                                                                pool.DataSource                  = Id.ToString();
+                                                                                pool.Description                 = CurrentEVSEDataRecord.AdditionalInfo;
+                                                                                pool.Address                     = CurrentEVSEDataRecord.Address.ToWWCP();
+                                                                                pool.GeoLocation                 = CurrentEVSEDataRecord.GeoCoordinate;
+                                                                                pool.LocationLanguage            = LocationLanguage;
+                                                                                pool.EntranceLocation            = CurrentEVSEDataRecord.GeoChargingPointEntrance;
+                                                                                pool.OpeningTimes                = CurrentEVSEDataRecord.OpeningTime != null ? OpeningTimes.Parse(CurrentEVSEDataRecord.OpeningTime) : null;
+                                                                                pool.AuthenticationModes         = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
+                                                                                pool.PaymentOptions              = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
+                                                                                pool.Accessibility               = CurrentEVSEDataRecord.Accessibility.ToWWCP();
+                                                                                pool.HotlinePhoneNumber          = CurrentEVSEDataRecord.HotlinePhoneNumber;
+                                                                                //pool.StatusAggregationDelegate   = ChargingStationStatusAggregationDelegate;
 
-                                                                                          }
+                                                                                ChargingPoolsCreated++;
 
-                                                        );
+                                                                            });
+
+                                                    }
 
                                                     #endregion
 
 
                                                     #region Update matching charging station...
 
-                                                              if (_ChargingPool.TryGetChargingStationbyId(EVSEInfo.StationId, out _ChargingStation))
-                                                              {
+                                                    if (_ChargingPool.TryGetChargingStationbyId(EVSEInfo.StationId, out _ChargingStation))
+                                                    {
 
-                                                                  // Update via events!
-                                                                  _ChargingStation.Name                       = CurrentEVSEDataRecord.ChargingStationName;
-                                                                  _ChargingStation.HubjectStationId           = CurrentEVSEDataRecord.ChargingStationId;
-                                                                  _ChargingStation.Description                = CurrentEVSEDataRecord.AdditionalInfo;
-                                                                  _ChargingStation.AuthenticationModes        = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
-                                                                  _ChargingStation.PaymentOptions             = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                                                                  _ChargingStation.Accessibility              = CurrentEVSEDataRecord.Accessibility.ToWWCP();
-                                                                  _ChargingStation.HotlinePhoneNumber         = CurrentEVSEDataRecord.HotlinePhoneNumber;
-                                                                  _ChargingStation.IsHubjectCompatible        = CurrentEVSEDataRecord.IsHubjectCompatible;
-                                                                  _ChargingStation.DynamicInfoAvailable       = CurrentEVSEDataRecord.DynamicInfoAvailable;
-                                                                  _ChargingStation.StatusAggregationDelegate  = EVSEStatusAggregationDelegate;
+                                                        // Update via events!
+                                                        _ChargingStation.Name                       = CurrentEVSEDataRecord.ChargingStationName;
+                                                        _ChargingStation.HubjectStationId           = CurrentEVSEDataRecord.ChargingStationId;
+                                                        _ChargingStation.Description                = CurrentEVSEDataRecord.AdditionalInfo;
+                                                        _ChargingStation.AuthenticationModes        = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
+                                                        _ChargingStation.PaymentOptions             = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
+                                                        _ChargingStation.Accessibility              = CurrentEVSEDataRecord.Accessibility.ToWWCP();
+                                                        _ChargingStation.HotlinePhoneNumber         = CurrentEVSEDataRecord.HotlinePhoneNumber;
+                                                        _ChargingStation.IsHubjectCompatible        = CurrentEVSEDataRecord.IsHubjectCompatible;
+                                                        _ChargingStation.DynamicInfoAvailable       = CurrentEVSEDataRecord.DynamicInfoAvailable;
+                                                        _ChargingStation.StatusAggregationDelegate  = EVSEStatusAggregationDelegate;
 
-                                                              }
+                                                        ChargingStationsUpdated++;
 
-                                                              #endregion
+                                                    }
+
+                                                    #endregion
 
                                                     #region ...or create a new one!
 
-                                                              else
-                                                                  _ChargingStation = _ChargingPool.CreateChargingStation(
+                                                    else
+                                                        _ChargingStation = _ChargingPool.CreateChargingStation(
 
-                                                                                                       EVSEInfo.StationId,
+                                                                                EVSEInfo.StationId,
 
-                                                                                                       Configurator: station => {
+                                                                                Configurator: station => {
 
-                                                                                                           station.Name                       = CurrentEVSEDataRecord.ChargingStationName;
-                                                                                                           station.HubjectStationId           = CurrentEVSEDataRecord.ChargingStationId;
-                                                                                                           station.Description                = CurrentEVSEDataRecord.AdditionalInfo;
-                                                                                                           station.AuthenticationModes        = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
-                                                                                                           station.PaymentOptions             = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                                                                                                           station.Accessibility              = CurrentEVSEDataRecord.Accessibility.ToWWCP();
-                                                                                                           station.HotlinePhoneNumber         = CurrentEVSEDataRecord.HotlinePhoneNumber;
-                                                                                                           station.IsHubjectCompatible        = CurrentEVSEDataRecord.IsHubjectCompatible;
-                                                                                                           station.DynamicInfoAvailable       = CurrentEVSEDataRecord.DynamicInfoAvailable;
-                                                                                                           station.StatusAggregationDelegate  = EVSEStatusAggregationDelegate;
+                                                                                    station.DataSource                 = Id.ToString();
+                                                                                    station.Name                       = CurrentEVSEDataRecord.ChargingStationName;
+                                                                                    station.HubjectStationId           = CurrentEVSEDataRecord.ChargingStationId;
+                                                                                    station.Description                = CurrentEVSEDataRecord.AdditionalInfo;
+                                                                                    station.AuthenticationModes        = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
+                                                                                    station.PaymentOptions             = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
+                                                                                    station.Accessibility              = CurrentEVSEDataRecord.Accessibility.ToWWCP();
+                                                                                    station.HotlinePhoneNumber         = CurrentEVSEDataRecord.HotlinePhoneNumber;
+                                                                                    station.IsHubjectCompatible        = CurrentEVSEDataRecord.IsHubjectCompatible;
+                                                                                    station.DynamicInfoAvailable       = CurrentEVSEDataRecord.DynamicInfoAvailable;
+                                                                                    station.StatusAggregationDelegate  = EVSEStatusAggregationDelegate;
 
-                                                                                                           // photo_uri => "place_photo"
+                                                                                    // photo_uri => "place_photo"
 
-                                                                                                       }
+                                                                                    ChargingStationsCreated++;
 
-                                                                         );
+                                                                                }
 
-                                                              #endregion
+                                                               );
+
+                                                    #endregion
 
 
                                                     #region Update matching EVSE...
@@ -3454,6 +3473,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                                                     Configurator: evse => {
 
+                                                                                        evse.DataSource      = Id.ToString();
                                                                                         evse.Description     = CurrentEVSEDataRecord.AdditionalInfo;
                                                                                         evse.ChargingModes   = new ReactiveSet<WWCP.ChargingModes>(CurrentEVSEDataRecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
                                                                                         OICPMapper.ApplyChargingFacilities(evse, CurrentEVSEDataRecord.ChargingFacilities);
@@ -3480,6 +3500,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                         DebugX.Log(EVSEsCreated + " EVSE created, " + EVSEsUpdated + " EVSEs updated, " + EVSEsSkipped + " EVSEs skipped");
 
+                                        TotalEVSEsCreated += EVSEsCreated;
                                         TotalEVSEsUpdated += EVSEsUpdated;
                                         TotalEVSEsSkipped += EVSEsSkipped;
 
@@ -3512,16 +3533,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             }
 
                             if (IllegalOperatorsIds > 0)
-                                DebugX.Log(OperatorsSkipped + " illegal EVSE operator identifications");
+                                DebugX.Log(IllegalOperatorsIds + " illegal EVSE operator identifications");
 
                             if (OperatorsSkipped > 0)
-                                DebugX.Log(OperatorsSkipped + " EVSE operators skipped");
+                                DebugX.Log(OperatorsSkipped    + " EVSE operators skipped");
+
+                            if (TotalEVSEsCreated > 0)
+                                DebugX.Log(TotalEVSEsCreated   + " EVSEs created");
 
                             if (TotalEVSEsUpdated > 0)
-                                DebugX.Log(TotalEVSEsUpdated + " EVSEs updated");
+                                DebugX.Log(TotalEVSEsUpdated   + " EVSEs updated");
 
                             if (TotalEVSEsSkipped > 0)
-                                DebugX.Log(TotalEVSEsSkipped + " EVSEs skipped");
+                                DebugX.Log(TotalEVSEsSkipped   + " EVSEs skipped");
 
                         }
 
@@ -3577,7 +3601,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
                     var EndTime = DateTime.Now;
-                    DebugX.LogT("[" + Id + "] 'Pull data service' finished after " + (EndTime - StartTime).TotalSeconds + " seconds");
+                    DebugX.LogT("[" + Id + "] 'Pull data service' finished after " + (EndTime - StartTime).TotalSeconds + " seconds (" + (DownloadTime - StartTime).TotalSeconds + "/" + (EndTime - DownloadTime).TotalSeconds + ")");
 
                 }
                 catch (Exception e)
@@ -3648,6 +3672,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                         RequestTimeout:     PullStatusServiceRequestTimeout);
 
                     PullEVSEStatusTask.Wait();
+
+                    var DownloadTime = DateTime.Now;
 
                     #region Everything is ok!
 
@@ -3816,7 +3842,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
                     var EndTime = DateTime.Now;
-                    DebugX.LogT("[" + Id + "] 'Pull status service' finished after " + (EndTime - StartTime).TotalSeconds + " seconds");
+
+                    DebugX.LogT("[" + Id + "] 'Pull status service' finished after " + (EndTime - StartTime).TotalSeconds + " seconds (" + (DownloadTime - StartTime).TotalSeconds + "/" + (EndTime - DownloadTime).TotalSeconds + ")");
 
                 }
                 catch (Exception e)

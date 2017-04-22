@@ -155,7 +155,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                       #endregion
 
-                                                      EVSEIdLookup = _CPInfoList.AnalyseAndGenerateLookUp();
+                                                      EVSEIdLookup = _CPInfoList.VerifyUniquenessOfChargingStationIds();
 
                                                       #region Data
 

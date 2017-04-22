@@ -117,8 +117,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                 : _ChargingStations.
                                       FirstOrDefault(CSInfo => CSInfo.StationId    == ChargingStation_Id.Create(EVSEId.ToWWCP().Value));
 
+            if (ChargingStationXMLId.IsNullOrEmpty())
+            {
+
+            }
+
             if (ExCSInfos == null)
-                AddCSInfo(ChargingStationXMLId, EVSEId);
+                AddCSInfo(ChargingStationXMLId.IsNotNullOrEmpty()
+                              ? ChargingStationXMLId
+                              : ChargingStation_Id.Create(EVSEId.ToWWCP().Value).ToString(),
+                          EVSEId);
 
             else
             {
