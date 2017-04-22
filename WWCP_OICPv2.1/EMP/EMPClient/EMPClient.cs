@@ -46,26 +46,76 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// The default HTTP user agent string.
         /// </summary>
-        public new const           String  DefaultHTTPUserAgent  = "GraphDefined OICP " + Version.Number + " EMP Client";
+        public new const           String  DefaultHTTPUserAgent            = "GraphDefined OICP " + Version.Number + " EMP Client";
 
         /// <summary>
         /// The default remote TCP port to connect to.
         /// </summary>
-        public new static readonly IPPort  DefaultRemotePort     = IPPort.Parse(443);
+        public new static readonly IPPort  DefaultRemotePort               = IPPort.Parse(443);
 
         /// <summary>
         /// The default URI prefix.
         /// </summary>
-        public const               String  DefaultURIPrefix      = "/ibis/ws";
+        public     const           String  DefaultURIPrefix                = "/ibis/ws";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP EvseData requests.
+        /// </summary>
+        public     const           String  DefaultEVSEDataURI              = "/eRoamingEvseData_V2.1";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP EvseStatus requests.
+        /// </summary>
+        public     const           String  DefaultEVSEStatusURI            = "/eRoamingEvseStatus_V2.0";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP AuthenticationData requests.
+        /// </summary>
+        public     const           String  DefaultAuthenticationDataURI    = "/eRoamingAuthenticationData_V2.0";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP Reservation requests.
+        /// </summary>
+        public     const           String  DefaultReservationURI           = "/eRoamingReservation_V1.0";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// </summary>
+        public     const           String  DefaultAuthorizationURI         = "/eRoamingAuthorization_V2.0";
 
         #endregion
 
         #region Properties
 
         /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP EvseData requests.
+        /// </summary>
+        public String           EVSEDataURI             { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP EvseStatus requests.
+        /// </summary>
+        public String           EVSEStatusURI           { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP AuthenticationData requests.
+        /// </summary>
+        public String           AuthenticationDataURI   { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP Reservation requests.
+        /// </summary>
+        public String           ReservationURI          { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// </summary>
+        public String           AuthorizationURI        { get; }
+
+        /// <summary>
         /// The attached OICP EMP client (HTTP/SOAP client) logger.
         /// </summary>
-        public EMPClientLogger Logger { get; }
+        public EMPClientLogger  Logger                  { get; }
 
         #endregion
 
@@ -120,57 +170,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public CustomMapperDelegate<Acknowledgement<PullEVSEDataRequest>, Acknowledgement<PullEVSEDataRequest>.Builder> CustomPullEVSEDataResponseMapper  { get; set; }
 
         #endregion
-
-        #region CustomSearchEVSE(SOAP)RequestMapper
-
-        #region CustomSearchEVSERequestMapper
-
-        private Func<SearchEVSERequest, SearchEVSERequest> _CustomSearchEVSERequestMapper = _ => _;
-
-        public Func<SearchEVSERequest, SearchEVSERequest> CustomSearchEVSERequestMapper
-        {
-
-            get
-            {
-                return _CustomSearchEVSERequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomSearchEVSERequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        #region CustomSearchEVSESOAPRequestMapper
-
-        private Func<SearchEVSERequest, XElement, XElement> _CustomSearchEVSESOAPRequestMapper = (request, xml) => xml;
-
-        public Func<SearchEVSERequest, XElement, XElement> CustomSearchEVSESOAPRequestMapper
-        {
-
-            get
-            {
-                return _CustomSearchEVSESOAPRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomSearchEVSESOAPRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        public CustomMapperDelegate<Acknowledgement<SearchEVSERequest>, Acknowledgement<SearchEVSERequest>.Builder> CustomSearchEVSEResponseMapper  { get; set; }
-
-        #endregion
-
 
         #region CustomPullEVSEStatus(SOAP)RequestMapper
 
@@ -423,7 +422,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>, Acknowledgement<AuthorizeRemoteReservationStopRequest>.Builder> CustomAuthorizeRemoteReservationStopResponseMapper  { get; set; }
 
         #endregion
-
 
         #region CustomAuthorizeRemoteStart(SOAP)RequestMapper
 
@@ -680,7 +678,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region OnReservationStartRequest/-Response
+        #region OnAuthorizeRemoteReservationStartRequest/-Response
 
         /// <summary>
         /// An event fired whenever a 'reservation start' request will be send.
@@ -690,12 +688,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event fired whenever a 'reservation start' SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler            OnAuthorizeRemoteReservationStartSOAPRequest;
+        public event ClientRequestLogHandler                           OnAuthorizeRemoteReservationStartSOAPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a 'reservation start' SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler           OnAuthorizeRemoteReservationStartSOAPResponse;
+        public event ClientResponseLogHandler                          OnAuthorizeRemoteReservationStartSOAPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a 'reservation start' request had been received.
@@ -704,7 +702,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region OnReservationStopRequest/-Response
+        #region OnAuthorizeRemoteReservationStopRequest/-Response
 
         /// <summary>
         /// An event fired whenever a 'reservation stop' request will be send.
@@ -714,12 +712,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event fired whenever a 'reservation stop' SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler           OnAuthorizeRemoteReservationStopSOAPRequest;
+        public event ClientRequestLogHandler                          OnAuthorizeRemoteReservationStopSOAPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a 'reservation stop' SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler          OnAuthorizeRemoteReservationStopSOAPResponse;
+        public event ClientResponseLogHandler                         OnAuthorizeRemoteReservationStopSOAPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a 'reservation stop' request had been received.
@@ -829,6 +827,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          X509Certificate                      ClientCert                  = null,
                          String                               HTTPVirtualHost             = null,
                          String                               URIPrefix                   = DefaultURIPrefix,
+                         String                               EVSEDataURI                 = DefaultEVSEDataURI,
+                         String                               EVSEStatusURI               = DefaultEVSEStatusURI,
+                         String                               AuthenticationDataURI       = DefaultAuthenticationDataURI,
+                         String                               ReservationURI              = DefaultReservationURI,
+                         String                               AuthorizationURI            = DefaultAuthorizationURI,
                          String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout              = null,
                          DNSClient                            DNSClient                   = null,
@@ -859,9 +862,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            this.Logger = new EMPClientLogger(this,
-                                              LoggingContext,
-                                              LogfileCreator);
+            this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
+            this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;
+            this.AuthenticationDataURI  = AuthenticationDataURI ?? DefaultAuthenticationDataURI;
+            this.ReservationURI         = ReservationURI        ?? DefaultReservationURI;
+            this.AuthorizationURI       = AuthorizationURI      ?? DefaultAuthorizationURI;
+
+            this.Logger                 = new EMPClientLogger(this,
+                                                              LoggingContext,
+                                                              LogfileCreator);
 
         }
 
@@ -921,7 +930,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            this.Logger = Logger;
+            this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
+            this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;
+            this.AuthenticationDataURI  = AuthenticationDataURI ?? DefaultAuthenticationDataURI;
+            this.ReservationURI         = ReservationURI        ?? DefaultReservationURI;
+            this.AuthorizationURI       = AuthorizationURI      ?? DefaultAuthorizationURI;
+
+            this.Logger                 = Logger;
 
         }
 
@@ -990,7 +1005,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingEvseData_V2.1",
+                                                    URIPrefix + EVSEDataURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1167,7 +1182,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingEvseStatus_V2.0",
+                                                    URIPrefix + EVSEStatusURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1341,7 +1356,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingEvseStatus_V2.0",
+                                                    URIPrefix + EVSEStatusURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1509,7 +1524,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingAuthenticationData_V2.0",
+                                                    URIPrefix + AuthenticationDataURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1713,7 +1728,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingReservation_V1.0",
+                                                    URIPrefix + ReservationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1918,7 +1933,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingReservation_V1.0",
+                                                    URIPrefix + ReservationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -2124,7 +2139,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingAuthorization_V2.0",
+                                                    URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -2326,7 +2341,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingAuthorization_V2.0",
+                                                    URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -2526,7 +2541,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingAuthorization_V2.0",
+                                                    URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,

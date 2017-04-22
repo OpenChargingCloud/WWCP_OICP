@@ -46,6 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Central\CentralClient\CentralClientLogger.cs" />
+    <Compile Include="Central\CentralClient\CentralClientDelegates.cs" />
+    <Compile Include="Central\CentralClient\ICentralClient.cs" />
+    <Compile Include="Central\CentralClient\ICentralClientExtentions.cs" />
     <Compile Include="Central\CentralServer\CentralServerDelegates.cs" />
     <Compile Include="CPO\CPOClient\ICPOClient.cs" />
     <Compile Include="CPO\CPOClient\ICPOClientExtentions.cs" />
@@ -91,7 +95,6 @@
     <Compile Include="Messages\CPO\PushEVSEStatusRequest.cs" />
     <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusByIdRequest.cs" />
-    <Compile Include="Messages\EMP\SearchEVSERequest.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusRequest.cs" />
     <Compile Include="Messages\EMP\PullEVSEDataRequest.cs" />
     <Compile Include="Messages\EMP\GetChargeDetailRecordsRequest.cs" />

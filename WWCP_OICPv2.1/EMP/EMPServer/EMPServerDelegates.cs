@@ -35,18 +35,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStartRequestHandler (DateTime              LogTimestamp,
-                                        DateTime              RequestTimestamp,
-                                        EMPServer             Sender,
-                                        String                SenderId,
-                                        EventTracking_Id      EventTrackingId,
-                                        Operator_Id           OperatorId,
-                                        UID                   UID,
-                                        EVSE_Id?              EVSEId,
-                                        Session_Id?           SessionId,
-                                        PartnerProduct_Id?    PartnerProductId,
-                                        PartnerSession_Id?    PartnerSessionId,
-                                        TimeSpan              RequestTimeout);
+        OnAuthorizeStartRequestDelegate (DateTime                 LogTimestamp,
+                                         DateTime                 RequestTimestamp,
+                                         EMPServer                Sender,
+                                         String                   SenderId,
+                                         EventTracking_Id         EventTrackingId,
+                                         Operator_Id              OperatorId,
+                                         UID                      UID,
+                                         EVSE_Id?                 EVSEId,
+                                         Session_Id?              SessionId,
+                                         PartnerProduct_Id?       PartnerProductId,
+                                         PartnerSession_Id?       PartnerSessionId,
+                                         TimeSpan                 RequestTimeout);
 
 
     /// <summary>
@@ -63,19 +63,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// <param name="PartnerProductId">An optional partner product identification.</param>
     /// <param name="PartnerSessionId">An optional partner session identification.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
-    public delegate Task<AuthorizationStart>
+    public delegate Task<CPO.AuthorizationStart>
 
-        OnAuthorizeStartDelegate       (DateTime              Timestamp,
-                                        EMPServer             Sender,
-                                        CancellationToken     CancellationToken,
-                                        EventTracking_Id      EventTrackingId,
-                                        Operator_Id           OperatorId,
-                                        UID                   UID,
-                                        EVSE_Id?              EVSEId,
-                                        Session_Id?           SessionId,
-                                        PartnerProduct_Id?    PartnerProductId,
-                                        PartnerSession_Id?    PartnerSessionId,
-                                        TimeSpan?             RequestTimeout);
+        OnAuthorizeStartDelegate(DateTime                   Timestamp,
+                                 EMPServer                  Sender,
+                                 CPO.AuthorizeStartRequest  Request);
 
 
     /// <summary>
@@ -83,19 +75,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStartResponseHandler(DateTime              Timestamp,
-                                        EMPServer             Sender,
-                                        String                SenderId,
-                                        EventTracking_Id      EventTrackingId,
-                                        Operator_Id           OperatorId,
-                                        UID                   UID,
-                                        EVSE_Id?              EVSEId,
-                                        Session_Id?           SessionId,
-                                        PartnerProduct_Id?    PartnerProductId,
-                                        PartnerSession_Id?    PartnerSessionId,
-                                        TimeSpan              RequestTimeout,
-                                        AuthorizationStart    Result,
-                                        TimeSpan              Duration);
+        OnAuthorizeStartResponseDelegate(DateTime                 Timestamp,
+                                         EMPServer                Sender,
+                                         String                   SenderId,
+                                         EventTracking_Id         EventTrackingId,
+                                         Operator_Id              OperatorId,
+                                         UID                      UID,
+                                         EVSE_Id?                 EVSEId,
+                                         Session_Id?              SessionId,
+                                         PartnerProduct_Id?       PartnerProductId,
+                                         PartnerSession_Id?       PartnerSessionId,
+                                         TimeSpan                 RequestTimeout,
+                                         CPO.AuthorizationStart   Result,
+                                         TimeSpan                 Duration);
 
     #endregion
 
@@ -114,7 +106,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                        Session_Id?           SessionId,
                                        PartnerSession_Id?    PartnerSessionId,
                                        Operator_Id           OperatorId,
-                                       EVSE_Id               EVSEId,
+                                       EVSE_Id?              EVSEId,
                                        UID                   UID,
                                        TimeSpan              RequestTimeout);
 
@@ -132,18 +124,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="AuthToken">A (RFID) user identification.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
-    public delegate Task<AuthorizationStop>
+    public delegate Task<CPO.AuthorizationStop>
 
-        OnAuthorizeStopDelegate       (DateTime              Timestamp,
-                                       EMPServer             Sender,
-                                       CancellationToken     CancellationToken,
-                                       EventTracking_Id      EventTrackingId,
-                                       Session_Id?           SessionId,
-                                       PartnerSession_Id?    PartnerSessionId,
-                                       Operator_Id           OperatorId,
-                                       EVSE_Id               EVSEId,
-                                       UID                   UID,
-                                       TimeSpan?             RequestTimeout);
+        OnAuthorizeStopDelegate(DateTime                  Timestamp,
+                                EMPServer                 Sender,
+                                CPO.AuthorizeStopRequest  Request);
 
 
     /// <summary>
@@ -151,18 +136,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStopResponseHandler(DateTime              Timestamp,
-                                       EMPServer             Sender,
-                                       String                SenderId,
-                                       EventTracking_Id      EventTrackingId,
-                                       Session_Id?           SessionId,
-                                       PartnerSession_Id?    PartnerSessionId,
-                                       Operator_Id           OperatorId,
-                                       EVSE_Id               EVSEId,
-                                       UID                   UID,
-                                       TimeSpan              RequestTimeout,
-                                       AuthorizationStop     Result,
-                                       TimeSpan              Duration);
+        OnAuthorizeStopResponseHandler(DateTime                Timestamp,
+                                       EMPServer               Sender,
+                                       String                  SenderId,
+                                       EventTracking_Id        EventTrackingId,
+                                       Session_Id?             SessionId,
+                                       PartnerSession_Id?      PartnerSessionId,
+                                       Operator_Id             OperatorId,
+                                       EVSE_Id?                EVSEId,
+                                       UID                     UID,
+                                       TimeSpan                RequestTimeout,
+                                       CPO.AuthorizationStop   Result,
+                                       TimeSpan                Duration);
 
     #endregion
 

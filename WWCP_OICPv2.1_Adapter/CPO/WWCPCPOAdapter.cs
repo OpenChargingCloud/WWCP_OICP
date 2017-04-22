@@ -438,29 +438,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="DisablePushStatus">This service can be disabled, e.g. for debugging reasons.</param>
         /// <param name="DisableAuthentication">This service can be disabled, e.g. for debugging reasons.</param>
         /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
-        public WWCPCPOAdapter(CSORoamingProvider_Id                                  Id,
-                              I18NString                                             Name,
-                              RoamingNetwork                                         RoamingNetwork,
+        public WWCPCPOAdapter(CSORoamingProvider_Id                              Id,
+                              I18NString                                         Name,
+                              RoamingNetwork                                     RoamingNetwork,
 
-                              CPORoaming                                             CPORoaming,
-                              EVSE2EVSEDataRecordDelegate                            EVSE2EVSEDataRecord                             = null,
-                              EVSEStatusUpdate2EVSEStatusRecordDelegate              EVSEStatusUpdate2EVSEStatusRecord               = null,
+                              CPORoaming                                         CPORoaming,
+                              EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
+                              EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
                               WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
-                              EVSEDataRecord2XMLDelegate                             EVSEDataRecord2XML                              = null,
-                              EVSEStatusRecord2XMLDelegate                           EVSEStatusRecord2XML                            = null,
-                              ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
+                              EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
+                              EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
+                              ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
-                              ChargingStationOperator                                DefaultOperator                                 = null,
-                              WWCP.OperatorIdFormats                                 DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
-                              ChargingStationOperatorNameSelectorDelegate            OperatorNameSelector                            = null,
-                              IncludeEVSEDelegate                                    IncludeEVSEs                                    = null,
-                              TimeSpan?                                              ServiceCheckEvery                               = null,
-                              TimeSpan?                                              StatusCheckEvery                                = null,
+                              ChargingStationOperator                            DefaultOperator                                 = null,
+                              WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
+                              ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
+                              IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
+                              TimeSpan?                                          ServiceCheckEvery                               = null,
+                              TimeSpan?                                          StatusCheckEvery                                = null,
 
-                              Boolean                                                DisablePushData                                 = false,
-                              Boolean                                                DisablePushStatus                               = false,
-                              Boolean                                                DisableAuthentication                           = false,
-                              Boolean                                                DisableSendChargeDetailRecords                  = false)
+                              Boolean                                            DisablePushData                                 = false,
+                              Boolean                                            DisablePushStatus                               = false,
+                              Boolean                                            DisableAuthentication                           = false,
+                              Boolean                                            DisableSendChargeDetailRecords                  = false)
 
             : base(Id,
                    RoamingNetwork)
@@ -525,25 +525,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             // Link events...
 
-            #region OnRemoteReservationStart
+            #region OnAuthorizeRemoteReservationStart
 
-            this.CPORoaming.OnRemoteReservationStart += async (Timestamp,
-                                                               Sender,
-                                                               CancellationToken,
-                                                               EventTrackingId,
-                                                               EVSEId,
-                                                               PartnerProductId,
-                                                               SessionId,
-                                                               PartnerSessionId,
-                                                               ProviderId,
-                                                               EVCOId,
-                                                               RequestTimeout) => {
+            this.CPORoaming.OnAuthorizeRemoteReservationStart += async (Timestamp,
+                                                                        Sender,
+                                                                        Request) => {
 
 
                 #region Request transformation
 
-                TimeSpan? Duration   = null;
-                DateTime? StartTime  = null;
+                TimeSpan?           Duration           = null;
+                DateTime?           StartTime          = null;
+                PartnerProduct_Id?  PartnerProductId   = Request.PartnerProductId;
 
                 // Analyse the ChargingProductId field and apply the found key/value-pairs
                 if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
@@ -586,32 +579,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                var response = await RoamingNetwork.Reserve(EVSEId.ToWWCP().Value,
-                                                            StartTime:          StartTime,
-                                                            Duration:           Duration,
+                var response = await RoamingNetwork.
+                                         Reserve(Request.EVSEId.ToWWCP().Value,
+                                                 StartTime:          StartTime,
+                                                 Duration:           Duration,
 
-                                                            // Always create a reservation identification usable for OICP!
-                                                            ReservationId:      ChargingReservation_Id.Parse(
-                                                                                    EVSEId.OperatorId.ToWWCP().Value,
-                                                                                    SessionId.HasValue
-                                                                                        ? SessionId.ToString()
-                                                                                        : Session_Id.NewRandom.ToString()
-                                                                                ),
+                                                 // Always create a reservation identification usable for OICP!
+                                                 ReservationId:      ChargingReservation_Id.Parse(
+                                                                         Request.EVSEId.OperatorId.ToWWCP().Value,
+                                                                         Request.SessionId.HasValue
+                                                                             ? Request.SessionId.ToString()
+                                                                             : Session_Id.NewRandom.ToString()
+                                                                     ),
 
-                                                            ProviderId:         ProviderId.      ToWWCP(),
-                                                            eMAId:              EVCOId.          ToWWCP(),
-                                                            ChargingProduct:    PartnerProductId.HasValue
-                                                                                    ? new ChargingProduct(PartnerProductId.Value.ToWWCP())
-                                                                                    : null,
+                                                 ProviderId:         Request.ProviderId.      ToWWCP(),
+                                                 eMAId:              Request.EVCOId.          ToWWCP(),
+                                                 ChargingProduct:    PartnerProductId.HasValue
+                                                                         ? new ChargingProduct(PartnerProductId.Value.ToWWCP())
+                                                                         : null,
 
-                                                            eMAIds:             new eMobilityAccount_Id[] {
-                                                                                    EVCOId.Value.ToWWCP()
-                                                                                },
+                                                 eMAIds:             new eMobilityAccount_Id[] {
+                                                                         Request.EVCOId.ToWWCP()
+                                                                     },
 
-                                                            Timestamp:          Timestamp,
-                                                            CancellationToken:  CancellationToken,
-                                                            EventTrackingId:    EventTrackingId,
-                                                            RequestTimeout:     RequestTimeout).ConfigureAwait(false);
+                                                 Timestamp:          Request.Timestamp,
+                                                 CancellationToken:  Request.CancellationToken,
+                                                 EventTrackingId:    Request.EventTrackingId,
+                                                 RequestTimeout:     Request.RequestTimeout).
+                                         ConfigureAwait(false);
 
                 #region Response mapping
 
@@ -621,8 +616,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case ReservationResultType.Success:
-                            return Acknowledgement.Success(
-
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.Success(
+                                       Request,
                                        response.Reservation != null
                                            ? Session_Id.Parse(response.Reservation.Id.Suffix)
                                            : new Session_Id?(),
@@ -633,30 +628,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                    );
 
                         case ReservationResultType.InvalidCredentials:
-                            return Acknowledgement.SessionIsInvalid(
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.SessionIsInvalid(
+                                       Request,
                                        SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
                                    );
 
                         case ReservationResultType.Timeout:
                         case ReservationResultType.CommunicationError:
-                            return Acknowledgement.CommunicationToEVSEFailed();
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.CommunicationToEVSEFailed(Request);
 
                         case ReservationResultType.AlreadyReserved:
-                            return Acknowledgement.EVSEAlreadyReserved();
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.EVSEAlreadyReserved(Request);
 
                         case ReservationResultType.AlreadyInUse:
-                            return Acknowledgement.EVSEAlreadyInUse_WrongToken();
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.EVSEAlreadyInUse_WrongToken(Request);
 
                         case ReservationResultType.UnknownEVSE:
-                            return Acknowledgement.UnknownEVSEID();
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.UnknownEVSEID(Request);
 
                         case ReservationResultType.OutOfService:
-                            return Acknowledgement.EVSEOutOfService();
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.EVSEOutOfService(Request);
 
                     }
                 }
 
-                return Acknowledgement.ServiceNotAvailable(
+                return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.ServiceNotAvailable(
+                           Request,
                            SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
                        );
 
@@ -666,30 +663,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            #region OnRemoteReservationStop
+            #region OnAuthorizeRemoteReservationStop
 
-            this.CPORoaming.OnRemoteReservationStop += async (Timestamp,
-                                                              Sender,
-                                                              CancellationToken,
-                                                              EventTrackingId,
-                                                              EVSEId,
-                                                              SessionId,
-                                                              PartnerSessionId,
-                                                              ProviderId,
-                                                              RequestTimeout) => {
+            this.CPORoaming.OnAuthorizeRemoteReservationStop += async (Timestamp,
+                                                                       Sender,
+                                                                       Request) => {
 
-                var response = await RoamingNetwork.CancelReservation(ChargingReservation_Id.Parse(
-                                                                          EVSEId.OperatorId.ToWWCP().Value,
-                                                                          SessionId.ToString()
-                                                                      ),
-                                                                      ChargingReservationCancellationReason.Deleted,
-                                                                      ProviderId.ToWWCP(),
-                                                                      EVSEId.    ToWWCP(),
+                var response = await RoamingNetwork.
+                                         CancelReservation(ChargingReservation_Id.Parse(
+                                                               Request.EVSEId.OperatorId.ToWWCP().Value,
+                                                               Request.SessionId.ToString()
+                                                           ),
+                                                           ChargingReservationCancellationReason.Deleted,
+                                                           Request.ProviderId.ToWWCP(),
+                                                           Request.EVSEId.    ToWWCP(),
 
-                                                                      Timestamp,
-                                                                      CancellationToken,
-                                                                      EventTrackingId,
-                                                                      RequestTimeout).ConfigureAwait(false);
+                                                           Request.Timestamp,
+                                                           Request.CancellationToken,
+                                                           Request.EventTrackingId,
+                                                           Request.RequestTimeout).
+                                         ConfigureAwait(false);
 
                 #region Response mapping
 
@@ -699,31 +692,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case CancelReservationResults.Success:
-                            return Acknowledgement.Success(
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.Success(
+                                       Request,
                                        StatusCodeDescription: "Reservation deleted!"
                                    );
 
                         case CancelReservationResults.UnknownReservationId:
-                            return Acknowledgement.SessionIsInvalid(
-                                       SessionId: SessionId
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.SessionIsInvalid(
+                                       Request,
+                                       SessionId: Request.SessionId
                                    );
 
                         case CancelReservationResults.Offline:
                         case CancelReservationResults.Timeout:
                         case CancelReservationResults.CommunicationError:
-                            return Acknowledgement.CommunicationToEVSEFailed();
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.CommunicationToEVSEFailed(Request);
 
                         case CancelReservationResults.UnknownEVSE:
-                            return Acknowledgement.UnknownEVSEID();
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.UnknownEVSEID(Request);
 
                         case CancelReservationResults.OutOfService:
-                            return Acknowledgement.EVSEOutOfService();
+                            return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.EVSEOutOfService(Request);
 
                     }
                 }
 
-                return Acknowledgement.ServiceNotAvailable(
-                           SessionId: SessionId
+                return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.ServiceNotAvailable(
+                           Request,
+                           SessionId: Request.SessionId
                        );
 
                 #endregion
@@ -732,27 +728,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            #region OnRemoteStart
 
-            this.CPORoaming.OnRemoteStart += async (Timestamp,
-                                                    Sender,
-                                                    CancellationToken,
-                                                    EventTrackingId,
-                                                    EVSEId,
-                                                    PartnerProductId,
-                                                    SessionId,
-                                                    PartnerSessionId,
-                                                    ProviderId,
-                                                    EVCOId,
-                                                    RequestTimeout) => {
+            #region OnAuthorizeRemoteStart
+
+            this.CPORoaming.OnAuthorizeRemoteStart += async (Timestamp,
+                                                             Sender,
+                                                             Request) => {
 
                 #region Request mapping
 
-                ChargingReservation_Id? ReservationId    = null;
-                TimeSpan?               MinDuration      = null;
-                Single?                 PlannedEnergy    = null;
-                ChargingProduct_Id?     ProductId        = ChargingProduct_Id.Parse("AC1");
-                ChargingProduct         ChargingProduct  = null;
+                ChargingReservation_Id? ReservationId      = null;
+                TimeSpan?               MinDuration        = null;
+                Single?                 PlannedEnergy      = null;
+                ChargingProduct_Id?     ProductId          = ChargingProduct_Id.Parse("AC1");
+                ChargingProduct         ChargingProduct    = null;
+                PartnerProduct_Id?      PartnerProductId   = Request.PartnerProductId;
 
                 if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
                 {
@@ -776,7 +766,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                             ChargingReservation_Id _ReservationId;
 
                             if (ProductIdElements.ContainsKey("R") &&
-                                ChargingReservation_Id.TryParse(EVSEId.OperatorId.ToWWCP().Value, ProductIdElements["R"], out _ReservationId))
+                                ChargingReservation_Id.TryParse(Request.EVSEId.OperatorId.ToWWCP().Value, ProductIdElements["R"], out _ReservationId))
                                 ReservationId = _ReservationId;
 
 
@@ -822,17 +812,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 #endregion
 
                 var response = await RoamingNetwork.
-                                         RemoteStart(EVSEId.    ToWWCP().Value,
+                                         RemoteStart(Request.EVSEId.    ToWWCP().Value,
                                                      ChargingProduct,
                                                      ReservationId,
-                                                     SessionId. ToWWCP(),
-                                                     ProviderId.ToWWCP(),
-                                                     EVCOId.    ToWWCP(),
+                                                     Request.SessionId. ToWWCP(),
+                                                     Request.ProviderId.ToWWCP(),
+                                                     Request.EVCOId.    ToWWCP(),
 
-                                                     Timestamp,
-                                                     CancellationToken,
-                                                     EventTrackingId,
-                                                     RequestTimeout).ConfigureAwait(false);
+                                                     Request.Timestamp,
+                                                     Request.CancellationToken,
+                                                     Request.EventTrackingId,
+                                                     Request.RequestTimeout).
+                                         ConfigureAwait(false);
 
                 #region Response mapping
 
@@ -842,43 +833,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case RemoteStartEVSEResultType.Success:
-                            return Acknowledgement.Success(
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.Success(
+                                       Request,
                                        response.Session.Id.ToOICP(),
                                        StatusCodeDescription: "Ready to charge!"
                                    );
 
                         case RemoteStartEVSEResultType.InvalidSessionId:
-                            return Acknowledgement.SessionIsInvalid(
-                                       SessionId: SessionId
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.SessionIsInvalid(
+                                       Request,
+                                       SessionId: Request.SessionId
                                    );
 
                         case RemoteStartEVSEResultType.InvalidCredentials:
-                            return Acknowledgement.NoValidContract();
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.NoValidContract(Request);
 
                         case RemoteStartEVSEResultType.Offline:
-                            return Acknowledgement.CommunicationToEVSEFailed();
-
                         case RemoteStartEVSEResultType.Timeout:
                         case RemoteStartEVSEResultType.CommunicationError:
-                            return Acknowledgement.CommunicationToEVSEFailed();
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed(Request);
 
                         case RemoteStartEVSEResultType.Reserved:
-                            return Acknowledgement.EVSEAlreadyReserved();
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyReserved(Request);
 
                         case RemoteStartEVSEResultType.AlreadyInUse:
-                            return Acknowledgement.EVSEAlreadyInUse_WrongToken();
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyInUse_WrongToken(Request);
 
                         case RemoteStartEVSEResultType.UnknownEVSE:
-                            return Acknowledgement.UnknownEVSEID();
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.UnknownEVSEID(Request);
 
                         case RemoteStartEVSEResultType.OutOfService:
-                            return Acknowledgement.EVSEOutOfService();
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEOutOfService(Request);
 
                     }
                 }
 
-                return Acknowledgement.ServiceNotAvailable(
-                           SessionId: SessionId
+                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.ServiceNotAvailable(
+                           Request,
+                           SessionId: Request.SessionId
                        );
 
                 #endregion
@@ -887,28 +879,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            #region OnRemoteStop
+            #region OnAuthorizeRemoteStop
 
-            this.CPORoaming.OnRemoteStop += async (Timestamp,
-                                                   Sender,
-                                                   CancellationToken,
-                                                   EventTrackingId,
-                                                   EVSEId,
-                                                   SessionId,
-                                                   PartnerSessionId,
-                                                   ProviderId,
-                                                   RequestTimeout) => {
+            this.CPORoaming.OnAuthorizeRemoteStop += async (Timestamp,
+                                                            Sender,
+                                                            Request) => {
 
-                var response = await RoamingNetwork.RemoteStop(EVSEId.ToWWCP().Value,
-                                                               SessionId. ToWWCP(),
-                                                               ReservationHandling.Close,
-                                                               ProviderId.ToWWCP(),
-                                                               null,
+                var response = await RoamingNetwork.
+                                         RemoteStop(Request.EVSEId.   ToWWCP().Value,
+                                                    Request.SessionId.ToWWCP(),
+                                                    ReservationHandling.Close,
+                                                    Request.ProviderId.ToWWCP(),
+                                                    null,
 
-                                                               Timestamp,
-                                                               CancellationToken,
-                                                               EventTrackingId,
-                                                               RequestTimeout).ConfigureAwait(false);
+                                                    Request.Timestamp,
+                                                    Request.CancellationToken,
+                                                    Request.EventTrackingId,
+                                                    Request.RequestTimeout).
+                                         ConfigureAwait(false);
 
                 #region Response mapping
 
@@ -918,32 +906,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     {
 
                         case RemoteStopEVSEResultType.Success:
-                            return Acknowledgement.Success(
+                            return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.Success(
+                                       Request,
                                        response.SessionId.ToOICP(),
                                        StatusCodeDescription: "Ready to stop charging!"
                                    );
 
                         case RemoteStopEVSEResultType.InvalidSessionId:
-                            return Acknowledgement.SessionIsInvalid(
-                                       SessionId: SessionId
+                            return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.SessionIsInvalid(
+                                       Request,
+                                       SessionId: Request.SessionId
                                    );
 
                         case RemoteStopEVSEResultType.Offline:
                         case RemoteStopEVSEResultType.Timeout:
                         case RemoteStopEVSEResultType.CommunicationError:
-                            return Acknowledgement.CommunicationToEVSEFailed();
+                            return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.CommunicationToEVSEFailed(Request);
 
                         case RemoteStopEVSEResultType.UnknownEVSE:
-                            return Acknowledgement.UnknownEVSEID();
+                            return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.UnknownEVSEID(Request);
 
                         case RemoteStopEVSEResultType.OutOfService:
-                            return Acknowledgement.EVSEOutOfService();
+                            return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.EVSEOutOfService(Request);
 
                     }
                 }
 
-                return Acknowledgement.ServiceNotAvailable(
-                           SessionId: SessionId
+                return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.ServiceNotAvailable(
+                           Request,
+                           SessionId: Request.SessionId
                        );
 
                 #endregion
@@ -981,33 +972,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="DisablePushStatus">This service can be disabled, e.g. for debugging reasons.</param>
         /// <param name="DisableAuthentication">This service can be disabled, e.g. for debugging reasons.</param>
         /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
-        public WWCPCPOAdapter(CSORoamingProvider_Id                                  Id,
-                              I18NString                                             Name,
-                              RoamingNetwork                                         RoamingNetwork,
+        public WWCPCPOAdapter(CSORoamingProvider_Id                              Id,
+                              I18NString                                         Name,
+                              RoamingNetwork                                     RoamingNetwork,
 
-                              CPOClient                                              CPOClient,
-                              CPOServer                                              CPOServer,
-                              String                                                 ServerLoggingContext                            = CPOServerLogger.DefaultContext,
-                              LogfileCreatorDelegate                                 LogfileCreator                                  = null,
+                              CPOClient                                          CPOClient,
+                              CPOServer                                          CPOServer,
+                              String                                             ServerLoggingContext                            = CPOServerLogger.DefaultContext,
+                              LogfileCreatorDelegate                             LogfileCreator                                  = null,
 
-                              EVSE2EVSEDataRecordDelegate                            EVSE2EVSEDataRecord                             = null,
-                              EVSEStatusUpdate2EVSEStatusRecordDelegate              EVSEStatusUpdate2EVSEStatusRecord               = null,
+                              EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
+                              EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
                               WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
-                              EVSEDataRecord2XMLDelegate                             EVSEDataRecord2XML                              = null,
-                              EVSEStatusRecord2XMLDelegate                           EVSEStatusRecord2XML                            = null,
-                              ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
+                              EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
+                              EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
+                              ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
-                              ChargingStationOperator                                DefaultOperator                                 = null,
-                              WWCP.OperatorIdFormats                                 DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
-                              ChargingStationOperatorNameSelectorDelegate            OperatorNameSelector                            = null,
-                              IncludeEVSEDelegate                                    IncludeEVSEs                                    = null,
-                              TimeSpan?                                              ServiceCheckEvery                               = null,
-                              TimeSpan?                                              StatusCheckEvery                                = null,
+                              ChargingStationOperator                            DefaultOperator                                 = null,
+                              WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
+                              ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
+                              IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
+                              TimeSpan?                                          ServiceCheckEvery                               = null,
+                              TimeSpan?                                          StatusCheckEvery                                = null,
 
-                              Boolean                                                DisablePushData                                 = false,
-                              Boolean                                                DisablePushStatus                               = false,
-                              Boolean                                                DisableAuthentication                           = false,
-                              Boolean                                                DisableSendChargeDetailRecords                  = false)
+                              Boolean                                            DisablePushData                                 = false,
+                              Boolean                                            DisablePushStatus                               = false,
+                              Boolean                                            DisableAuthentication                           = false,
+                              Boolean                                            DisableSendChargeDetailRecords                  = false)
 
             : this(Id,
                    Name,
@@ -1082,50 +1073,56 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public WWCPCPOAdapter(CSORoamingProvider_Id                                  Id,
-                              I18NString                                             Name,
-                              RoamingNetwork                                         RoamingNetwork,
+        public WWCPCPOAdapter(CSORoamingProvider_Id                              Id,
+                              I18NString                                         Name,
+                              RoamingNetwork                                     RoamingNetwork,
 
-                              String                                                 RemoteHostname,
-                              IPPort                                                 RemoteTCPPort                                   = null,
-                              RemoteCertificateValidationCallback                    RemoteCertificateValidator                      = null,
-                              X509Certificate                                        ClientCert                                      = null,
-                              String                                                 RemoteHTTPVirtualHost                           = null,
-                              String                                                 URIPrefix                                       = CPOClient.DefaultURIPrefix,
-                              String                                                 HTTPUserAgent                                   = CPOClient.DefaultHTTPUserAgent,
-                              TimeSpan?                                              RequestTimeout                                  = null,
+                              String                                             RemoteHostname,
+                              IPPort                                             RemoteTCPPort                                   = null,
+                              RemoteCertificateValidationCallback                RemoteCertificateValidator                      = null,
+                              X509Certificate                                    ClientCert                                      = null,
+                              String                                             RemoteHTTPVirtualHost                           = null,
+                              String                                             URIPrefix                                       = CPOClient.DefaultURIPrefix,
+                              String                                             EVSEDataURI                                     = CPOClient.DefaultEVSEDataURI,
+                              String                                             EVSEStatusURI                                   = CPOClient.DefaultEVSEStatusURI,
+                              String                                             AuthorizationURI                                = CPOClient.DefaultAuthorizationURI,
+                              String                                             AuthenticationDataURI                           = CPOClient.DefaultAuthenticationDataURI,
+                              String                                             HTTPUserAgent                                   = CPOClient.DefaultHTTPUserAgent,
+                              TimeSpan?                                          RequestTimeout                                  = null,
 
-                              String                                                 ServerName                                      = CPOServer.DefaultHTTPServerName,
-                              IPPort                                                 ServerTCPPort                                   = null,
-                              String                                                 ServerURIPrefix                                 = CPOServer.DefaultURIPrefix,
-                              HTTPContentType                                        ServerContentType                               = null,
-                              Boolean                                                ServerRegisterHTTPRootService                   = true,
-                              Boolean                                                ServerAutoStart                                 = false,
+                              String                                             ServerName                                      = CPOServer.DefaultHTTPServerName,
+                              IPPort                                             ServerTCPPort                                   = null,
+                              String                                             ServerURIPrefix                                 = CPOServer.DefaultURIPrefix,
+                              String                                             ServerAuthorizationURI                          = CPOServer.DefaultAuthorizationURI,
+                              String                                             ServerReservationURI                            = CPOServer.DefaultReservationURI,
+                              HTTPContentType                                    ServerContentType                               = null,
+                              Boolean                                            ServerRegisterHTTPRootService                   = true,
+                              Boolean                                            ServerAutoStart                                 = false,
 
-                              String                                                 ClientLoggingContext                            = CPOClient.CPOClientLogger.DefaultContext,
-                              String                                                 ServerLoggingContext                            = CPOServerLogger.DefaultContext,
-                              LogfileCreatorDelegate                                 LogfileCreator                                  = null,
+                              String                                             ClientLoggingContext                            = CPOClient.CPOClientLogger.DefaultContext,
+                              String                                             ServerLoggingContext                            = CPOServerLogger.DefaultContext,
+                              LogfileCreatorDelegate                             LogfileCreator                                  = null,
 
-                              EVSE2EVSEDataRecordDelegate                            EVSE2EVSEDataRecord                             = null,
-                              EVSEStatusUpdate2EVSEStatusRecordDelegate              EVSEStatusUpdate2EVSEStatusRecord               = null,
+                              EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
+                              EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
                               WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
-                              EVSEDataRecord2XMLDelegate                             EVSEDataRecord2XML                              = null,
-                              EVSEStatusRecord2XMLDelegate                           EVSEStatusRecord2XML                            = null,
-                              ChargeDetailRecord2XMLDelegate                         ChargeDetailRecord2XML                          = null,
+                              EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
+                              EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
+                              ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
-                              ChargingStationOperator                                DefaultOperator                                 = null,
-                              WWCP.OperatorIdFormats                                 DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
-                              ChargingStationOperatorNameSelectorDelegate            OperatorNameSelector                            = null,
-                              IncludeEVSEDelegate                                    IncludeEVSEs                                    = null,
-                              TimeSpan?                                              ServiceCheckEvery                               = null,
-                              TimeSpan?                                              StatusCheckEvery                                = null,
+                              ChargingStationOperator                            DefaultOperator                                 = null,
+                              WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
+                              ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
+                              IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
+                              TimeSpan?                                          ServiceCheckEvery                               = null,
+                              TimeSpan?                                          StatusCheckEvery                                = null,
 
-                              Boolean                                                DisablePushData                                 = false,
-                              Boolean                                                DisablePushStatus                               = false,
-                              Boolean                                                DisableAuthentication                           = false,
-                              Boolean                                                DisableSendChargeDetailRecords                  = false,
+                              Boolean                                            DisablePushData                                 = false,
+                              Boolean                                            DisablePushStatus                               = false,
+                              Boolean                                            DisableAuthentication                           = false,
+                              Boolean                                            DisableSendChargeDetailRecords                  = false,
 
-                              DNSClient                                              DNSClient                                       = null)
+                              DNSClient                                          DNSClient                                       = null)
 
             : this(Id,
                    Name,
@@ -1138,12 +1135,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                   ClientCert,
                                   RemoteHTTPVirtualHost,
                                   URIPrefix,
+                                  EVSEDataURI,
+                                  EVSEStatusURI,
+                                  AuthorizationURI,
+                                  AuthenticationDataURI,
                                   HTTPUserAgent,
                                   RequestTimeout,
 
                                   ServerName,
                                   ServerTCPPort,
                                   ServerURIPrefix,
+                                  ServerAuthorizationURI,
+                                  ServerReservationURI,
                                   ServerContentType,
                                   ServerRegisterHTTPRootService,
                                   false,

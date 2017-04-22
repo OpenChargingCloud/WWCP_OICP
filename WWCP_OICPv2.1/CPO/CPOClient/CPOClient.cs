@@ -47,26 +47,372 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The default HTTP user agent string.
         /// </summary>
-        public new const           String  DefaultHTTPUserAgent  = "GraphDefined OICP " + Version.Number + " CPO Client";
+        public new const           String  DefaultHTTPUserAgent            = "GraphDefined OICP " + Version.Number + " CPO Client";
 
         /// <summary>
         /// The default remote TCP port to connect to.
         /// </summary>
-        public new static readonly IPPort  DefaultRemotePort     = IPPort.Parse(443);
+        public new static readonly IPPort  DefaultRemotePort               = IPPort.Parse(443);
 
         /// <summary>
         /// The default URI prefix.
         /// </summary>
-        public const               String  DefaultURIPrefix      = "/ibis/ws";
+        public     const           String  DefaultURIPrefix                = "/ibis/ws";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP EvseData requests.
+        /// </summary>
+        public     const           String  DefaultEVSEDataURI              = "/eRoamingEvseData_V2.1";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP EvseStatus requests.
+        /// </summary>
+        public     const           String  DefaultEVSEStatusURI            = "/eRoamingEvseStatus_V2.0";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// </summary>
+        public     const           String  DefaultAuthorizationURI         = "/eRoamingAuthorization_V2.0";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP AuthenticationData requests.
+        /// </summary>
+        public     const           String  DefaultAuthenticationDataURI    = "/eRoamingAuthenticationData_V2.0";
 
         #endregion
 
         #region Properties
 
         /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP EvseData requests.
+        /// </summary>
+        public String           EVSEDataURI             { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP EvseStatus requests.
+        /// </summary>
+        public String           EVSEStatusURI           { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// </summary>
+        public String           AuthorizationURI        { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP AuthenticationData requests.
+        /// </summary>
+        public String           AuthenticationDataURI   { get; }
+
+        /// <summary>
         /// The attached OICP CPO client (HTTP/SOAP client) logger.
         /// </summary>
-        public CPOClientLogger  Logger   { get; }
+        public CPOClientLogger  Logger                  { get; }
+
+        #endregion
+
+        #region Custom request mappers
+
+        #region CustomPushEVSEDataRequestMapper
+
+        #region CustomPushEVSEDataRequestMapper
+
+        private Func<PushEVSEDataRequest, PushEVSEDataRequest> _CustomPushEVSEDataRequestMapper = _ => _;
+
+        public Func<PushEVSEDataRequest, PushEVSEDataRequest> CustomPushEVSEDataRequestMapper
+        {
+
+            get
+            {
+                return _CustomPushEVSEDataRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPushEVSEDataRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPushEVSEDataSOAPRequestMapper
+
+        private Func<PushEVSEDataRequest, XElement, XElement> _CustomPushEVSEDataSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<PushEVSEDataRequest, XElement, XElement> CustomPushEVSEDataSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomPushEVSEDataSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPushEVSEDataSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PushEVSEDataRequest>, Acknowledgement<PushEVSEDataRequest>.Builder> CustomPushEVSEDataResponseMapper { get; set; }
+
+        #endregion
+
+        #region CustomPushEVSEStatusRequestMapper
+
+        #region CustomPushEVSEStatusRequestMapper
+
+        private Func<PushEVSEStatusRequest, PushEVSEStatusRequest> _CustomPushEVSEStatusRequestMapper = _ => _;
+
+        public Func<PushEVSEStatusRequest, PushEVSEStatusRequest> CustomPushEVSEStatusRequestMapper
+        {
+
+            get
+            {
+                return _CustomPushEVSEStatusRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPushEVSEStatusRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPushEVSEStatusSOAPRequestMapper
+
+        private Func<PushEVSEStatusRequest, XElement, XElement> _CustomPushEVSEStatusSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<PushEVSEStatusRequest, XElement, XElement> CustomPushEVSEStatusSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomPushEVSEStatusSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPushEVSEStatusSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PushEVSEStatusRequest>, Acknowledgement<PushEVSEStatusRequest>.Builder> CustomPushEVSEStatusResponseMapper { get; set; }
+
+        #endregion
+
+
+        #region CustomAuthorizeStartRequestMapper
+
+        #region CustomAuthorizeStartRequestMapper
+
+        private Func<AuthorizeStartRequest, AuthorizeStartRequest> _CustomAuthorizeStartRequestMapper = _ => _;
+
+        public Func<AuthorizeStartRequest, AuthorizeStartRequest> CustomAuthorizeStartRequestMapper
+        {
+
+            get
+            {
+                return _CustomAuthorizeStartRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomAuthorizeStartRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeStartSOAPRequestMapper
+
+        private Func<AuthorizeStartRequest, XElement, XElement> _CustomAuthorizeStartSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<AuthorizeStartRequest, XElement, XElement> CustomAuthorizeStartSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomAuthorizeStartSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomAuthorizeStartSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<AuthorizationStart, AuthorizationStart.Builder> CustomAuthorizeStartResponseMapper { get; set; }
+
+        #endregion
+
+        #region CustomAuthorizeStopRequestMapper
+
+        #region CustomAuthorizeStopRequestMapper
+
+        private Func<AuthorizeStopRequest, AuthorizeStopRequest> _CustomAuthorizeStopRequestMapper = _ => _;
+
+        public Func<AuthorizeStopRequest, AuthorizeStopRequest> CustomAuthorizeStopRequestMapper
+        {
+
+            get
+            {
+                return _CustomAuthorizeStopRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomAuthorizeStopRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomAuthorizeStopSOAPRequestMapper
+
+        private Func<AuthorizeStopRequest, XElement, XElement> _CustomAuthorizeStopSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<AuthorizeStopRequest, XElement, XElement> CustomAuthorizeStopSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomAuthorizeStopSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomAuthorizeStopSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<AuthorizationStop, AuthorizationStop.Builder> CustomAuthorizeStopResponseMapper { get; set; }
+
+        #endregion
+
+        #region CustomSendChargeDetailRecordRequestMapper
+
+        #region CustomSendChargeDetailRecordRequestMapper
+
+        private Func<SendChargeDetailRecordRequest, SendChargeDetailRecordRequest> _CustomSendChargeDetailRecordRequestMapper = _ => _;
+
+        public Func<SendChargeDetailRecordRequest, SendChargeDetailRecordRequest> CustomSendChargeDetailRecordRequestMapper
+        {
+
+            get
+            {
+                return _CustomSendChargeDetailRecordRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomSendChargeDetailRecordRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomSendChargeDetailRecordSOAPRequestMapper
+
+        private Func<SendChargeDetailRecordRequest, XElement, XElement> _CustomSendChargeDetailRecordSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<SendChargeDetailRecordRequest, XElement, XElement> CustomSendChargeDetailRecordSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomSendChargeDetailRecordSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomSendChargeDetailRecordSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<SendChargeDetailRecordRequest>, Acknowledgement<SendChargeDetailRecordRequest>.Builder> CustomSendChargeDetailRecordResponseMapper { get; set; }
+
+        #endregion
+
+
+        #region CustomPullAuthenticationDataRequestMapper
+
+        #region CustomPullAuthenticationDataRequestMapper
+
+        private Func<PullAuthenticationDataRequest, PullAuthenticationDataRequest> _CustomPullAuthenticationDataRequestMapper = _ => _;
+
+        public Func<PullAuthenticationDataRequest, PullAuthenticationDataRequest> CustomPullAuthenticationDataRequestMapper
+        {
+
+            get
+            {
+                return _CustomPullAuthenticationDataRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPullAuthenticationDataRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullAuthenticationDataSOAPRequestMapper
+
+        private Func<PullAuthenticationDataRequest, XElement, XElement> _CustomPullAuthenticationDataSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<PullAuthenticationDataRequest, XElement, XElement> CustomPullAuthenticationDataSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomPullAuthenticationDataSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPullAuthenticationDataSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        public CustomMapperDelegate<Acknowledgement<PullAuthenticationDataRequest>, Acknowledgement<PullAuthenticationDataRequest>.Builder> CustomPullAuthenticationDataResponseMapper { get; set; }
+
+        #endregion
 
         #endregion
 
@@ -220,312 +566,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region Custom request mappers
-
-        #region CustomPushEVSEDataRequestMapper
-
-        #region CustomPushEVSEDataRequestMapper
-
-        private Func<PushEVSEDataRequest, PushEVSEDataRequest> _CustomPushEVSEDataRequestMapper = _ => _;
-
-        public Func<PushEVSEDataRequest, PushEVSEDataRequest> CustomPushEVSEDataRequestMapper
-        {
-
-            get
-            {
-                return _CustomPushEVSEDataRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomPushEVSEDataRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        #region CustomPushEVSEDataSOAPRequestMapper
-
-        private Func<PushEVSEDataRequest, XElement, XElement> _CustomPushEVSEDataSOAPRequestMapper = (request, xml) => xml;
-
-        public Func<PushEVSEDataRequest, XElement, XElement> CustomPushEVSEDataSOAPRequestMapper
-        {
-
-            get
-            {
-                return _CustomPushEVSEDataSOAPRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomPushEVSEDataSOAPRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        public CustomMapperDelegate<Acknowledgement<PushEVSEDataRequest>, Acknowledgement<PushEVSEDataRequest>.Builder> CustomPushEVSEDataResponseMapper { get; set; }
-
-        #endregion
-
-        #region CustomPushEVSEStatusRequestMapper
-
-        #region CustomPushEVSEStatusRequestMapper
-
-        private Func<PushEVSEStatusRequest, PushEVSEStatusRequest> _CustomPushEVSEStatusRequestMapper = _ => _;
-
-        public Func<PushEVSEStatusRequest, PushEVSEStatusRequest> CustomPushEVSEStatusRequestMapper
-        {
-
-            get
-            {
-                return _CustomPushEVSEStatusRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomPushEVSEStatusRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        #region CustomPushEVSEStatusSOAPRequestMapper
-
-        private Func<PushEVSEStatusRequest, XElement, XElement> _CustomPushEVSEStatusSOAPRequestMapper = (request, xml) => xml;
-
-        public Func<PushEVSEStatusRequest, XElement, XElement> CustomPushEVSEStatusSOAPRequestMapper
-        {
-
-            get
-            {
-                return _CustomPushEVSEStatusSOAPRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomPushEVSEStatusSOAPRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        public CustomMapperDelegate<Acknowledgement<PushEVSEStatusRequest>, Acknowledgement<PushEVSEStatusRequest>.Builder> CustomPushEVSEStatusResponseMapper { get; set; }
-
-        #endregion
-
-
-        #region CustomAuthorizeStartRequestMapper
-
-        #region CustomAuthorizeStartRequestMapper
-
-        private Func<AuthorizeStartRequest, AuthorizeStartRequest> _CustomAuthorizeStartRequestMapper = _ => _;
-
-        public Func<AuthorizeStartRequest, AuthorizeStartRequest> CustomAuthorizeStartRequestMapper
-        {
-
-            get
-            {
-                return _CustomAuthorizeStartRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomAuthorizeStartRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        #region CustomAuthorizeStartSOAPRequestMapper
-
-        private Func<AuthorizeStartRequest, XElement, XElement> _CustomAuthorizeStartSOAPRequestMapper = (request, xml) => xml;
-
-        public Func<AuthorizeStartRequest, XElement, XElement> CustomAuthorizeStartSOAPRequestMapper
-        {
-
-            get
-            {
-                return _CustomAuthorizeStartSOAPRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomAuthorizeStartSOAPRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        public CustomMapperDelegate<Acknowledgement<AuthorizeStartRequest>, Acknowledgement<AuthorizeStartRequest>.Builder> CustomAuthorizeStartResponseMapper { get; set; }
-
-        #endregion
-
-        #region CustomAuthorizeStopRequestMapper
-
-        #region CustomAuthorizeStopRequestMapper
-
-        private Func<AuthorizeStopRequest, AuthorizeStopRequest> _CustomAuthorizeStopRequestMapper = _ => _;
-
-        public Func<AuthorizeStopRequest, AuthorizeStopRequest> CustomAuthorizeStopRequestMapper
-        {
-
-            get
-            {
-                return _CustomAuthorizeStopRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomAuthorizeStopRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        #region CustomAuthorizeStopSOAPRequestMapper
-
-        private Func<AuthorizeStopRequest, XElement, XElement> _CustomAuthorizeStopSOAPRequestMapper = (request, xml) => xml;
-
-        public Func<AuthorizeStopRequest, XElement, XElement> CustomAuthorizeStopSOAPRequestMapper
-        {
-
-            get
-            {
-                return _CustomAuthorizeStopSOAPRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomAuthorizeStopSOAPRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        public CustomMapperDelegate<Acknowledgement<AuthorizeStopRequest>, Acknowledgement<AuthorizeStopRequest>.Builder> CustomAuthorizeStopResponseMapper { get; set; }
-
-        #endregion
-
-        #region CustomSendChargeDetailRecordRequestMapper
-
-        #region CustomSendChargeDetailRecordRequestMapper
-
-        private Func<SendChargeDetailRecordRequest, SendChargeDetailRecordRequest> _CustomSendChargeDetailRecordRequestMapper = _ => _;
-
-        public Func<SendChargeDetailRecordRequest, SendChargeDetailRecordRequest> CustomSendChargeDetailRecordRequestMapper
-        {
-
-            get
-            {
-                return _CustomSendChargeDetailRecordRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomSendChargeDetailRecordRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        #region CustomSendChargeDetailRecordSOAPRequestMapper
-
-        private Func<SendChargeDetailRecordRequest, XElement, XElement> _CustomSendChargeDetailRecordSOAPRequestMapper = (request, xml) => xml;
-
-        public Func<SendChargeDetailRecordRequest, XElement, XElement> CustomSendChargeDetailRecordSOAPRequestMapper
-        {
-
-            get
-            {
-                return _CustomSendChargeDetailRecordSOAPRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomSendChargeDetailRecordSOAPRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        public CustomMapperDelegate<Acknowledgement<SendChargeDetailRecordRequest>, Acknowledgement<SendChargeDetailRecordRequest>.Builder> CustomSendChargeDetailRecordResponseMapper { get; set; }
-
-        #endregion
-
-
-        #region CustomPullAuthenticationDataRequestMapper
-
-        #region CustomPullAuthenticationDataRequestMapper
-
-        private Func<PullAuthenticationDataRequest, PullAuthenticationDataRequest> _CustomPullAuthenticationDataRequestMapper = _ => _;
-
-        public Func<PullAuthenticationDataRequest, PullAuthenticationDataRequest> CustomPullAuthenticationDataRequestMapper
-        {
-
-            get
-            {
-                return _CustomPullAuthenticationDataRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomPullAuthenticationDataRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        #region CustomPullAuthenticationDataSOAPRequestMapper
-
-        private Func<PullAuthenticationDataRequest, XElement, XElement> _CustomPullAuthenticationDataSOAPRequestMapper = (request, xml) => xml;
-
-        public Func<PullAuthenticationDataRequest, XElement, XElement> CustomPullAuthenticationDataSOAPRequestMapper
-        {
-
-            get
-            {
-                return _CustomPullAuthenticationDataSOAPRequestMapper;
-            }
-
-            set
-            {
-                if (value != null)
-                    _CustomPullAuthenticationDataSOAPRequestMapper = value;
-            }
-
-        }
-
-        #endregion
-
-        public CustomMapperDelegate<Acknowledgement<PullAuthenticationDataRequest>, Acknowledgement<PullAuthenticationDataRequest>.Builder> CustomPullAuthenticationDataResponseMapper { get; set; }
-
-        #endregion
-
-        #endregion
-
         #region Constructor(s)
 
         #region CPOClient(ClientId, Hostname, ..., LoggingContext = CPOClientLogger.DefaultContext, ...)
@@ -540,6 +580,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="URIPrefix">An default URI prefix.</param>
+        /// <param name="EVSEDataURI">The HTTP/SOAP/XML URI for OICP EvseData requests.</param>
+        /// <param name="EVSEStatusURI">The HTTP/SOAP/XML URI for OICP EvseStatus requests.</param>
+        /// <param name="AuthorizationURI">The HTTP/SOAP/XML URI for OICP Authorization requests.</param>
+        /// <param name="AuthenticationDataURI">The HTTP/SOAP/XML URI for OICP AuthenticationData requests.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
@@ -552,6 +596,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          X509Certificate                      ClientCert                  = null,
                          String                               HTTPVirtualHost             = null,
                          String                               URIPrefix                   = DefaultURIPrefix,
+                         String                               EVSEDataURI                 = DefaultEVSEDataURI,
+                         String                               EVSEStatusURI               = DefaultEVSEStatusURI,
+                         String                               AuthorizationURI            = DefaultAuthorizationURI,
+                         String                               AuthenticationDataURI       = DefaultAuthenticationDataURI,
                          String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                          TimeSpan?                            QueryTimeout                = null,
                          DNSClient                            DNSClient                   = null,
@@ -582,9 +630,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            this.Logger = new CPOClientLogger(this,
-                                              LoggingContext,
-                                              LogfileCreator);
+            this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
+            this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;
+            this.AuthorizationURI       = AuthorizationURI      ?? DefaultAuthorizationURI;
+            this.AuthenticationDataURI  = AuthenticationDataURI ?? DefaultAuthenticationDataURI;
+
+            this.Logger                 = new CPOClientLogger(this,
+                                                              LoggingContext,
+                                                              LogfileCreator);
 
         }
 
@@ -613,6 +666,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          X509Certificate                      ClientCert                   = null,
                          String                               HTTPVirtualHost              = null,
                          String                               URIPrefix                    = DefaultURIPrefix,
+                         String                               EVSEDataURI                  = DefaultEVSEDataURI,
+                         String                               EVSEStatusURI                = DefaultEVSEStatusURI,
+                         String                               AuthorizationURI             = DefaultAuthorizationURI,
+                         String                               AuthenticationDataURI        = DefaultAuthenticationDataURI,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            QueryTimeout                 = null,
                          DNSClient                            DNSClient                    = null)
@@ -644,7 +701,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            this.Logger = Logger;
+            this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
+            this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;
+            this.AuthorizationURI       = AuthorizationURI      ?? DefaultAuthorizationURI;
+            this.AuthenticationDataURI  = AuthenticationDataURI ?? DefaultAuthenticationDataURI;
+
+            this.Logger                 = Logger;
 
         }
 
@@ -709,7 +771,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingEvseData_V2.1",
+                                                    URIPrefix + EVSEDataURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -911,7 +973,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingEvseStatus_V2.0",
+                                                    URIPrefix + EVSEStatusURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1115,7 +1177,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingAuthorization_V2.0",
+                                                    URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1132,7 +1194,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                  #region OnSuccess
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(AuthorizationStart.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) => AuthorizationStart.Parse(request,
+                                                                                                                                                              xml,
+                                                                                                                                                              CustomAuthorizeStartResponseMapper,
+                                                                                                                                                              onexception)),
 
                                                  #endregion
 
@@ -1144,6 +1210,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      return new HTTPResponse<AuthorizationStart>(httpresponse,
                                                                                                  AuthorizationStart.DataError(
+                                                                                                     Request,
                                                                                                      httpresponse.Content.ToString()
                                                                                                  ),
                                                                                                  IsFault: true);
@@ -1160,6 +1227,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      return new HTTPResponse<AuthorizationStart>(httpresponse,
                                                                                                  AuthorizationStart.DataError(
+                                                                                                     Request,
                                                                                                      httpresponse.HTTPStatusCode.ToString(),
                                                                                                      httpresponse.HTTPBody.ToUTF8String()
                                                                                                  ),
@@ -1176,6 +1244,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      SendException(timestamp, sender, exception);
 
                                                      return HTTPResponse<AuthorizationStart>.ExceptionThrown(AuthorizationStart.SystemError(
+                                                                                                                 Request,
                                                                                                                  exception.Message,
                                                                                                                  exception.StackTrace
                                                                                                              ),
@@ -1291,7 +1360,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingAuthorization_V2.0",
+                                                    URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1309,7 +1378,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                  #region OnSuccess
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(AuthorizationStop.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) => AuthorizationStop.Parse(request,
+                                                                                                                                                             xml,
+                                                                                                                                                             CustomAuthorizeStopResponseMapper,
+                                                                                                                                                             onexception)),
 
                                                  #endregion
 
@@ -1320,7 +1393,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      SendSOAPError(timestamp, this, httpresponse.Content);
 
                                                      return new HTTPResponse<AuthorizationStop>(httpresponse,
-                                                                                                AuthorizationStop.DataError(httpresponse.Content.ToString()),
+                                                                                                AuthorizationStop.DataError(Request,
+                                                                                                                            httpresponse.Content.ToString()),
                                                                                                 IsFault: true);
 
                                                  },
@@ -1335,6 +1409,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      return new HTTPResponse<AuthorizationStop>(httpresponse,
                                                                                                 AuthorizationStop.DataError(
+                                                                                                    Request,
                                                                                                     httpresponse.HTTPStatusCode.ToString(),
                                                                                                     httpresponse.HTTPBody.      ToUTF8String()
                                                                                                 ),
@@ -1351,6 +1426,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      SendException(timestamp, sender, exception);
 
                                                      return HTTPResponse<AuthorizationStop>.ExceptionThrown(AuthorizationStop.SystemError(
+                                                                                                                Request,
                                                                                                                 exception.Message,
                                                                                                                 exception.StackTrace
                                                                                                             ),
@@ -1461,7 +1537,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingAuthorization_V2.0",
+                                                    URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1666,7 +1742,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingAuthenticationData_V2.0",
+                                                    URIPrefix + AuthenticationDataURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,

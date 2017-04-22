@@ -18,7 +18,6 @@
 #region Usings
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -28,12 +27,15 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
+    #region OnAuthorizeRemoteReservationStartDelegate
+
     /// <summary>
-    /// Initiate a remote start of the given charging session at the given EVSE
-    /// and for the given Provider/eMAId.
+    /// A delegate called whenever an 'authorize remote reservation start' request was received.
     /// </summary>
-    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="LogTimestamp">The timestamp of the logging request.</param>
+    /// <param name="RequestTimestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
+    /// <param name="SenderId">The unique identification of the sender.</param>
     /// <param name="CancellationToken">A token to cancel this task.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
@@ -42,53 +44,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
-    /// <param name="RequestTimeout">An optional timeout for this request.</param>
-    public delegate Task<Acknowledgement>
+    /// <param name="RequestTimeout">The timeout of this request.</param>
+    public delegate Task
 
-        OnRemoteReservationStartDelegate(DateTime               Timestamp,
-                                         CPOServer              Sender,
-                                         CancellationToken      CancellationToken,
-                                         EventTracking_Id       EventTrackingId,
-                                         EVSE_Id                EVSEId,
-                                         PartnerProduct_Id?     PartnerProductId,
-                                         Session_Id?            SessionId,
-                                         PartnerSession_Id?     PartnerSessionId,
-                                         Provider_Id?           ProviderId,
-                                         EVCO_Id?               EVCOId,
-                                         TimeSpan?              RequestTimeout  = null);
+        OnAuthorizeRemoteReservationStartRequestDelegate(DateTime              LogTimestamp,
+                                                         DateTime              RequestTimestamp,
+                                                         CPOServer             Sender,
+                                                         String                SenderId,
+                                                         EventTracking_Id      EventTrackingId,
+                                                         EVSE_Id               EVSEId,
+                                                         PartnerProduct_Id?    PartnerProductId,
+                                                         Session_Id?           SessionId,
+                                                         PartnerSession_Id?    PartnerSessionId,
+                                                         Provider_Id?          ProviderId,
+                                                         EVCO_Id?              EVCOId,
+                                                         TimeSpan?             RequestTimeout);
 
 
     /// <summary>
-    /// Initiate a remote stop of the given charging session at the given EVSE.
+    /// Initiate a remote reservation start at the given EVSE.
     /// </summary>
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
-    /// <param name="CancellationToken">A token to cancel this task.</param>
-    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-    /// <param name="EVSEId">The unique identification of an EVSE.</param>
-    /// <param name="SessionId">The unique identification of this charging session.</param>
-    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
-    /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender..</param>
-    /// <param name="RequestTimeout">An optional timeout for this request.</param>
-    public delegate Task<Acknowledgement>
+    /// <param name="Request">An 'authorize remote reservation start' request.</param>
+    public delegate Task<Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>>
 
-        OnRemoteReservationStopDelegate(DateTime               Timestamp,
-                                        CPOServer              Sender,
-                                        CancellationToken      CancellationToken,
-                                        EventTracking_Id       EventTrackingId,
-                                        EVSE_Id                EVSEId,
-                                        Session_Id?            SessionId,
-                                        PartnerSession_Id?     PartnerSessionId,
-                                        Provider_Id?           ProviderId,
-                                        TimeSpan?              RequestTimeout  = null);
+        OnAuthorizeRemoteReservationStartDelegate(DateTime                                    Timestamp,
+                                                  CPOServer                                   Sender,
+                                                  EMP.AuthorizeRemoteReservationStartRequest  Request);
+
 
     /// <summary>
-    /// Initiate a remote start of the given charging session at the given EVSE
-    /// and for the given Provider/eMAId.
+    /// A delegate called whenever a response to an 'authorize remote reservation start' request was sent.
     /// </summary>
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
-    /// <param name="CancellationToken">A token to cancel this task.</param>
+    /// <param name="SenderId">The unique identification of the sender.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="PartnerProductId">The unique identification of the choosen charging product at the given EVSE.</param>
@@ -97,19 +88,211 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
-    public delegate Task<Acknowledgement>
+    /// <param name="Result">The result of the request.</param>
+    /// <param name="Duration">The time between request and response.</param>
+    public delegate Task
 
-        OnRemoteStartDelegate(DateTime               Timestamp,
-                              CPOServer              Sender,
-                              CancellationToken      CancellationToken,
-                              EventTracking_Id       EventTrackingId,
-                              EVSE_Id                EVSEId,
-                              PartnerProduct_Id?     PartnerProductId,
-                              Session_Id?            SessionId,
-                              PartnerSession_Id?     PartnerSessionId,
-                              Provider_Id?           ProviderId,
-                              EVCO_Id?               EVCOId,
-                              TimeSpan?              RequestTimeout  = null);
+        OnAuthorizeRemoteReservationStartResponseDelegate(DateTime                                                       Timestamp,
+                                                          CPOServer                                                      Sender,
+                                                          String                                                         SenderId,
+                                                          EventTracking_Id                                               EventTrackingId,
+                                                          EVSE_Id                                                        EVSEId,
+                                                          PartnerProduct_Id?                                             PartnerProductId,
+                                                          Session_Id?                                                    SessionId,
+                                                          PartnerSession_Id?                                             PartnerSessionId,
+                                                          Provider_Id?                                                   ProviderId,
+                                                          EVCO_Id?                                                       EVCOId,
+                                                          TimeSpan                                                       RequestTimeout,
+                                                          Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>    Result,
+                                                          TimeSpan                                                       Duration);
+
+    #endregion
+
+    #region OnAuthorizeRemoteReservationStopDelegate
+
+    /// <summary>
+    /// A delegate called whenever an 'authorize remote reservation stop' request was received.
+    /// </summary>
+    /// <param name="LogTimestamp">The timestamp of the logging request.</param>
+    /// <param name="RequestTimestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="SenderId">The unique identification of the sender.</param>
+    /// <param name="CancellationToken">A token to cancel this task.</param>
+    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+    /// <param name="EVSEId">The unique identification of an EVSE.</param>
+    /// <param name="SessionId">The unique identification of this charging session.</param>
+    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
+    /// <param name="RequestTimeout">The timeout of this request.</param>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStopRequestDelegate(DateTime              LogTimestamp,
+                                                        DateTime              RequestTimestamp,
+                                                        CPOServer             Sender,
+                                                        String                SenderId,
+                                                        EventTracking_Id      EventTrackingId,
+                                                        EVSE_Id               EVSEId,
+                                                        Session_Id?           SessionId,
+                                                        PartnerSession_Id?    PartnerSessionId,
+                                                        Provider_Id?          ProviderId,
+                                                        TimeSpan?             RequestTimeout);
+
+
+    /// <summary>
+    /// Initiate a remote reservation stop of the given charging session at the given EVSE.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">An 'authorize remote reservation stop' request.</param>
+    public delegate Task<Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>>
+
+        OnAuthorizeRemoteReservationStopDelegate(DateTime                                   Timestamp,
+                                                 CPOServer                                  Sender,
+                                                 EMP.AuthorizeRemoteReservationStopRequest  Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a response to an 'authorize remote reservation stop' request was sent.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="SenderId">The unique identification of the sender.</param>
+    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+    /// <param name="EVSEId">The unique identification of an EVSE.</param>
+    /// <param name="PartnerProductId">The unique identification of the choosen charging product at the given EVSE.</param>
+    /// <param name="SessionId">The unique identification of this charging session.</param>
+    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
+    /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
+    /// <param name="RequestTimeout">An optional timeout for this request.</param>
+    /// <param name="Result">The result of the request.</param>
+    /// <param name="Duration">The time between request and response.</param>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStopResponseDelegate(DateTime                                                      Timestamp,
+                                                         CPOServer                                                     Sender,
+                                                         String                                                        SenderId,
+                                                         EventTracking_Id                                              EventTrackingId,
+                                                         EVSE_Id                                                       EVSEId,
+                                                         Session_Id?                                                   SessionId,
+                                                         PartnerSession_Id?                                            PartnerSessionId,
+                                                         Provider_Id?                                                  ProviderId,
+                                                         TimeSpan                                                      RequestTimeout,
+                                                         Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>    Result,
+                                                         TimeSpan                                                      Duration);
+
+    #endregion
+
+
+    #region OnAuthorizeRemoteStartDelegate
+
+    /// <summary>
+    /// A delegate called whenever an 'authorize remote start' request was received.
+    /// </summary>
+    /// <param name="LogTimestamp">The timestamp of the logging request.</param>
+    /// <param name="RequestTimestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="SenderId">The unique identification of the sender.</param>
+    /// <param name="CancellationToken">A token to cancel this task.</param>
+    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+    /// <param name="EVSEId">The unique identification of an EVSE.</param>
+    /// <param name="PartnerProductId">The unique identification of the choosen charging product at the given EVSE.</param>
+    /// <param name="SessionId">The unique identification of this charging session.</param>
+    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
+    /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
+    /// <param name="RequestTimeout">The timeout of this request.</param>
+    public delegate Task
+
+        OnAuthorizeRemoteStartRequestDelegate(DateTime              LogTimestamp,
+                                              DateTime              RequestTimestamp,
+                                              CPOServer             Sender,
+                                              String                SenderId,
+                                              EventTracking_Id      EventTrackingId,
+                                              EVSE_Id               EVSEId,
+                                              PartnerProduct_Id?    PartnerProductId,
+                                              Session_Id?           SessionId,
+                                              PartnerSession_Id?    PartnerSessionId,
+                                              Provider_Id?          ProviderId,
+                                              EVCO_Id?              EVCOId,
+                                              TimeSpan?             RequestTimeout);
+
+
+    /// <summary>
+    /// Initiate a remote start at the given EVSE.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">An 'authorize remote reservation start' request.</param>
+    public delegate Task<Acknowledgement<EMP.AuthorizeRemoteStartRequest>>
+
+        OnAuthorizeRemoteStartDelegate(DateTime                         Timestamp,
+                                       CPOServer                        Sender,
+                                       EMP.AuthorizeRemoteStartRequest  Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a response to an 'authorize remote start' request was sent.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="SenderId">The unique identification of the sender.</param>
+    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+    /// <param name="EVSEId">The unique identification of an EVSE.</param>
+    /// <param name="PartnerProductId">The unique identification of the choosen charging product at the given EVSE.</param>
+    /// <param name="SessionId">The unique identification of this charging session.</param>
+    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
+    /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
+    /// <param name="RequestTimeout">An optional timeout for this request.</param>
+    /// <param name="Result">The result of the request.</param>
+    /// <param name="Duration">The time between request and response.</param>
+    public delegate Task
+
+        OnAuthorizeRemoteStartResponseDelegate(DateTime                                            Timestamp,
+                                               CPOServer                                           Sender,
+                                               String                                              SenderId,
+                                               EventTracking_Id                                    EventTrackingId,
+                                               EVSE_Id                                             EVSEId,
+                                               PartnerProduct_Id?                                  PartnerProductId,
+                                               Session_Id?                                         SessionId,
+                                               PartnerSession_Id?                                  PartnerSessionId,
+                                               Provider_Id?                                        ProviderId,
+                                               EVCO_Id?                                            EVCOId,
+                                               TimeSpan                                            RequestTimeout,
+                                               Acknowledgement<EMP.AuthorizeRemoteStartRequest>    Result,
+                                               TimeSpan                                            Duration);
+
+    #endregion
+
+    #region OnAuthorizeRemoteStopDelegate
+
+    /// <summary>
+    /// A delegate called whenever an 'authorize remote stop' request was received.
+    /// </summary>
+    /// <param name="LogTimestamp">The timestamp of the logging request.</param>
+    /// <param name="RequestTimestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="SenderId">The unique identification of the sender.</param>
+    /// <param name="CancellationToken">A token to cancel this task.</param>
+    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+    /// <param name="EVSEId">The unique identification of an EVSE.</param>
+    /// <param name="SessionId">The unique identification of this charging session.</param>
+    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
+    /// <param name="RequestTimeout">The timeout of this request.</param>
+    public delegate Task
+
+        OnAuthorizeRemoteStopRequestDelegate(DateTime              LogTimestamp,
+                                             DateTime              RequestTimestamp,
+                                             CPOServer             Sender,
+                                             String                SenderId,
+                                             EventTracking_Id      EventTrackingId,
+                                             EVSE_Id               EVSEId,
+                                             Session_Id?           SessionId,
+                                             PartnerSession_Id?    PartnerSessionId,
+                                             Provider_Id?          ProviderId,
+                                             TimeSpan?             RequestTimeout);
 
 
     /// <summary>
@@ -117,23 +300,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// </summary>
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
-    /// <param name="CancellationToken">A token to cancel this task.</param>
+    /// <param name="Request">An 'authorize remote reservation stop' request.</param>
+    public delegate Task<Acknowledgement<EMP.AuthorizeRemoteStopRequest>>
+
+        OnAuthorizeRemoteStopDelegate(DateTime                        Timestamp,
+                                      CPOServer                       Sender,
+                                      EMP.AuthorizeRemoteStopRequest  Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a response to an 'authorize remote stop' request was sent.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="SenderId">The unique identification of the sender.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
+    /// <param name="PartnerProductId">The unique identification of the choosen charging product at the given EVSE.</param>
     /// <param name="SessionId">The unique identification of this charging session.</param>
     /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
-    /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender..</param>
+    /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
+    /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
-    public delegate Task<Acknowledgement>
+    /// <param name="Result">The result of the request.</param>
+    /// <param name="Duration">The time between request and response.</param>
+    public delegate Task
 
-        OnRemoteStopDelegate(DateTime               Timestamp,
-                             CPOServer              Sender,
-                             CancellationToken      CancellationToken,
-                             EventTracking_Id       EventTrackingId,
-                             EVSE_Id                EVSEId,
-                             Session_Id             SessionId,
-                             PartnerSession_Id?     PartnerSessionId,
-                             Provider_Id?           ProviderId,
-                             TimeSpan?              RequestTimeout  = null);
+        OnAuthorizeRemoteStopResponseDelegate(DateTime                                           Timestamp,
+                                              CPOServer                                          Sender,
+                                              String                                             SenderId,
+                                              EventTracking_Id                                   EventTrackingId,
+                                              EVSE_Id                                            EVSEId,
+                                              Session_Id?                                        SessionId,
+                                              PartnerSession_Id?                                 PartnerSessionId,
+                                              Provider_Id?                                       ProviderId,
+                                              TimeSpan                                           RequestTimeout,
+                                              Acknowledgement<EMP.AuthorizeRemoteStopRequest>    Result,
+                                              TimeSpan                                           Duration);
+
+    #endregion
 
 }

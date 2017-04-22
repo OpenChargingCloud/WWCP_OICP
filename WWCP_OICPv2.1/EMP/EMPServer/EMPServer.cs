@@ -76,27 +76,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event sent whenever a authorize start SOAP request was received.
         /// </summary>
-        public event RequestLogHandler                 OnAuthorizeStartSOAPRequest;
+        public event RequestLogHandler                  OnAuthorizeStartSOAPRequest;
 
         /// <summary>
         /// An event sent whenever a authorize start request was received.
         /// </summary>
-        public event OnAuthorizeStartRequestHandler    OnAuthorizeStartRequest;
+        public event OnAuthorizeStartRequestDelegate    OnAuthorizeStartRequest;
 
         /// <summary>
         /// An event sent whenever a authorize start command was received.
         /// </summary>
-        public event OnAuthorizeStartDelegate          OnAuthorizeStart;
+        public event OnAuthorizeStartDelegate           OnAuthorizeStart;
 
         /// <summary>
         /// An event sent whenever a authorize start response was sent.
         /// </summary>
-        public event OnAuthorizeStartResponseHandler   OnAuthorizeStartResponse;
+        public event OnAuthorizeStartResponseDelegate   OnAuthorizeStartResponse;
 
         /// <summary>
         /// An event sent whenever a authorize start SOAP response was sent.
         /// </summary>
-        public event AccessLogHandler                  OnAuthorizeStartSOAPResponse;
+        public event AccessLogHandler                   OnAuthorizeStartSOAPResponse;
 
         #endregion
 
@@ -233,111 +233,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                             URIPrefix + "/Authorization",
                                             "AuthorizeStart",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart").FirstOrDefault(),
-                                            async (Request, AuthorizeStartXML) => {
-
-                #region Documentation
-
-                // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-                //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-                //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-                //
-                //    <soapenv:Header/>
-                //
-                //    <soapenv:Body>
-                //       <Authorization:eRoamingAuthorizeAuthorizeStart>
-                // 
-                //          <!--Optional:-->
-                //          <Authorization:SessionID>?</Authorization:SessionID>
-                // 
-                //          <!--Optional:-->
-                //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
-                // 
-                //          <Authorization:ProviderID>?</Authorization:ProviderID>
-                //          <Authorization:EVSEID>?</Authorization:EVSEID>
-                // 
-                //          <Authorization:Identification>
-                //             <!--You have a CHOICE of the next 4 items at this level-->
-                //
-                //             <CommonTypes:RFIDmifarefamilyIdentification>
-                //                <CommonTypes:UID>?</CommonTypes:UID>
-                //             </CommonTypes:RFIDmifarefamilyIdentification>
-                // 
-                //             <CommonTypes:QRCodeIdentification>
-                // 
-                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-                // 
-                //                <!--You have a CHOICE of the next 2 items at this level-->
-                //                <CommonTypes:PIN>?</CommonTypes:PIN>
-                // 
-                //                <CommonTypes:HashedPIN>
-                //                   <CommonTypes:Value>?</CommonTypes:Value>
-                //                   <CommonTypes:Function>?</CommonTypes:Function>
-                //                   <CommonTypes:Salt>?</CommonTypes:Salt>
-                //                </CommonTypes:HashedPIN>
-                // 
-                //             </CommonTypes:QRCodeIdentification>
-                // 
-                //             <CommonTypes:PlugAndChargeIdentification>
-                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-                //             </CommonTypes:PlugAndChargeIdentification>
-                // 
-                //             <CommonTypes:RemoteIdentification>
-                //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-                //             </CommonTypes:RemoteIdentification>
-                // 
-                //          </Authorization:Identification>
-                // 
-                //          <!--Optional:-->
-                //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
-                // 
-                //       </Authorization:eRoamingAuthorizeAuthorizeStart>
-                //    </soapenv:Body>
-                //
-                // </soapenv:Envelope>
+                                            async (HTTPRequest, AuthorizeStartXML) => {
 
 
-                // POST /RemoteStartStop HTTP/1.1
-                // Content-type: text/xml;charset=utf-8
-                // Soapaction: ""
-                // Accept: text/xml, multipart/related
-                // User-Agent: JAX-WS RI 2.2-hudson-752-
-                // Cache-Control: no-cache
-                // Pragma: no-cache
-                // Host: 5.9.142.73:7001
-                // Connection: keep-alive
-                // Content-Length: 822
-                // 
-                // <?xml version='1.0' encoding='UTF-8'?>
-                // <soapenv:Envelope xmlns:cmn     = "http://www.hubject.com/b2b/services/commontypes/v2.0"
-                //                   xmlns:fn      = "http://www.w3.org/2005/xpath-functions"
-                //                   xmlns:isns    = "http://schemas.xmlsoap.org/soap/envelope/"
-                //                   xmlns:sbp     = "http://www.inubit.com/eMobility/SBP"
-                //                   xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/"
-                //                   xmlns:tns     = "http://www.hubject.com/b2b/services/authorization/v2.0">
-                // 
-                //   <soapenv:Body>
-                // 
-                //     <tns:eRoamingAuthorizeStart>
-                //
-                //       <tns:SessionID>88efb713-0a88-1296-5c83-2e66786be68b</tns:SessionID>
-                //       <tns:OperatorID>+49*822</tns:OperatorID>
-                //       <tns:EVSEID>+49*822*028630243*1</tns:EVSEID>
-                //
-                //       <tns:Identification>
-                //         <cmn:RFIDmifarefamilyIdentification>
-                //           <cmn:UID>AA3634527A2280</cmn:UID>
-                //         </cmn:RFIDmifarefamilyIdentification>
-                //       </tns:Identification>
-                //
-                //       <tns:PartnerProductID>AC1</tns:PartnerProductID>
-                // 
-                //     </tns:eRoamingAuthorizeStart>
-                //
-                //   </soapenv:Body>
-                //
-                // </soapenv:Envelope>
-
-                #endregion
+                CPO.AuthorizeStartRequest AuthorizeStartRequest  = null;
+                CPO.AuthorizationStart    AuthorizationStart     = null;
 
                 #region Send OnAuthorizeStartSOAPRequest event
 
@@ -348,7 +248,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     OnAuthorizeStartSOAPRequest?.Invoke(StartTime,
                                                         this.SOAPServer,
-                                                        Request);
+                                                        HTTPRequest);
 
                 }
                 catch (Exception e)
@@ -359,188 +259,119 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 #endregion
 
 
-                #region Parse request parameters
-
-                Session_Id?         SessionId          = null;
-                PartnerSession_Id?  PartnerSessionId   = null;
-                Operator_Id         OperatorId         = default(Operator_Id);
-                EVSE_Id             EVSEId             = default(EVSE_Id);
-                PartnerProduct_Id?  PartnerProductId   = null;
-                UID                 UID                = default(UID);
-
-                AuthorizationStart  response           = null;
-
-                try
+                if (CPO.AuthorizeStartRequest.TryParse(AuthorizeStartXML,
+                                                       out AuthorizeStartRequest,
+                                                       null,
+                                                       HTTPRequest.Timestamp,
+                                                       HTTPRequest.CancellationToken,
+                                                       HTTPRequest.EventTrackingId,
+                                                       HTTPRequest.Timeout ?? DefaultRequestTimeout))
                 {
 
-                    XElement            SessionIdXML;
-                    XElement            PartnerSessionIdXML;
-                    XElement            EVSEIdXML;
-                    XElement            IdentificationXML;
-                    XElement            PartnerProductIdXML;
+                    #region Send OnAuthorizeStartRequest event
 
-                    SessionIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "SessionID");
-                    if (SessionIdXML != null)
-                        SessionId            = Session_Id.Parse(AuthorizeStartXML.ElementValueOrDefault(OICPNS.Authorization + "SessionID",   null));
-
-                    PartnerSessionIdXML      = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerSessionID");
-                    if (PartnerSessionIdXML != null)
-                        PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
-
-                    OperatorId               = Operator_Id.   Parse(AuthorizeStartXML.ElementValueOrFail   (OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
-
-                    EVSEIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "EVSEID");
-                    if (EVSEIdXML != null)
-                        EVSEId               = EVSE_Id.           Parse(EVSEIdXML.Value);
-
-                    IdentificationXML = AuthorizeStartXML.Element(OICPNS.Authorization + "Identification");
-                    if (IdentificationXML != null)
+                    try
                     {
 
-                        var RFIDmifarefamilyIdentificationXML = IdentificationXML.Element(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification");
-                        if (RFIDmifarefamilyIdentificationXML != null)
+                        OnAuthorizeStartRequest?.Invoke(StartTime,
+                                                        AuthorizeStartRequest.Timestamp.Value,
+                                                        this,
+                                                        nameof(EMPServer),   // ClientId
+                                                        AuthorizeStartRequest.EventTrackingId,
+                                                        AuthorizeStartRequest.OperatorId,
+                                                        AuthorizeStartRequest.UID,
+                                                        AuthorizeStartRequest.EVSEId,
+                                                        AuthorizeStartRequest.SessionId,
+                                                        AuthorizeStartRequest.PartnerProductId,
+                                                        AuthorizeStartRequest.PartnerSessionId,
+                                                        AuthorizeStartRequest.RequestTimeout.HasValue ? AuthorizeStartRequest.RequestTimeout.Value : DefaultRequestTimeout);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartRequest));
+                    }
+
+                    #endregion
+
+                    #region Call async subscribers
+
+                    if (AuthorizationStart == null)
+                    {
+
+                        var results = OnAuthorizeStart?.
+                                      GetInvocationList()?.
+                                      SafeSelect(subscriber => (subscriber as OnAuthorizeStartDelegate)
+                                          (DateTime.Now,
+                                           this,
+                                           AuthorizeStartRequest)).
+                                      ToArray();
+
+                        if (results.Length > 0)
                         {
 
-                            var UIDXML = RFIDmifarefamilyIdentificationXML.Element(OICPNS.CommonTypes + "UID");
+                            await Task.WhenAll(results);
 
-                            if (UIDXML != null)
-                                UID = UID.Parse(UIDXML.Value);
+                            AuthorizationStart = results.FirstOrDefault()?.Result;
 
                         }
 
+                        if (results.Length == 0 || AuthorizationStart == null)
+                            AuthorizationStart = CPO.AuthorizationStart.SystemError(
+                                           AuthorizeStartRequest,
+                                           "Could not process the incoming AuthorizationStart request!",
+                                           null,
+                                           AuthorizeStartRequest.SessionId,
+                                           AuthorizeStartRequest.PartnerSessionId
+                                       );
+
                     }
-                    else
-                        throw new Exception("Missing 'Identification'-XML tag!");
 
-                    PartnerProductIdXML = AuthorizeStartXML.Element(OICPNS.Authorization + "PartnerProductID");
-                    if (PartnerProductIdXML != null)
-                        PartnerProductId = PartnerProduct_Id.Parse(PartnerProductIdXML.Value);
+                    #endregion
 
-                }
-                catch (Exception e)
-                {
+                    #region Send OnAuthorizeStartResponse event
 
-                    response = AuthorizationStart.DataError(
-                                   "The AuthorizeStart request led to an exception!",
-                                   e.Message,
-                                   SessionId,
-                                   PartnerSessionId
-                               );
+                    var EndTime = DateTime.Now;
 
-                }
-
-                #endregion
-
-                #region Send OnAuthorizeStartRequest event
-
-                try
-                {
-
-                    OnAuthorizeStartRequest?.Invoke(StartTime,
-                                                    StartTime, //Request.Timestamp.Value,
-                                                    this,
-                                                    "EMPServer", //ClientId,
-                                                    Request.EventTrackingId,
-                                                    OperatorId,
-                                                    UID,
-                                                    EVSEId,
-                                                    SessionId,
-                                                    PartnerProductId,
-                                                    PartnerSessionId,
-                                                    Request.Timeout.HasValue ? Request.Timeout.Value : DefaultRequestTimeout); //RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
-
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeStartRequest));
-                }
-
-                #endregion
-
-                #region Call async subscribers
-
-                if (response == null)
-                {
-
-                    var results = OnAuthorizeStart?.
-                                  GetInvocationList()?.
-                                  SafeSelect(subscriber => (subscriber as OnAuthorizeStartDelegate)
-                                      (DateTime.Now,
-                                       this,
-                                       Request.CancellationToken,
-                                       Request.EventTrackingId,
-                                       OperatorId,
-                                       UID,
-                                       EVSEId,
-                                       SessionId,
-                                       PartnerProductId,
-                                       PartnerSessionId,
-                                       DefaultRequestTimeout)).
-                                  ToArray();
-
-                    if (results.Length > 0)
+                    try
                     {
 
-                        await Task.WhenAll(results);
-
-                        response = results.FirstOrDefault()?.Result;
+                        OnAuthorizeStartResponse?.Invoke(EndTime,
+                                                         this,
+                                                         nameof(EMPServer),   // ClientId
+                                                         AuthorizeStartRequest.EventTrackingId,
+                                                         AuthorizeStartRequest.OperatorId,
+                                                         AuthorizeStartRequest.UID,
+                                                         AuthorizeStartRequest.EVSEId,
+                                                         AuthorizeStartRequest.SessionId,
+                                                         AuthorizeStartRequest.PartnerProductId,
+                                                         AuthorizeStartRequest.PartnerSessionId,
+                                                         AuthorizeStartRequest.RequestTimeout.HasValue ? AuthorizeStartRequest.RequestTimeout.Value : DefaultRequestTimeout,
+                                                         AuthorizationStart,
+                                                         EndTime - StartTime);
 
                     }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartResponse));
+                    }
 
-                    if (results.Length == 0 || response == null)
-                        response = AuthorizationStart.SystemError(
-                                       "Could not process the incoming AuthorizationStart request!",
-                                       null,
-                                       SessionId,
-                                       PartnerSessionId
-                                   );
+                    #endregion
 
                 }
 
-                #endregion
-
-                #region Send OnAuthorizeStartResponse event
-
-                var EndTime = DateTime.Now;
-
-                try
-                {
-
-                    OnAuthorizeStartResponse?.Invoke(EndTime,
-                                                     //EndTime, //Request.Timestamp.Value,
-                                                     this,
-                                                     "EMPServer", //ClientId,
-                                                     Request.EventTrackingId,
-                                                     OperatorId,
-                                                     UID,
-                                                     EVSEId,
-                                                     SessionId,
-                                                     PartnerProductId,
-                                                     PartnerSessionId,
-                                                     Request.Timeout.HasValue ? Request.Timeout.Value : DefaultRequestTimeout,
-                                                     response,
-                                                     EndTime - StartTime);
-
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeStartResponse));
-                }
-
-                #endregion
 
                 #region Create SOAP response
 
-                var HTTPResponse = new HTTPResponseBuilder(Request) {
+                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.DefaultServerName,
-                    Date            = EndTime,
+                    Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                    Content         = SOAP.Encapsulation(response.ToXML()).ToUTF8Bytes()
+                    Content         = SOAP.Encapsulation(AuthorizationStart.ToXML()).ToUTF8Bytes()
                 };
 
                 #endregion
-
 
                 #region Send OnAuthorizeStartSOAPResponse event
 
@@ -549,7 +380,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     OnAuthorizeStartSOAPResponse?.Invoke(HTTPResponse.Timestamp,
                                                          this.SOAPServer,
-                                                         Request,
+                                                         HTTPRequest,
                                                          HTTPResponse);
 
                 }
@@ -559,6 +390,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 }
 
                 #endregion
+
 
                 return HTTPResponse;
 
@@ -572,42 +404,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                             URIPrefix + "/Authorization",
                                             "AuthorizeStop",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop").FirstOrDefault(),
-                                            async (Request, AuthorizeStopXML) => {
+                                            async (HTTPRequest, AuthorizeStopXML) => {
 
-                #region Documentation
 
-                // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-                //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0">
-                //
-                //    <soapenv:Header/>
-                //
-                //    <soapenv:Body>
-                //       <Authorization:eRoamingAuthorizeAuthorizeStop>
-                // 
-                //          <Authorization:SessionID>?</Authorization:SessionID>
-                // 
-                //          <!--Optional:-->
-                //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
-                // 
-                //          <Authorization:ProviderID>?</Authorization:ProviderID>
-                // 
-                //          <Authorization:EVSEID>?</Authorization:EVSEID>
-                // 
-                //       </Authorization:eRoamingAuthorizeAuthorizeStop>
-                //    </soapenv:Body>
-                //
-                // </soapenv:Envelope>
+                CPO.AuthorizeStopRequest AuthorizeStopRequest  = null;
+                CPO.AuthorizationStop    AuthorizationStop     = null;
 
-                #endregion
+                #region Send OnAuthorizeStopSOAPRequest event
 
-                #region Send OnLogAuthorizeStop event
+                var StartTime = DateTime.Now;
 
                 try
                 {
 
-                    OnAuthorizeStopSOAPRequest?.Invoke(DateTime.Now,
-                                               this.SOAPServer,
-                                               Request);
+                    OnAuthorizeStopSOAPRequest?.Invoke(StartTime,
+                                                       this.SOAPServer,
+                                                       HTTPRequest);
 
                 }
                 catch (Exception e)
@@ -618,117 +430,117 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 #endregion
 
 
-                #region Parse request parameters
-
-                Session_Id?         SessionId          = null;
-                PartnerSession_Id?  PartnerSessionId   = null;
-                Operator_Id         OperatorId         = default(Operator_Id);
-                EVSE_Id             EVSEId             = default(EVSE_Id);
-                UID                 UID                = default(UID);
-
-                AuthorizationStop   response           = null;
-
-                try
+                if (CPO.AuthorizeStopRequest.TryParse(AuthorizeStopXML,
+                                                      out AuthorizeStopRequest,
+                                                      null,
+                                                      HTTPRequest.Timestamp,
+                                                      HTTPRequest.CancellationToken,
+                                                      HTTPRequest.EventTrackingId,
+                                                      HTTPRequest.Timeout ?? DefaultRequestTimeout))
                 {
 
-                    XElement  PartnerSessionIdXML;
-                    XElement  IdentificationXML;
+                    #region Send OnAuthorizeStopRequest event
 
-                    SessionId         = Session_Id.Parse(AuthorizeStopXML.ElementValueOrFail    (OICPNS.Authorization + "SessionID",  "No SessionID XML tag provided!"));
-
-                    PartnerSessionIdXML = AuthorizeStopXML.Element(OICPNS.Authorization + "PartnerSessionID");
-                    if (PartnerSessionIdXML != null)
-                        PartnerSessionId = PartnerSession_Id.Parse(PartnerSessionIdXML.Value);
-
-                    OperatorId        = Operator_Id.   Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "OperatorID",  "No OperatorID XML tag provided!"));
-                    EVSEId            = EVSE_Id.           Parse(AuthorizeStopXML.ElementValueOrFail(OICPNS.Authorization + "EVSEID",      "No EVSEID XML tag provided!"));
-
-                    IdentificationXML = AuthorizeStopXML.Element(OICPNS.Authorization + "Identification");
-                    if (IdentificationXML != null)
+                    try
                     {
 
+                        OnAuthorizeStopRequest?.Invoke(StartTime,
+                                                       AuthorizeStopRequest.Timestamp.Value,
+                                                       this,
+                                                       nameof(EMPServer),   // ClientId
+                                                       AuthorizeStopRequest.EventTrackingId,
+                                                       AuthorizeStopRequest.SessionId,
+                                                       AuthorizeStopRequest.PartnerSessionId,
+                                                       AuthorizeStopRequest.OperatorId,
+                                                       AuthorizeStopRequest.EVSEId,
+                                                       AuthorizeStopRequest.UID,
+                                                       AuthorizeStopRequest.RequestTimeout.HasValue ? AuthorizeStopRequest.RequestTimeout.Value : DefaultRequestTimeout);
 
-                        var RFIDmifarefamilyIdentificationXML = IdentificationXML.Element(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification");
-                        if (RFIDmifarefamilyIdentificationXML != null)
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStopRequest));
+                    }
+
+                    #endregion
+
+                    #region Call async subscribers
+
+                    if (AuthorizationStop == null)
+                    {
+
+                        var results = OnAuthorizeStop?.
+                                          GetInvocationList()?.
+                                          SafeSelect(subscriber => (subscriber as OnAuthorizeStopDelegate)
+                                              (DateTime.Now,
+                                               this,
+                                               AuthorizeStopRequest)).
+                                          ToArray();
+
+                        if (results.Length > 0)
                         {
 
-                            var UIDXML = RFIDmifarefamilyIdentificationXML.Element(OICPNS.CommonTypes + "UID");
+                            await Task.WhenAll(results);
 
-                            if (UIDXML != null)
-                                UID = UID.Parse(UIDXML.Value);
+                            AuthorizationStop = results.FirstOrDefault()?.Result;
 
                         }
 
+                        if (results.Length == 0 || AuthorizationStop == null)
+                            AuthorizationStop = CPO.AuthorizationStop.SystemError(
+                                           null,
+                                           "Could not process the incoming AuthorizeStop request!",
+                                           null,
+                                           AuthorizeStopRequest.SessionId,
+                                           AuthorizeStopRequest.PartnerSessionId
+                                       );
+
                     }
 
-                }
-                catch (Exception e)
-                {
+                    #endregion
 
-                    response = AuthorizationStop.DataError(
-                                   "The AuthorizeStop request led to an exception!",
-                                   e.Message,
-                                   SessionId,
-                                   PartnerSessionId
-                               );
+                    #region Send OnAuthorizeStopResponse event
 
-                }
+                    var EndTime = DateTime.Now;
 
-                #endregion
-
-                #region Call async subscribers
-
-                if (response == null)
-                {
-
-                    var results = OnAuthorizeStop?.
-                                      GetInvocationList()?.
-                                      SafeSelect(subscriber => (subscriber as OnAuthorizeStopDelegate)
-                                          (DateTime.Now,
-                                           this,
-                                           Request.CancellationToken,
-                                           Request.EventTrackingId,
-                                           SessionId,
-                                           PartnerSessionId,
-                                           OperatorId,
-                                           EVSEId,
-                                           UID,
-                                           DefaultRequestTimeout)).
-                                      ToArray();
-
-                    if (results.Length > 0)
+                    try
                     {
 
-                        await Task.WhenAll(results);
-
-                        response = results.FirstOrDefault()?.Result;
+                        OnAuthorizeStopResponse?.Invoke(EndTime,
+                                                        this,
+                                                        nameof(EMPServer),   // ClientId
+                                                        AuthorizeStopRequest.EventTrackingId,
+                                                        AuthorizeStopRequest.SessionId,
+                                                        AuthorizeStopRequest.PartnerSessionId,
+                                                        AuthorizeStopRequest.OperatorId,
+                                                        AuthorizeStopRequest.EVSEId,
+                                                        AuthorizeStopRequest.UID,
+                                                        AuthorizeStopRequest.RequestTimeout.HasValue ? AuthorizeStopRequest.RequestTimeout.Value : DefaultRequestTimeout,
+                                                        AuthorizationStop,
+                                                        EndTime - StartTime);
 
                     }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStopResponse));
+                    }
 
-                    if (results.Length == 0 || response == null)
-                        response = AuthorizationStop.SystemError(
-                                       "Could not process the incoming AuthorizeStop request!",
-                                       null,
-                                       SessionId,
-                                       PartnerSessionId
-                                   );
+                    #endregion
 
                 }
 
-                #endregion
 
                 #region Create SOAP response
 
-                var HTTPResponse = new HTTPResponseBuilder(Request) {
+                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.DefaultServerName,
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                    Content         = SOAP.Encapsulation(response.ToXML()).ToUTF8Bytes()
+                    Content         = SOAP.Encapsulation(AuthorizationStop.ToXML()).ToUTF8Bytes()
                 };
 
                 #endregion
-
 
                 #region Send OnLogAuthorizeStopped event
 
@@ -737,7 +549,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     OnAuthorizeStopSOAPResponse?.Invoke(HTTPResponse.Timestamp,
                                                   this.SOAPServer,
-                                                  Request,
+                                                  HTTPRequest,
                                                   HTTPResponse);
 
                 }
@@ -747,6 +559,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 }
 
                 #endregion
+
 
                 return HTTPResponse;
 
@@ -768,8 +581,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     {
 
                         OnChargeDetailRecordSOAPRequest?.Invoke(DateTime.Now,
-                                                            this.SOAPServer,
-                                                            Request);
+                                                                this.SOAPServer,
+                                                                Request);
 
                     }
                     catch (Exception e)

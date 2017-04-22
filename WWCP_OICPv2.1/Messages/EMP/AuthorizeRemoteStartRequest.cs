@@ -225,7 +225,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                         AuthorizeRemoteStartRequestXML,
                                        out AuthorizeRemoteStartRequest  AuthorizeRemoteStartRequest,
-                                       OnExceptionDelegate              OnException  = null)
+                                       OnExceptionDelegate              OnException         = null,
+
+                                       DateTime?                        Timestamp           = null,
+                                       CancellationToken?               CancellationToken   = null,
+                                       EventTracking_Id                 EventTrackingId     = null,
+                                       TimeSpan?                        RequestTimeout      = null)
         {
 
             try
@@ -282,7 +287,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                     PartnerSession_Id.Parse),
 
                                                   AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Reservation + "PartnerProductID",
-                                                                                                    PartnerProduct_Id.Parse)
+                                                                                                    PartnerProduct_Id.Parse),
+
+                                                  Timestamp,
+                                                  CancellationToken,
+                                                  EventTrackingId,
+                                                  RequestTimeout
 
                                               );
 

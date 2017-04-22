@@ -21,16 +21,18 @@ using System;
 using System.Xml.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Collections.Generic;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
     /// <summary>
     /// An OICP Authorization Stop result.
     /// </summary>
-    public class AuthorizationStop
+    public class AuthorizationStop : AResponse<AuthorizeStopRequest,
+                                               AuthorizationStop>
     {
 
         #region Properties
@@ -67,16 +69,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Create a new OICP Authorization Stop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="AuthorizationStatus">The authorization status.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
         /// <param name="StatusCode">An optional status code.</param>
-        private AuthorizationStop(AuthorizationStatusTypes  AuthorizationStatus,
+        private AuthorizationStop(AuthorizeStopRequest      Request,
+                                  AuthorizationStatusTypes  AuthorizationStatus,
                                   Session_Id?               SessionId          = null,
                                   PartnerSession_Id?        PartnerSessionId   = null,
                                   Provider_Id?              ProviderId         = null,
                                   StatusCode                StatusCode         = null)
+
+            : base(Request)
+
         {
 
             this.AuthorizationStatus  = AuthorizationStatus;
@@ -90,24 +97,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region (static) Authorized               (SessionId = null, PartnerSessionId = null, ProviderId = null, ...)
+        #region (static) Authorized               (Request, SessionId = null, PartnerSessionId = null, ProviderId = null, ...)
 
         /// <summary>
         /// Create a new OICP 'Authorized' AuthorizationStop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="SessionId">The charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        public static AuthorizationStop Authorized(Session_Id?         SessionId                  = null,
-                                                   PartnerSession_Id?  PartnerSessionId           = null,
-                                                   Provider_Id?        ProviderId                 = null,
-                                                   String              StatusCodeDescription      = null,
-                                                   String              StatusCodeAdditionalInfo   = null)
+        public static AuthorizationStop Authorized(AuthorizeStopRequest  Request,
+                                                   Session_Id?           SessionId                  = null,
+                                                   PartnerSession_Id?    PartnerSessionId           = null,
+                                                   Provider_Id?          ProviderId                 = null,
+                                                   String                StatusCodeDescription      = null,
+                                                   String                StatusCodeAdditionalInfo   = null)
 
 
-            => new AuthorizationStop(AuthorizationStatusTypes.Authorized,
+            => new AuthorizationStop(Request,
+                                     AuthorizationStatusTypes.Authorized,
                                      SessionId,
                                      PartnerSessionId,
                                      ProviderId,
@@ -119,25 +129,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) NotAuthorized            (StatusCode, StatusCodeDescription = null, ...)
+        #region (static) NotAuthorized            (Request, StatusCode, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new OICP 'NotAuthorized' AuthorizationStop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCode">The status code of the operation.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop NotAuthorized(StatusCodes         StatusCode,
-                                                      String              StatusCodeDescription      = null,
-                                                      String              StatusCodeAdditionalInfo   = null,
-                                                      Session_Id?         SessionId                  = null,
-                                                      PartnerSession_Id?  PartnerSessionId           = null,
-                                                      Provider_Id?        ProviderId                 = null)
+        public static AuthorizationStop NotAuthorized(AuthorizeStopRequest  Request,
+                                                      StatusCodes           StatusCode,
+                                                      String                StatusCodeDescription      = null,
+                                                      String                StatusCodeAdditionalInfo   = null,
+                                                      Session_Id?           SessionId                  = null,
+                                                      PartnerSession_Id?    PartnerSessionId           = null,
+                                                      Provider_Id?          ProviderId                 = null)
 
-            => new AuthorizationStop(AuthorizationStatusTypes.NotAuthorized,
+            => new AuthorizationStop(Request,
+                                     AuthorizationStatusTypes.NotAuthorized,
                                      SessionId,
                                      PartnerSessionId,
                                      ProviderId,
@@ -149,23 +162,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) SessionIsInvalid         (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) SessionIsInvalid         (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
         /// Create a new OICP 'SessionIsInvalid' AuthorizationStop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop SessionIsInvalid(String              StatusCodeDescription      = null,
-                                                         String              StatusCodeAdditionalInfo   = null,
-                                                         Session_Id?         SessionId                  = null,
-                                                         PartnerSession_Id?  PartnerSessionId           = null,
-                                                         Provider_Id?        ProviderId                 = null)
+        public static AuthorizationStop SessionIsInvalid(AuthorizeStopRequest  Request,
+                                                         String                StatusCodeDescription      = null,
+                                                         String                StatusCodeAdditionalInfo   = null,
+                                                         Session_Id?           SessionId                  = null,
+                                                         PartnerSession_Id?    PartnerSessionId           = null,
+                                                         Provider_Id?          ProviderId                 = null)
 
-            => new AuthorizationStop(AuthorizationStatusTypes.NotAuthorized,
+            => new AuthorizationStop(Request,
+                                     AuthorizationStatusTypes.NotAuthorized,
                                      SessionId,
                                      PartnerSessionId,
                                      ProviderId,
@@ -177,23 +193,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) CommunicationToEVSEFailed(StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) CommunicationToEVSEFailed(Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
         /// Create a new OICP 'CommunicationToEVSEFailed' AuthorizationStop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop CommunicationToEVSEFailed(String              StatusCodeDescription      = null,
-                                                                  String              StatusCodeAdditionalInfo   = null,
-                                                                  Session_Id?         SessionId                  = null,
-                                                                  PartnerSession_Id?  PartnerSessionId           = null,
-                                                                  Provider_Id?        ProviderId                 = null)
+        public static AuthorizationStop CommunicationToEVSEFailed(AuthorizeStopRequest  Request,
+                                                                  String                StatusCodeDescription      = null,
+                                                                  String                StatusCodeAdditionalInfo   = null,
+                                                                  Session_Id?           SessionId                  = null,
+                                                                  PartnerSession_Id?    PartnerSessionId           = null,
+                                                                  Provider_Id?          ProviderId                 = null)
 
-            => new AuthorizationStop(AuthorizationStatusTypes.NotAuthorized,
+            => new AuthorizationStop(Request,
+                                     AuthorizationStatusTypes.NotAuthorized,
                                      SessionId,
                                      PartnerSessionId,
                                      ProviderId,
@@ -205,23 +224,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) NoEVConnectedToEVSE      (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) NoEVConnectedToEVSE      (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
         /// Create a new OICP 'NoEVConnectedToEVSE' AuthorizationStop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop NoEVConnectedToEVSE(String              StatusCodeDescription      = null,
-                                                            String              StatusCodeAdditionalInfo   = null,
-                                                            Session_Id?         SessionId                  = null,
-                                                            PartnerSession_Id?  PartnerSessionId           = null,
-                                                            Provider_Id?        ProviderId                 = null)
+        public static AuthorizationStop NoEVConnectedToEVSE(AuthorizeStopRequest  Request,
+                                                            String                StatusCodeDescription      = null,
+                                                            String                StatusCodeAdditionalInfo   = null,
+                                                            Session_Id?           SessionId                  = null,
+                                                            PartnerSession_Id?    PartnerSessionId           = null,
+                                                            Provider_Id?          ProviderId                 = null)
 
-            => new AuthorizationStop(AuthorizationStatusTypes.NotAuthorized,
+            => new AuthorizationStop(Request,
+                                     AuthorizationStatusTypes.NotAuthorized,
                                      SessionId,
                                      PartnerSessionId,
                                      ProviderId,
@@ -233,23 +255,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) EVSEAlreadyReserved      (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) EVSEAlreadyReserved      (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
         /// Create a new OICP 'EVSEAlreadyReserved' AuthorizationStop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop EVSEAlreadyReserved(String              StatusCodeDescription      = null,
-                                                            String              StatusCodeAdditionalInfo   = null,
-                                                            Session_Id?         SessionId                  = null,
-                                                            PartnerSession_Id?  PartnerSessionId           = null,
-                                                            Provider_Id?        ProviderId                 = null)
+        public static AuthorizationStop EVSEAlreadyReserved(AuthorizeStopRequest  Request,
+                                                            String                StatusCodeDescription      = null,
+                                                            String                StatusCodeAdditionalInfo   = null,
+                                                            Session_Id?           SessionId                  = null,
+                                                            PartnerSession_Id?    PartnerSessionId           = null,
+                                                            Provider_Id?          ProviderId                 = null)
 
-            => new AuthorizationStop(AuthorizationStatusTypes.NotAuthorized,
+            => new AuthorizationStop(Request,
+                                     AuthorizationStatusTypes.NotAuthorized,
                                      SessionId,
                                      PartnerSessionId,
                                      ProviderId,
@@ -261,23 +286,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) UnknownEVSEID            (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) UnknownEVSEID            (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
         /// Create a new OICP 'UnknownEVSEID' AuthorizationStop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop UnknownEVSEID(String              StatusCodeDescription      = null,
+        public static AuthorizationStop UnknownEVSEID(AuthorizeStopRequest  Request,
+                                                      String              StatusCodeDescription      = null,
                                                       String              StatusCodeAdditionalInfo   = null,
                                                       Session_Id?         SessionId                  = null,
                                                       PartnerSession_Id?  PartnerSessionId           = null,
                                                       Provider_Id?        ProviderId                 = null)
 
-            => new AuthorizationStop(AuthorizationStatusTypes.NotAuthorized,
+            => new AuthorizationStop(Request,
+                                     AuthorizationStatusTypes.NotAuthorized,
                                      SessionId,
                                      PartnerSessionId,
                                      ProviderId,
@@ -289,23 +317,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) EVSEOutOfService         (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) EVSEOutOfService         (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
         /// Create a new OICP 'EVSEOutOfService' AuthorizationStop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop EVSEOutOfService(String              StatusCodeDescription      = null,
-                                                         String              StatusCodeAdditionalInfo   = null,
-                                                         Session_Id?         SessionId                  = null,
-                                                         PartnerSession_Id?  PartnerSessionId           = null,
-                                                         Provider_Id?        ProviderId                 = null)
+        public static AuthorizationStop EVSEOutOfService(AuthorizeStopRequest  Request,
+                                                         String                StatusCodeDescription      = null,
+                                                         String                StatusCodeAdditionalInfo   = null,
+                                                         Session_Id?           SessionId                  = null,
+                                                         PartnerSession_Id?    PartnerSessionId           = null,
+                                                         Provider_Id?          ProviderId                 = null)
 
-            => new AuthorizationStop(AuthorizationStatusTypes.NotAuthorized,
+            => new AuthorizationStop(Request,
+                                     AuthorizationStatusTypes.NotAuthorized,
                                      SessionId,
                                      PartnerSessionId,
                                      ProviderId,
@@ -317,23 +348,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) ServiceNotAvailable      (StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) ServiceNotAvailable      (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
         /// Create a new OICP 'ServiceNotAvailable' AuthorizationStop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop ServiceNotAvailable(String              StatusCodeDescription      = null,
-                                                            String              StatusCodeAdditionalInfo   = null,
-                                                            Session_Id?         SessionId                  = null,
-                                                            PartnerSession_Id?  PartnerSessionId           = null,
-                                                            Provider_Id?        ProviderId                 = null)
+        public static AuthorizationStop ServiceNotAvailable(AuthorizeStopRequest  Request,
+                                                            String                StatusCodeDescription      = null,
+                                                            String                StatusCodeAdditionalInfo   = null,
+                                                            Session_Id?           SessionId                  = null,
+                                                            PartnerSession_Id?    PartnerSessionId           = null,
+                                                            Provider_Id?          ProviderId                 = null)
 
-            => new AuthorizationStop(AuthorizationStatusTypes.NotAuthorized,
+            => new AuthorizationStop(Request,
+                                     AuthorizationStatusTypes.NotAuthorized,
                                      SessionId,
                                      PartnerSessionId,
                                      ProviderId,
@@ -350,18 +384,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Create a new OICP 'DataError' AuthorizationStop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop DataError(String              StatusCodeDescription      = null,
-                                                  String              StatusCodeAdditionalInfo   = null,
-                                                  Session_Id?         SessionId                  = null,
-                                                  PartnerSession_Id?  PartnerSessionId           = null,
-                                                  Provider_Id?        ProviderId                 = null)
+        public static AuthorizationStop DataError(AuthorizeStopRequest  Request,
+                                                  String                StatusCodeDescription      = null,
+                                                  String                StatusCodeAdditionalInfo   = null,
+                                                  Session_Id?           SessionId                  = null,
+                                                  PartnerSession_Id?    PartnerSessionId           = null,
+                                                  Provider_Id?          ProviderId                 = null)
 
-            => new AuthorizationStop(AuthorizationStatusTypes.NotAuthorized,
+            => new AuthorizationStop(Request,
+                                     AuthorizationStatusTypes.NotAuthorized,
                                      SessionId,
                                      PartnerSessionId,
                                      ProviderId,
@@ -378,18 +415,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Create a new OICP 'SystemError' AuthorizationStop result.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop SystemError(String              StatusCodeDescription      = null,
-                                                    String              StatusCodeAdditionalInfo   = null,
-                                                    Session_Id?         SessionId                  = null,
-                                                    PartnerSession_Id?  PartnerSessionId           = null,
-                                                    Provider_Id?        ProviderId                 = null)
+        public static AuthorizationStop SystemError(AuthorizeStopRequest  Request,
+                                                    String                StatusCodeDescription      = null,
+                                                    String                StatusCodeAdditionalInfo   = null,
+                                                    Session_Id?           SessionId                  = null,
+                                                    PartnerSession_Id?    PartnerSessionId           = null,
+                                                    Provider_Id?          ProviderId                 = null)
 
-            => new AuthorizationStop(AuthorizationStatusTypes.NotAuthorized,
+            => new AuthorizationStop(Request,
+                                     AuthorizationStatusTypes.NotAuthorized,
                                      SessionId,
                                      PartnerSessionId,
                                      ProviderId,
@@ -443,25 +483,75 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse(AuthorizationStopXML)
+        #region (static) Parse   (Request, AuthorizationStopXML, CustomMapper = null, OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP authorization stop result.
         /// </summary>
+        /// <param name="Request">An AuthorizeStopRequest request.</param>
         /// <param name="AuthorizationStopXML">The XML to parse.</param>
-        public static AuthorizationStop Parse(XElement AuthorizationStopXML)
+        public static AuthorizationStop Parse(AuthorizeStopRequest                              Request,
+                                              XElement                                          AuthorizationStopXML,
+                                              CustomMapperDelegate<AuthorizationStop, Builder>  CustomMapper  = null,
+                                              OnExceptionDelegate                               OnException   = null)
+
+
         {
 
-            if (AuthorizationStopXML.Name != OICPNS.Authorization + "eRoamingAuthorizationStop")
-                throw new ArgumentException("Invalid eRoamingAuthorizationStop XML");
+            AuthorizationStop _AuthorizationStop;
 
-            return new AuthorizationStop(
-                           (AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), AuthorizationStopXML.ElementValueOrFail(OICPNS.Authorization + "AuthorizationStatus")),
-                           AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",         Session_Id.       Parse),
-                           AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",  PartnerSession_Id.Parse),
-                           AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "ProviderID",        Provider_Id.      Parse),
-                           AuthorizationStopXML.MapElement        (OICPNS.Authorization + "StatusCode",        StatusCode.       Parse)
-                       );
+            if (TryParse(Request, AuthorizationStopXML, out _AuthorizationStop, CustomMapper, OnException))
+                return _AuthorizationStop;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Request, AuthorizationStopXML, out AuthorizationStop, CustomMapper = null, OnException = null)
+
+        /// <summary>
+        /// Parse the given XML representation of an OICP authorization stop result.
+        /// </summary>
+        /// <param name="Request">An AuthorizeStopRequest request.</param>
+        /// <param name="AuthorizationStopXML">The XML to parse.</param>
+        public static Boolean TryParse(AuthorizeStopRequest                              Request,
+                                       XElement                                          AuthorizationStopXML,
+                                       out AuthorizationStop                             AuthorizationStop,
+                                       CustomMapperDelegate<AuthorizationStop, Builder>  CustomMapper  = null,
+                                       OnExceptionDelegate                               OnException   = null)
+
+
+        {
+
+            try
+            {
+
+                if (AuthorizationStopXML.Name != OICPNS.Authorization + "eRoamingAuthorizationStop")
+                    throw new ArgumentException("Invalid eRoamingAuthorizationStop XML");
+
+                AuthorizationStop = new AuthorizationStop(
+                                        Request,
+                                        (AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), AuthorizationStopXML.ElementValueOrFail(OICPNS.Authorization + "AuthorizationStatus")),
+                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",         Session_Id.       Parse),
+                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",  PartnerSession_Id.Parse),
+                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "ProviderID",        Provider_Id.      Parse),
+                                        AuthorizationStopXML.MapElement        (OICPNS.Authorization + "StatusCode",        StatusCode.       Parse)
+                                    );
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+
+                OnException?.Invoke(DateTime.Now, AuthorizationStopXML, e);
+
+                AuthorizationStop = null;
+                return false;
+
+            }
 
         }
 
@@ -495,6 +585,102 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             );
 
         #endregion
+
+
+        #region (override) ToString()
+
+        /// <summary>
+        /// Return a string representation of this object.
+        /// </summary>
+        public override String ToString()
+
+            => String.Concat("AuthorizationStop: " + Result + "; " + StatusCode.Code, " / ", StatusCode.Description, " / ", StatusCode.AdditionalInfo);
+
+        #endregion
+
+
+        public override bool Equals(AuthorizationStop AResponse)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public class Builder : ABuilder
+        {
+
+            #region Properties
+
+            public AuthorizeStopRequest        Request               { get; set; }
+
+            /// <summary>
+            /// The charging session identification.
+            /// </summary>
+            public Session_Id?                 SessionId             { get; set; }
+
+            /// <summary>
+            /// An optional partner charging session identification.
+            /// </summary>
+            public PartnerSession_Id?          PartnerSessionId      { get; set; }
+
+            /// <summary>
+            /// The e-mobility provider identification.
+            /// </summary>
+            public Provider_Id?                ProviderId            { get; set; }
+
+            /// <summary>
+            /// The authorization status, e.g. "Authorized".
+            /// </summary>
+            public AuthorizationStatusTypes    AuthorizationStatus   { get; set; }
+
+            /// <summary>
+            /// The authorization status code.
+            /// </summary>
+            public StatusCode                  StatusCode            { get; set; }
+
+            /// <summary>
+            /// The result of the operation.
+            /// </summary>
+            public Result                      Result                { get; set; }
+
+            public Dictionary<String, Object>  CustomData            { get; set; }
+
+            #endregion
+
+            public Builder(AuthorizationStop AuthorizationStop = null)
+            {
+
+                if (AuthorizationStop != null)
+                {
+
+                    this.Request              = AuthorizationStop.Request;
+                    this.SessionId            = AuthorizationStop.SessionId;
+                    this.PartnerSessionId     = AuthorizationStop.PartnerSessionId;
+                    this.ProviderId           = AuthorizationStop.ProviderId;
+                    this.AuthorizationStatus  = AuthorizationStop.AuthorizationStatus;
+                    this.StatusCode           = AuthorizationStop.StatusCode;
+                    this.Result               = AuthorizationStop.Result;
+                    this.CustomData           = new Dictionary<String, Object>();
+
+                    if (AuthorizationStop.CustomData != null)
+                        foreach (var item in AuthorizationStop.CustomData)
+                            CustomData.Add(item.Key, item.Value);
+
+                }
+
+            }
+
+
+            //public Acknowledgement<T> ToImmutable()
+
+            //    => new Acknowledgement<T>(Request,
+            //                              Result,
+            //                              StatusCode,
+            //                              SessionId,
+            //                              PartnerSessionId,
+            //                              CustomData);
+
+        }
+
 
     }
 

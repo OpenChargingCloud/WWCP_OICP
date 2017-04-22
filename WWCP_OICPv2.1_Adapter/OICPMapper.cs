@@ -1097,6 +1097,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         }
 
+        public static WWCP.EVSE_Id? ToWWCP(this EVSE_Id? EVSEId)
+        {
+
+            if (!EVSEId.HasValue)
+                return null;
+
+            WWCP.EVSE_Id WWCPEVSEId;
+
+            if (WWCP.EVSE_Id.TryParse(EVSEId.ToString(), out WWCPEVSEId))
+                return WWCPEVSEId;
+
+            return null;
+
+        }
+
 
         public static Session_Id ToOICP(this ChargingSession_Id SessionId)
             => Session_Id.Parse(SessionId.ToString());

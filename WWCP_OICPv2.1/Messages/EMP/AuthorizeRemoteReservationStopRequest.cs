@@ -171,9 +171,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="AuthorizeRemoteReservationStopXML">The XML to parse.</param>
         /// <param name="AuthorizeRemoteReservationStop">The parsed authorize remote reservation stop request.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                            AuthorizeRemoteReservationStopXML,
+        public static Boolean TryParse(XElement                                   AuthorizeRemoteReservationStopXML,
                                        out AuthorizeRemoteReservationStopRequest  AuthorizeRemoteReservationStop,
-                                       OnExceptionDelegate                 OnException  = null)
+                                       OnExceptionDelegate                        OnException  = null,
+
+                                       DateTime?                                  Timestamp           = null,
+                                       CancellationToken?                         CancellationToken   = null,
+                                       EventTracking_Id                           EventTrackingId     = null,
+                                       TimeSpan?                                  RequestTimeout      = null)
         {
 
             try
@@ -191,7 +196,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                           EVSE_Id.Parse),
 
                                                      AuthorizeRemoteReservationStopXML.MapValueOrNullable(OICPNS.Reservation + "PartnerSessionID",
-                                                                                                          PartnerSession_Id.Parse)
+                                                                                                          PartnerSession_Id.Parse),
+
+                                                     Timestamp,
+                                                     CancellationToken,
+                                                     EventTrackingId,
+                                                     RequestTimeout
 
                                                  );
 

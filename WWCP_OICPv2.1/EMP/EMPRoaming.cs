@@ -791,7 +791,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event sent whenever a authorize start request was received.
         /// </summary>
-        public event OnAuthorizeStartRequestHandler OnAuthorizeStartRequest
+        public event OnAuthorizeStartRequestDelegate OnAuthorizeStartRequest
         {
 
             add
@@ -827,7 +827,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An event sent whenever a authorize start response was sent.
         /// </summary>
-        public event OnAuthorizeStartResponseHandler OnAuthorizeStartResponse
+        public event OnAuthorizeStartResponseDelegate OnAuthorizeStartResponse
         {
 
             add
@@ -1700,8 +1700,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPRoaming(EMPClient               EMPClient,
                           EMPServer               EMPServer,
-                          String                  ServerLoggingContext   = EMPServerLogger.DefaultContext,
-                          LogfileCreatorDelegate  LogfileCreator  = null)
+                          String                  ServerLoggingContext  = EMPServerLogger.DefaultContext,
+                          LogfileCreatorDelegate  LogfileCreator        = null)
         {
 
             this.EMPClient        = EMPClient;
@@ -1747,6 +1747,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                           X509Certificate                      ClientCert                      = null,
                           String                               RemoteHTTPVirtualHost           = null,
                           String                               URIPrefix                       = EMPClient.DefaultURIPrefix,
+                          String                               EVSEDataURI                     = EMPClient.DefaultEVSEDataURI,
+                          String                               EVSEStatusURI                   = EMPClient.DefaultEVSEStatusURI,
+                          String                               AuthenticationDataURI           = EMPClient.DefaultAuthenticationDataURI,
+                          String                               ReservationURI                  = EMPClient.DefaultReservationURI,
+                          String                               AuthorizationURI                = EMPClient.DefaultAuthorizationURI,
                           String                               HTTPUserAgent                   = EMPClient.DefaultHTTPUserAgent,
                           TimeSpan?                            RequestTimeout                  = null,
 
@@ -1770,6 +1775,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                  ClientCert,
                                  RemoteHTTPVirtualHost,
                                  URIPrefix,
+                                 EVSEDataURI,
+                                 EVSEStatusURI,
+                                 AuthenticationDataURI,
+                                 ReservationURI,
+                                 AuthorizationURI,
                                  HTTPUserAgent,
                                  RequestTimeout,
                                  DNSClient,

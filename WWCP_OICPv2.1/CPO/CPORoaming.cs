@@ -227,6 +227,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
+
         #region OnAuthorizeStartRequest/-Response
 
         /// <summary>
@@ -455,6 +456,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
+
         #region OnPullAuthenticationDataRequest/-Response
 
         /// <summary>
@@ -532,89 +534,100 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
+
         // CPOServer methods
 
-        #region OnRemoteReservationStart/-Stop
+        #region OnAuthorizeRemoteReservationStart
 
         /// <summary>
-        /// An event sent whenever a remote reservation start command was received.
+        /// An event sent whenever an 'authorize remote reservation start' command was received.
         /// </summary>
-        public event OnRemoteReservationStartDelegate OnRemoteReservationStart
+        public event OnAuthorizeRemoteReservationStartDelegate OnAuthorizeRemoteReservationStart
         {
 
             add
             {
-                CPOServer.OnRemoteReservationStart += value;
+                CPOServer.OnAuthorizeRemoteReservationStart += value;
             }
 
             remove
             {
-                CPOServer.OnRemoteReservationStart -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event sent whenever a remote reservation stop command was received.
-        /// </summary>
-        public event OnRemoteReservationStopDelegate OnRemoteReservationStop
-
-        {
-
-            add
-            {
-                CPOServer.OnRemoteReservationStop += value;
-            }
-
-            remove
-            {
-                CPOServer.OnRemoteReservationStop -= value;
+                CPOServer.OnAuthorizeRemoteReservationStart -= value;
             }
 
         }
 
         #endregion
 
-        #region OnRemoteStart/-Stop
+        #region OnAuthorizeRemoteReservationStop
 
         /// <summary>
-        /// An event sent whenever a remote start command was received.
+        /// An event sent whenever an 'authorize remote reservation stop' command was received.
         /// </summary>
-        public event OnRemoteStartDelegate OnRemoteStart
-        {
-
-            add
-            {
-                CPOServer.OnRemoteStart += value;
-            }
-
-            remove
-            {
-                CPOServer.OnRemoteStart -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event sent whenever a remote stop command was received.
-        /// </summary>
-        public event OnRemoteStopDelegate OnRemoteStop
+        public event OnAuthorizeRemoteReservationStopDelegate OnAuthorizeRemoteReservationStop
 
         {
 
             add
             {
-                CPOServer.OnRemoteStop += value;
+                CPOServer.OnAuthorizeRemoteReservationStop += value;
             }
 
             remove
             {
-                CPOServer.OnRemoteStop -= value;
+                CPOServer.OnAuthorizeRemoteReservationStop -= value;
             }
 
         }
 
         #endregion
+
+
+        #region OnAuthorizeRemoteStart
+
+        /// <summary>
+        /// An event sent whenever an 'authorize remote start' command was received.
+        /// </summary>
+        public event OnAuthorizeRemoteStartDelegate OnAuthorizeRemoteStart
+        {
+
+            add
+            {
+                CPOServer.OnAuthorizeRemoteStart += value;
+            }
+
+            remove
+            {
+                CPOServer.OnAuthorizeRemoteStart -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region  OnAuthorizeRemoteStop
+
+        /// <summary>
+        /// An event sent whenever an 'authorize remote stop' command was received.
+        /// </summary>
+        public event OnAuthorizeRemoteStopDelegate OnAuthorizeRemoteStop
+
+        {
+
+            add
+            {
+                CPOServer.OnAuthorizeRemoteStop += value;
+            }
+
+            remove
+            {
+                CPOServer.OnAuthorizeRemoteStop -= value;
+            }
+
+        }
+
+        #endregion
+
 
 
         // Generic HTTP/SOAP server logging
@@ -688,8 +701,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
         #region Custom request mappers
-
-        #region CustomPushEVSEDataRequestMapper
 
         #region CustomPushEVSEDataRequestMapper
 
@@ -846,7 +857,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<AuthorizeStartRequest>, Acknowledgement<AuthorizeStartRequest>.Builder> CustomAuthorizeStartResponseMapper
+        public CustomMapperDelegate<AuthorizationStart, AuthorizationStart.Builder> CustomAuthorizeStartResponseMapper
         {
 
             get
@@ -903,7 +914,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<AuthorizeStopRequest>, Acknowledgement<AuthorizeStopRequest>.Builder> CustomAuthorizeStopResponseMapper
+        public CustomMapperDelegate<AuthorizationStop, AuthorizationStop.Builder> CustomAuthorizeStopResponseMapper
         {
 
             get
@@ -1037,8 +1048,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #endregion
-
         #region Constructor(s)
 
         #region CPORoaming(CPOClient, CPOServer, ServerLoggingContext = CPOServerLogger.DefaultContext, LogfileCreator = null)
@@ -1100,12 +1109,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                           X509Certificate                      ClientCert                      = null,
                           String                               RemoteHTTPVirtualHost           = null,
                           String                               URIPrefix                       = CPOClient.DefaultURIPrefix,
+                          String                               EVSEDataURI                     = CPOClient.DefaultEVSEDataURI,
+                          String                               EVSEStatusURI                   = CPOClient.DefaultEVSEStatusURI,
+                          String                               AuthorizationURI                = CPOClient.DefaultAuthorizationURI,
+                          String                               AuthenticationDataURI           = CPOClient.DefaultAuthenticationDataURI,
                           String                               HTTPUserAgent                   = CPOClient.DefaultHTTPUserAgent,
                           TimeSpan?                            RequestTimeout                  = null,
 
                           String                               ServerName                      = CPOServer.DefaultHTTPServerName,
                           IPPort                               ServerTCPPort                   = null,
                           String                               ServerURIPrefix                 = CPOServer.DefaultURIPrefix,
+                          String                               ServerAuthorizationURI          = CPOServer.DefaultAuthorizationURI,
+                          String                               ServerReservationURI            = CPOServer.DefaultReservationURI,
                           HTTPContentType                      ServerContentType               = null,
                           Boolean                              ServerRegisterHTTPRootService   = true,
                           Boolean                              ServerAutoStart                 = false,
@@ -1123,6 +1138,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                  ClientCert,
                                  RemoteHTTPVirtualHost,
                                  URIPrefix,
+                                 EVSEDataURI,
+                                 EVSEStatusURI,
+                                 AuthorizationURI,
+                                 AuthenticationDataURI,
                                  HTTPUserAgent,
                                  RequestTimeout,
                                  DNSClient,
@@ -1132,6 +1151,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    new CPOServer(ServerName,
                                  ServerTCPPort,
                                  ServerURIPrefix,
+                                 ServerAuthorizationURI,
+                                 ServerReservationURI,
                                  ServerContentType,
                                  ServerRegisterHTTPRootService,
                                  DNSClient,

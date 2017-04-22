@@ -180,7 +180,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #endregion
 
-                #region PullEVSEStatus/-ById
+                #region PullEVSEStatus
 
                 RegisterEvent("PullEVSEStatusRequest",
                               handler => EMPClient.OnPullEVSEStatusSOAPRequest += handler,
@@ -196,6 +196,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
+                #endregion
+
+                #region PullEVSEStatusById
 
                 RegisterEvent("PullEVSEStatusByIdRequest",
                               handler => EMPClient.OnPullEVSEStatusByIdSOAPRequest += handler,
@@ -212,6 +215,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     RegisterDefaultDiscLogTarget(this);
 
                 #endregion
+
 
                 #region PushAuthenticationData
 
@@ -230,6 +234,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     RegisterDefaultDiscLogTarget(this);
 
                 #endregion
+
 
                 #region ReservationStart/-Stop
 
@@ -296,6 +301,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     RegisterDefaultDiscLogTarget(this);
 
                 #endregion
+
 
                 #region GetChargeDetailRecords
 

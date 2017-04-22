@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        public Acknowledgement(TRequest                               Request,
+        public Acknowledgement(TRequest                        Request,
                                Session_Id                      SessionId,
                                PartnerSession_Id?              PartnerSessionId          = null,
                                String                          StatusCodeDescription     = null,
@@ -156,7 +156,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
-        public Acknowledgement(TRequest                               Request,
+        public Acknowledgement(TRequest                        Request,
                                StatusCodes                     StatusCode,
                                String                          StatusCodeDescription     = null,
                                String                          StatusCodeAdditionalInfo  = null,
@@ -176,6 +176,338 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         { }
 
         #endregion
+
+        #endregion
+
+
+        #region (static) Success(Request, SessionId = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'positive' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        public static Acknowledgement<TRequest>
+
+            Success(TRequest            Request,
+                    Session_Id?         SessionId                  = null,
+                    PartnerSession_Id?  PartnerSessionId           = null,
+                    String              StatusCodeDescription      = null,
+                    String              StatusCodeAdditionalInfo   = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 true,
+                                                 new StatusCode(
+                                                     StatusCodes.Success,
+                                                     StatusCodeDescription,
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 PartnerSessionId);
+
+        #endregion
+
+
+        #region (static) DataError                  (Request, StatusCodeDescription = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'DataError' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement<TRequest>
+
+            DataError(TRequest            Request,
+                      String              StatusCodeDescription      = null,
+                      String              StatusCodeAdditionalInfo   = null,
+                      Session_Id?         SessionId                  = null,
+                      PartnerSession_Id?  PartnerSessionId           = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 false,
+                                                 new StatusCode(
+                                                     StatusCodes.DataError,
+                                                     StatusCodeDescription ?? "Data Error!",
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 PartnerSessionId);
+
+        #endregion
+
+        #region (static) SystemError                (Request, StatusCodeDescription = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'SystemError' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement<TRequest>
+
+            SystemError(TRequest            Request,
+                        String              StatusCodeDescription      = null,
+                        String              StatusCodeAdditionalInfo   = null,
+                        Session_Id?         SessionId                  = null,
+                        PartnerSession_Id?  PartnerSessionId           = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 false,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     StatusCodeDescription ?? "System Error!",
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 PartnerSessionId);
+
+        #endregion
+
+        #region (static) ServiceNotAvailable        (Request, StatusCodeDescription = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'ServiceNotAvailable' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement<TRequest>
+
+            ServiceNotAvailable(TRequest            Request,
+                                String              StatusCodeDescription      = null,
+                                String              StatusCodeAdditionalInfo   = null,
+                                Session_Id?         SessionId                  = null,
+                                PartnerSession_Id?  PartnerSessionId           = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 false,
+                                                 new StatusCode(
+                                                     StatusCodes.ServiceNotAvailable,
+                                                     StatusCodeDescription ?? "Service not available!",
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 PartnerSessionId);
+
+        #endregion
+
+        #region (static) SessionIsInvalid           (Request, StatusCodeDescription = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'SessionIsInvalid' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement<TRequest>
+
+            SessionIsInvalid(TRequest            Request,
+                             String              StatusCodeDescription      = null,
+                             String              StatusCodeAdditionalInfo   = null,
+                             Session_Id?         SessionId                  = null,
+                             PartnerSession_Id?  PartnerSessionId           = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 false,
+                                                 new StatusCode(
+                                                     StatusCodes.SessionIsInvalid,
+                                                     StatusCodeDescription ?? "Session is invalid",
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 PartnerSessionId);
+
+        #endregion
+
+        #region (static) CommunicationToEVSEFailed  (Request, StatusCodeDescription = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'CommunicationToEVSEFailed' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement<TRequest>
+
+            CommunicationToEVSEFailed(TRequest            Request,
+                                      String              StatusCodeDescription      = null,
+                                      String              StatusCodeAdditionalInfo   = null,
+                                      Session_Id?         SessionId                  = null,
+                                      PartnerSession_Id?  PartnerSessionId           = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 false,
+                                                 new StatusCode(
+                                                     StatusCodes.CommunicationToEVSEFailed,
+                                                     StatusCodeDescription ?? "Communication to EVSE failed!",
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 PartnerSessionId);
+
+        #endregion
+
+        #region (static) EVSEAlreadyReserved        (Request, StatusCodeDescription = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'EVSEAlreadyReserved' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement<TRequest>
+
+            EVSEAlreadyReserved(TRequest            Request,
+                                String              StatusCodeDescription     = null,
+                                String              StatusCodeAdditionalInfo  = null,
+                                Session_Id?         SessionId                 = null,
+                                PartnerSession_Id?  PartnerSessionId          = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 false,
+                                                 new StatusCode(
+                                                     StatusCodes.EVSEAlreadyReserved,
+                                                     StatusCodeDescription ?? "EVSE already reserved!",
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 PartnerSessionId);
+
+        #endregion
+
+        #region (static) EVSEAlreadyInUse_WrongToken(Request, StatusCodeDescription = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'EVSEAlreadyInUse_WrongToken' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement<TRequest>
+
+            EVSEAlreadyInUse_WrongToken(TRequest            Request,
+                                        String              StatusCodeDescription     = null,
+                                        String              StatusCodeAdditionalInfo  = null,
+                                        Session_Id?         SessionId                 = null,
+                                        PartnerSession_Id?  PartnerSessionId          = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 false,
+                                                 new StatusCode(
+                                                     StatusCodes.EVSEAlreadyInUse_WrongToken,
+                                                     StatusCodeDescription ?? "EVSE is already in use!",
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 PartnerSessionId);
+
+        #endregion
+
+        #region (static) UnknownEVSEID              (Request, StatusCodeDescription = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'UnknownEVSEID' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement<TRequest>
+
+            UnknownEVSEID(TRequest            Request,
+                          String              StatusCodeDescription     = null,
+                          String              StatusCodeAdditionalInfo  = null,
+                          Session_Id?         SessionId                 = null,
+                          PartnerSession_Id?  PartnerSessionId          = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 false,
+                                                 new StatusCode(
+                                                     StatusCodes.UnknownEVSEID,
+                                                     StatusCodeDescription ?? "Unknown EVSE ID!",
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 PartnerSessionId);
+
+        #endregion
+
+        #region (static) EVSEOutOfService           (Request, StatusCodeDescription = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'EVSEOutOfService' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement<TRequest>
+
+            EVSEOutOfService(TRequest            Request,
+                             String              StatusCodeDescription     = null,
+                             String              StatusCodeAdditionalInfo  = null,
+                             Session_Id?         SessionId                 = null,
+                             PartnerSession_Id?  PartnerSessionId          = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 false,
+                                                 new StatusCode(
+                                                     StatusCodes.EVSEOutOfService,
+                                                     StatusCodeDescription ?? "EVSE out of service!",
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 PartnerSessionId);
+
+        #endregion
+
+        #region (static) NoValidContract            (Request, StatusCodeDescription = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'NoValidContract' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public static Acknowledgement<TRequest>
+
+            NoValidContract(TRequest            Request,
+                            String              StatusCodeDescription     = null,
+                            String              StatusCodeAdditionalInfo  = null,
+                            Session_Id?         SessionId                 = null,
+                            PartnerSession_Id?  PartnerSessionId          = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 false,
+                                                 new StatusCode(
+                                                     StatusCodes.NoValidContract,
+                                                     StatusCodeDescription ?? "No valid contract!",
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 PartnerSessionId);
 
         #endregion
 
@@ -250,16 +582,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse(XML)
+        #region (static)    Parse(Request, XML, CustomMapper = null, OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP acknowledgement.
         /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
         /// <param name="XML">The XML to parse.</param>
         public static Acknowledgement<TRequest> Parse(TRequest                                                  Request,
-                                               XElement                                           XML,
-                                               CustomMapperDelegate<Acknowledgement<TRequest>, Builder>  CustomMapper  = null,
-                                               OnExceptionDelegate                                OnException   = null)
+                                                      XElement                                                  XML,
+                                                      CustomMapperDelegate<Acknowledgement<TRequest>, Builder>  CustomMapper  = null,
+                                                      OnExceptionDelegate                                       OnException   = null)
         {
 
             Acknowledgement<TRequest> _Acknowledgement;
@@ -281,10 +614,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="XML">The XML to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement</param>
         public static Boolean TryParse(TRequest                                                  Request,
-                                       XElement                                           XML,
+                                       XElement                                                  XML,
                                        out Acknowledgement<TRequest>                             Acknowledgement,
                                        CustomMapperDelegate<Acknowledgement<TRequest>, Builder>  CustomMapper  = null,
-                                       OnExceptionDelegate                                OnException   = null)
+                                       OnExceptionDelegate                                       OnException   = null)
         {
 
             try

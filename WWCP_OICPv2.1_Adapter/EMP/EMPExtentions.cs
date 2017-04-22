@@ -81,26 +81,31 @@ namespace org.GraphDefined.WWCP
                                               I18NString                            Name,
 
                                               String                                RemoteHostname,
-                                              IPPort                                RemoteTCPPort                   = null,
-                                              RemoteCertificateValidationCallback   RemoteCertificateValidator      = null,
-                                              X509Certificate                       ClientCert                      = null,
-                                              String                                RemoteHTTPVirtualHost           = null,
-                                              String                                URIPrefix                       = OICPv2_1.EMP.EMPClient.DefaultURIPrefix,
-                                              String                                HTTPUserAgent                   = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                             QueryTimeout                    = null,
+                                              IPPort                                RemoteTCPPort                     = null,
+                                              RemoteCertificateValidationCallback   RemoteCertificateValidator        = null,
+                                              X509Certificate                       ClientCert                        = null,
+                                              String                                RemoteHTTPVirtualHost             = null,
+                                              String                                URIPrefix                         = OICPv2_1.EMP.EMPClient.DefaultURIPrefix,
+                                              String                                EVSEDataURI                       = OICPv2_1.EMP.EMPClient.DefaultEVSEDataURI,
+                                              String                                EVSEStatusURI                     = OICPv2_1.EMP.EMPClient.DefaultEVSEStatusURI,
+                                              String                                AuthenticationDataURI             = OICPv2_1.EMP.EMPClient.DefaultAuthenticationDataURI,
+                                              String                                ReservationURI                    = OICPv2_1.EMP.EMPClient.DefaultReservationURI,
+                                              String                                AuthorizationURI                  = OICPv2_1.EMP.EMPClient.DefaultAuthorizationURI,
+                                              String                                HTTPUserAgent                     = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
+                                              TimeSpan?                             QueryTimeout                      = null,
 
-                                              String                                ServerName                      = OICPv2_1.EMP.EMPServer.DefaultHTTPServerName,
-                                              IPPort                                ServerTCPPort                   = null,
-                                              String                                ServerURIPrefix                 = OICPv2_1.EMP.EMPServer.DefaultURIPrefix,
-                                              HTTPContentType                       ServerContentType               = null,
-                                              Boolean                               ServerRegisterHTTPRootService   = true,
-                                              Boolean                               ServerAutoStart                 = false,
+                                              String                                ServerName                        = OICPv2_1.EMP.EMPServer.DefaultHTTPServerName,
+                                              IPPort                                ServerTCPPort                     = null,
+                                              String                                ServerURIPrefix                   = OICPv2_1.EMP.EMPServer.DefaultURIPrefix,
+                                              HTTPContentType                       ServerContentType                 = null,
+                                              Boolean                               ServerRegisterHTTPRootService     = true,
+                                              Boolean                               ServerAutoStart                   = false,
 
-                                              String                                ClientLoggingContext            = OICPv2_1.EMP.EMPClient.EMPClientLogger.DefaultContext,
-                                              String                                ServerLoggingContext            = OICPv2_1.EMP.EMPServerLogger.DefaultContext,
-                                              LogfileCreatorDelegate                LogfileCreator                  = null,
+                                              String                                ClientLoggingContext              = OICPv2_1.EMP.EMPClient.EMPClientLogger.DefaultContext,
+                                              String                                ServerLoggingContext              = OICPv2_1.EMP.EMPServerLogger.DefaultContext,
+                                              LogfileCreatorDelegate                LogfileCreator                    = null,
 
-                                              OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE             = null,
+                                              OICPv2_1.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE               = null,
 
                                               OICPv2_1.EVSEOperatorFilterDelegate   EVSEOperatorFilter                = null,
 
@@ -116,10 +121,10 @@ namespace org.GraphDefined.WWCP
                                               GeoCoordinate?                        DefaultSearchCenter               = null,
                                               UInt64?                               DefaultDistanceKM                 = null,
 
-                                              DNSClient                             DNSClient                       = null,
+                                              DNSClient                             DNSClient                         = null,
 
-                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator                = null,
-                                              Action<IEMPRoamingProvider>           Configurator                    = null)
+                                              Action<OICPv2_1.EMP.WWCPEMPAdapter>   OICPConfigurator                  = null,
+                                              Action<IEMPRoamingProvider>           Configurator                      = null)
 
         {
 
@@ -149,6 +154,11 @@ namespace org.GraphDefined.WWCP
                                                                      ClientCert,
                                                                      RemoteHTTPVirtualHost,
                                                                      URIPrefix,
+                                                                     EVSEDataURI,
+                                                                     EVSEStatusURI,
+                                                                     AuthenticationDataURI,
+                                                                     ReservationURI,
+                                                                     AuthorizationURI,
                                                                      HTTPUserAgent,
                                                                      QueryTimeout,
 
@@ -236,6 +246,11 @@ namespace org.GraphDefined.WWCP
                                               X509Certificate                       ClientCert                        = null,
                                               String                                RemoteHTTPVirtualHost             = null,
                                               String                                URIPrefix                         = OICPv2_1.EMP.EMPClient.DefaultURIPrefix,
+                                              String                                EVSEDataURI                       = OICPv2_1.EMP.EMPClient.DefaultEVSEDataURI,
+                                              String                                EVSEStatusURI                     = OICPv2_1.EMP.EMPClient.DefaultEVSEStatusURI,
+                                              String                                AuthenticationDataURI             = OICPv2_1.EMP.EMPClient.DefaultAuthenticationDataURI,
+                                              String                                ReservationURI                    = OICPv2_1.EMP.EMPClient.DefaultReservationURI,
+                                              String                                AuthorizationURI                  = OICPv2_1.EMP.EMPClient.DefaultAuthorizationURI,
                                               String                                HTTPUserAgent                     = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
                                               TimeSpan?                             QueryTimeout                      = null,
 
@@ -299,6 +314,11 @@ namespace org.GraphDefined.WWCP
                                                                                                 ClientCert,
                                                                                                 RemoteHTTPVirtualHost,
                                                                                                 URIPrefix,
+                                                                                                EVSEDataURI,
+                                                                                                EVSEStatusURI,
+                                                                                                AuthenticationDataURI,
+                                                                                                ReservationURI,
+                                                                                                AuthorizationURI,
                                                                                                 HTTPUserAgent,
                                                                                                 QueryTimeout,
                                                                                                 DNSClient,

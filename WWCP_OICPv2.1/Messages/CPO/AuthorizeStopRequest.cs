@@ -223,7 +223,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                  AuthorizeStopXML,
                                        out AuthorizeStopRequest  AuthorizeStop,
-                                       OnExceptionDelegate       OnException  = null)
+                                       OnExceptionDelegate       OnException         = null,
+
+                                       DateTime?                 Timestamp           = null,
+                                       CancellationToken?        CancellationToken   = null,
+                                       EventTracking_Id          EventTrackingId     = null,
+                                       TimeSpan?                 RequestTimeout      = null)
         {
 
             try
@@ -255,7 +260,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                          EVSE_Id.Parse),
 
                                      AuthorizeStopXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",
-                                                                         PartnerSession_Id.Parse)
+                                                                         PartnerSession_Id.Parse),
+
+                                     Timestamp,
+                                     CancellationToken,
+                                     EventTrackingId,
+                                     RequestTimeout
 
                                  );
 
