@@ -768,7 +768,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         // EMPServer methods
 
-        #region OnAuthorizeStart
+        #region OnAuthorizeStart(SOAP)(Request/-Response)
 
         /// <summary>
         /// An event sent whenever a authorize start SOAP request was received.
@@ -862,7 +862,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region OnAuthorizeStop
+        #region OnAuthorizeStop(SOAP)(Request/-Response)
 
         /// <summary>
         /// An event sent whenever a authorize stop SOAP request was received.
@@ -956,7 +956,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region OnChargeDetailRecord
+        #region OnChargeDetailRecord(SOAP)(Request/-Response)
 
         /// <summary>
         /// An event sent whenever a charge detail record SOAP request was received.
@@ -1758,6 +1758,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                           String                               ServerName                      = EMPServer.DefaultHTTPServerName,
                           IPPort                               ServerTCPPort                   = null,
                           String                               ServerURIPrefix                 = EMPServer.DefaultURIPrefix,
+                          String                               ServerAuthorizationURI          = EMPServer.DefaultAuthorizationURI,
                           HTTPContentType                      ServerContentType               = null,
                           Boolean                              ServerRegisterHTTPRootService   = true,
                           Boolean                              ServerAutoStart                 = false,
@@ -1789,6 +1790,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                    new EMPServer(ServerName,
                                  ServerTCPPort,
                                  ServerURIPrefix,
+                                 ServerAuthorizationURI,
                                  ServerContentType,
                                  ServerRegisterHTTPRootService,
                                  DNSClient,

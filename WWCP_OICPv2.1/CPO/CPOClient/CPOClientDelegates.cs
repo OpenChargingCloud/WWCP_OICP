@@ -42,7 +42,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     public delegate Boolean IncludeEVSEStatusRecordsDelegate(EVSEStatusRecord  EVSEStatusRecord);
 
 
-    #region OnPushEVSEData/-Status
+    #region OnPushEVSEDataRequest/-Response
 
     /// <summary>
     /// A delegate called whenever new EVSE data record will be send upstream.
@@ -72,6 +72,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                         Acknowledgement<PushEVSEDataRequest>    Result,
                                                         TimeSpan                                Duration);
 
+    #endregion
+
+    #region OnPushEVSEStatusRequest/-Response
 
     /// <summary>
     /// A delegate called whenever new EVSE status will be send upstream.
@@ -103,68 +106,106 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
     #endregion
 
-    #region OnAuthorizeStart/-Stop
+
+    #region OnPullAuthenticationData
+
+    /// <summary>
+    /// A delegate called whenever a 'pull authentication data' request will be send.
+    /// </summary>
+    public delegate Task OnPullAuthenticationDataRequestHandler (DateTime                     LogTimestamp,
+                                                                 DateTime                     RequestTimestamp,
+                                                                 CPOClient                    Sender,
+                                                                 String                       SenderId,
+                                                                 EventTracking_Id             EventTrackingId,
+                                                                 Operator_Id                  OperatorId,
+                                                                 TimeSpan                     RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a 'pull authentication data' request had been received.
+    /// </summary>
+    public delegate Task OnPullAuthenticationDataResponseHandler(DateTime                     Timestamp,
+                                                                 CPOClient                    Sender,
+                                                                 String                       SenderId,
+                                                                 EventTracking_Id             EventTrackingId,
+                                                                 Operator_Id                  OperatorId,
+                                                                 TimeSpan                     RequestTimeout,
+                                                                 AuthenticationData           Result,
+                                                                 TimeSpan                     Duration);
+
+    #endregion
+
+
+    #region OnAuthorizeStartRequest/-Response
 
     /// <summary>
     /// A delegate called whenever an 'authorize start' request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeStartHandler  (DateTime                       LogTimestamp,
-                                                   DateTime                       RequestTimestamp,
-                                                   CPOClient                      Sender,
-                                                   String                         SenderId,
-                                                   Operator_Id                    OperatorId,
-                                                   UID                            UID,
-                                                   EVSE_Id?                       EVSEId,
-                                                   Session_Id?                    SessionId,
-                                                   PartnerProduct_Id?             PartnerProductId,
-                                                   PartnerSession_Id?             PartnerSessionId,
-                                                   TimeSpan                       RequestTimeout);
+    public delegate Task OnAuthorizeStartRequestHandler (DateTime                     LogTimestamp,
+                                                         DateTime                     RequestTimestamp,
+                                                         ICPOClient                   Sender,
+                                                         String                       SenderId,
+                                                         EventTracking_Id             EventTrackingId,
+                                                         Operator_Id                  OperatorId,
+                                                         UID                          UID,
+                                                         EVSE_Id?                     EVSEId,
+                                                         Session_Id?                  SessionId,
+                                                         PartnerProduct_Id?           PartnerProductId,
+                                                         PartnerSession_Id?           PartnerSessionId,
+                                                         TimeSpan                     RequestTimeout);
 
     /// <summary>
-    /// A delegate called whenever a response to a 'authorize start' request had been received.
+    /// A delegate called whenever a response to an 'authorize start' request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeStartedHandler(DateTime                     Timestamp,
-                                                   CPOClient                    Sender,
-                                                   String                       SenderId,
-                                                   Operator_Id                  OperatorId,
-                                                   UID                          UID,
-                                                   EVSE_Id?                     EVSEId,
-                                                   Session_Id?                  SessionId,
-                                                   PartnerProduct_Id?           PartnerProductId,
-                                                   PartnerSession_Id?           PartnerSessionId,
-                                                   TimeSpan                     RequestTimeout,
-                                                   AuthorizationStart           Result,
-                                                   TimeSpan                     Duration);
+    public delegate Task OnAuthorizeStartResponseHandler(DateTime                     LogTimestamp,
+                                                         DateTime                     RequestTimestamp,
+                                                         ICPOClient                   Sender,
+                                                         String                       SenderId,
+                                                         EventTracking_Id             EventTrackingId,
+                                                         Operator_Id                  OperatorId,
+                                                         UID                          UID,
+                                                         EVSE_Id?                     EVSEId,
+                                                         Session_Id?                  SessionId,
+                                                         PartnerProduct_Id?           PartnerProductId,
+                                                         PartnerSession_Id?           PartnerSessionId,
+                                                         TimeSpan                     RequestTimeout,
+                                                         AuthorizationStart           Result,
+                                                         TimeSpan                     Duration);
 
+    #endregion
+
+    #region OnAuthorizeStopRequest/-Response
 
     /// <summary>
     /// A delegate called whenever an 'authorize stop' request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeStopRequestHandler(DateTime                     LogTimestamp,
-                                                       DateTime                     RequestTimestamp,
-                                                       CPOClient                    Sender,
-                                                       String                       SenderId,
-                                                       Operator_Id                  OperatorId,
-                                                       Session_Id                   SessionId,
-                                                       UID                          UID,
-                                                       EVSE_Id?                     EVSEId,
-                                                       PartnerSession_Id?           PartnerSessionId,
-                                                       TimeSpan                     RequestTimeout);
+    public delegate Task OnAuthorizeStopRequestHandler (DateTime                      LogTimestamp,
+                                                        DateTime                      RequestTimestamp,
+                                                        ICPOClient                    Sender,
+                                                        String                        SenderId,
+                                                        EventTracking_Id              EventTrackingId,
+                                                        Operator_Id                   OperatorId,
+                                                        Session_Id                    SessionId,
+                                                        UID                           UID,
+                                                        EVSE_Id?                      EVSEId,
+                                                        PartnerSession_Id?            PartnerSessionId,
+                                                        TimeSpan                      RequestTimeout);
 
     /// <summary>
-    /// A delegate called whenever a response to a 'authorize stop' request had been received.
+    /// A delegate called whenever a response to an 'authorize stop' request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeStopResponseHandler(DateTime                    Timestamp,
-                                                        CPOClient                   Sender,
-                                                        String                      SenderId,
-                                                        Operator_Id                 OperatorId,
-                                                        Session_Id                  SessionId,
-                                                        UID                         UID,
-                                                        EVSE_Id?                    EVSEId,
-                                                        PartnerSession_Id?          PartnerSessionId,
-                                                        TimeSpan                    RequestTimeout,
-                                                        AuthorizationStop           Result,
-                                                        TimeSpan                    Duration);
+    public delegate Task OnAuthorizeStopResponseHandler(DateTime                      LogTimestamp,
+                                                        DateTime                      RequestTimestamp,
+                                                        ICPOClient                    Sender,
+                                                        String                        SenderId,
+                                                        EventTracking_Id              EventTrackingId,
+                                                        Operator_Id                   OperatorId,
+                                                        Session_Id                    SessionId,
+                                                        UID                           UID,
+                                                        EVSE_Id?                      EVSEId,
+                                                        PartnerSession_Id?            PartnerSessionId,
+                                                        TimeSpan                      RequestTimeout,
+                                                        AuthorizationStop             Result,
+                                                        TimeSpan                      Duration);
 
     #endregion
 
@@ -193,33 +234,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                  TimeSpan                                         RequestTimeout,
                                                                  Acknowledgement<SendChargeDetailRecordRequest>   Result,
                                                                  TimeSpan                                         Duration);
-
-    #endregion
-
-    #region OnPullAuthenticationData
-
-    /// <summary>
-    /// A delegate called whenever a 'pull authentication data' request will be send.
-    /// </summary>
-    public delegate Task OnPullAuthenticationDataRequestHandler (DateTime                     LogTimestamp,
-                                                                 DateTime                     RequestTimestamp,
-                                                                 CPOClient                    Sender,
-                                                                 String                       SenderId,
-                                                                 EventTracking_Id             EventTrackingId,
-                                                                 Operator_Id                  OperatorId,
-                                                                 TimeSpan                     RequestTimeout);
-
-    /// <summary>
-    /// A delegate called whenever a response for a 'pull authentication data' request had been received.
-    /// </summary>
-    public delegate Task OnPullAuthenticationDataResponseHandler(DateTime                     Timestamp,
-                                                                 CPOClient                    Sender,
-                                                                 String                       SenderId,
-                                                                 EventTracking_Id             EventTrackingId,
-                                                                 Operator_Id                  OperatorId,
-                                                                 TimeSpan                     RequestTimeout,
-                                                                 AuthenticationData           Result,
-                                                                 TimeSpan                     Duration);
 
     #endregion
 

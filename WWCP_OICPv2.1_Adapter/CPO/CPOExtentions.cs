@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_1.CPO.EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
                                               OICPv2_1.CPO.ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
-                                              ChargingStationOperator                                         DefaultOperator                                 = null,
+                                              ChargingStationOperatorProxy                                         DefaultOperator                                 = null,
                                               OperatorIdFormats                                               DefaultOperatorIdFormat                         = OperatorIdFormats.ISO_STAR,
                                               ChargingStationOperatorNameSelectorDelegate                     OperatorNameSelector                            = null,
                                               IncludeEVSEDelegate                                             IncludeEVSEs                                    = null,
@@ -299,7 +299,7 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_1.CPO.EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
                                               OICPv2_1.CPO.ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
-                                              ChargingStationOperator                                         DefaultOperator                                 = null,
+                                              ChargingStationOperatorProxy                                         DefaultOperator                                 = null,
                                               OperatorIdFormats                                               DefaultOperatorIdFormat                         = OperatorIdFormats.ISO_STAR,
                                               ChargingStationOperatorNameSelectorDelegate                     OperatorNameSelector                            = null,
                                               IncludeEVSEDelegate                                             IncludeEVSEs                                    = null,

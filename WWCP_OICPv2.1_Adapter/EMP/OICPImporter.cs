@@ -102,7 +102,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                   #region Data
 
-                                                  ChargingStationOperator     _EVSEOperator         = null;
+                                                  ChargingStationOperatorProxy     _EVSEOperator         = null;
                                                   ChargingPool     _ChargingPool         = null;
                                                   ChargingStation  _ChargingStation      = null;
                                                   EVSE             _EVSE                 = null;

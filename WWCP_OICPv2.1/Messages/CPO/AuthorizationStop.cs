@@ -594,7 +594,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public override String ToString()
 
-            => String.Concat("AuthorizationStop: " + Result + "; " + StatusCode.Code, " / ", StatusCode.Description, " / ", StatusCode.AdditionalInfo);
+            => String.Concat(AuthorizationStatus,
+
+                             StatusCode != null
+                                 ? "; " + StatusCode.Code +
+
+                                       (StatusCode.Description.IsNotNullOrEmpty()
+                                            ? " / " + StatusCode.Description
+                                            : "") +
+
+                                       (StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                            ? " / " + StatusCode.AdditionalInfo
+                                            : "")
+                                 : "");
 
         #endregion
 

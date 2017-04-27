@@ -176,14 +176,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="ChargeDetailRecord">A charge detail record.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
-    public delegate Task<Acknowledgement>
+    public delegate Task<Acknowledgement<CPO.SendChargeDetailRecordRequest>>
 
-        OnChargeDetailRecordDelegate       (DateTime              Timestamp,
-                                            EMPServer             Sender,
-                                            CancellationToken     CancellationToken,
-                                            EventTracking_Id      EventTrackingId,
-                                            ChargeDetailRecord    ChargeDetailRecord,
-                                            TimeSpan?             RequestTimeout);
+        OnChargeDetailRecordDelegate       (DateTime                           Timestamp,
+                                            EMPServer                          Sender,
+                                            CPO.SendChargeDetailRecordRequest  Request);
 
 
     /// <summary>
@@ -191,14 +188,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// </summary>
     public delegate Task
 
-        OnChargeDetailRecordResponseHandler(DateTime              Timestamp,
-                                            EMPServer             Sender,
-                                            String                SenderId,
-                                            EventTracking_Id      EventTrackingId,
-                                            ChargeDetailRecord    ChargeDetailRecord,
-                                            TimeSpan              RequestTimeout,
-                                            Acknowledgement       Result,
-                                            TimeSpan              Duration);
+        OnChargeDetailRecordResponseHandler(DateTime                                              Timestamp,
+                                            EMPServer                                             Sender,
+                                            String                                                SenderId,
+                                            EventTracking_Id                                      EventTrackingId,
+                                            ChargeDetailRecord                                    ChargeDetailRecord,
+                                            TimeSpan                                              RequestTimeout,
+                                            Acknowledgement<CPO.SendChargeDetailRecordRequest>    Result,
+                                            TimeSpan                                              Duration);
 
     #endregion
 

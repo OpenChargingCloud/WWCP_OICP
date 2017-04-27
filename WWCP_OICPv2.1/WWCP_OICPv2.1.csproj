@@ -138,7 +138,6 @@
     <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />
     <Compile Include="DataTypes\Enums\GeoCoordinatesResponseFormats.cs" />
     <Compile Include="DataTypes\EVSEDataRecord.cs" />
-    <Compile Include="DataTypes\EVSEMatch.cs" />
     <Compile Include="DataTypes\EVSEStatusRecord.cs" />
     <Compile Include="DataTypes\OperatorEVSEData.cs" />
     <Compile Include="DataTypes\OperatorEVSEStatus.cs" />
@@ -150,7 +149,6 @@
     <Compile Include="DataTypes\ChargeDetailRecord.cs" />
     <Compile Include="Messages\EMP\GetChargeDetailRecordsResponse.cs" />
     <Compile Include="DataTypes\EVSEData.cs" />
-    <Compile Include="DataTypes\EVSESearchResult.cs" />
     <Compile Include="DataTypes\EVSEStatus.cs" />
     <Compile Include="DataTypes\EVSEStatusById.cs" />
     <Compile Include="DataTypes\MobileAuthorizationStart.cs" />

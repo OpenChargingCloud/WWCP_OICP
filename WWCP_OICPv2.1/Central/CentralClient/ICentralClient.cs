@@ -49,8 +49,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         Task<HTTPResponse<Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>>>
             AuthorizeRemoteReservationStop (EMP.AuthorizeRemoteReservationStopRequest  Request);
 
-        Task<HTTPResponse<Acknowledgement>> AuthorizeRemoteStart(Provider_Id ProviderId, EVSE_Id EVSEId, EVCO_Id EVCOId, Session_Id? SessionId = default(Session_Id?), PartnerProduct_Id? ChargingProductId = default(PartnerProduct_Id?), PartnerSession_Id? PartnerSessionId = default(PartnerSession_Id?), TimeSpan? RequestTimeout = default(TimeSpan?));
-        Task<HTTPResponse<Acknowledgement>> AuthorizeRemoteStop(Session_Id SessionId, Provider_Id ProviderId, EVSE_Id EVSEId, PartnerSession_Id? PartnerSessionId = default(PartnerSession_Id?), TimeSpan? RequestTimeout = default(TimeSpan?));
+        Task<HTTPResponse<Acknowledgement<EMP.AuthorizeRemoteStartRequest>>>
+            AuthorizeRemoteStart(EMP.AuthorizeRemoteStartRequest Request);
+
+        Task<HTTPResponse<Acknowledgement<EMP.AuthorizeRemoteStopRequest>>>
+            AuthorizeRemoteStop (EMP.AuthorizeRemoteStopRequest  Request);
 
     }
 

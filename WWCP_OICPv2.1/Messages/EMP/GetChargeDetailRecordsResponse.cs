@@ -42,9 +42,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         public IEnumerable<ChargeDetailRecord>  ChargeDetailRecords   { get; }
 
+
+        public StatusCode                       StatusCode            { get; }
+
         #endregion
 
         #region Constructor(s)
+
+        #region GetChargeDetailRecordsResponse(Request, ChargeDetailRecords, ...)
 
         /// <summary>
         /// Create a new group of OICP Charge Detail Records.
@@ -52,6 +57,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="ChargeDetailRecords">An enumeration of charge detail records.</param>
         public GetChargeDetailRecordsResponse(GetChargeDetailRecordsRequest    Request,
                                               IEnumerable<ChargeDetailRecord>  ChargeDetailRecords,
+                                              StatusCode                       StatusCode    = null,
                                               CustomMapper2Delegate<Builder>   CustomMapper  = null)
 
             : base(Request)
@@ -66,6 +72,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #endregion
 
             this.ChargeDetailRecords  = ChargeDetailRecords;
+            this.StatusCode           = StatusCode;
 
             if (CustomMapper != null)
             {
@@ -78,6 +85,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
 
         }
+
+        #endregion
+
+        #region GetChargeDetailRecordsResponse(StatusCode, ...)
+
+        /// <summary>
+        /// Create a new OICP 'negative' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCode">The status code of the operation.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        public GetChargeDetailRecordsResponse(GetChargeDetailRecordsRequest   Request,
+                                              StatusCodes                     StatusCode,
+                                              String                          StatusCodeDescription     = null,
+                                              String                          StatusCodeAdditionalInfo  = null,
+                                              CustomMapper2Delegate<Builder>  CustomMapper              = null)
+
+            : this(Request,
+                   null,
+                   new StatusCode(StatusCode,
+                                  StatusCodeDescription,
+                                  StatusCodeAdditionalInfo),
+                   CustomMapper)
+
+        { }
+
+        #endregion
 
         #endregion
 
@@ -129,6 +166,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                        ChargeDetailRecordsXML.MapElements(OICPNS.Authorization + "eRoamingChargeDetailRecord",
                                                           (XML, e) => ChargeDetailRecord.Parse(XML, CustomChargeDetailRecordMapper, e),
                                                           OnException),
+
+                       null,
 
                        responsebuilder => CustomObjectMapper != null
                                               ? CustomObjectMapper(ChargeDetailRecordsXML, responsebuilder)

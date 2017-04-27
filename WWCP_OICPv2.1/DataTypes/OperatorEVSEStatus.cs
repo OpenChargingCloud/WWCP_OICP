@@ -114,8 +114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-
-        #region (static) Parse(OperatorEVSEDataXMLs)
+        #region (static) Parse(OperatorEVSEStatusXMLs)
 
         public static IEnumerable<OperatorEVSEStatus> Parse(IEnumerable<XElement> OperatorEVSEStatusXMLs)
         {
@@ -145,6 +144,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+
+        // ToXML()
+
+
+        // ToString()
 
     }
 

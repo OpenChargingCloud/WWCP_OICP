@@ -188,6 +188,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+
+        // ToXML()
+
+
+        // ToString()
+
+
     }
 
 }

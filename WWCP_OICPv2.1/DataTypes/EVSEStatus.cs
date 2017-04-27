@@ -65,7 +65,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #region Initial checks
 
             if (OperatorEVSEStatus == null)
-                throw new ArgumentNullException(nameof(OperatorEVSEStatus),  "The given operator EVSE status must not be null!");
+                throw new ArgumentNullException(nameof(OperatorEVSEStatus),  "The given OperatorEVSEStatus must not be null!");
 
             #endregion
 
@@ -188,6 +188,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
+
+
+        // ToXML()
+
+
+        // ToString()
 
 
     }

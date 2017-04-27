@@ -151,14 +151,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                           SendChargeDetailRecordXML,
                                        out SendChargeDetailRecordRequest  SendChargeDetailRecord,
-                                       OnExceptionDelegate                OnException  = null)
+                                       OnExceptionDelegate                OnException         = null,
+
+                                       DateTime?                          Timestamp           = null,
+                                       CancellationToken?                 CancellationToken   = null,
+                                       EventTracking_Id                   EventTrackingId     = null,
+                                       TimeSpan?                          RequestTimeout      = null)
+
         {
 
             try
             {
 
                 SendChargeDetailRecord = new SendChargeDetailRecordRequest(
-                                             ChargeDetailRecord.Parse(SendChargeDetailRecordXML)
+                                             ChargeDetailRecord.Parse(SendChargeDetailRecordXML),
+                                             Timestamp,
+                                             CancellationToken,
+                                             EventTrackingId,
+                                             RequestTimeout
                                          );
 
                 return true;

@@ -147,7 +147,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse(eRoamingEVSEDataXML, OnException = null)
+        #region (static) Parse(EVSEDataXML, OnException = null)
 
         /// <summary>
         /// Parse the givem XML as EVSE data records or a status code.
@@ -185,6 +185,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         }
 
         #endregion
+
+
+        // ToXML()
+
+
+        // ToString()
 
 
     }

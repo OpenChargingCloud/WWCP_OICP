@@ -19,8 +19,6 @@
 
 using System;
 using System.Linq;
-using System.Xml.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -45,27 +43,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// The default HTTP/SOAP/XML server name.
         /// </summary>
-        public new const           String           DefaultHTTPServerName  = "GraphDefined OICP " + Version.Number + " HTTP/SOAP/XML EMP API";
+        public new const           String           DefaultHTTPServerName      = "GraphDefined OICP " + Version.Number + " HTTP/SOAP/XML EMP API";
 
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
         /// </summary>
-        public new static readonly IPPort           DefaultHTTPServerPort  = new IPPort(2003);
+        public new static readonly IPPort           DefaultHTTPServerPort      = new IPPort(2003);
 
         /// <summary>
         /// The default HTTP/SOAP/XML server URI prefix.
         /// </summary>
-        public new const           String           DefaultURIPrefix       = "";
+        public new const           String           DefaultURIPrefix           = "";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP authorization requests.
+        /// </summary>
+        public     const           String           DefaultAuthorizationURI    = "/Authorization";
 
         /// <summary>
         /// The default HTTP/SOAP/XML content type.
         /// </summary>
-        public new static readonly HTTPContentType  DefaultContentType     = HTTPContentType.XMLTEXT_UTF8;
+        public new static readonly HTTPContentType  DefaultContentType         = HTTPContentType.XMLTEXT_UTF8;
 
         /// <summary>
         /// The default request timeout.
         /// </summary>
-        public new static readonly TimeSpan         DefaultRequestTimeout  = TimeSpan.FromMinutes(1);
+        public new static readonly TimeSpan         DefaultRequestTimeout      = TimeSpan.FromMinutes(1);
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP authorization requests.
+        /// </summary>
+        public String  AuthorizationURI    { get; }
 
         #endregion
 
@@ -174,13 +186,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
-        public EMPServer(String          HTTPServerName           = DefaultHTTPServerName,
-                         IPPort          TCPPort                  = null,
-                         String          URIPrefix                = DefaultURIPrefix,
-                         HTTPContentType ContentType              = null,
-                         Boolean         RegisterHTTPRootService  = true,
-                         DNSClient       DNSClient                = null,
-                         Boolean         AutoStart                = false)
+        public EMPServer(String          HTTPServerName            = DefaultHTTPServerName,
+                         IPPort          TCPPort                   = null,
+                         String          URIPrefix                 = DefaultURIPrefix,
+                         String          AuthorizationURI          = DefaultAuthorizationURI,
+                         HTTPContentType ContentType               = null,
+                         Boolean         RegisterHTTPRootService   = true,
+                         DNSClient       DNSClient                 = null,
+                         Boolean         AutoStart                 = false)
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    TCPPort     ?? DefaultHTTPServerPort,
@@ -191,6 +204,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                    AutoStart: false)
 
         {
+
+            this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
+
+            RegisterURITemplates();
 
             if (AutoStart)
                 Start();
@@ -206,13 +223,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="SOAPServer">A SOAP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
-        public EMPServer(SOAPServer  SOAPServer,
-                         String      URIPrefix  = DefaultURIPrefix)
+        public EMPServer(SOAPServer SOAPServer,
+                         String     URIPrefix          = DefaultURIPrefix,
+                         String     AuthorizationURI   = DefaultAuthorizationURI)
 
             : base(SOAPServer,
                    URIPrefix)
 
-        { }
+        {
+
+            this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
+
+            RegisterURITemplates();
+
+        }
 
         #endregion
 
@@ -224,13 +248,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// Register all URI templates for this SOAP API.
         /// </summary>
-        protected override void RegisterURITemplates()
+        protected void RegisterURITemplates()
         {
 
             #region /Authorization - AuthorizeStart
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + "/Authorization",
+                                            URIPrefix + AuthorizationURI,
                                             "AuthorizeStart",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart").FirstOrDefault(),
                                             async (HTTPRequest, AuthorizeStartXML) => {
@@ -246,9 +270,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 try
                 {
 
-                    OnAuthorizeStartSOAPRequest?.Invoke(StartTime,
-                                                        this.SOAPServer,
-                                                        HTTPRequest);
+                    if (OnAuthorizeStartSOAPRequest != null)
+                        await Task.WhenAll(OnAuthorizeStartSOAPRequest.GetInvocationList().
+                                           Cast<RequestLogHandler>().
+                                           Select(e => e(StartTime,
+                                                         SOAPServer,
+                                                         HTTPRequest))).
+                                           ConfigureAwait(false);
 
                 }
                 catch (Exception e)
@@ -273,18 +301,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     try
                     {
 
-                        OnAuthorizeStartRequest?.Invoke(StartTime,
-                                                        AuthorizeStartRequest.Timestamp.Value,
-                                                        this,
-                                                        nameof(EMPServer),   // ClientId
-                                                        AuthorizeStartRequest.EventTrackingId,
-                                                        AuthorizeStartRequest.OperatorId,
-                                                        AuthorizeStartRequest.UID,
-                                                        AuthorizeStartRequest.EVSEId,
-                                                        AuthorizeStartRequest.SessionId,
-                                                        AuthorizeStartRequest.PartnerProductId,
-                                                        AuthorizeStartRequest.PartnerSessionId,
-                                                        AuthorizeStartRequest.RequestTimeout.HasValue ? AuthorizeStartRequest.RequestTimeout.Value : DefaultRequestTimeout);
+                        if (OnAuthorizeStartRequest != null)
+                            await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
+                                               Cast<OnAuthorizeStartRequestDelegate>().
+                                               Select(e => e(StartTime,
+                                                              AuthorizeStartRequest.Timestamp.Value,
+                                                              this,
+                                                              nameof(EMPServer),   // ClientId
+                                                              AuthorizeStartRequest.EventTrackingId,
+                                                              AuthorizeStartRequest.OperatorId,
+                                                              AuthorizeStartRequest.UID,
+                                                              AuthorizeStartRequest.EVSEId,
+                                                              AuthorizeStartRequest.SessionId,
+                                                              AuthorizeStartRequest.PartnerProductId,
+                                                              AuthorizeStartRequest.PartnerSessionId,
+                                                              AuthorizeStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                               ConfigureAwait(false);
 
                     }
                     catch (Exception e)
@@ -296,36 +328,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     #region Call async subscribers
 
-                    if (AuthorizationStart == null)
+                    if (OnAuthorizeStart != null)
                     {
 
-                        var results = OnAuthorizeStart?.
-                                      GetInvocationList()?.
-                                      SafeSelect(subscriber => (subscriber as OnAuthorizeStartDelegate)
-                                          (DateTime.Now,
-                                           this,
-                                           AuthorizeStartRequest)).
-                                      ToArray();
+                        var results = await Task.WhenAll(OnAuthorizeStart.GetInvocationList().
+                                                             Cast<OnAuthorizeStartDelegate>().
+                                                             Select(e => e(DateTime.Now,
+                                                                           this,
+                                                                           AuthorizeStartRequest))).
+                                                             ConfigureAwait(false);
 
-                        if (results.Length > 0)
-                        {
-
-                            await Task.WhenAll(results);
-
-                            AuthorizationStart = results.FirstOrDefault()?.Result;
-
-                        }
-
-                        if (results.Length == 0 || AuthorizationStart == null)
-                            AuthorizationStart = CPO.AuthorizationStart.SystemError(
-                                           AuthorizeStartRequest,
-                                           "Could not process the incoming AuthorizationStart request!",
-                                           null,
-                                           AuthorizeStartRequest.SessionId,
-                                           AuthorizeStartRequest.PartnerSessionId
-                                       );
+                        AuthorizationStart = results.FirstOrDefault();
 
                     }
+
+                    if (AuthorizationStart == null)
+                        AuthorizationStart = CPO.AuthorizationStart.SystemError(
+                                       AuthorizeStartRequest,
+                                       "Could not process the incoming AuthorizationStart request!",
+                                       null,
+                                       AuthorizeStartRequest.SessionId,
+                                       AuthorizeStartRequest.PartnerSessionId
+                                   );
 
                     #endregion
 
@@ -336,19 +360,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     try
                     {
 
-                        OnAuthorizeStartResponse?.Invoke(EndTime,
-                                                         this,
-                                                         nameof(EMPServer),   // ClientId
-                                                         AuthorizeStartRequest.EventTrackingId,
-                                                         AuthorizeStartRequest.OperatorId,
-                                                         AuthorizeStartRequest.UID,
-                                                         AuthorizeStartRequest.EVSEId,
-                                                         AuthorizeStartRequest.SessionId,
-                                                         AuthorizeStartRequest.PartnerProductId,
-                                                         AuthorizeStartRequest.PartnerSessionId,
-                                                         AuthorizeStartRequest.RequestTimeout.HasValue ? AuthorizeStartRequest.RequestTimeout.Value : DefaultRequestTimeout,
-                                                         AuthorizationStart,
-                                                         EndTime - StartTime);
+                        if (OnAuthorizeStartResponse != null)
+                            await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
+                                               Cast<OnAuthorizeStartResponseDelegate>().
+                                               Select(e => e(EndTime,
+                                                             this,
+                                                             nameof(EMPServer),   // ClientId
+                                                             AuthorizeStartRequest.EventTrackingId,
+                                                             AuthorizeStartRequest.OperatorId,
+                                                             AuthorizeStartRequest.UID,
+                                                             AuthorizeStartRequest.EVSEId,
+                                                             AuthorizeStartRequest.SessionId,
+                                                             AuthorizeStartRequest.PartnerProductId,
+                                                             AuthorizeStartRequest.PartnerSessionId,
+                                                             AuthorizeStartRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                             AuthorizationStart,
+                                                             EndTime - StartTime))).
+                                               ConfigureAwait(false);
 
                     }
                     catch (Exception e)
@@ -378,10 +406,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 try
                 {
 
-                    OnAuthorizeStartSOAPResponse?.Invoke(HTTPResponse.Timestamp,
-                                                         this.SOAPServer,
+                    if (OnAuthorizeStartSOAPResponse != null)
+                        await Task.WhenAll(OnAuthorizeStartSOAPResponse.GetInvocationList().
+                                           Cast<AccessLogHandler>().
+                                           Select(e => e(HTTPResponse.Timestamp,
+                                                         SOAPServer,
                                                          HTTPRequest,
-                                                         HTTPResponse);
+                                                         HTTPResponse))).
+                                           ConfigureAwait(false);
 
                 }
                 catch (Exception e)
@@ -390,7 +422,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 }
 
                 #endregion
-
 
                 return HTTPResponse;
 
@@ -401,7 +432,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region /Authorization - AuthorizeStop
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + "/Authorization",
+                                            URIPrefix + AuthorizationURI,
                                             "AuthorizeStop",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop").FirstOrDefault(),
                                             async (HTTPRequest, AuthorizeStopXML) => {
@@ -417,9 +448,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 try
                 {
 
-                    OnAuthorizeStopSOAPRequest?.Invoke(StartTime,
-                                                       this.SOAPServer,
-                                                       HTTPRequest);
+                    if (OnAuthorizeStopSOAPRequest != null)
+                        await Task.WhenAll(OnAuthorizeStopSOAPRequest.GetInvocationList().
+                                           Cast<RequestLogHandler>().
+                                           Select(e => e(StartTime,
+                                                         SOAPServer,
+                                                         HTTPRequest))).
+                                           ConfigureAwait(false);
 
                 }
                 catch (Exception e)
@@ -444,17 +479,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     try
                     {
 
-                        OnAuthorizeStopRequest?.Invoke(StartTime,
-                                                       AuthorizeStopRequest.Timestamp.Value,
-                                                       this,
-                                                       nameof(EMPServer),   // ClientId
-                                                       AuthorizeStopRequest.EventTrackingId,
-                                                       AuthorizeStopRequest.SessionId,
-                                                       AuthorizeStopRequest.PartnerSessionId,
-                                                       AuthorizeStopRequest.OperatorId,
-                                                       AuthorizeStopRequest.EVSEId,
-                                                       AuthorizeStopRequest.UID,
-                                                       AuthorizeStopRequest.RequestTimeout.HasValue ? AuthorizeStopRequest.RequestTimeout.Value : DefaultRequestTimeout);
+                        if (OnAuthorizeStopRequest != null)
+                            await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
+                                               Cast<OnAuthorizeStopRequestHandler>().
+                                               Select(e => e(StartTime,
+                                                             AuthorizeStopRequest.Timestamp.Value,
+                                                             this,
+                                                             nameof(EMPServer),   // ClientId
+                                                             AuthorizeStopRequest.EventTrackingId,
+                                                             AuthorizeStopRequest.SessionId,
+                                                             AuthorizeStopRequest.PartnerSessionId,
+                                                             AuthorizeStopRequest.OperatorId,
+                                                             AuthorizeStopRequest.EVSEId,
+                                                             AuthorizeStopRequest.UID,
+                                                             AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                               ConfigureAwait(false);
 
                     }
                     catch (Exception e)
@@ -466,36 +505,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     #region Call async subscribers
 
-                    if (AuthorizationStop == null)
+                    if (OnAuthorizeStop != null)
                     {
 
-                        var results = OnAuthorizeStop?.
-                                          GetInvocationList()?.
-                                          SafeSelect(subscriber => (subscriber as OnAuthorizeStopDelegate)
-                                              (DateTime.Now,
-                                               this,
-                                               AuthorizeStopRequest)).
-                                          ToArray();
+                        var results = await Task.WhenAll(OnAuthorizeStop.GetInvocationList().
+                                                             Cast<OnAuthorizeStopDelegate>().
+                                                             Select(e => e(DateTime.Now,
+                                                                           this,
+                                                                           AuthorizeStopRequest))).
+                                                             ConfigureAwait(false);
 
-                        if (results.Length > 0)
-                        {
-
-                            await Task.WhenAll(results);
-
-                            AuthorizationStop = results.FirstOrDefault()?.Result;
-
-                        }
-
-                        if (results.Length == 0 || AuthorizationStop == null)
-                            AuthorizationStop = CPO.AuthorizationStop.SystemError(
-                                           null,
-                                           "Could not process the incoming AuthorizeStop request!",
-                                           null,
-                                           AuthorizeStopRequest.SessionId,
-                                           AuthorizeStopRequest.PartnerSessionId
-                                       );
+                        AuthorizationStop = results.FirstOrDefault();
 
                     }
+
+                    if (AuthorizationStop == null)
+                        AuthorizationStop = CPO.AuthorizationStop.SystemError(
+                                       null,
+                                       "Could not process the incoming AuthorizeStop request!",
+                                       null,
+                                       AuthorizeStopRequest.SessionId,
+                                       AuthorizeStopRequest.PartnerSessionId
+                                   );
 
                     #endregion
 
@@ -506,18 +537,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     try
                     {
 
-                        OnAuthorizeStopResponse?.Invoke(EndTime,
-                                                        this,
-                                                        nameof(EMPServer),   // ClientId
-                                                        AuthorizeStopRequest.EventTrackingId,
-                                                        AuthorizeStopRequest.SessionId,
-                                                        AuthorizeStopRequest.PartnerSessionId,
-                                                        AuthorizeStopRequest.OperatorId,
-                                                        AuthorizeStopRequest.EVSEId,
-                                                        AuthorizeStopRequest.UID,
-                                                        AuthorizeStopRequest.RequestTimeout.HasValue ? AuthorizeStopRequest.RequestTimeout.Value : DefaultRequestTimeout,
-                                                        AuthorizationStop,
-                                                        EndTime - StartTime);
+                        if (OnAuthorizeStopResponse != null)
+                            await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
+                                               Cast<OnAuthorizeStopResponseHandler>().
+                                               Select(e => e(EndTime,
+                                                             this,
+                                                             nameof(EMPServer),   // ClientId
+                                                             AuthorizeStopRequest.EventTrackingId,
+                                                             AuthorizeStopRequest.SessionId,
+                                                             AuthorizeStopRequest.PartnerSessionId,
+                                                             AuthorizeStopRequest.OperatorId,
+                                                             AuthorizeStopRequest.EVSEId,
+                                                             AuthorizeStopRequest.UID,
+                                                             AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                             AuthorizationStop,
+                                                             EndTime - StartTime))).
+                                               ConfigureAwait(false);
 
                     }
                     catch (Exception e)
@@ -542,15 +577,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #endregion
 
-                #region Send OnLogAuthorizeStopped event
+                #region Send OnAuthorizeStopSOAPResponse event
 
                 try
                 {
 
-                    OnAuthorizeStopSOAPResponse?.Invoke(HTTPResponse.Timestamp,
-                                                  this.SOAPServer,
-                                                  HTTPRequest,
-                                                  HTTPResponse);
+                    if (OnAuthorizeStopSOAPResponse != null)
+                        await Task.WhenAll(OnAuthorizeStopSOAPResponse.GetInvocationList().
+                                           Cast<AccessLogHandler>().
+                                           Select(e => e(HTTPResponse.Timestamp,
+                                                         SOAPServer,
+                                                         HTTPRequest,
+                                                         HTTPResponse))).
+                                           ConfigureAwait(false);
 
                 }
                 catch (Exception e)
@@ -559,7 +598,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 }
 
                 #endregion
-
 
                 return HTTPResponse;
 
@@ -570,115 +608,164 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region /Authorization - ChargeDetailRecord
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + "/Authorization",
+                                            URIPrefix + AuthorizationURI,
                                             "ChargeDetailRecord",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingChargeDetailRecord").FirstOrDefault(),
-                                            async (Request, ChargeDetailRecordXML) => {
+                                            async (HTTPRequest, ChargeDetailRecordXML) => {
 
-                    #region Send OnLogChargeDetailRecordSend event
+                CPO.SendChargeDetailRecordRequest                  SendChargeDetailRecordRequest  = null;
+                Acknowledgement<CPO.SendChargeDetailRecordRequest> Acknowledgement                = null;
+
+                #region Send OnChargeDetailRecordSOAPRequest event
+
+                var StartTime = DateTime.Now;
+
+                try
+                {
+
+                    if (OnChargeDetailRecordSOAPRequest != null)
+                        await Task.WhenAll(OnChargeDetailRecordSOAPRequest.GetInvocationList().
+                                           Cast<RequestLogHandler>().
+                                           Select(e => e(StartTime,
+                                                         SOAPServer,
+                                                         HTTPRequest))).
+                                           ConfigureAwait(false);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordSOAPRequest));
+                }
+
+                #endregion
+
+
+                if (CPO.SendChargeDetailRecordRequest.TryParse(ChargeDetailRecordXML,
+                                                               out SendChargeDetailRecordRequest,
+                                                               null,
+                                                               HTTPRequest.Timestamp,
+                                                               HTTPRequest.CancellationToken,
+                                                               HTTPRequest.EventTrackingId,
+                                                               HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                {
+
+                    #region Send OnChargeDetailRecordRequest event
 
                     try
                     {
 
-                        OnChargeDetailRecordSOAPRequest?.Invoke(DateTime.Now,
-                                                                this.SOAPServer,
-                                                                Request);
+                        if (OnChargeDetailRecordRequest != null)
+                            await Task.WhenAll(OnChargeDetailRecordRequest.GetInvocationList().
+                                               Cast<OnChargeDetailRecordRequestHandler>().
+                                               Select(e => e(StartTime,
+                                                             SendChargeDetailRecordRequest.Timestamp.Value,
+                                                             this,
+                                                             nameof(EMPServer),   // ClientId
+                                                             SendChargeDetailRecordRequest.EventTrackingId,
+                                                             SendChargeDetailRecordRequest.ChargeDetailRecord,
+                                                             SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                               ConfigureAwait(false);
 
                     }
                     catch (Exception e)
                     {
-                        e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordSOAPRequest));
-                    }
-
-                    #endregion
-
-
-                    #region Parse request parameters
-
-                    ChargeDetailRecord CDR       = null;
-                    Acknowledgement    response  = null;
-
-                    try
-                    {
-
-                        CDR = ChargeDetailRecord.Parse(ChargeDetailRecordXML);
-
-                    }
-                    catch (Exception e)
-                    {
-                        response = Acknowledgement.DataError(
-                                       "The ChargeDetailRecord request led to an exception!",
-                                       e.Message
-                                   );
+                        e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordRequest));
                     }
 
                     #endregion
 
                     #region Call async subscribers
 
-                    if (response == null)
+                    if (OnChargeDetailRecord != null)
                     {
 
-                        var results = OnChargeDetailRecord?.
-                                          GetInvocationList()?.
-                                          SafeSelect(subscriber => (subscriber as OnChargeDetailRecordDelegate)
-                                              (DateTime.Now,
-                                               this,
-                                               Request.CancellationToken,
-                                               Request.EventTrackingId,
-                                               CDR,
-                                               DefaultRequestTimeout)).
-                                          ToArray();
+                        var results = await Task.WhenAll(OnChargeDetailRecord.GetInvocationList().
+                                                             Cast<OnChargeDetailRecordDelegate>().
+                                                             Select(e => e(DateTime.Now,
+                                                                           this,
+                                                                           SendChargeDetailRecordRequest))).
+                                                             ConfigureAwait(false);
 
-                        if (results.Length > 0)
-                        {
-
-                            await Task.WhenAll(results);
-
-                            response = results.FirstOrDefault()?.Result;
-
-                        }
-
-                        if (results.Length == 0 || response == null)
-                            response = Acknowledgement.SystemError("Could not process the incoming request!");
+                        Acknowledgement = results.FirstOrDefault();
 
                     }
 
-                    #endregion
-
-                    #region Return SOAPResponse
-
-                    var HTTPResponse = new HTTPResponseBuilder(Request) {
-                        HTTPStatusCode  = HTTPStatusCode.OK,
-                        Server          = SOAPServer.DefaultServerName,
-                        Date            = DateTime.Now,
-                        ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(response.ToXML()).ToUTF8Bytes()
-
-                    };
+                    if (Acknowledgement == null)
+                        Acknowledgement = Acknowledgement<CPO.SendChargeDetailRecordRequest>.SystemError(
+                                              null,
+                                              "Could not process the incoming SendChargeDetailRecordRequest request!",
+                                              null
+                                          );
 
                     #endregion
 
+                    #region Send OnChargeDetailRecordResponse event
 
-                    #region Send OnLogChargeDetailRecordSent event
+                    var EndTime = DateTime.Now;
 
                     try
                     {
 
-                        OnChargeDetailRecordSOAPResponse?.Invoke(HTTPResponse.Timestamp,
-                                                            this.SOAPServer,
-                                                            Request,
-                                                            HTTPResponse);
+                        if (OnChargeDetailRecordResponse != null)
+                            await Task.WhenAll(OnChargeDetailRecordResponse.GetInvocationList().
+                                               Cast<OnChargeDetailRecordResponseHandler>().
+                                               Select(e => e(EndTime,
+                                                             this,
+                                                             nameof(EMPServer),   // ClientId
+                                                             SendChargeDetailRecordRequest.EventTrackingId,
+                                                             SendChargeDetailRecordRequest.ChargeDetailRecord,
+                                                             SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                             Acknowledgement,
+                                                             EndTime - StartTime))).
+                                               ConfigureAwait(false);
 
                     }
                     catch (Exception e)
                     {
-                        e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordSOAPResponse));
+                        e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordResponse));
                     }
 
                     #endregion
 
-                    return HTTPResponse;
+                }
+
+
+                #region Create SOAP response
+
+                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                    HTTPStatusCode  = HTTPStatusCode.OK,
+                    Server          = SOAPServer.DefaultServerName,
+                    Date            = DateTime.Now,
+                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML()).ToUTF8Bytes()
+
+                };
+
+                #endregion
+
+                #region Send OnChargeDetailRecordSOAPResponse event
+
+                try
+                {
+
+                    if (OnChargeDetailRecordSOAPResponse != null)
+                        await Task.WhenAll(OnChargeDetailRecordSOAPResponse.GetInvocationList().
+                                           Cast<AccessLogHandler>().
+                                           Select(e => e(HTTPResponse.Timestamp,
+                                                         SOAPServer,
+                                                         HTTPRequest,
+                                                         HTTPResponse))).
+                                           ConfigureAwait(false);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordSOAPResponse));
+                }
+
+                #endregion
+
+                return HTTPResponse;
 
             });
 

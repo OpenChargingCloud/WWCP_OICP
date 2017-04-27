@@ -99,7 +99,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this.PartnerSessionId                  = PartnerSessionId;
             this.ProviderId                        = ProviderId;
             this.StatusCode                        = StatusCode;
-            this.AuthorizationStopIdentifications  = AuthorizationStopIdentifications;
+            this.AuthorizationStopIdentifications  = AuthorizationStopIdentifications ?? new AuthorizationIdentification[0];
 
         }
 
@@ -718,7 +718,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public override String ToString()
 
-            => String.Concat("AuthorizationStart: " + Result + "; " + StatusCode.Code, " / ", StatusCode.Description, " / ", StatusCode.AdditionalInfo);
+            => String.Concat(AuthorizationStatus,
+
+                             StatusCode != null
+                                 ? "; " + StatusCode.Code +
+
+                                       (StatusCode.Description.IsNotNullOrEmpty()
+                                            ? " / " + StatusCode.Description
+                                            : "") +
+
+                                       (StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                            ? " / " + StatusCode.AdditionalInfo
+                                            : "")
+                                 : "");
 
         #endregion
 
@@ -734,44 +746,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Properties
 
-            public AuthorizeStartRequest                     Request                             { get; set; }
+            public AuthorizeStartRequest              Request                             { get; set; }
 
             /// <summary>
             /// The charging session identification.
             /// </summary>
-            public Session_Id?                               SessionId                           { get; set; }
+            public Session_Id?                        SessionId                           { get; set; }
 
             /// <summary>
             /// An optional partner charging session identification.
             /// </summary>
-            public PartnerSession_Id?                        PartnerSessionId                    { get; set; }
+            public PartnerSession_Id?                 PartnerSessionId                    { get; set; }
 
             /// <summary>
             /// The e-mobility provider identification.
             /// </summary>
-            public Provider_Id?                              ProviderId                          { get; set; }
+            public Provider_Id?                       ProviderId                          { get; set; }
 
             /// <summary>
             /// The authorization status, e.g. "Authorized".
             /// </summary>
-            public AuthorizationStatusTypes                  AuthorizationStatus                 { get; set; }
+            public AuthorizationStatusTypes           AuthorizationStatus                 { get; set; }
 
             /// <summary>
             /// The authorization status code.
             /// </summary>
-            public StatusCode                                StatusCode                          { get; set; }
+            public StatusCode                         StatusCode                          { get; set; }
 
             /// <summary>
             /// An enumeration of authorization identifications.
             /// </summary>
-            public IEnumerable<AuthorizationIdentification>  AuthorizationStopIdentifications    { get; set; }
+            public List<AuthorizationIdentification>  AuthorizationStopIdentifications    { get; set; }
 
             /// <summary>
             /// The result of the operation.
             /// </summary>
-            public Result                                    Result                              { get; set; }
+            public Result                             Result                              { get; set; }
 
-            public Dictionary<String, Object>                CustomData                          { get; set; }
+            public Dictionary<String, Object>         CustomData                          { get; set; }
 
             #endregion
 
@@ -787,7 +799,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     this.ProviderId                        = AuthorizationStart.ProviderId;
                     this.AuthorizationStatus               = AuthorizationStart.AuthorizationStatus;
                     this.StatusCode                        = AuthorizationStart.StatusCode;
-                    this.AuthorizationStopIdentifications  = AuthorizationStart.AuthorizationStopIdentifications;
+                    this.AuthorizationStopIdentifications  = AuthorizationStart.AuthorizationStopIdentifications != null
+                                                                 ? new List<AuthorizationIdentification>(AuthorizationStart.AuthorizationStopIdentifications)
+                                                                 : new List<AuthorizationIdentification>();
                     this.Result                            = AuthorizationStart.Result;
                     this.CustomData                        = new Dictionary<String, Object>();
 

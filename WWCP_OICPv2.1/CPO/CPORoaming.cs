@@ -233,7 +233,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// An event fired whenever an authorize start request will be send.
         /// </summary>
-        public event OnAuthorizeStartHandler OnAuthorizeStartRequest
+        public event OnAuthorizeStartRequestHandler OnAuthorizeStartRequest
         {
 
             add
@@ -287,7 +287,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// An event fired whenever an authorize start request was sent.
         /// </summary>
-        public event OnAuthorizeStartedHandler OnAuthorizeStartResponse
+        public event OnAuthorizeStartResponseHandler OnAuthorizeStartResponse
         {
 
             add

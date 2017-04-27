@@ -141,6 +141,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             //this.RoamingNetwork           = RoamingNetwork;
             this._EVSEDataRecords         = new Dictionary<EVSE_Id, EVSEDataRecord>();
 
+            RegisterURITemplates();
+
             if (AutoStart)
                 Start();
 
@@ -161,7 +163,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             : base(SOAPServer,
                    URIPrefix ?? DefaultURIPrefix)
 
-        { }
+        {
+
+            RegisterURITemplates();
+
+        }
 
         #endregion
 
@@ -173,7 +179,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <summary>
         /// Register all URI templates for this SOAP API.
         /// </summary>
-        protected override void RegisterURITemplates()
+        protected void RegisterURITemplates()
         {
 
             #region / - AddCDRsRequest

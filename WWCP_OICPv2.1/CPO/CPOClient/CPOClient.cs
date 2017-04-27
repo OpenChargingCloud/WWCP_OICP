@@ -18,8 +18,8 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Xml.Linq;
-using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
@@ -472,7 +472,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// An event fired whenever an authorize start request will be send.
         /// </summary>
-        public event OnAuthorizeStartHandler    OnAuthorizeStartRequest;
+        public event OnAuthorizeStartRequestHandler    OnAuthorizeStartRequest;
 
         /// <summary>
         /// An event fired whenever an authorize start SOAP request will be send.
@@ -487,7 +487,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// An event fired whenever an authorize start request was sent.
         /// </summary>
-        public event OnAuthorizeStartedHandler  OnAuthorizeStartResponse;
+        public event OnAuthorizeStartResponseHandler  OnAuthorizeStartResponse;
 
         #endregion
 
@@ -749,15 +749,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnPushEVSEDataRequest?.Invoke(StartTime,
-                                              Request.Timestamp.Value,
-                                              this,
-                                              ClientId,
-                                              Request.EventTrackingId,
-                                              Request.Action,
-                                              Request.EVSEDataRecords.ULongCount(),
-                                              Request.EVSEDataRecords,
-                                              Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
+                if (OnPushEVSEDataRequest != null)
+                    await Task.WhenAll(OnPushEVSEDataRequest.GetInvocationList().
+                                       Cast<OnPushEVSEDataRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.Action,
+                                                     Request.EVSEDataRecords.ULongCount(),
+                                                     Request.EVSEDataRecords,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -785,7 +789,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPushEVSEDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
+                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -891,17 +895,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnPushEVSEDataResponse?.Invoke(Endtime,
-                                               Request.Timestamp.Value,
-                                               this,
-                                               ClientId,
-                                               Request.EventTrackingId,
-                                               Request.Action,
-                                               Request.EVSEDataRecords.ULongCount(),
-                                               Request.EVSEDataRecords,
-                                               Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
-                                               result.Content,
-                                               Endtime - StartTime);
+                if (OnPushEVSEDataResponse != null)
+                    await Task.WhenAll(OnPushEVSEDataResponse.GetInvocationList().
+                                       Cast<OnPushEVSEDataResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.Action,
+                                                     Request.EVSEDataRecords.ULongCount(),
+                                                     Request.EVSEDataRecords,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value,
+                                                     result.Content,
+                                                     Endtime - StartTime))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -951,15 +959,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnPushEVSEStatusRequest?.Invoke(StartTime,
-                                                Request.Timestamp.Value,
-                                                this,
-                                                ClientId,
-                                                Request.EventTrackingId,
-                                                Request.Action,
-                                                Request.EVSEStatusRecords.ULongCount(),
-                                                Request.EVSEStatusRecords,
-                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
+                if (OnPushEVSEStatusRequest != null)
+                    await Task.WhenAll(OnPushEVSEStatusRequest.GetInvocationList().
+                                       Cast<OnPushEVSEStatusRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.Action,
+                                                     Request.EVSEStatusRecords.ULongCount(),
+                                                     Request.EVSEStatusRecords,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -986,7 +998,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPushEVSEStatusSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
+                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1092,17 +1104,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnPushEVSEStatusResponse?.Invoke(Endtime,
-                                                 Request.Timestamp.Value,
-                                                 this,
-                                                 ClientId,
-                                                 Request.EventTrackingId,
-                                                 Request.Action,
-                                                 Request.EVSEStatusRecords.ULongCount(),
-                                                 Request.EVSEStatusRecords,
-                                                 Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
-                                                 result.Content,
-                                                 Endtime - StartTime);
+                if (OnPushEVSEStatusResponse != null)
+                    await Task.WhenAll(OnPushEVSEStatusResponse.GetInvocationList().
+                                       Cast<OnPushEVSEStatusResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.Action,
+                                                     Request.EVSEStatusRecords.ULongCount(),
+                                                     Request.EVSEStatusRecords,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value,
+                                                     result.Content,
+                                                     Endtime - StartTime))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -1153,17 +1169,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStartRequest?.Invoke(StartTime,
-                                                Request.Timestamp.Value,
-                                                this,
-                                                ClientId,
-                                                Request.OperatorId,
-                                                Request.UID,
-                                                Request.EVSEId,
-                                                Request.SessionId,
-                                                Request.PartnerProductId,
-                                                Request.PartnerSessionId,
-                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
+                if (OnAuthorizeStartRequest != null)
+                    await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
+                                       Cast<OnAuthorizeStartRequestHandler>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.OperatorId,
+                                                     Request.UID,
+                                                     Request.EVSEId,
+                                                     Request.SessionId,
+                                                     Request.PartnerProductId,
+                                                     Request.PartnerSessionId,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -1190,7 +1211,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnAuthorizeStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
+                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1270,23 +1291,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Send OnAuthorizeStartResponse event
 
+            var Endtime = DateTime.Now;
+
             try
             {
 
-                var Endtime = DateTime.Now;
-
-                OnAuthorizeStartResponse?.Invoke(Endtime,
-                                                 this,
-                                                 ClientId,
-                                                 Request.OperatorId,
-                                                 Request.UID,
-                                                 Request.EVSEId,
-                                                 Request.SessionId,
-                                                 Request.PartnerProductId,
-                                                 Request.PartnerSessionId,
-                                                 Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
-                                                 result.Content,
-                                                 Endtime - StartTime);
+                if (OnAuthorizeStartResponse != null)
+                    await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
+                                       Cast<OnAuthorizeStartResponseHandler>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.OperatorId,
+                                                     Request.UID,
+                                                     Request.EVSEId,
+                                                     Request.SessionId,
+                                                     Request.PartnerProductId,
+                                                     Request.PartnerSessionId,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value,
+                                                     result.Content,
+                                                     Endtime - StartTime))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -1295,7 +1322,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
 
             #endregion
-
 
             return result;
 
@@ -1337,16 +1363,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStopRequest?.Invoke(StartTime,
-                                               Request.Timestamp.Value,
-                                               this,
-                                               ClientId,
-                                               Request.OperatorId,
-                                               Request.SessionId,
-                                               Request.UID,
-                                               Request.EVSEId,
-                                               Request.PartnerSessionId,
-                                               Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
+                if (OnAuthorizeStopRequest != null)
+                    await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
+                                       Cast<OnAuthorizeStopRequestHandler>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.OperatorId,
+                                                     Request.SessionId,
+                                                     Request.UID,
+                                                     Request.EVSEId,
+                                                     Request.PartnerSessionId,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -1374,7 +1405,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnAuthorizeStopSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
+                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1457,17 +1488,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnAuthorizeStopResponse?.Invoke(Endtime,
-                                                this,
-                                                ClientId,
-                                                Request.OperatorId,
-                                                Request.SessionId,
-                                                Request.UID,
-                                                Request.EVSEId,
-                                                Request.PartnerSessionId,
-                                                Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
-                                                result.Content,
-                                                Endtime - StartTime);
+                if (OnAuthorizeStopResponse != null)
+                    await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
+                                       Cast<OnAuthorizeStopResponseHandler>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.OperatorId,
+                                                     Request.SessionId,
+                                                     Request.UID,
+                                                     Request.EVSEId,
+                                                     Request.PartnerSessionId,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value,
+                                                     result.Content,
+                                                     Endtime - StartTime))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -1517,13 +1554,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnSendChargeDetailRecordRequest?.Invoke(StartTime,
-                                                        Request.Timestamp.Value,
-                                                        this,
-                                                        ClientId,
-                                                        Request.EventTrackingId,
-                                                        Request.ChargeDetailRecord,
-                                                        Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
+                if (OnSendChargeDetailRecordRequest != null)
+                    await Task.WhenAll(OnSendChargeDetailRecordRequest.GetInvocationList().
+                                       Cast<OnSendChargeDetailRecordRequestHandler>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.ChargeDetailRecord,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -1550,7 +1591,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnSendChargeDetailRecordSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
+                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1662,15 +1703,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnSendChargeDetailRecordResponse?.Invoke(Endtime,
-                                                         Request.Timestamp.Value,
-                                                         this,
-                                                         ClientId,
-                                                         Request.EventTrackingId,
-                                                         Request.ChargeDetailRecord,
-                                                         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
-                                                         result.Content,
-                                                         Endtime - StartTime);
+                if (OnSendChargeDetailRecordResponse != null)
+                    await Task.WhenAll(OnSendChargeDetailRecordResponse.GetInvocationList().
+                                       Cast<OnSendChargeDetailRecordResponseHandler>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.ChargeDetailRecord,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value,
+                                                     result.Content,
+                                                     Endtime - StartTime))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -1679,7 +1724,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
 
             #endregion
-
 
             return result;
 
@@ -1722,13 +1766,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnPullAuthenticationDataRequest?.Invoke(StartTime,
-                                                        Request.Timestamp.Value,
-                                                        this,
-                                                        ClientId,
-                                                        Request.EventTrackingId,
-                                                        Request.OperatorId,
-                                                        Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value);
+                if (OnPullAuthenticationDataRequest != null)
+                    await Task.WhenAll(OnPullAuthenticationDataRequest.GetInvocationList().
+                                       Cast<OnPullAuthenticationDataRequestHandler>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.OperatorId,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -1755,7 +1803,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPullAuthenticationDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
+                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1815,14 +1863,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             try
             {
 
-                OnPullAuthenticationDataResponse?.Invoke(Endtime,
-                                                         this,
-                                                         ClientId,
-                                                         Request.EventTrackingId,
-                                                         Request.OperatorId,
-                                                         Request.RequestTimeout.HasValue ? Request.RequestTimeout.Value : RequestTimeout.Value,
-                                                         result.Content,
-                                                         Endtime - StartTime);
+                if (OnPullAuthenticationDataResponse != null)
+                    await Task.WhenAll(OnPullAuthenticationDataResponse.GetInvocationList().
+                                       Cast<OnPullAuthenticationDataResponseHandler>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.OperatorId,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value,
+                                                     result.Content,
+                                                     Endtime - StartTime))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
