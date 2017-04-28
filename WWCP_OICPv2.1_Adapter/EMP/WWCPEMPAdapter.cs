@@ -18,7 +18,10 @@
 #region Usings
 
 using System;
+using System.IO;
+using System.Text;
 using System.Linq;
+using System.Xml.Linq;
 using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
@@ -30,10 +33,6 @@ using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.Xml.Linq;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
 
 #endregion
 
@@ -1112,266 +1111,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 result.Content        != null)
             {
 
-                //#region Data
+                var WWCPEVSEs = new List<EVSE>();
+                var Warnings  = new List<String>();
+                EVSE _EVSE    = null;
 
-                //ChargingStationOperatorProxy  _EVSEOperator                  = null;
-                //CPInfoList               _CPInfoList                    = null;
-                //EVSEIdLookup             _EVSEIdLookup                  = null;
-                //EVSEInfo                 _EVSEInfo                      = null;
-                //Languages                LocationLanguage;
-                //Languages                LocalChargingStationLanguage;
-                //I18NString               AdditionalInfo                 = null;
-                //ChargingPool             _ChargingPool                  = null;
-                //ChargingStation          _ChargingStation               = null;
-                //EVSE                     _EVSE                          = null;
+                foreach (var evseoperator in result.Content.OperatorEVSEData)
+                    foreach (var evse in evseoperator.EVSEDataRecords)
+                    {
 
-                //#endregion
+                        try
+                        {
 
-                //result.Content.OperatorEVSEData.ForEach(operatorevsedata => {
+                            _EVSE = evse.ToWWCP();
 
-                //    try
-                //    {
+                            if (_EVSE != null)
+                                WWCPEVSEs.Add(_EVSE);
 
-                //        #region Find Charging Station Operator, or create a new one...
+                            else
+                                Warnings.Add("Could not convert EVSE '" + evse.Id + "'!");
 
-                //        if (!RoamingNetwork.TryGetChargingStationOperatorById(operatorevsedata.OperatorId.ToWWCP().Value, out _EVSEOperator))
-                //            _EVSEOperator = RoamingNetwork.CreateChargingStationOperator(operatorevsedata.OperatorId.ToWWCP().Value, I18NString.Create(Languages.unknown, operatorevsedata.OperatorName));
+                        }
+                        catch (Exception e)
+                        {
+                            Warnings.Add(evse.Id.ToString() + " - " + e.Message);
+                        }
 
-                //        else
-                //        {
+                    }
 
-                //            // Update via events!
-                //            _EVSEOperator.Name = I18NString.Create(Languages.unknown, operatorevsedata.OperatorName);
-
-                //        }
-
-                //        #endregion
-
-                //        #region Generate a list of all charging pools/stations/EVSEs
-
-                //        _CPInfoList = new CPInfoList(_EVSEOperator.Id);
-
-                //        #region Create EVSEIdLookup
-
-                //        foreach (var evsedatarecord in operatorevsedata.EVSEDataRecords)
-                //        {
-
-                //            try
-                //            {
-
-                //                _CPInfoList.AddOrUpdateCPInfo(ChargingPool_Id.Generate(operatorevsedata.OperatorId.ToWWCP().Value,
-                //                                                                       evsedatarecord.  Address.ToWWCP(),
-                //                                                                       evsedatarecord.  GeoCoordinate),
-                //                                              evsedatarecord.Address,
-                //                                              evsedatarecord.GeoCoordinate,
-                //                                              evsedatarecord.ChargingStationId,
-                //                                              evsedatarecord.Id);
-
-                //                _EVSEIdLookup = _CPInfoList.VerifyUniquenessOfChargingStationIds();
-
-                //            }
-                //            catch (Exception e)
-                //            {
-
-                //                // Processing the EVSEDataRecords for the EVSEIdLookup failed!
-
-                //            }
-
-                //        }
-
-                //        #endregion
-
-                //        #region Process EVSEDataRecords
-
-                //        foreach (var evsedatarecord in operatorevsedata.EVSEDataRecords)
-                //        {
-
-                //            try
-                //            {
-
-                //                _EVSEInfo = _EVSEIdLookup[evsedatarecord.Id];
-
-                //                // Set derived WWCP properties
-
-                //                #region Set LocationLanguage
-
-                //                switch (_EVSEInfo.PoolAddress.Country.Alpha2Code.ToLower())
-                //                {
-
-                //                    case "de": LocationLanguage = Languages.deu; break;
-                //                    case "fr": LocationLanguage = Languages.fra; break;
-                //                    case "dk": LocationLanguage = Languages.dk; break;
-                //                    case "no": LocationLanguage = Languages.no; break;
-                //                    case "fi": LocationLanguage = Languages.fin; break;
-                //                    case "se": LocationLanguage = Languages.swe; break;
-
-                //                    case "sk": LocationLanguage = Languages.sk; break;
-                //                    //case "be": LocationLanguage = Languages.; break;
-                //                    case "us": LocationLanguage = Languages.eng; break;
-                //                    case "nl": LocationLanguage = Languages.nld; break;
-                //                    //case "fo": LocationLanguage = Languages.; break;
-                //                    case "at": LocationLanguage = Languages.deu; break;
-                //                    case "ru": LocationLanguage = Languages.ru; break;
-                //                    //case "ch": LocationLanguage = Languages.; break;
-
-                //                    default: LocationLanguage = Languages.unknown; break;
-
-                //                }
-
-                //                if (_EVSEInfo.PoolAddress.Country == Country.Germany)
-                //                    LocalChargingStationLanguage = Languages.deu;
-
-                //                else if (_EVSEInfo.PoolAddress.Country == Country.Denmark)
-                //                    LocalChargingStationLanguage = Languages.dk;
-
-                //                else if (_EVSEInfo.PoolAddress.Country == Country.France)
-                //                    LocalChargingStationLanguage = Languages.fra;
-
-                //                else
-                //                    LocalChargingStationLanguage = Languages.unknown;
-
-                //                #endregion
-
-                //                #region Update a matching charging pool... or create a new one!
-
-                //                if (_EVSEOperator.TryGetChargingPoolbyId(_EVSEInfo.PoolId, out _ChargingPool))
-                //                {
-
-                //                    // External update via events!
-                //                    _ChargingPool.Description          = evsedatarecord.AdditionalInfo;
-                //                    _ChargingPool.LocationLanguage     = LocationLanguage;
-                //                    _ChargingPool.EntranceLocation     = evsedatarecord.GeoChargingPointEntrance;
-                //                    _ChargingPool.OpeningTimes         = OpeningTimes.Parse(evsedatarecord.OpeningTime);
-                //                    _ChargingPool.AuthenticationModes  = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => mode.  AsWWCPAuthenticationMode()));
-                //                    _ChargingPool.PaymentOptions       = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => option.AsWWCPPaymentOption()));
-                //                    _ChargingPool.Accessibility        = evsedatarecord.Accessibility.ToWWCP();
-                //                    _ChargingPool.HotlinePhoneNumber   = evsedatarecord.HotlinePhoneNumber;
-
-                //                }
-
-                //                else
-
-                //                    _ChargingPool = _EVSEOperator.CreateChargingPool(
-
-                //                                                      _EVSEInfo.PoolId,
-
-                //                                                      Configurator: pool => {
-                //                                                          pool.Description          = evsedatarecord.AdditionalInfo;
-                //                                                          pool.Address              = _EVSEInfo.PoolAddress.ToWWCP();
-                //                                                          pool.GeoLocation          = _EVSEInfo.PoolLocation;
-                //                                                          pool.LocationLanguage     = LocationLanguage;
-                //                                                          pool.EntranceLocation     = evsedatarecord.GeoChargingPointEntrance;
-                //                                                          pool.OpeningTimes         = OpeningTimes.Parse(evsedatarecord.OpeningTime);
-                //                                                          pool.AuthenticationModes  = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
-                //                                                          pool.PaymentOptions       = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                //                                                          pool.Accessibility        = evsedatarecord.Accessibility.ToWWCP();
-                //                                                          pool.HotlinePhoneNumber   = evsedatarecord.HotlinePhoneNumber;
-                //                                                      }
-
-                //                );
-
-                //                #endregion
-
-                //                #region Update a matching charging station... or create a new one!
-
-                //                if (_ChargingPool.TryGetChargingStationbyId(_EVSEInfo.StationId, out _ChargingStation))
-                //                {
-
-                //                    // Update via events!
-                //                    _ChargingStation.Name                  = evsedatarecord.ChargingStationName;
-                //                    _ChargingStation.HubjectStationId      = evsedatarecord.ChargingStationId;
-                //                    _ChargingStation.AuthenticationModes   = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
-                //                    _ChargingStation.PaymentOptions        = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                //                    _ChargingStation.Accessibility         = evsedatarecord.Accessibility.ToWWCP();
-                //                    _ChargingStation.HotlinePhoneNumber    = evsedatarecord.HotlinePhoneNumber;
-                //                    _ChargingStation.Description           = evsedatarecord.AdditionalInfo;
-                //                    _ChargingStation.IsHubjectCompatible   = evsedatarecord.IsHubjectCompatible;
-                //                    _ChargingStation.DynamicInfoAvailable  = evsedatarecord.DynamicInfoAvailable;
-
-                //                }
-
-                //                else
-                //                    _ChargingStation = _ChargingPool.CreateChargingStation(
-
-                //                                                         _EVSEInfo.StationId,
-
-                //                                                         Configurator: station => {
-                //                                                             station.Name                  = evsedatarecord.ChargingStationName;
-                //                                                             station.HubjectStationId      = evsedatarecord.ChargingStationId;
-                //                                                             station.AuthenticationModes   = new ReactiveSet<WWCP.AuthenticationModes>(evsedatarecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
-                //                                                             station.PaymentOptions        = new ReactiveSet<WWCP.PaymentOptions>     (evsedatarecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
-                //                                                             station.Accessibility         = evsedatarecord.Accessibility.ToWWCP();
-                //                                                             station.HotlinePhoneNumber    = evsedatarecord.HotlinePhoneNumber;
-                //                                                             station.Description           = evsedatarecord.AdditionalInfo;
-                //                                                             station.IsHubjectCompatible   = evsedatarecord.IsHubjectCompatible;
-                //                                                             station.DynamicInfoAvailable  = evsedatarecord.DynamicInfoAvailable;
-                //                                                         }
-
-                //                                       );
-
-                //                #endregion
-
-                //                #region Update matching EVSE... or create a new one!
-
-                //                if (_ChargingStation.TryGetEVSEbyId(evsedatarecord.Id.ToWWCP().Value, out _EVSE))
-                //                {
-
-                //                    // Update via events!
-                //                    _EVSE.Description         = evsedatarecord.AdditionalInfo;
-                //                    _EVSE.ChargingModes       = new ReactiveSet<WWCP.ChargingModes>(evsedatarecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
-                //                    //_EVSE.ChargingFacilities  = evsedatarecord.ChargingFacilities;
-                //                    //_EVSE.MaxPower            = 
-                //                    //_EVSE.AverageVoltage      = 
-                //                    //_EVSE.MaxCapacity_kWh     = evsedatarecord.MaxCapacity_kWh;
-                //                    _EVSE.SocketOutlets       = new ReactiveSet<SocketOutlet>(evsedatarecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
-
-                //                }
-
-                //                else
-                //                    _ChargingStation.CreateEVSE(evsedatarecord.Id.ToWWCP().Value,
-
-                //                                                   Configurator: evse => {
-                //                                                       evse.Description         = evsedatarecord.AdditionalInfo;
-                //                                                       evse.ChargingModes       = new ReactiveSet<WWCP.ChargingModes>(evsedatarecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
-                //                                                       //evse.ChargingFacilities  = evsedatarecord.ChargingFacilities;
-                //                                                       //evse.MaxPower            = 
-                //                                                       //evse.AverageVoltage      = 
-                //                                                       //evse.MaxCapacity_kWh     = 
-                //                                                       evse.SocketOutlets       = new ReactiveSet<SocketOutlet>(evsedatarecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
-                //                                                   }
-
-                //                                                  );
-
-                //                #endregion
-
-
-                //            }
-                //            catch (Exception e)
-                //            {
-
-                //                // Processing the EVSEDataRecords failed!
-
-                //            }
-
-                //        }
-
-                //        #endregion
-
-                //        #endregion
-
-                //    }
-                //    catch (Exception e)
-                //    {
-
-                //        // Processing the OperatorEvseData failed!
-
-                //    }
-
-                //});
 
             }
 
-            return new EVSEDataPull(new WWCP.EVSE[0]);
+            return new EVSEDataPull(new EVSE[0],
+                                    result.HTTPStatusCode.ToString() +
+                                    (result.ContentLength.HasValue && result.ContentLength.Value > 0
+                                         ? Environment.NewLine + result.HTTPBody.ToUTF8String()
+                                         : ""));
 
         }
 
@@ -1516,7 +1290,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             // Hubject has a limit of 100 EVSEIds per request!
             // Do not make concurrent requests!
-            foreach (var evsepart in EVSEIds.Select(evse => evse.ToOICP()).ToPartitions(100))
+            foreach (var evsepart in EVSEIds.Select(evse => evse.ToOICP()).
+                                             Where (evse => evse.HasValue).
+                                             Select(evse => evse.Value).
+                                             ToPartitions(100))
             {
 
                 var result = await EMPRoaming.PullEVSEStatusById(ProviderId.HasValue
@@ -1838,7 +1615,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #endregion
 
 
-            var response = await EMPRoaming.ReservationStart(EVSEId:             EVSEId.ToOICP(),
+            var response = await EMPRoaming.ReservationStart(EVSEId:             EVSEId.ToOICP().Value,
                                                              ProviderId:         ProviderId.HasValue
                                                                                      ? ProviderId.Value.ToOICP()
                                                                                      : DefaultProviderId.Value,
@@ -2007,7 +1784,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                           ProviderId:         ProviderId.HasValue
                                                                                   ? ProviderId.Value.ToOICP()
                                                                                   : DefaultProviderId.Value,
-                                                          EVSEId:             EVSEId.Value.ToOICP(),
+                                                          EVSEId:             EVSEId.Value.ToOICP().Value,
                                                           PartnerSessionId:   null,
 
                                                           Timestamp:          Timestamp,
@@ -2197,7 +1974,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             var response = await EMPRoaming.RemoteStart(ProviderId:         ProviderId.HasValue
                                                                                 ? ProviderId.Value.ToOICP()
                                                                                 : DefaultProviderId.Value,
-                                                        EVSEId:             EVSEId.ToOICP(),
+                                                        EVSEId:             EVSEId.ToOICP().Value,
                                                         EVCOId:             eMAId.     Value.ToOICP(),
                                                         SessionId:          SessionId.       ToOICP(),
                                                         PartnerSessionId:   null,
@@ -2418,7 +2195,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        ProviderId:         ProviderId.HasValue
                                                                                 ? ProviderId.Value.ToOICP()
                                                                                 : DefaultProviderId.Value,
-                                                       EVSEId:             EVSEId.          ToOICP(),
+                                                       EVSEId:             EVSEId.          ToOICP().Value,
                                                        PartnerSessionId:   null,
 
                                                        Timestamp:          Timestamp,

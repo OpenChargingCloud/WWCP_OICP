@@ -104,6 +104,78 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
+        #region ToOICP(this EVSEDataRecord, EVSEDataRecord2EVSE = null)
+
+        /// <summary>
+        /// Convert an OICP EVSE data record into a corresponding WWCP EVSE.
+        /// </summary>
+        /// <param name="EVSEDataRecord">An EVSE data record.</param>
+        /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record, e.g. before importing it into a roaming network.</param>
+        /// <returns>The corresponding WWCP EVSE.</returns>
+        public static EVSE ToWWCP(this EVSEDataRecord              EVSEDataRecord,
+
+                                  String                           DataSource               = "",
+                                  EVSEAdminStatusTypes             InitialEVSEAdminStatus       = EVSEAdminStatusTypes.OutOfService,
+                                  EVSEAdminStatusTypes             InitialChargingStationAdminStatus       = ChargingStationAdminStatusTypes.OutOfService,
+                                  WWCP.EVSEStatusTypes             InitialEVSEStatus            = WWCP.EVSEStatusTypes.OutOfService,
+                                  WWCP.EVSEStatusTypes             InitialChargingStationStatus            = WWCP.EVSEStatusTypes.OutOfService,
+                                  UInt16                           MaxAdminStatusListSize   = EVSE.DefaultMaxAdminStatusListSize,
+                                  UInt16                           MaxStatusListSize        = EVSE.DefaultMaxEVSEStatusListSize,
+
+                                  EMP.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE      = null)
+
+        {
+
+            EVSE _EVSE = null;
+
+            try
+            {
+
+                var _EVSEId             = EVSEDataRecord.Id.ToWWCP();
+
+                if (!_EVSEId.HasValue)
+                    return null;
+
+                var _ChargingStationId  = ChargingStation_Id.Create(_EVSEId.Value);
+
+
+                _EVSE = new EVSE(_EVSEId.Value,
+                                 new ChargingStation(_ChargingStationId,
+                                                     station => {
+                                                     }),
+                                 evse => {
+                                     evse.DataSource = DataSource;
+                                 },
+                                 null,
+                                 InitialAdminStatus,
+                                 InitialStatus,
+                                 MaxAdminStatusListSize,
+                                 MaxStatusListSize);
+
+                //_EVSE.Address
+                //_EVSE.GeoCoordinate
+
+                //evse.Description     = CurrentEVSEDataRecord.AdditionalInfo;
+                //evse.ChargingModes   = new ReactiveSet<WWCP.ChargingModes>(CurrentEVSEDataRecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
+                //OICPMapper.ApplyChargingFacilities(evse, CurrentEVSEDataRecord.ChargingFacilities);
+                //evse.MaxCapacity     = CurrentEVSEDataRecord.MaxCapacity;
+                //evse.SocketOutlets   = new ReactiveSet<SocketOutlet>(CurrentEVSEDataRecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
+
+
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+
+            return EVSEDataRecord2EVSE != null
+                       ? EVSEDataRecord2EVSE(EVSEDataRecord, _EVSE)
+                       : _EVSE;
+
+        }
+
+        #endregion
+
         #region ToOICP(this EVSE, EVSE2EVSEDataRecord = null)
 
         /// <summary>
@@ -116,7 +188,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                             CPO.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord = null)
         {
 
-            var _EVSEDataRecord = new EVSEDataRecord(EVSE.Id.ToOICP(),
+            EVSEDataRecord _EVSEDataRecord = null;
+
+            try
+            {
+
+                var _EVSEId = EVSE.Id.ToOICP();
+
+                if (!_EVSEId.HasValue)
+                    return null;
+
+                _EVSEDataRecord = new EVSEDataRecord(_EVSEId.Value,
                                                      new DeltaTypes?(),
                                                      new DateTime?(),
                                                      EVSE.ChargingStation.Id.ToString(),
@@ -143,6 +225,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      null, // ClearingHouseId
                                                      EVSE.ChargingStation.IsHubjectCompatible,
                                                      EVSE.ChargingStation.DynamicInfoAvailable);
+
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
 
             return EVSE2EVSEDataRecord != null
                        ? EVSE2EVSEDataRecord(EVSE, _EVSEDataRecord)
@@ -244,7 +332,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            return new EVSEStatusRecord(EVSEStatus.Id.ToOICP(),
+            return new EVSEStatusRecord(EVSEStatus.Id.ToOICP().Value,
                                         AsOICPEVSEStatus(EVSEStatus.Status));
 
         }
@@ -1082,8 +1170,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        public static EVSE_Id ToOICP(this WWCP.EVSE_Id EVSEId)
-            => EVSE_Id.Parse(EVSEId.ToString());
+        public static EVSE_Id? ToOICP(this WWCP.EVSE_Id EVSEId)
+        {
+
+            EVSE_Id OICPEVSEId;
+
+            if (EVSE_Id.TryParse(EVSEId.ToString(), out OICPEVSEId))
+                return OICPEVSEId;
+
+            return null;
+
+        }
 
         public static WWCP.EVSE_Id? ToWWCP(this EVSE_Id EVSEId)
         {
@@ -1275,7 +1372,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             var CDR = new ChargeDetailRecord(
-                          ChargeDetailRecord.EVSEId.Value.ToOICP(),
+                          ChargeDetailRecord.EVSEId.Value.ToOICP().Value,
                           ChargeDetailRecord.SessionId.ToOICP(),
                           ChargeDetailRecord.SessionTime.Value.StartTime,
                           ChargeDetailRecord.SessionTime.Value.EndTime.Value,

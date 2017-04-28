@@ -1434,7 +1434,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                           // Only push the current status of the latest status update!
                                           return new EVSEStatusRecord(
-                                                     evsestatusupdate.Key.ToOICP(),
+                                                     evsestatusupdate.Key.ToOICP().Value,
                                                      evsestatusupdate.Value.First().NewStatus.Value.AsOICPEVSEStatus()
                                                  );
 
