@@ -114,15 +114,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <returns>The corresponding WWCP EVSE.</returns>
         public static EVSE ToWWCP(this EVSEDataRecord              EVSEDataRecord,
 
-                                  String                           DataSource               = "",
-                                  EVSEAdminStatusTypes             InitialEVSEAdminStatus       = EVSEAdminStatusTypes.OutOfService,
-                                  EVSEAdminStatusTypes             InitialChargingStationAdminStatus       = ChargingStationAdminStatusTypes.OutOfService,
-                                  WWCP.EVSEStatusTypes             InitialEVSEStatus            = WWCP.EVSEStatusTypes.OutOfService,
-                                  WWCP.EVSEStatusTypes             InitialChargingStationStatus            = WWCP.EVSEStatusTypes.OutOfService,
-                                  UInt16                           MaxAdminStatusListSize   = EVSE.DefaultMaxAdminStatusListSize,
-                                  UInt16                           MaxStatusListSize        = EVSE.DefaultMaxEVSEStatusListSize,
+                                  String                           DataSource                              = "",
+                                  EVSEAdminStatusTypes             InitialEVSEAdminStatus                  = EVSEAdminStatusTypes.OutOfService,
+                                  ChargingStationAdminStatusTypes  InitialChargingStationAdminStatus       = ChargingStationAdminStatusTypes.OutOfService,
+                                  WWCP.EVSEStatusTypes             InitialEVSEStatus                       = WWCP.EVSEStatusTypes.OutOfService,
+                                  WWCP.ChargingStationStatusTypes  InitialChargingStationStatus            = WWCP.ChargingStationStatusTypes.OutOfService,
+                                  UInt16                           MaxEVSEAdminStatusListSize              = EVSE.DefaultMaxAdminStatusListSize,
+                                  UInt16                           MaxChargingStationAdminStatusListSize   = EVSE.DefaultMaxAdminStatusListSize,
+                                  UInt16                           MaxEVSEStatusListSize                   = EVSE.DefaultMaxEVSEStatusListSize,
+                                  UInt16                           MaxChargingStationStatusListSize        = EVSE.DefaultMaxEVSEStatusListSize,
 
-                                  EMP.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE      = null)
+                                  EMP.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE                     = null)
 
         {
 
@@ -142,18 +144,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 _EVSE = new EVSE(_EVSEId.Value,
                                  new ChargingStation(_ChargingStationId,
                                                      station => {
-                                                     }),
+                                                         station.DataSource   = DataSource;
+                                                         station.Address      = EVSEDataRecord.Address.ToWWCP();
+                                                         station.GeoLocation  = EVSEDataRecord.GeoCoordinate;
+                                                     },
+                                                     null,
+                                                     InitialChargingStationAdminStatus,
+                                                     InitialChargingStationStatus,
+                                                     MaxChargingStationAdminStatusListSize,
+                                                     MaxChargingStationStatusListSize),
                                  evse => {
-                                     evse.DataSource = DataSource;
+                                     evse.DataSource  = DataSource;
                                  },
                                  null,
-                                 InitialAdminStatus,
-                                 InitialStatus,
-                                 MaxAdminStatusListSize,
-                                 MaxStatusListSize);
+                                 InitialEVSEAdminStatus,
+                                 InitialEVSEStatus,
+                                 MaxEVSEAdminStatusListSize,
+                                 MaxEVSEStatusListSize);
 
-                //_EVSE.Address
-                //_EVSE.GeoCoordinate
 
                 //evse.Description     = CurrentEVSEDataRecord.AdditionalInfo;
                 //evse.ChargingModes   = new ReactiveSet<WWCP.ChargingModes>(CurrentEVSEDataRecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
