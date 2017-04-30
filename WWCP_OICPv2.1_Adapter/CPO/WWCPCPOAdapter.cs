@@ -450,7 +450,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
                               ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
-                              ChargingStationOperatorProxy                            DefaultOperator                                 = null,
+                              ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
@@ -988,7 +988,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
                               ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
-                              ChargingStationOperatorProxy                            DefaultOperator                                 = null,
+                              ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
@@ -1110,7 +1110,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
                               ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
-                              ChargingStationOperatorProxy                            DefaultOperator                                 = null,
+                              ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
@@ -3390,7 +3390,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.Acknowledgement>
 
-            ISendData.SetStaticData(ChargingStationOperatorProxy  ChargingStationOperator,
+            ISendData.SetStaticData(ChargingStationOperator  ChargingStationOperator,
 
                                     DateTime?                     Timestamp,
                                     CancellationToken?            CancellationToken,
@@ -3431,7 +3431,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.Acknowledgement>
 
-            ISendData.AddStaticData(ChargingStationOperatorProxy  ChargingStationOperator,
+            ISendData.AddStaticData(ChargingStationOperator  ChargingStationOperator,
 
                                     DateTime?                     Timestamp,
                                     CancellationToken?            CancellationToken,
@@ -3472,7 +3472,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.Acknowledgement>
 
-            ISendData.UpdateStaticData(ChargingStationOperatorProxy  ChargingStationOperator,
+            ISendData.UpdateStaticData(ChargingStationOperator  ChargingStationOperator,
 
                                        DateTime?                     Timestamp,
                                        CancellationToken?            CancellationToken,
@@ -3513,7 +3513,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.Acknowledgement>
 
-            ISendData.DeleteStaticData(ChargingStationOperatorProxy  ChargingStationOperator,
+            ISendData.DeleteStaticData(ChargingStationOperator  ChargingStationOperator,
 
                                        DateTime?                     Timestamp,
                                        CancellationToken?            CancellationToken,
@@ -3555,7 +3555,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.Acknowledgement>
 
-            ISendData.SetStaticData(IEnumerable<ChargingStationOperatorProxy>  ChargingStationOperators,
+            ISendData.SetStaticData(IEnumerable<ChargingStationOperator>  ChargingStationOperators,
 
                                     DateTime?                                  Timestamp,
                                     CancellationToken?                         CancellationToken,
@@ -3596,7 +3596,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.Acknowledgement>
 
-            ISendData.AddStaticData(IEnumerable<ChargingStationOperatorProxy>  ChargingStationOperators,
+            ISendData.AddStaticData(IEnumerable<ChargingStationOperator>  ChargingStationOperators,
 
                                     DateTime?                                  Timestamp,
                                     CancellationToken?                         CancellationToken,
@@ -3637,7 +3637,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.Acknowledgement>
 
-            ISendData.UpdateStaticData(IEnumerable<ChargingStationOperatorProxy>  ChargingStationOperators,
+            ISendData.UpdateStaticData(IEnumerable<ChargingStationOperator>  ChargingStationOperators,
 
                                        DateTime?                                  Timestamp,
                                        CancellationToken?                         CancellationToken,
@@ -3678,7 +3678,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.Acknowledgement>
 
-            ISendData.DeleteStaticData(IEnumerable<ChargingStationOperatorProxy>  ChargingStationOperators,
+            ISendData.DeleteStaticData(IEnumerable<ChargingStationOperator>  ChargingStationOperators,
 
                                        DateTime?                                  Timestamp,
                                        CancellationToken?                         CancellationToken,

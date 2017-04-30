@@ -2571,7 +2571,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             DebugX.Log("Imported " + OperatorEVSEData.Count() + " OperatorEVSEData!");
                             DebugX.Log("Imported " + OperatorEVSEData.SelectMany(status => status.EVSEDataRecords).Count() + " EVSEDataRecords!");
 
-                            ChargingStationOperatorProxy      WWCPChargingStationOperator     = null;
+                            ChargingStationOperator      WWCPChargingStationOperator     = null;
                             ChargingStationOperator_Id?  WWCPChargingStationOperatorId   = null;
                             UInt64                       IllegalOperatorsIds             = 0;
                             UInt64                       OperatorsSkipped                = 0;
@@ -3092,7 +3092,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             DebugX.Log("Imported " + OperatorEVSEStatus.Count() + " OperatorEVSEStatus!");
                             DebugX.Log("Imported " + OperatorEVSEStatus.SelectMany(status => status.EVSEStatusRecords).Count() + " EVSEStatusRecords!");
 
-                            ChargingStationOperatorProxy      WWCPChargingStationOperator     = null;
+                            ChargingStationOperator      WWCPChargingStationOperator     = null;
                             ChargingStationOperator_Id?  WWCPChargingStationOperatorId   = null;
                             UInt64                       IllegalOperatorsIds             = 0;
                             UInt64                       OperatorsSkipped                = 0;
