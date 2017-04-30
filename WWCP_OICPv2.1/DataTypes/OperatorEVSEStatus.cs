@@ -32,25 +32,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// A group of OICP EVSE status records.
     /// </summary>
-    public class OperatorEVSEStatus
+    public class OperatorEVSEStatus : ACustomData,
+                                      IEquatable<OperatorEVSEStatus>,
+                                      IComparable<OperatorEVSEStatus>,
+                                      IComparable
     {
 
         #region Properties
 
         /// <summary>
-        /// The unique identification of an Charging Station Operator.
+        /// An enumeration of EVSE status records.
+        /// </summary>
+        public IEnumerable<EVSEStatusRecord>  EVSEStatusRecords   { get; }
+
+        /// <summary>
+        /// The unqiue identification of the EVSE operator maintaining the given EVSE status records.
         /// </summary>
         public Operator_Id                    OperatorId          { get; }
 
         /// <summary>
-        /// The name of an Charging Station Operator.
+        /// The optional name of the EVSE operator maintaining the given EVSE status records.
         /// </summary>
         public String                         OperatorName        { get; }
-
-        /// <summary>
-        /// An enumeration of EVSE status records.
-        /// </summary>
-        public IEnumerable<EVSEStatusRecord>  EVSEStatusRecords   { get; }
 
         #endregion
 
@@ -59,96 +62,510 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Create a new group of OICP EVSE status records.
         /// </summary>
-        /// <param name="OperatorId">The unique identification of an Charging Station Operator.</param>
-        /// <param name="OperatorName">The name of an Charging Station Operator.</param>
         /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
-        public OperatorEVSEStatus(Operator_Id                    OperatorId,
-                                  String                         OperatorName,
-                                  IEnumerable<EVSEStatusRecord>  EVSEStatusRecords)
+        /// <param name="OperatorId">The unqiue identification of the EVSE operator maintaining the given EVSE status records.</param>
+        /// <param name="OperatorName">An optional name of the EVSE operator maintaining the given EVSE status records.</param>
+        /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
+        public OperatorEVSEStatus(IEnumerable<EVSEStatusRecord>        EVSEStatusRecords,
+                                  Operator_Id                          OperatorId,
+                                  String                               OperatorName  = null,
+                                  IReadOnlyDictionary<String, Object>  CustomData    = null)
+
+            : base(CustomData)
+
         {
 
             #region Initial checks
 
-            if (OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId),  "The given operator identification must not be null!");
+            if (EVSEStatusRecords == null)
+                throw new ArgumentNullException(nameof(EVSEStatusRecords), "The given enumeration of EVSE status records must not be null!");
 
             #endregion
 
+            this.EVSEStatusRecords  = EVSEStatusRecords;
             this.OperatorId         = OperatorId;
-            this.OperatorName       = OperatorName      ?? "";
-            this.EVSEStatusRecords  = EVSEStatusRecords ?? new EVSEStatusRecord[0];
+            this.OperatorName       = OperatorName;
 
         }
 
         #endregion
 
 
-        #region (static) Parse(OperatorEVSEStatusXML)
+        #region Documentation
 
-        public static OperatorEVSEStatus Parse(XElement OperatorEVSEStatusXML)
+        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:EVSEStatus  = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
+        // [...]
+        //
+        // <!--Zero or more repetitions:-->
+        // <EVSEStatus:OperatorEvseStatus>
+        //
+        //    <EVSEStatus:OperatorID>?</EVSEStatus:OperatorID>
+        //
+        //    <!--Optional:-->
+        //    <EVSEStatus:OperatorName>?</EVSEStatus:OperatorName>
+        //
+        //    <!--Zero or more repetitions:-->
+        //    <EVSEStatus:EvseStatusRecord>
+        //       <EVSEStatus:EvseId>?</EVSEStatus:EvseId>
+        //       <EVSEStatus:EvseStatus>?</EVSEStatus:EvseStatus>
+        //    </EVSEStatus:EvseStatusRecord>
+        //
+        // </EVSEStatus:OperatorEvseStatus>
+        //
+        // [...]
+        //
+
+        #endregion
+
+        #region (static) Parse(OperatorEVSEStatusXML,  CustomOperatorEVSEStatusParser = null, CustomEVSEStatusRecordParser = null, OnException = null)
+
+        /// <summary>
+        /// Parse the given XML representation of an OICP operator EVSE status request.
+        /// </summary>
+        /// <param name="OperatorEVSEStatusXML">The XML to parse.</param>
+        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static OperatorEVSEStatus Parse(XElement                                  OperatorEVSEStatusXML,
+                                               CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
+                                               CustomParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser    = null,
+                                               OnExceptionDelegate                       OnException                     = null)
         {
 
-            #region Initial checks
+            OperatorEVSEStatus _OperatorEVSEStatus;
 
-            if (OperatorEVSEStatusXML == null)
-                return null;
+            if (TryParse(OperatorEVSEStatusXML,
+                         out _OperatorEVSEStatus,
+                         CustomOperatorEVSEStatusParser,
+                         CustomEVSEStatusRecordParser,
+                         OnException))
 
-            #endregion
+                return _OperatorEVSEStatus;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) Parse(OperatorEVSEStatusText, CustomOperatorEVSEStatusParser = null, CustomEVSEStatusRecordParser = null, OnException = null)
+
+        /// <summary>
+        /// Parse the given text representation of an OICP operator EVSE status request.
+        /// </summary>
+        /// <param name="OperatorEVSEStatusText">The text to parse.</param>
+        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static OperatorEVSEStatus Parse(String                                    OperatorEVSEStatusText,
+                                               CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
+                                               CustomParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser    = null,
+                                               OnExceptionDelegate                       OnException                     = null)
+        {
+
+            OperatorEVSEStatus _OperatorEVSEStatus;
+
+            if (TryParse(OperatorEVSEStatusText,
+                         out _OperatorEVSEStatus,
+                         CustomOperatorEVSEStatusParser,
+                         CustomEVSEStatusRecordParser,
+                         OnException))
+
+                return _OperatorEVSEStatus;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(OperatorEVSEStatusXML,  out OperatorEVSEStatus, CustomOperatorEVSEStatusParser = null, CustomEVSEStatusRecordParser = null, OnException = null)
+
+        /// <summary>
+        /// Try to parse the given XML representation of an OICP operator EVSE status request.
+        /// </summary>
+        /// <param name="OperatorEVSEStatusXML">The XML to parse.</param>
+        /// <param name="OperatorEVSEStatus">The parsed operator EVSE status request.</param>
+        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(XElement                                  OperatorEVSEStatusXML,
+                                       out OperatorEVSEStatus                    OperatorEVSEStatus,
+                                       CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
+                                       CustomParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser    = null,
+                                       OnExceptionDelegate                       OnException                     = null)
+        {
 
             try
             {
 
-                return new OperatorEVSEStatus(Operator_Id.Parse(OperatorEVSEStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "OperatorID", "Missing OperatorID!")),
-                                              OperatorEVSEStatusXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName", ""),
-                                              OperatorEVSEStatusXML.Elements             (OICPNS.EVSEStatus + "EvseStatusRecord").
-                                                                    SafeSelect(EvseStatusRecordXML => EVSEStatusRecord.Parse(EvseStatusRecordXML)).
-                                                                    SafeWhere (statusrecord        => statusrecord != null));
+                if (OperatorEVSEStatusXML.Name != OICPNS.EVSEStatus + "OperatorEvseStatus")
+                {
+                    OperatorEVSEStatus = null;
+                    return false;
+                }
+
+                OperatorEVSEStatus = new OperatorEVSEStatus(
+
+                                         OperatorEVSEStatusXML.MapElements          (OICPNS.EVSEStatus + "EvseStatusRecord",
+                                                                                     (EvseStatusRecordXML, onexception) => EVSEStatusRecord.Parse(EvseStatusRecordXML,
+                                                                                                                                                  CustomEVSEStatusRecordParser,
+                                                                                                                                                  onexception),
+                                                                                     OnException).
+                                                                                     Where(operatorevsestatus => operatorevsestatus != null),
+
+                                         OperatorEVSEStatusXML.MapValueOrFail       (OICPNS.EVSEStatus + "OperatorID",
+                                                                                     Operator_Id.Parse),
+
+                                         OperatorEVSEStatusXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName")
+
+                                     );
+
+                if (CustomOperatorEVSEStatusParser != null)
+                    OperatorEVSEStatus = CustomOperatorEVSEStatusParser(OperatorEVSEStatusXML, OperatorEVSEStatus);
+
+                return true;
 
             }
             catch (Exception e)
             {
-                return null;
+
+                OnException?.Invoke(DateTime.Now, OperatorEVSEStatusXML, e);
+
+                OperatorEVSEStatus = null;
+                return false;
+
             }
 
         }
 
         #endregion
 
-        #region (static) Parse(OperatorEVSEStatusXMLs)
+        #region (static) TryParse(OperatorEVSEStatusText, out OperatorEVSEStatus, CustomOperatorEVSEStatusParser = null, CustomEVSEStatusRecordParser = null, OnException = null)
 
-        public static IEnumerable<OperatorEVSEStatus> Parse(IEnumerable<XElement> OperatorEVSEStatusXMLs)
+        /// <summary>
+        /// Try to parse the given text representation of an OICP operator EVSE status request.
+        /// </summary>
+        /// <param name="OperatorEVSEStatusText">The text to parse.</param>
+        /// <param name="OperatorEVSEStatus">The parsed operator EVSE status request.</param>
+        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(String                                    OperatorEVSEStatusText,
+                                       out OperatorEVSEStatus                    OperatorEVSEStatus,
+                                       CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
+                                       CustomParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser    = null,
+                                       OnExceptionDelegate                       OnException                     = null)
         {
-
-            #region Initial checks
-
-            if (OperatorEVSEStatusXMLs == null)
-                return new OperatorEVSEStatus[0];
-
-            var _OperatorEVSEStatusXMLs = OperatorEVSEStatusXMLs.ToArray();
-
-            if (_OperatorEVSEStatusXMLs.Length == 0)
-                return new OperatorEVSEStatus[0];
-
-            #endregion
 
             try
             {
-                return OperatorEVSEStatusXMLs.SafeSelect(OperatorEVSEStatusXML => Parse(OperatorEVSEStatusXML));
+
+                if (TryParse(XDocument.Parse(OperatorEVSEStatusText).Root,
+                             out OperatorEVSEStatus,
+                             CustomOperatorEVSEStatusParser,
+                             CustomEVSEStatusRecordParser,
+                             OnException))
+
+                    return true;
+
             }
             catch (Exception e)
             {
-                return new OperatorEVSEStatus[0];
+                OnException?.Invoke(DateTime.Now, OperatorEVSEStatusText, e);
             }
+
+            OperatorEVSEStatus = null;
+            return false;
+
+        }
+
+        #endregion
+
+        #region ToXML(OperatorEVSEStatusXName = null, CustomOperatorEVSEStatusSerializer = null, EVSEStatusRecordXName = null, CustomEVSEStatusRecordSerializer = null)
+
+        /// <summary>
+        /// Return a XML representation of this object.
+        /// </summary>
+        /// <param name="OperatorEVSEStatusXName">The OperatorEVSEStatus XML name to use.</param>
+        /// <param name="CustomOperatorEVSEStatusSerializer">A delegate to serialize custom OperatorEVSEStatus xml elements.</param>
+        /// <param name="EVSEStatusRecordXName">The EVSEStatusRecord XML name to use.</param>
+        /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSEStatusRecord xml elements.</param>
+        public XElement ToXML(XName                                         OperatorEVSEStatusXName             = null,
+                              CustomSerializerDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusSerializer  = null,
+                              XName                                         EVSEStatusRecordXName               = null,
+                              CustomSerializerDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordSerializer    = null)
+
+        {
+
+            var xml = new XElement(OperatorEVSEStatusXName ?? OICPNS.EVSEData + "OperatorEvseStatus",
+
+                          new XElement(OICPNS.EVSEData + "OperatorID",          OperatorId.ToString()),
+
+                          OperatorName.IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.EVSEData + "OperatorName",  OperatorName)
+                              : null,
+
+                          EVSEStatusRecords.Any()
+                              ? EVSEStatusRecords.SafeSelect(evsestatusrecord => evsestatusrecord.ToXML(EVSEStatusRecordXName,
+                                                                                                        CustomEVSEStatusRecordSerializer))
+                              : null);
+
+            return CustomOperatorEVSEStatusSerializer != null
+                       ? CustomOperatorEVSEStatusSerializer(this, xml)
+                       : xml;
 
         }
 
         #endregion
 
 
-        // ToXML()
+        #region Operator overloading
 
+        #region Operator == (OperatorEVSEStatus1, OperatorEVSEStatus2)
 
-        // ToString()
+        /// <summary>
+        /// Compares two results for equality.
+        /// </summary>
+        /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
+        /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public static Boolean operator == (OperatorEVSEStatus OperatorEVSEStatus1, OperatorEVSEStatus OperatorEVSEStatus2)
+        {
+
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(OperatorEVSEStatus1, OperatorEVSEStatus2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (((Object) OperatorEVSEStatus1 == null) || ((Object) OperatorEVSEStatus2 == null))
+                return false;
+
+            return OperatorEVSEStatus1.Equals(OperatorEVSEStatus2);
+
+        }
+
+        #endregion
+
+        #region Operator != (OperatorEVSEStatus1, OperatorEVSEStatus2)
+
+        /// <summary>
+        /// Compares two results for inequality.
+        /// </summary>
+        /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
+        /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
+        /// <returns>False if both match; True otherwise.</returns>
+        public static Boolean operator != (OperatorEVSEStatus OperatorEVSEStatus1, OperatorEVSEStatus OperatorEVSEStatus2)
+
+            => !(OperatorEVSEStatus1 == OperatorEVSEStatus2);
+
+        #endregion
+
+        #region Operator <  (OperatorEVSEStatus1, OperatorEVSEStatus2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
+        /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator < (OperatorEVSEStatus OperatorEVSEStatus1, OperatorEVSEStatus OperatorEVSEStatus2)
+        {
+
+            if ((Object) OperatorEVSEStatus1 == null)
+                throw new ArgumentNullException(nameof(OperatorEVSEStatus1), "The given OperatorEVSEStatus1 must not be null!");
+
+            return OperatorEVSEStatus1.CompareTo(OperatorEVSEStatus2) < 0;
+
+        }
+
+        #endregion
+
+        #region Operator <= (OperatorEVSEStatus1, OperatorEVSEStatus2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
+        /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator <= (OperatorEVSEStatus OperatorEVSEStatus1, OperatorEVSEStatus OperatorEVSEStatus2)
+            => !(OperatorEVSEStatus1 > OperatorEVSEStatus2);
+
+        #endregion
+
+        #region Operator >  (OperatorEVSEStatus1, OperatorEVSEStatus2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
+        /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator > (OperatorEVSEStatus OperatorEVSEStatus1, OperatorEVSEStatus OperatorEVSEStatus2)
+        {
+
+            if ((Object) OperatorEVSEStatus1 == null)
+                throw new ArgumentNullException(nameof(OperatorEVSEStatus1), "The given OperatorEVSEStatus1 must not be null!");
+
+            return OperatorEVSEStatus1.CompareTo(OperatorEVSEStatus2) > 0;
+
+        }
+
+        #endregion
+
+        #region Operator >= (OperatorEVSEStatus1, OperatorEVSEStatus2)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
+        /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
+        /// <returns>true|false</returns>
+        public static Boolean operator >= (OperatorEVSEStatus OperatorEVSEStatus1, OperatorEVSEStatus OperatorEVSEStatus2)
+            => !(OperatorEVSEStatus1 < OperatorEVSEStatus2);
+
+        #endregion
+
+        #endregion
+
+        #region IComparable<OperatorEVSEStatus> Members
+
+        #region CompareTo(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        public Int32 CompareTo(Object Object)
+        {
+
+            if (Object == null)
+                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
+
+            var OperatorEVSEStatus = Object as OperatorEVSEStatus;
+            if ((Object) OperatorEVSEStatus == null)
+                throw new ArgumentException("The given object is not an operator EVSE status identification!", nameof(Object));
+
+            return CompareTo(OperatorEVSEStatus);
+
+        }
+
+        #endregion
+
+        #region CompareTo(OperatorEVSEStatus)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="OperatorEVSEStatus">An object to compare with.</param>
+        public Int32 CompareTo(OperatorEVSEStatus OperatorEVSEStatus)
+        {
+
+            if ((Object) OperatorEVSEStatus == null)
+                throw new ArgumentNullException(nameof(OperatorEVSEStatus), "The given operator EVSE status must not be null!");
+
+            return OperatorId.CompareTo(OperatorEVSEStatus.OperatorId);
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region IEquatable<OperatorEVSEStatus> Members
+
+        #region Equals(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        /// <returns>true|false</returns>
+        public override Boolean Equals(Object Object)
+        {
+
+            if (Object == null)
+                return false;
+
+            var OperatorEVSEStatus = Object as OperatorEVSEStatus;
+            if ((Object) OperatorEVSEStatus == null)
+                return false;
+
+            return Equals(OperatorEVSEStatus);
+
+        }
+
+        #endregion
+
+        #region Equals(OperatorEVSEStatus)
+
+        /// <summary>
+        /// Compares two operator EVSE statuss for equality.
+        /// </summary>
+        /// <param name="OperatorEVSEStatus">A operator EVSE status to compare with.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public Boolean Equals(OperatorEVSEStatus OperatorEVSEStatus)
+        {
+
+            if ((Object) OperatorEVSEStatus == null)
+                return false;
+
+            return OperatorId.Equals(OperatorEVSEStatus.OperatorId) &&
+
+                   ((OperatorName   == null && OperatorEVSEStatus.OperatorName   == null) ||
+                    (OperatorName   != null && OperatorEVSEStatus.OperatorName   != null && OperatorName.   Equals(OperatorEVSEStatus.OperatorName))) &&
+
+                   ((!EVSEStatusRecords.Any() && !OperatorEVSEStatus.EVSEStatusRecords.Any()) ||
+                    (EVSEStatusRecords.Any() && OperatorEVSEStatus.EVSEStatusRecords.Any() && EVSEStatusRecords.Count().Equals(OperatorEVSEStatus.EVSEStatusRecords.Count())));
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Return the HashCode of this object.
+        /// </summary>
+        /// <returns>The HashCode of this object.</returns>
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+
+                return OperatorId.GetHashCode() * 5 ^
+
+                       (OperatorName.IsNotNullOrEmpty()
+                            ? OperatorName.   GetHashCode()
+                            : 0) * 3 ^
+
+                       (EVSEStatusRecords.Any()
+                            ? EVSEStatusRecords.GetHashCode()
+                            : 0);
+
+            }
+        }
+
+        #endregion
+
+        #region (override) ToString()
+
+        /// <summary>
+        /// Return a string representation of this object.
+        /// </summary>
+        public override String ToString()
+
+            => String.Concat(OperatorId,
+                             OperatorName.IsNotNullOrEmpty() ? ", " + OperatorName : "",
+                             ", ",  EVSEStatusRecords.Count(), " EVSE status record(s)");
+
+        #endregion
 
     }
 

@@ -152,7 +152,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static GetChargeDetailRecordsResponse ParseXML(GetChargeDetailRecordsRequest                                  Request,
                                                               XElement                                                       ChargeDetailRecordsXML,
                                                               CustomMapperDelegate<GetChargeDetailRecordsResponse, Builder>  CustomObjectMapper              = null,
-                                                              CustomMapperDelegate<ChargeDetailRecord>                       CustomChargeDetailRecordMapper  = null,
+                                                              CustomParserDelegate<ChargeDetailRecord>                       CustomChargeDetailRecordParser  = null,
                                                               OnExceptionDelegate                                            OnException                     = null)
         {
 
@@ -164,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                        Request,
 
                        ChargeDetailRecordsXML.MapElements(OICPNS.Authorization + "eRoamingChargeDetailRecord",
-                                                          (XML, e) => ChargeDetailRecord.Parse(XML, CustomChargeDetailRecordMapper, e),
+                                                          (XML, e) => ChargeDetailRecord.Parse(XML, CustomChargeDetailRecordParser, e),
                                                           OnException),
 
                        null,

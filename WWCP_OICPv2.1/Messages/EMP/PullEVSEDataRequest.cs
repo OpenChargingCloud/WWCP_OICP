@@ -341,36 +341,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(CustomPullEVSEDataRequestSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomPullEVSEDataRequestSerializer">A delegate to serialize custom eRoamingPullEvseData xml elements.</param>
+        public XElement ToXML(CustomSerializerDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestSerializer = null)
+        {
 
-            => new XElement(OICPNS.EVSEData + "eRoamingPullEvseData",
+            var XML = new XElement(OICPNS.EVSEData + "eRoamingPullEvseData",
 
-                            new XElement(OICPNS.EVSEData + "ProviderID", ProviderId.ToString()),
+                                   new XElement(OICPNS.EVSEData + "ProviderID", ProviderId.ToString()),
 
-                            SearchCenter != null && DistanceKM > 0
-                                ? new XElement(OICPNS.EVSEData + "SearchCenter",
-                                    new XElement(OICPNS.CommonTypes + "GeoCoordinates",
-                                        new XElement(OICPNS.CommonTypes + "DecimalDegree",
-                                            new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),
-                                            new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Value.Latitude. ToString("{0:0.######}").Replace(",", "."))
-                                        )
-                                    ),
-                                    new XElement(OICPNS.CommonTypes + "Radius", String.Format("{0:0.}", DistanceKM).Replace(",", "."))
-                                  )
-                                : null,
+                                   SearchCenter != null && DistanceKM > 0
+                                       ? new XElement(OICPNS.EVSEData + "SearchCenter",
+                                           new XElement(OICPNS.CommonTypes + "GeoCoordinates",
+                                               new XElement(OICPNS.CommonTypes + "DecimalDegree",
+                                                   new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),
+                                                   new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Value.Latitude. ToString("{0:0.######}").Replace(",", "."))
+                                               )
+                                           ),
+                                           new XElement(OICPNS.CommonTypes + "Radius", String.Format("{0:0.}", DistanceKM).Replace(",", "."))
+                                         )
+                                       : null,
 
-                            LastCall.HasValue
-                                ? new XElement(OICPNS.EVSEData + "LastCall",  LastCall.Value.ToIso8601())
-                                : null,
+                                   LastCall.HasValue
+                                       ? new XElement(OICPNS.EVSEData + "LastCall",  LastCall.Value.ToIso8601())
+                                       : null,
 
-                            new XElement(OICPNS.EVSEData + "GeoCoordinatesResponseFormat",  "DecimalDegree")
+                                   new XElement(OICPNS.EVSEData + "GeoCoordinatesResponseFormat",  "DecimalDegree")
 
-                       );
+                              );
+
+            return CustomPullEVSEDataRequestSerializer != null
+                       ? CustomPullEVSEDataRequestSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

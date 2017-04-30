@@ -230,14 +230,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(XName = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="XName">The XML name to use.</param>
+        public XElement ToXML(XName XName = null)
 
-            => new XElement(OICPNS.CommonTypes + "StatusCode",
+            => new XElement(XName ?? OICPNS.CommonTypes + "StatusCode",
 
                    new XElement(OICPNS.CommonTypes + "Code",  ((Int32) Code).ToString("D3")),
 

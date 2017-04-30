@@ -414,6 +414,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
+
+        public CustomSerializerDelegate<OperatorEVSEData>    CustomOperatorEVSEDataSerializer    { get; set; }
+        public CustomSerializerDelegate<EVSEDataRecord>      CustomEVSEDataRecordSerializer      { get; set; }
+
+        public CustomSerializerDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusSerializer  { get; set; }
+        public CustomSerializerDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordSerializer    { get; set; }
+
+        public CustomSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer  { get; set; }
+
         #endregion
 
         #region Events
@@ -783,7 +792,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 result = await _OICPClient.Query(_CustomPushEVSEDataSOAPRequestMapper(Request,
-                                                                                      SOAP.Encapsulation(Request.ToXML(IncludeMetadata: false))),
+                                                                                      SOAP.Encapsulation(Request.ToXML(CustomOperatorEVSEDataSerializer: CustomOperatorEVSEDataSerializer,
+                                                                                                                       CustomEVSEDataRecordSerializer:   CustomEVSEDataRecordSerializer))),
                                                  "eRoamingPushEvseData",
                                                  RequestLogDelegate:   OnPushEVSEDataSOAPRequest,
                                                  ResponseLogDelegate:  OnPushEVSEDataSOAPResponse,
@@ -992,7 +1002,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(_CustomPushEVSEStatusSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                result = await _OICPClient.Query(_CustomPushEVSEStatusSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML(CustomOperatorEVSEStatusSerializer: CustomOperatorEVSEStatusSerializer,
+                                                                                                                                  CustomEVSEStatusRecordSerializer:   CustomEVSEStatusRecordSerializer))),
                                                  "eRoamingPushEvseStatus",
                                                  RequestLogDelegate:   OnPushEVSEStatusSOAPRequest,
                                                  ResponseLogDelegate:  OnPushEVSEStatusSOAPResponse,
@@ -1585,7 +1596,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(_CustomSendChargeDetailRecordSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                result = await _OICPClient.Query(_CustomSendChargeDetailRecordSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML(CustomChargeDetailRecordSerializer: CustomChargeDetailRecordSerializer))),
                                                  "eRoamingChargeDetailRecord",
                                                  RequestLogDelegate:   OnSendChargeDetailRecordSOAPRequest,
                                                  ResponseLogDelegate:  OnSendChargeDetailRecordSOAPResponse,

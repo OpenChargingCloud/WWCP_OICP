@@ -81,6 +81,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        public CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser { get; set; }
+
         #region Events
 
         #region OnAuthorizeStart
@@ -642,7 +644,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 if (CPO.SendChargeDetailRecordRequest.TryParse(ChargeDetailRecordXML,
                                                                out SendChargeDetailRecordRequest,
+                                                               CustomChargeDetailRecordParser,
                                                                null,
+
                                                                HTTPRequest.Timestamp,
                                                                HTTPRequest.CancellationToken,
                                                                HTTPRequest.EventTrackingId,

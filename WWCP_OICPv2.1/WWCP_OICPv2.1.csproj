@@ -67,6 +67,7 @@
     <Compile Include="DataTypes\Data\Address.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
     <Compile Include="DataTypes\Enums\PINCrypto.cs" />
+    <Compile Include="DataTypes\EVSEStatus.cs" />
     <Compile Include="DataTypes\ICustomData.cs" />
     <Compile Include="DataTypes\Simple\EVSE_Id.cs" />
     <Compile Include="DataTypes\Simple\HubOperator_Id.cs" />
@@ -149,7 +150,6 @@
     <Compile Include="DataTypes\ChargeDetailRecord.cs" />
     <Compile Include="Messages\EMP\GetChargeDetailRecordsResponse.cs" />
     <Compile Include="DataTypes\EVSEData.cs" />
-    <Compile Include="DataTypes\EVSEStatus.cs" />
     <Compile Include="DataTypes\EVSEStatusById.cs" />
     <Compile Include="DataTypes\MobileAuthorizationStart.cs" />
     <Compile Include="DataTypes\Data\StatusCode.cs" />

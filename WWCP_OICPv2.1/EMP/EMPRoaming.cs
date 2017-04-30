@@ -1666,18 +1666,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         }
 
 
-        public CustomMapperDelegate<ChargeDetailRecord> CustomChargeDetailRecordXMLMapper
+        public CustomParserDelegate<ChargeDetailRecord> CustomChargeDetailRecordXMLMapper
         {
 
             get
             {
-                return EMPClient.CustomChargeDetailRecordXMLMapper;
+                return EMPClient.CustomChargeDetailRecordParser;
             }
 
             set
             {
                 if (value != null)
-                    EMPClient.CustomChargeDetailRecordXMLMapper = value;
+                    EMPClient.CustomChargeDetailRecordParser = value;
             }
 
         }

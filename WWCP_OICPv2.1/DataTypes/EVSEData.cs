@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
@@ -31,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// A group of OICP operator EVSE data records or a status code.
     /// </summary>
-    public class EVSEData
+    public class EVSEData : IEquatable<EVSEData>
     {
 
         #region Properties
@@ -43,6 +44,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         /// <summary>
         /// The status code for this request.
+        /// (Not defined by OICP!)
         /// </summary>
         public StatusCode                     StatusCode        { get; }
 
@@ -69,7 +71,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             this.OperatorEVSEData  = OperatorEVSEData;
-            this.StatusCode        = StatusCode ?? new StatusCode(StatusCodes.Success);
+            this.StatusCode        = StatusCode;
 
         }
 
@@ -101,96 +103,395 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Documentation
 
+        // <?xml version="1.0" encoding="UTF-8"?>
         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //                   xmlns:fn          = "http://www.w3.org/2005/xpath-functions"
+        //                   xmlns:sbp         = "http://www.inubit.com/eMobility/SBP"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0"
+        //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.1">
         //
-        // [...]
+        //    <soapenv:Body>
+        //       <EVSEData:eRoamingEvseData>
+        //          <EVSEData:EvseData>
         //
-        //  <EVSEData:eRoamingEvseData>
+        //             <!--Zero or more repetitions:-->
+        //             <EVSEData:OperatorEvseData>
         //
-        //     <EVSEData:EvseData>
+        //                <EVSEData:OperatorID>DE*GEF</EVSEData:OperatorID>
         //
-        //        <!--Zero or more repetitions:-->
-        //        <EVSEData:OperatorEvseData>
+        //                <!--Optional:-->
+        //                <EVSEData:OperatorName>GraphDefined</EVSEData:OperatorName>
         //
-        //           <EVSEData:OperatorID>?</EVSEData:OperatorID>
+        //                <!--Zero or more repetitions:-->
+        //                <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="2017-04-21T01:00:03.000Z">
         //
-        //           <!--Optional:-->
-        //           <EVSEData:OperatorName>?</EVSEData:OperatorName>
+        //                   <EVSEData:EvseId>DE*GEF*EVSE*CI*TESTS*A*1</EVSEData:EvseId>
+        //                   <EVSEData:ChargingStationId>DE*GEF*STATION*CI*TESTS*A*1</EVSEData:ChargingStationId>
+        //                   <EVSEData:ChargingStationName>DE*GEF*STATION*CI*TESTS*A*1</EVSEData:ChargingStationName>
+        //                   <EVSEData:EnChargingStationName>DE*GEF*STATION*CI*TESTS*A*1</EVSEData:EnChargingStationName>
         //
-        //           <!--Zero or more repetitions:-->
-        //           <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
-        //              [...]
-        //           </EVSEData:EvseDataRecord>
+        //                   <EVSEData:Address>
+        //                      <CommonTypes:Country>DE</CommonTypes:Country>
+        //                      <CommonTypes:City>Jena</CommonTypes:City>
+        //                      <CommonTypes:Street>Biberweg</CommonTypes:Street>
+        //                      <CommonTypes:PostalCode>07749</CommonTypes:PostalCode>
+        //                      <CommonTypes:HouseNum>18</CommonTypes:HouseNum>
+        //                   </EVSEData:Address>
         //
-        //        </EVSEData:OperatorEvseData>
+        //                   <EVSEData:GeoCoordinates>
+        //                      <CommonTypes:DecimalDegree>
+        //                         <CommonTypes:Longitude>11.6309461</CommonTypes:Longitude>
+        //                         <CommonTypes:Latitude>50.9293504</CommonTypes:Latitude>
+        //                      </CommonTypes:DecimalDegree>
+        //                   </EVSEData:GeoCoordinates>
         //
-        //     </EVSEData:EvseData>
+        //                   <EVSEData:Plugs>
+        //                      <EVSEData:Plug>Type 2 Outlet</EVSEData:Plug>
+        //                   </EVSEData:Plugs>
         //
-        //     <!--Optional:-->
-        //     <EVSEData:StatusCode>
+        //                   <EVSEData:AuthenticationModes>
+        //                      <EVSEData:AuthenticationMode>NFC RFID Classic</EVSEData:AuthenticationMode>
+        //                      <EVSEData:AuthenticationMode>NFC RFID DESFire</EVSEData:AuthenticationMode>
+        //                      <EVSEData:AuthenticationMode>REMOTE</EVSEData:AuthenticationMode>
+        //                      <EVSEData:AuthenticationMode>Direct Payment</EVSEData:AuthenticationMode>
+        //                   </EVSEData:AuthenticationModes>
         //
-        //        <CommonTypes:Code>?</CommonTypes:Code>
+        //                   <EVSEData:ValueAddedServices>
+        //                      <EVSEData:ValueAddedService>Reservation</EVSEData:ValueAddedService>
+        //                   </EVSEData:ValueAddedServices>
         //
-        //        <!--Optional:-->
-        //        <CommonTypes:Description>?</CommonTypes:Description>
+        //                   <EVSEData:Accessibility>Free publicly accessible</EVSEData:Accessibility>
+        //                   <EVSEData:HotlinePhoneNum>+4955512345</EVSEData:HotlinePhoneNum>
+        //                   <EVSEData:IsOpen24Hours>true</EVSEData:IsOpen24Hours>
+        //                   <EVSEData:HubOperatorID>DE*GEF</EVSEData:HubOperatorID>
+        //                   <EVSEData:IsHubjectCompatible>true</EVSEData:IsHubjectCompatible>
+        //                   <EVSEData:DynamicInfoAvailable>true</EVSEData:DynamicInfoAvailable>
         //
-        //        <!--Optional:-->
-        //        <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
+        //                </EVSEData:EvseDataRecord>
         //
-        //     </EVSEData:StatusCode>
-        //
-        //  </EVSEData:eRoamingEvseData>
-        //
-        // [...]
+        //             </EVSEData:OperatorEvseData>
+        // 
+        //           </EVSEData:EvseData>
+        //       </EVSEData:eRoamingEvseData>
+        //    </soapenv:Body>
+        // </soapenv:Envelope>
 
         #endregion
 
-        #region (static) Parse(EVSEDataXML, OnException = null)
+        #region (static) Parse(EVSEDataXML,  CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
 
         /// <summary>
-        /// Parse the givem XML as EVSE data records or a status code.
+        /// Parse the given XML representation of an OICP EVSE data request.
         /// </summary>
-        /// <param name="EVSEDataXML">A XML representation of EVSE data records or a status code.</param>
+        /// <param name="EVSEDataXML">The XML to parse.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static EVSEData Parse(XElement             EVSEDataXML,
-                                     OnExceptionDelegate  OnException = null)
+        public static EVSEData Parse(XElement                                EVSEDataXML,
+                                     CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                     CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                     OnExceptionDelegate                     OnException                   = null)
         {
 
-            if (EVSEDataXML.Name != OICPNS.EVSEData + "eRoamingEvseData")
-                throw new Exception("Invalid eRoamingEvseData XML!");
+            EVSEData _EVSEData;
 
-            var _EVSEDataXML  = EVSEDataXML.Element   (OICPNS.EVSEData + "EvseData");
-            var _StatusCode   = EVSEDataXML.MapElement(OICPNS.EVSEData + "StatusCode",
-                                                       StatusCode.Parse);
+            if (TryParse(EVSEDataXML,
+                         out _EVSEData,
+                         CustomOperatorEVSEDataParser,
+                         CustomEVSEDataRecordParser,
+                         OnException))
 
-            if (_EVSEDataXML != null)
-            {
+                return _EVSEData;
 
-                var OperatorEvseDataXMLs = _EVSEDataXML.Elements(OICPNS.EVSEData + "OperatorEvseData");
-
-                if (OperatorEvseDataXMLs != null)
-                    return new EVSEData(OICPv2_1.OperatorEVSEData.Parse(OperatorEvseDataXMLs, OnException),
-                                                _StatusCode);
-
-            }
-
-            return _StatusCode != null
-                       ? new EVSEData(_StatusCode.Code,
-                                              _StatusCode.Description,
-                                              _StatusCode.AdditionalInfo)
-                       : new EVSEData(StatusCodes.DataError);
+            return null;
 
         }
 
         #endregion
 
+        #region (static) Parse(EVSEDataText, CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
 
-        // ToXML()
+        /// <summary>
+        /// Parse the given text representation of an OICP EVSE data request.
+        /// </summary>
+        /// <param name="EVSEDataText">The text to parse.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static EVSEData Parse(String                                  EVSEDataText,
+                                     CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                     CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                     OnExceptionDelegate                     OnException                   = null)
+        {
+
+            EVSEData _EVSEData;
+
+            if (TryParse(EVSEDataText,
+                         out _EVSEData,
+                         CustomOperatorEVSEDataParser,
+                         CustomEVSEDataRecordParser,
+                         OnException))
+
+                return _EVSEData;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(EVSEDataXML,  out EVSEData, CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
+
+        /// <summary>
+        /// Try to parse the given XML representation of an OICP EVSE data request.
+        /// </summary>
+        /// <param name="EVSEDataXML">The XML to parse.</param>
+        /// <param name="EVSEData">The parsed EVSEData request.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(XElement                                EVSEDataXML,
+                                       out EVSEData                            EVSEData,
+                                       CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                       CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                       OnExceptionDelegate                     OnException                   = null)
+        {
+
+            try
+            {
+
+                if (EVSEDataXML.Name != OICPNS.EVSEData + "EvseData")
+                {
+                    EVSEData = null;
+                    return false;
+                }
+
+                EVSEData = new EVSEData(
+
+                               EVSEDataXML.MapElements(OICPNS.EVSEData + "OperatorEvseData",
+                                                       (OperatorEvseDataXML, onexception) => OICPv2_1.OperatorEVSEData.Parse(OperatorEvseDataXML,
+                                                                                                                             CustomOperatorEVSEDataParser,
+                                                                                                                             CustomEVSEDataRecordParser,
+                                                                                                                             onexception),
+                                                       OnException)
+
+                           );
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+
+                OnException?.Invoke(DateTime.Now, EVSEDataXML, e);
+
+                EVSEData = null;
+                return false;
+
+            }
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(EVSEDataText, out EVSEData, CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of an OICP EVSE data request.
+        /// </summary>
+        /// <param name="EVSEDataText">The text to parse.</param>
+        /// <param name="EVSEData">The parsed EVSEData request.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(String                                  EVSEDataText,
+                                       out EVSEData                            EVSEData,
+                                       CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                       CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                       OnExceptionDelegate                     OnException                   = null)
+        {
+
+            try
+            {
+
+                if (TryParse(XDocument.Parse(EVSEDataText).Root,
+                             out EVSEData,
+                             CustomOperatorEVSEDataParser,
+                             CustomEVSEDataRecordParser,
+                             OnException))
+
+                    return true;
+
+            }
+            catch (Exception e)
+            {
+                OnException?.Invoke(DateTime.Now, EVSEDataText, e);
+            }
+
+            EVSEData = null;
+            return false;
+
+        }
+
+        #endregion
+
+        #region ToXML(OperatorEVSEDataXName = null, CustomOperatorEVSEDataSerializer = null, EVSEDataRecordXName = null, IncludeEVSEDataRecordMetadata = true, CustomEVSEDataRecordSerializer = null)
+
+        /// <summary>
+        /// Return a XML representation of this object.
+        /// </summary>
+        /// <param name="OperatorEVSEDataXName">The OperatorEVSEData XML name to use.</param>
+        /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom OperatorEVSEData xml elements.</param>
+        /// <param name="EVSEDataRecordXName">The EVSEDataRecord XML name to use.</param>
+        /// <param name="IncludeEVSEDataRecordMetadata">Include EVSEDataRecord deltaType and lastUpdate meta data.</param>
+        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord xml elements.</param>
+        public XElement ToXML(XName                                       OperatorEVSEDataXName             = null,
+                              CustomSerializerDelegate<OperatorEVSEData>  CustomOperatorEVSEDataSerializer  = null,
+                              XName                                       EVSEDataRecordXName               = null,
+                              Boolean                                     IncludeEVSEDataRecordMetadata     = true,
+                              CustomSerializerDelegate<EVSEDataRecord>    CustomEVSEDataRecordSerializer    = null)
+
+            => new XElement(OICPNS.EVSEData + "EvseData",
+
+                   OperatorEVSEData.Any()
+                       ? OperatorEVSEData.SafeSelect(operatorevsedata => operatorevsedata.ToXML(OperatorEVSEDataXName,
+                                                                                                CustomOperatorEVSEDataSerializer,
+                                                                                                EVSEDataRecordXName,
+                                                                                                IncludeEVSEDataRecordMetadata,
+                                                                                                CustomEVSEDataRecordSerializer))
+                       : null
+
+               );
+
+        #endregion
 
 
-        // ToString()
+        #region Operator overloading
+
+        #region Operator == (EVSEData1, EVSEData2)
+
+        /// <summary>
+        /// Compares two results for equality.
+        /// </summary>
+        /// <param name="EVSEData1">An EVSE data.</param>
+        /// <param name="EVSEData2">Another EVSE data.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public static Boolean operator == (EVSEData EVSEData1, EVSEData EVSEData2)
+        {
+
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(EVSEData1, EVSEData2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (((Object) EVSEData1 == null) || ((Object) EVSEData2 == null))
+                return false;
+
+            return EVSEData1.Equals(EVSEData2);
+
+        }
+
+        #endregion
+
+        #region Operator != (EVSEData1, EVSEData2)
+
+        /// <summary>
+        /// Compares two results for inequality.
+        /// </summary>
+        /// <param name="EVSEData1">An EVSE data.</param>
+        /// <param name="EVSEData2">Another EVSE data.</param>
+        /// <returns>False if both match; True otherwise.</returns>
+        public static Boolean operator != (EVSEData EVSEData1, EVSEData EVSEData2)
+
+            => !(EVSEData1 == EVSEData2);
+
+        #endregion
+
+        #endregion
+
+        #region IEquatable<EVSEData> Members
+
+        #region Equals(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        /// <returns>true|false</returns>
+        public override Boolean Equals(Object Object)
+        {
+
+            if (Object == null)
+                return false;
+
+            var EVSEData = Object as EVSEData;
+            if ((Object) EVSEData == null)
+                return false;
+
+            return Equals(EVSEData);
+
+        }
+
+        #endregion
+
+        #region Equals(EVSEData)
+
+        /// <summary>
+        /// Compares two EVSE data for equality.
+        /// </summary>
+        /// <param name="EVSEData">An EVSE data to compare with.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public Boolean Equals(EVSEData EVSEData)
+        {
+
+            if ((Object) EVSEData == null)
+                return false;
+
+            return (!OperatorEVSEData.Any() && !EVSEData.OperatorEVSEData.Any()) ||
+                    (OperatorEVSEData.Any() &&  EVSEData.OperatorEVSEData.Any() && OperatorEVSEData.Count().Equals(EVSEData.OperatorEVSEData.Count())) &&
+
+                    (StatusCode != null && EVSEData.StatusCode != null) ||
+                    (StatusCode == null && EVSEData.StatusCode == null && StatusCode.Equals(EVSEData.StatusCode));
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Return the HashCode of this object.
+        /// </summary>
+        /// <returns>The HashCode of this object.</returns>
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+
+                return (OperatorEVSEData.Any()
+                           ? OperatorEVSEData.GetHashCode() * 5
+                           : 0) ^
+
+                       StatusCode.GetHashCode();
+
+            }
+        }
+
+        #endregion
+
+        #region (override) ToString()
+
+        /// <summary>
+        /// Return a string representation of this object.
+        /// </summary>
+        public override String ToString()
+
+            => String.Concat(OperatorEVSEData.Count() + " operator EVSE data record(s)",
+                             StatusCode != null ? " -> " + StatusCode.Code.ToString() : "");
+
+        #endregion
 
 
     }

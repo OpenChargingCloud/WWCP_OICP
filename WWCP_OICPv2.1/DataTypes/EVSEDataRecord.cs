@@ -21,7 +21,6 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Aegir;
@@ -203,33 +202,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
         /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
         /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
-        /// <param name="CustomData">A dictionary of customer-specific data.</param>
-        public EVSEDataRecord(EVSE_Id                             Id,
-                              DeltaTypes?                         DeltaType,
-                              DateTime?                           LastUpdate,
-                              String                              ChargingStationId           = null,
-                              I18NString                          ChargingStationName         = null,
-                              Address                             Address                     = null,
-                              GeoCoordinate?                      GeoCoordinate               = null,
-                              PlugTypes                           Plugs                       = PlugTypes.Unspecified,
-                              ChargingFacilities                  ChargingFacilities          = ChargingFacilities.Unspecified,
-                              ChargingModes                       ChargingModes               = ChargingModes.Unspecified,
-                              AuthenticationModes                 AuthenticationModes         = AuthenticationModes.Unknown,
-                              Single?                             MaxCapacity                 = null,
-                              PaymentOptions                      PaymentOptions              = PaymentOptions.Unspecified,
-                              ValueAddedServices                  ValueAddedServices          = ValueAddedServices.None,
-                              AccessibilityTypes                  Accessibility               = AccessibilityTypes.Free_publicly_accessible,
-                              String                              HotlinePhoneNumber          = null,
-                              I18NString                          AdditionalInfo              = null,
-                              GeoCoordinate?                      GeoChargingPointEntrance    = null,
-                              Boolean                             IsOpen24Hours               = true,
-                              String                              OpeningTime                 = null,
-                              HubOperator_Id?                     HubOperatorId               = null,
-                              ClearingHouse_Id?                   ClearingHouseId             = null,
-                              Boolean                             IsHubjectCompatible         = true,
-                              Boolean                             DynamicInfoAvailable        = true,
+        /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
+        public EVSEDataRecord(EVSE_Id                              Id,
+                              DeltaTypes?                          DeltaType,
+                              DateTime?                            LastUpdate,
+                              String                               ChargingStationId           = null,
+                              I18NString                           ChargingStationName         = null,
+                              Address                              Address                     = null,
+                              GeoCoordinate?                       GeoCoordinate               = null,
+                              PlugTypes                            Plugs                       = PlugTypes.Unspecified,
+                              ChargingFacilities                   ChargingFacilities          = ChargingFacilities.Unspecified,
+                              ChargingModes                        ChargingModes               = ChargingModes.Unspecified,
+                              AuthenticationModes                  AuthenticationModes         = AuthenticationModes.Unknown,
+                              Single?                              MaxCapacity                 = null,
+                              PaymentOptions                       PaymentOptions              = PaymentOptions.Unspecified,
+                              ValueAddedServices                   ValueAddedServices          = ValueAddedServices.None,
+                              AccessibilityTypes                   Accessibility               = AccessibilityTypes.Free_publicly_accessible,
+                              String                               HotlinePhoneNumber          = null,
+                              I18NString                           AdditionalInfo              = null,
+                              GeoCoordinate?                       GeoChargingPointEntrance    = null,
+                              Boolean                              IsOpen24Hours               = true,
+                              String                               OpeningTime                 = null,
+                              HubOperator_Id?                      HubOperatorId               = null,
+                              ClearingHouse_Id?                    ClearingHouseId             = null,
+                              Boolean                              IsHubjectCompatible         = true,
+                              Boolean                              DynamicInfoAvailable        = true,
 
-                              ReadOnlyDictionary<String, Object>  CustomData                  = null)
+                              IReadOnlyDictionary<String, Object>  CustomData                  = null)
 
             : base(CustomData)
 
@@ -411,21 +410,85 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region Parse(EVSEDataRecordXML, OnException = null)
+        #region (static) Parse   (EVSEDataRecordXML,  CustomEVSEDataRecordParser = null, OnException = null)
 
         /// <summary>
-        /// Parse the given XML representation.
+        /// Parse the given XML representation of an OICP EVSE data record.
         /// </summary>
-        /// <param name="EVSEDataRecordXML">A XML representation of an EVSE data record.</param>
-        /// <param name="OnException">A delegate to handle exceptions during the parsing process.</param>
-        public static EVSEDataRecord Parse(XElement             EVSEDataRecordXML,
-                                           OnExceptionDelegate  OnException = null)
+        /// <param name="EVSEDataRecordXML">The XML to parse.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static EVSEDataRecord Parse(XElement                                EVSEDataRecordXML,
+                                             CustomParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser  = null,
+                                             OnExceptionDelegate                     OnException       = null)
         {
 
-            EVSEDataRecord _EVSEDataRecord = null;
+            EVSEDataRecord _EVSEDataRecord;
+
+            if (TryParse(EVSEDataRecordXML,
+                         out _EVSEDataRecord,
+                         CustomEVSEDataRecordParser,
+                         OnException))
+
+                return _EVSEDataRecord;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) Parse   (EVSEDataRecordText, CustomEVSEDataRecordParser = null, OnException = null)
+
+        /// <summary>
+        /// Parse the given text representation of an OICP EVSE data record.
+        /// </summary>
+        /// <param name="EVSEDataRecordText">The text to parse.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static EVSEDataRecord Parse(String                                  EVSEDataRecordText,
+                                             CustomParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser  = null,
+                                             OnExceptionDelegate                     OnException       = null)
+        {
+
+            EVSEDataRecord _EVSEDataRecord;
+
+            if (TryParse(EVSEDataRecordText,
+                         out _EVSEDataRecord,
+                         CustomEVSEDataRecordParser,
+                         OnException))
+
+                return _EVSEDataRecord;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(EVSEDataRecordXML,  out EVSEDataRecord, CustomEVSEDataRecordParser = null, OnException = null)
+
+        /// <summary>
+        /// Try to parse the given XML representation of an OICP EVSE data record.
+        /// </summary>
+        /// <param name="EVSEDataRecordXML">The XML to parse.</param>
+        /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(XElement                              EVSEDataRecordXML,
+                                       out EVSEDataRecord                    EVSEDataRecord,
+                                       CustomParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser  = null,
+                                       OnExceptionDelegate                   OnException                 = null)
+        {
 
             try
             {
+
+                if (EVSEDataRecordXML.Name != OICPNS.EVSEData + "EvseDataRecord")
+                {
+                    EVSEDataRecord = null;
+                    return false;
+                }
 
                 #region XML Attribute: LastUpdate
 
@@ -525,7 +588,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 #endregion
 
 
-                _EVSEDataRecord = new EVSEDataRecord(
+                EVSEDataRecord = new EVSEDataRecord(
 
                     EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!")),
 
@@ -613,148 +676,206 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 );
 
+                if (CustomEVSEDataRecordParser != null)
+                    EVSEDataRecord = CustomEVSEDataRecordParser(EVSEDataRecordXML, EVSEDataRecord);
+
+                return true;
+
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, EVSEDataRecordXML, e);
-            }
 
-            return _EVSEDataRecord;
+                OnException?.Invoke(DateTime.Now, EVSEDataRecordXML, e);
+
+                EVSEDataRecord = null;
+                return false;
+
+            }
 
         }
 
         #endregion
 
-        #region ToXML(IncludeMetadata = false)
+        #region (static) TryParse(EVSEDataRecordText, out EVSEDataRecord, CustomEVSEDataRecordParser = null, OnException = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of an OICP EVSE data record.
+        /// </summary>
+        /// <param name="EVSEDataRecordText">The text to parse.</param>
+        /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(String                                EVSEDataRecordText,
+                                       out EVSEDataRecord                    EVSEDataRecord,
+                                       CustomParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser  = null,
+                                       OnExceptionDelegate                   OnException                 = null)
+        {
+
+            try
+            {
+
+                if (TryParse(XDocument.Parse(EVSEDataRecordText).Root,
+                             out EVSEDataRecord,
+                             CustomEVSEDataRecordParser,
+                             OnException))
+
+                    return true;
+
+            }
+            catch (Exception e)
+            {
+                OnException?.Invoke(DateTime.Now, EVSEDataRecordText, e);
+            }
+
+            EVSEDataRecord = null;
+            return false;
+
+        }
+
+        #endregion
+
+        #region ToXML(XName = null, IncludeMetadata = false, CustomEVSEDataRecordSerializer = null)
 
         /// <summary>
         /// Return an XML representation of this EVSE data record.
         /// </summary>
+        /// <param name="XName">The XML name to use.</param>
         /// <param name="IncludeMetadata">Include deltaType and lastUpdate meta data.</param>
-        public XElement ToXML(Boolean IncludeMetadata = false)
+        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord xml elements.</param>
+        public XElement ToXML(XName                                     XName                           = null,
+                              Boolean                                   IncludeMetadata                 = false,
+                              CustomSerializerDelegate<EVSEDataRecord>  CustomEVSEDataRecordSerializer  = null)
 
-            => new XElement(OICPNS.EVSEData + "EvseDataRecord",
+        {
 
-                   IncludeMetadata && DeltaType.HasValue
-                       ? new XAttribute(OICPNS.EVSEData + "deltaType",  DeltaType.ToString())
-                       : null,
+            var XML = new XElement(OICPNS.EVSEData + "EvseDataRecord",
 
-                   IncludeMetadata && LastUpdate.HasValue
-                       ? new XAttribute(OICPNS.EVSEData + "lastUpdate", LastUpdate.ToString())
-                       : null,
+                          IncludeMetadata && DeltaType.HasValue
+                              ? new XAttribute(OICPNS.EVSEData + "deltaType",  DeltaType.ToString())
+                              : null,
 
-                   new XElement(OICPNS.EVSEData + "EvseId",                Id.ToString()),
-                   new XElement(OICPNS.EVSEData + "ChargingStationId",     ChargingStationId),
-                   new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.deu].SubstringMax(50)),
-                   new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.eng].SubstringMax(50)),
+                          IncludeMetadata && LastUpdate.HasValue
+                              ? new XAttribute(OICPNS.EVSEData + "lastUpdate", LastUpdate.ToString())
+                              : null,
 
-                   new XElement(OICPNS.EVSEData + "Address",
-                       new XElement(OICPNS.CommonTypes + "Country",        Address.Country.Alpha3Code),
-                       new XElement(OICPNS.CommonTypes + "City",           Address.City.FirstText),
-                       new XElement(OICPNS.CommonTypes + "Street",         Address.Street), // OICP v2.1 requires at least 5 characters!
+                          new XElement(OICPNS.EVSEData + "EvseId",                Id.ToString()),
+                          new XElement(OICPNS.EVSEData + "ChargingStationId",     ChargingStationId),
+                          new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.deu].SubstringMax(50)),
+                          new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.eng].SubstringMax(50)),
 
-                       Address.PostalCode. IsNotNullOrEmpty()
-                           ? new XElement(OICPNS.CommonTypes + "PostalCode", Address.PostalCode)
-                           : null,
+                          new XElement(OICPNS.EVSEData + "Address",
+                              new XElement(OICPNS.CommonTypes + "Country",        Address.Country.Alpha3Code),
+                              new XElement(OICPNS.CommonTypes + "City",           Address.City.FirstText),
+                              new XElement(OICPNS.CommonTypes + "Street",         Address.Street), // OICP v2.1 requires at least 5 characters!
 
-                       Address.HouseNumber.IsNotNullOrEmpty()
-                           ? new XElement(OICPNS.CommonTypes + "HouseNum",   Address.HouseNumber)
-                           : null,
+                              Address.PostalCode. IsNotNullOrEmpty()
+                                  ? new XElement(OICPNS.CommonTypes + "PostalCode", Address.PostalCode)
+                                  : null,
 
-                       Address.FloorLevel. IsNotNullOrEmpty()
-                           ? new XElement(OICPNS.CommonTypes + "Floor",      Address.FloorLevel)
-                           : null
+                              Address.HouseNumber.IsNotNullOrEmpty()
+                                  ? new XElement(OICPNS.CommonTypes + "HouseNum",   Address.HouseNumber)
+                                  : null,
 
-                       // <!--Optional:-->
-                       // <v11:Region>?</v11:Region>
+                              Address.FloorLevel. IsNotNullOrEmpty()
+                                  ? new XElement(OICPNS.CommonTypes + "Floor",      Address.FloorLevel)
+                                  : null
 
-                       // <!--Optional:-->
-                       // <v11:TimeZone>?</v11:TimeZone>
+                              // <!--Optional:-->
+                              // <v11:Region>?</v11:Region>
 
-                   ),
+                              // <!--Optional:-->
+                              // <v11:TimeZone>?</v11:TimeZone>
 
-                   new XElement(OICPNS.EVSEData + "GeoCoordinates",
-                       new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                           new XElement(OICPNS.CommonTypes + "Longitude",  GeoCoordinate.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-                           new XElement(OICPNS.CommonTypes + "Latitude",   GeoCoordinate.Value.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
-                       )
-                   ),
+                          ),
 
-                   new XElement(OICPNS.EVSEData + "Plugs",
-                       Plugs.ToEnumeration().SafeSelect(Plug               => new XElement(OICPNS.EVSEData + "Plug",               XML_IO.AsString(Plug)))
-                   ),
+                          new XElement(OICPNS.EVSEData + "GeoCoordinates",
+                              new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
+                                  new XElement(OICPNS.CommonTypes + "Longitude",  GeoCoordinate.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                                  new XElement(OICPNS.CommonTypes + "Latitude",   GeoCoordinate.Value.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                              )
+                          ),
 
-                   ChargingFacilities.ToEnumeration().NotNullAny()
-                       ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
-                             ChargingFacilities.ToEnumeration().Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   XML_IO.AsString(ChargingFacility))))
-                       : null,
+                          new XElement(OICPNS.EVSEData + "Plugs",
+                              Plugs.ToEnumeration().SafeSelect(Plug               => new XElement(OICPNS.EVSEData + "Plug",               XML_IO.AsString(Plug)))
+                          ),
 
-                   ChargingModes.ToEnumeration().NotNullAny()
-                       ? new XElement(OICPNS.EVSEData + "ChargingModes",
-                             ChargingModes.ToEnumeration().Select(ChargingMode => new XElement(OICPNS.EVSEData + "ChargingMode", XML_IO.AsString(ChargingMode))))
-                       : null,
+                          ChargingFacilities.ToEnumeration().NotNullAny()
+                              ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
+                                    ChargingFacilities.ToEnumeration().Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   XML_IO.AsString(ChargingFacility))))
+                              : null,
 
-                   new XElement(OICPNS.EVSEData + "AuthenticationModes",
-                       AuthenticationModes.     ToEnumeration().
-                                                Select(AuthenticationMode => XML_IO.AsString(AuthenticationMode)).
-                                                Where (AuthenticationMode => AuthenticationMode != "Unknown").
-                                                Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode))
-                   ),
+                          ChargingModes.ToEnumeration().NotNullAny()
+                              ? new XElement(OICPNS.EVSEData + "ChargingModes",
+                                    ChargingModes.ToEnumeration().Select(ChargingMode => new XElement(OICPNS.EVSEData + "ChargingMode", XML_IO.AsString(ChargingMode))))
+                              : null,
 
-                   MaxCapacity.HasValue
-                       ? new XElement(OICPNS.EVSEData + "MaxCapacity", MaxCapacity)
-                       : null,
+                          new XElement(OICPNS.EVSEData + "AuthenticationModes",
+                              AuthenticationModes.     ToEnumeration().
+                                                       Select(AuthenticationMode => XML_IO.AsString(AuthenticationMode)).
+                                                       Where (AuthenticationMode => AuthenticationMode != "Unknown").
+                                                       Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode))
+                          ),
 
-                   PaymentOptions.ToEnumeration().NotNullAny()
-                       ? new XElement(OICPNS.EVSEData + "PaymentOptions",
-                             PaymentOptions.ToEnumeration().SafeSelect(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      XML_IO.AsString(PaymentOption)))
-                         )
-                       : null,
+                          MaxCapacity.HasValue
+                              ? new XElement(OICPNS.EVSEData + "MaxCapacity", MaxCapacity)
+                              : null,
 
-                   ValueAddedServices.ToEnumeration().NotNullAny()
-                       ? new XElement(OICPNS.EVSEData + "ValueAddedServices",
-                             ValueAddedServices.ToEnumeration().SafeSelect(ValueAddedService => new XElement(OICPNS.EVSEData + "ValueAddedService", XML_IO.AsString(ValueAddedService)))
-                         )
-                       : new XElement(OICPNS.EVSEData + "ValueAddedServices", new XElement(OICPNS.EVSEData + "ValueAddedService", "None")),
+                          PaymentOptions.ToEnumeration().NotNullAny()
+                              ? new XElement(OICPNS.EVSEData + "PaymentOptions",
+                                    PaymentOptions.ToEnumeration().SafeSelect(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      XML_IO.AsString(PaymentOption)))
+                                )
+                              : null,
 
-                   new XElement(OICPNS.EVSEData + "Accessibility",     Accessibility.ToString().Replace("_", " ")),
-                   new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
+                          ValueAddedServices.ToEnumeration().NotNullAny()
+                              ? new XElement(OICPNS.EVSEData + "ValueAddedServices",
+                                    ValueAddedServices.ToEnumeration().SafeSelect(ValueAddedService => new XElement(OICPNS.EVSEData + "ValueAddedService", XML_IO.AsString(ValueAddedService)))
+                                )
+                              : new XElement(OICPNS.EVSEData + "ValueAddedServices", new XElement(OICPNS.EVSEData + "ValueAddedService", "None")),
 
-                   AdditionalInfo.has(Languages.deu)
-                       ? new XElement(OICPNS.EVSEData + "AdditionalInfo", AdditionalInfo[Languages.deu])
-                       : null,
+                          new XElement(OICPNS.EVSEData + "Accessibility",     Accessibility.ToString().Replace("_", " ")),
+                          new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
 
-                   AdditionalInfo.has(Languages.eng)
-                       ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", AdditionalInfo[Languages.eng])
-                       : null,
+                          AdditionalInfo.has(Languages.deu)
+                              ? new XElement(OICPNS.EVSEData + "AdditionalInfo", AdditionalInfo[Languages.deu])
+                              : null,
 
-                   GeoChargingPointEntrance != null
-                       ? new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
-                           new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                               new XElement(OICPNS.CommonTypes + "Longitude", GeoChargingPointEntrance.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-                               new XElement(OICPNS.CommonTypes + "Latitude",  GeoChargingPointEntrance.Value.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
-                           )
-                       )
-                       : null,
+                          AdditionalInfo.has(Languages.eng)
+                              ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", AdditionalInfo[Languages.eng])
+                              : null,
 
-                   new XElement(OICPNS.EVSEData + "IsOpen24Hours",         IsOpen24Hours ? "true" : "false"),
+                          GeoChargingPointEntrance != null
+                              ? new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
+                                  new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
+                                      new XElement(OICPNS.CommonTypes + "Longitude", GeoChargingPointEntrance.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                                      new XElement(OICPNS.CommonTypes + "Latitude",  GeoChargingPointEntrance.Value.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                                  )
+                              )
+                              : null,
 
-                   OpeningTime.IsNotNullOrEmpty()
-                       ? new XElement(OICPNS.EVSEData + "OpeningTime",     OpeningTime)
-                       : null,
+                          new XElement(OICPNS.EVSEData + "IsOpen24Hours",         IsOpen24Hours ? "true" : "false"),
 
-                   HubOperatorId != null
-                       ? new XElement(OICPNS.EVSEData + "HubOperatorID",   HubOperatorId.ToString())
-                       : null,
+                          OpeningTime.IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.EVSEData + "OpeningTime",     OpeningTime)
+                              : null,
 
-                   ClearingHouseId != null
-                       ? new XElement(OICPNS.EVSEData + "ClearinghouseID", ClearingHouseId.ToString())
-                       : null,
+                          HubOperatorId != null
+                              ? new XElement(OICPNS.EVSEData + "HubOperatorID",   HubOperatorId.ToString())
+                              : null,
 
-                   new XElement(OICPNS.EVSEData + "IsHubjectCompatible",   IsHubjectCompatible  ? "true" : "false"),
-                   new XElement(OICPNS.EVSEData + "DynamicInfoAvailable",  DynamicInfoAvailable ? "true" : "false")
+                          ClearingHouseId != null
+                              ? new XElement(OICPNS.EVSEData + "ClearinghouseID", ClearingHouseId.ToString())
+                              : null,
 
-               );
+                          new XElement(OICPNS.EVSEData + "IsHubjectCompatible",   IsHubjectCompatible  ? "true" : "false"),
+                          new XElement(OICPNS.EVSEData + "DynamicInfoAvailable",  DynamicInfoAvailable ? "true" : "false")
+
+                   );
+
+            return CustomEVSEDataRecordSerializer != null
+                       ? CustomEVSEDataRecordSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 
@@ -1015,8 +1136,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    IsHubjectCompatible,
                    DynamicInfoAvailable,
 
-                   _CustomData != null
-                       ? _CustomData.ToDictionary(kvp => kvp.Key,
+                   Values != null
+                       ? Values.ToDictionary(kvp => kvp.Key,
                                                   kvp => kvp.Value)
                        : null);
 

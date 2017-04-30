@@ -20,7 +20,6 @@
 using System;
 using System.Xml.Linq;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -62,10 +61,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="Id">The unique identification of an EVSE.</param>
         /// <param name="Status">The current status of an EVSE.</param>
-        /// <param name="CustomData">A dictionary of customer-specific data.</param>
-        public EVSEStatusRecord(EVSE_Id                             Id,
-                                EVSEStatusTypes                     Status,
-                                ReadOnlyDictionary<String, Object>  CustomData  = null)
+        /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
+        public EVSEStatusRecord(EVSE_Id                              Id,
+                                EVSEStatusTypes                      Status,
+                                IReadOnlyDictionary<String, Object>  CustomData  = null)
 
             : base(CustomData)
 
@@ -95,22 +94,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse   (EVSEStatusRecordXML,  CustomDataMapper = null, OnException = null)
+        #region (static) Parse   (EVSEStatusRecordXML,  CustomEVSEStatusRecordParser = null, OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP EVSE status record.
         /// </summary>
         /// <param name="EVSEStatusRecordXML">The XML to parse.</param>
-        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom xml elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static EVSEStatusRecord Parse(XElement                                EVSEStatusRecordXML,
-                                             CustomMapperDelegate<EVSEStatusRecord>  CustomDataMapper  = null,
+                                             CustomParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser  = null,
                                              OnExceptionDelegate                     OnException       = null)
         {
 
             EVSEStatusRecord _EVSEStatusRecord;
 
-            if (TryParse(EVSEStatusRecordXML, out _EVSEStatusRecord, CustomDataMapper, OnException))
+            if (TryParse(EVSEStatusRecordXML,
+                         out _EVSEStatusRecord,
+                         CustomEVSEStatusRecordParser,
+                         OnException))
+
                 return _EVSEStatusRecord;
 
             return null;
@@ -119,22 +122,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse   (EVSEStatusRecordText, CustomDataMapper = null, OnException = null)
+        #region (static) Parse   (EVSEStatusRecordText, CustomEVSEStatusRecordParser = null, OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP EVSE status record.
         /// </summary>
         /// <param name="EVSEStatusRecordText">The text to parse.</param>
-        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom xml elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static EVSEStatusRecord Parse(String                                  EVSEStatusRecordText,
-                                             CustomMapperDelegate<EVSEStatusRecord>  CustomDataMapper  = null,
+                                             CustomParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser  = null,
                                              OnExceptionDelegate                     OnException       = null)
         {
 
             EVSEStatusRecord _EVSEStatusRecord;
 
-            if (TryParse(EVSEStatusRecordText, out _EVSEStatusRecord, CustomDataMapper, OnException))
+            if (TryParse(EVSEStatusRecordText,
+                         out _EVSEStatusRecord,
+                         CustomEVSEStatusRecordParser,
+                         OnException))
+
                 return _EVSEStatusRecord;
 
             return null;
@@ -143,26 +150,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(EVSEStatusRecordXML,  out EVSEStatusRecord, CustomDataMapper = null, OnException = null)
+        #region (static) TryParse(EVSEStatusRecordXML,  out EVSEStatusRecord, CustomEVSEStatusRecordParser = null, OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP EVSE status record.
         /// </summary>
         /// <param name="EVSEStatusRecordXML">The XML to parse.</param>
         /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
-        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom xml elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                EVSEStatusRecordXML,
                                        out EVSEStatusRecord                    EVSEStatusRecord,
-                                       CustomMapperDelegate<EVSEStatusRecord>  CustomDataMapper  = null,
-                                       OnExceptionDelegate                     OnException       = null)
+                                       CustomParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser  = null,
+                                       OnExceptionDelegate                     OnException                   = null)
         {
 
             try
             {
 
                 if (EVSEStatusRecordXML.Name != OICPNS.EVSEStatus + "EvseStatusRecord")
-                    throw new Exception("Illegal EVSEStatusRecord XML!");
+                {
+                    EVSEStatusRecord = null;
+                    return false;
+                }
 
                 EVSEStatusRecord = new EVSEStatusRecord(
 
@@ -174,8 +184,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                    );
 
-                if (CustomDataMapper != null)
-                    EVSEStatusRecord = CustomDataMapper(EVSEStatusRecordXML, EVSEStatusRecord);
+                if (CustomEVSEStatusRecordParser != null)
+                    EVSEStatusRecord = CustomEVSEStatusRecordParser(EVSEStatusRecordXML, EVSEStatusRecord);
 
                 return true;
 
@@ -194,19 +204,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(EVSEStatusRecordText, out EVSEStatusRecord, CustomDataMapper = null, OnException = null)
+        #region (static) TryParse(EVSEStatusRecordText, out EVSEStatusRecord, CustomEVSEStatusRecordParser = null, OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP EVSE status record.
         /// </summary>
         /// <param name="EVSEStatusRecordText">The text to parse.</param>
         /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
-        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom xml elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                  EVSEStatusRecordText,
                                        out EVSEStatusRecord                    EVSEStatusRecord,
-                                       CustomMapperDelegate<EVSEStatusRecord>  CustomDataMapper  = null,
-                                       OnExceptionDelegate                     OnException       = null)
+                                       CustomParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser  = null,
+                                       OnExceptionDelegate                     OnException                   = null)
         {
 
             try
@@ -214,7 +224,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 if (TryParse(XDocument.Parse(EVSEStatusRecordText).Root,
                              out EVSEStatusRecord,
-                             CustomDataMapper,
+                             CustomEVSEStatusRecordParser,
                              OnException))
 
                     return true;
@@ -232,18 +242,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToXML(XName = null)
+        #region ToXML(XName = null, CustomEVSEStatusRecordSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="XName">The XML name to use.</param>
-        public XElement ToXML(XName XName = null)
+        /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSEStatusRecord xml elements.</param>
+        public XElement ToXML(XName                                       XName                             = null,
+                              CustomSerializerDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordSerializer  = null)
 
-            => new XElement(XName ?? OICPNS.EVSEStatus + "EvseStatusRecord",
-                   new XElement(OICPNS.EVSEStatus + "EvseId",      Id.    ToString()),
-                   new XElement(OICPNS.EVSEStatus + "EvseStatus",  XML_IO.AsText(Status))
-               );
+        {
+
+            var XML = new XElement(XName ?? OICPNS.EVSEStatus + "EvseStatusRecord",
+                          new XElement(OICPNS.EVSEStatus + "EvseId",      Id.    ToString()),
+                          new XElement(OICPNS.EVSEStatus + "EvseStatus",  XML_IO.AsText(Status))
+                      );
+
+            return CustomEVSEStatusRecordSerializer != null
+                       ? CustomEVSEStatusRecordSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

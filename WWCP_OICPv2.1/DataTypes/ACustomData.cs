@@ -30,7 +30,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Data
 
-        protected IReadOnlyDictionary<String, Object> _CustomData;
+        private Dictionary<String, Object> _CustomData   { get; }
+
+        public IReadOnlyDictionary<String, Object> Values
+            => _CustomData;
 
         #endregion
 
@@ -38,7 +41,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         protected ACustomData(IReadOnlyDictionary<String, Object> CustomData)
         {
-            this._CustomData = CustomData;
+
+            if (CustomData != null)
+            {
+
+                this._CustomData = new Dictionary<String, Object>();
+
+                foreach (var item in CustomData)
+                    _CustomData.Add(item.Key, item.Value);
+
+            }
+
         }
 
         #endregion
@@ -47,18 +60,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public Boolean IsDefined(String Key)
         {
 
+            if (_CustomData == null)
+                return false;
+
             Object _Value;
 
-            return _CustomData.TryGetValue(Key, out _Value);
+            return Values.TryGetValue(Key, out _Value);
 
         }
 
         public Object GetCustomData(String Key)
         {
 
+            if (_CustomData == null)
+                return null;
+
             Object _Value;
 
-            if (_CustomData.TryGetValue(Key, out _Value))
+            if (Values.TryGetValue(Key, out _Value))
                 return _Value;
 
             return null;
@@ -68,9 +87,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public T GetCustomDataAs<T>(String Key)
         {
 
+            if (_CustomData == null)
+                return default(T);
+
             Object _Value;
 
-            if (_CustomData.TryGetValue(Key, out _Value))
+            if (Values.TryGetValue(Key, out _Value))
                 return (T) _Value;
 
             return default(T);
@@ -82,12 +104,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               Action<Object>  ValueDelegate)
         {
 
-            if (ValueDelegate == null)
+            if (_CustomData   == null ||
+                ValueDelegate == null)
                 return;
 
             Object _Value;
 
-            if (_CustomData.TryGetValue(Key, out _Value))
+            if (Values.TryGetValue(Key, out _Value))
                 ValueDelegate(_Value);
 
         }
@@ -96,12 +119,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                    Action<T>  ValueDelegate)
         {
 
-            if (ValueDelegate == null)
+            if (_CustomData   == null ||
+                ValueDelegate == null)
                 return;
 
             Object _Value;
 
-            if (_CustomData.TryGetValue(Key, out _Value))
+            if (Values.TryGetValue(Key, out _Value))
                 ValueDelegate((T) _Value);
 
         }

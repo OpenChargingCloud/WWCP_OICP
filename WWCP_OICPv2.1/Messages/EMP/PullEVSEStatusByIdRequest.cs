@@ -111,20 +111,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(PullEVSEStatusXML,  OnException = null)
+        #region (static) Parse(PullEVSEStatusByIdXML,  OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP pull EVSE status by id request.
         /// </summary>
-        /// <param name="PullEVSEStatusXML">The XML to parse.</param>
+        /// <param name="PullEVSEStatusByIdXML">The XML to parse.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PullEVSEStatusByIdRequest Parse(XElement             PullEVSEStatusXML,
+        public static PullEVSEStatusByIdRequest Parse(XElement             PullEVSEStatusByIdXML,
                                                       OnExceptionDelegate  OnException = null)
         {
 
             PullEVSEStatusByIdRequest _PullEVSEStatusById;
 
-            if (TryParse(PullEVSEStatusXML, out _PullEVSEStatusById, OnException))
+            if (TryParse(PullEVSEStatusByIdXML, out _PullEVSEStatusById, OnException))
                 return _PullEVSEStatusById;
 
             return null;
@@ -155,15 +155,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(PullEVSEStatusXML,  out PullEVSEStatusById, OnException = null)
+        #region (static) TryParse(PullEVSEStatusByIdXML,  out PullEVSEStatusById, OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP pull EVSE status by id request.
         /// </summary>
-        /// <param name="PullEVSEStatusXML">The XML to parse.</param>
+        /// <param name="PullEVSEStatusByIdXML">The XML to parse.</param>
         /// <param name="PullEVSEStatus">The parsed pull EVSE status by id request.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                       PullEVSEStatusXML,
+        public static Boolean TryParse(XElement                       PullEVSEStatusByIdXML,
                                        out PullEVSEStatusByIdRequest  PullEVSEStatusById,
                                        OnExceptionDelegate            OnException  = null)
         {
@@ -171,11 +171,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             try
             {
 
-                PullEVSEStatusById = new PullEVSEStatusByIdRequest(PullEVSEStatusXML.MapValueOrFail (OICPNS.EVSEStatus + "ProviderID",
-                                                                                                     Provider_Id.Parse),
+                PullEVSEStatusById = new PullEVSEStatusByIdRequest(PullEVSEStatusByIdXML.MapValueOrFail (OICPNS.EVSEStatus + "ProviderID",
+                                                                                                         Provider_Id.Parse),
 
-                                                                   PullEVSEStatusXML.MapValuesOrFail(OICPNS.EVSEStatus + "EvseId",
-                                                                                                     EVSE_Id.Parse));
+                                                                   PullEVSEStatusByIdXML.MapValuesOrFail(OICPNS.EVSEStatus + "EvseId",
+                                                                                                         EVSE_Id.Parse));
 
                 return true;
 
@@ -183,7 +183,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, PullEVSEStatusXML, e);
+                OnException?.Invoke(DateTime.Now, PullEVSEStatusByIdXML, e);
 
                 PullEVSEStatusById = null;
                 return false;
@@ -229,20 +229,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(CustomPullEVSEStatusByIdRequestSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomPullEVSEDataRequestSerializer">A delegate to serialize custom eRoamingPullEvseStatusById xml elements.</param>
+        public XElement ToXML(CustomSerializerDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestSerializer = null)
+        {
 
-            => new XElement(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById",
+            var XML = new XElement(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById",
 
-                                new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
+                                   new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
 
-                                EVSEIds.SafeSelect(evseid => new XElement(OICPNS.EVSEStatus + "EvseId", evseid.ToString()))
+                                   EVSEIds.SafeSelect(evseid => new XElement(OICPNS.EVSEStatus + "EvseId", evseid.ToString()))
 
-                           );
+                                  );
+
+            return CustomPullEVSEStatusByIdRequestSerializer != null
+                       ? CustomPullEVSEStatusByIdRequestSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

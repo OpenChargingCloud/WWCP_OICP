@@ -26,7 +26,9 @@ using System.Xml.Linq;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public delegate T CustomMapperDelegate<T>(XElement XML, T ResponseBuilder);
+    public delegate T CustomParserDelegate<T>(XElement XML, T ResponseBuilder);
+
+    public delegate XElement CustomSerializerDelegate<T>(T ResponseBuilder, XElement XML);
 
     public delegate TB CustomMapper2Delegate<TB>(TB ResponseBuilder);
 

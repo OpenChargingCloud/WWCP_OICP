@@ -388,7 +388,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                         #region Parse request parameters
 
                         var ActionType        = PushEVSEDataXML.ElementValueOrFail(OICPNS.EVSEData + "ActionType", "No ActionType XML tag provided!");
-                        var OperatorEvseData  = OperatorEVSEData.Parse(PushEVSEDataXML.ElementsOrFail(OICPNS.EVSEData + "OperatorEvseData", "No OperatorEvseData XML tags provided!"));
+                        var OperatorEvseData  = OperatorEVSEData.Parse(PushEVSEDataXML.ElementOrFail(OICPNS.EVSEData + "OperatorEvseData", "No OperatorEvseData XML tags provided!"));
 
                         #endregion
 

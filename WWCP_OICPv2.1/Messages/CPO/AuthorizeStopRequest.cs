@@ -91,16 +91,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
-            #region Initial checks
-
-            if (UID == null)
-                throw new ArgumentNullException(nameof(UID), "The given authentication token must not be null!");
-
-            #endregion
-
             this.OperatorId        = OperatorId;
             this.SessionId         = SessionId;
-            this.UID         = UID;
+            this.UID               = UID;
             this.EVSEId            = EVSEId;
             this.PartnerSessionId  = PartnerSessionId;
 

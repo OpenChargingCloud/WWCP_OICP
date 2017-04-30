@@ -37,6 +37,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     public static class ICPOClientExtentions
     {
 
+        #region PushEVSEData(OperatorEVSEData, Action = fullLoad, ...)
+
+        /// <summary>
+        /// Upload the given EVSE data records.
+        /// </summary>
+        /// <param name="OperatorEVSEData">An operator EVSE data.</param>
+        /// <param name="Action">The server-side data management operation.</param>
+        /// <param name="IncludeEVSEDataRecords">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<HTTPResponse<Acknowledgement<PushEVSEDataRequest>>>
+
+            PushEVSEData(this ICPOClient                 ICPOClient,
+                         OperatorEVSEData                OperatorEVSEData,
+                         ActionTypes                     Action                   = ActionTypes.fullLoad,
+                         IncludeEVSEDataRecordsDelegate  IncludeEVSEDataRecords   = null,
+
+                         DateTime?                       Timestamp                = null,
+                         CancellationToken?              CancellationToken        = null,
+                         EventTracking_Id                EventTrackingId          = null,
+                         TimeSpan?                       RequestTimeout           = null)
+
+
+                => ICPOClient.PushEVSEData(new PushEVSEDataRequest(OperatorEVSEData,
+                                                                   Action,
+
+                                                                   Timestamp,
+                                                                   CancellationToken,
+                                                                   EventTrackingId,
+                                                                   RequestTimeout.HasValue
+                                                                       ? RequestTimeout.Value
+                                                                       : ICPOClient.RequestTimeout));
+
+        #endregion
+
         #region PushEVSEData(EVSEDataRecords, OperatorId, OperatorName = null, Action = fullLoad, ...)
 
         /// <summary>
@@ -67,11 +105,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          TimeSpan?                       RequestTimeout           = null)
 
 
-                => ICPOClient.PushEVSEData(new PushEVSEDataRequest(IncludeEVSEDataRecords != null
-                                                                       ? EVSEDataRecords.Where(evsedatarecord => IncludeEVSEDataRecords(evsedatarecord))
-                                                                       : EVSEDataRecords,
-                                                                   OperatorId,
-                                                                   OperatorName,
+                => ICPOClient.PushEVSEData(new PushEVSEDataRequest(new OperatorEVSEData(IncludeEVSEDataRecords != null
+                                                                                            ? EVSEDataRecords.Where(evsedatarecord => IncludeEVSEDataRecords(evsedatarecord))
+                                                                                            : EVSEDataRecords,
+                                                                                        OperatorId,
+                                                                                        OperatorName),
                                                                    Action,
 
                                                                    Timestamp,
@@ -111,9 +149,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          TimeSpan?           RequestTimeout      = null)
 
 
-                => ICPOClient.PushEVSEData(new PushEVSEDataRequest(new EVSEDataRecord[] { EVSEDataRecord },
-                                                                   OperatorId,
-                                                                   OperatorName,
+                => ICPOClient.PushEVSEData(new PushEVSEDataRequest(new OperatorEVSEData(new EVSEDataRecord[] { EVSEDataRecord },
+                                                                                        OperatorId,
+                                                                                        OperatorName),
                                                                    Action,
 
                                                                    Timestamp,
@@ -141,14 +179,52 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          params EVSEDataRecord[]  EVSEDataRecords)
 
 
-            => ICPOClient.PushEVSEData(new PushEVSEDataRequest(EVSEDataRecords,
-                                                               OperatorId,
+            => ICPOClient.PushEVSEData(new PushEVSEDataRequest(new OperatorEVSEData(EVSEDataRecords,
+                                                                                    OperatorId),
                                                                Action:          Action,
 
                                                                RequestTimeout:  ICPOClient.RequestTimeout));
 
         #endregion
 
+
+        #region PushEVSEStatus(OperatorEVSEStatus, Action = update, ...)
+
+        /// <summary>
+        /// Upload the given EVSE status records.
+        /// </summary>
+        /// <param name="OperatorEVSEStatus">An operator EVSE status.</param>
+        /// <param name="Action">The server-side status management operation.</param>
+        /// <param name="IncludeEVSEStatusRecords">An optional delegate for filtering EVSE status records before pushing them to the server.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>>
+
+            PushEVSEStatus(this ICPOClient                   ICPOClient,
+                           OperatorEVSEStatus                OperatorEVSEStatus,
+                           ActionTypes                       Action                     = ActionTypes.update,
+                           IncludeEVSEStatusRecordsDelegate  IncludeEVSEStatusRecords   = null,
+
+                           DateTime?                         Timestamp                  = null,
+                           CancellationToken?                CancellationToken          = null,
+                           EventTracking_Id                  EventTrackingId            = null,
+                           TimeSpan?                         RequestTimeout             = null)
+
+
+                => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(OperatorEVSEStatus,
+                                                                       Action,
+
+                                                                       Timestamp,
+                                                                       CancellationToken,
+                                                                       EventTrackingId,
+                                                                       RequestTimeout.HasValue
+                                                                           ? RequestTimeout.Value
+                                                                           : ICPOClient.RequestTimeout));
+
+        #endregion
 
         #region PushEVSEStatus(EVSEStatusRecords, OperatorId, OperatorName = null, Action = update, ...)
 
@@ -180,11 +256,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                            TimeSpan?                         RequestTimeout             = null)
 
 
-                => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(IncludeEVSEStatusRecords != null
-                                                                           ? EVSEStatusRecords.Where(evsestatusrecord => IncludeEVSEStatusRecords(evsestatusrecord))
-                                                                           : EVSEStatusRecords,
-                                                                       OperatorId,
-                                                                       OperatorName,
+                => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(new OperatorEVSEStatus(IncludeEVSEStatusRecords != null
+                                                                                                  ? EVSEStatusRecords.Where(evsestatusrecord => IncludeEVSEStatusRecords(evsestatusrecord))
+                                                                                                  : EVSEStatusRecords,
+                                                                                              OperatorId,
+                                                                                              OperatorName),
                                                                        Action,
 
                                                                        Timestamp,
@@ -224,9 +300,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                            TimeSpan?           RequestTimeout      = null)
 
 
-                => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(new EVSEStatusRecord[] { EVSEStatusRecord },
-                                                                       OperatorId,
-                                                                       OperatorName,
+                => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(new OperatorEVSEStatus(new EVSEStatusRecord[] { EVSEStatusRecord },
+                                                                                              OperatorId,
+                                                                                              OperatorName),
                                                                        Action,
 
                                                                        Timestamp,
@@ -254,8 +330,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                            params EVSEStatusRecord[]  EVSEStatusRecords)
 
 
-            => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(EVSEStatusRecords,
-                                                                   OperatorId,
+            => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(new OperatorEVSEStatus(EVSEStatusRecords,
+                                                                                          OperatorId),
                                                                    Action:          Action,
 
                                                                    RequestTimeout:  ICPOClient.RequestTimeout));

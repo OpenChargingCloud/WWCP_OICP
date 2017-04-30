@@ -573,9 +573,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         public CustomMapperDelegate<GetChargeDetailRecordsResponse, GetChargeDetailRecordsResponse.Builder> CustomGetChargeDetailRecordsResponseMapper  { get; set; }
 
-        public CustomMapperDelegate<ChargeDetailRecord>                                                     CustomChargeDetailRecordXMLMapper           { get; set; }
-
         #endregion
+
+
+        public CustomParserDelegate<OperatorEVSEData>    CustomOperatorEVSEDataParser     { get; set; }
+        public CustomParserDelegate<EVSEDataRecord>      CustomEVSEDataRecordParser       { get; set; }
+
+        public CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   { get; set; }
+        public CustomParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     { get; set; }
+
+        public CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   { get; set; }
 
         #endregion
 
@@ -1035,7 +1042,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                  #region OnSuccess
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(EVSEData.Parse, SendException),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent((xml, e) => EVSEData.Parse(xml,
+                                                                                                                                 CustomOperatorEVSEDataParser,
+                                                                                                                                 CustomEVSEDataRecordParser,
+                                                                                                                                 e)),
 
                                                  #endregion
 
@@ -1059,10 +1069,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                      return new HTTPResponse<EVSEData>(httpresponse,
-                                                                                               new EVSEData(StatusCodes.DataError,
-                                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                    AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                               IsFault: true);
+                                                                                       new EVSEData(StatusCodes.DataError,
+                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                    AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                       IsFault: true);
 
                                                  },
 
@@ -1075,9 +1085,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      SendException(timestamp, sender, exception);
 
                                                      return HTTPResponse<EVSEData>.ExceptionThrown(new EVSEData(StatusCodes.ServiceNotAvailable,
-                                                                                                                                exception.Message,
-                                                                                                                                exception.StackTrace),
-                                                                                                           Exception: exception);
+                                                                                                                exception.Message,
+                                                                                                                exception.StackTrace),
+                                                                                                   Exception: exception);
 
                                                  }
 
@@ -1220,7 +1230,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                  #region OnSuccess
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(EVSEStatus.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent((xml, e) => EVSEStatus.Parse(xml,
+                                                                                                                                   CustomOperatorEVSEStatusParser,
+                                                                                                                                   CustomEVSEStatusRecordParser,
+                                                                                                                                   e)),
 
                                                  #endregion
 
@@ -1231,7 +1244,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
                                                      return new HTTPResponse<EVSEStatus>(httpresponse,
-                                                                                                 IsFault: true);
+                                                                                         IsFault: true);
 
                                                  },
 
@@ -1244,10 +1257,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                      return new HTTPResponse<EVSEStatus>(httpresponse,
-                                                                                                 new EVSEStatus(StatusCodes.DataError,
-                                                                                                                        Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                        AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                 IsFault: true);
+                                                                                         new EVSEStatus(StatusCodes.DataError,
+                                                                                                        Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                        AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                         IsFault: true);
 
                                                  },
 
@@ -1260,9 +1273,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      SendException(timestamp, sender, exception);
 
                                                      return HTTPResponse<EVSEStatus>.ExceptionThrown(new EVSEStatus(StatusCodes.ServiceNotAvailable,
-                                                                                                                                    exception.Message,
-                                                                                                                                    exception.StackTrace),
-                                                                                                             Exception: exception);
+                                                                                                                    exception.Message,
+                                                                                                                    exception.StackTrace),
+                                                                                                     Exception: exception);
 
                                                  }
 
@@ -1395,7 +1408,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                  #region OnSuccess
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(EVSEStatusById.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent((xml, e) => EVSEStatusById.Parse(xml,
+                                                                                                                                       CustomEVSEStatusRecordParser,
+                                                                                                                                       e)),
 
                                                  #endregion
 
@@ -1406,7 +1421,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      DebugX.Log("'PullEVSEStatusByIdRequest' lead to a SOAP fault!");
 
                                                      return new HTTPResponse<EVSEStatusById>(httpresponse,
-                                                                                                     IsFault: true);
+                                                                                             IsFault: true);
 
                                                  },
 
@@ -1419,10 +1434,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                      return new HTTPResponse<EVSEStatusById>(httpresponse,
-                                                                                                     new EVSEStatusById(StatusCodes.DataError,
-                                                                                                                                Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                                AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                                     IsFault: true);
+                                                                                             new EVSEStatusById(StatusCodes.DataError,
+                                                                                                                Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                             IsFault: true);
 
                                                  },
 
@@ -1435,9 +1450,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      SendException(timestamp, sender, exception);
 
                                                      return HTTPResponse<EVSEStatusById>.ExceptionThrown(new EVSEStatusById(StatusCodes.ServiceNotAvailable,
-                                                                                                                                            exception.Message,
-                                                                                                                                            exception.StackTrace),
-                                                                                                                 Exception: exception);
+                                                                                                                            exception.Message,
+                                                                                                                            exception.StackTrace),
+                                                                                                         Exception: exception);
 
                                                  }
 
@@ -2634,7 +2649,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                           => GetChargeDetailRecordsResponse.ParseXML(request,
                                                                                                                                                      xml,
                                                                                                                                                      CustomGetChargeDetailRecordsResponseMapper,
-                                                                                                                                                     CustomChargeDetailRecordXMLMapper,
+                                                                                                                                                     CustomChargeDetailRecordParser,
                                                                                                                                                      onexception)),
 
                                                  #endregion

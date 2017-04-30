@@ -290,22 +290,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse   (ChargeDetailRecordXML,  CustomDataMapper = null, OnException = null)
+        #region (static) Parse   (ChargeDetailRecordXML,  CustomChargeDetailRecordParser = null, OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecordXML">The XML to parse.</param>
-        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom xml elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static ChargeDetailRecord Parse(XElement                                  ChargeDetailRecordXML,
-                                               CustomMapperDelegate<ChargeDetailRecord>  CustomDataMapper  = null,
-                                               OnExceptionDelegate                       OnException       = null)
+                                               CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser  = null,
+                                               OnExceptionDelegate                       OnException                     = null)
         {
 
             ChargeDetailRecord _ChargeDetailRecord;
 
-            if (TryParse(ChargeDetailRecordXML, out _ChargeDetailRecord, CustomDataMapper, OnException))
+            if (TryParse(ChargeDetailRecordXML, out _ChargeDetailRecord, CustomChargeDetailRecordParser, OnException))
                 return _ChargeDetailRecord;
 
             return null;
@@ -314,22 +314,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse   (ChargeDetailRecordText, CustomDataMapper = null, OnException = null)
+        #region (static) Parse   (ChargeDetailRecordText, CustomChargeDetailRecordParser = null, OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecordText">The text to parse.</param>
-        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom xml elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static ChargeDetailRecord Parse(String                                  ChargeDetailRecordText,
-                                             CustomMapperDelegate<ChargeDetailRecord>  CustomDataMapper  = null,
-                                             OnExceptionDelegate                     OnException       = null)
+                                             CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser  = null,
+                                             OnExceptionDelegate                       OnException                     = null)
         {
 
             ChargeDetailRecord _ChargeDetailRecord;
 
-            if (TryParse(ChargeDetailRecordText, out _ChargeDetailRecord, CustomDataMapper, OnException))
+            if (TryParse(ChargeDetailRecordText, out _ChargeDetailRecord, CustomChargeDetailRecordParser, OnException))
                 return _ChargeDetailRecord;
 
             return null;
@@ -338,19 +338,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(ChargeDetailRecordXML,  out ChargeDetailRecord, CustomDataMapper = null, OnException = null)
+        #region (static) TryParse(ChargeDetailRecordXML,  out ChargeDetailRecord, CustomChargeDetailRecordParser = null, OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecordXML">The XML to parse.</param>
         /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
-        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom xml elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                  ChargeDetailRecordXML,
                                        out ChargeDetailRecord                    ChargeDetailRecord,
-                                       CustomMapperDelegate<ChargeDetailRecord>  CustomDataMapper  = null,
-                                       OnExceptionDelegate                       OnException       = null)
+                                       CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser  = null,
+                                       OnExceptionDelegate                       OnException                     = null)
         {
 
             try
@@ -414,8 +414,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                      );
 
-                if (CustomDataMapper != null)
-                    ChargeDetailRecord = CustomDataMapper(ChargeDetailRecordXML, ChargeDetailRecord);
+                if (CustomChargeDetailRecordParser != null)
+                    ChargeDetailRecord = CustomChargeDetailRecordParser(ChargeDetailRecordXML, ChargeDetailRecord);
 
                 return true;
 
@@ -434,19 +434,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(ChargeDetailRecordText, out ChargeDetailRecord, CustomDataMapper = null, OnException = null)
+        #region (static) TryParse(ChargeDetailRecordText, out ChargeDetailRecord, CustomChargeDetailRecordParser = null, OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecordText">The text to parse.</param>
         /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
-        /// <param name="CustomDataMapper">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom xml elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                    ChargeDetailRecordText,
                                        out ChargeDetailRecord                    ChargeDetailRecord,
-                                       CustomMapperDelegate<ChargeDetailRecord>  CustomDataMapper  = null,
-                                       OnExceptionDelegate                       OnException       = null)
+                                       CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser  = null,
+                                       OnExceptionDelegate                       OnException                     = null)
         {
 
             try
@@ -454,7 +454,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 if (TryParse(XDocument.Parse(ChargeDetailRecordText).Root,
                              out ChargeDetailRecord,
-                             CustomDataMapper,
+                             CustomChargeDetailRecordParser,
                              OnException))
 
                     return true;
@@ -472,74 +472,84 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToXML(XName = null)
+        #region ToXML(XName = null, CustomChargeDetailRecordSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="XName">The XML name to use.</param>
-        public XElement ToXML(XName XName = null)
+        /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord xml elements.</param>
+        public XElement ToXML(XName                                         XName                               = null,
+                              CustomSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer  = null)
 
-            => new XElement(XName ?? OICPNS.Authorization + "eRoamingChargeDetailRecord",
+        {
 
-                   new XElement(OICPNS.Authorization + "SessionID",               SessionId.       ToString()),
+            var XML = new XElement(XName ?? OICPNS.Authorization + "eRoamingChargeDetailRecord",
 
-                   PartnerSessionId.HasValue
-                       ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
-                       : null,
+                          new XElement(OICPNS.Authorization + "SessionID",               SessionId.       ToString()),
 
-                   PartnerProductId.HasValue
-                       ? new XElement(OICPNS.Authorization + "PartnerProductID",  PartnerProductId.ToString())
-                       : null,
+                          PartnerSessionId.HasValue
+                              ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                              : null,
 
-                   new XElement(OICPNS.Authorization + "EvseID",                  EVSEId.          ToString()),
+                          PartnerProductId.HasValue
+                              ? new XElement(OICPNS.Authorization + "PartnerProductID",  PartnerProductId.ToString())
+                              : null,
 
-                   Identification.ToXML(OICPNS.Authorization),
+                          new XElement(OICPNS.Authorization + "EvseID",                  EVSEId.          ToString()),
 
-                   ChargingStart.HasValue
-                       ? new XElement(OICPNS.Authorization + "ChargingStart",     ChargingStart.Value.ToIso8601())
-                       : null,
+                          Identification.ToXML(OICPNS.Authorization),
 
-                   ChargingEnd.HasValue
-                       ? new XElement(OICPNS.Authorization + "ChargingEnd",       ChargingEnd.  Value.ToIso8601())
-                       : null,
+                          ChargingStart.HasValue
+                              ? new XElement(OICPNS.Authorization + "ChargingStart",     ChargingStart.Value.ToIso8601())
+                              : null,
 
-                   new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
-                   new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
+                          ChargingEnd.HasValue
+                              ? new XElement(OICPNS.Authorization + "ChargingEnd",       ChargingEnd.  Value.ToIso8601())
+                              : null,
 
-                   MeterValueStart.HasValue
-                       ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", "."))
-                       : null,
+                          new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
+                          new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
 
-                   MeterValueEnd.HasValue
-                       ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", "."))
-                       : null,
+                          MeterValueStart.HasValue
+                              ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", "."))
+                              : null,
 
-                   MeterValuesInBetween != null
-                       ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
-                             MeterValuesInBetween.
-                                 SafeSelect(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
-                                 ToArray()
-                         )
-                       : null,
+                          MeterValueEnd.HasValue
+                              ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", "."))
+                              : null,
 
-                   ConsumedEnergy.HasValue
-                       ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", "."))
-                       : null,
+                          MeterValuesInBetween != null
+                              ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
+                                    MeterValuesInBetween.
+                                        SafeSelect(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
+                                        ToArray()
+                                )
+                              : null,
 
-                   MeteringSignature != null
-                       ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)
-                       : null,
+                          ConsumedEnergy.HasValue
+                              ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", "."))
+                              : null,
 
-                   HubOperatorId.HasValue
-                       ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString())
-                       : null,
+                          MeteringSignature != null
+                              ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)
+                              : null,
 
-                   HubProviderId.HasValue
-                       ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString())
-                       : null
+                          HubOperatorId.HasValue
+                              ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString())
+                              : null,
 
-            );
+                          HubProviderId.HasValue
+                              ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString())
+                              : null
+
+                    );
+
+            return CustomChargeDetailRecordSerializer != null
+                       ? CustomChargeDetailRecordSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 
@@ -803,9 +813,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    HubOperatorId,
                    HubProviderId,
 
-                   _CustomData != null
-                       ? _CustomData.ToDictionary(kvp => kvp.Key,
-                                                  kvp => kvp.Value)
+                   Values != null
+                       ? Values.ToDictionary(kvp => kvp.Key,
+                                             kvp => kvp.Value)
                        : null);
 
         #endregion

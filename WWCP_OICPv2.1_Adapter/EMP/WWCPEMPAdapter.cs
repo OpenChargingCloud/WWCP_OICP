@@ -952,32 +952,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                               RoamingNetwork                       RoamingNetwork,
 
                               String                               RemoteHostname,
-                              IPPort                               RemoteTCPPort                   = null,
-                              RemoteCertificateValidationCallback  RemoteCertificateValidator      = null,
-                              X509Certificate                      ClientCert                      = null,
-                              String                               RemoteHTTPVirtualHost           = null,
-                              String                               URIPrefix                       = EMPClient.DefaultURIPrefix,
-                              String                               EVSEDataURI                     = EMPClient.DefaultEVSEDataURI,
-                              String                               EVSEStatusURI                   = EMPClient.DefaultEVSEStatusURI,
-                              String                               AuthenticationDataURI           = EMPClient.DefaultAuthenticationDataURI,
-                              String                               ReservationURI                  = EMPClient.DefaultReservationURI,
-                              String                               AuthorizationURI                = EMPClient.DefaultAuthorizationURI,
-                              String                               HTTPUserAgent                   = EMPClient.DefaultHTTPUserAgent,
-                              TimeSpan?                            RequestTimeout                  = null,
+                              IPPort                               RemoteTCPPort                     = null,
+                              RemoteCertificateValidationCallback  RemoteCertificateValidator        = null,
+                              X509Certificate                      ClientCert                        = null,
+                              String                               RemoteHTTPVirtualHost             = null,
+                              String                               URIPrefix                         = EMPClient.DefaultURIPrefix,
+                              String                               EVSEDataURI                       = EMPClient.DefaultEVSEDataURI,
+                              String                               EVSEStatusURI                     = EMPClient.DefaultEVSEStatusURI,
+                              String                               AuthenticationDataURI             = EMPClient.DefaultAuthenticationDataURI,
+                              String                               ReservationURI                    = EMPClient.DefaultReservationURI,
+                              String                               AuthorizationURI                  = EMPClient.DefaultAuthorizationURI,
+                              String                               HTTPUserAgent                     = EMPClient.DefaultHTTPUserAgent,
+                              TimeSpan?                            RequestTimeout                    = null,
 
-                              String                               ServerName                      = EMPServer.DefaultHTTPServerName,
-                              IPPort                               ServerTCPPort                   = null,
-                              String                               ServerURIPrefix                 = EMPServer.DefaultURIPrefix,
-                              String                               ServerAuthorizationURI          = EMPServer.DefaultAuthorizationURI,
-                              HTTPContentType                      ServerContentType               = null,
-                              Boolean                              ServerRegisterHTTPRootService   = true,
-                              Boolean                              ServerAutoStart                 = false,
+                              String                               ServerName                        = EMPServer.DefaultHTTPServerName,
+                              IPPort                               ServerTCPPort                     = null,
+                              String                               ServerURIPrefix                   = EMPServer.DefaultURIPrefix,
+                              String                               ServerAuthorizationURI            = EMPServer.DefaultAuthorizationURI,
+                              HTTPContentType                      ServerContentType                 = null,
+                              Boolean                              ServerRegisterHTTPRootService     = true,
+                              Boolean                              ServerAutoStart                   = false,
 
-                              String                               ClientLoggingContext            = EMPClient.EMPClientLogger.DefaultContext,
-                              String                               ServerLoggingContext            = EMPServerLogger.DefaultContext,
-                              LogfileCreatorDelegate               LogfileCreator                  = null,
+                              String                               ClientLoggingContext              = EMPClient.EMPClientLogger.DefaultContext,
+                              String                               ServerLoggingContext              = EMPServerLogger.DefaultContext,
+                              LogfileCreatorDelegate               LogfileCreator                    = null,
 
-                              EVSEDataRecord2EVSEDelegate          EVSEDataRecord2EVSE             = null,
+                              EVSEDataRecord2EVSEDelegate          EVSEDataRecord2EVSE               = null,
 
                               EVSEOperatorFilterDelegate           EVSEOperatorFilter                = null,
 
@@ -993,7 +993,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                               GeoCoordinate?                       DefaultSearchCenter               = null,
                               UInt64?                              DefaultDistanceKM                 = null,
 
-                              DNSClient                            DNSClient                       = null)
+                              DNSClient                            DNSClient                         = null)
 
             : this(Id,
                    Name,
@@ -1029,8 +1029,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                   DNSClient),
 
                    EVSEDataRecord2EVSE,
+                   EVSEOperatorFilter,
 
-                   DefaultProvider: DefaultProvider)
+                   PullDataServiceEvery,
+                   DisablePullData,
+                   PullDataServiceRequestTimeout,
+
+                   PullStatusServiceEvery,
+                   DisablePullStatus,
+                   PullStatusServiceRequestTimeout,
+
+                   DefaultProvider,
+                   DefaultSearchCenter,
+                   DefaultDistanceKM)
 
         {
 
@@ -1241,15 +1252,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 result.Content        != null)
             {
 
-                return new EVSEStatusPull(result.Content.OperatorEVSEStatus.
-                                              SelectMany(operatorevsestatus => operatorevsestatus.EVSEStatusRecords).
-                                              SafeSelect(evsestatusrecord   => new WWCP.EVSEStatus(evsestatusrecord.Id.ToWWCP().Value,
-                                                                                                   OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
-                                                                                                   result.Timestamp)));
+                var EVSEStatusList = new List<WWCP.EVSEStatus>();
+                var Warnings       = new List<String>();
+                WWCP.EVSE_Id? EVSEId = null;
+
+                foreach (var operatorevsestatus in result.Content.OperatorEVSEStatus)
+                    foreach (var evsestatusrecord in operatorevsestatus.EVSEStatusRecords)
+                    {
+
+                        EVSEId = evsestatusrecord.Id.ToWWCP();
+
+                        if (EVSEId.HasValue)
+                            EVSEStatusList.Add(new WWCP.EVSEStatus(EVSEId.Value,
+                                                                   OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
+                                                                   result.Timestamp,
+                                                                   evsestatusrecord.Values));
+
+                        else
+                            Warnings.Add("Invalid EVSE identification '" + evsestatusrecord.Id + "'!");
+
+                    }
+
+                return new EVSEStatusPull(EVSEStatusList, Warnings);
 
             }
 
-            return new EVSEStatusPull(new WWCP.EVSEStatus[0]);
+            return new EVSEStatusPull(new WWCP.EVSEStatus[0],
+                                      new String[] {
+                                          result.HTTPStatusCode.ToString(),
+                                          result.HTTPBody.ToUTF8String()
+                                      });
 
         }
 
@@ -1267,7 +1299,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<IEnumerable<WWCP.EVSEStatus>>
+        public async Task<EVSEStatusPull>
 
             PullEVSEStatusById(IEnumerable<WWCP.EVSE_Id>  EVSEIds,
                                eMobilityProvider_Id?      ProviderId          = null,
@@ -1282,11 +1314,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region Initial checks
 
             if (EVSEIds.IsNullOrEmpty())
-                return new WWCP.EVSEStatus[0];
+                return new EVSEStatusPull(new WWCP.EVSEStatus[0],
+                                          new String[] { "Parameter 'EVSEIds' was null or empty!" });
 
             #endregion
 
-            var _EVSEStatus = new List<WWCP.EVSEStatus>();
+
+            var EVSEStatusList  = new List<WWCP.EVSEStatus>();
+            var Warnings        = new List<String>();
 
             // Hubject has a limit of 100 EVSEIds per request!
             // Do not make concurrent requests!
@@ -1311,16 +1346,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     result.Content != null)
                 {
 
-                    _EVSEStatus.AddRange(result.Content.EVSEStatusRecords.
-                                                        SafeSelect(evsestatusrecord => new WWCP.EVSEStatus(evsestatusrecord.Id.ToWWCP().Value,
-                                                                                                           OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
-                                                                                                           result.Timestamp)));
+                    WWCP.EVSE_Id? EVSEId = null;
+
+                    foreach (var evsestatusrecord in result.Content.EVSEStatusRecords)
+                    {
+
+                        EVSEId = evsestatusrecord.Id.ToWWCP();
+
+                        if (EVSEId.HasValue)
+                            EVSEStatusList.Add(new WWCP.EVSEStatus(EVSEId.Value,
+                                                                   OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
+                                                                   result.Timestamp));
+
+                        else
+                            Warnings.Add("Invalid EVSE identification '" + evsestatusrecord.Id + "'!");
+
+                    }
 
                 }
 
+                else
+                    Warnings.AddRange(new String[] {
+                                          result.HTTPStatusCode.ToString(),
+                                          result.HTTPBody.ToUTF8String()
+                                      });
+
             }
 
-            return _EVSEStatus;
+            return new EVSEStatusPull(EVSEStatusList, Warnings);
 
         }
 
@@ -2380,6 +2433,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 response.Content        != null)
             {
 
+                var Warnings = new List<String>();
+
                 result = response.Content.
                              ChargeDetailRecords.
                              SafeSelect(cdr => {
@@ -2387,12 +2442,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                    try
                                                    {
 
-                                                       return OICPMapper.ToWWCP(cdr);
+                                                       return cdr.ToWWCP();
 
                                                    }
                                                    catch (Exception e)
                                                    {
-                                                       //ToDo: Add exceptions to information list!
+                                                       Warnings.Add("Error during import of charge detail record: " + e.Message);
                                                        return null;
                                                    }
 
